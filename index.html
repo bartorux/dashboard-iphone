@@ -88,6 +88,29 @@
         .status-online { background-color: #34c759; }
         .status-offline { background-color: #ff3b30; }
         
+        .notification-toggle {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+        }
+        
+        .notification-toggle:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+        
+        .notification-toggle.silenced {
+            opacity: 0.3;
+        }
+        
+        .notification-toggle.silenced #notificationIcon::after {
+            content: '🔕';
+        }
+        
         .day-navigation {
             background: white;
             padding: 12px 16px;
@@ -299,6 +322,41 @@
                 color: #ffffff;
             }
             
+            setupVisibilityTracking() {
+                // Track when user opens/closes app
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'visible') {
+                        this.isAppVisible = true;
+                        this.lastSeenTime = Date.now();
+                        console.log('App became visible - updating lastSeenTime');
+                    } else {
+                        this.isAppVisible = false;
+                        console.log('App became hidden');
+                    }
+                });
+                
+                // Track focus/blur events
+                window.addEventListener('focus', () => {
+                    this.isAppVisible = true;
+                    this.lastSeenTime = Date.now();
+                    console.log('App focused - updating lastSeenTime');
+                });
+                
+                window.addEventListener('blur', () => {
+                    this.isAppVisible = false;
+                    console.log('App lost focus');
+                });
+                
+                // Update lastSeenTime when user interacts with app
+                ['click', 'touch', 'scroll'].forEach(event => {
+                    document.addEventListener(event, () => {
+                        if (this.isAppVisible) {
+                            this.lastSeenTime = Date.now();
+                        }
+                    }, { passive: true });
+                });
+            }
+            
             .status-bar,
             .chart-container,
             .alerts-section,
@@ -325,6 +383,15 @@
             
             .alert-orange {
                 background-color: rgba(255, 149, 0, 0.15);
+            }
+            
+            .notification-toggle {
+                background: #2c2c2e;
+                border-color: #38383a;
+            }
+            
+            .notification-toggle:hover {
+                background-color: #3a3a3c;
             }
         }
         
@@ -400,7 +467,12 @@
                 <div class="status-indicator status-offline" id="statusIndicator"></div>
                 <span id="statusText">Łączenie...</span>
             </div>
-            <div id="lastUpdate" style="font-size: 12px; color: #8e8e93;"></div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="notification-toggle" id="notificationToggle" onclick="toggleNotifications()" title="Włącz/wyłącz powiadomienia">
+                    <span id="notificationIcon">🔔</span>
+                </button>
+                <div id="lastUpdate" style="font-size: 12px; color: #8e8e93;"></div>
+            </div>
         </div>
         
         <!-- Day Navigation -->
@@ -462,6 +534,11 @@
                 this.allData = []; // Wszystkie 72h danych
                 this.notificationRequested = false;
                 
+                // Notification management
+                this.lastSeenTime = Date.now(); // Kiedy użytkownik ostatnio widział alerty
+                this.isAppVisible = true;
+                this.notificationsSilenced = false;
+                
                 this.init();
             }
             
@@ -499,6 +576,9 @@
                 // Setup online/offline detection
                 window.addEventListener('online', () => this.handleOnlineStatus(true));
                 window.addEventListener('offline', () => this.handleOnlineStatus(false));
+                
+                // Track app visibility for smarter notifications
+                this.setupVisibilityTracking();
                 
                 // Setup resize handler with debounce
                 let resizeTimeout;
@@ -592,6 +672,9 @@
                         });
                     }
                 }
+                
+                // Setup notification button
+                this.updateNotificationButton();
             }
             
             switchDay(dayOffset) {
@@ -602,6 +685,9 @@
                 document.getElementById(`dayBtn${dayOffset}`).classList.add('active');
                 
                 this.currentDayOffset = dayOffset;
+                
+                // Update lastSeenTime when user interacts with app
+                this.lastSeenTime = Date.now();
                 
                 // Filter data for selected day
                 if (this.allData && this.allData.length > 0) {
@@ -614,6 +700,32 @@
                 if (dayOffset !== 0 && !this.notificationRequested) {
                     this.requestNotificationPermission();
                     this.notificationRequested = true;
+                }
+            }
+            
+            toggleNotifications() {
+                this.notificationsSilenced = !this.notificationsSilenced;
+                this.updateNotificationButton();
+                
+                const status = this.notificationsSilenced ? 'wyłączone' : 'włączone';
+                console.log(`Notifications ${status}`);
+                
+                // Show feedback
+                this.showNotification(`Powiadomienia ${status}`);
+            }
+            
+            updateNotificationButton() {
+                const button = document.getElementById('notificationToggle');
+                const icon = document.getElementById('notificationIcon');
+                
+                if (this.notificationsSilenced) {
+                    button.classList.add('silenced');
+                    icon.textContent = '🔕';
+                    button.title = 'Powiadomienia wyłączone - kliknij aby włączyć';
+                } else {
+                    button.classList.remove('silenced');
+                    icon.textContent = '🔔';
+                    button.title = 'Powiadomienia włączone - kliknij aby wyłączyć';
                 }
             }
             
@@ -787,33 +899,63 @@
                         red: [],
                         lastResetDate: today
                     };
+                    // Reset lastSeenTime for new day
+                    this.lastSeenTime = Date.now();
+                    console.log('New day - reset alert history and lastSeenTime');
                 }
                 
-                const oldCount = this.alertHistory.orange.length + this.alertHistory.red.length;
+                // Count only truly NEW alerts (that appeared after lastSeenTime)
+                let newAlertsCount = 0;
+                const now = Date.now();
                 
                 newAlerts.orange.forEach(alert => {
                     if (!this.alertHistory.orange.some(a => a.time === alert.time)) {
-                        this.alertHistory.orange.push(alert);
+                        this.alertHistory.orange.push({
+                            ...alert,
+                            detectedAt: now
+                        });
+                        
+                        // Only count as "new" if detected after user last saw the app
+                        if (now - this.lastSeenTime > 60000) { // 1 minute buffer
+                            newAlertsCount++;
+                        }
                     }
                 });
                 
                 newAlerts.red.forEach(alert => {
                     if (!this.alertHistory.red.some(a => a.time === alert.time)) {
-                        this.alertHistory.red.push(alert);
+                        this.alertHistory.red.push({
+                            ...alert,
+                            detectedAt: now
+                        });
+                        
+                        // Only count as "new" if detected after user last saw the app
+                        if (now - this.lastSeenTime > 60000) { // 1 minute buffer
+                            newAlertsCount++;
+                        }
                     }
                 });
                 
-                const newCount = this.alertHistory.orange.length + this.alertHistory.red.length;
-                
-                // Show notification for new alerts
-                if (newCount > oldCount && 'Notification' in window && Notification.permission === 'granted') {
-                    const newAlertCount = newCount - oldCount;
-                    this.showNotification(`🚨 ${newAlertCount} nowy alert rezerw mocy!`);
+                // Only show notification if:
+                // 1. There are truly new alerts
+                // 2. App is not currently visible 
+                // 3. Notifications are not silenced
+                // 4. User has granted permission
+                if (newAlertsCount > 0 && 
+                    !this.isAppVisible && 
+                    !this.notificationsSilenced &&
+                    'Notification' in window && 
+                    Notification.permission === 'granted') {
+                    
+                    console.log(`Sending notification for ${newAlertsCount} new alerts`);
+                    this.showNotification(`🚨 ${newAlertsCount} ${newAlertsCount === 1 ? 'nowy alert' : 'nowe alerty'} rezerw mocy!`);
+                } else {
+                    console.log(`Not sending notification - newAlertsCount: ${newAlertsCount}, isAppVisible: ${this.isAppVisible}, silenced: ${this.notificationsSilenced}`);
                 }
             }
             
             showNotification(message) {
-                // Show in-app notification banner
+                // Always show in-app notification banner
                 const banner = document.getElementById('notificationBanner');
                 if (banner) {
                     banner.textContent = message;
@@ -824,8 +966,19 @@
                     }, 4000);
                 }
                 
-                // Show system notification if permission granted
-                if ('Notification' in window && Notification.permission === 'granted') {
+                // Only show system notification if:
+                // 1. App is not visible (user not actively using it)
+                // 2. Notifications are not silenced
+                // 3. Permission is granted
+                // 4. It's not a feedback message (like "Powiadomienia włączone")
+                const isFeedbackMessage = message.includes('włączone') || message.includes('wyłączone');
+                
+                if (!this.isAppVisible && 
+                    !this.notificationsSilenced && 
+                    !isFeedbackMessage &&
+                    'Notification' in window && 
+                    Notification.permission === 'granted') {
+                    
                     try {
                         new Notification('PSE Dashboard', {
                             body: message,
@@ -835,9 +988,12 @@
                             requireInteraction: false,
                             silent: false
                         });
+                        console.log('System notification sent:', message);
                     } catch (error) {
                         console.log('Failed to show notification:', error);
                     }
+                } else {
+                    console.log('System notification skipped - app visible or silenced');
                 }
             }
             
@@ -1035,6 +1191,9 @@
                 const refreshText = document.getElementById('refreshText');
                 const lastUpdateEl = document.getElementById('lastUpdate');
                 
+                // Update lastSeenTime when user manually refreshes
+                this.lastSeenTime = Date.now();
+                
                 // Show loading
                 refreshBtn.disabled = true;
                 refreshText.innerHTML = '<div class="loading-spinner"></div>Odświeżanie...';
@@ -1097,6 +1256,12 @@
         function refreshData() {
             if (app) {
                 app.refreshData();
+            }
+        }
+        
+        function toggleNotifications() {
+            if (app) {
+                app.toggleNotifications();
             }
         }
         
