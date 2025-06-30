@@ -177,18 +177,16 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin: 15px 4px;
-            padding: 4px;
-            width: calc(100% - 8px);
+            margin: 15px 0;
+            padding: 10px;
+            width: 100%;
             position: relative;
-            overflow: hidden;
         }
         
         #chart {
             width: 100%;
             height: 50vh;
             min-height: 300px;
-            position: relative;
         }
         
         .trends-section {
@@ -1526,14 +1524,12 @@
                         font: { size: 9 }
                     },
                     margin: { 
-                        t: 15, 
-                        r: window.innerWidth < 400 ? 25 : 45, 
+                        t: 10, 
+                        r: 15, 
                         b: 70, 
-                        l: window.innerWidth < 400 ? 40 : 55 
+                        l: window.innerWidth < 400 ? 35 : 50 
                     },
-                    autosize: true,
-                    width: null,
-                    height: null
+                    autosize: true
                 };
                 
                 this.currentData = data;
@@ -1555,17 +1551,9 @@
                     }
                 };
                 
-                // Rysuj z lepszą konfiguracją i pełnym dostosowaniem
+                // Rysuj wykres
                 Plotly.newPlot('chart', traces, layout, config).then(() => {
                     console.log('Plotly chart created successfully');
-                    // Force resize after creation to ensure proper fitting
-                    setTimeout(() => {
-                        Plotly.Plots.resize('chart');
-                        // Additional safety resize for mobile
-                        setTimeout(() => {
-                            Plotly.Plots.resize('chart');
-                        }, 200);
-                    }, 100);
                 }).catch(error => {
                     console.error('Plotly error:', error);
                 });
@@ -1698,20 +1686,7 @@
             handleResize() {
                 if (this.currentData && this.currentData.length > 0) {
                     console.log('Window resized, redrawing chart...');
-                    // Force Plotly resize first
-                    try {
-                        Plotly.Plots.resize('chart');
-                        // Additional resize after short delay for stability
-                        setTimeout(() => {
-                            Plotly.Plots.resize('chart');
-                        }, 150);
-                    } catch (error) {
-                        console.log('Plotly resize failed, redrawing:', error);
-                        // If resize fails, redraw completely with new dimensions
-                        setTimeout(() => {
-                            this.drawChart(this.currentData);
-                        }, 100);
-                    }
+                    this.drawChart(this.currentData);
                 }
             }
             
