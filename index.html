@@ -558,6 +558,26 @@
             opacity: 1;
         }
         
+        .test-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #ff9500 0%, #ff6b00 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            opacity: 0.8;
+        }
+        
+        .test-btn:active {
+            transform: translateY(1px);
+            opacity: 1;
+        }
+        
         .notification-banner {
             position: fixed;
             top: 60px;
@@ -659,6 +679,10 @@
             
             .update-btn {
                 background: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 100%);
+            }
+            
+            .test-btn {
+                background: linear-gradient(135deg, #ff9f0a 0%, #ff6b35 100%);
             }
             
             .install-btn {
@@ -880,16 +904,54 @@
             <button class="update-btn" id="updateBtn" onclick="forceUpdate()" title="Wymuś aktualizację aplikacji">
                 <span>🔄 Aktualizuj aplikację</span>
             </button>
+            <button class="test-btn" id="testBtn" onclick="testConnection()" title="Test połączenia z API PSE">
+                <span>🧪 Test API</span>
+            </button>
         </div>
     </div>
 
     <script>
         // PSE Dashboard Application
         class PSEApp {
+            // Settings and Custom Thresholds (moved before constructor)
+            loadSettings() {
+                const defaultSettings = {
+                    orangeThreshold: 500,
+                    redThreshold: 300,
+                    snoozeMinutes: 0
+                };
+                
+                // Check if localStorage is available
+                if (typeof Storage === "undefined" || !window.localStorage) {
+                    console.log('📋 localStorage not available, using defaults');
+                    return defaultSettings;
+                }
+                
+                try {
+                    const saved = localStorage.getItem('pse-dashboard-settings');
+                    if (saved) {
+                        const settings = { ...defaultSettings, ...JSON.parse(saved) };
+                        console.log('📋 Settings loaded:', settings);
+                        return settings;
+                    }
+                } catch (error) {
+                    console.log('Settings load error:', error);
+                }
+                
+                console.log('📋 Using default settings');
+                return defaultSettings;
+            }
+            
             constructor() {
                 this.ALERT_THRESHOLD_ORANGE = 500;
                 this.ALERT_THRESHOLD_RED = 300;
-                this.API_URL = 'https://api.raporty.pse.pl/api/pk5l-wp';
+                // Try different API URLs in case of CORS issues
+                this.API_URLS = [
+                    'https://api.raporty.pse.pl/api/pk5l-wp',
+                    'https://cors-anywhere.herokuapp.com/https://api.raporty.pse.pl/api/pk5l-wp',
+                    'https://corsproxy.io/?https://api.raporty.pse.pl/api/pk5l-wp'
+                ];
+                this.currentAPIIndex = 0;
                 this.alertHistory = { orange: [], red: [], lastResetDate: null };
                 this.currentData = null;
                 this.isOnline = true; // Start as online
@@ -928,7 +990,10 @@
                 
                 // Advanced PWA features
                 this.badgeSupported = 'setAppBadge' in navigator;
-                this.backgroundSyncSupported = 'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype;
+                this.backgroundSyncSupported = 'serviceWorker' in navigator && 
+                    typeof window !== 'undefined' && 
+                    'ServiceWorkerRegistration' in window && 
+                    'sync' in window.ServiceWorkerRegistration.prototype;
                 this.alertBadgeCount = 0;
                 
                 // Custom settings
@@ -940,13 +1005,27 @@
             }
             
             async init() {
-                console.log('=== PSE Dashboard Initializing ===');
+                console.log('=== PSE Dashboard Init Started ===');
+                console.log('⚙️ Init method called successfully');
                 
                 // Start as online by default
                 this.isOnline = true;
                 this.hideOfflineIndicator();
                 
+                console.log('📋 Loading settings...');
+                // Apply custom thresholds from settings (moved here to ensure proper order)
+                this.ALERT_THRESHOLD_ORANGE = this.settings.orangeThreshold;
+                this.ALERT_THRESHOLD_RED = this.settings.redThreshold;
+                console.log('📋 Applied thresholds:', { orange: this.ALERT_THRESHOLD_ORANGE, red: this.ALERT_THRESHOLD_RED });
+                
+                // Test basic functionality
+                console.log('🧪 Basic tests:');
+                console.log('  - Fetch available:', typeof fetch !== 'undefined');
+                console.log('  - Promise available:', typeof Promise !== 'undefined');
+                console.log('  - Settings loaded:', JSON.stringify(this.settings));
+                
                 // Register service worker with better error handling
+                console.log('🔧 Registering Service Worker...');
                 if ('serviceWorker' in navigator) {
                     try {
                         const swPaths = ['./sw.js', '/sw.js', 'sw.js'];
@@ -1004,9 +1083,13 @@
                 });
                 
                 // Initial data load and connection check
+                console.log('📊 Starting initial data load...');
+                // Test API connectivity first
+                await this.testAPIConnectivity();
                 await this.refreshData();
                 
                 // Setup day navigation dates
+                console.log('📅 Setting up day navigation...');
                 this.setupDayNavigation();
                 
                 // Auto refresh every 15 minutes (ZACHOWANE jak w oryginale)
@@ -1015,6 +1098,8 @@
                     console.log('⏰ Auto-refresh triggered (15-minute interval)');
                     this.refreshData();
                 }, 15 * 60 * 1000);
+                
+                console.log('=== PSE Dashboard Init Complete ===');
             }
             
             // Dodana metoda setupPWAInstallation
@@ -1298,6 +1383,8 @@
                 
                 // Setup notification button
                 this.updateNotificationButton();
+                
+                console.log('📋 Day navigation setup complete');
             }
             
             switchDay(dayOffset) {
@@ -1424,6 +1511,7 @@
             }
             
             async fetchData() {
+                console.log('🌐 === FETCH DATA START ===');
                 const now = new Date();
                 // WAŻNE: Po północy automatycznie przesunie się na nowy dzień! (jak w oryginale)
                 const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -1433,33 +1521,60 @@
                 const endDate = this.formatDate(new Date(startOfToday.getTime() + 3 * 24 * 60 * 60 * 1000));
                 
                 console.log(`🕐 Fetching data from ${startDate} to ${endDate} (auto-shifts at midnight)`);
+                console.log(`📅 Start of today: ${startOfToday.toISOString()}`);
                 
-                try {
-                    let url = `${this.API_URL}?$filter=plan_dtime ge '${startDate}' and plan_dtime le '${endDate}'&$orderby=plan_dtime&$first=200`;
+                // Try different API URLs in case of CORS issues
+                for (let i = 0; i < this.API_URLS.length; i++) {
+                    const apiUrl = this.API_URLS[i];
+                    console.log(`🔗 Trying API URL ${i + 1}/${this.API_URLS.length}: ${apiUrl}`);
                     
-                    let response;
                     try {
-                        response = await fetch(url);
-                    } catch (fetchError) {
-                        response = await fetch(this.API_URL + '?$first=200');
-                    }
-                    
-                    if (!response.ok) {
-                        response = await fetch(this.API_URL + '?$first=200');
-                    }
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.value && data.value.length > 0) {
-                            return this.processData(data.value);
+                        let url = `${apiUrl}?$filter=plan_dtime ge '${startDate}' and plan_dtime le '${endDate}'&$orderby=plan_dtime&$first=200`;
+                        console.log(`🔗 Full URL: ${url}`);
+                        
+                        let response;
+                        try {
+                            console.log('📡 Making API request with filter...');
+                            response = await fetch(url);
+                            console.log(`📡 Filtered response status: ${response.status}`);
+                        } catch (fetchError) {
+                            console.log('❌ Filtered request failed:', fetchError.message);
+                            console.log('📡 Trying simple API request...');
+                            response = await fetch(apiUrl + '?$first=200');
+                            console.log(`📡 Simple response status: ${response.status}`);
                         }
+                        
+                        if (response.ok) {
+                            console.log('✅ API response OK, parsing JSON...');
+                            const data = await response.json();
+                            console.log(`📊 Raw API data:`, { 
+                                hasValue: !!data.value, 
+                                valueLength: data.value?.length || 0,
+                                sampleItem: data.value?.[0] || null
+                            });
+                            
+                            if (data.value && data.value.length > 0) {
+                                console.log(`✅ SUCCESS with API URL ${i + 1}: ${apiUrl}`);
+                                this.currentAPIIndex = i; // Remember working API
+                                return this.processData(data.value);
+                            } else {
+                                console.log(`❌ API ${i + 1} returned empty data.value array`);
+                            }
+                        } else {
+                            console.log(`❌ API ${i + 1} returned status: ${response.status}`);
+                            if (response.status === 403 || response.status === 404) {
+                                const text = await response.text();
+                                console.log(`Response text: ${text.substring(0, 200)}...`);
+                            }
+                        }
+                    } catch (error) {
+                        console.error(`❌ Error with API ${i + 1} (${apiUrl}):`, error.message);
                     }
-                    
-                    return [];
-                } catch (error) {
-                    console.error('API Error:', error);
-                    return [];
                 }
+                
+                console.log('❌ All API URLs failed - returning empty array');
+                return [];
+            }
             }
             
             formatDate(date) {
@@ -1547,6 +1662,7 @@
                 data.forEach(item => {
                     const difference = item.reserve - item.required;
                     
+                    // Use custom thresholds
                     if (difference <= this.ALERT_THRESHOLD_RED || item.reserve < item.required) {
                         alertsRed.push({
                             time: item.timeStr,
@@ -1619,10 +1735,12 @@
                 // 1. There are truly new alerts
                 // 2. App is not currently visible 
                 // 3. Notifications are not silenced
-                // 4. User has granted permission
+                // 4. Notifications are not snoozed
+                // 5. User has granted permission
                 if (newAlertsCount > 0 && 
                     !this.isAppVisible && 
                     !this.notificationsSilenced &&
+                    !this.isNotificationsSnoozed() &&
                     'Notification' in window && 
                     Notification.permission === 'granted') {
                     
@@ -1637,7 +1755,14 @@
                     
                     this.showNotification(`🚨 ${newAlertsCount} ${newAlertsCount === 1 ? 'nowy alert' : 'nowe alerty'} rezerw mocy!`);
                 } else {
-                    console.log(`📱 Not sending notification - newAlertsCount: ${newAlertsCount}, isAppVisible: ${this.isAppVisible}, silenced: ${this.notificationsSilenced}`);
+                    let skipReason = 'unknown';
+                    if (newAlertsCount === 0) skipReason = 'no new alerts';
+                    else if (this.isAppVisible) skipReason = 'app visible';
+                    else if (this.notificationsSilenced) skipReason = 'notifications silenced';
+                    else if (this.isNotificationsSnoozed()) skipReason = 'notifications snoozed';
+                    else if (!('Notification' in window) || Notification.permission !== 'granted') skipReason = 'no permission';
+                    
+                    console.log(`📱 Not sending notification - reason: ${skipReason}`);
                 }
                 
                 // Update app badge with total alert count (if app not visible)
@@ -2009,6 +2134,38 @@
             }
         }
         
+        function toggleSettings() {
+            if (app) {
+                app.toggleSettings();
+            }
+        }
+        
+        function saveSettings() {
+            if (app) {
+                app.saveSettings();
+            }
+        }
+        
+        function resetSettings() {
+            if (app) {
+                app.resetSettings();
+            }
+        }
+        
+        function testConnection() {
+            if (app) {
+                app.testAPIConnectivity().then(result => {
+                    if (result) {
+                        app.showNotification('✅ Połączenie z API PSE działa!');
+                        app.triggerHaptic('success');
+                    } else {
+                        app.showNotification('❌ Nie można połączyć się z API PSE');
+                        app.triggerHaptic('error');
+                    }
+                });
+            }
+        }
+        
         // Debug functions (available in browser console)
         window.hideOfflineTest = function() {
             console.log('🧪 Manual test: hiding offline indicator');
@@ -2074,6 +2231,44 @@
             }
         };
         
+        // API testing functions
+        window.testAPI = async function() {
+            console.log('🧪 Testing all API URLs...');
+            const urls = [
+                'https://api.raporty.pse.pl/api/pk5l-wp?$first=1',
+                'https://cors-anywhere.herokuapp.com/https://api.raporty.pse.pl/api/pk5l-wp?$first=1',
+                'https://corsproxy.io/?https://api.raporty.pse.pl/api/pk5l-wp?$first=1'
+            ];
+            
+            for (let i = 0; i < urls.length; i++) {
+                try {
+                    console.log(`Testing URL ${i + 1}: ${urls[i]}`);
+                    const response = await fetch(urls[i]);
+                    console.log(`Response ${i + 1}: ${response.status} ${response.statusText}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(`Data ${i + 1}:`, data);
+                        break;
+                    }
+                } catch (error) {
+                    console.log(`Error ${i + 1}:`, error.message);
+                }
+            }
+        };
+        
+        window.testSimpleAPI = async function() {
+            try {
+                console.log('🧪 Testing simple API call...');
+                const response = await fetch('https://api.raporty.pse.pl/api/pk5l-wp?$first=1');
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                const text = await response.text();
+                console.log('Response text:', text.substring(0, 500));
+            } catch (error) {
+                console.log('Simple API test error:', error);
+            }
+        };
+        
         function forceUpdate() {
             console.log('Force update requested by user');
             
@@ -2121,6 +2316,8 @@
             console.log('SW Support:', 'serviceWorker' in navigator);
             console.log('Notification Support:', 'Notification' in window);
             console.log('Notification Permission:', 'Notification' in window ? Notification.permission : 'N/A');
+            console.log('localStorage Support:', typeof Storage !== "undefined" && !!window.localStorage);
+            console.log('CORS Support:', typeof fetch !== "undefined");
             
             // FORCE HIDE offline indicator at start
             const offlineIndicator = document.getElementById('offlineIndicator');
@@ -2128,9 +2325,18 @@
                 offlineIndicator.style.display = 'none';
                 offlineIndicator.classList.remove('show');
                 console.log('🟢 FORCED offline indicator hidden at startup');
+            } else {
+                console.log('❌ Offline indicator element not found');
             }
             
-            app = new PSEApp();
+            try {
+                console.log('🚀 Creating PSEApp instance...');
+                app = new PSEApp();
+                console.log('✅ PSEApp instance created successfully');
+            } catch (error) {
+                console.error('❌ Failed to create PSEApp:', error);
+                console.log('Error details:', { message: error.message, stack: error.stack });
+            }
         });
         
         // Inline manifest as fallback if external manifest.json fails
