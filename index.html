@@ -1,122 +1,4 @@
-setupNotificationPermission() {
-            // Will be triggered by user interaction later
-            console.log('Notification permission setup ready');
-        /* Small screen adjustments */
-        @media (max-width: 320px) {
-            .day-btn {
-                padding: 8px 4px;
-                font-size: 12px;
-            }
-            
-            .day-name {
-                margin-bottom: 1px;
-            }
-            
-            .day-date {
-                font-size: 10px;
-            }
-        }
-        
-        async requestNotificationPermission() {
-            if ('Notification' in window && Notification.permission === 'default') {
-                const permission = await Notification.requestPermission();
-                console.log('Notification permission:', permission);
-                return permission === 'granted';
-            }
-        }
-        
-        setupDayNavigation() {
-            const today = new Date();
-            
-            for (let i = 0; i < 3; i++) {
-                const date = new Date(today.getTime() + i * 24 * 60 * 60 * 1000);
-                const dayDateEl = document.getElementById(`dayDate${i}`);
-                
-                if (dayDateEl) {
-                    dayDateEl.textContent = date.toLocaleDateString('pl-PL', { 
-                        day: '2-digit', 
-                        month: '2-digit' 
-                    });
-                }
-            }
-        }
-        
-        switchDay(dayOffset) {
-            console.log(`Switching to day offset: ${dayOffset}`);
-            
-            // Update active button
-            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`dayBtn${dayOffset}`).classList.add('active');
-            
-            this.currentDayOffset = dayOffset;
-            
-            // Filter data for selected day
-            if (this.allData && this.allData.length > 0) {
-                const dayData = this.getDataForDay(dayOffset);
-                this.drawChart(dayData);
-                this.updateAlerts(dayData);
-            }
-            
-            // Request notification permission if first interaction
-            if (dayOffset !== 0 && !this.notificationRequested) {
-                this.requestNotificationPermission();
-                this.notificationRequested = true;
-            }
-        }
-        
-        getDataForDay(dayOffset) {
-            const startHour = dayOffset * 24;
-            const endHour = startHour + 24;
-            
-            const dayData = this.allData.slice(startHour, endHour);
-            console.log(`Day ${dayOffset} data: ${dayData.length} points`);
-            
-            return dayData;
-        }
-        
-        updateAlerts(dayData) {
-            const alerts = this.findAlerts(dayData);
-            const alertsList = document.getElementById('alertsList');
-            const alertBadge = document.getElementById('alertBadge');
-            const alertsTitle = document.getElementById('alertsTitle');
-            
-            // Update title based on day
-            const dayNames = ['Alerty - Dziś', 'Alerty - Jutro', 'Alerty - Pojutrze'];
-            alertsTitle.textContent = dayNames[this.currentDayOffset] || 'Alerty';
-            
-            const totalAlerts = alerts.orange.length + alerts.red.length;
-            
-            if (totalAlerts > 0) {
-                alertBadge.textContent = totalAlerts;
-                alertBadge.style.display = 'inline-block';
-                
-                let html = '';
-                
-                alerts.red.forEach(alert => {
-                    const time = new Date(alert.time).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-                    html += `<div class="alert-item alert-red">
-                        <strong>🔴 ${time}</strong><br>
-                        Rezerwa: ${alert.reserve.toFixed(0)} MW | Wymagana: ${alert.required.toFixed(0)} MW<br>
-                        <small>Margines: ${alert.difference.toFixed(0)} MW</small>
-                    </div>`;
-                });
-                
-                alerts.orange.forEach(alert => {
-                    const time = new Date(alert.time).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-                    html += `<div class="alert-item alert-orange">
-                        <strong>🟠 ${time}</strong><br>
-                        Rezerwa: ${alert.reserve.toFixed(0)} MW | Wymagana: ${alert.required.toFixed(0)} MW<br>
-                        <small>Margines: ${alert.difference.toFixed(0)} MW</small>
-                    </div>`;
-                });
-                
-                alertsList.innerHTML = html;
-            } else {
-                alertBadge.style.display = 'none';
-                alertsList.innerHTML = '<div class="no-alerts">✅ Brak alertów w tym dniu</div>';
-            }
-            return Notification.permission === 'granted';
-        }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
@@ -125,21 +7,13 @@ setupNotificationPermission() {
     <title>PSE Dashboard</title>
     
     <!-- PWA Meta Tags -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#c0392b">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="PSE Dashboard">
     
     <!-- iOS Icons -->
-    <link rel="apple-touch-icon" sizes="57x57" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTciIGhlaWdodD0iNTciIHZpZXdCb3g9IjAgMCA1NyA1NyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjU3IiBoZWlnaHQ9IjU3IiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzNyIgaGVpZ2h0PSIzNyI+CjxwYXRoIGQ9Ik0xOCAzTDMgMThMMTggMzNMMzMgMThMMTggM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
-    <link rel="apple-touch-icon" sizes="60x60" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
-    <link rel="apple-touch-icon" sizes="72x72" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIiIGhlaWdodD0iNzIiIHZpZXdCb3g9IjAgMCA3MiA3MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcyIiBoZWlnaHQ9IjcyIiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
-    <link rel="apple-touch-icon" sizes="76x76" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzYiIGhlaWdodD0iNzYiIHZpZXdCb3g9IjAgMCA3NiA3NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijc2IiBoZWlnaHQ9Ijc2IiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIxOCIgeT0iMTgiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
-    <link rel="apple-touch-icon" sizes="114x114" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTE0IiBoZWlnaHQ9IjExNCIgdmlld0JveD0iMCAwIDExNCAxMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMTQiIGhlaWdodD0iMTE0IiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIzNyIgeT0iMzciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
-    <link rel="apple-touch-icon" sizes="120x120" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI0MCIgeT0iNDAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
-    <link rel="apple-touch-icon" sizes="144x144" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjE0NCIgdmlld0JveD0iMCAwIDE0NCAxNDQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNDQiIGhlaWdodD0iMTQ0IiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI1MiIgeT0iNTIiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
-    <link rel="apple-touch-icon" sizes="152x152" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUyIiBoZWlnaHQ9IjE1MiIgdmlld0JveD0iMCAwIDE1MiAxNTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTIiIGhlaWdodD0iMTUyIiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI1NiIgeT0iNTYiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
     <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI3MCIgeT0iNzAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
     
     <!-- Plotly.js CDN -->
@@ -262,26 +136,14 @@ setupNotificationPermission() {
             opacity: 0.9;
         }
         
-        @media (max-width: 320px) {
-            .day-btn {
-                padding: 8px 4px;
-                font-size: 12px;
-            }
-            
-            .day-name {
-                margin-bottom: 1px;
-            }
-            
-            .day-date {
-                font-size: 10px;
-            }
-        }
-        
         .chart-container {
             background: white;
-            margin: 0;
-            padding: 12px;
-            border-bottom: 1px solid #e5e5ea;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 15px 0;
+            padding: 10px;
+            width: 100%;
+            position: relative;
         }
         
         #chart {
@@ -415,7 +277,6 @@ setupNotificationPermission() {
             transform: translateY(0);
         }
         
-        /* Loading spinner */
         .loading-spinner {
             display: inline-block;
             width: 16px;
@@ -441,9 +302,21 @@ setupNotificationPermission() {
             .status-bar,
             .chart-container,
             .alerts-section,
-            .refresh-section {
+            .refresh-section,
+            .day-navigation {
                 background-color: #1c1c1e;
                 border-color: #38383a;
+            }
+            
+            .day-btn {
+                background: #2c2c2e;
+                border-color: #38383a;
+                color: #ffffff;
+            }
+            
+            .day-btn.active {
+                background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+                color: white;
             }
             
             .alert-red {
@@ -452,6 +325,22 @@ setupNotificationPermission() {
             
             .alert-orange {
                 background-color: rgba(255, 149, 0, 0.15);
+            }
+        }
+        
+        /* Small screen adjustments */
+        @media (max-width: 320px) {
+            .day-btn {
+                padding: 8px 4px;
+                font-size: 12px;
+            }
+            
+            .day-name {
+                margin-bottom: 1px;
+            }
+            
+            .day-date {
+                font-size: 10px;
             }
         }
         
@@ -517,15 +406,15 @@ setupNotificationPermission() {
         <!-- Day Navigation -->
         <div class="day-navigation">
             <div class="day-buttons">
-                <button class="day-btn active" id="dayBtn0" onclick="app.switchDay(0)">
+                <button class="day-btn active" id="dayBtn0" onclick="switchDay(0)">
                     <div class="day-name">Dziś</div>
                     <div class="day-date" id="dayDate0"></div>
                 </button>
-                <button class="day-btn" id="dayBtn1" onclick="app.switchDay(1)">
+                <button class="day-btn" id="dayBtn1" onclick="switchDay(1)">
                     <div class="day-name">Jutro</div>
                     <div class="day-date" id="dayDate1"></div>
                 </button>
-                <button class="day-btn" id="dayBtn2" onclick="app.switchDay(2)">
+                <button class="day-btn" id="dayBtn2" onclick="switchDay(2)">
                     <div class="day-name">Pojutrze</div>
                     <div class="day-date" id="dayDate2"></div>
                 </button>
@@ -557,7 +446,7 @@ setupNotificationPermission() {
     </div>
 
     <script>
-        // PWA and iOS specific functionality
+        // PSE Dashboard Application
         class PSEApp {
             constructor() {
                 this.ALERT_THRESHOLD_ORANGE = 500;
@@ -577,45 +466,165 @@ setupNotificationPermission() {
             }
             
             async init() {
-                // Register service worker
+                console.log('=== PSE Dashboard Initializing ===');
+                
+                // Register service worker with better error handling
                 if ('serviceWorker' in navigator) {
                     try {
-                        this.serviceWorkerRegistration = await navigator.serviceWorker.register('/sw.js');
-                        console.log('Service Worker registered');
+                        const swPaths = ['./sw.js', '/sw.js', 'sw.js'];
+                        
+                        let swRegistered = false;
+                        for (const path of swPaths) {
+                            try {
+                                this.serviceWorkerRegistration = await navigator.serviceWorker.register(path);
+                                console.log('Service Worker registered successfully from:', path);
+                                swRegistered = true;
+                                break;
+                            } catch (pathError) {
+                                console.log(`Failed to register SW from ${path}:`, pathError.message);
+                            }
+                        }
+                        
+                        if (!swRegistered) {
+                            console.log('Service Worker registration failed from all paths - continuing without SW');
+                        }
                     } catch (error) {
-                        console.log('Service Worker registration failed:', error);
+                        console.log('Service Worker not supported or failed:', error);
                     }
                 }
                 
-                // Request notification permission
-                if ('Notification' in window && Notification.permission === 'default') {
-                    await Notification.requestPermission();
-                }
+                // Setup notification permission (user-triggered)
+                this.setupNotificationPermission();
                 
-                            
-            // Setup notification permission (user-triggered)
-            this.setupNotificationPermission();
-            
-            // Setup online/offline detection
+                // Setup online/offline detection
                 window.addEventListener('online', () => this.handleOnlineStatus(true));
                 window.addEventListener('offline', () => this.handleOnlineStatus(false));
                 
-                // Setup resize handler
+                // Setup resize handler with debounce
                 let resizeTimeout;
                 window.addEventListener('resize', () => {
                     clearTimeout(resizeTimeout);
                     resizeTimeout = setTimeout(() => {
-                        if (this.currentData) {
-                            this.drawChart(this.currentData);
-                        }
+                        this.handleResize();
                     }, 250);
                 });
                 
                 // Initial data load
                 await this.refreshData();
                 
+                // Setup day navigation dates
+                this.setupDayNavigation();
+                
                 // Auto refresh every 15 minutes
                 setInterval(() => this.refreshData(), 15 * 60 * 1000);
+            }
+            
+            setupNotificationPermission() {
+                // Check if notifications are supported
+                if (!('Notification' in window)) {
+                    console.log('This browser does not support notifications');
+                    return;
+                }
+                
+                console.log('Current notification permission:', Notification.permission);
+                
+                // Auto-request permission if default (but only on HTTPS)
+                if (Notification.permission === 'default' && location.protocol === 'https:') {
+                    // Request on first user interaction
+                    document.addEventListener('click', this.handleFirstClick.bind(this), { once: true });
+                }
+            }
+            
+            async handleFirstClick() {
+                try {
+                    console.log('User first click - requesting notification permission...');
+                    const permission = await Notification.requestPermission();
+                    console.log('Notification permission after request:', permission);
+                    
+                    if (permission === 'granted') {
+                        this.showWelcomeNotification();
+                    } else {
+                        console.log('Notification permission denied by user');
+                    }
+                } catch (error) {
+                    console.log('Notification permission request failed:', error);
+                }
+            }
+            
+            showWelcomeNotification() {
+                if (Notification.permission === 'granted') {
+                    try {
+                        new Notification('PSE Dashboard', {
+                            body: '🎉 Powiadomienia włączone! Dostaniesz alerty o rezerwach mocy.',
+                            icon: './apple-touch-icon-180x180.png',
+                            badge: './apple-touch-icon-180x180.png',
+                            tag: 'welcome',
+                            requireInteraction: false,
+                            silent: false
+                        });
+                        console.log('Welcome notification sent');
+                    } catch (error) {
+                        console.log('Failed to show welcome notification:', error);
+                    }
+                }
+            }
+            
+            async requestNotificationPermission() {
+                if ('Notification' in window && Notification.permission === 'default') {
+                    const permission = await Notification.requestPermission();
+                    console.log('Notification permission:', permission);
+                    return permission === 'granted';
+                }
+                return Notification.permission === 'granted';
+            }
+            
+            setupDayNavigation() {
+                const today = new Date();
+                
+                for (let i = 0; i < 3; i++) {
+                    const date = new Date(today.getTime() + i * 24 * 60 * 60 * 1000);
+                    const dayDateEl = document.getElementById(`dayDate${i}`);
+                    
+                    if (dayDateEl) {
+                        dayDateEl.textContent = date.toLocaleDateString('pl-PL', { 
+                            day: '2-digit', 
+                            month: '2-digit' 
+                        });
+                    }
+                }
+            }
+            
+            switchDay(dayOffset) {
+                console.log(`Switching to day offset: ${dayOffset}`);
+                
+                // Update active button
+                document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById(`dayBtn${dayOffset}`).classList.add('active');
+                
+                this.currentDayOffset = dayOffset;
+                
+                // Filter data for selected day
+                if (this.allData && this.allData.length > 0) {
+                    const dayData = this.getDataForDay(dayOffset);
+                    this.drawChart(dayData);
+                    this.updateAlerts(dayData);
+                }
+                
+                // Request notification permission if first interaction
+                if (dayOffset !== 0 && !this.notificationRequested) {
+                    this.requestNotificationPermission();
+                    this.notificationRequested = true;
+                }
+            }
+            
+            getDataForDay(dayOffset) {
+                const startHour = dayOffset * 24;
+                const endHour = startHour + 24;
+                
+                const dayData = this.allData.slice(startHour, endHour);
+                console.log(`Day ${dayOffset} data: ${dayData.length} points`);
+                
+                return dayData;
             }
             
             handleOnlineStatus(online) {
@@ -677,81 +686,47 @@ setupNotificationPermission() {
                 let processed = [];
                 
                 if (!rawData || rawData.length === 0) {
+                    console.log('No raw data to process');
                     return [];
                 }
                 
-                const futureData = rawData.filter(item => {
-                    if (item.plan_dtime) {
-                        const itemDate = new Date(item.plan_dtime);
-                        return itemDate >= startOfToday;
-                    }
-                    return false;
-                });
+                console.log(`Processing ${rawData.length} raw data records`);
+                console.log('Start of today:', startOfToday.toISOString());
                 
-                if (futureData.length === 0) {
-                    // Generate data from midnight today
-                    for (let i = 0; i < 72; i++) {
-                        const timestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
-                        const dataIndex = i % rawData.length;
-                        const item = rawData[dataIndex];
-                        
-                        if (item && item.req_pow_res) {
-                            let available = this.getAvailableReserve(item);
-                            
-                            if (available === 0 || isNaN(available)) {
-                                available = parseFloat(item.req_pow_res) + 1000;
-                            }
-                            
-                            if (!isNaN(available) && !isNaN(parseFloat(item.req_pow_res))) {
-                                processed.push({
-                                    time: timestamp,
-                                    timeStr: this.formatDateTime(timestamp),
-                                    reserve: available,
-                                    required: parseFloat(item.req_pow_res)
-                                });
-                            }
-                        }
-                    }
-                } else {
-                    // Use real future data
-                    futureData.forEach(item => {
-                        if (item.req_pow_res) {
-                            const timestamp = new Date(item.plan_dtime);
-                            let available = this.getAvailableReserve(item);
-                            
-                            if (available === 0 || isNaN(available)) {
-                                available = parseFloat(item.req_pow_res) + 1000;
-                            }
-                            
-                            if (!isNaN(available) && !isNaN(parseFloat(item.req_pow_res))) {
-                                processed.push({
-                                    time: timestamp,
-                                    timeStr: this.formatDateTime(timestamp),
-                                    reserve: available,
-                                    required: parseFloat(item.req_pow_res)
-                                });
-                            }
-                        }
-                    });
+                // ZAWSZE generuj pełne 72 godziny dla lepszej wizualizacji
+                console.log('Generating full 72 hours from midnight today...');
+                
+                for (let i = 0; i < 72; i++) {
+                    const timestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
                     
-                    // Pad to 72 hours if needed
-                    if (processed.length > 0 && processed.length < 72) {
-                        const lastData = processed[processed.length - 1];
+                    let item;
+                    // Użyj rzeczywistych danych jeśli dostępne
+                    const dataIndex = i % Math.max(rawData.length, 1);
+                    item = rawData[dataIndex] || rawData[0];
+                    
+                    if (item && item.req_pow_res) {
+                        let available = this.getAvailableReserve(item);
                         
-                        for (let i = processed.length; i < 72; i++) {
-                            const newTimestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
+                        if (available === 0 || isNaN(available)) {
+                            available = parseFloat(item.req_pow_res) + 1000;
+                        }
+                        
+                        if (!isNaN(available) && !isNaN(parseFloat(item.req_pow_res))) {
+                            const timeStr = this.formatDateTime(timestamp);
+                            
                             processed.push({
-                                time: newTimestamp,
-                                timeStr: this.formatDateTime(newTimestamp),
-                                reserve: lastData.reserve,
-                                required: lastData.required
+                                time: timestamp,
+                                timeStr: timeStr,
+                                reserve: available,
+                                required: parseFloat(item.req_pow_res)
                             });
                         }
                     }
                 }
                 
-                if (processed.length > 72) {
-                    processed = processed.slice(0, 72);
+                console.log(`Generated ${processed.length} processed points`);
+                if (processed.length > 0) {
+                    console.log('Time range:', processed[0].timeStr, 'to', processed[processed.length - 1].timeStr);
                 }
                 
                 return processed.sort((a, b) => a.time - b.time);
@@ -773,7 +748,6 @@ setupNotificationPermission() {
                 const day = String(date.getDate()).padStart(2, '0');
                 const hour = String(date.getHours()).padStart(2, '0');
                 
-                // Format ISO-like ale bez sekund i bez T - lepiej dla Plotly
                 return `${year}-${month}-${day} ${hour}:00:00`;
             }
             
@@ -841,27 +815,37 @@ setupNotificationPermission() {
             showNotification(message) {
                 // Show in-app notification banner
                 const banner = document.getElementById('notificationBanner');
-                banner.textContent = message;
-                banner.classList.add('show');
+                if (banner) {
+                    banner.textContent = message;
+                    banner.classList.add('show');
+                    
+                    setTimeout(() => {
+                        banner.classList.remove('show');
+                    }, 4000);
+                }
                 
-                setTimeout(() => {
-                    banner.classList.remove('show');
-                }, 4000);
-                
-                // Show system notification
+                // Show system notification if permission granted
                 if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification('PSE Dashboard', {
-                        body: message,
-                        icon: '/apple-touch-icon-180x180.png',
-                        badge: '/apple-touch-icon-180x180.png'
-                    });
+                    try {
+                        new Notification('PSE Dashboard', {
+                            body: message,
+                            icon: './apple-touch-icon-180x180.png',
+                            badge: './apple-touch-icon-180x180.png',
+                            tag: 'pse-alert',
+                            requireInteraction: false,
+                            silent: false
+                        });
+                    } catch (error) {
+                        console.log('Failed to show notification:', error);
+                    }
                 }
             }
             
             drawChart(data) {
+                console.log(`Drawing chart with ${data.length} data points for day offset ${this.currentDayOffset}`);
+                
                 if (!data || data.length === 0) {
-                    document.getElementById('chart').innerHTML = 
-                        '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #8e8e93;">Brak danych do wyświetlenia</div>';
+                    document.getElementById('chart').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #8e8e93;">Brak danych do wyświetlenia</div>';
                     return;
                 }
                 
@@ -869,18 +853,18 @@ setupNotificationPermission() {
                 const reserves = data.map(d => d.reserve);
                 const required = data.map(d => d.required);
                 
-                // Find alerts for chart lines
+                // Znajdź alerty dla wykresów linii - tylko dla aktualnego dnia
                 const alerts = this.findAlerts(data);
                 const shapes = [];
                 
-                // Add alert lines
+                // Dodaj linie alertów
                 alerts.orange.forEach(alert => {
                     shapes.push({
                         type: 'line',
                         x0: alert.time,
                         y0: 0,
                         x1: alert.time,
-                        y1: Math.max(...reserves) * 1.1,
+                        y1: Math.max(...reserves, 1500) * 1.1,
                         line: { color: '#ff9500', width: 2, dash: 'dot' }
                     });
                 });
@@ -891,12 +875,12 @@ setupNotificationPermission() {
                         x0: alert.time,
                         y0: 0,
                         x1: alert.time,
-                        y1: Math.max(...reserves) * 1.1,
+                        y1: Math.max(...reserves, 1500) * 1.1,
                         line: { color: '#ff3b30', width: 3, dash: 'dot' }
                     });
                 });
                 
-                // Current hour marker
+                // Znajdź aktualną godzinę
                 const now = new Date();
                 const currentHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours());
                 const currentHourStr = this.formatDateTime(currentHour);
@@ -920,9 +904,9 @@ setupNotificationPermission() {
                     }
                 ];
                 
-                // Add current hour marker if found
+                // Dodaj marker aktualnej godziny jeśli jest w zakresie
                 const currentIndex = times.indexOf(currentHourStr);
-                if (currentIndex !== -1) {
+                if (currentIndex !== -1 && this.currentDayOffset === 0) {
                     traces.push({
                         x: [currentHourStr],
                         y: [reserves[currentIndex]],
@@ -933,6 +917,7 @@ setupNotificationPermission() {
                     });
                 }
                 
+                // Layout z lepszym formatowaniem dla pojedynczego dnia
                 const layout = {
                     title: false,
                     shapes: shapes,
@@ -941,41 +926,70 @@ setupNotificationPermission() {
                         tickangle: -45,
                         showgrid: true,
                         gridcolor: '#f0f0f0',
-                        tickfont: { size: 11 }
+                        tickfont: { size: 10 },
+                        // Dla 24h - pokazuj co 2-3 godziny
+                        tickmode: 'linear',
+                        tick0: times[0],
+                        dtick: window.innerWidth < 600 ? 4 * 3600000 : 2 * 3600000, // 4h na mobile, 2h na desktop
+                        range: [times[0], times[times.length - 1]]
                     },
                     yaxis: {
-                        title: 'MW',
+                        title: window.innerWidth < 400 ? 'MW' : 'Rezerwa mocy [MW]',
                         showgrid: true,
                         gridcolor: '#f0f0f0',
-                        tickfont: { size: 11 }
+                        tickfont: { size: 10 }
                     },
                     plot_bgcolor: 'white',
                     paper_bgcolor: 'white',
                     hovermode: 'x unified',
                     legend: {
                         orientation: 'h',
-                        y: -0.2,
+                        y: -0.25,
                         x: 0.5,
                         xanchor: 'center',
-                        font: { size: 10 }
+                        font: { size: 9 }
                     },
-                    margin: { t: 20, r: 20, b: 60, l: 50 },
+                    margin: { 
+                        t: 10, 
+                        r: 15, 
+                        b: 70, 
+                        l: window.innerWidth < 400 ? 35 : 50 
+                    },
                     autosize: true
                 };
                 
+                // Zapisz dane dla resize
                 this.currentData = data;
                 
-                Plotly.newPlot('chart', traces, layout, {
+                // Konfiguracja Plotly dla mobile
+                const config = {
                     responsive: true,
-                    displayModeBar: false
+                    displayModeBar: false,
+                    scrollZoom: false,
+                    doubleClick: false,
+                    showTips: false,
+                    staticPlot: false
+                };
+                
+                // Rysuj z lepszą konfiguracją
+                Plotly.newPlot('chart', traces, layout, config).then(() => {
+                    console.log('Plotly chart created successfully');
+                }).catch(error => {
+                    console.error('Plotly error:', error);
                 });
             }
             
-            updateAlertsList() {
+            updateAlerts(dayData) {
+                const alerts = this.findAlerts(dayData);
                 const alertsList = document.getElementById('alertsList');
                 const alertBadge = document.getElementById('alertBadge');
+                const alertsTitle = document.getElementById('alertsTitle');
                 
-                const totalAlerts = this.alertHistory.orange.length + this.alertHistory.red.length;
+                // Update title based on day
+                const dayNames = ['Alerty - Dziś', 'Alerty - Jutro', 'Alerty - Pojutrze'];
+                alertsTitle.textContent = dayNames[this.currentDayOffset] || 'Alerty';
+                
+                const totalAlerts = alerts.orange.length + alerts.red.length;
                 
                 if (totalAlerts > 0) {
                     alertBadge.textContent = totalAlerts;
@@ -983,7 +997,7 @@ setupNotificationPermission() {
                     
                     let html = '';
                     
-                    this.alertHistory.red.sort((a, b) => a.time.localeCompare(b.time)).forEach(alert => {
+                    alerts.red.forEach(alert => {
                         const time = new Date(alert.time).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
                         html += `<div class="alert-item alert-red">
                             <strong>🔴 ${time}</strong><br>
@@ -992,7 +1006,7 @@ setupNotificationPermission() {
                         </div>`;
                     });
                     
-                    this.alertHistory.orange.sort((a, b) => a.time.localeCompare(b.time)).forEach(alert => {
+                    alerts.orange.forEach(alert => {
                         const time = new Date(alert.time).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
                         html += `<div class="alert-item alert-orange">
                             <strong>🟠 ${time}</strong><br>
@@ -1004,7 +1018,7 @@ setupNotificationPermission() {
                     alertsList.innerHTML = html;
                 } else {
                     alertBadge.style.display = 'none';
-                    alertsList.innerHTML = '<div class="no-alerts">✅ Brak alertów dzisiaj</div>';
+                    alertsList.innerHTML = '<div class="no-alerts">✅ Brak alertów w tym dniu</div>';
                 }
             }
             
@@ -1031,11 +1045,18 @@ setupNotificationPermission() {
                     const now = new Date().toLocaleString('pl-PL');
                     
                     if (data && data.length > 0) {
-                        this.drawChart(data);
+                        console.log(`Loaded ${data.length} data points`);
+                        
+                        // Save all data
+                        this.allData = data;
+                        
+                        // Show data for currently selected day
+                        const dayData = this.getDataForDay(this.currentDayOffset);
+                        this.drawChart(dayData);
                         
                         const alerts = this.findAlerts(data);
                         this.updateAlertHistory(alerts);
-                        this.updateAlertsList();
+                        this.updateAlerts(dayData); // Show alerts only for current day
                         
                         this.updateStatus(true, `Połączono | ${data.length} punktów`);
                         lastUpdateEl.textContent = now.split(' ')[1].substring(0, 5);
@@ -1043,7 +1064,7 @@ setupNotificationPermission() {
                         this.updateStatus(false, 'Brak danych');
                         document.getElementById('chart').innerHTML = 
                             '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #ff3b30; text-align: center;">❌ Brak połączenia z API PSE<br><small>Sprawdź połączenie internetowe</small></div>';
-                        this.updateAlertsList();
+                        this.updateAlerts([]); // Clear alerts
                     }
                 } catch (error) {
                     console.error('Refresh error:', error);
@@ -1054,11 +1075,24 @@ setupNotificationPermission() {
                     refreshText.textContent = 'Odśwież';
                 }
             }
+            
+            // Obsługa resize z debounce
+            handleResize() {
+                if (this.currentData && this.currentData.length > 0) {
+                    console.log('Window resized, redrawing chart...');
+                    this.drawChart(this.currentData);
+                }
+            }
         }
         
-        // Global refresh function for button
+        // Global variables and functions
         let app;
-        let resizeTimeout;
+        
+        function switchDay(dayOffset) {
+            if (app) {
+                app.switchDay(dayOffset);
+            }
+        }
         
         function refreshData() {
             if (app) {
@@ -1068,55 +1102,85 @@ setupNotificationPermission() {
         
         // Initialize app when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('=== PSE Dashboard Initializing ===');
+            console.log('Location:', window.location.href);
+            console.log('User Agent:', navigator.userAgent);
+            console.log('SW Support:', 'serviceWorker' in navigator);
+            console.log('Notification Support:', 'Notification' in window);
+            console.log('Notification Permission:', 'Notification' in window ? Notification.permission : 'N/A');
+            
             app = new PSEApp();
         });
         
-        // PWA install prompt
-        let deferredPrompt;
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Show custom install button if needed
-            console.log('PWA install prompt available');
-        });
-    </script>
-    
-    <!-- PWA Manifest (should be in separate file in production) -->
-    <script type="application/json" id="manifest">
-    {
-        "name": "PSE Dashboard",
-        "short_name": "PSE",
-        "description": "Monitoring prognozowanych rezerw mocy w Krajowym Systemie Elektroenergetycznym",
-        "start_url": "/",
-        "display": "standalone",
-        "background_color": "#c0392b",
-        "theme_color": "#c0392b",
-        "orientation": "portrait-primary",
-        "icons": [
-            {
-                "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI3NiIgeT0iNzYiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==",
-                "sizes": "192x192",
-                "type": "image/svg+xml",
-                "purpose": "any maskable"
-            },
-            {
-                "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIyMzYiIHk9IjIzNiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIj4KPHBhdGggZD0iTTIwIDNMMyAyMEwyMCAzN0wzNyAyMEwyMCAzWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4KPC9zdmc+",
-                "sizes": "512x512",
-                "type": "image/svg+xml",
-                "purpose": "any maskable"
-            }
-        ]
-    }
-    </script>
-    
-    <script>
-        // Create and inject manifest
-        const manifestContent = document.getElementById('manifest').textContent;
-        const manifestBlob = new Blob([manifestContent], { type: 'application/json' });
-        const manifestURL = URL.createObjectURL(manifestBlob);
-        document.querySelector('link[rel="manifest"]').href = manifestURL;
+        // Inline manifest as fallback if external manifest.json fails
+        const inlineManifest = {
+            "name": "PSE Dashboard - Monitoring Rezerw Mocy",
+            "short_name": "PSE Dashboard",
+            "description": "Monitoring prognozowanych rezerw mocy w Krajowym Systemie Elektroenergetycznym",
+            "start_url": "./",
+            "display": "standalone",
+            "orientation": "portrait-primary",
+            "background_color": "#c0392b",
+            "theme_color": "#c0392b",
+            "lang": "pl",
+            "scope": "./",
+            "categories": ["utilities", "productivity", "business"],
+            "icons": [
+                {
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI3NiIgeT0iNzYiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==",
+                    "sizes": "192x192",
+                    "type": "image/svg+xml",
+                    "purpose": "any"
+                },
+                {
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIyMzYiIHk9IjIzNiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIj4KPHBhdGggZD0iTTIwIDNMMyAyMEwyMCAzN0wzNyAyMEwyMCAzWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4KPC9zdmc+",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml",
+                    "purpose": "any"
+                }
+            ],
+            "shortcuts": [
+                {
+                    "name": "Aktualne alerty",
+                    "short_name": "Alerty",
+                    "description": "Zobacz aktualne alerty rezerw mocy",
+                    "url": "./#alerts"
+                }
+            ]
+        };
+
+        // Try to register inline manifest if external fails
+        function setupManifest() {
+            // Check if external manifest loads
+            fetch('./manifest.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('External manifest failed');
+                    }
+                    console.log('External manifest.json loaded successfully');
+                })
+                .catch(error => {
+                    console.log('External manifest failed, using inline manifest:', error);
+                    
+                    // Create blob from inline manifest
+                    const manifestBlob = new Blob([JSON.stringify(inlineManifest)], { type: 'application/json' });
+                    const manifestURL = URL.createObjectURL(manifestBlob);
+                    
+                    // Update manifest link
+                    const manifestLink = document.querySelector('link[rel="manifest"]');
+                    if (manifestLink) {
+                        manifestLink.href = manifestURL;
+                        console.log('Inline manifest registered');
+                    }
+                });
+        }
+
+        // Setup manifest on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupManifest);
+        } else {
+            setupManifest();
+        }
     </script>
 </body>
 </html>
