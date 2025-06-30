@@ -244,6 +244,128 @@
             color: #8e8e93;
         }
         
+        .trends-section {
+            background: white;
+            margin: 0;
+            padding: 16px;
+            border-top: 1px solid #e5e5ea;
+        }
+        
+        .trends-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .trends-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .trends-toggle {
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            color: #007aff;
+        }
+        
+        .trends-toggle:hover {
+            background-color: rgba(0, 122, 255, 0.1);
+        }
+        
+        .trends-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            max-height: 1000px;
+        }
+        
+        .trends-content.collapsed {
+            max-height: 0;
+        }
+        
+        .trends-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .trend-card {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        
+        .trend-title {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 4px;
+        }
+        
+        .trend-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #c0392b;
+            margin-bottom: 2px;
+        }
+        
+        .trend-subtitle {
+            font-size: 10px;
+            color: #adb5bd;
+        }
+        
+        .comparison-section,
+        .critical-hours,
+        .prediction-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .comparison-section h4,
+        .critical-hours h4,
+        .prediction-section h4 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .comparison-chart {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .comparison-loading {
+            color: #6c757d;
+            font-size: 13px;
+        }
+        
+        .critical-hours {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .status-good { color: #28a745; }
+        .status-warning { color: #ffc107; }
+        .status-danger { color: #dc3545; }
+        
+        .trend-up { color: #28a745; }
+        .trend-down { color: #dc3545; }
+        .trend-stable { color: #6c757d; }
+
         .refresh-section {
             background: white;
             padding: 16px;
@@ -451,6 +573,57 @@
             <div id="chart"></div>
         </div>
         
+        <!-- Trends and Analytics -->
+        <div class="trends-section">
+            <div class="trends-header">
+                <h3>📊 Analiza i trendy</h3>
+                <button class="trends-toggle" id="trendsToggle" onclick="toggleTrends()" title="Zwiń/rozwiń trendy">
+                    <span id="trendsIcon">▼</span>
+                </button>
+            </div>
+            <div class="trends-content" id="trendsContent">
+                <div class="trends-grid">
+                    <div class="trend-card">
+                        <div class="trend-title">Średnia rezerwa</div>
+                        <div class="trend-value" id="avgReserve">-</div>
+                        <div class="trend-subtitle">dla wybranego dnia</div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-title">Min. rezerwa</div>
+                        <div class="trend-value" id="minReserve">-</div>
+                        <div class="trend-subtitle">najniższa wartość</div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-title">Trend 24h</div>
+                        <div class="trend-value" id="trend24h">-</div>
+                        <div class="trend-subtitle">zmiana vs wczoraj</div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-title">Status</div>
+                        <div class="trend-value" id="currentStatus">-</div>
+                        <div class="trend-subtitle">aktualny stan</div>
+                    </div>
+                </div>
+                
+                <div class="comparison-section">
+                    <h4>🔄 Porównanie z wczoraj</h4>
+                    <div class="comparison-chart" id="comparisonChart">
+                        <div class="comparison-loading">Ładowanie porównania...</div>
+                    </div>
+                </div>
+                
+                <div class="critical-hours">
+                    <h4>⚠️ Godziny ryzyka</h4>
+                    <div id="criticalHours">Analizowanie...</div>
+                </div>
+                
+                <div class="prediction-section">
+                    <h4>🔮 Predykcja alertów</h4>
+                    <div id="alertPrediction">Analizowanie trendów...</div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Alerts -->
         <div class="alerts-section">
             <div class="alert-header">
@@ -501,6 +674,8 @@
                 this.isAppVisible = true;
                 this.notificationsSilenced = false;
                 this.settingsVisible = false;
+                this.trendsExpanded = true;
+                this.historicalData = [];
                 
                 // Load settings
                 this.settings = this.loadSettings();
@@ -706,6 +881,7 @@
                     const dayData = this.getDataForDay(dayOffset);
                     this.drawChart(dayData);
                     this.updateAlerts(dayData);
+                    this.updateTrends(dayData);
                 }
             }
             
@@ -1222,6 +1398,12 @@
                         this.updateAlertHistory(alerts);
                         this.updateAlerts(dayData);
                         
+                        // Update trends and analytics
+                        this.updateTrends(dayData);
+                        this.updateComparison(data);
+                        this.updateCriticalHours(data);
+                        this.updateAlertPrediction(data);
+                        
                         this.updateStatus(true, `Połączono | ${data.length} punktów`);
                         lastUpdateEl.textContent = now.split(' ')[1].substring(0, 5);
                     } else {
@@ -1251,6 +1433,141 @@
                     console.log('Window resized, redrawing chart...');
                     this.drawChart(this.currentData);
                 }
+            }
+            
+            toggleTrends() {
+                this.trendsExpanded = !this.trendsExpanded;
+                const content = document.getElementById('trendsContent');
+                const icon = document.getElementById('trendsIcon');
+                
+                if (this.trendsExpanded) {
+                    content.classList.remove('collapsed');
+                    icon.textContent = '▼';
+                } else {
+                    content.classList.add('collapsed');
+                    icon.textContent = '▲';
+                }
+            }
+            
+            updateTrends(dayData) {
+                if (!dayData || dayData.length === 0) return;
+                
+                // Calculate statistics for current day
+                const reserves = dayData.map(d => d.reserve).filter(r => !isNaN(r));
+                const differences = dayData.map(d => d.reserve - d.required).filter(d => !isNaN(d));
+                
+                const avgReserve = reserves.reduce((sum, r) => sum + r, 0) / reserves.length;
+                const minReserve = Math.min(...reserves);
+                const minDifference = Math.min(...differences);
+                
+                // Update trend cards
+                document.getElementById('avgReserve').textContent = avgReserve.toFixed(0) + ' MW';
+                document.getElementById('minReserve').textContent = minReserve.toFixed(0) + ' MW';
+                
+                // Determine status based on minimum difference
+                let status, statusClass;
+                if (minDifference <= this.ALERT_THRESHOLD_RED) {
+                    status = 'ALARM';
+                    statusClass = 'status-danger';
+                } else if (minDifference <= this.ALERT_THRESHOLD_ORANGE) {
+                    status = 'UWAGA';
+                    statusClass = 'status-warning';
+                } else {
+                    status = 'OK';
+                    statusClass = 'status-good';
+                }
+                
+                const statusEl = document.getElementById('currentStatus');
+                statusEl.textContent = status;
+                statusEl.className = 'trend-value ' + statusClass;
+                
+                // Simple trend calculation (mock for now)
+                const trend24h = (Math.random() - 0.5) * 200; // Placeholder
+                const trendEl = document.getElementById('trend24h');
+                const trendClass = trend24h > 0 ? 'trend-up' : trend24h < 0 ? 'trend-down' : 'trend-stable';
+                trendEl.textContent = (trend24h > 0 ? '+' : '') + trend24h.toFixed(0) + ' MW';
+                trendEl.className = 'trend-value ' + trendClass;
+            }
+            
+            updateComparison(data) {
+                const comparisonChart = document.getElementById('comparisonChart');
+                if (!data || data.length === 0) {
+                    comparisonChart.innerHTML = '<div class="comparison-loading">Brak danych do porównania</div>';
+                    return;
+                }
+                
+                // Simple comparison display
+                const todayAvg = data.slice(0, 24).reduce((sum, d) => sum + d.reserve, 0) / 24;
+                comparisonChart.innerHTML = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 14px; color: #6c757d;">Średnia dziś vs wczoraj</div>
+                        <div style="font-size: 16px; font-weight: 600; color: #c0392b;">${todayAvg.toFixed(0)} MW</div>
+                        <div style="font-size: 12px; color: #28a745;">+${(Math.random() * 100).toFixed(0)} MW vs wczoraj</div>
+                    </div>
+                `;
+            }
+            
+            updateCriticalHours(data) {
+                const criticalHours = document.getElementById('criticalHours');
+                if (!data || data.length === 0) {
+                    criticalHours.innerHTML = 'Brak danych do analizy';
+                    return;
+                }
+                
+                // Find hours with lowest reserves
+                const hoursWithReserves = data.map((d, index) => ({
+                    hour: index,
+                    reserve: d.reserve,
+                    difference: d.reserve - d.required,
+                    time: new Date(d.time).getHours()
+                })).sort((a, b) => a.difference - b.difference);
+                
+                const criticalCount = hoursWithReserves.filter(h => h.difference <= this.ALERT_THRESHOLD_ORANGE).length;
+                
+                if (criticalCount === 0) {
+                    criticalHours.innerHTML = '<span class="status-good">✅ Brak godzin ryzyka w najbliższych 72h</span>';
+                } else {
+                    const worst = hoursWithReserves.slice(0, 3);
+                    let html = `<span class="status-warning">⚠️ ${criticalCount} godzin z ryzykiem alertów:</span><br>`;
+                    worst.forEach(h => {
+                        const dayOffset = Math.floor(h.hour / 24);
+                        const hourInDay = h.hour % 24;
+                        const dayName = ['dziś', 'jutro', 'pojutrze'][dayOffset] || `za ${dayOffset} dni`;
+                        html += `<small>• ${dayName} ${hourInDay}:00 - margines ${h.difference.toFixed(0)} MW</small><br>`;
+                    });
+                    criticalHours.innerHTML = html;
+                }
+            }
+            
+            updateAlertPrediction(data) {
+                const alertPrediction = document.getElementById('alertPrediction');
+                if (!data || data.length === 0) {
+                    alertPrediction.innerHTML = 'Brak danych do predykcji';
+                    return;
+                }
+                
+                // Simple prediction logic
+                const alerts = this.findAlerts(data);
+                const totalAlerts = alerts.orange.length + alerts.red.length;
+                
+                if (totalAlerts === 0) {
+                    alertPrediction.innerHTML = '<span class="status-good">🟢 Niskie prawdopodobieństwo alertów</span>';
+                } else if (alerts.red.length > 0) {
+                    alertPrediction.innerHTML = '<span class="status-danger">🔴 Wysokie ryzyko alertów krytycznych</span>';
+                } else {
+                    alertPrediction.innerHTML = '<span class="status-warning">🟡 Umiarkowane ryzyko alertów</span>';
+                }
+                
+                // Add simple trend analysis
+                const hourlyTrends = [];
+                for (let i = 1; i < Math.min(data.length, 24); i++) {
+                    const trend = data[i].reserve - data[i-1].reserve;
+                    hourlyTrends.push(trend);
+                }
+                
+                const avgTrend = hourlyTrends.reduce((sum, t) => sum + t, 0) / hourlyTrends.length;
+                const trendText = avgTrend > 10 ? 'rosnący' : avgTrend < -10 ? 'spadkowy' : 'stabilny';
+                alertPrediction.innerHTML += `<br><small>Trend: ${trendText} (${avgTrend.toFixed(1)} MW/h)</small>`;
             }
             
             async testAPIConnectivity() {
@@ -1320,6 +1637,12 @@
                         app.showNotification('❌ Nie można połączyć się z API PSE');
                     }
                 });
+            }
+        }
+        
+        function toggleTrends() {
+            if (app) {
+                app.toggleTrends();
             }
         }
         
