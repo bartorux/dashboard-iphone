@@ -1504,8 +1504,7 @@
                         tickfont: { size: 10 },
                         tickmode: 'linear',
                         tick0: times[0],
-                        dtick: window.innerWidth < 600 ? 4 * 3600000 : 2 * 3600000,
-                        range: [times[0], times[times.length - 1]]
+                        dtick: window.innerWidth < 600 ? 4 * 3600000 : 2 * 3600000
                     },
                     yaxis: {
                         title: window.innerWidth < 400 ? 'MW' : 'Rezerwa mocy [MW]',
@@ -1525,7 +1524,7 @@
                     },
                     margin: { 
                         t: 10, 
-                        r: 15, 
+                        r: 50, 
                         b: 70, 
                         l: window.innerWidth < 400 ? 35 : 50 
                     },
