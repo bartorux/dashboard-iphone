@@ -177,9 +177,9 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin: 15px 8px;
-            padding: 8px;
-            width: calc(100% - 16px);
+            margin: 15px 4px;
+            padding: 4px;
+            width: calc(100% - 8px);
             position: relative;
             overflow: hidden;
         }
@@ -188,6 +188,7 @@
             width: 100%;
             height: 50vh;
             min-height: 300px;
+            position: relative;
         }
         
         .trends-section {
@@ -1526,11 +1527,13 @@
                     },
                     margin: { 
                         t: 15, 
-                        r: 20, 
+                        r: window.innerWidth < 400 ? 25 : 45, 
                         b: 70, 
                         l: window.innerWidth < 400 ? 40 : 55 
                     },
-                    autosize: true
+                    autosize: true,
+                    width: null,
+                    height: null
                 };
                 
                 this.currentData = data;
@@ -1558,6 +1561,10 @@
                     // Force resize after creation to ensure proper fitting
                     setTimeout(() => {
                         Plotly.Plots.resize('chart');
+                        // Additional safety resize for mobile
+                        setTimeout(() => {
+                            Plotly.Plots.resize('chart');
+                        }, 200);
                     }, 100);
                 }).catch(error => {
                     console.error('Plotly error:', error);
@@ -1694,10 +1701,16 @@
                     // Force Plotly resize first
                     try {
                         Plotly.Plots.resize('chart');
+                        // Additional resize after short delay for stability
+                        setTimeout(() => {
+                            Plotly.Plots.resize('chart');
+                        }, 150);
                     } catch (error) {
                         console.log('Plotly resize failed, redrawing:', error);
-                        // If resize fails, redraw completely
-                        this.drawChart(this.currentData);
+                        // If resize fails, redraw completely with new dimensions
+                        setTimeout(() => {
+                            this.drawChart(this.currentData);
+                        }, 100);
                     }
                 }
             }
