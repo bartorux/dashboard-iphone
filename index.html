@@ -2336,6 +2336,20 @@
             } catch (error) {
                 console.error('❌ Failed to create PSEApp:', error);
                 console.log('Error details:', { message: error.message, stack: error.stack });
+                
+                // Show error message to user
+                const chart = document.getElementById('chart');
+                if (chart) {
+                    chart.innerHTML = `
+                        <div style="padding: 20px; text-align: center; color: #e74c3c;">
+                            <h3>❌ Błąd inicjalizacji aplikacji</h3>
+                            <p>Szczegóły: ${error.message}</p>
+                            <button onclick="window.location.reload()" style="padding: 10px 20px; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                🔄 Odśwież stronę
+                            </button>
+                        </div>
+                    `;
+                }
             }
         });
         
