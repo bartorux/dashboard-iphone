@@ -1,19 +1,21 @@
 // Service Worker dla PSE Dashboard PWA
 // Plik: sw.js
 
-const CACHE_NAME = 'pse-dashboard-v1';
-const API_CACHE_NAME = 'pse-api-cache-v1';
+const CACHE_NAME = 'pse-dashboard-v2'; // ← Zwiększ wersję!
+const API_CACHE_NAME = 'pse-api-cache-v2'; // ← Zwiększ wersję!
 
 const STATIC_ASSETS = [
     '/',
     '/index.html',
-    '/manifest.json',
+    './index.html',
+    '/manifest.json', 
+    './manifest.json',
     'https://cdn.plot.ly/plotly-2.27.0.min.js'
 ];
 
-// Install event - cache static assets
+// Install event - cache static assets and force update
 self.addEventListener('install', event => {
-    console.log('Service Worker installing...');
+    console.log('Service Worker installing - NEW VERSION...');
     
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -22,20 +24,22 @@ self.addEventListener('install', event => {
                 return cache.addAll(STATIC_ASSETS);
             })
             .then(() => {
-                // Skip waiting to activate immediately
+                console.log('Service Worker installed - taking control immediately');
+                // Force immediate activation
                 return self.skipWaiting();
             })
     );
 });
 
-// Activate event - clean up old caches
+// Activate event - clean up old caches aggressively  
 self.addEventListener('activate', event => {
-    console.log('Service Worker activating...');
+    console.log('Service Worker activating - cleaning old caches...');
     
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cacheName => {
+                    // Delete ALL old caches
                     if (cacheName !== CACHE_NAME && cacheName !== API_CACHE_NAME) {
                         console.log('Deleting old cache:', cacheName);
                         return caches.delete(cacheName);
@@ -43,8 +47,20 @@ self.addEventListener('activate', event => {
                 })
             );
         }).then(() => {
-            // Take control of all clients
+            console.log('Service Worker activated - taking control of all clients');
+            // Take control immediately - force reload of PWA
             return self.clients.claim();
+        }).then(() => {
+            // Notify all clients to reload
+            return self.clients.matchAll();
+        }).then(clients => {
+            clients.forEach(client => {
+                console.log('Sending reload message to client');
+                client.postMessage({
+                    type: 'FORCE_RELOAD',
+                    message: 'New version available - reloading...'
+                });
+            });
         })
     );
 });
