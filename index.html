@@ -645,15 +645,28 @@
             
             // Dodana metoda setupPWAInstallation
             setupPWAInstallation() {
-                // Listen for the beforeinstallprompt event
+                console.log('Setting up PWA installation...');
+                
+                // Check if app is already installed (standalone mode)
+                const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+                const isIOSStandalone = window.navigator.standalone === true;
+                
+                if (isStandalone || isIOSStandalone) {
+                    console.log('App is already installed - hiding install button');
+                    this.hideInstallButton();
+                    return;
+                }
+                
+                // Always show install button initially (will be hidden if not needed)
+                this.showInstallButton();
+                
+                // Listen for the beforeinstallprompt event (Android/Chrome)
                 window.addEventListener('beforeinstallprompt', (event) => {
                     console.log('PWA install prompt available');
-                    // Prevent the mini-infobar from appearing on mobile
-                    event.preventDefault();
-                    // Save the event so it can be triggered later
+                    event.preventDefault(); // Prevent the mini-infobar
                     this.installPromptEvent = event;
                     this.isInstallable = true;
-                    this.showInstallButton();
+                    this.updateInstallButton();
                 });
                 
                 // Listen for the app being installed
@@ -663,10 +676,24 @@
                     this.showNotification('🎉 Aplikacja została zainstalowana!');
                 });
                 
-                // Check if app is already installed
-                if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
-                    console.log('App is running in standalone mode (already installed)');
-                    this.hideInstallButton();
+                // Detect iOS
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                
+                if (isIOS && isSafari) {
+                    console.log('iOS Safari detected - showing iOS install instructions');
+                    this.isInstallable = 'ios';
+                    this.updateInstallButton();
+                } else {
+                    console.log('Waiting for beforeinstallprompt event...');
+                    // Set a timeout to show generic install button if no prompt event comes
+                    setTimeout(() => {
+                        if (!this.installPromptEvent && !this.isInstallable) {
+                            console.log('No install prompt available - showing generic button');
+                            this.isInstallable = 'generic';
+                            this.updateInstallButton();
+                        }
+                    }, 3000);
                 }
             }
             
@@ -674,7 +701,6 @@
                 const installBtn = document.getElementById('installBtn');
                 if (installBtn) {
                     installBtn.style.display = 'block';
-                    installBtn.disabled = false;
                 }
             }
             
@@ -685,58 +711,89 @@
                 }
             }
             
-            async installPWA() {
-                if (!this.installPromptEvent) {
-                    // Show manual instructions for iOS
-                    this.showIOSInstallInstructions();
-                    return;
+            updateInstallButton() {
+                const installBtn = document.getElementById('installBtn');
+                if (!installBtn) return;
+                
+                if (this.isInstallable === 'ios') {
+                    installBtn.innerHTML = '📱 Dodaj do ekranu głównego';
+                    installBtn.title = 'Instrukcje instalacji dla iOS';
+                } else if (this.isInstallable === 'generic') {
+                    installBtn.innerHTML = '📱 Otwórz w przeglądarce';
+                    installBtn.title = 'Otwórz w Chrome lub Safari aby zainstalować';
+                } else if (this.isInstallable === true) {
+                    installBtn.innerHTML = '📱 Zainstaluj aplikację';
+                    installBtn.title = 'Zainstaluj aplikację na urządzeniu';
                 }
+                
+                installBtn.style.display = 'block';
+                installBtn.disabled = false;
+            }
+            
+            async installPWA() {
+                console.log('Install button clicked, installable:', this.isInstallable);
                 
                 const installBtn = document.getElementById('installBtn');
-                if (installBtn) {
-                    installBtn.innerHTML = '<div class="loading-spinner"></div>Instalowanie...';
-                    installBtn.disabled = true;
-                }
                 
-                try {
-                    // Show the install prompt
-                    this.installPromptEvent.prompt();
-                    
-                    // Wait for the user to respond to the prompt
-                    const result = await this.installPromptEvent.userChoice;
-                    console.log('User choice:', result.outcome);
-                    
-                    if (result.outcome === 'accepted') {
-                        console.log('User accepted the install prompt');
-                        this.showNotification('🎉 Instalowanie aplikacji...');
-                    } else {
-                        console.log('User dismissed the install prompt');
-                        this.showNotification('💡 Możesz zainstalować aplikację później');
-                    }
-                    
-                    // Reset the install prompt event
-                    this.installPromptEvent = null;
-                    this.isInstallable = false;
-                    
-                } catch (error) {
-                    console.log('Install prompt error:', error);
-                    this.showIOSInstallInstructions();
-                } finally {
+                // Android/Chrome - native install prompt
+                if (this.installPromptEvent && this.isInstallable === true) {
                     if (installBtn) {
-                        installBtn.innerHTML = '📱 Zainstaluj aplikację';
-                        installBtn.disabled = false;
+                        installBtn.innerHTML = '<div class="loading-spinner"></div>Instalowanie...';
+                        installBtn.disabled = true;
                     }
+                    
+                    try {
+                        this.installPromptEvent.prompt();
+                        const result = await this.installPromptEvent.userChoice;
+                        console.log('User choice:', result.outcome);
+                        
+                        if (result.outcome === 'accepted') {
+                            this.showNotification('🎉 Instalowanie aplikacji...');
+                        } else {
+                            this.showNotification('💡 Możesz zainstalować później');
+                        }
+                        
+                        this.installPromptEvent = null;
+                        this.isInstallable = false;
+                        
+                    } catch (error) {
+                        console.log('Install prompt error:', error);
+                        this.showIOSInstallInstructions();
+                    } finally {
+                        if (installBtn) {
+                            installBtn.innerHTML = '📱 Zainstaluj aplikację';
+                            installBtn.disabled = false;
+                        }
+                    }
+                } 
+                // iOS Safari - show instructions
+                else if (this.isInstallable === 'ios') {
+                    this.showIOSInstallInstructions();
+                }
+                // Generic - show browser recommendation
+                else {
+                    this.showNotification('💡 Aby zainstalować aplikację, otwórz tę stronę w przeglądarce Chrome (Android) lub Safari (iOS)');
                 }
             }
             
             showIOSInstallInstructions() {
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-                
-                if (isIOS && isSafari) {
-                    this.showNotification('📱 Aby zainstalować: naciśnij przycisk Udostępnij ⬆️ i wybierz "Dodaj do ekranu głównego"');
-                } else {
-                    this.showNotification('💡 Otwórz stronę w przeglądarce Chrome lub Safari aby zainstalować aplikację');
+                // Create a more detailed iOS instruction popup
+                const banner = document.getElementById('notificationBanner');
+                if (banner) {
+                    banner.innerHTML = `
+                        <div style="text-align: left;">
+                            <strong>📱 Jak zainstalować na iPhone:</strong><br>
+                            1. Naciśnij przycisk <strong>Udostępnij ⬆️</strong> (na dole ekranu)<br>
+                            2. Przewiń w dół i wybierz <strong>"Dodaj do ekranu głównego"</strong><br>
+                            3. Naciśnij <strong>"Dodaj"</strong>
+                        </div>
+                    `;
+                    banner.classList.add('show');
+                    
+                    // Hide after longer time for instructions
+                    setTimeout(() => {
+                        banner.classList.remove('show');
+                    }, 8000);
                 }
             }
             handleSWMessage(event) {
