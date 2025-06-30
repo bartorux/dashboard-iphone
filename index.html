@@ -342,57 +342,6 @@
                 color: #ffffff;
             }
             
-            handleSWMessage(event) {
-                console.log('Received message from Service Worker:', event.data);
-                
-                if (event.data && event.data.type === 'FORCE_RELOAD') {
-                    console.log('Service Worker requests app reload for update');
-                    
-                    // Show update notification
-                    this.showNotification('📱 Aktualizacja aplikacji dostępna - odświeżanie...');
-                    
-                    // Reload after short delay
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                }
-            }
-            
-            setupVisibilityTracking() {
-                // Track when user opens/closes app
-                document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'visible') {
-                        this.isAppVisible = true;
-                        this.lastSeenTime = Date.now();
-                        console.log('App became visible - updating lastSeenTime');
-                    } else {
-                        this.isAppVisible = false;
-                        console.log('App became hidden');
-                    }
-                });
-                
-                // Track focus/blur events
-                window.addEventListener('focus', () => {
-                    this.isAppVisible = true;
-                    this.lastSeenTime = Date.now();
-                    console.log('App focused - updating lastSeenTime');
-                });
-                
-                window.addEventListener('blur', () => {
-                    this.isAppVisible = false;
-                    console.log('App lost focus');
-                });
-                
-                // Update lastSeenTime when user interacts with app
-                ['click', 'touch', 'scroll'].forEach(event => {
-                    document.addEventListener(event, () => {
-                        if (this.isAppVisible) {
-                            this.lastSeenTime = Date.now();
-                        }
-                    }, { passive: true });
-                });
-            }
-            
             .status-bar,
             .chart-container,
             .alerts-section,
@@ -644,6 +593,59 @@
                 
                 // Auto refresh every 15 minutes
                 setInterval(() => this.refreshData(), 15 * 60 * 1000);
+            }
+            
+            // Dodana brakująca metoda handleSWMessage
+            handleSWMessage(event) {
+                console.log('Received message from Service Worker:', event.data);
+                
+                if (event.data && event.data.type === 'FORCE_RELOAD') {
+                    console.log('Service Worker requests app reload for update');
+                    
+                    // Show update notification
+                    this.showNotification('📱 Aktualizacja aplikacji dostępna - odświeżanie...');
+                    
+                    // Reload after short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                }
+            }
+            
+            // Dodana brakująca metoda setupVisibilityTracking
+            setupVisibilityTracking() {
+                // Track when user opens/closes app
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'visible') {
+                        this.isAppVisible = true;
+                        this.lastSeenTime = Date.now();
+                        console.log('App became visible - updating lastSeenTime');
+                    } else {
+                        this.isAppVisible = false;
+                        console.log('App became hidden');
+                    }
+                });
+                
+                // Track focus/blur events
+                window.addEventListener('focus', () => {
+                    this.isAppVisible = true;
+                    this.lastSeenTime = Date.now();
+                    console.log('App focused - updating lastSeenTime');
+                });
+                
+                window.addEventListener('blur', () => {
+                    this.isAppVisible = false;
+                    console.log('App lost focus');
+                });
+                
+                // Update lastSeenTime when user interacts with app
+                ['click', 'touch', 'scroll'].forEach(event => {
+                    document.addEventListener(event, () => {
+                        if (this.isAppVisible) {
+                            this.lastSeenTime = Date.now();
+                        }
+                    }, { passive: true });
+                });
             }
             
             setupNotificationPermission() {
