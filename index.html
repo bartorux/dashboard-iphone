@@ -1,4 +1,11 @@
-<!DOCTYPE html>
+toggleNotifications() {
+                this.notificationsSilenced = !this.notificationsSilenced;
+                this.updateNotificationButton();
+                
+                const status = this.notificationsSilenced ? 'wyłączone' : 'włączone';
+                console.log(`Notifications ${status}`);
+                this.showNotification(`Powiadomienia ${status}`);
+            }<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
@@ -521,10 +528,10 @@
                 <span id="statusText">Łączenie...</span>
             </div>
             <div style="display: flex; align-items: center; gap: 12px;">
-                <button class="notification-toggle" id="notificationToggle" title="Włącz/wyłącz powiadomienia">
+                <button class="notification-toggle" id="notificationToggle" onclick="toggleNotifications()" title="Włącz/wyłącz powiadomienia">
                     <span id="notificationIcon">🔔</span>
                 </button>
-                <button class="settings-toggle" id="settingsToggle" title="Ustawienia">
+                <button class="settings-toggle" id="settingsToggle" onclick="toggleSettings()" title="Ustawienia">
                     <span>⚙️</span>
                 </button>
                 <div id="lastUpdate" style="font-size: 12px; color: #8e8e93;"></div>
@@ -640,7 +647,7 @@
             <button class="refresh-btn" id="refreshBtn" onclick="refreshData()">
                 <span id="refreshText">Odśwież</span>
             </button>
-            <button class="install-btn" id="installBtn" onclick="installPWA()" style="display: none;" title="Zainstaluj aplikację na ekranie głównym">
+            <button class="install-btn" id="installBtn" onclick="installPWA()" title="Zainstaluj aplikację na ekranie głównym">
                 <span>📱 Zainstaluj aplikację</span>
             </button>
             <button class="update-btn" id="updateBtn" onclick="forceUpdate()" title="Wymuś aktualizację aplikacji">
@@ -676,6 +683,10 @@
                 this.settingsVisible = false;
                 this.trendsExpanded = true;
                 this.historicalData = [];
+                
+                // PWA Installation
+                this.installPromptEvent = null;
+                this.isInstallable = false;
                 
                 // Load settings
                 this.settings = this.loadSettings();
@@ -788,15 +799,25 @@
             }
             
             async init() {
-                console.log('PSE Dashboard Init Started');
+                console.log('=== PSE Dashboard Init Started ===');
+                console.log('⚙️ Init method called successfully');
                 
-                // Start as online by default
+                // Start as online by default (jak w Python)
                 this.isOnline = true;
                 this.hideOfflineIndicator();
+                
+                console.log('📋 Loading settings...');
+                // Apply custom thresholds from settings (moved here to ensure proper order)
+                this.ALERT_THRESHOLD_ORANGE = this.settings.orangeThreshold;
+                this.ALERT_THRESHOLD_RED = this.settings.redThreshold;
+                console.log('📋 Applied thresholds:', { orange: this.ALERT_THRESHOLD_ORANGE, red: this.ALERT_THRESHOLD_RED });
                 
                 // Setup offline/online detection
                 window.addEventListener('online', () => this.handleOnlineStatus(true));
                 window.addEventListener('offline', () => this.handleOnlineStatus(false));
+                
+                // Setup PWA installation
+                this.setupPWAInstallation();
                 
                 // Setup visibility tracking
                 this.setupVisibilityTracking();
@@ -811,20 +832,21 @@
                 });
                 
                 // Setup day navigation
+                console.log('📅 Setting up day navigation...');
                 this.setupDayNavigation();
                 
                 // Initial data load
-                console.log('Starting initial data load...');
+                console.log('📊 Starting initial data load...');
                 await this.refreshData();
                 
-                // Auto refresh every 15 minutes
-                console.log('Setting up 15-minute auto-refresh');
+                // Auto refresh every 15 minutes (ZACHOWANE jak w oryginale Python!)
+                console.log('⏰ Setting up 15-minute auto-refresh (preserved from Python original)');
                 setInterval(() => {
-                    console.log('Auto-refresh triggered');
+                    console.log('⏰ Auto-refresh triggered (15-minute interval from Python)');
                     this.refreshData();
-                }, 15 * 60 * 1000);
+                }, 15 * 60 * 1000); // DOKŁADNIE jak w Python: 15 * 60 * 1000
                 
-                console.log('PSE Dashboard Init Complete');
+                console.log('=== PSE Dashboard Init Complete ===');
             }
             
             setupVisibilityTracking() {
@@ -845,6 +867,191 @@
                 window.addEventListener('blur', () => {
                     this.isAppVisible = false;
                 });
+            }
+            
+            setupPWAInstallation() {
+                console.log('Setting up PWA installation...');
+                
+                // Check if app is already installed (standalone mode)
+                const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+                const isIOSStandalone = window.navigator.standalone === true;
+                
+                if (isStandalone || isIOSStandalone) {
+                    console.log('App is already installed - hiding install button');
+                    this.hideInstallButton();
+                    return;
+                }
+                
+                // Always show install button initially
+                this.showInstallButton();
+                
+                // Listen for the beforeinstallprompt event (Android/Chrome)
+                window.addEventListener('beforeinstallprompt', (event) => {
+                    console.log('PWA install prompt available');
+                    event.preventDefault(); // Prevent the mini-infobar
+                    this.installPromptEvent = event;
+                    this.isInstallable = true;
+                    this.updateInstallButton();
+                });
+                
+                // Listen for the app being installed
+                window.addEventListener('appinstalled', () => {
+                    console.log('PWA was installed');
+                    this.hideInstallButton();
+                    this.showNotification('🎉 Aplikacja została zainstalowana!');
+                });
+                
+                // Detect iOS
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                
+                if (isIOS && isSafari) {
+                    console.log('iOS Safari detected - showing iOS install instructions');
+                    this.isInstallable = 'ios';
+                    this.updateInstallButton();
+                } else {
+                    console.log('Waiting for beforeinstallprompt event...');
+                    // Set a timeout to show generic install button if no prompt event comes
+                    setTimeout(() => {
+                        if (!this.installPromptEvent && !this.isInstallable) {
+                            console.log('No install prompt available - showing generic button');
+                            this.isInstallable = 'generic';
+                            this.updateInstallButton();
+                        }
+                    }, 3000);
+                }
+            }
+            
+            showInstallButton() {
+                const installBtn = document.getElementById('installBtn');
+                if (installBtn) {
+                    installBtn.style.display = 'block';
+                }
+            }
+            
+            hideInstallButton() {
+                const installBtn = document.getElementById('installBtn');
+                if (installBtn) {
+                    installBtn.style.display = 'none';
+                }
+            }
+            
+            updateInstallButton() {
+                const installBtn = document.getElementById('installBtn');
+                if (!installBtn) return;
+                
+                if (this.isInstallable === 'ios') {
+                    installBtn.innerHTML = '📱 Dodaj do ekranu głównego';
+                    installBtn.title = 'Instrukcje instalacji dla iOS';
+                } else if (this.isInstallable === 'generic') {
+                    installBtn.innerHTML = '📱 Otwórz w przeglądarce';
+                    installBtn.title = 'Otwórz w Chrome lub Safari aby zainstalować';
+                } else if (this.isInstallable === true) {
+                    installBtn.innerHTML = '📱 Zainstaluj aplikację';
+                    installBtn.title = 'Zainstaluj aplikację na urządzeniu';
+                }
+                
+                installBtn.style.display = 'block';
+                installBtn.disabled = false;
+            }
+            
+            async installPWA() {
+                console.log('Install button clicked, installable:', this.isInstallable);
+                
+                const installBtn = document.getElementById('installBtn');
+                
+                // Android/Chrome - native install prompt
+                if (this.installPromptEvent && this.isInstallable === true) {
+                    if (installBtn) {
+                        installBtn.innerHTML = '<div class="loading-spinner"></div>Instalowanie...';
+                        installBtn.disabled = true;
+                    }
+                    
+                    try {
+                        this.installPromptEvent.prompt();
+                        const result = await this.installPromptEvent.userChoice;
+                        console.log('User choice:', result.outcome);
+                        
+                        if (result.outcome === 'accepted') {
+                            this.showNotification('🎉 Instalowanie aplikacji...');
+                        } else {
+                            this.showNotification('💡 Możesz zainstalować później');
+                        }
+                        
+                        this.installPromptEvent = null;
+                        this.isInstallable = false;
+                        
+                    } catch (error) {
+                        console.log('Install prompt error:', error);
+                        this.showIOSInstallInstructions();
+                    } finally {
+                        if (installBtn) {
+                            installBtn.innerHTML = '📱 Zainstaluj aplikację';
+                            installBtn.disabled = false;
+                        }
+                    }
+                } 
+                // iOS Safari - show instructions
+                else if (this.isInstallable === 'ios') {
+                    this.showIOSInstallInstructions();
+                }
+                // Generic - show browser recommendation
+                else {
+                    this.showIOSInstallInstructions(); // Show general instructions for all platforms
+                }
+            }
+            
+            showIOSInstallInstructions() {
+                // Create detailed installation popup
+                const banner = document.getElementById('notificationBanner');
+                if (banner) {
+                    // Detect platform for specific instructions
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                    const isAndroid = /Android/.test(navigator.userAgent);
+                    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                    const isChrome = /Chrome/.test(navigator.userAgent);
+                    
+                    let instructions = '';
+                    
+                    if (isIOS && isSafari) {
+                        instructions = `
+                            <div style="text-align: left; line-height: 1.4;">
+                                <strong>📱 Jak zainstalować na iPhone/iPad:</strong><br>
+                                1. Naciśnij przycisk <strong>Udostępnij ⬆️</strong> (na dole ekranu)<br>
+                                2. Przewiń w dół i wybierz <strong>"Dodaj do ekranu głównego"</strong><br>
+                                3. Naciśnij <strong>"Dodaj"</strong><br>
+                                <small style="opacity: 0.8;">Aplikacja będzie dostępna jak zwykła aplikacja!</small>
+                            </div>
+                        `;
+                    } else if (isAndroid && isChrome) {
+                        instructions = `
+                            <div style="text-align: left; line-height: 1.4;">
+                                <strong>📱 Jak zainstalować na Android:</strong><br>
+                                1. Naciśnij <strong>menu ⋮</strong> (prawy górny róg)<br>
+                                2. Wybierz <strong>"Dodaj do ekranu głównego"</strong><br>
+                                3. Potwierdź <strong>"Dodaj"</strong><br>
+                                <small style="opacity: 0.8;">Aplikacja będzie dostępna jak zwykła aplikacja!</small>
+                            </div>
+                        `;
+                    } else {
+                        instructions = `
+                            <div style="text-align: left; line-height: 1.4;">
+                                <strong>📱 Jak zainstalować aplikację:</strong><br>
+                                <strong>iPhone/iPad:</strong> Safari → Udostępnij ⬆️ → "Dodaj do ekranu głównego"<br>
+                                <strong>Android:</strong> Chrome → Menu ⋮ → "Dodaj do ekranu głównego"<br>
+                                <small style="opacity: 0.8;">Aplikacja będzie działać offline!</small>
+                            </div>
+                        `;
+                    }
+                    
+                    banner.innerHTML = instructions;
+                    banner.classList.add('show');
+                    
+                    // Hide after longer time for instructions
+                    setTimeout(() => {
+                        banner.classList.remove('show');
+                    }, 10000);
+                }
             }
             
             setupDayNavigation() {
@@ -953,14 +1160,19 @@
             }
             
             async fetchData() {
-                console.log('=== FETCH DATA START ===');
+                console.log('🌐 === FETCH DATA START ===');
                 const now = new Date();
+                // WAŻNE: Po północy automatycznie przesunie się na nowy dzień! (jak w Python)
+                // start_of_today zawsze wskazuje na 00:00 aktualnego dnia
+                // więc po północy automatycznie przesuwa się zakres danych o 1 dzień!
                 const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 
                 const startDate = this.formatDate(startOfToday);
+                // 3 pełne dni w przód (72 godziny) - dokładnie jak w Python
                 const endDate = this.formatDate(new Date(startOfToday.getTime() + 3 * 24 * 60 * 60 * 1000));
                 
-                console.log(`Fetching data from ${startDate} to ${endDate}`);
+                console.log(`🕐 Fetching data from ${startDate} to ${endDate} (auto-shifts at midnight like Python)`);
+                console.log(`📅 Start of today: ${startOfToday.toISOString()} (like Python startOfToday)`);
                 
                 try {
                     let url = `${this.API_URL}?$filter=plan_dtime ge '${startDate}' and plan_dtime le '${endDate}'&$orderby=plan_dtime&$first=200`;
@@ -968,38 +1180,38 @@
                     
                     let response;
                     try {
-                        console.log('Making API request with filter...');
+                        console.log('📡 Making API request with filter (like Python)...');
                         response = await fetch(url);
-                        console.log(`Filtered response status: ${response.status}`);
+                        console.log(`📡 Filtered response status: ${response.status}`);
                     } catch (fetchError) {
-                        console.log('Filtered request failed:', fetchError.message);
-                        console.log('Trying simple API request...');
+                        console.log('❌ Filtered request failed:', fetchError.message);
+                        console.log('📡 Trying simple API request (Python fallback)...');
                         response = await fetch(this.API_URL + '?$first=200');
-                        console.log(`Simple response status: ${response.status}`);
+                        console.log(`📡 Simple response status: ${response.status}`);
                     }
                     
                     if (response.ok) {
-                        console.log('API response OK, parsing JSON...');
+                        console.log('✅ API response OK, parsing JSON...');
                         const data = await response.json();
-                        console.log('Raw API data:', { 
+                        console.log('📊 Raw API data:', { 
                             hasValue: !!data.value, 
                             valueLength: data.value?.length || 0
                         });
                         
                         if (data.value && data.value.length > 0) {
-                            console.log('SUCCESS: Got data from API');
+                            console.log('✅ SUCCESS: Got data from API (like Python success)');
                             return this.processData(data.value);
                         } else {
-                            console.log('API returned empty data.value array');
+                            console.log('❌ API returned empty data.value array');
                         }
                     } else {
-                        console.log(`API returned status: ${response.status}`);
+                        console.log(`❌ API returned status: ${response.status}`);
                     }
                 } catch (error) {
-                    console.error('Error fetching data:', error);
+                    console.error('❌ Error fetching data:', error);
                 }
                 
-                console.log('Fetch failed - returning empty array');
+                console.log('❌ Fetch failed - returning empty array (like Python fallback)');
                 return [];
             }
             
@@ -1011,6 +1223,9 @@
             
             processData(rawData) {
                 const now = new Date();
+                // WAŻNE: Po północy automatycznie przesunie się na nowy dzień! (jak w Python)
+                // start_of_today zawsze wskazuje na 00:00 aktualnego dnia
+                // więc po północy automatycznie przesuwa się zakres danych o 1 dzień!
                 const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 let processed = [];
                 
@@ -1019,13 +1234,16 @@
                     return [];
                 }
                 
-                console.log(`Processing ${rawData.length} raw data records`);
+                console.log(`🔄 Processing ${rawData.length} raw data records`);
+                console.log(`📅 Start of today: ${startOfToday.toISOString()} (Python startOfToday equivalent)`);
                 
-                // Generate full 72 hours from midnight today
+                // ZAWSZE generuj pełne 72 godziny od północy dzisiejszego dnia (jak w Python)
+                console.log('🕐 Generating full 72 hours from midnight today (exactly like Python original)...');
+                
                 for (let i = 0; i < 72; i++) {
                     const timestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
                     
-                    // Use real data if available, otherwise cycle through available data
+                    // Użyj rzeczywistych danych jeśli dostępne, inaczej cykluj przez dostępne (jak Python)
                     const dataIndex = i % Math.max(rawData.length, 1);
                     const item = rawData[dataIndex] || rawData[0];
                     
@@ -1033,6 +1251,7 @@
                         let available = this.getAvailableReserve(item);
                         
                         if (available === 0 || isNaN(available)) {
+                            // Dodaj 1000 MW jak w Python: available = required + 1000
                             available = parseFloat(item.req_pow_res) + 1000;
                         }
                         
@@ -1049,7 +1268,11 @@
                     }
                 }
                 
-                console.log(`Generated ${processed.length} processed points for 72h period`);
+                console.log(`✅ Generated ${processed.length} processed points for 72h period (like Python)`);
+                if (processed.length > 0) {
+                    console.log(`📅 Time range: ${processed[0].timeStr} to ${processed[processed.length - 1].timeStr}`);
+                }
+                
                 return processed.sort((a, b) => a.time - b.time);
             }
             
@@ -1101,16 +1324,20 @@
             updateAlertHistory(newAlerts) {
                 const today = new Date().toDateString();
                 
+                // ZACHOWANE: Reset alertów o północy (dokładnie jak w Python!)
                 if (this.alertHistory.lastResetDate !== today) {
-                    console.log('NEW DAY - resetting alert history');
+                    console.log('🌅 NEW DAY - resetting alert history (preserved from Python original)');
                     this.alertHistory = {
                         orange: [],
                         red: [],
                         lastResetDate: today
                     };
+                    // Reset lastSeenTime for new day (jak w Python)
                     this.lastSeenTime = Date.now();
+                    console.log('🌅 Alert history reset and lastSeenTime updated for new day (like Python)');
                 }
                 
+                // Count only truly NEW alerts (that appeared after lastSeenTime) - jak w Python
                 let newAlertsCount = 0;
                 const now = Date.now();
                 
@@ -1121,7 +1348,8 @@
                             detectedAt: now
                         });
                         
-                        if (now - this.lastSeenTime > 60000) {
+                        // Only count as "new" if detected after user last saw the app (jak w Python)
+                        if (now - this.lastSeenTime > 60000) { // 1 minute buffer (jak w Python)
                             newAlertsCount++;
                         }
                     }
@@ -1134,20 +1362,30 @@
                             detectedAt: now
                         });
                         
-                        if (now - this.lastSeenTime > 60000) {
+                        // Only count as "new" if detected after user last saw the app (jak w Python)
+                        if (now - this.lastSeenTime > 60000) { // 1 minute buffer (jak w Python)
                             newAlertsCount++;
                         }
                     }
                 });
                 
+                // Logika powiadomień dokładnie jak w Python
                 if (newAlertsCount > 0 && 
                     !this.isAppVisible && 
                     !this.notificationsSilenced &&
                     'Notification' in window && 
                     Notification.permission === 'granted') {
                     
-                    console.log(`Sending notification for ${newAlertsCount} new alerts`);
+                    console.log(`🚨 Sending notification for ${newAlertsCount} new alerts (like Python logic)`);
                     this.showNotification(`🚨 ${newAlertsCount} ${newAlertsCount === 1 ? 'nowy alert' : 'nowe alerty'} rezerw mocy!`);
+                } else {
+                    let skipReason = 'unknown';
+                    if (newAlertsCount === 0) skipReason = 'no new alerts';
+                    else if (this.isAppVisible) skipReason = 'app visible';
+                    else if (this.notificationsSilenced) skipReason = 'notifications silenced';
+                    else if (!('Notification' in window) || Notification.permission !== 'granted') skipReason = 'no permission';
+                    
+                    console.log(`📱 Not sending notification - reason: ${skipReason} (Python logic)`);
                 }
             }
             
@@ -1384,10 +1622,19 @@
                     const now = new Date().toLocaleString('pl-PL');
                     
                     if (data && data.length > 0) {
-                        console.log(`DATA LOAD SUCCESS: ${data.length} data points - CONNECTION CONFIRMED`);
+                        console.log(`✅ DATA LOAD SUCCESS: ${data.length} data points - CONNECTION CONFIRMED (like Python)`);
                         
+                        // Data loaded successfully - we're definitely online (jak w Python)
                         this.isOnline = true;
                         this.hideOfflineIndicator();
+                        
+                        // FORCE HIDE offline indicator (safety check) - jak w Python
+                        const offlineIndicator = document.getElementById('offlineIndicator');
+                        if (offlineIndicator) {
+                            offlineIndicator.style.display = 'none';
+                            offlineIndicator.classList.remove('show');
+                        }
+                        console.log('📡 Connection status: ONLINE - offline indicator FORCED hidden (like Python)');
                         
                         this.allData = data;
                         
@@ -1407,9 +1654,11 @@
                         this.updateStatus(true, `Połączono | ${data.length} punktów`);
                         lastUpdateEl.textContent = now.split(' ')[1].substring(0, 5);
                     } else {
-                        console.log('No data received - CONNECTION FAILED');
+                        console.log('❌ No data received - CONNECTION FAILED (like Python fallback)');
+                        // No data received - probably offline (jak w Python)
                         this.isOnline = false;
                         this.showOfflineIndicator();
+                        console.log('📡 Connection status updated to OFFLINE (like Python)');
                         
                         this.updateStatus(false, 'Brak danych');
                         document.getElementById('chart').innerHTML = 
@@ -1417,12 +1666,15 @@
                         this.updateAlerts([]);
                     }
                 } catch (error) {
-                    console.error('Refresh error - CONNECTION FAILED:', error);
+                    console.error('❌ Refresh error - CONNECTION FAILED (like Python error handling):', error);
+                    // Error occurred - probably offline (jak w Python)
                     this.isOnline = false;
                     this.showOfflineIndicator();
+                    console.log('📡 Connection status updated to OFFLINE due to error (like Python)');
                     
                     this.updateStatus(false, 'Błąd połączenia');
                 } finally {
+                    // Hide loading (jak w Python)
                     refreshBtn.disabled = false;
                     refreshText.textContent = 'Odśwież';
                 }
@@ -1623,8 +1875,7 @@
         
         function installPWA() {
             if (app) {
-                console.log('Install PWA clicked');
-                app.showNotification('💡 Aby zainstalować aplikację, użyj opcji "Dodaj do ekranu głównego" w menu przeglądarki');
+                app.installPWA();
             }
         }
         
@@ -1666,20 +1917,23 @@
             console.log('Location:', window.location.href);
             console.log('User Agent:', navigator.userAgent);
             
-            // Hide offline indicator at startup
+            // FORCE HIDE offline indicator at startup (like Python)
             const offlineIndicator = document.getElementById('offlineIndicator');
             if (offlineIndicator) {
                 offlineIndicator.style.display = 'none';
                 offlineIndicator.classList.remove('show');
-                console.log('Offline indicator hidden at startup');
+                console.log('🟢 FORCED offline indicator hidden at startup (like Python)');
+            } else {
+                console.log('❌ Offline indicator element not found');
             }
             
             try {
-                console.log('Creating PSEApp instance...');
+                console.log('🚀 Creating PSEApp instance...');
                 app = new PSEApp();
-                console.log('PSEApp instance created successfully');
+                console.log('✅ PSEApp instance created successfully');
             } catch (error) {
-                console.error('Failed to create PSEApp:', error);
+                console.error('❌ Failed to create PSEApp:', error);
+                console.log('Error details:', { message: error.message, stack: error.stack });
                 
                 const chart = document.getElementById('chart');
                 if (chart) {
