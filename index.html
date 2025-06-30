@@ -1524,7 +1524,7 @@
                     },
                     margin: { 
                         t: 10, 
-                        r: 50, 
+                        r: 30, 
                         b: 70, 
                         l: window.innerWidth < 400 ? 35 : 50 
                     },
@@ -1712,18 +1712,38 @@
                 
                 const avgReserve = reserves.reduce((sum, r) => sum + r, 0) / reserves.length;
                 const minReserve = Math.min(...reserves);
-                const minDifference = Math.min(...differences);
                 
                 // Update trend cards
                 document.getElementById('avgReserve').textContent = avgReserve.toFixed(0) + ' MW';
                 document.getElementById('minReserve').textContent = minReserve.toFixed(0) + ' MW';
                 
-                // Determine status based on minimum difference
+                // Determine status based on CURRENT HOUR or next few hours (not whole day!)
                 let status, statusClass;
-                if (minDifference <= this.ALERT_THRESHOLD_RED) {
+                let relevantDifference;
+                
+                if (this.currentDayOffset === 0) {
+                    // For today - check current hour and next 2 hours
+                    const now = new Date();
+                    const currentHour = now.getHours();
+                    const relevantHours = dayData.slice(currentHour, currentHour + 3); // Current + next 2 hours
+                    
+                    if (relevantHours.length > 0) {
+                        const relevantDifferences = relevantHours.map(d => d.reserve - d.required);
+                        relevantDifference = Math.min(...relevantDifferences);
+                    } else {
+                        relevantDifference = differences[0] || 1000; // Fallback
+                    }
+                } else {
+                    // For tomorrow/day after - check first 3 hours of the day
+                    const firstHours = dayData.slice(0, 3);
+                    const firstHoursDifferences = firstHours.map(d => d.reserve - d.required);
+                    relevantDifference = Math.min(...firstHoursDifferences);
+                }
+                
+                if (relevantDifference <= this.ALERT_THRESHOLD_RED) {
                     status = 'ALARM';
                     statusClass = 'status-danger';
-                } else if (minDifference <= this.ALERT_THRESHOLD_ORANGE) {
+                } else if (relevantDifference <= this.ALERT_THRESHOLD_ORANGE) {
                     status = 'UWAGA';
                     statusClass = 'status-warning';
                 } else {
