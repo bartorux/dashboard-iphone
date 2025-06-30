@@ -1461,31 +1461,47 @@
                 const currentHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours());
                 const currentHourStr = this.formatDateTime(currentHour);
                 
+                // Dodaj padding na końcu danych dla lepszej widoczności
+                const paddedTimes = [...times];
+                const paddedReserves = [...reserves];
+                const paddedRequired = [...required];
+                
+                // Dodaj jeden punkt 30 minut później z tymi samymi wartościami (niewidoczny)
+                const lastTime = new Date(times[times.length - 1]);
+                const paddingTime = new Date(lastTime.getTime() + 30 * 60 * 1000);
+                const paddingTimeStr = this.formatDateTime(paddingTime);
+                
+                paddedTimes.push(paddingTimeStr);
+                paddedReserves.push(null); // Niewidoczny punkt
+                paddedRequired.push(null); // Niewidoczny punkt
+                
                 const traces = [
                     {
-                        x: times,
-                        y: reserves,
+                        x: paddedTimes,
+                        y: paddedReserves,
                         type: 'scatter',
                         mode: 'lines',
                         name: 'Rezerwa mocy',
-                        line: { color: '#c0392b', width: 3 }
+                        line: { color: '#c0392b', width: 3 },
+                        connectgaps: false
                     },
                     {
-                        x: times,
-                        y: required,
+                        x: paddedTimes,
+                        y: paddedRequired,
                         type: 'scatter',
                         mode: 'lines',
                         name: 'Wymagana rezerwa',
-                        line: { color: '#007aff', width: 2 }
+                        line: { color: '#007aff', width: 2 },
+                        connectgaps: false
                     }
                 ];
                 
                 // Add current hour marker if in range
-                const currentIndex = times.indexOf(currentHourStr);
+                const currentIndex = times.indexOf(currentHourStr); // Używaj oryginalnych times, nie paddedTimes
                 if (currentIndex !== -1 && this.currentDayOffset === 0) {
                     traces.push({
                         x: [currentHourStr],
-                        y: [reserves[currentIndex]],
+                        y: [reserves[currentIndex]], // Używaj oryginalnych reserves
                         type: 'scatter',
                         mode: 'markers',
                         name: 'Teraz',
@@ -1504,10 +1520,7 @@
                         tickfont: { size: 10 },
                         tickmode: 'linear',
                         tick0: times[0],
-                        dtick: window.innerWidth < 600 ? 4 * 3600000 : 2 * 3600000,
-                        range: [times[0], times[times.length - 1]],
-                        rangeslider: {visible: false},
-                        fixedrange: true
+                        dtick: window.innerWidth < 600 ? 4 * 3600000 : 2 * 3600000
                     },
                     yaxis: {
                         title: window.innerWidth < 400 ? 'MW' : 'Rezerwa mocy [MW]',
@@ -1527,7 +1540,7 @@
                     },
                     margin: { 
                         t: 10, 
-                        r: 15, 
+                        r: window.innerWidth < 768 ? 60 : 25,  // Większy margines na mobile
                         b: 70, 
                         l: window.innerWidth < 400 ? 35 : 50 
                     },
