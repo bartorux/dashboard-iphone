@@ -261,6 +261,31 @@
             cursor: not-allowed;
         }
         
+        .install-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(52, 199, 89, 0.3);
+            margin-bottom: 8px;
+        }
+        
+        .install-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 4px rgba(52, 199, 89, 0.3);
+        }
+        
+        .install-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
         .update-btn {
             width: 100%;
             padding: 10px;
@@ -381,6 +406,10 @@
             
             .update-btn {
                 background: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 100%);
+            }
+            
+            .install-btn {
+                background: linear-gradient(135deg, #32d74b 0%, #30d158 100%);
             }
         }
         
@@ -503,6 +532,9 @@
             <button class="refresh-btn" id="refreshBtn" onclick="refreshData()">
                 <span id="refreshText">Odśwież</span>
             </button>
+            <button class="install-btn" id="installBtn" onclick="installPWA()" style="display: none;" title="Zainstaluj aplikację na ekranie głównym">
+                <span>📱 Zainstaluj aplikację</span>
+            </button>
             <button class="update-btn" id="updateBtn" onclick="forceUpdate()" title="Wymuś aktualizację aplikacji">
                 <span>🔄 Aktualizuj aplikację</span>
             </button>
@@ -530,6 +562,10 @@
                 this.lastSeenTime = Date.now(); // Kiedy użytkownik ostatnio widział alerty
                 this.isAppVisible = true;
                 this.notificationsSilenced = false;
+                
+                // PWA Installation
+                this.installPromptEvent = null;
+                this.isInstallable = false;
                 
                 this.init();
             }
@@ -569,9 +605,12 @@
                 // Setup notification permission (user-triggered)
                 this.setupNotificationPermission();
                 
-                // Setup online/offline detection
+                // Setup online/offline detection with better logic
                 window.addEventListener('online', () => this.handleOnlineStatus(true));
                 window.addEventListener('offline', () => this.handleOnlineStatus(false));
+                
+                // Setup PWA installation
+                this.setupPWAInstallation();
                 
                 // Track app visibility for smarter notifications
                 this.setupVisibilityTracking();
@@ -585,8 +624,17 @@
                     }, 250);
                 });
                 
-                // Initial data load
+                // Initial data load and connection check
                 await this.refreshData();
+                
+                // If initial data load failed, do a real connection check
+                if (!this.isOnline) {
+                    const reallyOnline = await this.checkRealConnectionStatus();
+                    this.isOnline = reallyOnline;
+                    if (!reallyOnline) {
+                        this.showOfflineIndicator();
+                    }
+                }
                 
                 // Setup day navigation dates
                 this.setupDayNavigation();
@@ -595,7 +643,102 @@
                 setInterval(() => this.refreshData(), 15 * 60 * 1000);
             }
             
-            // Dodana brakująca metoda handleSWMessage
+            // Dodana metoda setupPWAInstallation
+            setupPWAInstallation() {
+                // Listen for the beforeinstallprompt event
+                window.addEventListener('beforeinstallprompt', (event) => {
+                    console.log('PWA install prompt available');
+                    // Prevent the mini-infobar from appearing on mobile
+                    event.preventDefault();
+                    // Save the event so it can be triggered later
+                    this.installPromptEvent = event;
+                    this.isInstallable = true;
+                    this.showInstallButton();
+                });
+                
+                // Listen for the app being installed
+                window.addEventListener('appinstalled', () => {
+                    console.log('PWA was installed');
+                    this.hideInstallButton();
+                    this.showNotification('🎉 Aplikacja została zainstalowana!');
+                });
+                
+                // Check if app is already installed
+                if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+                    console.log('App is running in standalone mode (already installed)');
+                    this.hideInstallButton();
+                }
+            }
+            
+            showInstallButton() {
+                const installBtn = document.getElementById('installBtn');
+                if (installBtn) {
+                    installBtn.style.display = 'block';
+                    installBtn.disabled = false;
+                }
+            }
+            
+            hideInstallButton() {
+                const installBtn = document.getElementById('installBtn');
+                if (installBtn) {
+                    installBtn.style.display = 'none';
+                }
+            }
+            
+            async installPWA() {
+                if (!this.installPromptEvent) {
+                    // Show manual instructions for iOS
+                    this.showIOSInstallInstructions();
+                    return;
+                }
+                
+                const installBtn = document.getElementById('installBtn');
+                if (installBtn) {
+                    installBtn.innerHTML = '<div class="loading-spinner"></div>Instalowanie...';
+                    installBtn.disabled = true;
+                }
+                
+                try {
+                    // Show the install prompt
+                    this.installPromptEvent.prompt();
+                    
+                    // Wait for the user to respond to the prompt
+                    const result = await this.installPromptEvent.userChoice;
+                    console.log('User choice:', result.outcome);
+                    
+                    if (result.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                        this.showNotification('🎉 Instalowanie aplikacji...');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                        this.showNotification('💡 Możesz zainstalować aplikację później');
+                    }
+                    
+                    // Reset the install prompt event
+                    this.installPromptEvent = null;
+                    this.isInstallable = false;
+                    
+                } catch (error) {
+                    console.log('Install prompt error:', error);
+                    this.showIOSInstallInstructions();
+                } finally {
+                    if (installBtn) {
+                        installBtn.innerHTML = '📱 Zainstaluj aplikację';
+                        installBtn.disabled = false;
+                    }
+                }
+            }
+            
+            showIOSInstallInstructions() {
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                
+                if (isIOS && isSafari) {
+                    this.showNotification('📱 Aby zainstalować: naciśnij przycisk Udostępnij ⬆️ i wybierz "Dodaj do ekranu głównego"');
+                } else {
+                    this.showNotification('💡 Otwórz stronę w przeglądarce Chrome lub Safari aby zainstalować aplikację');
+                }
+            }
             handleSWMessage(event) {
                 console.log('Received message from Service Worker:', event.data);
                 
@@ -788,15 +931,57 @@
                 return dayData;
             }
             
-            handleOnlineStatus(online) {
-                this.isOnline = online;
-                const offlineIndicator = document.getElementById('offlineIndicator');
+            async handleOnlineStatus(online) {
+                console.log('Browser online status changed to:', online);
                 
+                // If browser says we're online, verify with actual API call
                 if (online) {
-                    offlineIndicator.classList.remove('show');
-                    this.refreshData(); // Refresh when coming back online
+                    const reallyOnline = await this.checkRealConnectionStatus();
+                    this.isOnline = reallyOnline;
+                    console.log('Real connection status:', reallyOnline);
+                    
+                    if (reallyOnline) {
+                        this.hideOfflineIndicator();
+                        this.refreshData(); // Refresh when coming back online
+                    } else {
+                        this.showOfflineIndicator();
+                    }
                 } else {
+                    this.isOnline = false;
+                    this.showOfflineIndicator();
+                }
+            }
+            
+            async checkRealConnectionStatus() {
+                try {
+                    // Try a simple API call with short timeout
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+                    
+                    const response = await fetch(this.API_URL + '?$first=1', {
+                        signal: controller.signal,
+                        cache: 'no-cache'
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    return response.ok;
+                } catch (error) {
+                    console.log('Connection check failed:', error.message);
+                    return false;
+                }
+            }
+            
+            showOfflineIndicator() {
+                const offlineIndicator = document.getElementById('offlineIndicator');
+                if (offlineIndicator) {
                     offlineIndicator.classList.add('show');
+                }
+            }
+            
+            hideOfflineIndicator() {
+                const offlineIndicator = document.getElementById('offlineIndicator');
+                if (offlineIndicator) {
+                    offlineIndicator.classList.remove('show');
                 }
             }
             
@@ -1255,6 +1440,10 @@
                     if (data && data.length > 0) {
                         console.log(`Loaded ${data.length} data points`);
                         
+                        // Data loaded successfully - we're definitely online
+                        this.isOnline = true;
+                        this.hideOfflineIndicator();
+                        
                         // Save all data
                         this.allData = data;
                         
@@ -1269,6 +1458,9 @@
                         this.updateStatus(true, `Połączono | ${data.length} punktów`);
                         lastUpdateEl.textContent = now.split(' ')[1].substring(0, 5);
                     } else {
+                        // No data received - probably offline
+                        this.isOnline = false;
+                        this.showOfflineIndicator();
                         this.updateStatus(false, 'Brak danych');
                         document.getElementById('chart').innerHTML = 
                             '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #ff3b30; text-align: center;">❌ Brak połączenia z API PSE<br><small>Sprawdź połączenie internetowe</small></div>';
@@ -1276,6 +1468,9 @@
                     }
                 } catch (error) {
                     console.error('Refresh error:', error);
+                    // Error occurred - probably offline
+                    this.isOnline = false;
+                    this.showOfflineIndicator();
                     this.updateStatus(false, 'Błąd połączenia');
                 } finally {
                     // Hide loading
@@ -1311,6 +1506,12 @@
         function toggleNotifications() {
             if (app) {
                 app.toggleNotifications();
+            }
+        }
+        
+        function installPWA() {
+            if (app) {
+                app.installPWA();
             }
         }
         
