@@ -339,6 +339,7 @@
             font-size: 13px;
             transform: translateY(100%);
             transition: transform 0.3s ease;
+            z-index: 50;
         }
         
         .offline-indicator.show {
@@ -573,6 +574,10 @@
             async init() {
                 console.log('=== PSE Dashboard Initializing ===');
                 
+                // Start as online by default
+                this.isOnline = true;
+                this.hideOfflineIndicator();
+                
                 // Register service worker with better error handling
                 if ('serviceWorker' in navigator) {
                     try {
@@ -626,15 +631,6 @@
                 
                 // Initial data load and connection check
                 await this.refreshData();
-                
-                // If initial data load failed, do a real connection check
-                if (!this.isOnline) {
-                    const reallyOnline = await this.checkRealConnectionStatus();
-                    this.isOnline = reallyOnline;
-                    if (!reallyOnline) {
-                        this.showOfflineIndicator();
-                    }
-                }
                 
                 // Setup day navigation dates
                 this.setupDayNavigation();
@@ -989,21 +985,15 @@
             }
             
             async handleOnlineStatus(online) {
-                console.log('Browser online status changed to:', online);
+                console.log('🌐 Browser online status changed to:', online);
                 
-                // If browser says we're online, verify with actual API call
+                // Don't immediately change UI based on browser status
+                // Only use this as a hint - real connection test is more reliable
                 if (online) {
-                    const reallyOnline = await this.checkRealConnectionStatus();
-                    this.isOnline = reallyOnline;
-                    console.log('Real connection status:', reallyOnline);
-                    
-                    if (reallyOnline) {
-                        this.hideOfflineIndicator();
-                        this.refreshData(); // Refresh when coming back online
-                    } else {
-                        this.showOfflineIndicator();
-                    }
+                    console.log('🌐 Browser says online - will test real connection on next refresh');
+                    // Don't hide offline indicator yet - wait for successful data fetch
                 } else {
+                    console.log('🌐 Browser says offline - showing offline indicator');
                     this.isOnline = false;
                     this.showOfflineIndicator();
                 }
@@ -1029,6 +1019,7 @@
             }
             
             showOfflineIndicator() {
+                console.log('🔴 Showing offline indicator');
                 const offlineIndicator = document.getElementById('offlineIndicator');
                 if (offlineIndicator) {
                     offlineIndicator.classList.add('show');
@@ -1036,6 +1027,7 @@
             }
             
             hideOfflineIndicator() {
+                console.log('🟢 Hiding offline indicator');
                 const offlineIndicator = document.getElementById('offlineIndicator');
                 if (offlineIndicator) {
                     offlineIndicator.classList.remove('show');
@@ -1495,11 +1487,12 @@
                     const now = new Date().toLocaleString('pl-PL');
                     
                     if (data && data.length > 0) {
-                        console.log(`Loaded ${data.length} data points`);
+                        console.log(`✅ Loaded ${data.length} data points - CONNECTION SUCCESSFUL`);
                         
                         // Data loaded successfully - we're definitely online
                         this.isOnline = true;
                         this.hideOfflineIndicator();
+                        console.log('📡 Connection status updated to ONLINE');
                         
                         // Save all data
                         this.allData = data;
@@ -1515,19 +1508,22 @@
                         this.updateStatus(true, `Połączono | ${data.length} punktów`);
                         lastUpdateEl.textContent = now.split(' ')[1].substring(0, 5);
                     } else {
+                        console.log('❌ No data received - CONNECTION FAILED');
                         // No data received - probably offline
                         this.isOnline = false;
                         this.showOfflineIndicator();
+                        console.log('📡 Connection status updated to OFFLINE');
                         this.updateStatus(false, 'Brak danych');
                         document.getElementById('chart').innerHTML = 
                             '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #ff3b30; text-align: center;">❌ Brak połączenia z API PSE<br><small>Sprawdź połączenie internetowe</small></div>';
                         this.updateAlerts([]); // Clear alerts
                     }
                 } catch (error) {
-                    console.error('Refresh error:', error);
+                    console.error('❌ Refresh error - CONNECTION FAILED:', error);
                     // Error occurred - probably offline
                     this.isOnline = false;
                     this.showOfflineIndicator();
+                    console.log('📡 Connection status updated to OFFLINE due to error');
                     this.updateStatus(false, 'Błąd połączenia');
                 } finally {
                     // Hide loading
@@ -1571,6 +1567,25 @@
                 app.installPWA();
             }
         }
+        
+        // Debug functions (available in browser console)
+        window.hideOfflineTest = function() {
+            console.log('🧪 Manual test: hiding offline indicator');
+            if (app) {
+                app.hideOfflineIndicator();
+            }
+        };
+        
+        window.showOfflineTest = function() {
+            console.log('🧪 Manual test: showing offline indicator');
+            if (app) {
+                app.showOfflineIndicator();
+            }
+        };
+        
+        window.getConnectionStatus = function() {
+            console.log('🧪 Connection status:', app ? app.isOnline : 'App not initialized');
+        };
         
         function forceUpdate() {
             console.log('Force update requested by user');
