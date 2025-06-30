@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="PSE Dashboard - Monitoring rezerw mocy KSE">
+    <title>PSE Dashboard</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#c0392b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PSE Dashboard">
+    
+    <!-- iOS Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTciIGhlaWdodD0iNTciIHZpZXdCb3g9IjAgMCA1NyA1NyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjU3IiBoZWlnaHQ9IjU3IiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzNyIgaGVpZ2h0PSIzNyI+CjxwYXRoIGQ9Ik0xOCAzTDMgMThMMTggMzNMMzMgMThMMTggM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" sizes="60x60" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" sizes="72x72" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIiIGhlaWdodD0iNzIiIHZpZXdCb3g9IjAgMCA3MiA3MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcyIiBoZWlnaHQ9IjcyIiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" sizes="76x76" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzYiIGhlaWdodD0iNzYiIHZpZXdCb3g9IjAgMCA3NiA3NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijc2IiBoZWlnaHQ9Ijc2IiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIxOCIgeT0iMTgiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" sizes="114x114" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTE0IiBoZWlnaHQ9IjExNCIgdmlld0JveD0iMCAwIDExNCAxMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMTQiIGhlaWdodD0iMTE0IiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIzNyIgeT0iMzciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" sizes="120x120" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI0MCIgeT0iNDAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" sizes="144x144" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjE0NCIgdmlld0JveD0iMCAwIDE0NCAxNDQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNDQiIGhlaWdodD0iMTQ0IiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI1MiIgeT0iNTIiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" sizes="152x152" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUyIiBoZWlnaHQ9IjE1MiIgdmlld0JveD0iMCAwIDE1MiAxNTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTIiIGhlaWdodD0iMTUyIiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI1NiIgeT0iNTYiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iMTIiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI3MCIgeT0iNzAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==">
+    
+    <!-- Plotly.js CDN -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f2f2f7;
+            min-height: 100vh;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 100vw;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            color: white;
+            padding: 20px 16px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        
+        .header p {
+            margin: 0;
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            line-height: 1.3;
+        }
+        
+        .status-bar {
+            background-color: white;
+            margin: 0;
+            padding: 12px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid #e5e5ea;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        
+        .status-online { background-color: #34c759; }
+        .status-offline { background-color: #ff3b30; }
+        
+        .chart-container {
+            background: white;
+            margin: 0;
+            padding: 12px;
+            border-bottom: 1px solid #e5e5ea;
+        }
+        
+        #chart {
+            width: 100%;
+            height: 50vh;
+            min-height: 300px;
+        }
+        
+        .alerts-section {
+            background: white;
+            margin: 0;
+            padding: 16px;
+            max-height: 40vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .alert-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .alert-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .alert-badge {
+            background-color: #ff3b30;
+            color: white;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+            min-width: 16px;
+            text-align: center;
+        }
+        
+        .alert-item {
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 8px;
+            font-size: 13px;
+            border-left: 3px solid;
+        }
+        
+        .alert-red {
+            background-color: #ffebee;
+            border-left-color: #ff3b30;
+        }
+        
+        .alert-orange {
+            background-color: #fff8e1;
+            border-left-color: #ff9500;
+        }
+        
+        .no-alerts {
+            text-align: center;
+            padding: 20px;
+            color: #8e8e93;
+        }
+        
+        .refresh-section {
+            background: white;
+            padding: 16px;
+            border-top: 1px solid #e5e5ea;
+        }
+        
+        .refresh-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(192, 57, 43, 0.3);
+        }
+        
+        .refresh-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 4px rgba(192, 57, 43, 0.3);
+        }
+        
+        .refresh-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .notification-banner {
+            position: fixed;
+            top: 60px;
+            left: 16px;
+            right: 16px;
+            background: #ff3b30;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            transform: translateY(-100px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+        }
+        
+        .notification-banner.show {
+            transform: translateY(0);
+        }
+        
+        .offline-indicator {
+            position: fixed;
+            bottom: env(safe-area-inset-bottom);
+            left: 0;
+            right: 0;
+            background: #8e8e93;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .offline-indicator.show {
+            transform: translateY(0);
+        }
+        
+        /* Loading spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #000000;
+                color: #ffffff;
+            }
+            
+            .status-bar,
+            .chart-container,
+            .alerts-section,
+            .refresh-section {
+                background-color: #1c1c1e;
+                border-color: #38383a;
+            }
+            
+            .alert-red {
+                background-color: rgba(255, 59, 48, 0.15);
+            }
+            
+            .alert-orange {
+                background-color: rgba(255, 149, 0, 0.15);
+            }
+        }
+        
+        /* Landscape orientation adjustments */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .header {
+                padding: 12px 16px;
+            }
+            
+            .header h1 {
+                font-size: 16px;
+            }
+            
+            .header p {
+                font-size: 12px;
+            }
+            
+            #chart {
+                height: 40vh;
+                min-height: 250px;
+            }
+            
+            .alerts-section {
+                max-height: 30vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Banner -->
+    <div class="notification-banner" id="notificationBanner"></div>
+    
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        Tryb offline - Dane mogą być nieaktualne
+    </div>
+    
+    <!-- Header -->
+    <div class="header">
+        <h1>PSE Dashboard</h1>
+        <p>Monitoring rezerw mocy KSE</p>
+    </div>
+    
+    <div class="container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div style="display: flex; align-items: center;">
+                <div class="status-indicator status-offline" id="statusIndicator"></div>
+                <span id="statusText">Łączenie...</span>
+            </div>
+            <div id="lastUpdate" style="font-size: 12px; color: #8e8e93;"></div>
+        </div>
+        
+        <!-- Chart -->
+        <div class="chart-container">
+            <div id="chart"></div>
+        </div>
+        
+        <!-- Alerts -->
+        <div class="alerts-section">
+            <div class="alert-header">
+                <h3>Alerty</h3>
+                <div class="alert-badge" id="alertBadge" style="display: none;">0</div>
+            </div>
+            <div id="alertsList">
+                <div class="no-alerts">Ładowanie alertów...</div>
+            </div>
+        </div>
+        
+        <!-- Refresh Button -->
+        <div class="refresh-section">
+            <button class="refresh-btn" id="refreshBtn" onclick="refreshData()">
+                <span id="refreshText">Odśwież</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // PWA and iOS specific functionality
+        class PSEApp {
+            constructor() {
+                this.ALERT_THRESHOLD_ORANGE = 500;
+                this.ALERT_THRESHOLD_RED = 300;
+                this.API_URL = 'https://api.raporty.pse.pl/api/pk5l-wp';
+                this.alertHistory = { orange: [], red: [], lastResetDate: null };
+                this.currentData = null;
+                this.isOnline = navigator.onLine;
+                this.serviceWorkerRegistration = null;
+                
+                this.init();
+            }
+            
+            async init() {
+                // Register service worker
+                if ('serviceWorker' in navigator) {
+                    try {
+                        this.serviceWorkerRegistration = await navigator.serviceWorker.register('/sw.js');
+                        console.log('Service Worker registered');
+                    } catch (error) {
+                        console.log('Service Worker registration failed:', error);
+                    }
+                }
+                
+                // Request notification permission
+                if ('Notification' in window && Notification.permission === 'default') {
+                    await Notification.requestPermission();
+                }
+                
+                // Setup online/offline detection
+                window.addEventListener('online', () => this.handleOnlineStatus(true));
+                window.addEventListener('offline', () => this.handleOnlineStatus(false));
+                
+                // Setup resize handler
+                let resizeTimeout;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        if (this.currentData) {
+                            this.drawChart(this.currentData);
+                        }
+                    }, 250);
+                });
+                
+                // Initial data load
+                await this.refreshData();
+                
+                // Auto refresh every 15 minutes
+                setInterval(() => this.refreshData(), 15 * 60 * 1000);
+            }
+            
+            handleOnlineStatus(online) {
+                this.isOnline = online;
+                const offlineIndicator = document.getElementById('offlineIndicator');
+                
+                if (online) {
+                    offlineIndicator.classList.remove('show');
+                    this.refreshData(); // Refresh when coming back online
+                } else {
+                    offlineIndicator.classList.add('show');
+                }
+            }
+            
+            async fetchData() {
+                const now = new Date();
+                const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                
+                const startDate = this.formatDate(startOfToday);
+                const endDate = this.formatDate(new Date(startOfToday.getTime() + 3 * 24 * 60 * 60 * 1000));
+                
+                try {
+                    let url = `${this.API_URL}?$filter=plan_dtime ge '${startDate}' and plan_dtime le '${endDate}'&$orderby=plan_dtime&$first=200`;
+                    
+                    let response;
+                    try {
+                        response = await fetch(url);
+                    } catch (fetchError) {
+                        response = await fetch(this.API_URL + '?$first=200');
+                    }
+                    
+                    if (!response.ok) {
+                        response = await fetch(this.API_URL + '?$first=200');
+                    }
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.value && data.value.length > 0) {
+                            return this.processData(data.value);
+                        }
+                    }
+                    
+                    return [];
+                } catch (error) {
+                    console.error('API Error:', error);
+                    return [];
+                }
+            }
+            
+            formatDate(date) {
+                return date.getFullYear() + '-' + 
+                       String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                       String(date.getDate()).padStart(2, '0');
+            }
+            
+            processData(rawData) {
+                const now = new Date();
+                const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                let processed = [];
+                
+                if (!rawData || rawData.length === 0) {
+                    return [];
+                }
+                
+                const futureData = rawData.filter(item => {
+                    if (item.plan_dtime) {
+                        const itemDate = new Date(item.plan_dtime);
+                        return itemDate >= startOfToday;
+                    }
+                    return false;
+                });
+                
+                if (futureData.length === 0) {
+                    // Generate data from midnight today
+                    for (let i = 0; i < 72; i++) {
+                        const timestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
+                        const dataIndex = i % rawData.length;
+                        const item = rawData[dataIndex];
+                        
+                        if (item && item.req_pow_res) {
+                            let available = this.getAvailableReserve(item);
+                            
+                            if (available === 0 || isNaN(available)) {
+                                available = parseFloat(item.req_pow_res) + 1000;
+                            }
+                            
+                            if (!isNaN(available) && !isNaN(parseFloat(item.req_pow_res))) {
+                                processed.push({
+                                    time: timestamp,
+                                    timeStr: this.formatDateTime(timestamp),
+                                    reserve: available,
+                                    required: parseFloat(item.req_pow_res)
+                                });
+                            }
+                        }
+                    }
+                } else {
+                    // Use real future data
+                    futureData.forEach(item => {
+                        if (item.req_pow_res) {
+                            const timestamp = new Date(item.plan_dtime);
+                            let available = this.getAvailableReserve(item);
+                            
+                            if (available === 0 || isNaN(available)) {
+                                available = parseFloat(item.req_pow_res) + 1000;
+                            }
+                            
+                            if (!isNaN(available) && !isNaN(parseFloat(item.req_pow_res))) {
+                                processed.push({
+                                    time: timestamp,
+                                    timeStr: this.formatDateTime(timestamp),
+                                    reserve: available,
+                                    required: parseFloat(item.req_pow_res)
+                                });
+                            }
+                        }
+                    });
+                    
+                    // Pad to 72 hours if needed
+                    if (processed.length > 0 && processed.length < 72) {
+                        const lastData = processed[processed.length - 1];
+                        
+                        for (let i = processed.length; i < 72; i++) {
+                            const newTimestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
+                            processed.push({
+                                time: newTimestamp,
+                                timeStr: this.formatDateTime(newTimestamp),
+                                reserve: lastData.reserve,
+                                required: lastData.required
+                            });
+                        }
+                    }
+                }
+                
+                if (processed.length > 72) {
+                    processed = processed.slice(0, 72);
+                }
+                
+                return processed.sort((a, b) => a.time - b.time);
+            }
+            
+            getAvailableReserve(item) {
+                if (item.surplus_cap_avail_tso !== null && item.surplus_cap_avail_tso !== undefined) {
+                    return parseFloat(item.surplus_cap_avail_tso);
+                } else if (item.avail_cap_gen_units_stor_prov !== null && item.avail_cap_gen_units_stor_prov !== undefined) {
+                    return parseFloat(item.avail_cap_gen_units_stor_prov);
+                }
+                return 0;
+            }
+            
+            formatDateTime(date) {
+                return date.getFullYear() + '-' + 
+                       String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                       String(date.getDate()).padStart(2, '0') + ' ' +
+                       String(date.getHours()).padStart(2, '0') + ':00:00';
+            }
+            
+            findAlerts(data) {
+                const alertsOrange = [];
+                const alertsRed = [];
+                
+                data.forEach(item => {
+                    const difference = item.reserve - item.required;
+                    
+                    if (difference <= this.ALERT_THRESHOLD_RED || item.reserve < item.required) {
+                        alertsRed.push({
+                            time: item.timeStr,
+                            reserve: item.reserve,
+                            required: item.required,
+                            difference: difference
+                        });
+                    } else if (difference <= this.ALERT_THRESHOLD_ORANGE) {
+                        alertsOrange.push({
+                            time: item.timeStr,
+                            reserve: item.reserve,
+                            required: item.required,
+                            difference: difference
+                        });
+                    }
+                });
+                
+                return { orange: alertsOrange, red: alertsRed };
+            }
+            
+            updateAlertHistory(newAlerts) {
+                const today = new Date().toDateString();
+                
+                if (this.alertHistory.lastResetDate !== today) {
+                    this.alertHistory = {
+                        orange: [],
+                        red: [],
+                        lastResetDate: today
+                    };
+                }
+                
+                const oldCount = this.alertHistory.orange.length + this.alertHistory.red.length;
+                
+                newAlerts.orange.forEach(alert => {
+                    if (!this.alertHistory.orange.some(a => a.time === alert.time)) {
+                        this.alertHistory.orange.push(alert);
+                    }
+                });
+                
+                newAlerts.red.forEach(alert => {
+                    if (!this.alertHistory.red.some(a => a.time === alert.time)) {
+                        this.alertHistory.red.push(alert);
+                    }
+                });
+                
+                const newCount = this.alertHistory.orange.length + this.alertHistory.red.length;
+                
+                // Show notification for new alerts
+                if (newCount > oldCount && 'Notification' in window && Notification.permission === 'granted') {
+                    const newAlertCount = newCount - oldCount;
+                    this.showNotification(`🚨 ${newAlertCount} nowy alert rezerw mocy!`);
+                }
+            }
+            
+            showNotification(message) {
+                // Show in-app notification banner
+                const banner = document.getElementById('notificationBanner');
+                banner.textContent = message;
+                banner.classList.add('show');
+                
+                setTimeout(() => {
+                    banner.classList.remove('show');
+                }, 4000);
+                
+                // Show system notification
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('PSE Dashboard', {
+                        body: message,
+                        icon: '/apple-touch-icon-180x180.png',
+                        badge: '/apple-touch-icon-180x180.png'
+                    });
+                }
+            }
+            
+            drawChart(data) {
+                if (!data || data.length === 0) {
+                    document.getElementById('chart').innerHTML = 
+                        '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #8e8e93;">Brak danych do wyświetlenia</div>';
+                    return;
+                }
+                
+                const times = data.map(d => d.timeStr);
+                const reserves = data.map(d => d.reserve);
+                const required = data.map(d => d.required);
+                
+                // Find alerts for chart lines
+                const alerts = this.findAlerts(data);
+                const shapes = [];
+                
+                // Add alert lines
+                alerts.orange.forEach(alert => {
+                    shapes.push({
+                        type: 'line',
+                        x0: alert.time,
+                        y0: 0,
+                        x1: alert.time,
+                        y1: Math.max(...reserves) * 1.1,
+                        line: { color: '#ff9500', width: 2, dash: 'dot' }
+                    });
+                });
+                
+                alerts.red.forEach(alert => {
+                    shapes.push({
+                        type: 'line',
+                        x0: alert.time,
+                        y0: 0,
+                        x1: alert.time,
+                        y1: Math.max(...reserves) * 1.1,
+                        line: { color: '#ff3b30', width: 3, dash: 'dot' }
+                    });
+                });
+                
+                // Current hour marker
+                const now = new Date();
+                const currentHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours());
+                const currentHourStr = this.formatDateTime(currentHour);
+                
+                const traces = [
+                    {
+                        x: times,
+                        y: reserves,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'Rezerwa mocy',
+                        line: { color: '#c0392b', width: 3 }
+                    },
+                    {
+                        x: times,
+                        y: required,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'Wymagana rezerwa',
+                        line: { color: '#007aff', width: 2 }
+                    }
+                ];
+                
+                // Add current hour marker if found
+                const currentIndex = times.indexOf(currentHourStr);
+                if (currentIndex !== -1) {
+                    traces.push({
+                        x: [currentHourStr],
+                        y: [reserves[currentIndex]],
+                        type: 'scatter',
+                        mode: 'markers',
+                        name: 'Teraz',
+                        marker: { color: '#ff3b30', size: 10 }
+                    });
+                }
+                
+                const layout = {
+                    title: false,
+                    shapes: shapes,
+                    xaxis: {
+                        tickformat: '%H:%M',
+                        tickangle: -45,
+                        showgrid: true,
+                        gridcolor: '#f0f0f0',
+                        tickfont: { size: 11 }
+                    },
+                    yaxis: {
+                        title: 'MW',
+                        showgrid: true,
+                        gridcolor: '#f0f0f0',
+                        tickfont: { size: 11 }
+                    },
+                    plot_bgcolor: 'white',
+                    paper_bgcolor: 'white',
+                    hovermode: 'x unified',
+                    legend: {
+                        orientation: 'h',
+                        y: -0.2,
+                        x: 0.5,
+                        xanchor: 'center',
+                        font: { size: 10 }
+                    },
+                    margin: { t: 20, r: 20, b: 60, l: 50 },
+                    autosize: true
+                };
+                
+                this.currentData = data;
+                
+                Plotly.newPlot('chart', traces, layout, {
+                    responsive: true,
+                    displayModeBar: false
+                });
+            }
+            
+            updateAlertsList() {
+                const alertsList = document.getElementById('alertsList');
+                const alertBadge = document.getElementById('alertBadge');
+                
+                const totalAlerts = this.alertHistory.orange.length + this.alertHistory.red.length;
+                
+                if (totalAlerts > 0) {
+                    alertBadge.textContent = totalAlerts;
+                    alertBadge.style.display = 'inline-block';
+                    
+                    let html = '';
+                    
+                    this.alertHistory.red.sort((a, b) => a.time.localeCompare(b.time)).forEach(alert => {
+                        const time = new Date(alert.time).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+                        html += `<div class="alert-item alert-red">
+                            <strong>🔴 ${time}</strong><br>
+                            Rezerwa: ${alert.reserve.toFixed(0)} MW | Wymagana: ${alert.required.toFixed(0)} MW<br>
+                            <small>Margines: ${alert.difference.toFixed(0)} MW</small>
+                        </div>`;
+                    });
+                    
+                    this.alertHistory.orange.sort((a, b) => a.time.localeCompare(b.time)).forEach(alert => {
+                        const time = new Date(alert.time).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+                        html += `<div class="alert-item alert-orange">
+                            <strong>🟠 ${time}</strong><br>
+                            Rezerwa: ${alert.reserve.toFixed(0)} MW | Wymagana: ${alert.required.toFixed(0)} MW<br>
+                            <small>Margines: ${alert.difference.toFixed(0)} MW</small>
+                        </div>`;
+                    });
+                    
+                    alertsList.innerHTML = html;
+                } else {
+                    alertBadge.style.display = 'none';
+                    alertsList.innerHTML = '<div class="no-alerts">✅ Brak alertów dzisiaj</div>';
+                }
+            }
+            
+            updateStatus(online, message) {
+                const statusIndicator = document.getElementById('statusIndicator');
+                const statusText = document.getElementById('statusText');
+                
+                statusIndicator.className = `status-indicator ${online ? 'status-online' : 'status-offline'}`;
+                statusText.textContent = message;
+            }
+            
+            async refreshData() {
+                const refreshBtn = document.getElementById('refreshBtn');
+                const refreshText = document.getElementById('refreshText');
+                const lastUpdateEl = document.getElementById('lastUpdate');
+                
+                // Show loading
+                refreshBtn.disabled = true;
+                refreshText.innerHTML = '<div class="loading-spinner"></div>Odświeżanie...';
+                this.updateStatus(false, 'Pobieranie danych...');
+                
+                try {
+                    const data = await this.fetchData();
+                    const now = new Date().toLocaleString('pl-PL');
+                    
+                    if (data && data.length > 0) {
+                        this.drawChart(data);
+                        
+                        const alerts = this.findAlerts(data);
+                        this.updateAlertHistory(alerts);
+                        this.updateAlertsList();
+                        
+                        this.updateStatus(true, `Połączono | ${data.length} punktów`);
+                        lastUpdateEl.textContent = now.split(' ')[1].substring(0, 5);
+                    } else {
+                        this.updateStatus(false, 'Brak danych');
+                        document.getElementById('chart').innerHTML = 
+                            '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #ff3b30; text-align: center;">❌ Brak połączenia z API PSE<br><small>Sprawdź połączenie internetowe</small></div>';
+                        this.updateAlertsList();
+                    }
+                } catch (error) {
+                    console.error('Refresh error:', error);
+                    this.updateStatus(false, 'Błąd połączenia');
+                } finally {
+                    // Hide loading
+                    refreshBtn.disabled = false;
+                    refreshText.textContent = 'Odśwież';
+                }
+            }
+        }
+        
+        // Global refresh function for button
+        let app;
+        
+        function refreshData() {
+            if (app) {
+                app.refreshData();
+            }
+        }
+        
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            app = new PSEApp();
+        });
+        
+        // PWA install prompt
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show custom install button if needed
+            console.log('PWA install prompt available');
+        });
+    </script>
+    
+    <!-- PWA Manifest (should be in separate file in production) -->
+    <script type="application/json" id="manifest">
+    {
+        "name": "PSE Dashboard",
+        "short_name": "PSE",
+        "description": "Monitoring prognozowanych rezerw mocy w Krajowym Systemie Elektroenergetycznym",
+        "start_url": "/",
+        "display": "standalone",
+        "background_color": "#c0392b",
+        "theme_color": "#c0392b",
+        "orientation": "portrait-primary",
+        "icons": [
+            {
+                "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSI3NiIgeT0iNzYiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0yMCAzTDMgMjBMMjAgMzdMMzcgMjBMMjAgM1oiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cjwvc3ZnPg==",
+                "sizes": "192x192",
+                "type": "image/svg+xml",
+                "purpose": "any maskable"
+            },
+            {
+                "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiNjMDM5MmIiLz4KPHN2ZyB4PSIyMzYiIHk9IjIzNiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIj4KPHBhdGggZD0iTTIwIDNMMyAyMEwyMCAzN0wzNyAyMEwyMCAzWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4KPC9zdmc+",
+                "sizes": "512x512",
+                "type": "image/svg+xml",
+                "purpose": "any maskable"
+            }
+        ]
+    }
+    </script>
+    
+    <script>
+        // Create and inject manifest
+        const manifestContent = document.getElementById('manifest').textContent;
+        const manifestBlob = new Blob([manifestContent], { type: 'application/json' });
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        document.querySelector('link[rel="manifest"]').href = manifestURL;
+    </script>
+</body>
+</html>
