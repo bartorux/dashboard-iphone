@@ -261,6 +261,26 @@
             cursor: not-allowed;
         }
         
+        .update-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            opacity: 0.8;
+        }
+        
+        .update-btn:active {
+            transform: translateY(1px);
+            opacity: 1;
+        }
+        
         .notification-banner {
             position: fixed;
             top: 60px;
@@ -320,6 +340,22 @@
             body {
                 background-color: #000000;
                 color: #ffffff;
+            }
+            
+            handleSWMessage(event) {
+                console.log('Received message from Service Worker:', event.data);
+                
+                if (event.data && event.data.type === 'FORCE_RELOAD') {
+                    console.log('Service Worker requests app reload for update');
+                    
+                    // Show update notification
+                    this.showNotification('📱 Aktualizacja aplikacji dostępna - odświeżanie...');
+                    
+                    // Reload after short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                }
             }
             
             setupVisibilityTracking() {
@@ -392,6 +428,10 @@
             
             .notification-toggle:hover {
                 background-color: #3a3a3c;
+            }
+            
+            .update-btn {
+                background: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 100%);
             }
         }
         
@@ -514,6 +554,9 @@
             <button class="refresh-btn" id="refreshBtn" onclick="refreshData()">
                 <span id="refreshText">Odśwież</span>
             </button>
+            <button class="update-btn" id="updateBtn" onclick="forceUpdate()" title="Wymuś aktualizację aplikacji">
+                <span>🔄 Aktualizuj aplikację</span>
+            </button>
         </div>
     </div>
 
@@ -556,6 +599,10 @@
                                 this.serviceWorkerRegistration = await navigator.serviceWorker.register(path);
                                 console.log('Service Worker registered successfully from:', path);
                                 swRegistered = true;
+                                
+                                // Listen for SW messages about updates
+                                navigator.serviceWorker.addEventListener('message', this.handleSWMessage.bind(this));
+                                
                                 break;
                             } catch (pathError) {
                                 console.log(`Failed to register SW from ${path}:`, pathError.message);
@@ -1262,6 +1309,45 @@
         function toggleNotifications() {
             if (app) {
                 app.toggleNotifications();
+            }
+        }
+        
+        function forceUpdate() {
+            console.log('Force update requested by user');
+            
+            // Show loading state
+            const updateBtn = document.getElementById('updateBtn');
+            const originalText = updateBtn.innerHTML;
+            updateBtn.innerHTML = '<div class="loading-spinner"></div>Aktualizowanie...';
+            updateBtn.disabled = true;
+            
+            // Clear all caches
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        console.log('Deleting cache:', name);
+                        caches.delete(name);
+                    });
+                }).then(() => {
+                    console.log('All caches cleared');
+                    
+                    // Unregister service worker
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistrations().then(registrations => {
+                            registrations.forEach(registration => {
+                                console.log('Unregistering SW');
+                                registration.unregister();
+                            });
+                        }).then(() => {
+                            console.log('Service Worker unregistered - reloading...');
+                            window.location.reload();
+                        });
+                    } else {
+                        window.location.reload();
+                    }
+                });
+            } else {
+                window.location.reload();
             }
         }
         
