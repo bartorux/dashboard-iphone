@@ -551,7 +551,7 @@
                 this.API_URL = 'https://api.raporty.pse.pl/api/pk5l-wp';
                 this.alertHistory = { orange: [], red: [], lastResetDate: null };
                 this.currentData = null;
-                this.isOnline = navigator.onLine;
+                this.isOnline = true; // Start as online
                 this.serviceWorkerRegistration = null;
                 
                 // Day navigation
@@ -635,8 +635,12 @@
                 // Setup day navigation dates
                 this.setupDayNavigation();
                 
-                // Auto refresh every 15 minutes
-                setInterval(() => this.refreshData(), 15 * 60 * 1000);
+                // Auto refresh every 15 minutes (ZACHOWANE jak w oryginale)
+                console.log('⏰ Setting up 15-minute auto-refresh (preserved from original)');
+                setInterval(() => {
+                    console.log('⏰ Auto-refresh triggered (15-minute interval)');
+                    this.refreshData();
+                }, 15 * 60 * 1000);
             }
             
             // Dodana metoda setupPWAInstallation
@@ -1022,6 +1026,9 @@
                 console.log('🔴 Showing offline indicator');
                 const offlineIndicator = document.getElementById('offlineIndicator');
                 if (offlineIndicator) {
+                    offlineIndicator.style.display = 'block';
+                    // Force reflow before adding class
+                    offlineIndicator.offsetHeight;
                     offlineIndicator.classList.add('show');
                 }
             }
@@ -1031,15 +1038,23 @@
                 const offlineIndicator = document.getElementById('offlineIndicator');
                 if (offlineIndicator) {
                     offlineIndicator.classList.remove('show');
+                    // Hide completely after animation
+                    setTimeout(() => {
+                        offlineIndicator.style.display = 'none';
+                    }, 300);
                 }
             }
             
             async fetchData() {
                 const now = new Date();
+                // WAŻNE: Po północy automatycznie przesunie się na nowy dzień! (jak w oryginale)
                 const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 
                 const startDate = this.formatDate(startOfToday);
+                // 3 pełne dni w przód (72 godziny) - jak w oryginale
                 const endDate = this.formatDate(new Date(startOfToday.getTime() + 3 * 24 * 60 * 60 * 1000));
+                
+                console.log(`🕐 Fetching data from ${startDate} to ${endDate} (auto-shifts at midnight)`);
                 
                 try {
                     let url = `${this.API_URL}?$filter=plan_dtime ge '${startDate}' and plan_dtime le '${endDate}'&$orderby=plan_dtime&$first=200`;
@@ -1077,6 +1092,7 @@
             
             processData(rawData) {
                 const now = new Date();
+                // WAŻNE: Po północy automatycznie przesunie się na nowy dzień! (jak w oryginale)
                 const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 let processed = [];
                 
@@ -1085,17 +1101,17 @@
                     return [];
                 }
                 
-                console.log(`Processing ${rawData.length} raw data records`);
-                console.log('Start of today:', startOfToday.toISOString());
+                console.log(`🔄 Processing ${rawData.length} raw data records`);
+                console.log(`📅 Start of today: ${startOfToday.toISOString()}`);
                 
-                // ZAWSZE generuj pełne 72 godziny dla lepszej wizualizacji
-                console.log('Generating full 72 hours from midnight today...');
+                // ZAWSZE generuj pełne 72 godziny od północy dzisiejszego dnia (jak w oryginale)
+                console.log('🕐 Generating full 72 hours from midnight today (like original)...');
                 
                 for (let i = 0; i < 72; i++) {
                     const timestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
                     
                     let item;
-                    // Użyj rzeczywistych danych jeśli dostępne
+                    // Użyj rzeczywistych danych jeśli dostępne, inaczej cykluj przez dostępne
                     const dataIndex = i % Math.max(rawData.length, 1);
                     item = rawData[dataIndex] || rawData[0];
                     
@@ -1119,9 +1135,9 @@
                     }
                 }
                 
-                console.log(`Generated ${processed.length} processed points`);
+                console.log(`✅ Generated ${processed.length} processed points for 72h period`);
                 if (processed.length > 0) {
-                    console.log('Time range:', processed[0].timeStr, 'to', processed[processed.length - 1].timeStr);
+                    console.log(`📅 Time range: ${processed[0].timeStr} to ${processed[processed.length - 1].timeStr}`);
                 }
                 
                 return processed.sort((a, b) => a.time - b.time);
@@ -1176,7 +1192,9 @@
             updateAlertHistory(newAlerts) {
                 const today = new Date().toDateString();
                 
+                // ZACHOWANE: Reset alertów o północy (jak w oryginale)
                 if (this.alertHistory.lastResetDate !== today) {
+                    console.log('🌅 NEW DAY - resetting alert history (preserved from original)');
                     this.alertHistory = {
                         orange: [],
                         red: [],
@@ -1184,7 +1202,7 @@
                     };
                     // Reset lastSeenTime for new day
                     this.lastSeenTime = Date.now();
-                    console.log('New day - reset alert history and lastSeenTime');
+                    console.log('🌅 Alert history reset and lastSeenTime updated for new day');
                 }
                 
                 // Count only truly NEW alerts (that appeared after lastSeenTime)
@@ -1230,10 +1248,10 @@
                     'Notification' in window && 
                     Notification.permission === 'granted') {
                     
-                    console.log(`Sending notification for ${newAlertsCount} new alerts`);
+                    console.log(`🚨 Sending notification for ${newAlertsCount} new alerts`);
                     this.showNotification(`🚨 ${newAlertsCount} ${newAlertsCount === 1 ? 'nowy alert' : 'nowe alerty'} rezerw mocy!`);
                 } else {
-                    console.log(`Not sending notification - newAlertsCount: ${newAlertsCount}, isAppVisible: ${this.isAppVisible}, silenced: ${this.notificationsSilenced}`);
+                    console.log(`📱 Not sending notification - newAlertsCount: ${newAlertsCount}, isAppVisible: ${this.isAppVisible}, silenced: ${this.notificationsSilenced}`);
                 }
             }
             
@@ -1487,12 +1505,19 @@
                     const now = new Date().toLocaleString('pl-PL');
                     
                     if (data && data.length > 0) {
-                        console.log(`✅ Loaded ${data.length} data points - CONNECTION SUCCESSFUL`);
+                        console.log(`✅ DATA LOAD SUCCESS: ${data.length} data points - CONNECTION CONFIRMED`);
                         
                         // Data loaded successfully - we're definitely online
                         this.isOnline = true;
                         this.hideOfflineIndicator();
-                        console.log('📡 Connection status updated to ONLINE');
+                        
+                        // FORCE HIDE offline indicator (safety check)
+                        const offlineIndicator = document.getElementById('offlineIndicator');
+                        if (offlineIndicator) {
+                            offlineIndicator.style.display = 'none';
+                            offlineIndicator.classList.remove('show');
+                        }
+                        console.log('📡 Connection status: ONLINE - offline indicator FORCED hidden');
                         
                         // Save all data
                         this.allData = data;
@@ -1571,20 +1596,37 @@
         // Debug functions (available in browser console)
         window.hideOfflineTest = function() {
             console.log('🧪 Manual test: hiding offline indicator');
-            if (app) {
-                app.hideOfflineIndicator();
+            const indicator = document.getElementById('offlineIndicator');
+            if (indicator) {
+                indicator.style.display = 'none';
+                indicator.classList.remove('show');
+                console.log('🟢 Offline indicator manually hidden');
             }
         };
         
         window.showOfflineTest = function() {
             console.log('🧪 Manual test: showing offline indicator');
-            if (app) {
-                app.showOfflineIndicator();
+            const indicator = document.getElementById('offlineIndicator');
+            if (indicator) {
+                indicator.style.display = 'block';
+                indicator.offsetHeight; // Force reflow
+                indicator.classList.add('show');
+                console.log('🔴 Offline indicator manually shown');
             }
         };
         
         window.getConnectionStatus = function() {
             console.log('🧪 Connection status:', app ? app.isOnline : 'App not initialized');
+            const indicator = document.getElementById('offlineIndicator');
+            console.log('🧪 Offline indicator display:', indicator ? indicator.style.display : 'Not found');
+            console.log('🧪 Offline indicator show class:', indicator ? indicator.classList.contains('show') : 'Not found');
+        };
+        
+        window.forceRefresh = function() {
+            console.log('🧪 Force refresh test');
+            if (app) {
+                app.refreshData();
+            }
         };
         
         function forceUpdate() {
@@ -1634,6 +1676,14 @@
             console.log('SW Support:', 'serviceWorker' in navigator);
             console.log('Notification Support:', 'Notification' in window);
             console.log('Notification Permission:', 'Notification' in window ? Notification.permission : 'N/A');
+            
+            // FORCE HIDE offline indicator at start
+            const offlineIndicator = document.getElementById('offlineIndicator');
+            if (offlineIndicator) {
+                offlineIndicator.style.display = 'none';
+                offlineIndicator.classList.remove('show');
+                console.log('🟢 FORCED offline indicator hidden at startup');
+            }
             
             app = new PSEApp();
         });
