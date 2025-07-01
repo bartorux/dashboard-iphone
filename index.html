@@ -165,8 +165,8 @@
         }
         
         .settings-panel.show {
-            max-height: 400px; /* Zwiększone z 300px na 400px dla iPhone */
-            overflow-y: auto; /* Dodaj scroll jeśli potrzeba */
+            max-height: 400px;
+            overflow-y: auto;
         }
         
         .settings-content {
@@ -194,7 +194,6 @@
             font-size: 14px;
         }
         
-        /* Specjalne style dla checkboxa - lepiej widoczne na iPhone */
         .checkbox-setting {
             margin-top: 16px;
             padding: 12px;
@@ -231,7 +230,6 @@
             flex-shrink: 0;
             accent-color: #007aff;
             cursor: pointer;
-            /* Większy obszar kliknięcia */
             position: relative;
         }
         
@@ -339,7 +337,7 @@
             width: 100%;
             height: 50vh;
             min-height: 300px;
-            overflow: visible; /* Ważne dla iPhone - zapobiega obcinaniu */
+            overflow: visible;
         }
         
         .trends-section {
@@ -570,10 +568,15 @@
             margin-bottom: 8px;
         }
         
+        .install-btn.auto-install {
+            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+            box-shadow: 0 2px 8px rgba(0, 212, 170, 0.4);
+        }
+        
         .update-btn {
             background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
             color: white;
-            display: none; /* Ukryty domyślnie */
+            display: none;
         }
         
         .test-btn {
@@ -586,7 +589,7 @@
             color: #8e8e93;
             text-align: center;
             margin-top: 4px;
-            display: none; /* Ukryty domyślnie */
+            display: none;
         }
         
         .notification-banner {
@@ -644,7 +647,7 @@
             to { transform: rotate(360deg); }
         }
         
-        /* Bardzo małe ekrany (iPhone SE, małe Android) */
+        /* Very small screens */
         @media (max-width: 380px) {
             .header {
                 padding: 12px 8px;
@@ -677,7 +680,6 @@
                 font-size: 11px;
             }
             
-            /* Większy checkbox i tekst na małych ekranach */
             .checkbox-setting {
                 padding: 16px 12px;
             }
@@ -698,12 +700,12 @@
             }
             
             .setting-item input {
-                font-size: 16px; /* Większy font na iPhone */
+                font-size: 16px;
                 padding: 10px 12px;
             }
         }
         
-        /* iPhone standardowy (iPhone 12, 13, 14 itp.) */
+        /* iPhone standard */
         @media (max-width: 430px) and (min-width: 381px) {
             .checkbox-setting {
                 padding: 14px;
@@ -721,11 +723,11 @@
             }
             
             .setting-item input {
-                font-size: 16px; /* Zapobiega zoom na iPhone */
+                font-size: 16px;
             }
         }
         
-        /* Small screen adjustments - iPhone SE i bardzo małe ekrany */
+        /* Very small screens */
         @media (max-width: 320px) {
             .day-btn {
                 padding: 8px 4px;
@@ -740,7 +742,6 @@
                 font-size: 10px;
             }
             
-            /* Jeszcze większy checkbox na bardzo małych ekranach */
             .checkbox-setting {
                 padding: 18px 14px;
                 margin-top: 20px;
@@ -956,9 +957,9 @@
     </div>
 
     <script>
-        // Version info for debugging
-        const APP_VERSION = '2.1.0'; // Zwiększ przy każdej zmianie!
-        const APP_BUILD = Date.now(); // Timestamp budowania
+        // Version info
+        const APP_VERSION = '2.2.0'; // Zwiększ przy każdej zmianie!
+        const APP_BUILD = Date.now();
         
         console.log(`📱 PSE Dashboard ${APP_VERSION} (build: ${APP_BUILD})`);
         
@@ -987,9 +988,9 @@
                 this.settingsVisible = false;
                 this.trendsExpanded = true;
                 this.historicalData = [];
-                this.isRefreshing = false; // Flaga zapobiegająca wielokrotnym refresh
+                this.isRefreshing = false;
                 
-                // PWA Installation
+                // PWA Installation - POPRAWIONE
                 this.installPromptEvent = null;
                 this.isInstallable = false;
                 
@@ -1080,7 +1081,7 @@
                     }
                     
                     this.showNotification('✅ Ustawienia zapisane');
-                    this.toggleSettings(); // Hide settings panel
+                    this.toggleSettings();
                     
                     // Recalculate alerts with new thresholds
                     if (this.allData && this.allData.length > 0) {
@@ -1120,7 +1121,6 @@
                 
                 if (this.settingsVisible) {
                     panel.style.display = 'block';
-                    // Force reflow
                     panel.offsetHeight;
                     panel.classList.add('show');
                     
@@ -1161,29 +1161,22 @@
             async init() {
                 console.log('=== PSE Dashboard Init Started ===');
                 
-                // Start as online by default (jak w Python)
                 this.isOnline = true;
                 this.hideOfflineIndicator();
                 
-                // Apply custom thresholds from settings
                 this.ALERT_THRESHOLD_ORANGE = this.settings.orangeThreshold;
                 this.ALERT_THRESHOLD_RED = this.settings.redThreshold;
                 console.log('📋 Zastosowane progi alertów:', { orange: this.ALERT_THRESHOLD_ORANGE, red: this.ALERT_THRESHOLD_RED });
                 
-                // Setup offline/online detection
                 window.addEventListener('online', () => this.handleOnlineStatus(true));
                 window.addEventListener('offline', () => this.handleOnlineStatus(false));
                 
-                // Setup PWA installation
+                // ⭐ POPRAWIONA INSTALACJA PWA
                 this.setupPWAInstallation();
                 
-                // Setup pull-to-refresh
                 this.setupPullToRefresh();
-                
-                // Setup visibility tracking
                 this.setupVisibilityTracking();
                 
-                // Setup resize handler
                 let resizeTimeout;
                 window.addEventListener('resize', () => {
                     clearTimeout(resizeTimeout);
@@ -1192,42 +1185,290 @@
                     }, 250);
                 });
                 
-                // Setup day navigation
                 console.log('📅 Konfigurowanie nawigacji dni...');
                 this.setupDayNavigation();
                 
-                // Setup Service Worker message handling
                 this.setupServiceWorkerMessages();
-                
-                // Register Service Worker for PWA
                 this.registerServiceWorker();
                 
-                // Initial data load
                 console.log('📊 Rozpoczynam pierwsze ładowanie danych...');
                 await this.refreshData();
                 
-                // Auto refresh every 15 minutes (PRESERVED from Python)
-                console.log('⏰ Konfiguracja auto-odświeżania co 15 minut (zachowane z wersji Python)');
+                console.log('⏰ Konfiguracja auto-odświeżania co 15 minut');
                 setInterval(() => {
-                    console.log('⏰ Auto-odświeżanie (15-minutowy interwał z Python)');
+                    console.log('⏰ Auto-odświeżanie (15-minutowy interwał)');
                     this.refreshData();
-                }, 15 * 60 * 1000); // EXACTLY like in Python: 15 * 60 * 1000
+                }, 15 * 60 * 1000);
                 
-                // Ukryj przycisk aktualizacji na początku lub jeśli wyłączony
                 if (this.settings.disableUpdates || localStorage.getItem('no-sw-updates')) {
                     this.hideUpdateButton();
                     console.log('📱 Automatyczne sprawdzanie aktualizacji WYŁĄCZONE przez użytkownika');
                 } else {
-                    this.hideUpdateButton(); // Domyślnie ukryty, pokaże się gdy będzie aktualizacja
-                    console.log('📱 Automatyczne sprawdzanie aktualizacji WŁĄCZONE - przycisk pojawi się gdy będzie dostępna nowa wersja');
+                    this.hideUpdateButton();
+                    console.log('📱 Automatyczne sprawdzanie aktualizacji WŁĄCZONE');
                 }
                 
                 console.log('=== PSE Dashboard Init Complete ===');
             }
             
+            // ⭐ POPRAWIONA INSTALACJA PWA
+            setupPWAInstallation() {
+                console.log('📱 Konfigurowanie instalacji PWA...');
+                
+                // Check if app is already installed
+                const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+                const isIOSStandalone = window.navigator.standalone === true;
+                
+                if (isStandalone || isIOSStandalone) {
+                    console.log('📱 Aplikacja już zainstalowana - ukrywam przycisk instalacji');
+                    this.hideInstallButton();
+                    return;
+                }
+                
+                // Always show install button initially
+                this.showInstallButton();
+                
+                // 🎯 KLUCZOWY LISTENER - łapie możliwość automatycznej instalacji
+                window.addEventListener('beforeinstallprompt', (event) => {
+                    console.log('🎯 beforeinstallprompt event otrzymany - AUTOMATYCZNA INSTALACJA DOSTĘPNA!');
+                    event.preventDefault(); // Zapobiega automatycznemu pokazaniu mini-infobara
+                    
+                    this.installPromptEvent = event;
+                    this.isInstallable = true;
+                    
+                    // Zaktualizuj przycisk na "gotowy do automatycznej instalacji"
+                    this.updateInstallButton();
+                    this.showNotification('🚀 Aplikacja gotowa do automatycznej instalacji!');
+                });
+                
+                // Listen for successful installation
+                window.addEventListener('appinstalled', () => {
+                    console.log('🎉 PWA została automatycznie zainstalowana!');
+                    this.hideInstallButton();
+                    this.showNotification('🎉 Aplikacja zainstalowana na ekranie głównym!');
+                });
+                
+                // Detect platforms without automatic install
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                
+                if (isIOS && isSafari) {
+                    console.log('📱 iOS Safari - tylko instrukcje manualne');
+                    this.isInstallable = 'ios';
+                    this.updateInstallButton();
+                }
+                
+                // Fallback timer
+                setTimeout(() => {
+                    if (!this.installPromptEvent && !this.isInstallable) {
+                        console.log('📱 Brak automatycznej instalacji - używam trybu instrukcji');
+                        this.isInstallable = 'manual';
+                        this.updateInstallButton();
+                    }
+                }, 3000);
+            }
+            
+            updateInstallButton() {
+                const installBtn = document.getElementById('installBtn');
+                if (!installBtn) return;
+                
+                if (this.isInstallable === true) {
+                    // ⭐ Automatyczna instalacja dostępna!
+                    installBtn.innerHTML = '🚀 Zainstaluj automatycznie';
+                    installBtn.title = 'Kliknij aby automatycznie zainstalować na urządzeniu';
+                    installBtn.classList.add('auto-install');
+                } else if (this.isInstallable === 'ios') {
+                    installBtn.innerHTML = '📱 Instrukcje dla iOS';
+                    installBtn.title = 'Zobacz instrukcje instalacji dla iPhone/iPad';
+                    installBtn.classList.remove('auto-install');
+                } else if (this.isInstallable === 'manual') {
+                    installBtn.innerHTML = '📱 Instrukcje instalacji';
+                    installBtn.title = 'Zobacz instrukcje jak dodać do ekranu głównego';
+                    installBtn.classList.remove('auto-install');
+                } else {
+                    installBtn.innerHTML = '📱 Zainstaluj aplikację';
+                    installBtn.title = 'Zainstaluj aplikację na urządzeniu';
+                    installBtn.classList.remove('auto-install');
+                }
+                
+                installBtn.style.display = 'block';
+                installBtn.disabled = false;
+            }
+            
+            // ⭐ POPRAWIONA FUNKCJA INSTALACJI
+            async installPWA() {
+                console.log('📱 Przycisk instalacji kliknięty, installable:', this.isInstallable);
+                
+                const installBtn = document.getElementById('installBtn');
+                
+                // CASE 1: Android/Chrome - AUTOMATYCZNA INSTALACJA
+                if (this.installPromptEvent && this.isInstallable === true) {
+                    if (installBtn) {
+                        installBtn.innerHTML = '<div class="loading-spinner"></div>Instalowanie...';
+                        installBtn.disabled = true;
+                    }
+                    
+                    try {
+                        // 🚀 POKAZUJE NATYWNY DIALOG INSTALACJI
+                        console.log('🚀 Wyświetlam natywny dialog instalacji...');
+                        this.installPromptEvent.prompt();
+                        
+                        // Czeka na decyzję użytkownika
+                        const result = await this.installPromptEvent.userChoice;
+                        console.log('📱 Wybór użytkownika:', result.outcome);
+                        
+                        if (result.outcome === 'accepted') {
+                            // ✅ SUKCES - PWA zostanie automatycznie zainstalowana!
+                            this.showNotification('🎉 Aplikacja zostanie zainstalowana!');
+                            this.hideInstallButton(); // Ukryj przycisk bo już instaluje
+                            
+                            // Opcjonalnie: Posłuchaj event 'appinstalled'
+                            window.addEventListener('appinstalled', () => {
+                                this.showNotification('✅ Aplikacja zainstalowana na ekranie głównym!');
+                            });
+                            
+                        } else if (result.outcome === 'dismissed') {
+                            this.showNotification('💡 Możesz zainstalować później');
+                        }
+                        
+                        // Wyczyść event (można użyć tylko raz)
+                        this.installPromptEvent = null;
+                        this.isInstallable = false;
+                        
+                    } catch (error) {
+                        console.log('❌ Błąd natywnej instalacji:', error);
+                        // Fallback do instrukcji jeśli natywny dialog nie działa
+                        this.showPlatformSpecificInstructions();
+                    } finally {
+                        if (installBtn) {
+                            installBtn.innerHTML = '📱 Zainstaluj aplikację';
+                            installBtn.disabled = false;
+                        }
+                    }
+                } 
+                
+                // CASE 2: iOS Safari - TYLKO INSTRUKCJE (brak API)
+                else if (this.isInstallable === 'ios') {
+                    console.log('🍎 iOS Safari - pokazuję instrukcje (brak API automatycznej instalacji)');
+                    this.showIOSInstallInstructions();
+                }
+                
+                // CASE 3: Inne przeglądarki - sprawdź czy może jednak jest API
+                else {
+                    console.log('🔍 Sprawdzam czy może jest dostępny natywny prompt...');
+                    
+                    // Spróbuj wymusić sprawdzenie beforeinstallprompt
+                    if ('serviceWorker' in navigator && !this.installPromptEvent) {
+                        // Czasami event się spóźnia, spróbuj poczekać
+                        this.showNotification('🔍 Sprawdzam możliwości instalacji...');
+                        
+                        setTimeout(() => {
+                            if (this.installPromptEvent) {
+                                console.log('🎯 Znaleziono spóźniony install prompt!');
+                                this.installPWA(); // Rekurencyjnie spróbuj ponownie
+                            } else {
+                                this.showPlatformSpecificInstructions();
+                            }
+                        }, 1000);
+                    } else {
+                        this.showPlatformSpecificInstructions();
+                    }
+                }
+            }
+            
+            // Nowa funkcja do pokazywania instrukcji specyficznych dla platformy
+            showPlatformSpecificInstructions() {
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isAndroid = /Android/.test(navigator.userAgent);
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                const isChrome = /Chrome/.test(navigator.userAgent);
+                const isFirefox = /Firefox/.test(navigator.userAgent);
+                const isEdge = /Edge/.test(navigator.userAgent);
+                
+                const banner = document.getElementById('notificationBanner');
+                if (banner) {
+                    let instructions = '';
+                    
+                    if (isIOS && isSafari) {
+                        instructions = `
+                            <div style="text-align: left; line-height: 1.4;">
+                                <strong>📱 iOS Safari - instrukcje:</strong><br>
+                                1. Naciśnij przycisk <strong>Udostępnij ⬆️</strong><br>
+                                2. Wybierz <strong>"Dodaj do ekranu głównego"</strong><br>
+                                3. Naciśnij <strong>"Dodaj"</strong><br>
+                                <small style="opacity: 0.8;">Apple nie pozwala na automatyczną instalację</small>
+                            </div>
+                        `;
+                    } else if (isAndroid && isChrome) {
+                        instructions = `
+                            <div style="text-align: left; line-height: 1.4;">
+                                <strong>📱 Chrome Android - instrukcje:</strong><br>
+                                1. Naciśnij <strong>menu ⋮</strong> (prawy górny róg)<br>
+                                2. Wybierz <strong>"Dodaj do ekranu głównego"</strong><br>
+                                3. Potwierdź <strong>"Dodaj"</strong><br>
+                                <small style="opacity: 0.8;">Lub sprawdź czy pojawi się powiadomienie o instalacji</small>
+                            </div>
+                        `;
+                    } else if (isFirefox) {
+                        instructions = `
+                            <div style="text-align: left; line-height: 1.4;">
+                                <strong>🦊 Firefox - instrukcje:</strong><br>
+                                1. Naciśnij <strong>menu ⋮</strong><br>
+                                2. Wybierz <strong>"Zainstaluj"</strong> lub <strong>"Dodaj do ekranu głównego"</strong><br>
+                                <small style="opacity: 0.8;">Firefox często pokazuje powiadomienie o instalacji</small>
+                            </div>
+                        `;
+                    } else if (isEdge) {
+                        instructions = `
+                            <div style="text-align: left; line-height: 1.4;">
+                                <strong>🌐 Edge - instrukcje:</strong><br>
+                                1. Naciśnij <strong>menu ⋯</strong><br>
+                                2. Wybierz <strong>"Aplikacje"</strong> → <strong>"Zainstaluj tę witrynę jako aplikację"</strong><br>
+                                <small style="opacity: 0.8;">Edge ma dobre wsparcie dla PWA</small>
+                            </div>
+                        `;
+                    } else {
+                        instructions = `
+                            <div style="text-align: left; line-height: 1.4;">
+                                <strong>📱 Instrukcje uniwersalne:</strong><br>
+                                <strong>iPhone/iPad:</strong> Safari → Udostępnij ⬆️ → "Dodaj do ekranu głównego"<br>
+                                <strong>Android:</strong> Chrome → Menu ⋮ → "Dodaj do ekranu głównego"<br>
+                                <strong>Desktop:</strong> Sprawdź ikonę instalacji w pasku adresu<br>
+                                <small style="opacity: 0.8;">Użyj Chrome lub Safari dla najlepszego wsparcia PWA</small>
+                            </div>
+                        `;
+                    }
+                    
+                    banner.innerHTML = instructions;
+                    banner.classList.add('show');
+                    
+                    // Ukryj po dłuższym czasie dla instrukcji
+                    setTimeout(() => {
+                        banner.classList.remove('show');
+                    }, 12000);
+                }
+            }
+            
+            showIOSInstallInstructions() {
+                this.showPlatformSpecificInstructions();
+            }
+            
+            showInstallButton() {
+                const installBtn = document.getElementById('installBtn');
+                if (installBtn) {
+                    installBtn.style.display = 'block';
+                }
+            }
+            
+            hideInstallButton() {
+                const installBtn = document.getElementById('installBtn');
+                if (installBtn) {
+                    installBtn.style.display = 'none';
+                }
+            }
+            
             setupServiceWorkerMessages() {
                 if ('serviceWorker' in navigator) {
-                    // Listen for messages from Service Worker
                     navigator.serviceWorker.addEventListener('message', event => {
                         console.log('📱 Wiadomość od Service Worker:', event.data);
                         
@@ -1235,7 +1476,6 @@
                             console.log('🔄 Service Worker żąda przeładowania');
                             this.showNotification('🔄 Aplikacja została zaktualizowana');
                             
-                            // Reload after short delay
                             setTimeout(() => {
                                 window.location.reload();
                             }, 2000);
@@ -1249,7 +1489,6 @@
                         }
                     });
                     
-                    // Listen for Service Worker controller change
                     navigator.serviceWorker.addEventListener('controllerchange', () => {
                         console.log('🔄 Service Worker controller zmieniony');
                         if (!this.isRefreshing) {
@@ -1265,26 +1504,22 @@
                     try {
                         console.log('📱 Rejestrowanie Service Worker...');
                         
-                        // Wymuś odświeżenie cache przy każdym ładowaniu (dla testów)
                         const timestamp = new Date().getTime();
                         
-                        // Spróbuj zarejestrować zewnętrzny SW
                         let registration;
                         try {
                             registration = await navigator.serviceWorker.register(`./sw.js?v=${timestamp}`, {
-                                updateViaCache: 'none' // Wymuś sprawdzenie nowej wersji
+                                updateViaCache: 'none'
                             });
                             console.log('✅ Zewnętrzny Service Worker zarejestrowany');
                         } catch (swError) {
                             console.log('📱 Brak sw.js, rejestruję podstawowy Service Worker...');
                             
-                            // Sprawdź czy już mamy zarejestrowany SW
                             const existingRegistration = await navigator.serviceWorker.getRegistration();
                             if (existingRegistration) {
                                 console.log('📱 Service Worker już zarejestrowany, używam istniejącego');
                                 registration = existingRegistration;
                             } else {
-                                // Stwórz prosty Service Worker inline jako fallback tylko jeśli nie ma żadnego
                                 const swCode = `
                                     const CACHE_NAME = 'pse-dashboard-fallback-v${timestamp}';
                                     
@@ -1317,11 +1552,9 @@
                         
                         console.log('✅ Service Worker zarejestrowany:', registration);
                         
-                        // ZAWSZE sprawdź aktualizacje dla testów
                         console.log('🔄 Sprawdzanie aktualizacji...');
                         await registration.update();
                         
-                        // Sprawdź po chwili czy pojawiła się nowa wersja
                         setTimeout(async () => {
                             await registration.update();
                             if (registration.waiting) {
@@ -1331,19 +1564,16 @@
                             }
                         }, 2000);
                         
-                        // Sprawdź czy jest już oczekująca aktualizacja
                         if (registration.waiting && !localStorage.getItem('no-sw-updates')) {
                             console.log('🔄 Oczekująca aktualizacja Service Worker wykryta');
                             this.showUpdateButton();
                             this.showNotification('🔄 Aktualizacja aplikacji gotowa do zainstalowania');
                         }
                         
-                        // Sprawdź czy jest już aktywny service worker
                         if (registration.active) {
                             console.log('📱 Service Worker już aktywny');
                         }
                         
-                        // Listen for updates tylko jeśli użytkownik nie wyłączył aktualizacji
                         if (!localStorage.getItem('no-sw-updates')) {
                             registration.addEventListener('updatefound', () => {
                                 const newWorker = registration.installing;
@@ -1356,12 +1586,10 @@
                                     
                                     if (newWorker.state === 'installed') {
                                         if (navigator.serviceWorker.controller) {
-                                            // Nowa wersja jest gotowa
                                             console.log('🔄 Nowa wersja gotowa - pokazuję przycisk');
                                             this.showUpdateButton();
                                             this.showNotification('🔄 Dostępna aktualizacja aplikacji');
                                         } else {
-                                            // Pierwszy raz instalujemy SW
                                             console.log('🔄 Service Worker zainstalowany po raz pierwszy');
                                         }
                                     }
@@ -1371,7 +1599,6 @@
                             console.log('📱 Aktualizacje Service Worker wyłączone przez użytkownika');
                         }
                         
-                        // Auto-update check - zawsze dla testów
                         console.log('🔄 Wymuszone sprawdzenie aktualizacji...');
                         try {
                             await registration.update();
@@ -1414,191 +1641,6 @@
                 });
             }
             
-            setupPWAInstallation() {
-                console.log('📱 Konfigurowanie instalacji PWA...');
-                
-                // Check if app is already installed (standalone mode)
-                const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
-                const isIOSStandalone = window.navigator.standalone === true;
-                
-                if (isStandalone || isIOSStandalone) {
-                    console.log('📱 Aplikacja już zainstalowana - ukrywam przycisk instalacji');
-                    this.hideInstallButton();
-                    return;
-                }
-                
-                // Always show install button initially
-                this.showInstallButton();
-                
-                // Listen for the beforeinstallprompt event (Android/Chrome)
-                window.addEventListener('beforeinstallprompt', (event) => {
-                    console.log('📱 PWA install prompt dostępny');
-                    event.preventDefault(); // Prevent the mini-infobar
-                    this.installPromptEvent = event;
-                    this.isInstallable = true;
-                    this.updateInstallButton();
-                });
-                
-                // Listen for the app being installed
-                window.addEventListener('appinstalled', () => {
-                    console.log('📱 PWA została zainstalowana');
-                    this.hideInstallButton();
-                    this.showNotification('🎉 Aplikacja została zainstalowana!');
-                });
-                
-                // Detect iOS
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-                
-                if (isIOS && isSafari) {
-                    console.log('📱 iOS Safari wykryty - pokazuję instrukcje instalacji iOS');
-                    this.isInstallable = 'ios';
-                    this.updateInstallButton();
-                } else {
-                    console.log('📱 Oczekuję na beforeinstallprompt event...');
-                    // Set a timeout to show generic install button if no prompt event comes
-                    setTimeout(() => {
-                        if (!this.installPromptEvent && !this.isInstallable) {
-                            console.log('📱 Brak install prompt - pokazuję ogólny przycisk');
-                            this.isInstallable = 'generic';
-                            this.updateInstallButton();
-                        }
-                    }, 3000);
-                }
-            }
-            
-            showInstallButton() {
-                const installBtn = document.getElementById('installBtn');
-                if (installBtn) {
-                    installBtn.style.display = 'block';
-                }
-            }
-            
-            hideInstallButton() {
-                const installBtn = document.getElementById('installBtn');
-                if (installBtn) {
-                    installBtn.style.display = 'none';
-                }
-            }
-            
-            updateInstallButton() {
-                const installBtn = document.getElementById('installBtn');
-                if (!installBtn) return;
-                
-                if (this.isInstallable === 'ios') {
-                    installBtn.innerHTML = '📱 Dodaj do ekranu głównego';
-                    installBtn.title = 'Instrukcje instalacji dla iOS';
-                } else if (this.isInstallable === 'generic') {
-                    installBtn.innerHTML = '📱 Otwórz w przeglądarce';
-                    installBtn.title = 'Otwórz w Chrome lub Safari aby zainstalować';
-                } else if (this.isInstallable === true) {
-                    installBtn.innerHTML = '📱 Zainstaluj aplikację';
-                    installBtn.title = 'Zainstaluj aplikację na urządzeniu';
-                }
-                
-                installBtn.style.display = 'block';
-                installBtn.disabled = false;
-            }
-            
-            async installPWA() {
-                console.log('📱 Przycisk instalacji kliknięty, installable:', this.isInstallable);
-                
-                const installBtn = document.getElementById('installBtn');
-                
-                // Android/Chrome - native install prompt
-                if (this.installPromptEvent && this.isInstallable === true) {
-                    if (installBtn) {
-                        installBtn.innerHTML = '<div class="loading-spinner"></div>Instalowanie...';
-                        installBtn.disabled = true;
-                    }
-                    
-                    try {
-                        this.installPromptEvent.prompt();
-                        const result = await this.installPromptEvent.userChoice;
-                        console.log('📱 Wybór użytkownika:', result.outcome);
-                        
-                        if (result.outcome === 'accepted') {
-                            this.showNotification('🎉 Instalowanie aplikacji...');
-                        } else {
-                            this.showNotification('💡 Możesz zainstalować później');
-                        }
-                        
-                        this.installPromptEvent = null;
-                        this.isInstallable = false;
-                        
-                    } catch (error) {
-                        console.log('❌ Błąd install prompt:', error);
-                        this.showIOSInstallInstructions();
-                    } finally {
-                        if (installBtn) {
-                            installBtn.innerHTML = '📱 Zainstaluj aplikację';
-                            installBtn.disabled = false;
-                        }
-                    }
-                } 
-                // iOS Safari - show instructions
-                else if (this.isInstallable === 'ios') {
-                    this.showIOSInstallInstructions();
-                }
-                // Generic - show browser recommendation
-                else {
-                    this.showIOSInstallInstructions(); // Show general instructions for all platforms
-                }
-            }
-            
-            showIOSInstallInstructions() {
-                // Create detailed installation popup
-                const banner = document.getElementById('notificationBanner');
-                if (banner) {
-                    // Detect platform for specific instructions
-                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                    const isAndroid = /Android/.test(navigator.userAgent);
-                    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-                    const isChrome = /Chrome/.test(navigator.userAgent);
-                    
-                    let instructions = '';
-                    
-                    if (isIOS && isSafari) {
-                        instructions = `
-                            <div style="text-align: left; line-height: 1.4;">
-                                <strong>📱 Jak zainstalować na iPhone/iPad:</strong><br>
-                                1. Naciśnij przycisk <strong>Udostępnij ⬆️</strong> (na dole ekranu)<br>
-                                2. Przewiń w dół i wybierz <strong>"Dodaj do ekranu głównego"</strong><br>
-                                3. Naciśnij <strong>"Dodaj"</strong><br>
-                                <small style="opacity: 0.8;">Aplikacja będzie dostępna jak zwykła aplikacja!</small>
-                            </div>
-                        `;
-                    } else if (isAndroid && isChrome) {
-                        instructions = `
-                            <div style="text-align: left; line-height: 1.4;">
-                                <strong>📱 Jak zainstalować na Android:</strong><br>
-                                1. Naciśnij <strong>menu ⋮</strong> (prawy górny róg)<br>
-                                2. Wybierz <strong>"Dodaj do ekranu głównego"</strong><br>
-                                3. Potwierdź <strong>"Dodaj"</strong><br>
-                                <small style="opacity: 0.8;">Aplikacja będzie dostępna jak zwykła aplikacja!</small>
-                            </div>
-                        `;
-                    } else {
-                        instructions = `
-                            <div style="text-align: left; line-height: 1.4;">
-                                <strong>📱 Jak zainstalować aplikację:</strong><br>
-                                <strong>iPhone/iPad:</strong> Safari → Udostępnij ⬆️ → "Dodaj do ekranu głównego"<br>
-                                <strong>Android:</strong> Chrome → Menu ⋮ → "Dodaj do ekranu głównego"<br>
-                                <small style="opacity: 0.8;">Aplikacja będzie działać offline!</small>
-                            </div>
-                        `;
-                    }
-                    
-                    banner.innerHTML = instructions;
-                    banner.classList.add('show');
-                    
-                    // Hide after longer time for instructions
-                    setTimeout(() => {
-                        banner.classList.remove('show');
-                    }, 10000);
-                }
-            }
-            
             setupPullToRefresh() {
                 console.log('📱 Konfigurowanie pull-to-refresh...');
                 
@@ -1611,18 +1653,15 @@
                     return;
                 }
                 
-                // Touch start
                 document.addEventListener('touchstart', (e) => {
                     if (this.pullToRefresh.isRefreshing) return;
                     
-                    // Only start if at top of page
                     if (window.scrollY === 0) {
                         this.pullToRefresh.startY = e.touches[0].clientY;
                         this.pullToRefresh.isDragging = false;
                     }
                 }, { passive: true });
                 
-                // Touch move
                 document.addEventListener('touchmove', (e) => {
                     if (this.pullToRefresh.isRefreshing || window.scrollY > 0) return;
                     
@@ -1632,9 +1671,8 @@
                         
                         if (pullDistance > 10) {
                             this.pullToRefresh.isDragging = true;
-                            e.preventDefault(); // Prevent scrolling
+                            e.preventDefault();
                             
-                            // Update visual feedback
                             if (pullDistance >= this.pullToRefresh.threshold) {
                                 pullIndicator.classList.add('ready');
                                 pullText.textContent = 'Puść aby odświeżyć';
@@ -1645,7 +1683,6 @@
                                 pullIcon.textContent = '↓';
                             }
                             
-                            // Show indicator
                             const progress = Math.min(pullDistance / this.pullToRefresh.threshold, 1);
                             pullIndicator.style.transform = `translateY(${pullDistance * 0.5}px)`;
                             pullIndicator.style.opacity = progress;
@@ -1657,7 +1694,6 @@
                     }
                 }, { passive: false });
                 
-                // Touch end
                 document.addEventListener('touchend', (e) => {
                     if (this.pullToRefresh.isRefreshing) return;
                     
@@ -1688,15 +1724,12 @@
                 
                 this.pullToRefresh.isRefreshing = true;
                 
-                // Show refreshing state
                 pullIndicator.classList.add('refreshing');
                 pullIndicator.classList.remove('ready');
                 pullText.textContent = 'Odświeżanie...';
                 pullIcon.innerHTML = '<div class="pull-loading-spinner"></div>';
                 
-                // Trigger actual refresh
                 this.refreshData().finally(() => {
-                    // Reset after refresh completes
                     setTimeout(() => {
                         this.resetPullToRefresh();
                         this.pullToRefresh.isRefreshing = false;
@@ -1709,7 +1742,6 @@
                 const pullText = document.getElementById('pullText');
                 const pullIcon = document.getElementById('pullIcon');
                 
-                // Reset visual state
                 pullIndicator.classList.remove('visible', 'ready', 'refreshing');
                 pullIndicator.style.transform = '';
                 pullIndicator.style.opacity = '';
@@ -1739,14 +1771,12 @@
             switchDay(dayOffset) {
                 console.log(`📅 Przełączanie na dzień: ${dayOffset}`);
                 
-                // Update active button
                 document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
                 document.getElementById(`dayBtn${dayOffset}`).classList.add('active');
                 
                 this.currentDayOffset = dayOffset;
                 this.lastSeenTime = Date.now();
                 
-                // Filter data for selected day
                 if (this.allData && this.allData.length > 0) {
                     const dayData = this.getDataForDay(dayOffset);
                     this.drawChart(dayData);
@@ -1759,7 +1789,6 @@
                 const startHour = dayOffset * 24;
                 const endHour = startHour + 24;
                 
-                // Upewnij się, że pobieramy pełne 24 godziny
                 const dayData = this.allData.slice(startHour, endHour);
                 console.log(`📅 getDataForDay(${dayOffset}): startHour=${startHour}, endHour=${endHour}`);
                 console.log(`📅 allData.length=${this.allData.length}, dayData.length=${dayData.length}`);
@@ -1769,7 +1798,6 @@
                     console.log(`📅 Pierwszy: ${dayData[0].timeStr}, Ostatni: ${dayData[dayData.length-1].timeStr}`);
                 }
                 
-                // Jeśli mamy niepełny dzień, wypełnij brakujące godziny
                 if (dayData.length < 24 && dayData.length > 0) {
                     console.log(`⚠️ Wypełniam brakujące godziny dla dnia ${dayOffset}`);
                     const lastItem = dayData[dayData.length - 1];
@@ -1831,7 +1859,7 @@
                 const offlineIndicator = document.getElementById('offlineIndicator');
                 if (offlineIndicator) {
                     offlineIndicator.style.display = 'block';
-                    offlineIndicator.offsetHeight; // Force reflow
+                    offlineIndicator.offsetHeight;
                     offlineIndicator.classList.add('show');
                 }
             }
@@ -1850,15 +1878,13 @@
             async fetchData() {
                 console.log('🌐 === FETCH DATA START ===');
                 const now = new Date();
-                // WAŻNE: Po północy automatycznie przesunie się na nowy dzień! (jak w Python)
                 const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 
                 const startDate = this.formatDate(startOfToday);
-                // 3 pełne dni w przód (72 godziny) - dokładnie jak w Python
                 const endDate = this.formatDate(new Date(startOfToday.getTime() + 3 * 24 * 60 * 60 * 1000));
                 
-                console.log(`🕐 Pobieranie danych od ${startDate} do ${endDate} (automatycznie przesuwa się o północy jak Python)`);
-                console.log(`📅 Początek dzisiejszego dnia: ${startOfToday.toISOString()} (jak Python startOfToday)`);
+                console.log(`🕐 Pobieranie danych od ${startDate} do ${endDate}`);
+                console.log(`📅 Początek dzisiejszego dnia: ${startOfToday.toISOString()}`);
                 
                 try {
                     let url = `${this.API_URL}?$filter=plan_dtime ge '${startDate}' and plan_dtime le '${endDate}'&$orderby=plan_dtime&$first=200`;
@@ -1866,12 +1892,12 @@
                     
                     let response;
                     try {
-                        console.log('📡 Zapytanie API z filtrem (jak Python)...');
+                        console.log('📡 Zapytanie API z filtrem...');
                         response = await fetch(url);
                         console.log(`📡 Status odpowiedzi z filtrem: ${response.status}`);
                     } catch (fetchError) {
                         console.log('❌ Zapytanie z filtrem nieudane:', fetchError.message);
-                        console.log('📡 Próbuję proste zapytanie API (fallback Python)...');
+                        console.log('📡 Próbuję proste zapytanie API...');
                         response = await fetch(this.API_URL + '?$first=200');
                         console.log(`📡 Status prostej odpowiedzi: ${response.status}`);
                     }
@@ -1885,7 +1911,7 @@
                         });
                         
                         if (data.value && data.value.length > 0) {
-                            console.log('✅ SUKCES: Otrzymano dane z API (jak Python sukces)');
+                            console.log('✅ SUKCES: Otrzymano dane z API');
                             return this.processData(data.value);
                         } else {
                             console.log('❌ API zwróciło pustą tablicę data.value');
@@ -1897,7 +1923,7 @@
                     console.error('❌ Błąd pobierania danych:', error);
                 }
                 
-                console.log('❌ Pobieranie nieudane - zwracam pustą tablicę (jak Python fallback)');
+                console.log('❌ Pobieranie nieudane - zwracam pustą tablicę');
                 return [];
             }
             
@@ -1909,7 +1935,6 @@
             
             processData(rawData) {
                 const now = new Date();
-                // WAŻNE: Po północy automatycznie przesunie się na nowy dzień! (jak w Python)
                 const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 let processed = [];
                 
@@ -1919,16 +1944,14 @@
                 }
                 
                 console.log(`🔄 Przetwarzanie ${rawData.length} surowych rekordów danych`);
-                console.log(`📅 Początek dzisiejszego dnia: ${startOfToday.toISOString()} (Python startOfToday equivalent)`);
+                console.log(`📅 Początek dzisiejszego dnia: ${startOfToday.toISOString()}`);
                 
-                // ZAWSZE generuj pełne 72 godziny od północy dzisiejszego dnia (jak w Python)
-                console.log('🕐 Generowanie pełnych 72 godzin od północy dzisiejszego dnia (dokładnie jak Python original)...');
+                console.log('🕐 Generowanie pełnych 72 godzin od północy dzisiejszego dnia...');
                 console.log(`📅 StartOfToday: ${startOfToday.toISOString()}`);
                 
                 for (let i = 0; i < 72; i++) {
                     const timestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
                     
-                    // Użyj rzeczywistych danych jeśli dostępne, inaczej cykluj przez dostępne (jak Python)
                     const dataIndex = i % Math.max(rawData.length, 1);
                     const item = rawData[dataIndex] || rawData[0];
                     
@@ -1936,7 +1959,6 @@
                         let available = this.getAvailableReserve(item);
                         
                         if (available === 0 || isNaN(available)) {
-                            // Dodaj 1000 MW jak w Python: available = required + 1000
                             available = parseFloat(item.req_pow_res) + 1000;
                         }
                         
@@ -1952,7 +1974,6 @@
                         }
                     }
                     
-                    // Debug co 24 godziny
                     if ((i + 1) % 24 === 0) {
                         console.log(`📅 Ukończono dzień ${Math.floor(i / 24)}: godziny 0-${i}`);
                     }
@@ -1965,7 +1986,6 @@
                 
                 if (processed.length > 0) {
                     console.log(`📅 Zakres czasowy: ${processed[0].timeStr} do ${processed[processed.length - 1].timeStr}`);
-                    // Sprawdź każdy dzień
                     for (let day = 0; day < 3; day++) {
                         const dayStart = day * 24;
                         const dayEnd = dayStart + 24;
@@ -2025,20 +2045,17 @@
             updateAlertHistory(newAlerts) {
                 const today = new Date().toDateString();
                 
-                // ZACHOWANE: Reset alertów o północy (dokładnie jak w Python!)
                 if (this.alertHistory.lastResetDate !== today) {
-                    console.log('🌅 NOWY DZIEŃ - resetuję historię alertów (zachowane z Python original)');
+                    console.log('🌅 NOWY DZIEŃ - resetuję historię alertów');
                     this.alertHistory = {
                         orange: [],
                         red: [],
                         lastResetDate: today
                     };
-                    // Reset lastSeenTime for new day (jak w Python)
                     this.lastSeenTime = Date.now();
-                    console.log('🌅 Historia alertów zresetowana i lastSeenTime zaktualizowany na nowy dzień (jak Python)');
+                    console.log('🌅 Historia alertów zresetowana i lastSeenTime zaktualizowany na nowy dzień');
                 }
                 
-                // Count only truly NEW alerts (that appeared after lastSeenTime) - jak w Python
                 let newAlertsCount = 0;
                 const now = Date.now();
                 
@@ -2049,8 +2066,7 @@
                             detectedAt: now
                         });
                         
-                        // Only count as "new" if detected after user last saw the app (jak w Python)
-                        if (now - this.lastSeenTime > 60000) { // 1 minute buffer (jak w Python)
+                        if (now - this.lastSeenTime > 60000) {
                             newAlertsCount++;
                         }
                     }
@@ -2063,21 +2079,19 @@
                             detectedAt: now
                         });
                         
-                        // Only count as "new" if detected after user last saw the app (jak w Python)
-                        if (now - this.lastSeenTime > 60000) { // 1 minute buffer (jak w Python)
+                        if (now - this.lastSeenTime > 60000) {
                             newAlertsCount++;
                         }
                     }
                 });
                 
-                // Logika powiadomień dokładnie jak w Python
                 if (newAlertsCount > 0 && 
                     !this.isAppVisible && 
                     !this.notificationsSilenced &&
                     'Notification' in window && 
                     Notification.permission === 'granted') {
                     
-                    console.log(`🚨 Wysyłam powiadomienie dla ${newAlertsCount} nowych alertów (jak Python logic)`);
+                    console.log(`🚨 Wysyłam powiadomienie dla ${newAlertsCount} nowych alertów`);
                     this.showNotification(`🚨 ${newAlertsCount} ${newAlertsCount === 1 ? 'nowy alert' : 'nowe alerty'} rezerw mocy!`);
                 } else {
                     let skipReason = 'unknown';
@@ -2086,7 +2100,7 @@
                     else if (this.notificationsSilenced) skipReason = 'notifications silenced';
                     else if (!('Notification' in window) || Notification.permission !== 'granted') skipReason = 'no permission';
                     
-                    console.log(`📱 Nie wysyłam powiadomienia - powód: ${skipReason} (Python logic)`);
+                    console.log(`📱 Nie wysyłam powiadomienia - powód: ${skipReason}`);
                 }
             }
             
@@ -2135,7 +2149,6 @@
                     return;
                 }
                 
-                // Sprawdź czy mamy pełny dzień (24 godziny)
                 if (data.length < 24) {
                     console.log(`⚠️ UWAGA: Niepełny dzień! Mamy tylko ${data.length} godzin zamiast 24`);
                 }
@@ -2144,11 +2157,9 @@
                 const reserves = data.map(d => d.reserve);
                 const required = data.map(d => d.required);
                 
-                // Find alerts for current day
                 const alerts = this.findAlerts(data);
                 const shapes = [];
                 
-                // Add alert lines
                 alerts.orange.forEach(alert => {
                     shapes.push({
                         type: 'line',
@@ -2171,16 +2182,14 @@
                     });
                 });
                 
-                // Find current hour
                 const now = new Date();
                 const currentHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours());
                 const currentHourStr = this.formatDateTime(currentHour);
                 
-                // Nie dodawaj padding points - używaj oryginalnych danych dla iPhone
                 const traces = [
                     {
-                        x: times,  // Używaj oryginalnych times, nie paddedTimes
-                        y: reserves, // Używaj oryginalnych reserves, nie paddedReserves
+                        x: times,
+                        y: reserves,
                         type: 'scatter',
                         mode: 'lines',
                         name: 'Rezerwa mocy',
@@ -2188,8 +2197,8 @@
                         connectgaps: false
                     },
                     {
-                        x: times,  // Używaj oryginalnych times
-                        y: required, // Używaj oryginalnych required
+                        x: times,
+                        y: required,
                         type: 'scatter',
                         mode: 'lines',
                         name: 'Wymagana rezerwa',
@@ -2198,7 +2207,6 @@
                     }
                 ];
                 
-                // Add current hour marker if in range
                 const currentIndex = times.indexOf(currentHourStr);
                 if (currentIndex !== -1 && this.currentDayOffset === 0) {
                     traces.push({
@@ -2211,12 +2219,10 @@
                     });
                 }
                 
-                // Optymalne marginesy dla iPhone - zapobieganie obcinaniu godzin
                 const isMobile = window.innerWidth < 500;
-                const isVerySmall = window.innerWidth < 380; // iPhone SE, małe Android
+                const isVerySmall = window.innerWidth < 380;
                 const isIPhone = /iPhone/.test(navigator.userAgent);
                 
-                // Specjalne ustawienia dla iPhone aby nie ucinać godzin
                 const layout = {
                     title: false,
                     shapes: shapes,
@@ -2229,13 +2235,10 @@
                         tickfont: { size: isVerySmall ? 9 : 10 },
                         tickmode: 'linear',
                         tick0: times[0],
-                        // Mniejsze dtick dla iPhone żeby pokazać więcej godzin
                         dtick: isIPhone ? 3 * 3600000 : isVerySmall ? 4 * 3600000 : window.innerWidth < 600 ? 3 * 3600000 : 2 * 3600000,
-                        // Ważne: dodaj margines czasowy żeby pokazać ostatnią godzinę w pełni
                         range: (() => {
                             const startTime = times[0];
                             const endTime = times[times.length - 1];
-                            // Prosty sposób: dodaj string z następną godziną
                             const lastDate = new Date(endTime);
                             lastDate.setHours(lastDate.getHours() + 1);
                             const endTimeWithMargin = lastDate.getFullYear() + '-' + 
@@ -2245,8 +2248,8 @@
                             console.log(`📅 Zakres osi X: ${startTime} do ${endTimeWithMargin} (z marginesem 1h)`);
                             return [startTime, endTimeWithMargin];
                         })(),
-                        autorange: false, // Wyłącz autorange żeby kontrolować zakres
-                        fixedrange: false // Pozwól na zoom jeśli potrzeba
+                        autorange: false,
+                        fixedrange: false
                     },
                     yaxis: {
                         title: isVerySmall ? '' : 'MW',
@@ -2260,17 +2263,16 @@
                     hovermode: 'x unified',
                     legend: {
                         orientation: 'h',
-                        y: -0.12, // Przesunięto wyżej
+                        y: -0.12,
                         x: 0.5,
                         xanchor: 'center',
                         font: { size: isVerySmall ? 8 : 9 }
                     },
                     margin: { 
-                        t: 8,  // Zwiększony górny margines
-                        r: 15,  // Jeszcze większy prawy margines dla iPhone
-                        b: isIPhone ? 70 : isVerySmall ? 65 : 70, // Większy dolny margines na iPhone
-                        l: isVerySmall ? 35 : 40,   // Zwiększony lewy margines
-                        // Dodaj automargin dla lepszego dopasowania
+                        t: 8,
+                        r: 15,
+                        b: isIPhone ? 70 : isVerySmall ? 65 : 70,
+                        l: isVerySmall ? 35 : 40,
                         autoexpand: true
                     },
                     autosize: true
@@ -2278,7 +2280,6 @@
                 
                 this.currentData = data;
                 
-                // Konfiguracja Plotly zoptymalizowana dla iPhone
                 const config = {
                     responsive: true,
                     displayModeBar: false,
@@ -2286,20 +2287,17 @@
                     doubleClick: false,
                     showTips: false,
                     staticPlot: false,
-                    // Dodatkowe ustawienia dla iPhone
                     modeBarButtonsToRemove: ['autoScale2d', 'lasso2d', 'select2d'],
                     displaylogo: false,
-                    // Wymuś pełną szerokość dla iPhone
                     toImageButtonOptions: {
                         format: 'png',
                         filename: 'pse_dashboard',
                         height: 400,
-                        width: Math.max(window.innerWidth - 20, 300), // Dynamiczna szerokość
+                        width: Math.max(window.innerWidth - 20, 300),
                         scale: 1
                     }
                 };
                 
-                // Rysuj wykres
                 Plotly.newPlot('chart', traces, layout, config).then(() => {
                     console.log('✅ Wykres Plotly utworzony pomyślnie');
                 }).catch(error => {
@@ -2373,19 +2371,17 @@
                     const now = new Date().toLocaleString('pl-PL');
                     
                     if (data && data.length > 0) {
-                        console.log(`✅ SUKCES ŁADOWANIA DANYCH: ${data.length} punktów danych - POŁĄCZENIE POTWIERDZONE (jak Python)`);
+                        console.log(`✅ SUKCES ŁADOWANIA DANYCH: ${data.length} punktów danych - POŁĄCZENIE POTWIERDZONE`);
                         
-                        // Data loaded successfully - we're definitely online (jak w Python)
                         this.isOnline = true;
                         this.hideOfflineIndicator();
                         
-                        // FORCE HIDE offline indicator (safety check) - jak w Python
                         const offlineIndicator = document.getElementById('offlineIndicator');
                         if (offlineIndicator) {
                             offlineIndicator.style.display = 'none';
                             offlineIndicator.classList.remove('show');
                         }
-                        console.log('📡 Status połączenia: ONLINE - wskaźnik offline WYMUSZONE ukrycie (jak Python)');
+                        console.log('📡 Status połączenia: ONLINE - wskaźnik offline WYMUSZONE ukrycie');
                         
                         this.allData = data;
                         
@@ -2396,7 +2392,6 @@
                         this.updateAlertHistory(alerts);
                         this.updateAlerts(dayData);
                         
-                        // Update trends and analytics
                         this.updateTrends(dayData);
                         this.updateComparison(data);
                         this.updateCriticalHours(data);
@@ -2405,11 +2400,10 @@
                         this.updateStatus(true, `Połączono | ${data.length} punktów`);
                         lastUpdateEl.textContent = now.split(' ')[1].substring(0, 5);
                     } else {
-                        console.log('❌ Nie otrzymano danych - POŁĄCZENIE NIEUDANE (jak Python fallback)');
-                        // No data received - probably offline (jak w Python)
+                        console.log('❌ Nie otrzymano danych - POŁĄCZENIE NIEUDANE');
                         this.isOnline = false;
                         this.showOfflineIndicator();
-                        console.log('📡 Status połączenia zaktualizowany na OFFLINE (jak Python)');
+                        console.log('📡 Status połączenia zaktualizowany na OFFLINE');
                         
                         this.updateStatus(false, 'Brak danych');
                         document.getElementById('chart').innerHTML = 
@@ -2417,15 +2411,13 @@
                         this.updateAlerts([]);
                     }
                 } catch (error) {
-                    console.error('❌ Błąd odświeżania - POŁĄCZENIE NIEUDANE (jak Python error handling):', error);
-                    // Error occurred - probably offline (jak w Python)
+                    console.error('❌ Błąd odświeżania - POŁĄCZENIE NIEUDANE:', error);
                     this.isOnline = false;
                     this.showOfflineIndicator();
-                    console.log('📡 Status połączenia zaktualizowany na OFFLINE z powodu błędu (jak Python)');
+                    console.log('📡 Status połączenia zaktualizowany na OFFLINE z powodu błędu');
                     
                     this.updateStatus(false, 'Błąd połączenia');
                 } finally {
-                    // Hide loading (jak w Python)
                     refreshBtn.disabled = false;
                     refreshText.textContent = 'Odśwież';
                 }
@@ -2455,35 +2447,30 @@
             updateTrends(dayData) {
                 if (!dayData || dayData.length === 0) return;
                 
-                // Calculate statistics for current day
                 const reserves = dayData.map(d => d.reserve).filter(r => !isNaN(r));
                 const differences = dayData.map(d => d.reserve - d.required).filter(d => !isNaN(d));
                 
                 const avgReserve = reserves.reduce((sum, r) => sum + r, 0) / reserves.length;
                 const minReserve = Math.min(...reserves);
                 
-                // Update trend cards
                 document.getElementById('avgReserve').textContent = avgReserve.toFixed(0) + ' MW';
                 document.getElementById('minReserve').textContent = minReserve.toFixed(0) + ' MW';
                 
-                // Determine status based on CURRENT HOUR or next few hours (not whole day!)
                 let status, statusClass;
                 let relevantDifference;
                 
                 if (this.currentDayOffset === 0) {
-                    // For today - check current hour and next 2 hours
                     const now = new Date();
                     const currentHour = now.getHours();
-                    const relevantHours = dayData.slice(currentHour, currentHour + 3); // Current + next 2 hours
+                    const relevantHours = dayData.slice(currentHour, currentHour + 3);
                     
                     if (relevantHours.length > 0) {
                         const relevantDifferences = relevantHours.map(d => d.reserve - d.required);
                         relevantDifference = Math.min(...relevantDifferences);
                     } else {
-                        relevantDifference = differences[0] || 1000; // Fallback
+                        relevantDifference = differences[0] || 1000;
                     }
                 } else {
-                    // For tomorrow/day after - check first 3 hours of the day
                     const firstHours = dayData.slice(0, 3);
                     const firstHoursDifferences = firstHours.map(d => d.reserve - d.required);
                     relevantDifference = Math.min(...firstHoursDifferences);
@@ -2504,7 +2491,6 @@
                 statusEl.textContent = status;
                 statusEl.className = 'trend-value ' + statusClass;
                 
-                // Rzeczywisty trend 24h - porównanie z wczorajszą średnią z tej samej godziny
                 let trend24h = 0;
                 let trendText = 'brak danych';
                 let trendClass = 'trend-stable';
@@ -2514,16 +2500,13 @@
                 console.log(`📊 dayData length: ${dayData.length}`);
                 
                 if (this.currentDayOffset === 0 && this.allData && this.allData.length >= 48) {
-                    // Dzisiejszy dzień - porównaj z wczoraj
                     const now = new Date();
                     const currentHour = now.getHours();
                     
-                    // Dzisiejsze dane do aktualnej godziny (pierwsze 24 punkty w allData)
                     const todayUpToNow = this.allData.slice(0, Math.min(currentHour + 1, 24));
                     const todayAvg = todayUpToNow.length > 0 ? 
                         todayUpToNow.reduce((sum, d) => sum + d.reserve, 0) / todayUpToNow.length : 0;
                     
-                    // Wczorajsze dane z tego samego okresu (punkty 24-48 w allData)
                     const yesterdayUpToSameHour = this.allData.slice(24, Math.min(24 + currentHour + 1, 48));
                     const yesterdayAvg = yesterdayUpToSameHour.length > 0 ?
                         yesterdayUpToSameHour.reduce((sum, d) => sum + d.reserve, 0) / yesterdayUpToSameHour.length : todayAvg;
@@ -2535,7 +2518,6 @@
                     console.log(`📊 Różnica (trend): ${trend24h.toFixed(0)} MW`);
                     
                 } else if (this.currentDayOffset > 0) {
-                    // Dla jutro/pojutrze - porównaj z dniem wcześniejszym
                     const previousDayData = this.getDataForDay(this.currentDayOffset - 1);
                     
                     if (previousDayData && previousDayData.length > 0) {
@@ -2552,7 +2534,6 @@
                     }
                 }
                 
-                // Walidacja i ograniczenie trendu do rozsądnych wartości
                 if (Math.abs(trend24h) > 2000) {
                     console.log(`⚠️ Trend zbyt duży (${trend24h.toFixed(0)} MW), resetuję do "brak danych"`);
                     trend24h = 0;
@@ -2587,7 +2568,6 @@
                     return;
                 }
                 
-                // Simple comparison display
                 const todayAvg = data.slice(0, 24).reduce((sum, d) => sum + d.reserve, 0) / 24;
                 comparisonChart.innerHTML = `
                     <div style="text-align: center;">
@@ -2605,7 +2585,6 @@
                     return;
                 }
                 
-                // Find hours with lowest reserves
                 const hoursWithReserves = data.map((d, index) => ({
                     hour: index,
                     reserve: d.reserve,
@@ -2637,7 +2616,6 @@
                     return;
                 }
                 
-                // Simple prediction logic
                 const alerts = this.findAlerts(data);
                 const totalAlerts = alerts.orange.length + alerts.red.length;
                 
@@ -2649,7 +2627,6 @@
                     alertPrediction.innerHTML = '<span class="status-warning">🟡 Umiarkowane ryzyko alertów</span>';
                 }
                 
-                // Add simple trend analysis
                 const hourlyTrends = [];
                 for (let i = 1; i < Math.min(data.length, 24); i++) {
                     const trend = data[i].reserve - data[i-1].reserve;
@@ -2673,7 +2650,6 @@
             }
             
             showUpdateButton() {
-                // Nie pokazuj jeśli użytkownik wyłączył aktualizacje
                 if (localStorage.getItem('no-sw-updates')) {
                     console.log('📱 Przycisk aktualizacji ukryty - wyłączony przez użytkownika');
                     return;
@@ -2687,7 +2663,7 @@
                 
                 if (updateBtn) {
                     updateBtn.style.display = 'block';
-                    updateBtn.style.backgroundColor = '#ff6b00'; // Pomarańczowy dla nowej wersji
+                    updateBtn.style.backgroundColor = '#ff6b00';
                     updateBtn.innerHTML = '<span>🚀 Zainstaluj aktualizację</span>';
                 }
                 if (updateInfo) {
@@ -2738,11 +2714,9 @@
                     console.log('- Waiting:', registration.waiting ? 'TAK' : 'NIE');
                     console.log('- Installing:', registration.installing ? 'TAK' : 'NIE');
                     
-                    // Wymuś sprawdzenie aktualizacji
                     console.log('🔍 Wymuszam sprawdzenie aktualizacji...');
                     await registration.update();
                     
-                    // Sprawdź czy jest oczekująca aktualizacja
                     if (registration.waiting) {
                         console.log('✅ Znaleziono oczekującą aktualizację!');
                         this.showUpdateButton();
@@ -2796,6 +2770,7 @@
             }
         }
         
+        // ⭐ POPRAWIONA FUNKCJA INSTALACJI
         function installPWA() {
             if (app) {
                 app.installPWA();
@@ -2836,7 +2811,6 @@
                         app.showNotification('✅ Aplikacja jest aktualna');
                     }
                     
-                    // Dodatkowo sprawdź API
                     const apiWorking = await app.testAPIConnectivity();
                     if (!apiWorking) {
                         app.showNotification('⚠️ Problem z połączeniem API PSE');
@@ -2882,9 +2856,8 @@
                         
                         if (registration.active) {
                             debugInfo += `📱 SW Script URL: ${registration.active.scriptURL}\n`;
-                            // Debug info
-            debugInfo += `📱 External sw.js: ${registration.active && registration.active.scriptURL.includes('sw.js') ? '✅' : '❌ (inline)'}\n`;
-            debugInfo += `📱 Update via cache: none\n`;
+                            debugInfo += `📱 External sw.js: ${registration.active && registration.active.scriptURL.includes('sw.js') ? '✅' : '❌ (inline)'}\n`;
+                            debugInfo += `📱 Update via cache: none\n`;
                         }
                     } else {
                         debugInfo += '📱 SW Registration: ❌\n';
@@ -2926,6 +2899,8 @@
             debugInfo += `📱 Current day: ${app.currentDayOffset}\n`;
             debugInfo += `📱 Is online: ${app.isOnline}\n`;
             debugInfo += `📱 Notifications silenced: ${app.notificationsSilenced}\n`;
+            debugInfo += `📱 Install prompt available: ${app.installPromptEvent ? '✅' : '❌'}\n`;
+            debugInfo += `📱 Installable state: ${app.isInstallable}\n`;
             
             debugInfo += '\n';
             
@@ -2935,6 +2910,7 @@
             debugInfo += '🔘 Button States:\n';
             debugInfo += `📱 Update button visible: ${updateBtn && updateBtn.style.display !== 'none' ? '✅' : '❌'}\n`;
             debugInfo += `📱 Install button visible: ${installBtn && installBtn.style.display !== 'none' ? '✅' : '❌'}\n`;
+            debugInfo += `📱 Install button text: ${installBtn ? installBtn.textContent : 'not found'}\n`;
             
             console.log(debugInfo);
             
@@ -3048,6 +3024,66 @@
             }
         }
         
+        function hardReset() {
+            if (!confirm('🗑️ Czy na pewno chcesz wyczyścić wszystkie dane?\n\nTo usunie:\n- Wszystkie cache\n- Ustawienia aplikacji\n- Service Worker\n- Dane offline\n\nAplikacja zostanie przeładowana.')) {
+                return;
+            }
+            
+            console.log('🗑️ === HARD RESET ROZPOCZĘTY ===');
+            
+            try {
+                // 1. Wyczyść localStorage
+                console.log('🗑️ Czyszczenie localStorage...');
+                localStorage.clear();
+                
+                // 2. Wyczyść sessionStorage
+                console.log('🗑️ Czyszczenie sessionStorage...');
+                sessionStorage.clear();
+                
+                // 3. Wyczyść wszystkie cache
+                if ('caches' in window) {
+                    console.log('🗑️ Czyszczenie cache...');
+                    caches.keys().then(cacheNames => {
+                        return Promise.all(
+                            cacheNames.map(cacheName => {
+                                console.log('🗑️ Usuwam cache:', cacheName);
+                                return caches.delete(cacheName);
+                            })
+                        );
+                    }).then(() => {
+                        console.log('🗑️ Wszystkie cache wyczyszczone');
+                    });
+                }
+                
+                // 4. Wyrejestruj Service Worker
+                if ('serviceWorker' in navigator) {
+                    console.log('🗑️ Wyrejestrowywanie Service Worker...');
+                    navigator.serviceWorker.getRegistrations().then(registrations => {
+                        registrations.forEach(registration => {
+                            console.log('🗑️ Wyrejestrowywanie SW:', registration.scope);
+                            registration.unregister();
+                        });
+                    });
+                }
+                
+                // 5. Ustaw flagę hard reset
+                localStorage.setItem('hard-reset-performed', 'true');
+                localStorage.setItem('force-fresh-load', Date.now().toString());
+                
+                console.log('🗑️ === HARD RESET ZAKOŃCZONY ===');
+                
+                // 6. Przeładuj stronę z wymuszeniem
+                setTimeout(() => {
+                    const timestamp = Date.now();
+                    window.location.href = window.location.href.split('?')[0] + '?reset=' + timestamp;
+                }, 1000);
+                
+            } catch (error) {
+                console.error('❌ Błąd podczas hard reset:', error);
+                app.showNotification('❌ Błąd podczas czyszczenia - sprawdź konsolę');
+            }
+        }
+        
         // Initialize app when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             console.log('=== PSE Dashboard Mobile Initializing ===');
@@ -3062,6 +3098,27 @@
                 const timeDiff = Date.now() - loadTime;
                 console.log(`🔄 Wykryto wymuszone odświeżenie ${Math.round(timeDiff/1000)}s temu`);
                 localStorage.removeItem('force-fresh-load');
+            }
+            
+            // Sprawdź czy wykonano hard reset
+            const hardResetPerformed = localStorage.getItem('hard-reset-performed');
+            if (hardResetPerformed) {
+                localStorage.removeItem('hard-reset-performed');
+                console.log('🗑️ Wykryto wykonany hard reset');
+                
+                // Pokaż komunikat o pomyślnym reset
+                setTimeout(() => {
+                    const banner = document.getElementById('notificationBanner');
+                    if (banner) {
+                        banner.textContent = `🗑️ Hard reset wykonany pomyślnie!`;
+                        banner.style.background = '#34c759';
+                        banner.classList.add('show');
+                        
+                        setTimeout(() => {
+                            banner.classList.remove('show');
+                        }, 4000);
+                    }
+                }, 2000);
             }
             
             // Sprawdź czy aplikacja była właśnie zaktualizowana
@@ -3084,12 +3141,12 @@
                 }, 2000);
             }
             
-            // FORCE HIDE offline indicator at startup (like Python)
+            // FORCE HIDE offline indicator at startup
             const offlineIndicator = document.getElementById('offlineIndicator');
             if (offlineIndicator) {
                 offlineIndicator.style.display = 'none';
                 offlineIndicator.classList.remove('show');
-                console.log('🟢 WYMUSZONE ukrycie wskaźnika offline przy starcie (jak Python)');
+                console.log('🟢 WYMUSZONE ukrycie wskaźnika offline przy starcie');
             } else {
                 console.log('❌ Element wskaźnika offline nie znaleziony');
             }
