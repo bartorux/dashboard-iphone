@@ -943,8 +943,11 @@
             <div id="updateInfo" style="font-size: 11px; color: #8e8e93; text-align: center; margin-top: 4px;">
                 Sprawdzono: <span id="lastUpdateCheck">nigdy</span>
             </div>
-            <button class="test-btn" id="testBtn" onclick="testConnection()" title="Test połączenia z API PSE">
-                <span>🧪 Test API</span>
+            <button class="test-btn" id="testBtn" onclick="testUpdates()" title="Sprawdź dostępność aktualizacji">
+                <span>🔍 Sprawdź aktualizacje</span>
+            </button>
+            <button class="test-btn" onclick="showDebugInfo()" title="Pokaż informacje debugowania" style="margin-top: 4px; background: linear-gradient(135deg, #6c757d 0%, #495057 100%);">
+                <span>🔧 Debug</span>
             </button>
         </div>
     </div>
@@ -1204,8 +1207,10 @@
                 // Ukryj przycisk aktualizacji na początku lub jeśli wyłączony
                 if (this.settings.disableUpdates || localStorage.getItem('no-sw-updates')) {
                     this.hideUpdateButton();
+                    console.log('📱 Automatyczne sprawdzanie aktualizacji WYŁĄCZONE przez użytkownika');
                 } else {
                     this.hideUpdateButton(); // Domyślnie ukryty, pokaże się gdy będzie aktualizacja
+                    console.log('📱 Automatyczne sprawdzanie aktualizacji WŁĄCZONE - przycisk pojawi się gdy będzie dostępna nowa wersja');
                 }
                 
                 console.log('=== PSE Dashboard Init Complete ===');
@@ -1251,10 +1256,16 @@
                     try {
                         console.log('📱 Rejestrowanie Service Worker...');
                         
+                        // Wymuś odświeżenie cache przy każdym ładowaniu (dla testów)
+                        const timestamp = new Date().getTime();
+                        
                         // Spróbuj zarejestrować zewnętrzny SW
                         let registration;
                         try {
-                            registration = await navigator.serviceWorker.register('./sw.js');
+                            registration = await navigator.serviceWorker.register(`./sw.js?v=${timestamp}`, {
+                                updateViaCache: 'none' // Wymuś sprawdzenie nowej wersji
+                            });
+                            console.log('✅ Zewnętrzny Service Worker zarejestrowany');
                         } catch (swError) {
                             console.log('📱 Brak sw.js, rejestruję podstawowy Service Worker...');
                             
@@ -1266,7 +1277,7 @@
                             } else {
                                 // Stwórz prosty Service Worker inline jako fallback tylko jeśli nie ma żadnego
                                 const swCode = `
-                                    const CACHE_NAME = 'pse-dashboard-fallback-v1';
+                                    const CACHE_NAME = 'pse-dashboard-fallback-v${timestamp}';
                                     
                                     self.addEventListener('install', event => {
                                         console.log('SW Fallback: Install');
@@ -1279,7 +1290,6 @@
                                     });
                                     
                                     self.addEventListener('fetch', event => {
-                                        // Podstawowa obsługa fetch - przepuszczaj wszystko
                                         event.respondWith(fetch(event.request));
                                     });
                                     
@@ -1298,6 +1308,20 @@
                         
                         console.log('✅ Service Worker zarejestrowany:', registration);
                         
+                        // ZAWSZE sprawdź aktualizacje dla testów
+                        console.log('🔄 Sprawdzanie aktualizacji...');
+                        await registration.update();
+                        
+                        // Sprawdź po chwili czy pojawiła się nowa wersja
+                        setTimeout(async () => {
+                            await registration.update();
+                            if (registration.waiting) {
+                                console.log('🔄 Opóźnione wykrycie aktualizacji!');
+                                this.showUpdateButton();
+                                this.showNotification('🔄 Dostępna aktualizacja aplikacji');
+                            }
+                        }, 2000);
+                        
                         // Sprawdź czy jest już oczekująca aktualizacja
                         if (registration.waiting && !localStorage.getItem('no-sw-updates')) {
                             console.log('🔄 Oczekująca aktualizacja Service Worker wykryta');
@@ -1315,19 +1339,22 @@
                             registration.addEventListener('updatefound', () => {
                                 const newWorker = registration.installing;
                                 console.log('🔄 Wykryto nową wersję Service Worker');
+                                console.log('🔄 Installing worker:', newWorker);
+                                console.log('🔄 Script URL:', newWorker ? newWorker.scriptURL : 'brak');
                                 
                                 newWorker.addEventListener('statechange', () => {
-                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                        // Nowa wersja jest gotowa
-                                        console.log('🔄 Nowa wersja gotowa');
-                                        this.showUpdateButton(); // Pokaż przycisk aktualizacji
-                                        
-                                        // Pokaż komunikat tylko jeśli aplikacja jest aktywna przez dłużej niż 2 minuty
-                                        setTimeout(() => {
-                                            if (document.visibilityState === 'visible') {
-                                                this.showNotification('🔄 Dostępna aktualizacja aplikacji');
-                                            }
-                                        }, 2 * 60 * 1000); // 2 minuty
+                                    console.log('🔄 SW state changed to:', newWorker.state);
+                                    
+                                    if (newWorker.state === 'installed') {
+                                        if (navigator.serviceWorker.controller) {
+                                            // Nowa wersja jest gotowa
+                                            console.log('🔄 Nowa wersja gotowa - pokazuję przycisk');
+                                            this.showUpdateButton();
+                                            this.showNotification('🔄 Dostępna aktualizacja aplikacji');
+                                        } else {
+                                            // Pierwszy raz instalujemy SW
+                                            console.log('🔄 Service Worker zainstalowany po raz pierwszy');
+                                        }
                                     }
                                 });
                             });
@@ -1335,13 +1362,14 @@
                             console.log('📱 Aktualizacje Service Worker wyłączone przez użytkownika');
                         }
                         
-                        // Auto-update check - tylko raz na sesję
-                        if (!sessionStorage.getItem('sw-checked')) {
-                            sessionStorage.setItem('sw-checked', 'true');
-                            registration.update().then(() => {
-                                this.updateLastCheckTime();
-                            });
-                        } else {
+                        // Auto-update check - zawsze dla testów
+                        console.log('🔄 Wymuszone sprawdzenie aktualizacji...');
+                        try {
+                            await registration.update();
+                            this.updateLastCheckTime();
+                            console.log('✅ Sprawdzenie aktualizacji zakończone');
+                        } catch (updateError) {
+                            console.log('❌ Błąd sprawdzania aktualizacji:', updateError);
                             this.updateLastCheckTime();
                         }
                         
@@ -2576,11 +2604,18 @@
                 
                 const updateBtn = document.getElementById('updateBtn');
                 const updateInfo = document.getElementById('updateInfo');
+                console.log('📱 Pokazuję przycisk aktualizacji');
+                console.log('📱 Update button element:', updateBtn ? 'found' : 'NOT FOUND');
+                console.log('📱 Update info element:', updateInfo ? 'found' : 'NOT FOUND');
+                
                 if (updateBtn) {
                     updateBtn.style.display = 'block';
+                    updateBtn.style.backgroundColor = '#ff6b00'; // Pomarańczowy dla nowej wersji
+                    updateBtn.innerHTML = '<span>🚀 Zainstaluj aktualizację</span>';
                 }
                 if (updateInfo) {
                     updateInfo.style.display = 'block';
+                    updateInfo.innerHTML = 'Nowa wersja: <span style="color: #ff6b00;">gotowa</span>';
                 }
             }
             
@@ -2602,6 +2637,46 @@
                     return success;
                 } catch (error) {
                     console.log('🧪 Test API nieudany:', error);
+                    return false;
+                }
+            }
+            
+            async checkForUpdates() {
+                console.log('🔍 Manualnie sprawdzam aktualizacje...');
+                
+                if (!('serviceWorker' in navigator)) {
+                    console.log('❌ Service Worker nie obsługiwany');
+                    return false;
+                }
+                
+                try {
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    if (!registration) {
+                        console.log('❌ Brak rejestracji Service Worker');
+                        return false;
+                    }
+                    
+                    console.log('🔍 Obecny stan Service Worker:');
+                    console.log('- Active:', registration.active ? 'TAK' : 'NIE');
+                    console.log('- Waiting:', registration.waiting ? 'TAK' : 'NIE');
+                    console.log('- Installing:', registration.installing ? 'TAK' : 'NIE');
+                    
+                    // Wymuś sprawdzenie aktualizacji
+                    console.log('🔍 Wymuszam sprawdzenie aktualizacji...');
+                    await registration.update();
+                    
+                    // Sprawdź czy jest oczekująca aktualizacja
+                    if (registration.waiting) {
+                        console.log('✅ Znaleziono oczekującą aktualizację!');
+                        this.showUpdateButton();
+                        return true;
+                    } else {
+                        console.log('ℹ️ Brak dostępnych aktualizacji');
+                        return false;
+                    }
+                    
+                } catch (error) {
+                    console.log('❌ Błąd sprawdzania aktualizacji:', error);
                     return false;
                 }
             }
@@ -2665,6 +2740,132 @@
                         app.showNotification('❌ Nie można połączyć się z API PSE');
                     }
                 });
+            }
+        }
+        
+        async function testUpdates() {
+            if (app) {
+                const testBtn = document.getElementById('testBtn');
+                const originalText = testBtn.innerHTML;
+                testBtn.innerHTML = '<div class="loading-spinner"></div>Sprawdzanie...';
+                testBtn.disabled = true;
+                
+                try {
+                    const hasUpdate = await app.checkForUpdates();
+                    
+                    if (hasUpdate) {
+                        app.showNotification('🚀 Znaleziono aktualizację! Sprawdź przycisk "Aktualizuj aplikację"');
+                    } else {
+                        app.showNotification('✅ Aplikacja jest aktualna');
+                    }
+                    
+                    // Dodatkowo sprawdź API
+                    const apiWorking = await app.testAPIConnectivity();
+                    if (!apiWorking) {
+                        app.showNotification('⚠️ Problem z połączeniem API PSE');
+                    }
+                    
+                } catch (error) {
+                    console.log('❌ Błąd sprawdzania aktualizacji:', error);
+                    app.showNotification('❌ Błąd sprawdzania aktualizacji');
+                } finally {
+                    testBtn.innerHTML = originalText;
+                    testBtn.disabled = false;
+                }
+            }
+        }
+        
+        async function showDebugInfo() {
+            if (!app) return;
+            
+            console.log('🔧 Zbieranie informacji debugowania...');
+            
+            let debugInfo = '';
+            debugInfo += '🔧 PSE Dashboard Debug Info\n\n';
+            debugInfo += `📱 User Agent: ${navigator.userAgent}\n`;
+            debugInfo += `📐 Screen: ${window.innerWidth}x${window.innerHeight}\n`;
+            debugInfo += `🌐 Online: ${navigator.onLine}\n`;
+            debugInfo += `⏰ Current time: ${new Date().toLocaleString('pl-PL')}\n\n`;
+            
+            // Service Worker info
+            if ('serviceWorker' in navigator) {
+                debugInfo += '🔧 Service Worker Support: ✅\n';
+                
+                try {
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    if (registration) {
+                        debugInfo += '📱 SW Registration: ✅\n';
+                        debugInfo += `📱 SW Scope: ${registration.scope}\n`;
+                        debugInfo += `📱 SW Active: ${registration.active ? '✅' : '❌'}\n`;
+                        debugInfo += `📱 SW Waiting: ${registration.waiting ? '✅ (UPDATE READY!)' : '❌'}\n`;
+                        debugInfo += `📱 SW Installing: ${registration.installing ? '✅' : '❌'}\n`;
+                        
+                        if (registration.active) {
+                            debugInfo += `📱 SW Script URL: ${registration.active.scriptURL}\n`;
+                            // Debug info
+            debugInfo += `📱 External sw.js: ${registration.active && registration.active.scriptURL.includes('sw.js') ? '✅' : '❌ (inline)'}\n`;
+            debugInfo += `📱 Update via cache: none\n`;
+                        }
+                    } else {
+                        debugInfo += '📱 SW Registration: ❌\n';
+                    }
+                } catch (error) {
+                    debugInfo += `📱 SW Error: ${error.message}\n`;
+                }
+            } else {
+                debugInfo += '🔧 Service Worker Support: ❌\n';
+            }
+            
+            debugInfo += '\n';
+            
+            // Check if sw.js exists
+            try {
+                const swResponse = await fetch('./sw.js', { method: 'HEAD' });
+                debugInfo += `📱 sw.js file exists: ${swResponse.ok ? '✅' : '❌'}\n`;
+                if (swResponse.ok) {
+                    debugInfo += `📱 sw.js last-modified: ${swResponse.headers.get('last-modified') || 'unknown'}\n`;
+                    debugInfo += `📱 sw.js etag: ${swResponse.headers.get('etag') || 'none'}\n`;
+                }
+            } catch (error) {
+                debugInfo += `📱 sw.js file exists: ❌ (${error.message})\n`;
+            }
+            
+            debugInfo += '\n';
+            
+            // Settings info
+            debugInfo += '⚙️ Settings:\n';
+            debugInfo += `📱 Disable Updates: ${localStorage.getItem('no-sw-updates') ? '✅' : '❌'}\n`;
+            debugInfo += `📱 SW Checked: ${sessionStorage.getItem('sw-checked') ? '✅' : '❌'}\n`;
+            debugInfo += `📱 App Updated: ${localStorage.getItem('app-updated') ? '✅' : '❌'}\n`;
+            
+            debugInfo += '\n';
+            
+            // App state
+            debugInfo += '📊 App State:\n';
+            debugInfo += `📱 Data loaded: ${app.allData ? app.allData.length : 0} points\n`;
+            debugInfo += `📱 Current day: ${app.currentDayOffset}\n`;
+            debugInfo += `📱 Is online: ${app.isOnline}\n`;
+            debugInfo += `📱 Notifications silenced: ${app.notificationsSilenced}\n`;
+            
+            debugInfo += '\n';
+            
+            // Button states
+            const updateBtn = document.getElementById('updateBtn');
+            const installBtn = document.getElementById('installBtn');
+            debugInfo += '🔘 Button States:\n';
+            debugInfo += `📱 Update button visible: ${updateBtn && updateBtn.style.display !== 'none' ? '✅' : '❌'}\n`;
+            debugInfo += `📱 Install button visible: ${installBtn && installBtn.style.display !== 'none' ? '✅' : '❌'}\n`;
+            
+            console.log(debugInfo);
+            
+            // Pokaż w alert dla łatwego kopiowania
+            if (confirm('🔧 Debug info wyświetlone w konsoli. Skopiować do schowka?')) {
+                try {
+                    await navigator.clipboard.writeText(debugInfo);
+                    app.showNotification('✅ Debug info skopiowane do schowka');
+                } catch (error) {
+                    app.showNotification('❌ Nie można skopiować - sprawdź konsolę');
+                }
             }
         }
         
