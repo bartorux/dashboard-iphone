@@ -118,7 +118,7 @@
         .status-bar {
             background-color: white;
             margin: 0;
-            padding: 12px 16px;
+            padding: 8px 12px;
             font-size: 13px;
             border-bottom: 1px solid #e5e5ea;
             display: flex;
@@ -172,9 +172,54 @@
             padding: 16px;
         }
         
+        .setting-item {
+            margin: 12px 0;
+        }
+        
+        .setting-item label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .setting-item input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .setting-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        
+        .save-btn, .reset-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .save-btn {
+            background: #34c759;
+            color: white;
+        }
+        
+        .reset-btn {
+            background: #8e8e93;
+            color: white;
+        }
+        
         .day-navigation {
             background: white;
-            padding: 12px 16px;
+            padding: 8px 12px;
             border-bottom: 1px solid #e5e5ea;
         }
         
@@ -224,8 +269,8 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin: 15px 0;
-            padding: 10px;
+            margin: 8px 0;
+            padding: 2px;
             width: 100%;
             position: relative;
         }
@@ -239,7 +284,7 @@
         .trends-section {
             background: white;
             margin: 0;
-            padding: 16px;
+            padding: 12px;
             border-top: 1px solid #e5e5ea;
         }
         
@@ -361,7 +406,7 @@
         .alerts-section {
             background: white;
             margin: 0;
-            padding: 16px;
+            padding: 12px;
             max-height: 40vh;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
@@ -416,7 +461,7 @@
         
         .refresh-section {
             background: white;
-            padding: 16px;
+            padding: 12px;
             border-top: 1px solid #e5e5ea;
         }
         
@@ -527,6 +572,40 @@
         
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+        
+        /* Bardzo małe ekrany (iPhone SE, małe Android) */
+        @media (max-width: 380px) {
+            .header {
+                padding: 12px 8px;
+            }
+            
+            .header h1 {
+                font-size: 16px;
+            }
+            
+            .header p {
+                font-size: 12px;
+            }
+            
+            .status-bar, .day-navigation, .trends-section, .alerts-section, .refresh-section {
+                padding: 6px 8px;
+            }
+            
+            .chart-container {
+                margin: 4px 0;
+                padding: 1px;
+            }
+            
+            #chart {
+                height: 45vh;
+                min-height: 280px;
+            }
+            
+            .day-btn {
+                padding: 8px 4px;
+                font-size: 11px;
+            }
         }
         
         /* Small screen adjustments */
@@ -713,6 +792,8 @@
         // PSE Dashboard Application Class
         class PSEApp {
             constructor() {
+                console.log('🚀 PSE Dashboard Mobile App - Inicjalizacja...');
+                
                 // Configuration
                 this.ALERT_THRESHOLD_ORANGE = 500;
                 this.ALERT_THRESHOLD_RED = 300;
@@ -750,7 +831,7 @@
                 this.ALERT_THRESHOLD_ORANGE = this.settings.orangeThreshold;
                 this.ALERT_THRESHOLD_RED = this.settings.redThreshold;
                 
-                console.log('PSE App initialized with settings:', this.settings);
+                console.log('📋 Załadowane ustawienia:', this.settings);
                 this.init();
             }
             
@@ -765,15 +846,15 @@
                         const saved = localStorage.getItem('pse-dashboard-settings');
                         if (saved) {
                             const settings = { ...defaultSettings, ...JSON.parse(saved) };
-                            console.log('Settings loaded:', settings);
+                            console.log('💾 Ustawienia wczytane z localStorage:', settings);
                             return settings;
                         }
                     }
                 } catch (error) {
-                    console.log('Settings load error:', error);
+                    console.log('❌ Błąd wczytywania ustawień:', error);
                 }
                 
-                console.log('Using default settings');
+                console.log('🔧 Używam domyślnych ustawień');
                 return defaultSettings;
             }
             
@@ -810,9 +891,9 @@
                         this.updateAlerts(dayData);
                     }
                     
-                    console.log('Settings saved:', settings);
+                    console.log('💾 Ustawienia zapisane:', settings);
                 } catch (error) {
-                    console.log('Settings save error:', error);
+                    console.log('❌ Błąd zapisu ustawień:', error);
                     this.showNotification('❌ Błąd zapisu ustawień');
                 }
             }
@@ -857,17 +938,15 @@
             
             async init() {
                 console.log('=== PSE Dashboard Init Started ===');
-                console.log('⚙️ Init method called successfully');
                 
                 // Start as online by default (jak w Python)
                 this.isOnline = true;
                 this.hideOfflineIndicator();
                 
-                console.log('📋 Loading settings...');
-                // Apply custom thresholds from settings (moved here to ensure proper order)
+                // Apply custom thresholds from settings
                 this.ALERT_THRESHOLD_ORANGE = this.settings.orangeThreshold;
                 this.ALERT_THRESHOLD_RED = this.settings.redThreshold;
-                console.log('📋 Applied thresholds:', { orange: this.ALERT_THRESHOLD_ORANGE, red: this.ALERT_THRESHOLD_RED });
+                console.log('📋 Zastosowane progi alertów:', { orange: this.ALERT_THRESHOLD_ORANGE, red: this.ALERT_THRESHOLD_RED });
                 
                 // Setup offline/online detection
                 window.addEventListener('online', () => this.handleOnlineStatus(true));
@@ -892,21 +971,45 @@
                 });
                 
                 // Setup day navigation
-                console.log('📅 Setting up day navigation...');
+                console.log('📅 Konfigurowanie nawigacji dni...');
                 this.setupDayNavigation();
                 
+                // Register Service Worker for PWA
+                this.registerServiceWorker();
+                
                 // Initial data load
-                console.log('📊 Starting initial data load...');
+                console.log('📊 Rozpoczynam pierwsze ładowanie danych...');
                 await this.refreshData();
                 
-                // Auto refresh every 15 minutes (ZACHOWANE jak w oryginale Python!)
-                console.log('⏰ Setting up 15-minute auto-refresh (preserved from Python original)');
+                // Auto refresh every 15 minutes (PRESERVED from Python)
+                console.log('⏰ Konfiguracja auto-odświeżania co 15 minut (zachowane z wersji Python)');
                 setInterval(() => {
-                    console.log('⏰ Auto-refresh triggered (15-minute interval from Python)');
+                    console.log('⏰ Auto-odświeżanie (15-minutowy interwał z Python)');
                     this.refreshData();
-                }, 15 * 60 * 1000); // DOKŁADNIE jak w Python: 15 * 60 * 1000
+                }, 15 * 60 * 1000); // EXACTLY like in Python: 15 * 60 * 1000
                 
                 console.log('=== PSE Dashboard Init Complete ===');
+            }
+            
+            async registerServiceWorker() {
+                if ('serviceWorker' in navigator) {
+                    try {
+                        console.log('📱 Rejestrowanie Service Worker...');
+                        const registration = await navigator.serviceWorker.register('./sw.js');
+                        console.log('✅ Service Worker zarejestrowany:', registration);
+                        
+                        // Listen for updates
+                        registration.addEventListener('updatefound', () => {
+                            console.log('🔄 Nowa wersja aplikacji dostępna');
+                            this.showNotification('🔄 Nowa wersja aplikacji dostępna');
+                        });
+                        
+                    } catch (error) {
+                        console.log('❌ Błąd rejestracji Service Worker:', error);
+                    }
+                } else {
+                    console.log('❌ Service Worker nie jest obsługiwany');
+                }
             }
             
             setupVisibilityTracking() {
@@ -914,8 +1017,10 @@
                     if (document.visibilityState === 'visible') {
                         this.isAppVisible = true;
                         this.lastSeenTime = Date.now();
+                        console.log('👁️ Aplikacja widoczna - aktualizuję lastSeenTime');
                     } else {
                         this.isAppVisible = false;
+                        console.log('👁️ Aplikacja ukryta');
                     }
                 });
                 
@@ -930,14 +1035,14 @@
             }
             
             setupPWAInstallation() {
-                console.log('Setting up PWA installation...');
+                console.log('📱 Konfigurowanie instalacji PWA...');
                 
                 // Check if app is already installed (standalone mode)
                 const isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
                 const isIOSStandalone = window.navigator.standalone === true;
                 
                 if (isStandalone || isIOSStandalone) {
-                    console.log('App is already installed - hiding install button');
+                    console.log('📱 Aplikacja już zainstalowana - ukrywam przycisk instalacji');
                     this.hideInstallButton();
                     return;
                 }
@@ -947,7 +1052,7 @@
                 
                 // Listen for the beforeinstallprompt event (Android/Chrome)
                 window.addEventListener('beforeinstallprompt', (event) => {
-                    console.log('PWA install prompt available');
+                    console.log('📱 PWA install prompt dostępny');
                     event.preventDefault(); // Prevent the mini-infobar
                     this.installPromptEvent = event;
                     this.isInstallable = true;
@@ -956,7 +1061,7 @@
                 
                 // Listen for the app being installed
                 window.addEventListener('appinstalled', () => {
-                    console.log('PWA was installed');
+                    console.log('📱 PWA została zainstalowana');
                     this.hideInstallButton();
                     this.showNotification('🎉 Aplikacja została zainstalowana!');
                 });
@@ -966,15 +1071,15 @@
                 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
                 
                 if (isIOS && isSafari) {
-                    console.log('iOS Safari detected - showing iOS install instructions');
+                    console.log('📱 iOS Safari wykryty - pokazuję instrukcje instalacji iOS');
                     this.isInstallable = 'ios';
                     this.updateInstallButton();
                 } else {
-                    console.log('Waiting for beforeinstallprompt event...');
+                    console.log('📱 Oczekuję na beforeinstallprompt event...');
                     // Set a timeout to show generic install button if no prompt event comes
                     setTimeout(() => {
                         if (!this.installPromptEvent && !this.isInstallable) {
-                            console.log('No install prompt available - showing generic button');
+                            console.log('📱 Brak install prompt - pokazuję ogólny przycisk');
                             this.isInstallable = 'generic';
                             this.updateInstallButton();
                         }
@@ -1016,7 +1121,7 @@
             }
             
             async installPWA() {
-                console.log('Install button clicked, installable:', this.isInstallable);
+                console.log('📱 Przycisk instalacji kliknięty, installable:', this.isInstallable);
                 
                 const installBtn = document.getElementById('installBtn');
                 
@@ -1030,7 +1135,7 @@
                     try {
                         this.installPromptEvent.prompt();
                         const result = await this.installPromptEvent.userChoice;
-                        console.log('User choice:', result.outcome);
+                        console.log('📱 Wybór użytkownika:', result.outcome);
                         
                         if (result.outcome === 'accepted') {
                             this.showNotification('🎉 Instalowanie aplikacji...');
@@ -1042,7 +1147,7 @@
                         this.isInstallable = false;
                         
                     } catch (error) {
-                        console.log('Install prompt error:', error);
+                        console.log('❌ Błąd install prompt:', error);
                         this.showIOSInstallInstructions();
                     } finally {
                         if (installBtn) {
@@ -1115,14 +1220,14 @@
             }
             
             setupPullToRefresh() {
-                console.log('Setting up pull-to-refresh...');
+                console.log('📱 Konfigurowanie pull-to-refresh...');
                 
                 const pullIndicator = document.getElementById('pullToRefresh');
                 const pullIcon = document.getElementById('pullIcon');
                 const pullText = document.getElementById('pullText');
                 
                 if (!pullIndicator) {
-                    console.log('Pull-to-refresh element not found');
+                    console.log('❌ Element pull-to-refresh nie znaleziony');
                     return;
                 }
                 
@@ -1191,11 +1296,11 @@
                     this.pullToRefresh.isDragging = false;
                 }, { passive: true });
                 
-                console.log('Pull-to-refresh setup complete');
+                console.log('✅ Pull-to-refresh skonfigurowany');
             }
             
             triggerPullRefresh() {
-                console.log('Pull-to-refresh triggered');
+                console.log('🔄 Pull-to-refresh uruchomiony');
                 
                 const pullIndicator = document.getElementById('pullToRefresh');
                 const pullText = document.getElementById('pullText');
@@ -1248,11 +1353,11 @@
                 }
                 
                 this.updateNotificationButton();
-                console.log('Day navigation setup complete');
+                console.log('✅ Nawigacja dni skonfigurowana');
             }
             
             switchDay(dayOffset) {
-                console.log(`Switching to day offset: ${dayOffset}`);
+                console.log(`📅 Przełączanie na dzień: ${dayOffset}`);
                 
                 // Update active button
                 document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
@@ -1275,7 +1380,7 @@
                 const endHour = startHour + 24;
                 
                 const dayData = this.allData.slice(startHour, endHour);
-                console.log(`Day ${dayOffset} data: ${dayData.length} points`);
+                console.log(`📅 Dane dla dnia ${dayOffset}: ${dayData.length} punktów`);
                 
                 return dayData;
             }
@@ -1285,7 +1390,7 @@
                 this.updateNotificationButton();
                 
                 const status = this.notificationsSilenced ? 'wyłączone' : 'włączone';
-                console.log(`Notifications ${status}`);
+                console.log(`🔔 Powiadomienia ${status}`);
                 this.showNotification(`Powiadomienia ${status}`);
             }
             
@@ -1305,19 +1410,19 @@
             }
             
             async handleOnlineStatus(online) {
-                console.log('Browser online status changed to:', online);
+                console.log('🌐 Status online przeglądarki zmieniony na:', online);
                 
                 if (online) {
-                    console.log('Browser says online - will test real connection on next refresh');
+                    console.log('🌐 Przeglądarka mówi online - przetestuję rzeczywiste połączenie przy następnym odświeżeniu');
                 } else {
-                    console.log('Browser says offline - showing offline indicator');
+                    console.log('🌐 Przeglądarka mówi offline - pokazuję wskaźnik offline');
                     this.isOnline = false;
                     this.showOfflineIndicator();
                 }
             }
             
             showOfflineIndicator() {
-                console.log('Showing offline indicator');
+                console.log('📵 Pokazuję wskaźnik offline');
                 const offlineIndicator = document.getElementById('offlineIndicator');
                 if (offlineIndicator) {
                     offlineIndicator.style.display = 'block';
@@ -1327,7 +1432,7 @@
             }
             
             hideOfflineIndicator() {
-                console.log('Hiding offline indicator');
+                console.log('📶 Ukrywam wskaźnik offline');
                 const offlineIndicator = document.getElementById('offlineIndicator');
                 if (offlineIndicator) {
                     offlineIndicator.classList.remove('show');
@@ -1341,55 +1446,53 @@
                 console.log('🌐 === FETCH DATA START ===');
                 const now = new Date();
                 // WAŻNE: Po północy automatycznie przesunie się na nowy dzień! (jak w Python)
-                // start_of_today zawsze wskazuje na 00:00 aktualnego dnia
-                // więc po północy automatycznie przesuwa się zakres danych o 1 dzień!
                 const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 
                 const startDate = this.formatDate(startOfToday);
                 // 3 pełne dni w przód (72 godziny) - dokładnie jak w Python
                 const endDate = this.formatDate(new Date(startOfToday.getTime() + 3 * 24 * 60 * 60 * 1000));
                 
-                console.log(`🕐 Fetching data from ${startDate} to ${endDate} (auto-shifts at midnight like Python)`);
-                console.log(`📅 Start of today: ${startOfToday.toISOString()} (like Python startOfToday)`);
+                console.log(`🕐 Pobieranie danych od ${startDate} do ${endDate} (automatycznie przesuwa się o północy jak Python)`);
+                console.log(`📅 Początek dzisiejszego dnia: ${startOfToday.toISOString()} (jak Python startOfToday)`);
                 
                 try {
                     let url = `${this.API_URL}?$filter=plan_dtime ge '${startDate}' and plan_dtime le '${endDate}'&$orderby=plan_dtime&$first=200`;
-                    console.log('Full URL:', url);
+                    console.log('📡 Pełny URL:', url);
                     
                     let response;
                     try {
-                        console.log('📡 Making API request with filter (like Python)...');
+                        console.log('📡 Zapytanie API z filtrem (jak Python)...');
                         response = await fetch(url);
-                        console.log(`📡 Filtered response status: ${response.status}`);
+                        console.log(`📡 Status odpowiedzi z filtrem: ${response.status}`);
                     } catch (fetchError) {
-                        console.log('❌ Filtered request failed:', fetchError.message);
-                        console.log('📡 Trying simple API request (Python fallback)...');
+                        console.log('❌ Zapytanie z filtrem nieudane:', fetchError.message);
+                        console.log('📡 Próbuję proste zapytanie API (fallback Python)...');
                         response = await fetch(this.API_URL + '?$first=200');
-                        console.log(`📡 Simple response status: ${response.status}`);
+                        console.log(`📡 Status prostej odpowiedzi: ${response.status}`);
                     }
                     
                     if (response.ok) {
-                        console.log('✅ API response OK, parsing JSON...');
+                        console.log('✅ Odpowiedź API OK, parsowanie JSON...');
                         const data = await response.json();
-                        console.log('📊 Raw API data:', { 
+                        console.log('📊 Surowe dane API:', { 
                             hasValue: !!data.value, 
                             valueLength: data.value?.length || 0
                         });
                         
                         if (data.value && data.value.length > 0) {
-                            console.log('✅ SUCCESS: Got data from API (like Python success)');
+                            console.log('✅ SUKCES: Otrzymano dane z API (jak Python sukces)');
                             return this.processData(data.value);
                         } else {
-                            console.log('❌ API returned empty data.value array');
+                            console.log('❌ API zwróciło pustą tablicę data.value');
                         }
                     } else {
-                        console.log(`❌ API returned status: ${response.status}`);
+                        console.log(`❌ API zwróciło status: ${response.status}`);
                     }
                 } catch (error) {
-                    console.error('❌ Error fetching data:', error);
+                    console.error('❌ Błąd pobierania danych:', error);
                 }
                 
-                console.log('❌ Fetch failed - returning empty array (like Python fallback)');
+                console.log('❌ Pobieranie nieudane - zwracam pustą tablicę (jak Python fallback)');
                 return [];
             }
             
@@ -1402,21 +1505,19 @@
             processData(rawData) {
                 const now = new Date();
                 // WAŻNE: Po północy automatycznie przesunie się na nowy dzień! (jak w Python)
-                // start_of_today zawsze wskazuje na 00:00 aktualnego dnia
-                // więc po północy automatycznie przesuwa się zakres danych o 1 dzień!
                 const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 let processed = [];
                 
                 if (!rawData || rawData.length === 0) {
-                    console.log('No raw data to process');
+                    console.log('❌ Brak surowych danych do przetworzenia');
                     return [];
                 }
                 
-                console.log(`🔄 Processing ${rawData.length} raw data records`);
-                console.log(`📅 Start of today: ${startOfToday.toISOString()} (Python startOfToday equivalent)`);
+                console.log(`🔄 Przetwarzanie ${rawData.length} surowych rekordów danych`);
+                console.log(`📅 Początek dzisiejszego dnia: ${startOfToday.toISOString()} (Python startOfToday equivalent)`);
                 
                 // ZAWSZE generuj pełne 72 godziny od północy dzisiejszego dnia (jak w Python)
-                console.log('🕐 Generating full 72 hours from midnight today (exactly like Python original)...');
+                console.log('🕐 Generowanie pełnych 72 godzin od północy dzisiejszego dnia (dokładnie jak Python original)...');
                 
                 for (let i = 0; i < 72; i++) {
                     const timestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
@@ -1446,9 +1547,9 @@
                     }
                 }
                 
-                console.log(`✅ Generated ${processed.length} processed points for 72h period (like Python)`);
+                console.log(`✅ Wygenerowano ${processed.length} przetworzonych punktów na okres 72h (jak Python)`);
                 if (processed.length > 0) {
-                    console.log(`📅 Time range: ${processed[0].timeStr} to ${processed[processed.length - 1].timeStr}`);
+                    console.log(`📅 Zakres czasowy: ${processed[0].timeStr} do ${processed[processed.length - 1].timeStr}`);
                 }
                 
                 return processed.sort((a, b) => a.time - b.time);
@@ -1504,7 +1605,7 @@
                 
                 // ZACHOWANE: Reset alertów o północy (dokładnie jak w Python!)
                 if (this.alertHistory.lastResetDate !== today) {
-                    console.log('🌅 NEW DAY - resetting alert history (preserved from Python original)');
+                    console.log('🌅 NOWY DZIEŃ - resetuję historię alertów (zachowane z Python original)');
                     this.alertHistory = {
                         orange: [],
                         red: [],
@@ -1512,7 +1613,7 @@
                     };
                     // Reset lastSeenTime for new day (jak w Python)
                     this.lastSeenTime = Date.now();
-                    console.log('🌅 Alert history reset and lastSeenTime updated for new day (like Python)');
+                    console.log('🌅 Historia alertów zresetowana i lastSeenTime zaktualizowany na nowy dzień (jak Python)');
                 }
                 
                 // Count only truly NEW alerts (that appeared after lastSeenTime) - jak w Python
@@ -1554,7 +1655,7 @@
                     'Notification' in window && 
                     Notification.permission === 'granted') {
                     
-                    console.log(`🚨 Sending notification for ${newAlertsCount} new alerts (like Python logic)`);
+                    console.log(`🚨 Wysyłam powiadomienie dla ${newAlertsCount} nowych alertów (jak Python logic)`);
                     this.showNotification(`🚨 ${newAlertsCount} ${newAlertsCount === 1 ? 'nowy alert' : 'nowe alerty'} rezerw mocy!`);
                 } else {
                     let skipReason = 'unknown';
@@ -1563,7 +1664,7 @@
                     else if (this.notificationsSilenced) skipReason = 'notifications silenced';
                     else if (!('Notification' in window) || Notification.permission !== 'granted') skipReason = 'no permission';
                     
-                    console.log(`📱 Not sending notification - reason: ${skipReason} (Python logic)`);
+                    console.log(`📱 Nie wysyłam powiadomienia - powód: ${skipReason} (Python logic)`);
                 }
             }
             
@@ -1594,15 +1695,15 @@
                             requireInteraction: false,
                             silent: false
                         });
-                        console.log('System notification sent:', message);
+                        console.log('🔔 Powiadomienie systemowe wysłane:', message);
                     } catch (error) {
-                        console.log('Failed to show notification:', error);
+                        console.log('❌ Nie udało się pokazać powiadomienia:', error);
                     }
                 }
             }
             
             drawChart(data) {
-                console.log(`Drawing chart with ${data.length} data points for day offset ${this.currentDayOffset}`);
+                console.log(`📊 Rysowanie wykresu z ${data.length} punktów danych dla dnia offset ${this.currentDayOffset}`);
                 
                 if (!data || data.length === 0) {
                     document.getElementById('chart').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #8e8e93;">Brak danych do wyświetlenia</div>';
@@ -1693,40 +1794,46 @@
                     });
                 }
                 
+                // Bardzo małe marginesy dla maksymalnego wykorzystania ekranu na mobile
+                const isMobile = window.innerWidth < 500;
+                const isVerySmall = window.innerWidth < 380; // iPhone SE, małe Android
+                
                 const layout = {
                     title: false,
                     shapes: shapes,
                     xaxis: {
+                        title: false, // Usuń tytuł osi X na mobile dla oszczędności miejsca
                         tickformat: '%H:%M',
-                        tickangle: -45,
+                        tickangle: isMobile ? -45 : 0,
                         showgrid: true,
                         gridcolor: '#f0f0f0',
-                        tickfont: { size: 10 },
+                        tickfont: { size: isVerySmall ? 9 : 10 },
                         tickmode: 'linear',
                         tick0: times[0],
-                        dtick: window.innerWidth < 600 ? 4 * 3600000 : 2 * 3600000
+                        dtick: isVerySmall ? 6 * 3600000 : window.innerWidth < 600 ? 4 * 3600000 : 2 * 3600000
                     },
                     yaxis: {
-                        title: window.innerWidth < 400 ? 'MW' : 'Rezerwa mocy [MW]',
+                        title: isVerySmall ? '' : 'MW', // Skrócony lub brak tytułu na bardzo małych ekranach
+                        titlefont: { size: 10 },
                         showgrid: true,
                         gridcolor: '#f0f0f0',
-                        tickfont: { size: 10 }
+                        tickfont: { size: isVerySmall ? 9 : 10 }
                     },
                     plot_bgcolor: 'white',
                     paper_bgcolor: 'white',
                     hovermode: 'x unified',
                     legend: {
                         orientation: 'h',
-                        y: -0.25,
+                        y: -0.15, // Przesunięto wyżej dla oszczędności miejsca
                         x: 0.5,
                         xanchor: 'center',
-                        font: { size: 9 }
+                        font: { size: isVerySmall ? 8 : 9 }
                     },
                     margin: { 
-                        t: 10, 
-                        r: window.innerWidth < 768 ? 100 : 25,  // Drastycznie większy margines na iPhone
-                        b: 70, 
-                        l: window.innerWidth < 400 ? 35 : 50 
+                        t: 5,  // Bardzo mały górny margines
+                        r: 2,  // Minimalny prawy margines 
+                        b: isVerySmall ? 45 : 55, // Mniejszy dolny margines na małych ekranach
+                        l: isVerySmall ? 25 : 30   // ZNACZNIE zmniejszony lewy margines
                     },
                     autosize: true
                 };
@@ -1752,9 +1859,9 @@
                 
                 // Rysuj wykres
                 Plotly.newPlot('chart', traces, layout, config).then(() => {
-                    console.log('Plotly chart created successfully');
+                    console.log('✅ Wykres Plotly utworzony pomyślnie');
                 }).catch(error => {
-                    console.error('Plotly error:', error);
+                    console.error('❌ Błąd Plotly:', error);
                 });
             }
             
@@ -1824,7 +1931,7 @@
                     const now = new Date().toLocaleString('pl-PL');
                     
                     if (data && data.length > 0) {
-                        console.log(`✅ DATA LOAD SUCCESS: ${data.length} data points - CONNECTION CONFIRMED (like Python)`);
+                        console.log(`✅ SUKCES ŁADOWANIA DANYCH: ${data.length} punktów danych - POŁĄCZENIE POTWIERDZONE (jak Python)`);
                         
                         // Data loaded successfully - we're definitely online (jak w Python)
                         this.isOnline = true;
@@ -1836,7 +1943,7 @@
                             offlineIndicator.style.display = 'none';
                             offlineIndicator.classList.remove('show');
                         }
-                        console.log('📡 Connection status: ONLINE - offline indicator FORCED hidden (like Python)');
+                        console.log('📡 Status połączenia: ONLINE - wskaźnik offline WYMUSZONE ukrycie (jak Python)');
                         
                         this.allData = data;
                         
@@ -1856,11 +1963,11 @@
                         this.updateStatus(true, `Połączono | ${data.length} punktów`);
                         lastUpdateEl.textContent = now.split(' ')[1].substring(0, 5);
                     } else {
-                        console.log('❌ No data received - CONNECTION FAILED (like Python fallback)');
+                        console.log('❌ Nie otrzymano danych - POŁĄCZENIE NIEUDANE (jak Python fallback)');
                         // No data received - probably offline (jak w Python)
                         this.isOnline = false;
                         this.showOfflineIndicator();
-                        console.log('📡 Connection status updated to OFFLINE (like Python)');
+                        console.log('📡 Status połączenia zaktualizowany na OFFLINE (jak Python)');
                         
                         this.updateStatus(false, 'Brak danych');
                         document.getElementById('chart').innerHTML = 
@@ -1868,11 +1975,11 @@
                         this.updateAlerts([]);
                     }
                 } catch (error) {
-                    console.error('❌ Refresh error - CONNECTION FAILED (like Python error handling):', error);
+                    console.error('❌ Błąd odświeżania - POŁĄCZENIE NIEUDANE (jak Python error handling):', error);
                     // Error occurred - probably offline (jak w Python)
                     this.isOnline = false;
                     this.showOfflineIndicator();
-                    console.log('📡 Connection status updated to OFFLINE due to error (like Python)');
+                    console.log('📡 Status połączenia zaktualizowany na OFFLINE z powodu błędu (jak Python)');
                     
                     this.updateStatus(false, 'Błąd połączenia');
                 } finally {
@@ -1884,7 +1991,7 @@
             
             handleResize() {
                 if (this.currentData && this.currentData.length > 0) {
-                    console.log('Window resized, redrawing chart...');
+                    console.log('📱 Zmieniono rozmiar okna, przerysowuję wykres...');
                     this.drawChart(this.currentData);
                 }
             }
@@ -2045,14 +2152,14 @@
             }
             
             async testAPIConnectivity() {
-                console.log('Testing API connectivity...');
+                console.log('🧪 Testowanie łączności z API...');
                 try {
                     const response = await fetch(this.API_URL + '?$first=1');
                     const success = response.ok;
-                    console.log('API test result:', success);
+                    console.log('🧪 Wynik testu API:', success);
                     return success;
                 } catch (error) {
-                    console.log('API test failed:', error);
+                    console.log('🧪 Test API nieudany:', error);
                     return false;
                 }
             }
@@ -2120,7 +2227,7 @@
         }
         
         function forceUpdate() {
-            console.log('Force update requested by user');
+            console.log('🔄 Wymuszona aktualizacja żądana przez użytkownika');
             
             const updateBtn = document.getElementById('updateBtn');
             const originalText = updateBtn.innerHTML;
@@ -2144,18 +2251,18 @@
             if (offlineIndicator) {
                 offlineIndicator.style.display = 'none';
                 offlineIndicator.classList.remove('show');
-                console.log('🟢 FORCED offline indicator hidden at startup (like Python)');
+                console.log('🟢 WYMUSZONE ukrycie wskaźnika offline przy starcie (jak Python)');
             } else {
-                console.log('❌ Offline indicator element not found');
+                console.log('❌ Element wskaźnika offline nie znaleziony');
             }
             
             try {
-                console.log('🚀 Creating PSEApp instance...');
+                console.log('🚀 Tworzenie instancji PSEApp...');
                 app = new PSEApp();
-                console.log('✅ PSEApp instance created successfully');
+                console.log('✅ Instancja PSEApp utworzona pomyślnie');
             } catch (error) {
-                console.error('❌ Failed to create PSEApp:', error);
-                console.log('Error details:', { message: error.message, stack: error.stack });
+                console.error('❌ Nie udało się utworzyć PSEApp:', error);
+                console.log('Szczegóły błędu:', { message: error.message, stack: error.stack });
                 
                 const chart = document.getElementById('chart');
                 if (chart) {
