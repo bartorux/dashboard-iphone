@@ -1794,15 +1794,17 @@
                     });
                 }
                 
-                // Bardzo małe marginesy dla maksymalnego wykorzystania ekranu na mobile
+                // Optymalne marginesy dla iPhone - zapobieganie obcinaniu godzin
                 const isMobile = window.innerWidth < 500;
                 const isVerySmall = window.innerWidth < 380; // iPhone SE, małe Android
+                const isIPhone = /iPhone/.test(navigator.userAgent);
                 
+                // Specjalne ustawienia dla iPhone aby nie ucinać godzin
                 const layout = {
                     title: false,
                     shapes: shapes,
                     xaxis: {
-                        title: false, // Usuń tytuł osi X na mobile dla oszczędności miejsca
+                        title: false,
                         tickformat: '%H:%M',
                         tickangle: isMobile ? -45 : 0,
                         showgrid: true,
@@ -1810,10 +1812,14 @@
                         tickfont: { size: isVerySmall ? 9 : 10 },
                         tickmode: 'linear',
                         tick0: times[0],
-                        dtick: isVerySmall ? 6 * 3600000 : window.innerWidth < 600 ? 4 * 3600000 : 2 * 3600000
+                        // Mniejsze dtick dla iPhone żeby pokazać więcej godzin
+                        dtick: isIPhone ? 3 * 3600000 : isVerySmall ? 4 * 3600000 : window.innerWidth < 600 ? 3 * 3600000 : 2 * 3600000,
+                        // Ważne: ustaw range żeby pokazać wszystkie godziny
+                        range: [times[0], times[times.length - 1]],
+                        autorange: false // Wyłącz autorange żeby kontrolować zakres
                     },
                     yaxis: {
-                        title: isVerySmall ? '' : 'MW', // Skrócony lub brak tytułu na bardzo małych ekranach
+                        title: isVerySmall ? '' : 'MW',
                         titlefont: { size: 10 },
                         showgrid: true,
                         gridcolor: '#f0f0f0',
@@ -1824,16 +1830,16 @@
                     hovermode: 'x unified',
                     legend: {
                         orientation: 'h',
-                        y: -0.15, // Przesunięto wyżej dla oszczędności miejsca
+                        y: -0.12, // Przesunięto wyżej
                         x: 0.5,
                         xanchor: 'center',
                         font: { size: isVerySmall ? 8 : 9 }
                     },
                     margin: { 
-                        t: 5,  // Bardzo mały górny margines
-                        r: 2,  // Minimalny prawy margines 
-                        b: isVerySmall ? 45 : 55, // Mniejszy dolny margines na małych ekranach
-                        l: isVerySmall ? 25 : 30   // ZNACZNIE zmniejszony lewy margines
+                        t: 8,  // Zwiększony górny margines
+                        r: 8,  // Zwiększony prawy margines dla iPhone
+                        b: isIPhone ? 65 : isVerySmall ? 60 : 65, // Większy dolny margines na iPhone
+                        l: isVerySmall ? 30 : 35   // Lekko zwiększony lewy margines
                     },
                     autosize: true
                 };
