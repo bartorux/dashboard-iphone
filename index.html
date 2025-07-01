@@ -279,6 +279,7 @@
             width: 100%;
             height: 50vh;
             min-height: 300px;
+            overflow: visible; /* Ważne dla iPhone - zapobiega obcinaniu */
         }
         
         .trends-section {
@@ -1379,8 +1380,33 @@
                 const startHour = dayOffset * 24;
                 const endHour = startHour + 24;
                 
+                // Upewnij się, że pobieramy pełne 24 godziny
                 const dayData = this.allData.slice(startHour, endHour);
-                console.log(`📅 Dane dla dnia ${dayOffset}: ${dayData.length} punktów`);
+                console.log(`📅 getDataForDay(${dayOffset}): startHour=${startHour}, endHour=${endHour}`);
+                console.log(`📅 allData.length=${this.allData.length}, dayData.length=${dayData.length}`);
+                console.log(`📅 Dane dla dnia ${dayOffset}: ${dayData.length} punktów (oczekiwane: 24)`);
+                
+                if (dayData.length > 0) {
+                    console.log(`📅 Pierwszy: ${dayData[0].timeStr}, Ostatni: ${dayData[dayData.length-1].timeStr}`);
+                }
+                
+                // Jeśli mamy niepełny dzień, wypełnij brakujące godziny
+                if (dayData.length < 24 && dayData.length > 0) {
+                    console.log(`⚠️ Wypełniam brakujące godziny dla dnia ${dayOffset}`);
+                    const lastItem = dayData[dayData.length - 1];
+                    const baseTime = new Date(lastItem.time);
+                    
+                    for (let i = dayData.length; i < 24; i++) {
+                        const newTime = new Date(baseTime.getTime() + (i - dayData.length + 1) * 60 * 60 * 1000);
+                        dayData.push({
+                            time: newTime,
+                            timeStr: this.formatDateTime(newTime),
+                            reserve: lastItem.reserve,
+                            required: lastItem.required
+                        });
+                    }
+                    console.log(`✅ Wypełniono do ${dayData.length} godzin`);
+                }
                 
                 return dayData;
             }
@@ -1518,6 +1544,7 @@
                 
                 // ZAWSZE generuj pełne 72 godziny od północy dzisiejszego dnia (jak w Python)
                 console.log('🕐 Generowanie pełnych 72 godzin od północy dzisiejszego dnia (dokładnie jak Python original)...');
+                console.log(`📅 StartOfToday: ${startOfToday.toISOString()}`);
                 
                 for (let i = 0; i < 72; i++) {
                     const timestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
@@ -1545,11 +1572,27 @@
                             });
                         }
                     }
+                    
+                    // Debug co 24 godziny
+                    if ((i + 1) % 24 === 0) {
+                        console.log(`📅 Ukończono dzień ${Math.floor(i / 24)}: godziny 0-${i}`);
+                    }
                 }
                 
-                console.log(`✅ Wygenerowano ${processed.length} przetworzonych punktów na okres 72h (jak Python)`);
+                console.log(`✅ Wygenerowano ${processed.length} przetworzonych punktów na okres 72h (oczekiwane: 72)`);
+                if (processed.length !== 72) {
+                    console.log(`⚠️ PROBLEM: Wygenerowano ${processed.length} punktów zamiast 72!`);
+                }
+                
                 if (processed.length > 0) {
                     console.log(`📅 Zakres czasowy: ${processed[0].timeStr} do ${processed[processed.length - 1].timeStr}`);
+                    // Sprawdź każdy dzień
+                    for (let day = 0; day < 3; day++) {
+                        const dayStart = day * 24;
+                        const dayEnd = dayStart + 24;
+                        const dayPoints = processed.slice(dayStart, dayEnd);
+                        console.log(`📅 Dzień ${day}: ${dayPoints.length} punktów (${dayPoints[0]?.timeStr} - ${dayPoints[dayPoints.length-1]?.timeStr})`);
+                    }
                 }
                 
                 return processed.sort((a, b) => a.time - b.time);
@@ -1704,10 +1747,18 @@
             
             drawChart(data) {
                 console.log(`📊 Rysowanie wykresu z ${data.length} punktów danych dla dnia offset ${this.currentDayOffset}`);
+                console.log(`📅 Pierwszy punkt: ${data[0]?.timeStr}, Ostatni punkt: ${data[data.length-1]?.timeStr}`);
+                console.log(`📅 Oczekiwane godziny: 00:00-23:00, Rzeczywiste godziny w danych: ${data.length}`);
+                console.log(`📱 iPhone wykryty: ${/iPhone/.test(navigator.userAgent)}, szerokość: ${window.innerWidth}px`);
                 
                 if (!data || data.length === 0) {
                     document.getElementById('chart').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #8e8e93;">Brak danych do wyświetlenia</div>';
                     return;
+                }
+                
+                // Sprawdź czy mamy pełny dzień (24 godziny)
+                if (data.length < 24) {
+                    console.log(`⚠️ UWAGA: Niepełny dzień! Mamy tylko ${data.length} godzin zamiast 24`);
                 }
                 
                 const times = data.map(d => d.timeStr);
@@ -1746,24 +1797,11 @@
                 const currentHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours());
                 const currentHourStr = this.formatDateTime(currentHour);
                 
-                // Dodaj padding na końcu danych dla lepszej widoczności
-                const paddedTimes = [...times];
-                const paddedReserves = [...reserves];
-                const paddedRequired = [...required];
-                
-                // Dodaj jeden punkt 30 minut później z tymi samymi wartościami (niewidoczny)
-                const lastTime = new Date(times[times.length - 1]);
-                const paddingTime = new Date(lastTime.getTime() + 30 * 60 * 1000);
-                const paddingTimeStr = this.formatDateTime(paddingTime);
-                
-                paddedTimes.push(paddingTimeStr);
-                paddedReserves.push(null); // Niewidoczny punkt
-                paddedRequired.push(null); // Niewidoczny punkt
-                
+                // Nie dodawaj padding points - używaj oryginalnych danych dla iPhone
                 const traces = [
                     {
-                        x: paddedTimes,
-                        y: paddedReserves,
+                        x: times,  // Używaj oryginalnych times, nie paddedTimes
+                        y: reserves, // Używaj oryginalnych reserves, nie paddedReserves
                         type: 'scatter',
                         mode: 'lines',
                         name: 'Rezerwa mocy',
@@ -1771,8 +1809,8 @@
                         connectgaps: false
                     },
                     {
-                        x: paddedTimes,
-                        y: paddedRequired,
+                        x: times,  // Używaj oryginalnych times
+                        y: required, // Używaj oryginalnych required
                         type: 'scatter',
                         mode: 'lines',
                         name: 'Wymagana rezerwa',
@@ -1782,11 +1820,11 @@
                 ];
                 
                 // Add current hour marker if in range
-                const currentIndex = times.indexOf(currentHourStr); // Używaj oryginalnych times, nie paddedTimes
+                const currentIndex = times.indexOf(currentHourStr);
                 if (currentIndex !== -1 && this.currentDayOffset === 0) {
                     traces.push({
                         x: [currentHourStr],
-                        y: [reserves[currentIndex]], // Używaj oryginalnych reserves
+                        y: [reserves[currentIndex]],
                         type: 'scatter',
                         mode: 'markers',
                         name: 'Teraz',
@@ -1814,9 +1852,22 @@
                         tick0: times[0],
                         // Mniejsze dtick dla iPhone żeby pokazać więcej godzin
                         dtick: isIPhone ? 3 * 3600000 : isVerySmall ? 4 * 3600000 : window.innerWidth < 600 ? 3 * 3600000 : 2 * 3600000,
-                        // Ważne: ustaw range żeby pokazać wszystkie godziny
-                        range: [times[0], times[times.length - 1]],
-                        autorange: false // Wyłącz autorange żeby kontrolować zakres
+                        // Ważne: dodaj margines czasowy żeby pokazać ostatnią godzinę w pełni
+                        range: (() => {
+                            const startTime = times[0];
+                            const endTime = times[times.length - 1];
+                            // Prosty sposób: dodaj string z następną godziną
+                            const lastDate = new Date(endTime);
+                            lastDate.setHours(lastDate.getHours() + 1);
+                            const endTimeWithMargin = lastDate.getFullYear() + '-' + 
+                                                    String(lastDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                                                    String(lastDate.getDate()).padStart(2, '0') + ' ' +
+                                                    String(lastDate.getHours()).padStart(2, '0') + ':00:00';
+                            console.log(`📅 Zakres osi X: ${startTime} do ${endTimeWithMargin} (z marginesem 1h)`);
+                            return [startTime, endTimeWithMargin];
+                        })(),
+                        autorange: false, // Wyłącz autorange żeby kontrolować zakres
+                        fixedrange: false // Pozwól na zoom jeśli potrzeba
                     },
                     yaxis: {
                         title: isVerySmall ? '' : 'MW',
@@ -1837,16 +1888,18 @@
                     },
                     margin: { 
                         t: 8,  // Zwiększony górny margines
-                        r: 8,  // Zwiększony prawy margines dla iPhone
-                        b: isIPhone ? 65 : isVerySmall ? 60 : 65, // Większy dolny margines na iPhone
-                        l: isVerySmall ? 30 : 35   // Lekko zwiększony lewy margines
+                        r: 15,  // Jeszcze większy prawy margines dla iPhone
+                        b: isIPhone ? 70 : isVerySmall ? 65 : 70, // Większy dolny margines na iPhone
+                        l: isVerySmall ? 35 : 40,   // Zwiększony lewy margines
+                        // Dodaj automargin dla lepszego dopasowania
+                        autoexpand: true
                     },
                     autosize: true
                 };
                 
                 this.currentData = data;
                 
-                // Konfiguracja Plotly dla mobile z lepszym dostosowaniem
+                // Konfiguracja Plotly zoptymalizowana dla iPhone
                 const config = {
                     responsive: true,
                     displayModeBar: false,
@@ -1854,11 +1907,15 @@
                     doubleClick: false,
                     showTips: false,
                     staticPlot: false,
+                    // Dodatkowe ustawienia dla iPhone
+                    modeBarButtonsToRemove: ['autoScale2d', 'lasso2d', 'select2d'],
+                    displaylogo: false,
+                    // Wymuś pełną szerokość dla iPhone
                     toImageButtonOptions: {
                         format: 'png',
                         filename: 'pse_dashboard',
                         height: 400,
-                        width: 600,
+                        width: Math.max(window.innerWidth - 20, 300), // Dynamiczna szerokość
                         scale: 1
                     }
                 };
