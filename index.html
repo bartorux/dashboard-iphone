@@ -43,6 +43,53 @@
             overflow-x: hidden;
         }
         
+        .pull-to-refresh {
+            position: absolute;
+            top: -80px;
+            left: 0;
+            right: 0;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 10;
+            transition: transform 0.3s ease;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .pull-to-refresh.visible {
+            transform: translateY(80px);
+        }
+        
+        .pull-to-refresh.refreshing {
+            transform: translateY(80px);
+        }
+        
+        .pull-icon {
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+            font-size: 18px;
+        }
+        
+        .pull-to-refresh.ready .pull-icon {
+            transform: rotate(180deg);
+        }
+        
+        .pull-loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
         .header {
             background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
             color: white;
@@ -515,6 +562,12 @@
     </div>
     
     <div class="container">
+        <!-- Pull to Refresh Indicator -->
+        <div class="pull-to-refresh" id="pullToRefresh">
+            <span class="pull-icon" id="pullIcon">↓</span>
+            <span id="pullText">Pociągnij aby odświeżyć</span>
+        </div>
+        
         <!-- Status Bar -->
         <div class="status-bar">
             <div style="display: flex; align-items: center;">
@@ -682,6 +735,16 @@
                 this.installPromptEvent = null;
                 this.isInstallable = false;
                 
+                // Pull-to-refresh
+                this.pullToRefresh = {
+                    isEnabled: true,
+                    startY: 0,
+                    currentY: 0,
+                    isDragging: false,
+                    threshold: 80,
+                    isRefreshing: false
+                };
+                
                 // Load settings
                 this.settings = this.loadSettings();
                 this.ALERT_THRESHOLD_ORANGE = this.settings.orangeThreshold;
@@ -812,6 +875,9 @@
                 
                 // Setup PWA installation
                 this.setupPWAInstallation();
+                
+                // Setup pull-to-refresh
+                this.setupPullToRefresh();
                 
                 // Setup visibility tracking
                 this.setupVisibilityTracking();
@@ -1046,6 +1112,124 @@
                         banner.classList.remove('show');
                     }, 10000);
                 }
+            }
+            
+            setupPullToRefresh() {
+                console.log('Setting up pull-to-refresh...');
+                
+                const pullIndicator = document.getElementById('pullToRefresh');
+                const pullIcon = document.getElementById('pullIcon');
+                const pullText = document.getElementById('pullText');
+                
+                if (!pullIndicator) {
+                    console.log('Pull-to-refresh element not found');
+                    return;
+                }
+                
+                // Touch start
+                document.addEventListener('touchstart', (e) => {
+                    if (this.pullToRefresh.isRefreshing) return;
+                    
+                    // Only start if at top of page
+                    if (window.scrollY === 0) {
+                        this.pullToRefresh.startY = e.touches[0].clientY;
+                        this.pullToRefresh.isDragging = false;
+                    }
+                }, { passive: true });
+                
+                // Touch move
+                document.addEventListener('touchmove', (e) => {
+                    if (this.pullToRefresh.isRefreshing || window.scrollY > 0) return;
+                    
+                    if (this.pullToRefresh.startY > 0) {
+                        this.pullToRefresh.currentY = e.touches[0].clientY;
+                        const pullDistance = Math.max(0, this.pullToRefresh.currentY - this.pullToRefresh.startY);
+                        
+                        if (pullDistance > 10) {
+                            this.pullToRefresh.isDragging = true;
+                            e.preventDefault(); // Prevent scrolling
+                            
+                            // Update visual feedback
+                            if (pullDistance >= this.pullToRefresh.threshold) {
+                                pullIndicator.classList.add('ready');
+                                pullText.textContent = 'Puść aby odświeżyć';
+                                pullIcon.textContent = '↑';
+                            } else {
+                                pullIndicator.classList.remove('ready');
+                                pullText.textContent = 'Pociągnij aby odświeżyć';
+                                pullIcon.textContent = '↓';
+                            }
+                            
+                            // Show indicator
+                            const progress = Math.min(pullDistance / this.pullToRefresh.threshold, 1);
+                            pullIndicator.style.transform = `translateY(${pullDistance * 0.5}px)`;
+                            pullIndicator.style.opacity = progress;
+                            
+                            if (pullDistance > 20) {
+                                pullIndicator.classList.add('visible');
+                            }
+                        }
+                    }
+                }, { passive: false });
+                
+                // Touch end
+                document.addEventListener('touchend', (e) => {
+                    if (this.pullToRefresh.isRefreshing) return;
+                    
+                    if (this.pullToRefresh.isDragging) {
+                        const pullDistance = Math.max(0, this.pullToRefresh.currentY - this.pullToRefresh.startY);
+                        
+                        if (pullDistance >= this.pullToRefresh.threshold) {
+                            this.triggerPullRefresh();
+                        } else {
+                            this.resetPullToRefresh();
+                        }
+                    }
+                    
+                    this.pullToRefresh.startY = 0;
+                    this.pullToRefresh.currentY = 0;
+                    this.pullToRefresh.isDragging = false;
+                }, { passive: true });
+                
+                console.log('Pull-to-refresh setup complete');
+            }
+            
+            triggerPullRefresh() {
+                console.log('Pull-to-refresh triggered');
+                
+                const pullIndicator = document.getElementById('pullToRefresh');
+                const pullText = document.getElementById('pullText');
+                const pullIcon = document.getElementById('pullIcon');
+                
+                this.pullToRefresh.isRefreshing = true;
+                
+                // Show refreshing state
+                pullIndicator.classList.add('refreshing');
+                pullIndicator.classList.remove('ready');
+                pullText.textContent = 'Odświeżanie...';
+                pullIcon.innerHTML = '<div class="pull-loading-spinner"></div>';
+                
+                // Trigger actual refresh
+                this.refreshData().finally(() => {
+                    // Reset after refresh completes
+                    setTimeout(() => {
+                        this.resetPullToRefresh();
+                        this.pullToRefresh.isRefreshing = false;
+                    }, 1000);
+                });
+            }
+            
+            resetPullToRefresh() {
+                const pullIndicator = document.getElementById('pullToRefresh');
+                const pullText = document.getElementById('pullText');
+                const pullIcon = document.getElementById('pullIcon');
+                
+                // Reset visual state
+                pullIndicator.classList.remove('visible', 'ready', 'refreshing');
+                pullIndicator.style.transform = '';
+                pullIndicator.style.opacity = '';
+                pullText.textContent = 'Pociągnij aby odświeżyć';
+                pullIcon.textContent = '↓';
             }
             
             setupDayNavigation() {
@@ -1540,7 +1724,7 @@
                     },
                     margin: { 
                         t: 10, 
-                        r: window.innerWidth < 768 ? 60 : 25,  // Większy margines na mobile
+                        r: window.innerWidth < 768 ? 100 : 25,  // Drastycznie większy margines na iPhone
                         b: 70, 
                         l: window.innerWidth < 400 ? 35 : 50 
                     },
