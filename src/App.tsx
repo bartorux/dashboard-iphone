@@ -18,7 +18,6 @@ import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { usePullToRefresh } from './hooks/usePullToRefresh';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
 import { DayOffset } from './types';
-import { STORAGE_PREFIX } from './utils/constants';
 
 function App() {
   const {
@@ -45,7 +44,7 @@ function App() {
   const [notification, setNotification] = useState<string | null>(null);
   const [notificationKey, setNotificationKey] = useState(0);
 
-  // PWA update prompt via Workbox
+  // PWA auto-update via Workbox
   const {
     needRefresh: [needRefresh],
     updateServiceWorker,
@@ -70,12 +69,13 @@ function App() {
     [switchDay]
   );
 
-  // Show offline only when we actually failed to fetch data (not during loading)
-  const isOffline = !dataOnline && !isLoading;
+  // Show offline only when we have no data AND browser says offline
+  const hasData = allData.some((d) => d.reserve !== null);
+  const isOffline = !browserOnline && !hasData && !isLoading;
 
   const statusText = isLoading
     ? 'Pobieranie danych...'
-    : dataError
+    : dataError && !hasData
     ? 'Brak danych'
     : `Połączono | ${allData.filter((d) => d.reserve !== null).length} punktów`;
 
@@ -89,40 +89,6 @@ function App() {
       showNotification('Menu przeglądarki -> Dodaj do ekranu głównego');
     }
   }, [showNotification]);
-
-  // FIX: Hard reset clears only PSE-prefixed localStorage keys
-  const handleHardReset = useCallback(async () => {
-    if (
-      !window.confirm(
-        'Czy na pewno chcesz wyczyścić wszystkie dane aplikacji?'
-      )
-    )
-      return;
-
-    // Clear only PSE-related keys
-    const keysToRemove: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith(STORAGE_PREFIX)) {
-        keysToRemove.push(key);
-      }
-    }
-    keysToRemove.forEach((k) => localStorage.removeItem(k));
-
-    // Clear caches
-    if ('caches' in window) {
-      const names = await caches.keys();
-      await Promise.all(names.map((n) => caches.delete(n)));
-    }
-
-    // Unregister service workers with await
-    if ('serviceWorker' in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(registrations.map((r) => r.unregister()));
-    }
-
-    window.location.reload();
-  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f2f2f7] overflow-x-hidden" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" }}>
@@ -218,13 +184,6 @@ function App() {
               Aktualizuj aplikację
             </button>
           )}
-
-          <button
-            onClick={handleHardReset}
-            className="w-full py-2.5 border-none rounded-lg text-sm font-medium cursor-pointer transition-all mt-2 text-white bg-gradient-to-br from-[#dc3545] to-[#c82333] shadow-md"
-          >
-            Hard Reset
-          </button>
         </div>
       </div>
     </div>
