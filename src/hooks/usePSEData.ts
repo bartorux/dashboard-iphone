@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { PSEDataPoint, DayOffset } from '../types';
 import { fetchPSEData } from '../utils/api';
 import { processData, getDataForDay } from '../utils/dataTransform';
@@ -77,7 +77,10 @@ export function usePSEData(): UsePSEDataReturn {
     return () => clearInterval(intervalId);
   }, [refreshData]);
 
-  const dayData = getDataForDay(allData, currentDayOffset);
+  const dayData = useMemo(
+    () => getDataForDay(allData, currentDayOffset),
+    [allData, currentDayOffset]
+  );
 
   return {
     allData,
