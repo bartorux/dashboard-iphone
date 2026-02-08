@@ -45,7 +45,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
         className="bg-transparent border-none text-base cursor-pointer p-1 rounded transition-all opacity-70"
         title="Ustawienia"
       >
-        \u2699\uFE0F
+        {'\u2699\uFE0F'}
       </button>
       {lastUpdate && (
         <div className="text-xs text-[#8e8e93]">{lastUpdate}</div>

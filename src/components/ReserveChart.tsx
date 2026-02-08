@@ -121,10 +121,8 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               dataKey="hour"
               tickFormatter={formatXTick}
               tick={{ fontSize: 10 }}
-              angle={-45}
-              textAnchor="end"
-              interval="preserveStartEnd"
-              height={50}
+              interval={2}
+              height={35}
             />
             <YAxis
               tick={{ fontSize: 10 }}

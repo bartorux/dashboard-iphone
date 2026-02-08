@@ -70,7 +70,8 @@ function App() {
     [switchDay]
   );
 
-  const isOffline = !browserOnline || (!dataOnline && !isLoading);
+  // Show offline only when we actually failed to fetch data (not during loading)
+  const isOffline = !dataOnline && !isLoading;
 
   const statusText = isLoading
     ? 'Pobieranie danych...'
