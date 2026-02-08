@@ -157,10 +157,15 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
         i < HOURS_PER_DAY
     );
     let avgTrend = 0;
-    if (validData.length > 0) {
-      const trends = validData.map(
-        (d, i) => d.reserve! - allData[allData.indexOf(d) - 1]?.reserve!
-      ).filter(t => !isNaN(t));
+    if (allData.length > 1) {
+      const trends: number[] = [];
+      for (let i = 1; i < Math.min(allData.length, HOURS_PER_DAY); i++) {
+        const curr = allData[i].reserve;
+        const prev = allData[i - 1].reserve;
+        if (curr !== null && prev !== null && !isNaN(curr) && !isNaN(prev)) {
+          trends.push(curr - prev);
+        }
+      }
       avgTrend = trends.length > 0 ? trends.reduce((sum, t) => sum + t, 0) / trends.length : 0;
     }
 

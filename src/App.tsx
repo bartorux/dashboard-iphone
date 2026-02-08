@@ -124,7 +124,7 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f2f2f7] font-['-apple-system','BlinkMacSystemFont','SF_Pro_Display','Helvetica_Neue','Arial',sans-serif] overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-[#f2f2f7] overflow-x-hidden" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" }}>
       <NotificationBanner key={notificationKey} message={notification} />
       <OfflineIndicator isOffline={isOffline} />
 
