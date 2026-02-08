@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Safe area insets for iOS */
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Disable tap highlight on iOS */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s ease-in-out infinite;
+}
