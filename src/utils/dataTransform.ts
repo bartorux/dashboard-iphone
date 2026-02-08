@@ -27,13 +27,17 @@ export function processData(rawData: PSERawItem[]): PSEDataPoint[] {
   if (!rawData || rawData.length === 0) return [];
 
   const startOfToday = getStartOfToday();
+  // PSE API uses end-of-period timestamps: period "00-01" → plan_dtime 01:00
+  // A business day runs from 01:00 today to 00:00 next day (24 periods)
+  // Start at 01:00 so each day slice contains a complete business day
+  const startTime = new Date(startOfToday.getTime() + 1 * 60 * 60 * 1000);
 
-  // Build a map of raw data by hour offset from start of today
+  // Build a map of raw data by hour offset from start time
   const rawByHour = new Map<number, PSERawItem>();
   for (const item of rawData) {
     if (!item.plan_dtime || !item.req_pow_res) continue;
     const itemTime = new Date(item.plan_dtime);
-    const diffMs = itemTime.getTime() - startOfToday.getTime();
+    const diffMs = itemTime.getTime() - startTime.getTime();
     const hourOffset = Math.round(diffMs / (60 * 60 * 1000));
     if (hourOffset >= 0 && hourOffset < TOTAL_HOURS) {
       rawByHour.set(hourOffset, item);
@@ -43,7 +47,7 @@ export function processData(rawData: PSERawItem[]): PSEDataPoint[] {
   const processed: PSEDataPoint[] = [];
 
   for (let i = 0; i < TOTAL_HOURS; i++) {
-    const timestamp = new Date(startOfToday.getTime() + i * 60 * 60 * 1000);
+    const timestamp = new Date(startTime.getTime() + i * 60 * 60 * 1000);
     const timeStr = formatDateTime(timestamp);
     const rawItem = rawByHour.get(i);
 
