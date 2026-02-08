@@ -30,6 +30,11 @@ export function formatTime(timeStr: string): string {
   }
 }
 
+export function extractHour(timeStr: string): number {
+  const match = timeStr.match(/(\d{2}):\d{2}:\d{2}$/);
+  return match ? parseInt(match[1], 10) : -1;
+}
+
 export function getDayDate(offset: number): string {
   const today = new Date();
   const date = new Date(today.getTime() + offset * 24 * 60 * 60 * 1000);

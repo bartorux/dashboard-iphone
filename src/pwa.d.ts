@@ -1,3 +1,8 @@
+interface Navigator {
+  setAppBadge(count?: number): Promise<void>;
+  clearAppBadge(): Promise<void>;
+}
+
 declare module 'virtual:pwa-register/react' {
   import type { Dispatch, SetStateAction } from 'react';
 

@@ -57,6 +57,18 @@ function App() {
     }
   }, [dayData, settings.orangeThreshold, settings.redThreshold, updateAlerts]);
 
+  // Update app badge with alert count
+  useEffect(() => {
+    const totalAlerts = alerts.orange.length + alerts.red.length;
+    if ('setAppBadge' in navigator) {
+      if (totalAlerts > 0) {
+        navigator.setAppBadge(totalAlerts);
+      } else {
+        navigator.clearAppBadge();
+      }
+    }
+  }, [alerts]);
+
   const showNotification = useCallback((msg: string) => {
     setNotification(msg);
     setNotificationKey((k) => k + 1);
