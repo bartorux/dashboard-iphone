@@ -15,7 +15,7 @@ import { RefreshIcon } from './components/icons';
 import { usePSEData } from './hooks/usePSEData';
 import { useSettings } from './hooks/useSettings';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
-import { usePullToRefresh } from './hooks/usePullToRefresh';
+import { useTouchGestures } from './hooks/useTouchGestures';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
 import { useThemeColorMeta } from './hooks/useThemeColorMeta';
 import { useTheme } from './hooks/useTheme';
@@ -47,8 +47,12 @@ function App() {
   const { settings, saveSettings, resetSettings } = useSettings();
   const { preference: themePreference, setTheme } = useTheme();
   const browserOnline = useOnlineStatus();
-  const { pullDistance, isRefreshing, isPulling, isReady } =
-    usePullToRefresh(refreshData);
+  const { pullDistance, isRefreshing, isPulling, isReady } = useTouchGestures({
+    onRefresh: refreshData,
+    // Swiping left moves forward in time, matching the order of the day tabs
+    onSwipeLeft: () => switchDay(Math.min(2, currentDayOffset + 1) as DayOffset),
+    onSwipeRight: () => switchDay(Math.max(0, currentDayOffset - 1) as DayOffset),
+  });
   const { installableState, isInstalled, install } = useInstallPrompt();
 
   const [settingsVisible, setSettingsVisible] = useState(false);
