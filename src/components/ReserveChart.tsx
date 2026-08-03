@@ -32,6 +32,9 @@ interface ChartRow {
   /** [bottom, top] band the margin must stay above — drawn as a range area. */
   zoneAlarm: [number, number] | null;
   zoneWarn: [number, number] | null;
+  /** Upper edge of each band, stroked so the boundary is a crisp line. */
+  alarmTop: number | null;
+  warnTop: number | null;
 }
 
 const formatMW = (value: number) =>
@@ -137,6 +140,8 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
             required === null
               ? null
               : [required + redThreshold, required + orangeThreshold],
+          alarmTop: required === null ? null : required + redThreshold,
+          warnTop: required === null ? null : required + orangeThreshold,
         };
       }),
     [data, orangeThreshold, redThreshold]
@@ -163,7 +168,8 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
     const longest = Math.max(
       ...scale.ticks.map((tick) => formatMW(tick).length)
     );
-    return longest * 7 + 16;
+    // ~6.1px per digit at 11px, plus tick margin and a little breathing room
+    return Math.ceil(longest * 6.5) + 18;
   }, [scale]);
 
   const xTicks = useMemo(() => {
@@ -233,12 +239,26 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
             />
             Wymagana
           </li>
+          {/* Swatches take the same values the bands are painted with, so the
+              legend cannot drift away from the chart. */}
           <li className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-[3px] bg-warn-soft ring-1 ring-warn/40" />
+            <span
+              className="h-2.5 w-2.5 rounded-[3px] border"
+              style={{
+                background: colors.bandWarn,
+                borderColor: colors.bandWarnEdge,
+              }}
+            />
             Uwaga
           </li>
           <li className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-[3px] bg-alarm-soft ring-1 ring-alarm/40" />
+            <span
+              className="h-2.5 w-2.5 rounded-[3px] border"
+              style={{
+                background: colors.bandAlarm,
+                borderColor: colors.bandAlarmEdge,
+              }}
+            />
             Alarm
           </li>
         </ul>
@@ -248,16 +268,11 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
             data={rows}
-            /* top leaves room for the "teraz" label, which sits above the plot */
-            margin={{ top: 18, right: 10, bottom: 4, left: -12 }}
+            /* top leaves room for the "teraz" label, which sits above the plot.
+               left stays at 0: a negative inset pulls the Y axis past the SVG
+               edge and clips the first digit of every label. */
+            margin={{ top: 18, right: 10, bottom: 4, left: 0 }}
           >
-            <defs>
-              <linearGradient id="reserveFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={colors.reserve} stopOpacity={0.22} />
-                <stop offset="100%" stopColor={colors.reserve} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-
             <CartesianGrid
               vertical={false}
               stroke={colors.grid}
@@ -290,8 +305,8 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               type="monotone"
               dataKey="zoneAlarm"
               stroke="none"
-              fill={colors.alarm}
-              fillOpacity={0.12}
+              fill={colors.bandAlarm}
+              fillOpacity={1}
               animationDuration={ANIMATION_MS}
               activeDot={false}
               legendType="none"
@@ -301,12 +316,37 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               type="monotone"
               dataKey="zoneWarn"
               stroke="none"
-              fill={colors.warn}
-              fillOpacity={0.14}
+              fill={colors.bandWarn}
+              fillOpacity={1}
               animationDuration={ANIMATION_MS}
               activeDot={false}
               legendType="none"
               connectNulls={false}
+            />
+
+            {/* Band edges. A flat tint alone reads as a smudge; the boundary is
+                the thing you actually measure the curve against. */}
+            <Line
+              type="monotone"
+              dataKey="alarmTop"
+              stroke={colors.bandAlarmEdge}
+              strokeWidth={1}
+              dot={false}
+              connectNulls={false}
+              animationDuration={ANIMATION_MS}
+              activeDot={false}
+              legendType="none"
+            />
+            <Line
+              type="monotone"
+              dataKey="warnTop"
+              stroke={colors.bandWarnEdge}
+              strokeWidth={1}
+              dot={false}
+              connectNulls={false}
+              animationDuration={ANIMATION_MS}
+              activeDot={false}
+              legendType="none"
             />
 
             {/* Vertical rule on every hour that breaches a threshold */}
@@ -357,12 +397,14 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               activeDot={false}
             />
 
-            <Area
+            {/* No fill under this curve: it would span the full height and lay a
+                third translucent layer over both bands, muddying every colour
+                below the line. The line alone reads cleanly against the tints. */}
+            <Line
               type="monotone"
               dataKey="reserve"
               stroke={colors.reserve}
-              strokeWidth={2.5}
-              fill="url(#reserveFill)"
+              strokeWidth={2.75}
               dot={false}
               connectNulls={false}
               animationDuration={ANIMATION_MS}
