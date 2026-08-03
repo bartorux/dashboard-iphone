@@ -19,6 +19,7 @@ export function makePoint(overrides: Partial<PSEDataPoint> = {}): PSEDataPoint {
     wind: 2000,
     outages: 2500,
     exchange: -500,
+    generation: 14500,
     ...overrides,
   };
 }

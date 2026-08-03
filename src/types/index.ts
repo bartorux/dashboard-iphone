@@ -21,6 +21,10 @@ export interface PSERawItem {
   fcst_wi_tot_gen?: string | number | null;
   sum_unav_oper_cond?: string | number | null;
   planned_exchange?: string | number | null;
+  /** Dispatchable generation scheduled by the TSO. */
+  fcst_gen_unit_stor_prov?: string | number | null;
+  /** Non-dispatchable generation. */
+  fcst_gen_unit_stor_non_prov?: string | number | null;
 }
 
 export interface PSEDataPoint {
@@ -52,6 +56,11 @@ export interface PSEDataPoint {
   outages: number | null;
   /** Planned cross-border exchange; negative means export. */
   exchange: number | null;
+  /**
+   * Total forecast generation. Verified across 792 hours to within 1 MW:
+   * generation + exchange = demand.
+   */
+  generation: number | null;
 }
 
 export interface Alert {

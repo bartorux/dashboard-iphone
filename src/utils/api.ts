@@ -4,7 +4,7 @@ import { addDays, formatDateTimeApi, getStartOfToday } from './dateHelpers';
 
 /**
  * Fields the app actually reads. The endpoint serves 16 per row; asking for
- * these 11 cuts the response from ~55 KB to ~24 KB before compression.
+ * these cuts the response from ~55 KB to ~24 KB before compression.
  */
 const FORECAST_FIELDS = [
   'business_date',
@@ -18,6 +18,8 @@ const FORECAST_FIELDS = [
   'fcst_wi_tot_gen',
   'sum_unav_oper_cond',
   'planned_exchange',
+  'fcst_gen_unit_stor_prov',
+  'fcst_gen_unit_stor_non_prov',
 ].join(',');
 
 /**

@@ -38,6 +38,11 @@ function hourLabels(
   };
 }
 
+/** Null unless both parts are present — a half-known total would mislead. */
+function sumOrNull(a: number | null, b: number | null): number | null {
+  return a === null || b === null ? null : a + b;
+}
+
 function toNumber(value: unknown): number | null {
   if (value == null) return null;
   const parsed = parseFloat(String(value));
@@ -96,6 +101,10 @@ export function processData(rawData: PSERawItem[]): PSEDataPoint[] {
         wind: toNumber(item.fcst_wi_tot_gen),
         outages: toNumber(item.sum_unav_oper_cond),
         exchange: toNumber(item.planned_exchange),
+        generation: sumOrNull(
+          toNumber(item.fcst_gen_unit_stor_prov),
+          toNumber(item.fcst_gen_unit_stor_non_prov)
+        ),
       } satisfies PSEDataPoint;
     })
     .filter((p): p is PSEDataPoint => p !== null)
@@ -129,6 +138,7 @@ export function processData(rawData: PSERawItem[]): PSEDataPoint[] {
           wind: null,
           outages: null,
           exchange: null,
+          generation: null,
         });
       }
     }

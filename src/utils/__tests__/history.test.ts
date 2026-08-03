@@ -113,3 +113,14 @@ describe('standingFor', () => {
     expect(standingFor(500, undefined)).toBe('unknown');
   });
 });
+
+describe('standingFor — both directions matter', () => {
+  const d = { hourLabel: '19:00', p10: 100, p50: 500, p90: 900, samples: 30 };
+
+  it('flags an hour with an unusually large margin as atypical too', () => {
+    // Reporting only the downside would describe such a day as entirely
+    // ordinary, which is not what the chart shows
+    expect(standingFor(1200, d)).toBe('above');
+    expect(standingFor(50, d)).toBe('below');
+  });
+});

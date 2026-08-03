@@ -41,6 +41,10 @@ interface Row {
   wind: number | null;
   outages: number | null;
   exchange: number | null;
+  /** Everything the system generates, renewables included. */
+  generation: number | null;
+  /** PV + wind, drawn as the share of that total which is renewable. */
+  renewables: number | null;
 }
 
 interface TooltipProps {
@@ -62,8 +66,10 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
     );
   }
 
-  const renewables = (row.pv ?? 0) + (row.wind ?? 0);
-  const share = row.demand > 0 ? (renewables / row.demand) * 100 : 0;
+  const renewables = row.renewables ?? 0;
+  const generation = row.generation;
+  const conventional = generation === null ? null : generation - renewables;
+  const share = generation && generation > 0 ? (renewables / generation) * 100 : 0;
 
   return (
     <ChartTooltipBox>
@@ -72,11 +78,19 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
       </div>
       <dl className="space-y-0.5">
         <TooltipRow label="Zapotrzebowanie" value={`${formatMW(row.demand)} MW`} />
-        <TooltipRow label="Fotowoltaika" value={`${formatMW(row.pv ?? 0)} MW`} />
-        <TooltipRow label="Wiatr" value={`${formatMW(row.wind ?? 0)} MW`} />
         <TooltipRow
-          label="Ubytki mocy"
-          value={`${formatMW(row.outages ?? 0)} MW`}
+          label="Generacja"
+          value={generation === null ? 'brak' : `${formatMW(generation)} MW`}
+        />
+        <TooltipRow label="  fotowoltaika" value={`${formatMW(row.pv ?? 0)} MW`} />
+        <TooltipRow label="  wiatr" value={`${formatMW(row.wind ?? 0)} MW`} />
+        <TooltipRow
+          label="  pozostałe źródła"
+          value={
+            conventional === null
+              ? 'brak'
+              : `${formatMW(conventional)} MW`
+          }
         />
         <TooltipRow
           label="Wymiana"
@@ -85,7 +99,11 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
           )} MW`}
         />
         <TooltipRow
-          label="OZE w zapotrzebowaniu"
+          label="Ubytki mocy"
+          value={`${formatMW(row.outages ?? 0)} MW`}
+        />
+        <TooltipRow
+          label="Udział OZE"
           value={`${share.toFixed(0)} %`}
           divider
         />
@@ -119,6 +137,9 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         wind: point.wind,
         outages: point.outages,
         exchange: point.exchange,
+        generation: point.generation,
+        renewables:
+          point.pv === null || point.wind === null ? null : point.pv + point.wind,
       })),
     [data]
   );
@@ -126,7 +147,8 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
   const scale = useMemo(() => {
     const values = rows.flatMap((row) => [
       row.demand,
-      (row.pv ?? 0) + (row.wind ?? 0),
+      row.generation,
+      row.renewables,
       // Exchange goes negative when Poland exports. A domain anchored at zero
       // clipped those hours away entirely, leaving the line flat against the
       // axis exactly when it carried the most information.
@@ -160,12 +182,12 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
             swatch: <LineSwatch color={colors.demand} />,
           },
           {
-            label: 'Fotowoltaika',
-            swatch: <AreaSwatch fill={colors.pv} border={colors.pv} />,
+            label: 'Generacja łącznie',
+            swatch: <LineSwatch color={colors.wind} />,
           },
           {
-            label: 'Wiatr',
-            swatch: <AreaSwatch fill={colors.wind} border={colors.wind} />,
+            label: 'w tym OZE',
+            swatch: <AreaSwatch fill={colors.pv} border={colors.pv} />,
           },
           {
             label: 'Wymiana',
@@ -204,26 +226,18 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               width={axisWidthFor(scale.ticks)}
             />
 
-            {/* Stacked so the height of the pair is what renewables actually
-                cover, and the moment PV disappears is impossible to miss. */}
+            {/* Renewables as a share of total generation. Deliberately NOT
+                stacked with a "conventional" band: the PV forecast exceeds total
+                generation in 4 hours out of 792, which would make that band
+                negative. Clamping it would hide a real inconsistency, so the
+                gap between this area and the generation line carries it
+                instead — and stays visible when the forecast disagrees. */}
             <Area
               type="monotone"
-              dataKey="pv"
-              stackId="renewables"
+              dataKey="renewables"
               stroke="none"
               fill={colors.pv}
-              fillOpacity={0.45}
-              animationDuration={ANIMATION_MS}
-              activeDot={false}
-              connectNulls={false}
-            />
-            <Area
-              type="monotone"
-              dataKey="wind"
-              stackId="renewables"
-              stroke="none"
-              fill={colors.wind}
-              fillOpacity={0.45}
+              fillOpacity={0.4}
               animationDuration={ANIMATION_MS}
               activeDot={false}
               connectNulls={false}
@@ -258,6 +272,17 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               stroke={colors.exchange}
               strokeWidth={1.5}
               strokeDasharray="4 4"
+              dot={false}
+              connectNulls={false}
+              animationDuration={ANIMATION_MS}
+              activeDot={false}
+            />
+
+            <Line
+              type="monotone"
+              dataKey="generation"
+              stroke={colors.wind}
+              strokeWidth={2}
               dot={false}
               connectNulls={false}
               animationDuration={ANIMATION_MS}

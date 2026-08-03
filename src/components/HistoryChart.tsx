@@ -164,6 +164,36 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
 
   const ticks = useMemo(() => hourTicks(rows.map((row) => row.key)), [rows]);
 
+  /**
+   * Plain-language answer to "is today unusual, and when?".
+   * Counts both directions: an hour above the band is also atypical, and
+   * reporting only the downside would call such a day entirely ordinary.
+   */
+  const summary = useMemo(() => {
+    const compared = rows.filter((row) => row.today !== null && row.band);
+    if (compared.length === 0) return null;
+
+    const below = compared.filter((row) => row.today! < row.band![0]);
+    const above = compared.filter((row) => row.today! > row.band![1]);
+
+    if (below.length > 0) {
+      const worst = below.reduce((a, b) =>
+        a.today! - a.band![0] <= b.today! - b.band![0] ? a : b
+      );
+      // Phrased to sidestep Polish numeral agreement, which differs for
+      // 1 / 2-4 / 5+ and would need a table to get right for one sentence.
+      const rest =
+        above.length > 0 ? `, a przez ${above.length} godz. powyżej` : '';
+      return `Dziś przez ${below.length} godz. margines jest poniżej typowego zakresu${rest}. Najciaśniej o ${worst.key}.`;
+    }
+
+    if (above.length > 0) {
+      return `Dziś margines nigdzie nie schodzi poniżej normy, a przez ${above.length} godz. zapas jest większy niż zwykle.`;
+    }
+
+    return 'Dziś każda godzina mieści się w typowym zakresie.';
+  }, [rows]);
+
   if (state === 'loading' || state === 'idle') {
     return (
       <div className={CHART_BOX}>
@@ -193,12 +223,24 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
 
   return (
     <>
+      {/* The chart was legible but unexplained: it needs saying what the band
+          is before the shape means anything. */}
+      <p className="mb-2 px-1 text-[11px] leading-relaxed text-text-secondary">
+        Szare pasmo to zakres typowy dla danej godziny — mieściło się w nim 80%
+        z ostatnich {days} dni. Krzywa poniżej pasma oznacza godzinę bardziej
+        napiętą niż zwykle, powyżej — z większym zapasem.
+      </p>
+
+      {summary && (
+        <p className="mb-2 px-1 text-[13px] font-medium text-text">{summary}</p>
+      )}
+
       <ChartLegend
         items={[
           { label: 'Dziś', swatch: <LineSwatch color={colors.reserve} /> },
           { label: 'Mediana', swatch: <LineSwatch color={colors.history} dashed /> },
           {
-            label: `Typowy zakres (${days} dni)`,
+            label: 'Typowy zakres',
             swatch: (
               <AreaSwatch fill={colors.bandHistory} border={colors.history} />
             ),

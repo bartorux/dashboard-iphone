@@ -86,13 +86,16 @@ export const TooltipRow: React.FC<{
   value: string;
   tone?: string;
   divider?: boolean;
-}> = ({ label, value, tone = 'text-text', divider }) => (
+  /** Marks the row as a component of the one above it. */
+  indent?: boolean;
+}> = ({ label, value, tone = 'text-text', divider, indent }) => (
   <div
     className={`flex justify-between gap-4 ${
       divider ? 'mt-1 border-t border-separator pt-1' : ''
     }`}
   >
-    <dt className="text-text-secondary">{label}</dt>
+    {/* Leading spaces would collapse in HTML, so the indent has to be styled */}
+    <dt className={`text-text-secondary ${indent ? 'pl-3' : ''}`}>{label}</dt>
     <dd className={`tnum font-medium ${tone}`}>{value}</dd>
   </div>
 );
