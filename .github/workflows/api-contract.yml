@@ -1,0 +1,32 @@
+name: PSE API contract
+
+# The app is only as good as the shape PSE serves. A change there - a renamed
+# field, a different timestamp format, a shorter window - would otherwise first
+# show up as an empty chart on a phone. This catches it the next morning.
+on:
+  schedule:
+    - cron: '15 6 * * *' # 06:15 UTC, after PSE publishes the day-ahead plan
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - run: npm ci
+
+      # Hits the live endpoint on purpose — that is the whole point of this job,
+      # which is why it is kept out of `npm test` and out of the deploy workflow.
+      - run: npm run test:api
