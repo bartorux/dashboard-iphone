@@ -15,6 +15,7 @@ function renderSection() {
   return render(
     <ChartSection
       dayData={dayData}
+      dayLabel="Dziś"
       orangeThreshold={500}
       redThreshold={300}
       currentHourLabel="12:00"

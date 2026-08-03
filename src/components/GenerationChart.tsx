@@ -44,8 +44,27 @@ interface Row {
   exchange: number | null;
   /** Everything the system generates, renewables included. */
   generation: number | null;
-  /** PV + wind, drawn as the share of that total which is renewable. */
-  renewables: number | null;
+  /** Conventional and everything else, i.e. generation minus PV and wind. */
+  other: number | null;
+  /**
+   * The unclamped remainder. Negative in 4 hours out of 792 measured, where the
+   * PV forecast exceeds total generation — kept so the tooltip can admit it
+   * instead of the stack quietly swallowing the discrepancy.
+   */
+  otherRaw: number | null;
+}
+
+/** Splits total generation into the part that is not PV or wind. */
+function remainder(
+  generation: number | null,
+  pv: number | null,
+  wind: number | null
+): { other: number | null; otherRaw: number | null } {
+  if (generation === null || pv === null || wind === null) {
+    return { other: null, otherRaw: null };
+  }
+  const raw = generation - pv - wind;
+  return { other: Math.max(0, raw), otherRaw: raw };
 }
 
 interface TooltipProps {
@@ -67,10 +86,13 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
     );
   }
 
-  const renewables = row.renewables ?? 0;
+  const pv = row.pv ?? 0;
+  const wind = row.wind ?? 0;
   const generation = row.generation;
-  const conventional = generation === null ? null : generation - renewables;
-  const share = generation && generation > 0 ? (renewables / generation) * 100 : 0;
+  const share = generation && generation > 0 ? ((pv + wind) / generation) * 100 : 0;
+  const exchange = row.exchange ?? 0;
+  // Negative in the rare hours where the PV forecast exceeds total generation
+  const inconsistent = row.otherRaw !== null && row.otherRaw < 0;
 
   return (
     <ChartTooltipBox>
@@ -78,36 +100,36 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
         {String(label)}&ndash;{row.endLabel}
       </div>
       <dl className="space-y-0.5">
-        <TooltipRow label="Zapotrzebowanie" value={`${formatMW(row.demand)} MW`} />
         <TooltipRow
           label="Generacja"
           value={generation === null ? 'brak' : `${formatMW(generation)} MW`}
         />
-        <TooltipRow label="  fotowoltaika" value={`${formatMW(row.pv ?? 0)} MW`} />
-        <TooltipRow label="  wiatr" value={`${formatMW(row.wind ?? 0)} MW`} />
+        <TooltipRow indent label="fotowoltaika" value={`${formatMW(pv)} MW`} />
+        <TooltipRow indent label="wiatr" value={`${formatMW(wind)} MW`} />
         <TooltipRow
-          label="  pozostałe źródła"
-          value={
-            conventional === null
-              ? 'brak'
-              : `${formatMW(conventional)} MW`
-          }
+          indent
+          label="pozostałe"
+          value={row.other === null ? 'brak' : `${formatMW(row.other)} MW`}
+        />
+        <TooltipRow label="Udział OZE" value={`${share.toFixed(0)} %`} />
+        <TooltipRow
+          label="Zapotrzebowanie"
+          value={`${formatMW(row.demand)} MW`}
+          divider
         />
         <TooltipRow
           label="Wymiana"
-          value={`${(row.exchange ?? 0) > 0 ? 'import ' : 'eksport '}${formatMW(
-            Math.abs(row.exchange ?? 0)
+          value={`${exchange > 0 ? 'import ' : 'eksport '}${formatMW(
+            Math.abs(exchange)
           )} MW`}
         />
-        <TooltipRow
-          label="Ubytki mocy"
-          value={`${formatMW(row.outages ?? 0)} MW`}
-        />
-        <TooltipRow
-          label="Udział OZE"
-          value={`${share.toFixed(0)} %`}
-          divider
-        />
+        <TooltipRow label="Ubytki mocy" value={`${formatMW(row.outages ?? 0)} MW`} />
+        {inconsistent && (
+          <div className="mt-1 border-t border-separator pt-1 text-[11px] text-warn-text">
+            Prognoza OZE przekracza generację łączną o{' '}
+            {formatMW(Math.abs(row.otherRaw!))} MW — tak podaje PSE.
+          </div>
+        )}
       </dl>
     </ChartTooltipBox>
   );
@@ -140,8 +162,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         outages: point.outages,
         exchange: point.exchange,
         generation: point.generation,
-        renewables:
-          point.pv === null || point.wind === null ? null : point.pv + point.wind,
+        ...remainder(point.generation, point.pv, point.wind),
       })),
     [data]
   );
@@ -150,7 +171,6 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
     const values = rows.flatMap((row) => [
       row.demand,
       row.generation,
-      row.renewables,
       // Exchange goes negative when Poland exports. A domain anchored at zero
       // clipped those hours away entirely, leaving the line flat against the
       // axis exactly when it carried the most information.
@@ -184,12 +204,16 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
             swatch: <LineSwatch color={colors.demand} />,
           },
           {
-            label: 'Generacja łącznie',
-            swatch: <LineSwatch color={colors.wind} />,
+            label: 'Fotowoltaika',
+            swatch: <AreaSwatch fill={colors.pv} border={colors.pv} />,
           },
           {
-            label: 'w tym OZE',
-            swatch: <AreaSwatch fill={colors.pv} border={colors.pv} />,
+            label: 'Wiatr',
+            swatch: <AreaSwatch fill={colors.wind} border={colors.wind} />,
+          },
+          {
+            label: 'Pozostałe',
+            swatch: <AreaSwatch fill={colors.other} border={colors.other} />,
           },
           {
             label: 'Wymiana',
@@ -228,18 +252,39 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               width={axisWidthFor(scale.ticks)}
             />
 
-            {/* Renewables as a share of total generation. Deliberately NOT
-                stacked with a "conventional" band: the PV forecast exceeds total
-                generation in 4 hours out of 792, which would make that band
-                negative. Clamping it would hide a real inconsistency, so the
-                gap between this area and the generation line carries it
-                instead — and stays visible when the forecast disagrees. */}
+            {/* The mix, stacked: the height of the stack is total generation
+                and each band is one fraction of it. `other` is clamped at zero
+                for the 0.5% of hours where the PV forecast exceeds generation;
+                the tooltip says so rather than letting the stack absorb it. */}
             <Area
               type="monotone"
-              dataKey="renewables"
+              dataKey="pv"
+              stackId="mix"
               stroke="none"
               fill={colors.pv}
-              fillOpacity={0.4}
+              fillOpacity={0.55}
+              animationDuration={ANIMATION_MS}
+              activeDot={false}
+              connectNulls={false}
+            />
+            <Area
+              type="monotone"
+              dataKey="wind"
+              stackId="mix"
+              stroke="none"
+              fill={colors.wind}
+              fillOpacity={0.55}
+              animationDuration={ANIMATION_MS}
+              activeDot={false}
+              connectNulls={false}
+            />
+            <Area
+              type="monotone"
+              dataKey="other"
+              stackId="mix"
+              stroke="none"
+              fill={colors.other}
+              fillOpacity={0.55}
               animationDuration={ANIMATION_MS}
               activeDot={false}
               connectNulls={false}
@@ -275,17 +320,6 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               stroke={colors.exchange}
               strokeWidth={1.5}
               strokeDasharray="4 4"
-              dot={false}
-              connectNulls={false}
-              animationDuration={ANIMATION_MS}
-              activeDot={false}
-            />
-
-            <Line
-              type="monotone"
-              dataKey="generation"
-              stroke={colors.wind}
-              strokeWidth={2}
               dot={false}
               connectNulls={false}
               animationDuration={ANIMATION_MS}

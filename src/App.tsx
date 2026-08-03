@@ -27,6 +27,7 @@ import {
   getUpcomingStatus,
 } from './utils/dataTransform';
 import { DayOffset } from './types';
+import { DAY_NAMES } from './utils/constants';
 
 /** Re-evaluate "now" this often so the current hour rolls over on its own. */
 const CLOCK_TICK_MS = 30 * 1000;
@@ -214,6 +215,7 @@ function App() {
 
         <ChartSection
           dayData={dayData}
+          dayLabel={DAY_NAMES[currentDayOffset]}
           orangeThreshold={orangeThreshold}
           redThreshold={redThreshold}
           currentHourLabel={

@@ -19,6 +19,8 @@ const VIEWS: { value: ChartView; label: string; title: string }[] = [
 
 interface ChartSectionProps {
   dayData: PSEDataPoint[];
+  /** Which of the three days is on screen — the views label themselves with it. */
+  dayLabel: string;
   orangeThreshold: number;
   redThreshold: number;
   currentHourLabel: string | null;
@@ -32,6 +34,7 @@ interface ChartSectionProps {
  */
 const ChartSection: React.FC<ChartSectionProps> = ({
   dayData,
+  dayLabel,
   orangeThreshold,
   redThreshold,
   currentHourLabel,
@@ -48,6 +51,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     if (view === 'history') {
       return (
         <HistoryChart
+          dayLabel={dayLabel}
           dayData={dayData}
           history={history.points}
           state={history.state}

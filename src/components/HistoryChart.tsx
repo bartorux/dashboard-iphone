@@ -32,6 +32,8 @@ import {
 } from './chart/shared';
 
 interface HistoryChartProps {
+  /** Name of the day being compared — the chart also serves Jutro and Pojutrze. */
+  dayLabel: string;
   dayData: PSEDataPoint[];
   history: PSEDataPoint[];
   state: HistoryState;
@@ -94,21 +96,21 @@ const HistoryTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
       </div>
       <dl className="space-y-0.5">
         <TooltipRow
-          label="Dziś"
+          label="Margines"
           value={row.today === null ? 'brak' : `${formatMW(row.today)} MW`}
         />
         <TooltipRow
-          label="Mediana"
+          label="Zwykle o tej porze"
           value={row.median === null ? 'brak' : `${formatMW(row.median)} MW`}
+          divider
         />
         <TooltipRow
-          label="Typowy zakres"
-          value={
-            row.band
-              ? `${formatMW(row.band[0])} … ${formatMW(row.band[1])} MW`
-              : 'brak'
-          }
-          divider
+          label="Typowo od"
+          value={row.band ? `${formatMW(row.band[0])} MW` : 'brak'}
+        />
+        <TooltipRow
+          label="Typowo do"
+          value={row.band ? `${formatMW(row.band[1])} MW` : 'brak'}
         />
       </dl>
     </ChartTooltipBox>
@@ -121,6 +123,7 @@ const HistoryTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
  * what evenings look like?
  */
 const HistoryChart: React.FC<HistoryChartProps> = ({
+  dayLabel,
   dayData,
   history,
   state,
@@ -186,15 +189,15 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
       // 1 / 2-4 / 5+ and would need a table to get right for one sentence.
       const rest =
         above.length > 0 ? `, a przez ${above.length} godz. powyżej` : '';
-      return `Dziś przez ${below.length} godz. margines jest poniżej typowego zakresu${rest}. Najciaśniej o ${worst.key}.`;
+      return `${dayLabel}: przez ${below.length} godz. margines poniżej typowego zakresu${rest}. Najciaśniej o ${worst.key}.`;
     }
 
     if (above.length > 0) {
-      return `Dziś margines nigdzie nie schodzi poniżej normy, a przez ${above.length} godz. zapas jest większy niż zwykle.`;
+      return `${dayLabel}: margines nigdzie nie schodzi poniżej normy, a przez ${above.length} godz. zapas jest większy niż zwykle.`;
     }
 
-    return 'Dziś każda godzina mieści się w typowym zakresie.';
-  }, [rows]);
+    return `${dayLabel}: każda godzina mieści się w typowym zakresie.`;
+  }, [rows, dayLabel]);
 
   if (state === 'loading' || state === 'idle') {
     return (
@@ -228,9 +231,10 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
       {/* The chart was legible but unexplained: it needs saying what the band
           is before the shape means anything. */}
       <p className="mb-2 px-1 text-[11px] leading-relaxed text-text-secondary">
-        Szare pasmo to zakres typowy dla danej godziny — mieściło się w nim 80%
-        z ostatnich {days} dni. Krzywa poniżej pasma oznacza godzinę bardziej
-        napiętą niż zwykle, powyżej — z większym zapasem.
+        Wykres pokazuje <strong className="font-semibold text-text">margines</strong>,
+        czyli dostępną rezerwę minus wymaganą. Poniżej zera rezerwa nie pokrywa
+        wymagań. Szare pasmo to zakres typowy dla danej godziny — mieściło się
+        w nim 80% z ostatnich {days} dni.
       </p>
 
       {summary && (
@@ -239,7 +243,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
 
       <ChartLegend
         items={[
-          { label: 'Dziś', swatch: <LineSwatch color={colors.reserve} /> },
+          { label: dayLabel, swatch: <LineSwatch color={colors.reserve} /> },
           { label: 'Mediana', swatch: <LineSwatch color={colors.history} dashed /> },
           {
             label: 'Typowy zakres',

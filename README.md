@@ -36,18 +36,30 @@ kontrolerem, żeby strona nie rosła o kolejne wykresy.
 próg alarmu`, pomarańczowe do `wymagana + próg uwagi`. Dlatego falują razem
 z wymaganą, która zmienia się co godzinę.
 
-**Generacja** — zapotrzebowanie, skumulowana generacja PV i wiatrowa oraz
-wymiana zagraniczna. Odpowiada na pytanie, dlaczego margines spada. Pomiar na
-33 dniach: godziny alarmowe mają średnio o 4366 MW wyższe zapotrzebowanie
-i o 4153 MW niższą generację PV niż godziny spokojne, a 73 z 92 wypadają między
-17:00 a 23:00. Ubytki mocy celowo nie są rysowane — różnią się o zaledwie
-110 MW, więc linia dla nich niczego by nie wyjaśniła; wartość jest w dymku.
+**Generacja** — cały miks w podziale na frakcje: fotowoltaika, wiatr
+i pozostałe źródła sumują się do generacji łącznej, a nad stosem biegnie linia
+zapotrzebowania. Odstęp między nimi to wymiana zagraniczna. Odpowiada na
+pytanie, dlaczego margines spada: godziny alarmowe mają średnio o 4366 MW
+wyższe zapotrzebowanie i o 4153 MW niższą generację PV niż spokojne, a 73 z 92
+wypadają między 17:00 a 23:00.
 
-**Na tle 30 dni** — dzisiejszy margines na tle rozstępu 10.–90. percentyla dla
-tej samej godziny w minionych dobach. Dane pobierane dopiero przy pierwszym
-wejściu w ten widok i cache'owane do północy.
+Frakcja „pozostałe" to `generacja - PV - wiatr` i bywa ujemna: w 4 godzinach na
+792 prognoza PV przekracza generację łączną. Na wykresie jest wtedy przycinana
+do zera, ale dymek podaje rozbieżność wprost, zamiast pozwolić stosowi ją
+połknąć. Ubytki mocy nie są rysowane — różnią się o zaledwie 110 MW między
+godzinami alarmowymi a spokojnymi, więc linia dla nich niczego by nie
+wyjaśniła; wartość jest w dymku.
+
+**Na tle 30 dni** — margines wybranego dnia (`dostępna - wymagana`) na tle
+rozstępu 10.–90. percentyla dla tej samej godziny w minionych dobach. Widok
+nazywa dzień po imieniu, bo obsługuje także Jutro i Pojutrze. Dane pobierane
+dopiero przy pierwszym wejściu w ten widok i cache'owane do północy.
 
 ## Gesty
+
+Dotknięcie wykresu otwiera dymek ze szczegółami, powtórne go zamyka — Recharts
+otwiera go sam, ale na telefonie nie ma wskaźnika, który mógłby go zamknąć.
+Przeciąganie po wykresie odczytuje kolejne godziny i dymka nie zamyka.
 
 Przesunięcie palcem w lewo i prawo zmienia dzień, pociągnięcie w dół odświeża.
 Oba obsługuje jeden hook ([useTouchGestures](src/hooks/useTouchGestures.ts)):
