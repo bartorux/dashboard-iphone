@@ -18,6 +18,7 @@ import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { usePullToRefresh } from './hooks/usePullToRefresh';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
 import { useThemeColorMeta } from './hooks/useThemeColorMeta';
+import { useTheme } from './hooks/useTheme';
 import {
   buildAlertRanges,
   classifyMargin,
@@ -44,6 +45,7 @@ function App() {
   } = usePSEData();
 
   const { settings, saveSettings, resetSettings } = useSettings();
+  const { preference: themePreference, setTheme } = useTheme();
   const browserOnline = useOnlineStatus();
   const { pullDistance, isRefreshing, isPulling, isReady } =
     usePullToRefresh(refreshData);
@@ -187,6 +189,8 @@ function App() {
         <SettingsPanel
           visible={settingsVisible}
           settings={settings}
+          theme={themePreference}
+          onThemeChange={setTheme}
           onSave={saveSettings}
           onReset={resetSettings}
           onNotification={(message) => showNotification(message, true)}

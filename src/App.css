@@ -3,86 +3,138 @@
 /* ---------------------------------------------------------------------------
    Design tokens
 
-   Declared as plain custom properties so a single `prefers-color-scheme` block
-   can swap the whole palette, then re-exported through `@theme inline` so
-   Tailwind utilities (bg-surface, text-secondary, …) resolve to the variable
-   rather than to a baked-in value.
+   Each colour is written once, as a `--l-*` / `--d-*` pair. Two alias blocks
+   then decide which pair is live:
+
+     - no data-theme          -> follow the system
+     - data-theme="light"     -> force light even on a dark system
+     - data-theme="dark"      -> force dark even on a light system
+
+   The alias lists are duplicated on purpose. `light-dark()` would collapse them
+   into one, but it needs iOS 17.5+, and an unsupported colour function fails to
+   a transparent value - which would leave the app unreadable rather than merely
+   in the wrong theme.
    --------------------------------------------------------------------------- */
 
 :root {
-  color-scheme: light dark;
-
   /* surfaces */
-  --bg: #f2f2f7;
-  --surface: #ffffff;
-  --surface-2: #f2f2f7;
-  --surface-3: #e9e9ee;
-  --border: #e5e5ea;
-  --separator: rgba(60, 60, 67, 0.18);
+  --l-bg: #f2f2f7;              --d-bg: #000000;
+  --l-surface: #ffffff;         --d-surface: #1c1c1e;
+  --l-surface-2: #f2f2f7;       --d-surface-2: #2c2c2e;
+  --l-surface-3: #e9e9ee;       --d-surface-3: #3a3a3c;
+  --l-border: #e5e5ea;          --d-border: #38383a;
+  --l-separator: rgba(60, 60, 67, 0.18);
+  --d-separator: rgba(84, 84, 88, 0.6);
 
   /* text */
-  --text: #000000;
-  --text-secondary: #6c6c70;
-  --text-tertiary: #8e8e93;
-  --on-accent: #ffffff;
+  --l-text: #000000;            --d-text: #ffffff;
+  --l-text-secondary: #6c6c70;  --d-text-secondary: #aeaeb2;
+  --l-text-tertiary: #8e8e93;   --d-text-tertiary: #8e8e93;
 
-  /* semantic — `-text` variants carry enough contrast to sit on --surface,
+  /* semantic - `-text` variants carry enough contrast to sit on the surface,
      `-soft` variants are backgrounds only */
-  --ok: #34c759;
-  --ok-text: #1c7a35;
-  --ok-soft: #e8f8ed;
+  --l-ok: #34c759;              --d-ok: #30d158;
+  --l-ok-text: #1c7a35;         --d-ok-text: #5fe07f;
+  --l-ok-soft: #e8f8ed;         --d-ok-soft: rgba(48, 209, 88, 0.16);
 
-  --warn: #ff9500;
-  --warn-text: #9a5b00;
-  --warn-soft: #fff4e5;
+  --l-warn: #ff9500;            --d-warn: #ff9f0a;
+  --l-warn-text: #9a5b00;       --d-warn-text: #ffb84d;
+  --l-warn-soft: #fff4e5;       --d-warn-soft: rgba(255, 159, 10, 0.16);
 
-  --alarm: #ff3b30;
-  --alarm-text: #c9271d;
-  --alarm-soft: #ffeceb;
+  --l-alarm: #ff3b30;           --d-alarm: #ff453a;
+  --l-alarm-text: #c9271d;      --d-alarm-text: #ff7a70;
+  --l-alarm-soft: #ffeceb;      --d-alarm-soft: rgba(255, 69, 58, 0.18);
 
   /* interactive */
-  --accent: #007aff;
-  --accent-text: #0062cc;
+  --l-accent: #007aff;          --d-accent: #0a84ff;
+  --l-accent-text: #0062cc;     --d-accent-text: #64b5ff;
 
   /* chart series */
-  --series-reserve: #007aff;
-  --series-required: #8e8e93;
+  --l-series-reserve: #007aff;  --d-series-reserve: #0a84ff;
+  --l-series-required: #8e8e93; --d-series-required: #98989d;
 
   /* layout */
   --header-height: 3.5rem;
+
+  /* --- live aliases: light --- */
+  color-scheme: light;
+  --bg: var(--l-bg);
+  --surface: var(--l-surface);
+  --surface-2: var(--l-surface-2);
+  --surface-3: var(--l-surface-3);
+  --border: var(--l-border);
+  --separator: var(--l-separator);
+  --text: var(--l-text);
+  --text-secondary: var(--l-text-secondary);
+  --text-tertiary: var(--l-text-tertiary);
+  --on-accent: #ffffff;
+  --ok: var(--l-ok);
+  --ok-text: var(--l-ok-text);
+  --ok-soft: var(--l-ok-soft);
+  --warn: var(--l-warn);
+  --warn-text: var(--l-warn-text);
+  --warn-soft: var(--l-warn-soft);
+  --alarm: var(--l-alarm);
+  --alarm-text: var(--l-alarm-text);
+  --alarm-soft: var(--l-alarm-soft);
+  --accent: var(--l-accent);
+  --accent-text: var(--l-accent-text);
+  --series-reserve: var(--l-series-reserve);
+  --series-required: var(--l-series-required);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #000000;
-    --surface: #1c1c1e;
-    --surface-2: #2c2c2e;
-    --surface-3: #3a3a3c;
-    --border: #38383a;
-    --separator: rgba(84, 84, 88, 0.6);
-
-    --text: #ffffff;
-    --text-secondary: #aeaeb2;
-    --text-tertiary: #8e8e93;
-
-    --ok: #30d158;
-    --ok-text: #5fe07f;
-    --ok-soft: rgba(48, 209, 88, 0.16);
-
-    --warn: #ff9f0a;
-    --warn-text: #ffb84d;
-    --warn-soft: rgba(255, 159, 10, 0.16);
-
-    --alarm: #ff453a;
-    --alarm-text: #ff7a70;
-    --alarm-soft: rgba(255, 69, 58, 0.18);
-
-    --accent: #0a84ff;
-    --accent-text: #64b5ff;
-
-    --series-reserve: #0a84ff;
-    --series-required: #98989d;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: var(--d-bg);
+    --surface: var(--d-surface);
+    --surface-2: var(--d-surface-2);
+    --surface-3: var(--d-surface-3);
+    --border: var(--d-border);
+    --separator: var(--d-separator);
+    --text: var(--d-text);
+    --text-secondary: var(--d-text-secondary);
+    --text-tertiary: var(--d-text-tertiary);
+    --ok: var(--d-ok);
+    --ok-text: var(--d-ok-text);
+    --ok-soft: var(--d-ok-soft);
+    --warn: var(--d-warn);
+    --warn-text: var(--d-warn-text);
+    --warn-soft: var(--d-warn-soft);
+    --alarm: var(--d-alarm);
+    --alarm-text: var(--d-alarm-text);
+    --alarm-soft: var(--d-alarm-soft);
+    --accent: var(--d-accent);
+    --accent-text: var(--d-accent-text);
+    --series-reserve: var(--d-series-reserve);
+    --series-required: var(--d-series-required);
   }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: var(--d-bg);
+  --surface: var(--d-surface);
+  --surface-2: var(--d-surface-2);
+  --surface-3: var(--d-surface-3);
+  --border: var(--d-border);
+  --separator: var(--d-separator);
+  --text: var(--d-text);
+  --text-secondary: var(--d-text-secondary);
+  --text-tertiary: var(--d-text-tertiary);
+  --ok: var(--d-ok);
+  --ok-text: var(--d-ok-text);
+  --ok-soft: var(--d-ok-soft);
+  --warn: var(--d-warn);
+  --warn-text: var(--d-warn-text);
+  --warn-soft: var(--d-warn-soft);
+  --alarm: var(--d-alarm);
+  --alarm-text: var(--d-alarm-text);
+  --alarm-soft: var(--d-alarm-soft);
+  --accent: var(--d-accent);
+  --accent-text: var(--d-accent-text);
+  --series-reserve: var(--d-series-reserve);
+  --series-required: var(--d-series-required);
 }
 
 @theme inline {
@@ -132,10 +184,20 @@ body {
   /* No safe-area padding here: the sticky header handles its own inset, so it
      can extend its background under the notch while keeping content clear. */
   overscroll-behavior-y: contain;
+  transition: background-color 250ms ease, color 250ms ease;
 }
 
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Recharts makes the chart root focusable for keyboard users, which on touch
+   means a blue ring appears around it on every tap. Drop the ring for pointer
+   focus only - :focus-visible keeps it for actual keyboard navigation. */
+.recharts-wrapper:focus:not(:focus-visible),
+.recharts-surface:focus:not(:focus-visible),
+.recharts-wrapper *:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* Measurements and money-like figures must not jitter as values change. */

@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Settings } from '../types';
+import { ThemePreference } from '../hooks/useTheme';
+
+const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
+  { value: 'system', label: 'Systemowy' },
+  { value: 'light', label: 'Jasny' },
+  { value: 'dark', label: 'Ciemny' },
+];
 
 interface SettingsPanelProps {
   visible: boolean;
   settings: Settings;
+  theme: ThemePreference;
+  onThemeChange: (theme: ThemePreference) => void;
   onSave: (settings: Partial<Settings>) => string | null;
   onReset: () => void;
   onNotification: (msg: string) => void;
@@ -13,6 +22,8 @@ interface SettingsPanelProps {
 const SettingsPanel: React.FC<SettingsPanelProps> = ({
   visible,
   settings,
+  theme,
+  onThemeChange,
   onSave,
   onReset,
   onNotification,
@@ -63,6 +74,34 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
     <div className="collapsible mx-3" data-collapsed={!visible}>
       <div>
         <div className="mt-3 rounded-2xl bg-surface p-4 shadow-sm">
+          <h2 className="mb-2 text-[15px] font-semibold text-text">Wygląd</h2>
+
+          <div
+            role="radiogroup"
+            aria-label="Motyw"
+            className="mb-4 flex rounded-xl bg-surface-3 p-1"
+          >
+            {THEME_OPTIONS.map((option) => {
+              const active = theme === option.value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => onThemeChange(option.value)}
+                  className={`min-h-9 flex-1 rounded-[10px] text-[13px] font-medium transition-colors ${
+                    active
+                      ? 'bg-surface text-text shadow-sm'
+                      : 'text-text-secondary'
+                  }`}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+
           <h2 className="mb-3 text-[15px] font-semibold text-text">
             Ustawienia alertów
           </h2>

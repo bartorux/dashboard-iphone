@@ -56,7 +56,19 @@ export function useChartColors(): ChartColors {
 
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     media.addEventListener('change', refresh);
-    return () => media.removeEventListener('change', refresh);
+
+    // The manual theme switch flips data-theme on <html>, which no media query
+    // reports — watch the attribute so the chart repaints with it.
+    const observer = new MutationObserver(refresh);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+
+    return () => {
+      media.removeEventListener('change', refresh);
+      observer.disconnect();
+    };
   }, [refresh]);
 
   return colors;

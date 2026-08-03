@@ -37,6 +37,9 @@ interface ChartRow {
 const formatMW = (value: number) =>
   new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
 
+/** Curves redraw rather than jump when the selected day changes. */
+const ANIMATION_MS = 450;
+
 /**
  * Recharts injects `active`/`payload`/`label` into whatever element is passed as
  * `content`, but its exported prop types don't describe that for custom content,
@@ -152,12 +155,44 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
     return niceScale(valid.length > 0 ? Math.max(...valid) : NaN);
   }, [rows]);
 
+  /**
+   * Width has to follow the widest tick label. A fixed value sized for four
+   * digits clips the fifth once the reserve passes 10 000 MW.
+   */
+  const yAxisWidth = useMemo(() => {
+    const longest = Math.max(
+      ...scale.ticks.map((tick) => formatMW(tick).length)
+    );
+    return longest * 7 + 16;
+  }, [scale]);
+
   const xTicks = useMemo(() => {
     const ticks = rows.filter((_, i) => i % 4 === 0).map((row) => row.key);
     const last = rows[rows.length - 1];
     if (last && !ticks.includes(last.key)) ticks.push(last.key);
     return ticks;
   }, [rows]);
+
+  /** Hours breaching a threshold, marked with a vertical rule on the chart. */
+  const alertHours = useMemo(
+    () =>
+      rows
+        .map((row) => {
+          if (row.reserve === null || row.required === null) return null;
+          const status = classifyMargin(
+            row.reserve - row.required,
+            orangeThreshold,
+            redThreshold
+          );
+          return status === 'alarm' || status === 'warn'
+            ? { key: row.key, status }
+            : null;
+        })
+        .filter((entry): entry is { key: string; status: 'alarm' | 'warn' } =>
+          entry !== null
+        ),
+    [rows, orangeThreshold, redThreshold]
+  );
 
   if (isLoading && data.length === 0) {
     return (
@@ -247,30 +282,44 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               tickFormatter={formatMW}
               tickLine={false}
               axisLine={false}
-              width={48}
+              width={yAxisWidth}
             />
 
             {/* Threshold bands, drawn behind the series */}
             <Area
+              type="monotone"
               dataKey="zoneAlarm"
               stroke="none"
               fill={colors.alarm}
               fillOpacity={0.12}
-              isAnimationActive={false}
+              animationDuration={ANIMATION_MS}
               activeDot={false}
               legendType="none"
               connectNulls={false}
             />
             <Area
+              type="monotone"
               dataKey="zoneWarn"
               stroke="none"
               fill={colors.warn}
               fillOpacity={0.14}
-              isAnimationActive={false}
+              animationDuration={ANIMATION_MS}
               activeDot={false}
               legendType="none"
               connectNulls={false}
             />
+
+            {/* Vertical rule on every hour that breaches a threshold */}
+            {alertHours.map(({ key, status }) => (
+              <ReferenceLine
+                key={`alert-${key}`}
+                x={key}
+                stroke={status === 'alarm' ? colors.alarm : colors.warn}
+                strokeWidth={status === 'alarm' ? 1.5 : 1}
+                strokeDasharray="4 4"
+                strokeOpacity={0.55}
+              />
+            ))}
 
             <Tooltip
               content={
@@ -297,24 +346,26 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
             )}
 
             <Line
+              type="monotone"
               dataKey="required"
               stroke={colors.required}
               strokeWidth={1.5}
               strokeDasharray="4 4"
               dot={false}
               connectNulls={false}
-              isAnimationActive={false}
+              animationDuration={ANIMATION_MS}
               activeDot={false}
             />
 
             <Area
+              type="monotone"
               dataKey="reserve"
               stroke={colors.reserve}
               strokeWidth={2.5}
               fill="url(#reserveFill)"
               dot={false}
               connectNulls={false}
-              isAnimationActive={false}
+              animationDuration={ANIMATION_MS}
               activeDot={{ r: 4, fill: colors.reserve, stroke: colors.surface, strokeWidth: 2 }}
             />
           </ComposedChart>

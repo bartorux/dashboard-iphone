@@ -1,9 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Header from '../Header';
 import CurrentStatusCard from '../CurrentStatusCard';
 import AlertsPanel from '../AlertsPanel';
-import { AlertRange, PSEDataPoint } from '../../types';
+import SettingsPanel from '../SettingsPanel';
+import { AlertRange, PSEDataPoint, Settings } from '../../types';
 
 const noop = () => {};
 
@@ -133,5 +134,77 @@ describe('AlertsPanel', () => {
 
     expect(screen.getByText('Brak danych dla tego dnia')).toBeInTheDocument();
     expect(screen.queryByText('Brak alertów w tym dniu')).not.toBeInTheDocument();
+  });
+});
+
+describe('SettingsPanel — theme switch', () => {
+  const settings: Settings = {
+    orangeThreshold: 500,
+    redThreshold: 300,
+    disableUpdates: false,
+    version: 1,
+  };
+
+  const renderPanel = (theme: 'system' | 'light' | 'dark', onThemeChange = vi.fn()) => {
+    render(
+      <SettingsPanel
+        visible
+        settings={settings}
+        theme={theme}
+        onThemeChange={onThemeChange}
+        onSave={() => null}
+        onReset={noop}
+        onNotification={noop}
+        onClose={noop}
+      />
+    );
+    return onThemeChange;
+  };
+
+  it('marks the active preference and offers all three', () => {
+    renderPanel('dark');
+
+    expect(screen.getByRole('radio', { name: 'Ciemny' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: 'Jasny' })).not.toBeChecked();
+    expect(screen.getByRole('radio', { name: 'Systemowy' })).not.toBeChecked();
+  });
+
+  it('reports the chosen preference', () => {
+    const onThemeChange = renderPanel('system');
+
+    fireEvent.click(screen.getByRole('radio', { name: 'Jasny' }));
+
+    expect(onThemeChange).toHaveBeenCalledWith('light');
+  });
+});
+
+describe('SettingsPanel — thresholds', () => {
+  const settings: Settings = {
+    orangeThreshold: 500,
+    redThreshold: 300,
+    disableUpdates: false,
+    version: 1,
+  };
+
+  afterEach(() => vi.restoreAllMocks());
+
+  it('keeps a cleared field empty instead of snapping back to the default', () => {
+    render(
+      <SettingsPanel
+        visible
+        settings={settings}
+        theme="system"
+        onThemeChange={noop}
+        onSave={() => null}
+        onReset={noop}
+        onNotification={noop}
+        onClose={noop}
+      />
+    );
+
+    const field = screen.getByDisplayValue('500');
+    fireEvent.change(field, { target: { value: '' } });
+
+    expect(field).toHaveValue(null);
   });
 });
