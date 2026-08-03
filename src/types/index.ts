@@ -1,13 +1,24 @@
 export interface PSERawItem {
+  /** Local wall-clock end of the period. May contain a literal "03a" hour on DST days. */
   plan_dtime: string;
+  /** Same instant in UTC — always parseable, so this is what we order by. */
+  plan_dtime_utc: string;
+  /** PSE business day the period belongs to, e.g. "2026-08-03". */
+  business_date: string;
+  /** Period label, e.g. "00 - 01" or "03 - 03a". */
+  period: string;
   req_pow_res: string | number;
   surplus_cap_avail_tso?: string | number | null;
   avail_cap_gen_units_stor_prov?: string | number | null;
 }
 
 export interface PSEDataPoint {
+  /** Canonical instant, derived from plan_dtime_utc. */
   time: Date;
+  /** Raw local stamp — unique per point, used as a React key and chart category. */
   timeStr: string;
+  businessDate: string;
+  period: string;
   reserve: number | null;
   required: number | null;
 }
@@ -22,6 +33,20 @@ export interface Alert {
 export interface AlertSet {
   orange: Alert[];
   red: Alert[];
+}
+
+/** Consecutive alert hours collapsed into one entry. */
+export interface AlertRange {
+  severity: 'red' | 'orange';
+  /** Label of the first hour in the range, e.g. "17:00". */
+  from: string;
+  /** Label of the hour the range ends at, e.g. "20:00". */
+  to: string;
+  /** Worst (lowest) margin within the range. */
+  worstDifference: number;
+  reserve: number;
+  required: number;
+  hours: number;
 }
 
 export interface AlertHistory {
@@ -40,3 +65,6 @@ export interface Settings {
 export type DayOffset = 0 | 1 | 2;
 
 export type InstallableState = true | 'ios' | 'manual' | false;
+
+/** Overall system state shown in the header and the "now" card. */
+export type SystemStatus = 'ok' | 'warn' | 'alarm' | 'unknown';
