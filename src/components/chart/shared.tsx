@@ -99,3 +99,62 @@ export const TooltipRow: React.FC<{
     <dd className={`tnum font-medium ${tone}`}>{value}</dd>
   </div>
 );
+
+/** Movement above this counts as scrubbing rather than a tap. */
+const TAP_SLOP_PX = 8;
+
+/**
+ * Makes the tooltip dismissible on touch.
+ *
+ * Recharts opens its tooltip on touch and then leaves it there — on a phone
+ * there is no pointer to move away, so it never closes. A second tap toggles it
+ * shut, and so does a touch anywhere outside the chart. Dragging across the
+ * chart keeps it open, since that is the gesture used to read values.
+ *
+ * Mouse hover is left untouched: the gate only engages once the chart has
+ * actually been touched.
+ */
+export function useDismissibleTooltip() {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [touchUsed, setTouchUsed] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const startRef = React.useRef({ x: 0, y: 0 });
+  const movedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    const onDocumentTouch = (event: TouchEvent) => {
+      if (!ref.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener('touchstart', onDocumentTouch, { passive: true });
+    return () => document.removeEventListener('touchstart', onDocumentTouch);
+  }, []);
+
+  const handlers = {
+    onTouchStart: (event: React.TouchEvent) => {
+      const touch = event.touches[0];
+      startRef.current = { x: touch.clientX, y: touch.clientY };
+      movedRef.current = false;
+      setTouchUsed(true);
+    },
+    onTouchMove: (event: React.TouchEvent) => {
+      const touch = event.touches[0];
+      const dx = Math.abs(touch.clientX - startRef.current.x);
+      const dy = Math.abs(touch.clientY - startRef.current.y);
+      if (dx > TAP_SLOP_PX || dy > TAP_SLOP_PX) {
+        movedRef.current = true;
+        setOpen(true);
+      }
+    },
+    onTouchEnd: () => {
+      if (!movedRef.current) setOpen((value) => !value);
+    },
+  };
+
+  return {
+    ref,
+    handlers,
+    // undefined = let Recharts decide, which is what a mouse should get;
+    // once touched, the tooltip is ours to open and close.
+    tooltipActive: touchUsed ? open : undefined,
+  };
+}

@@ -28,6 +28,7 @@ import {
   formatMW,
   hourTicks,
   shortHour,
+  useDismissibleTooltip,
 } from './chart/shared';
 
 interface HistoryChartProps {
@@ -127,6 +128,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
   onRetry,
 }) => {
   const colors = useChartColors();
+  const { ref, handlers, tooltipActive } = useDismissibleTooltip();
 
   const distribution = useMemo(() => marginDistribution(history), [history]);
 
@@ -248,7 +250,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
         ]}
       />
 
-      <div className={CHART_BOX}>
+      <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
             <CartesianGrid
@@ -290,6 +292,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
             />
 
             <Tooltip
+              active={tooltipActive}
               content={<HistoryTooltip />}
               cursor={{ stroke: colors.axis, strokeDasharray: '3 3' }}
             />

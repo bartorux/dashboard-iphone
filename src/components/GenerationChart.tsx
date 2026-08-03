@@ -26,6 +26,7 @@ import {
   formatMW,
   hourTicks,
   shortHour,
+  useDismissibleTooltip,
 } from './chart/shared';
 
 interface GenerationChartProps {
@@ -126,6 +127,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
   currentHourLabel,
 }) => {
   const colors = useChartColors();
+  const { ref, handlers, tooltipActive } = useDismissibleTooltip();
 
   const rows = useMemo<Row[]>(
     () =>
@@ -196,7 +198,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         ]}
       />
 
-      <div className={CHART_BOX}>
+      <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
             <CartesianGrid
@@ -244,6 +246,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
             />
 
             <Tooltip
+              active={tooltipActive}
               content={<GenerationTooltip />}
               cursor={{ stroke: colors.axis, strokeDasharray: '3 3' }}
             />

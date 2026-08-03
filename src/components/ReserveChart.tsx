@@ -28,6 +28,7 @@ import {
   formatMW,
   hourTicks,
   shortHour,
+  useDismissibleTooltip,
 } from './chart/shared';
 
 interface ReserveChartProps {
@@ -112,6 +113,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
   currentHourLabel,
 }) => {
   const colors = useChartColors();
+  const { ref, handlers, tooltipActive } = useDismissibleTooltip();
 
   const rows = useMemo<Row[]>(
     () =>
@@ -194,7 +196,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
         ]}
       />
 
-      <div className={CHART_BOX}>
+      <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
             <CartesianGrid
@@ -282,6 +284,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
             ))}
 
             <Tooltip
+              active={tooltipActive}
               content={
                 <ReserveTooltip
                   orangeThreshold={orangeThreshold}
