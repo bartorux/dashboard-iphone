@@ -1,7 +1,7 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
-import Header from './components/Header';
-import StatusBar from './components/StatusBar';
+import Header, { ConnectionState } from './components/Header';
+import CurrentStatusCard from './components/CurrentStatusCard';
 import DayNavigation from './components/DayNavigation';
 import ReserveChart from './components/ReserveChart';
 import TrendsSection from './components/TrendsSection';
@@ -11,13 +11,24 @@ import PullToRefresh from './components/PullToRefresh';
 import NotificationBanner from './components/NotificationBanner';
 import OfflineIndicator from './components/OfflineIndicator';
 import InstallButton from './components/InstallButton';
+import { RefreshIcon } from './components/icons';
 import { usePSEData } from './hooks/usePSEData';
 import { useSettings } from './hooks/useSettings';
-import { useAlerts } from './hooks/useAlerts';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { usePullToRefresh } from './hooks/usePullToRefresh';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
+import { useThemeColorMeta } from './hooks/useThemeColorMeta';
+import {
+  buildAlertRanges,
+  classifyMargin,
+  findAlerts,
+  findCurrentPoint,
+  getUpcomingStatus,
+} from './utils/dataTransform';
 import { DayOffset } from './types';
+
+/** Re-evaluate "now" this often so the current hour rolls over on its own. */
+const CLOCK_TICK_MS = 30 * 1000;
 
 function App() {
   const {
@@ -27,13 +38,12 @@ function App() {
     switchDay,
     refreshData,
     isLoading,
-    isOnline: dataOnline,
+    isStale,
     lastUpdate,
-    dataError,
+    hasData,
   } = usePSEData();
 
   const { settings, saveSettings, resetSettings } = useSettings();
-  const { alerts, updateAlerts } = useAlerts();
   const browserOnline = useOnlineStatus();
   const { pullDistance, isRefreshing, isPulling, isReady } =
     usePullToRefresh(refreshData);
@@ -43,73 +53,130 @@ function App() {
   const [notificationsSilenced, setNotificationsSilenced] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
   const [notificationKey, setNotificationKey] = useState(0);
+  const [clockTick, setClockTick] = useState(0);
 
-  // PWA auto-update via Workbox
-  const {
-    needRefresh: [needRefresh],
-    updateServiceWorker,
-  } = useRegisterSW();
+  const { needRefresh: [needRefresh], updateServiceWorker } = useRegisterSW();
 
-  // Update alerts when data or settings change
   useEffect(() => {
-    if (dayData.length > 0) {
-      updateAlerts(dayData, settings.orangeThreshold, settings.redThreshold);
-    }
-  }, [dayData, settings.orangeThreshold, settings.redThreshold, updateAlerts]);
-
-  // Update app badge with alert count
-  useEffect(() => {
-    const totalAlerts = alerts.orange.length + alerts.red.length;
-    if ('setAppBadge' in navigator) {
-      if (totalAlerts > 0) {
-        navigator.setAppBadge(totalAlerts);
-      } else {
-        navigator.clearAppBadge();
-      }
-    }
-  }, [alerts]);
-
-  const showNotification = useCallback((msg: string) => {
-    setNotification(msg);
-    setNotificationKey((k) => k + 1);
+    const id = setInterval(() => setClockTick((tick) => tick + 1), CLOCK_TICK_MS);
+    return () => clearInterval(id);
   }, []);
 
-  const handleSwitchDay = useCallback(
-    (offset: DayOffset) => {
-      switchDay(offset);
+  const { orangeThreshold, redThreshold } = settings;
+
+  // Alerts for the selected day drive the panel...
+  const dayAlerts = useMemo(
+    () => findAlerts(dayData, orangeThreshold, redThreshold),
+    [dayData, orangeThreshold, redThreshold]
+  );
+  const alertRanges = useMemo(
+    () => buildAlertRanges(dayData, dayAlerts),
+    [dayData, dayAlerts]
+  );
+
+  // ...while the app badge counts the whole 72-hour horizon, so it does not
+  // change just because the user switched to a different day.
+  const horizonAlertCount = useMemo(() => {
+    const alerts = findAlerts(allData, orangeThreshold, redThreshold);
+    return alerts.orange.length + alerts.red.length;
+  }, [allData, orangeThreshold, redThreshold]);
+
+  // clockTick is a dependency on purpose: both of these read the wall clock, so
+  // they have to be recomputed as the hour rolls over, not only when data changes.
+  const currentPoint = useMemo(
+    () => findCurrentPoint(allData),
+    [allData, clockTick]
+  );
+
+  const currentStatus = useMemo(
+    () =>
+      currentPoint && currentPoint.reserve !== null && currentPoint.required !== null
+        ? classifyMargin(
+            currentPoint.reserve - currentPoint.required,
+            orangeThreshold,
+            redThreshold
+          )
+        : 'unknown',
+    [currentPoint, orangeThreshold, redThreshold]
+  );
+
+  const headerStatus = useMemo(
+    () => getUpcomingStatus(allData, orangeThreshold, redThreshold),
+    [allData, orangeThreshold, redThreshold, clockTick]
+  );
+
+  useThemeColorMeta(headerStatus);
+
+  useEffect(() => {
+    if (!('setAppBadge' in navigator)) return;
+    if (horizonAlertCount > 0) {
+      navigator.setAppBadge(horizonAlertCount);
+    } else {
+      navigator.clearAppBadge();
+    }
+  }, [horizonAlertCount]);
+
+  const showNotification = useCallback(
+    (message: string, force = false) => {
+      if (notificationsSilenced && !force) return;
+      setNotification(message);
+      setNotificationKey((key) => key + 1);
     },
+    [notificationsSilenced]
+  );
+
+  const handleSwitchDay = useCallback(
+    (offset: DayOffset) => switchDay(offset),
     [switchDay]
   );
 
-  // Show offline only when we have no data AND browser says offline
-  const hasData = allData.some((d) => d.reserve !== null);
-  const isOffline = !browserOnline && !hasData && !isLoading;
-
-  const statusText = isLoading
-    ? 'Pobieranie danych...'
-    : dataError && !hasData
-    ? 'Brak danych'
-    : `Połączono | ${allData.filter((d) => d.reserve !== null).length} punktów`;
-
   const handleShowInstructions = useCallback(() => {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if (isIOS) {
-      showNotification(
-        'iOS Safari: Udostępnij -> Dodaj do ekranu głównego'
-      );
-    } else {
-      showNotification('Menu przeglądarki -> Dodaj do ekranu głównego');
-    }
+    showNotification(
+      isIOS
+        ? 'Safari: Udostępnij → Dodaj do ekranu głównego'
+        : 'Menu przeglądarki → Dodaj do ekranu głównego',
+      true
+    );
   }, [showNotification]);
 
+  const connection: ConnectionState = isLoading && !hasData
+    ? 'loading'
+    : !hasData
+    ? 'error'
+    : isStale || !browserOnline
+    ? 'cached'
+    : 'online';
+
+  const connectionText = {
+    loading: 'Pobieranie danych…',
+    error: 'Brak danych z PSE',
+    cached: lastUpdate ? `Dane z ${lastUpdate}` : 'Dane z pamięci',
+    online: lastUpdate
+      ? `Zaktualizowano ${lastUpdate}`
+      : 'Połączono',
+  }[connection];
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#f2f2f7] overflow-x-hidden" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" }}>
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-bg">
       <NotificationBanner key={notificationKey} message={notification} />
-      <OfflineIndicator isOffline={isOffline} />
 
-      <Header />
+      <Header
+        status={headerStatus}
+        connection={connection}
+        connectionText={connectionText}
+        notificationsSilenced={notificationsSilenced}
+        onToggleNotifications={() =>
+          setNotificationsSilenced((silenced) => {
+            const next = !silenced;
+            if (!next) showNotification('Powiadomienia włączone', true);
+            return next;
+          })
+        }
+        onToggleSettings={() => setSettingsVisible((visible) => !visible)}
+      />
 
-      <div className="relative overflow-x-hidden">
+      <main className="relative flex-1 overflow-x-hidden pb-6">
         <PullToRefresh
           pullDistance={pullDistance}
           isRefreshing={isRefreshing}
@@ -117,30 +184,19 @@ function App() {
           isReady={isReady}
         />
 
-        <StatusBar
-          isOnline={dataOnline}
-          statusText={statusText}
-          lastUpdate={lastUpdate}
-          notificationsSilenced={notificationsSilenced}
-          onToggleNotifications={() =>
-            setNotificationsSilenced((s) => {
-              const next = !s;
-              showNotification(
-                `Powiadomienia ${next ? 'wyłączone' : 'włączone'}`
-              );
-              return next;
-            })
-          }
-          onToggleSettings={() => setSettingsVisible((v) => !v)}
-        />
-
         <SettingsPanel
           visible={settingsVisible}
           settings={settings}
           onSave={saveSettings}
           onReset={resetSettings}
-          onNotification={showNotification}
+          onNotification={(message) => showNotification(message, true)}
           onClose={() => setSettingsVisible(false)}
+        />
+
+        <CurrentStatusCard
+          point={currentPoint}
+          status={currentStatus}
+          isStale={isStale && hasData}
         />
 
         <DayNavigation
@@ -150,35 +206,40 @@ function App() {
 
         <ReserveChart
           data={dayData}
-          alerts={alerts}
+          orangeThreshold={orangeThreshold}
+          redThreshold={redThreshold}
+          currentTimeStr={
+            currentDayOffset === 0 ? currentPoint?.timeStr ?? null : null
+          }
+          isLoading={isLoading}
+        />
+
+        <AlertsPanel
+          ranges={alertRanges}
           currentDayOffset={currentDayOffset}
+          hasData={dayData.some((point) => point.reserve !== null)}
         />
 
         <TrendsSection
           dayData={dayData}
           allData={allData}
           currentDayOffset={currentDayOffset}
-          orangeThreshold={settings.orangeThreshold}
-          redThreshold={settings.redThreshold}
+          orangeThreshold={orangeThreshold}
+          redThreshold={redThreshold}
         />
 
-        <AlertsPanel alerts={alerts} currentDayOffset={currentDayOffset} />
-
-        {/* Actions */}
-        <div className="bg-white p-3 border-t border-[#e5e5ea]">
+        <div
+          className="mx-3 mt-3 space-y-2"
+          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        >
           <button
+            type="button"
             onClick={() => refreshData()}
             disabled={isLoading}
-            className="w-full py-3 bg-gradient-to-br from-[#c0392b] to-[#e74c3c] text-white border-none rounded-[10px] text-base font-semibold cursor-pointer transition-all shadow-[0_2px_8px_rgba(192,57,43,0.3)] disabled:opacity-60 disabled:cursor-not-allowed active:translate-y-px"
+            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface px-4 text-[15px] font-medium text-accent-text shadow-sm active:opacity-70 disabled:opacity-50"
           >
-            {isLoading ? (
-              <span className="flex items-center justify-center">
-                <span className="inline-block w-4 h-4 border-2 border-white/30 rounded-full border-t-white animate-spin mr-2" />
-                Odświeżanie...
-              </span>
-            ) : (
-              'Odśwież'
-            )}
+            <RefreshIcon className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+            {isLoading ? 'Odświeżanie…' : 'Odśwież'}
           </button>
 
           <InstallButton
@@ -190,14 +251,17 @@ function App() {
 
           {needRefresh && !settings.disableUpdates && (
             <button
+              type="button"
               onClick={() => updateServiceWorker(true)}
-              className="w-full py-2.5 border-none rounded-lg text-sm font-medium cursor-pointer transition-all mt-2 text-white bg-gradient-to-br from-[#007aff] to-[#5856d6] shadow-md"
+              className="min-h-11 w-full rounded-xl bg-accent px-4 text-[15px] font-semibold text-white active:opacity-80"
             >
-              Aktualizuj aplikację
+              Zainstaluj aktualizację
             </button>
           )}
         </div>
-      </div>
+      </main>
+
+      <OfflineIndicator isOffline={!browserOnline} lastUpdate={lastUpdate} />
     </div>
   );
 }

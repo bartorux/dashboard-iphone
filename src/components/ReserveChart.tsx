@@ -1,223 +1,326 @@
 import React, { useMemo } from 'react';
 import {
   ResponsiveContainer,
-  AreaChart,
+  ComposedChart,
   Area,
   Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ReferenceLine,
-  ReferenceDot,
 } from 'recharts';
-import { PSEDataPoint, AlertSet } from '../types';
-import { formatDateTime } from '../utils/dateHelpers';
+import { PSEDataPoint, SystemStatus } from '../types';
+import { formatHourLabel, formatHourShort } from '../utils/dateHelpers';
+import { niceScale } from '../utils/scale';
+import { classifyMargin } from '../utils/dataTransform';
+import { useChartColors } from '../hooks/useChartColors';
+import { STATUS_LABEL, STATUS_TEXT } from '../utils/status';
 
 interface ReserveChartProps {
   data: PSEDataPoint[];
-  alerts: AlertSet;
-  currentDayOffset: number;
+  orangeThreshold: number;
+  redThreshold: number;
+  currentTimeStr: string | null;
+  isLoading: boolean;
 }
 
-interface ChartDataItem {
-  hour: string;
+interface ChartRow {
+  key: string;
   reserve: number | null;
   required: number | null;
-  isCurrent: boolean;
+  /** [bottom, top] band the margin must stay above — drawn as a range area. */
+  zoneAlarm: [number, number] | null;
+  zoneWarn: [number, number] | null;
 }
 
-const ReserveChart: React.FC<ReserveChartProps> = ({
-  data,
-  alerts,
-  currentDayOffset,
+const formatMW = (value: number) =>
+  new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
+
+/**
+ * Recharts injects `active`/`payload`/`label` into whatever element is passed as
+ * `content`, but its exported prop types don't describe that for custom content,
+ * so the shape is declared here.
+ */
+interface ChartTooltipProps {
+  active?: boolean;
+  label?: string | number;
+  payload?: Array<{ payload: ChartRow }>;
+  orangeThreshold: number;
+  redThreshold: number;
+}
+
+const ChartTooltip: React.FC<ChartTooltipProps> = ({
+  active,
+  payload,
+  label,
+  orangeThreshold,
+  redThreshold,
 }) => {
-  const chartData = useMemo((): ChartDataItem[] => {
-    const now = new Date();
-    const currentHourStr =
-      currentDayOffset === 0
-        ? formatDateTime(
-            new Date(
-              now.getFullYear(),
-              now.getMonth(),
-              now.getDate(),
-              now.getHours()
-            )
-          )
-        : '';
+  if (!active || !payload?.length) return null;
 
-    return data.map((d) => ({
-      hour: d.timeStr,
-      reserve: d.reserve,
-      required: d.required,
-      isCurrent: d.timeStr === currentHourStr,
-    }));
-  }, [data, currentDayOffset]);
-
-  // FIX: filter NaN before Math.max to avoid NaN propagation
-  const maxValue = useMemo(() => {
-    const validReserves = data
-      .map((d) => d.reserve)
-      .filter((r): r is number => r !== null && !isNaN(r));
-    const validRequired = data
-      .map((d) => d.required)
-      .filter((r): r is number => r !== null && !isNaN(r));
-    const allVals = [...validReserves, ...validRequired];
-    return allVals.length > 0 ? Math.max(...allVals) * 1.1 : 1500;
-  }, [data]);
-
-  const currentPoint = useMemo(
-    () => chartData.find((d) => d.isCurrent),
-    [chartData]
-  );
-
-  // Alert reference lines
-  const alertHours = useMemo(() => {
-    const hours = new Set<string>();
-    alerts.red.forEach((a) => hours.add(a.time));
-    alerts.orange.forEach((a) => hours.add(a.time));
-    return hours;
-  }, [alerts]);
-
-  const formatXTick = (value: string) => {
-    try {
-      const parts = value.split(' ');
-      if (parts.length >= 2) {
-        return parts[1].substring(0, 5);
-      }
-      return value;
-    } catch {
-      return value;
-    }
-  };
-
-  if (data.length === 0) {
+  const row = payload[0].payload;
+  if (row.reserve === null || row.required === null) {
     return (
-      <div className="bg-white rounded-lg shadow-md mx-0 my-2 p-1">
-        <div className="flex items-center justify-center h-[200px] text-[#8e8e93]">
-          Brak danych do wyświetlenia
+      <div className="rounded-xl bg-surface px-3 py-2 text-[12px] shadow-lg ring-1 ring-separator">
+        <div className="font-semibold text-text">
+          {formatHourLabel(String(label))}
         </div>
+        <div className="text-text-tertiary">Brak danych</div>
       </div>
     );
   }
 
+  const margin = row.reserve - row.required;
+  const status = classifyMargin(margin, orangeThreshold, redThreshold);
+
   return (
-    <div className="bg-white rounded-lg shadow-md mx-0 my-2 p-1">
-      <div className="w-full h-[45vh] min-h-[280px]">
+    <div className="min-w-[10rem] rounded-xl bg-surface px-3 py-2 text-[12px] shadow-lg ring-1 ring-separator">
+      <div className="mb-1 flex items-baseline justify-between gap-3">
+        <span className="font-semibold text-text">
+          {formatHourLabel(String(label))}
+        </span>
+        <span className={`text-[11px] font-semibold ${STATUS_TEXT[status]}`}>
+          {STATUS_LABEL[status]}
+        </span>
+      </div>
+      <dl className="space-y-0.5">
+        <div className="flex justify-between gap-4">
+          <dt className="text-text-secondary">Rezerwa</dt>
+          <dd className="tnum font-medium text-text">
+            {formatMW(row.reserve)} MW
+          </dd>
+        </div>
+        <div className="flex justify-between gap-4">
+          <dt className="text-text-secondary">Wymagana</dt>
+          <dd className="tnum font-medium text-text">
+            {formatMW(row.required)} MW
+          </dd>
+        </div>
+        <div className="mt-1 flex justify-between gap-4 border-t border-separator pt-1">
+          <dt className="text-text-secondary">Margines</dt>
+          <dd className={`tnum font-semibold ${STATUS_TEXT[status]}`}>
+            {margin > 0 ? '+' : ''}
+            {formatMW(margin)} MW
+          </dd>
+        </div>
+      </dl>
+    </div>
+  );
+};
+
+const ReserveChart: React.FC<ReserveChartProps> = ({
+  data,
+  orangeThreshold,
+  redThreshold,
+  currentTimeStr,
+  isLoading,
+}) => {
+  const colors = useChartColors();
+
+  const rows = useMemo<ChartRow[]>(
+    () =>
+      data.map((point) => {
+        const { reserve, required } = point;
+        return {
+          key: point.timeStr,
+          reserve,
+          required,
+          // Bands follow the required curve, because the alert thresholds are
+          // margins above it — a flat horizontal band would misrepresent them.
+          zoneAlarm:
+            required === null ? null : [0, required + redThreshold],
+          zoneWarn:
+            required === null
+              ? null
+              : [required + redThreshold, required + orangeThreshold],
+        };
+      }),
+    [data, orangeThreshold, redThreshold]
+  );
+
+  const scale = useMemo(() => {
+    const values = rows.flatMap((row) => [
+      row.reserve,
+      row.zoneWarn?.[1] ?? null,
+    ]);
+    const valid = values.filter(
+      (v): v is number => v !== null && Number.isFinite(v)
+    );
+    // niceScale keeps every axis label on a round number and copes with an
+    // empty set, where Math.max() would hand back -Infinity.
+    return niceScale(valid.length > 0 ? Math.max(...valid) : NaN);
+  }, [rows]);
+
+  const xTicks = useMemo(() => {
+    const ticks = rows.filter((_, i) => i % 4 === 0).map((row) => row.key);
+    const last = rows[rows.length - 1];
+    if (last && !ticks.includes(last.key)) ticks.push(last.key);
+    return ticks;
+  }, [rows]);
+
+  if (isLoading && data.length === 0) {
+    return (
+      <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
+        <div className="h-[16rem] animate-pulse rounded-xl bg-surface-2" />
+      </section>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
+        <div className="grid h-[16rem] place-items-center text-[13px] text-text-tertiary">
+          Brak danych do wyświetlenia
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="mx-3 mt-3 rounded-2xl bg-surface p-3 shadow-sm">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-1">
+        <h2 className="text-[15px] font-semibold text-text">
+          Rezerwa mocy <span className="text-text-tertiary">(MW)</span>
+        </h2>
+        <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-secondary">
+          <li className="flex items-center gap-1.5">
+            <span
+              className="h-0.5 w-4 rounded-full"
+              style={{ background: colors.reserve }}
+            />
+            Dostępna
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span
+              className="h-0 w-4 border-t-2 border-dashed"
+              style={{ borderColor: colors.required }}
+            />
+            Wymagana
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-warn-soft ring-1 ring-warn/40" />
+            Uwaga
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-alarm-soft ring-1 ring-alarm/40" />
+            Alarm
+          </li>
+        </ul>
+      </div>
+
+      <div className="h-[45vh] max-h-[22rem] min-h-[15rem] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
-            data={chartData}
-            margin={{ top: 8, right: 15, bottom: 30, left: 5 }}
+          <ComposedChart
+            data={rows}
+            /* top leaves room for the "teraz" label, which sits above the plot */
+            margin={{ top: 18, right: 10, bottom: 4, left: -12 }}
           >
             <defs>
-              <linearGradient id="reserveGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#c0392b" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#c0392b" stopOpacity={0} />
+              <linearGradient id="reserveFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={colors.reserve} stopOpacity={0.22} />
+                <stop offset="100%" stopColor={colors.reserve} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+
+            <CartesianGrid
+              vertical={false}
+              stroke={colors.grid}
+              strokeDasharray="3 3"
+            />
+
             <XAxis
-              dataKey="hour"
-              tickFormatter={formatXTick}
-              tick={{ fontSize: 10 }}
+              dataKey="key"
+              ticks={xTicks}
               interval={0}
-              ticks={(() => {
-                const t = chartData
-                  .filter((_, i) => i % 4 === 0)
-                  .map((d) => d.hour);
-                const last = chartData[chartData.length - 1];
-                if (last && !t.includes(last.hour)) {
-                  t.push(last.hour);
-                }
-                return t;
-              })()}
-              height={35}
+              tickFormatter={formatHourShort}
+              tick={{ fontSize: 11, fill: colors.axis }}
+              tickLine={false}
+              axisLine={{ stroke: colors.grid }}
+              tickMargin={8}
             />
+
             <YAxis
-              tick={{ fontSize: 10 }}
-              width={40}
-              domain={[0, maxValue]}
-              label={{
-                value: 'MW',
-                angle: -90,
-                position: 'insideLeft',
-                style: { fontSize: 10 },
-              }}
-            />
-            <Tooltip
-              formatter={(value, name) => {
-                if (value == null) return ['brak danych', String(name)];
-                const label =
-                  name === 'reserve' ? 'Rezerwa mocy' : 'Wymagana rezerwa';
-                return [`${Number(value).toFixed(0)} MW`, label];
-              }}
-              labelFormatter={(label) => formatXTick(String(label))}
-              contentStyle={{
-                fontSize: 12,
-                borderRadius: 8,
-                border: 'none',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-              }}
-            />
-            <Legend
-              verticalAlign="bottom"
-              height={20}
-              wrapperStyle={{ fontSize: 10 }}
-              formatter={(value: string) =>
-                value === 'reserve' ? 'Rezerwa mocy' : 'Wymagana rezerwa'
-              }
+              domain={[0, scale.max]}
+              ticks={scale.ticks}
+              tick={{ fontSize: 11, fill: colors.axis }}
+              tickFormatter={formatMW}
+              tickLine={false}
+              axisLine={false}
+              width={48}
             />
 
-            {/* Alert reference lines */}
-            {Array.from(alertHours).map((hour) => {
-              const isRed = alerts.red.some((a) => a.time === hour);
-              return (
-                <ReferenceLine
-                  key={hour}
-                  x={hour}
-                  stroke={isRed ? '#ff3b30' : '#ff9500'}
-                  strokeWidth={isRed ? 2 : 1}
-                  strokeDasharray="5 5"
-                />
-              );
-            })}
-
+            {/* Threshold bands, drawn behind the series */}
             <Area
-              type="monotone"
-              dataKey="reserve"
-              stroke="#c0392b"
-              strokeWidth={2.5}
-              fill="url(#reserveGradient)"
+              dataKey="zoneAlarm"
+              stroke="none"
+              fill={colors.alarm}
+              fillOpacity={0.12}
+              isAnimationActive={false}
+              activeDot={false}
+              legendType="none"
               connectNulls={false}
-              dot={false}
-              activeDot={{ r: 5, stroke: '#c0392b', strokeWidth: 2 }}
             />
-            <Line
-              type="monotone"
-              dataKey="required"
-              stroke="#007aff"
-              strokeWidth={2}
-              dot={false}
+            <Area
+              dataKey="zoneWarn"
+              stroke="none"
+              fill={colors.warn}
+              fillOpacity={0.14}
+              isAnimationActive={false}
+              activeDot={false}
+              legendType="none"
               connectNulls={false}
-              activeDot={{ r: 4, stroke: '#007aff', strokeWidth: 2 }}
             />
 
-            {/* Current hour marker */}
-            {currentPoint && currentPoint.reserve !== null && (
-              <ReferenceDot
-                x={currentPoint.hour}
-                y={currentPoint.reserve}
-                r={6}
-                fill="#ff3b30"
-                stroke="white"
-                strokeWidth={2}
+            <Tooltip
+              content={
+                <ChartTooltip
+                  orangeThreshold={orangeThreshold}
+                  redThreshold={redThreshold}
+                />
+              }
+              cursor={{ stroke: colors.axis, strokeDasharray: '3 3' }}
+            />
+
+            {currentTimeStr && (
+              <ReferenceLine
+                x={currentTimeStr}
+                stroke={colors.accent}
+                strokeWidth={1.5}
+                label={{
+                  value: 'teraz',
+                  position: 'top',
+                  fontSize: 10,
+                  fill: colors.accent,
+                }}
               />
             )}
-          </AreaChart>
+
+            <Line
+              dataKey="required"
+              stroke={colors.required}
+              strokeWidth={1.5}
+              strokeDasharray="4 4"
+              dot={false}
+              connectNulls={false}
+              isAnimationActive={false}
+              activeDot={false}
+            />
+
+            <Area
+              dataKey="reserve"
+              stroke={colors.reserve}
+              strokeWidth={2.5}
+              fill="url(#reserveFill)"
+              dot={false}
+              connectNulls={false}
+              isAnimationActive={false}
+              activeDot={{ r: 4, fill: colors.reserve, stroke: colors.surface, strokeWidth: 2 }}
+            />
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </section>
   );
 };
 

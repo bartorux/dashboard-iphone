@@ -2,34 +2,53 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { PSEDataPoint, DayOffset } from '../types';
 import { fetchPSEData } from '../utils/api';
 import { processData, getDataForDay } from '../utils/dataTransform';
-import { REFRESH_INTERVAL_MS, STORAGE_PREFIX } from '../utils/constants';
+import { REFRESH_INTERVAL_MS, STORAGE_PREFIX, HOUR_MS } from '../utils/constants';
 
 const DATA_CACHE_KEY = `${STORAGE_PREFIX}data-cache`;
+/** Beyond this the cache describes business days we no longer display. */
+const CACHE_MAX_AGE_MS = 12 * HOUR_MS;
+
+interface CachedPayload {
+  data: PSEDataPoint[];
+  timestamp: string;
+}
 
 function saveDataCache(data: PSEDataPoint[], timestamp: string): void {
   try {
-    const serializable = data.map(d => ({
-      ...d,
-      time: d.time.toISOString(),
-    }));
-    localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({
-      data: serializable,
-      timestamp,
-      savedAt: Date.now(),
-    }));
-  } catch { /* storage full */ }
+    localStorage.setItem(
+      DATA_CACHE_KEY,
+      JSON.stringify({
+        data: data.map((point) => ({ ...point, time: point.time.toISOString() })),
+        timestamp,
+        savedAt: Date.now(),
+      })
+    );
+  } catch {
+    /* storage full or unavailable */
+  }
 }
 
-function loadDataCache(): { data: PSEDataPoint[]; timestamp: string } | null {
+function loadDataCache(): CachedPayload | null {
   try {
     const raw = localStorage.getItem(DATA_CACHE_KEY);
     if (!raw) return null;
+
     const parsed = JSON.parse(raw);
-    const data = parsed.data.map((d: any) => ({
-      ...d,
-      time: new Date(d.time),
-    }));
-    return { data, timestamp: parsed.timestamp };
+    if (!Array.isArray(parsed?.data)) return null;
+    if (
+      typeof parsed.savedAt === 'number' &&
+      Date.now() - parsed.savedAt > CACHE_MAX_AGE_MS
+    ) {
+      return null;
+    }
+
+    return {
+      data: parsed.data.map((point: PSEDataPoint & { time: string }) => ({
+        ...point,
+        time: new Date(point.time),
+      })),
+      timestamp: String(parsed.timestamp ?? ''),
+    };
   } catch {
     return null;
   }
@@ -42,23 +61,24 @@ interface UsePSEDataReturn {
   switchDay: (offset: DayOffset) => void;
   refreshData: () => Promise<void>;
   isLoading: boolean;
-  isOnline: boolean;
+  /** True while the newest fetch failed but cached data is still on screen. */
+  isStale: boolean;
   lastUpdate: string | null;
-  dataError: boolean;
+  hasData: boolean;
 }
 
 export function usePSEData(): UsePSEDataReturn {
-  const cached = loadDataCache();
+  const cached = useRef(loadDataCache()).current;
+
   const [allData, setAllData] = useState<PSEDataPoint[]>(cached?.data ?? []);
   const [currentDayOffset, setCurrentDayOffset] = useState<DayOffset>(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [isOnline, setIsOnline] = useState(true);
+  const [isStale, setIsStale] = useState(cached != null);
   const [lastUpdate, setLastUpdate] = useState<string | null>(
-    cached ? `${cached.timestamp} (cache)` : null
+    cached?.timestamp || null
   );
-  const [dataError, setDataError] = useState(false);
 
-  // FIX: useRef guard against race condition — prevents concurrent fetches
+  // Guards against overlapping fetches (interval + pull-to-refresh + mount).
   const isFetchingRef = useRef(false);
 
   const refreshData = useCallback(async () => {
@@ -67,26 +87,23 @@ export function usePSEData(): UsePSEDataReturn {
     setIsLoading(true);
 
     try {
-      const rawData = await fetchPSEData();
+      const processed = processData(await fetchPSEData());
 
-      if (rawData.length > 0) {
-        const processed = processData(rawData);
-        setAllData(processed);
-        setIsOnline(true);
-        setDataError(false);
-        const timeStr = new Date().toLocaleTimeString('pl-PL', {
+      if (processed.some((point) => point.reserve !== null)) {
+        const timestamp = new Date().toLocaleTimeString('pl-PL', {
           hour: '2-digit',
           minute: '2-digit',
         });
-        setLastUpdate(timeStr);
-        saveDataCache(processed, timeStr);
+        setAllData(processed);
+        setLastUpdate(timestamp);
+        setIsStale(false);
+        saveDataCache(processed, timestamp);
       } else {
-        setIsOnline(false);
-        setDataError(true);
+        // A 200 that carries no usable values is a failure, not fresh data.
+        setIsStale(true);
       }
     } catch {
-      setIsOnline(false);
-      setDataError(true);
+      setIsStale(true);
     } finally {
       setIsLoading(false);
       isFetchingRef.current = false;
@@ -97,23 +114,20 @@ export function usePSEData(): UsePSEDataReturn {
     setCurrentDayOffset(offset);
   }, []);
 
-  // Initial fetch
   useEffect(() => {
     refreshData();
-  }, [refreshData]);
-
-  // Auto-refresh interval with cleanup
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      refreshData();
-    }, REFRESH_INTERVAL_MS);
-
+    const intervalId = setInterval(refreshData, REFRESH_INTERVAL_MS);
     return () => clearInterval(intervalId);
   }, [refreshData]);
 
   const dayData = useMemo(
     () => getDataForDay(allData, currentDayOffset),
     [allData, currentDayOffset]
+  );
+
+  const hasData = useMemo(
+    () => allData.some((point) => point.reserve !== null),
+    [allData]
   );
 
   return {
@@ -123,8 +137,8 @@ export function usePSEData(): UsePSEDataReturn {
     switchDay,
     refreshData,
     isLoading,
-    isOnline,
+    isStale,
     lastUpdate,
-    dataError,
+    hasData,
   };
 }

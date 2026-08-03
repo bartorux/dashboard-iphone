@@ -19,7 +19,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icons/*.svg'],
+      includeAssets: ['icons/*.png'],
       workbox: {
         skipWaiting: true,
         clientsClaim: true,
@@ -43,22 +43,28 @@ export default defineConfig({
         start_url: './',
         display: 'standalone',
         orientation: 'portrait-primary',
-        background_color: '#c0392b',
-        theme_color: '#c0392b',
+        background_color: '#0a84ff',
+        theme_color: '#0a84ff',
         lang: 'pl',
         categories: ['utilities', 'productivity', 'business'],
         icons: [
           {
-            src: 'icons/icon-192.svg',
+            src: 'icons/icon-192.png',
             sizes: '192x192',
-            type: 'image/svg+xml',
+            type: 'image/png',
             purpose: 'any',
           },
           {
-            src: 'icons/icon-512.svg',
+            src: 'icons/icon-512.png',
             sizes: '512x512',
-            type: 'image/svg+xml',
+            type: 'image/png',
             purpose: 'any',
+          },
+          {
+            src: 'icons/icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
           },
         ],
         shortcuts: [

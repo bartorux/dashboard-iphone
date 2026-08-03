@@ -3,6 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [react]
+  # Runs checks without deploying, so a pull request into `react` is verified
+  # before it can reach production.
+  pull_request:
+    branches: [react]
 
 permissions:
   contents: read
@@ -12,6 +16,11 @@ permissions:
 concurrency:
   group: "pages"
   cancel-in-progress: true
+
+env:
+  # The `playwright` dev dependency is only used by scripts/screenshots.mjs,
+  # which is run locally. CI has no use for a ~150 MB browser download.
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
 
 jobs:
   build-and-deploy:
@@ -24,18 +33,27 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - run: npm ci
 
+      # Type errors used to reach production: `build` runs vite only, which
+      # strips types without checking them.
+      - run: npm run typecheck
+
+      - run: npm test
+
       - run: npm run build
 
       - uses: actions/configure-pages@v4
+        if: github.event_name == 'push'
 
       - uses: actions/upload-pages-artifact@v3
+        if: github.event_name == 'push'
         with:
           path: dist
 
       - id: deployment
+        if: github.event_name == 'push'
         uses: actions/deploy-pages@v4

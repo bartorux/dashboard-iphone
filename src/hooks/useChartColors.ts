@@ -1,0 +1,63 @@
+import { useCallback, useEffect, useState } from 'react';
+
+/**
+ * Recharts takes colours as prop values, not as CSS — `stroke="var(--x)"` is not
+ * resolved for the SVG it generates. So we read the tokens off the document and
+ * re-read them whenever the system flips between light and dark.
+ */
+const TOKENS = {
+  reserve: '--series-reserve',
+  required: '--series-required',
+  grid: '--separator',
+  axis: '--text-tertiary',
+  surface: '--surface',
+  text: '--text',
+  textSecondary: '--text-secondary',
+  warn: '--warn',
+  alarm: '--alarm',
+  accent: '--accent',
+} as const;
+
+export type ChartColors = Record<keyof typeof TOKENS, string>;
+
+/** Used in jsdom and before first paint, where computed styles are empty. */
+const FALLBACK: ChartColors = {
+  reserve: '#007aff',
+  required: '#8e8e93',
+  grid: 'rgba(60,60,67,0.18)',
+  axis: '#8e8e93',
+  surface: '#ffffff',
+  text: '#000000',
+  textSecondary: '#6c6c70',
+  warn: '#ff9500',
+  alarm: '#ff3b30',
+  accent: '#007aff',
+};
+
+function readColors(): ChartColors {
+  if (typeof window === 'undefined') return FALLBACK;
+
+  const styles = window.getComputedStyle(document.documentElement);
+  const entries = Object.entries(TOKENS).map(([key, token]) => {
+    const value = styles.getPropertyValue(token).trim();
+    return [key, value || FALLBACK[key as keyof ChartColors]];
+  });
+
+  return Object.fromEntries(entries) as ChartColors;
+}
+
+export function useChartColors(): ChartColors {
+  const [colors, setColors] = useState<ChartColors>(readColors);
+
+  const refresh = useCallback(() => setColors(readColors()), []);
+
+  useEffect(() => {
+    refresh();
+
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    media.addEventListener('change', refresh);
+    return () => media.removeEventListener('change', refresh);
+  }, [refresh]);
+
+  return colors;
+}

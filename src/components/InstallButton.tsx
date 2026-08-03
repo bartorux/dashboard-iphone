@@ -1,5 +1,6 @@
 import React from 'react';
 import { InstallableState } from '../types';
+import { DownloadIcon } from './icons';
 
 interface InstallButtonProps {
   installableState: InstallableState;
@@ -8,13 +9,19 @@ interface InstallButtonProps {
   onShowInstructions: () => void;
 }
 
+const LABELS: Record<string, string> = {
+  true: 'Zainstaluj aplikację',
+  ios: 'Jak dodać do ekranu głównego',
+  manual: 'Jak zainstalować',
+};
+
 const InstallButton: React.FC<InstallButtonProps> = ({
   installableState,
   isInstalled,
   onInstall,
   onShowInstructions,
 }) => {
-  if (isInstalled) return null;
+  if (isInstalled || installableState === false) return null;
 
   const handleClick = () => {
     if (installableState === true) {
@@ -24,25 +31,14 @@ const InstallButton: React.FC<InstallButtonProps> = ({
     }
   };
 
-  const getLabel = () => {
-    if (installableState === true) return 'Zainstaluj automatycznie';
-    if (installableState === 'ios') return 'Instrukcje dla iOS';
-    if (installableState === 'manual') return 'Instrukcje instalacji';
-    return 'Zainstaluj aplikację';
-  };
-
-  const isAuto = installableState === true;
-
   return (
     <button
+      type="button"
       onClick={handleClick}
-      className={`w-full py-2.5 border-none rounded-lg text-sm font-medium cursor-pointer transition-all mt-2 mb-2 text-white shadow-md ${
-        isAuto
-          ? 'bg-gradient-to-br from-[#00d4aa] to-[#00b894]'
-          : 'bg-gradient-to-br from-[#34c759] to-[#30d158]'
-      }`}
+      className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface-2 px-4 text-[15px] font-medium text-accent-text active:opacity-70"
     >
-      {getLabel()}
+      <DownloadIcon className="h-4 w-4" />
+      {LABELS[String(installableState)] ?? 'Zainstaluj aplikację'}
     </button>
   );
 };

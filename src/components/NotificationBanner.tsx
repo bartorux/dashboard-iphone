@@ -4,30 +4,34 @@ interface NotificationBannerProps {
   message: string | null;
 }
 
-const NotificationBanner: React.FC<NotificationBannerProps> = ({
-  message,
-}) => {
+/**
+ * Toast under the app bar. Positioned against the safe-area inset plus the header
+ * height, so it never slides underneath the notch or the header itself.
+ */
+const NotificationBanner: React.FC<NotificationBannerProps> = ({ message }) => {
   const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
 
   useEffect(() => {
-    if (message) {
-      setText(message);
-      setVisible(true);
+    if (!message) return;
 
-      const timer = setTimeout(() => {
-        setVisible(false);
-      }, 4000);
+    setText(message);
+    setVisible(true);
 
-      return () => clearTimeout(timer);
-    }
+    const timer = setTimeout(() => setVisible(false), 4000);
+    return () => clearTimeout(timer);
   }, [message]);
 
   return (
     <div
-      className={`fixed top-[60px] left-4 right-4 bg-[#ff3b30] text-white px-4 py-3 rounded-[10px] font-semibold text-center z-[1000] shadow-[0_4px_12px_rgba(255,59,48,0.4)] transition-transform duration-300 ${
-        visible ? 'translate-y-0' : '-translate-y-[100px]'
+      role="status"
+      aria-live="polite"
+      className={`pointer-events-none fixed inset-x-3 z-[1000] rounded-2xl bg-text px-4 py-3 text-center text-[14px] font-medium text-bg shadow-lg transition-all duration-300 ${
+        visible ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
       }`}
+      style={{
+        top: 'calc(env(safe-area-inset-top) + var(--header-height) + 0.5rem)',
+      }}
     >
       {text}
     </div>
