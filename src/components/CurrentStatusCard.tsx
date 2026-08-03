@@ -1,7 +1,6 @@
 import React from 'react';
 import { PSEDataPoint, SystemStatus } from '../types';
 import { STATUS_LABEL, STATUS_SOFT_BG, STATUS_TEXT } from '../utils/status';
-import { formatHourLabel } from '../utils/dateHelpers';
 
 interface CurrentStatusCardProps {
   point: PSEDataPoint | undefined;
@@ -33,7 +32,7 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
             Margines rezerwy
           </div>
           <div className="text-[11px] text-text-tertiary">
-            {point ? `godzina ${formatHourLabel(point.timeStr)}` : 'teraz'}
+            {point ? `godzina ${point.hourLabel}–${point.endLabel}` : 'teraz'}
           </div>
         </div>
         <span

@@ -18,7 +18,16 @@ export interface PSEDataPoint {
   /** Raw local stamp — unique per point, used as a React key and chart category. */
   timeStr: string;
   businessDate: string;
+  /** Period label, e.g. "19 - 20". Empty for points synthesised to fill a gap. */
   period: string;
+  /**
+   * Hour the period STARTS, as "19:00" — this is what the user sees.
+   * Deliberately not derived from `timeStr`: that carries the period end, and
+   * showing it put every hour in the UI one hour later than reality.
+   */
+  hourLabel: string;
+  /** Hour the period ends, as "20:00". Used for the closing edge of a range. */
+  endLabel: string;
   reserve: number | null;
   required: number | null;
 }

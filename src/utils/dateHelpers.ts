@@ -62,6 +62,33 @@ export function formatHourShort(timeStr: string): string {
   return match ? match[4] : timeStr;
 }
 
+/**
+ * PSE labels a period by its span, e.g. "19 - 20" for the block covering
+ * 19:00-20:00. `plan_dtime` carries only the END of that span, so the period
+ * field is the only place the start is stated - and the only way to display an
+ * hour that matches the wall clock it describes.
+ *
+ * The autumn DST switch produces "03 - 03a" and "03a - 04"; the suffix has to
+ * survive, otherwise the repeated hour collapses into one.
+ */
+const PSE_PERIOD = /^(\d{2}a?) - (\d{2}a?)$/;
+
+export function periodStart(period: string): string | null {
+  return PSE_PERIOD.exec(period)?.[1] ?? null;
+}
+
+export function periodEnd(period: string): string | null {
+  const end = PSE_PERIOD.exec(period)?.[2];
+  if (!end) return null;
+  // The closing block is written "23 - 24"; midnight reads as 00.
+  return end === '24' ? '00' : end;
+}
+
+/** Local wall-clock hour of an instant, as "HH:00". */
+export function localHourLabel(date: Date): string {
+  return `${pad(date.getHours())}:00`;
+}
+
 export function getDayDate(offset: number): string {
   return addDays(new Date(), offset).toLocaleDateString('pl-PL', {
     day: '2-digit',

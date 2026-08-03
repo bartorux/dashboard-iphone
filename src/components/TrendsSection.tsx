@@ -266,8 +266,7 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
                       className="tnum flex justify-between gap-3 text-[12px] text-text-secondary"
                     >
                       <span>
-                        {dayNameFor(point.businessDate)}{' '}
-                        {formatHourLabel(point.timeStr)}
+                        {dayNameFor(point.businessDate)} {point.hourLabel}
                       </span>
                       <span
                         className={`font-semibold ${

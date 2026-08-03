@@ -13,11 +13,17 @@ const BASE = Date.UTC(2026, 7, 3, 0, 0, 0);
 
 /** Builds a day of points where `reserve - required` equals the given margin. */
 function series(margins: (number | null)[]): PSEDataPoint[] {
+  // Mirrors the real shape: plan_dtime is the period END, so index 0 carries the
+  // 01:00 stamp while describing the 00:00-01:00 block.
+  const pad = (n: number) => String(n).padStart(2, '0');
   return margins.map((margin, index) => ({
-    time: new Date(BASE + index * HOUR),
-    timeStr: `2026-08-03 ${String(index).padStart(2, '0')}:00:00`,
+    // time is the period END, so block `index` covers BASE+index .. BASE+index+1
+    time: new Date(BASE + (index + 1) * HOUR),
+    timeStr: `2026-08-03 ${pad(index + 1)}:00:00`,
     businessDate: '2026-08-03',
-    period: '',
+    period: `${pad(index)} - ${pad(index + 1)}`,
+    hourLabel: `${pad(index)}:00`,
+    endLabel: `${pad(index + 1)}:00`,
     reserve: margin === null ? null : 1000 + margin,
     required: margin === null ? null : 1000,
   }));
@@ -108,11 +114,12 @@ describe('classifyMargin', () => {
 describe('findCurrentPoint / getUpcomingStatus', () => {
   it('picks the period that has not ended yet', () => {
     vi.useFakeTimers();
-    // 03:30 UTC — the period ending at 04:00 is the one in progress
+    // half past the 03:00 block — that block is the one in progress
     vi.setSystemTime(new Date(BASE + 3.5 * HOUR));
 
     const data = series([900, 900, 900, 900, 900, 900]);
-    expect(findCurrentPoint(data)?.timeStr).toBe('2026-08-03 04:00:00');
+    expect(findCurrentPoint(data)?.hourLabel).toBe('03:00');
+    expect(findCurrentPoint(data)?.endLabel).toBe('04:00');
   });
 
   it('returns undefined once every period is in the past', () => {
@@ -126,11 +133,11 @@ describe('findCurrentPoint / getUpcomingStatus', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(BASE + 0.5 * HOUR));
 
-    // index 0 has already ended, so the window covers indices 1-3
+    // the 00:00 block is still running, so the window covers blocks 00-02
     expect(getUpcomingStatus(series([900, 900, 100, 900]), 500, 300)).toBe(
       'alarm'
     );
-    // index 4 sits past the end of the three-hour window
+    // the fifth block sits past the end of the three-hour window
     expect(
       getUpcomingStatus(series([900, 900, 900, 900, 100]), 500, 300)
     ).toBe('ok');
@@ -141,5 +148,32 @@ describe('findCurrentPoint / getUpcomingStatus', () => {
     vi.setSystemTime(new Date(BASE + 99 * HOUR));
 
     expect(getUpcomingStatus(series([900, 900]), 500, 300)).toBe('unknown');
+  });
+});
+
+describe('buildAlertRanges — hours describe the block they cover', () => {
+  it('reports the clock time the alarm actually covers', () => {
+    // index 19 carries the 20:00 stamp and covers 19:00-20:00
+    const margins = Array(24).fill(900);
+    margins[19] = -49;
+
+    const [range] = rangesFor(margins);
+
+    expect(range.from).toBe('19:00');
+    expect(range.to).toBe('20:00');
+    expect(range.hours).toBe(1);
+  });
+
+  it('spans start of the first block to end of the last', () => {
+    const margins = Array(24).fill(900);
+    margins[19] = 100;
+    margins[20] = 100;
+    margins[21] = 100;
+
+    const [range] = rangesFor(margins);
+
+    expect(range.from).toBe('19:00');
+    expect(range.to).toBe('22:00');
+    expect(range.hours).toBe(3);
   });
 });

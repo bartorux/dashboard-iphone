@@ -212,8 +212,8 @@ function App() {
           data={dayData}
           orangeThreshold={orangeThreshold}
           redThreshold={redThreshold}
-          currentTimeStr={
-            currentDayOffset === 0 ? currentPoint?.timeStr ?? null : null
+          currentHourLabel={
+            currentDayOffset === 0 ? currentPoint?.hourLabel ?? null : null
           }
           isLoading={isLoading}
         />

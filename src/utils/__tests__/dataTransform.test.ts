@@ -141,6 +141,8 @@ describe('findAlerts', () => {
     timeStr: key,
     businessDate: '2026-08-03',
     period: '00 - 01',
+    hourLabel: '00:00',
+    endLabel: '01:00',
     reserve,
     required,
   });
@@ -197,5 +199,49 @@ describe('getValidReserves / safeAvg', () => {
   it('returns null for an empty set instead of NaN', () => {
     expect(safeAvg([])).toBeNull();
     expect(safeAvg([100, 200])).toBe(150);
+  });
+});
+
+describe('processData — hour labels', () => {
+  beforeEach(pinToFixtureDay);
+
+  it('labels each point with the hour the period STARTS, not ends', () => {
+    // PSE stamps periods with their end: the block covering 19:00-20:00 carries
+    // plan_dtime 20:00. Showing that stamp put every hour in the UI one hour
+    // later than the time it actually describes.
+    const points = processData(RAW_72H);
+
+    expect(points[0].hourLabel).toBe('00:00');
+    expect(points[0].endLabel).toBe('01:00');
+    expect(points[0].timeStr).toBe('2026-08-03 01:00:00');
+  });
+
+  it('runs the day from 00:00 to 23:00 rather than 01:00 to 00:00', () => {
+    const day = getDataForDay(processData(RAW_72H), 0);
+
+    expect(day[0].hourLabel).toBe('00:00');
+    expect(day[day.length - 1].hourLabel).toBe('23:00');
+    expect(day[day.length - 1].endLabel).toBe('00:00');
+  });
+
+  it('keeps the duplicated autumn hour distinguishable', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2025, 9, 26, 12));
+
+    const labels = getDataForDay(processData(RAW_AUTUMN), 0).map((p) => p.hourLabel);
+
+    expect(labels).toHaveLength(25);
+    expect(new Set(labels).size).toBe(25);
+    expect(labels).toContain('03:00');
+    expect(labels).toContain('03a:00');
+  });
+
+  it('derives a label for gap-filled points, which carry no period', () => {
+    const withHole = RAW_72H.filter((_, i) => i !== 10);
+    const filled = processData(withHole).find((p) => p.reserve === null);
+
+    expect(filled).toBeDefined();
+    expect(filled!.period).toBe('');
+    expect(filled!.hourLabel).toMatch(/^\d{2}:00$/);
   });
 });

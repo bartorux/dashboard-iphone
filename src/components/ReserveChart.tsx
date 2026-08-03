@@ -11,7 +11,7 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { PSEDataPoint, SystemStatus } from '../types';
-import { formatHourLabel, formatHourShort } from '../utils/dateHelpers';
+
 import { niceScale } from '../utils/scale';
 import { classifyMargin } from '../utils/dataTransform';
 import { useChartColors } from '../hooks/useChartColors';
@@ -21,12 +21,15 @@ interface ReserveChartProps {
   data: PSEDataPoint[];
   orangeThreshold: number;
   redThreshold: number;
-  currentTimeStr: string | null;
+  currentHourLabel: string | null;
   isLoading: boolean;
 }
 
 interface ChartRow {
+  /** Hour the block starts, e.g. "19:00" — also the X category. */
   key: string;
+  /** Hour the block ends, shown in the tooltip so the span is unambiguous. */
+  endLabel: string;
   reserve: number | null;
   required: number | null;
   /** [bottom, top] band the margin must stay above — drawn as a range area. */
@@ -69,9 +72,7 @@ const ChartTooltip: React.FC<ChartTooltipProps> = ({
   if (row.reserve === null || row.required === null) {
     return (
       <div className="rounded-xl bg-surface px-3 py-2 text-[12px] shadow-lg ring-1 ring-separator">
-        <div className="font-semibold text-text">
-          {formatHourLabel(String(label))}
-        </div>
+        <div className="font-semibold text-text">{String(label)}</div>
         <div className="text-text-tertiary">Brak danych</div>
       </div>
     );
@@ -84,7 +85,7 @@ const ChartTooltip: React.FC<ChartTooltipProps> = ({
     <div className="min-w-[10rem] rounded-xl bg-surface px-3 py-2 text-[12px] shadow-lg ring-1 ring-separator">
       <div className="mb-1 flex items-baseline justify-between gap-3">
         <span className="font-semibold text-text">
-          {formatHourLabel(String(label))}
+          {String(label)}&ndash;{row.endLabel}
         </span>
         <span className={`text-[11px] font-semibold ${STATUS_TEXT[status]}`}>
           {STATUS_LABEL[status]}
@@ -119,7 +120,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
   data,
   orangeThreshold,
   redThreshold,
-  currentTimeStr,
+  currentHourLabel,
   isLoading,
 }) => {
   const colors = useChartColors();
@@ -129,7 +130,8 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
       data.map((point) => {
         const { reserve, required } = point;
         return {
-          key: point.timeStr,
+          key: point.hourLabel,
+          endLabel: point.endLabel,
           reserve,
           required,
           // Bands follow the required curve, because the alert thresholds are
@@ -283,7 +285,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               dataKey="key"
               ticks={xTicks}
               interval={0}
-              tickFormatter={formatHourShort}
+              tickFormatter={(value: string) => value.slice(0, -3)}
               tick={{ fontSize: 11, fill: colors.axis }}
               tickLine={false}
               axisLine={{ stroke: colors.grid }}
@@ -371,9 +373,9 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               cursor={{ stroke: colors.axis, strokeDasharray: '3 3' }}
             />
 
-            {currentTimeStr && (
+            {currentHourLabel && (
               <ReferenceLine
-                x={currentTimeStr}
+                x={currentHourLabel}
                 stroke={colors.accent}
                 strokeWidth={1.5}
                 label={{

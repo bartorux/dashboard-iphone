@@ -4,6 +4,8 @@ import {
   parsePseUtc,
   formatHourLabel,
   addDays,
+  periodStart,
+  periodEnd,
 } from '../dateHelpers';
 
 describe('formatDateTimeApi', () => {
@@ -63,5 +65,32 @@ describe('addDays', () => {
     const d = addDays(new Date(2025, 9, 25), 2);
     expect(d.getDate()).toBe(27);
     expect(d.getHours()).toBe(0);
+  });
+});
+
+describe('periodStart / periodEnd', () => {
+  it('reads both ends of an ordinary period', () => {
+    expect(periodStart('19 - 20')).toBe('19');
+    expect(periodEnd('19 - 20')).toBe('20');
+    expect(periodStart('00 - 01')).toBe('00');
+  });
+
+  it('renders the closing period as 00, not 24', () => {
+    expect(periodStart('23 - 24')).toBe('23');
+    expect(periodEnd('23 - 24')).toBe('00');
+  });
+
+  it('keeps the duplicated hour of the autumn switch distinguishable', () => {
+    expect(periodStart('03 - 03a')).toBe('03');
+    expect(periodEnd('03 - 03a')).toBe('03a');
+    expect(periodStart('03a - 04')).toBe('03a');
+    expect(periodEnd('03a - 04')).toBe('04');
+  });
+
+  it('returns null for anything it cannot parse', () => {
+    for (const bad of ['', 'nonsense', '19-20', '19 -', ' - 20']) {
+      expect(periodStart(bad)).toBeNull();
+      expect(periodEnd(bad)).toBeNull();
+    }
   });
 });

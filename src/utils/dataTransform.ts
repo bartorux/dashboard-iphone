@@ -10,10 +10,33 @@ import { HOUR_MS } from './constants';
 import {
   formatDate,
   formatDateTimeApi,
-  formatHourLabel,
+  localHourLabel,
   parsePseUtc,
   addDays,
+  periodStart,
+  periodEnd,
 } from './dateHelpers';
+
+/**
+ * Hour labels for a point. Prefers the `period` field, which is the only source
+ * that states where the block begins and that preserves the "03a" marker on the
+ * autumn DST switch. Falls back to clock arithmetic for synthesised gap points,
+ * which carry no period.
+ */
+function hourLabels(
+  period: string,
+  endInstant: Date
+): { hourLabel: string; endLabel: string } {
+  const start = periodStart(period);
+  const end = periodEnd(period);
+  if (start && end) {
+    return { hourLabel: `${start}:00`, endLabel: `${end}:00` };
+  }
+  return {
+    hourLabel: localHourLabel(new Date(endInstant.getTime() - HOUR_MS)),
+    endLabel: localHourLabel(endInstant),
+  };
+}
 
 function toNumber(value: unknown): number | null {
   if (value == null) return null;
@@ -59,11 +82,13 @@ export function processData(rawData: PSERawItem[]): PSEDataPoint[] {
     .map((item) => {
       const time = parsePseUtc(item.plan_dtime_utc);
       if (!time || !item.business_date) return null;
+      const period = item.period ?? '';
       return {
         time,
         timeStr: item.plan_dtime,
         businessDate: item.business_date,
-        period: item.period ?? '',
+        period,
+        ...hourLabels(period, time),
         reserve: getAvailableReserve(item),
         required: toNumber(item.req_pow_res),
       } satisfies PSEDataPoint;
@@ -91,6 +116,7 @@ export function processData(rawData: PSERawItem[]): PSEDataPoint[] {
           timeStr: formatDateTimeApi(instant),
           businessDate: businessDateOf(instant),
           period: '',
+          ...hourLabels('', instant),
           reserve: null,
           required: null,
         });
@@ -187,8 +213,10 @@ export function buildAlertRanges(
     }
 
     const difference = point.reserve - point.required;
-    const next = data[index + 1];
-    const to = next ? formatHourLabel(next.timeStr) : endOfHourLabel(point);
+    // Both edges come from the point itself: the block covering 19:00-20:00
+    // spans exactly those hours. Reading the *next* point's stamp shifted the
+    // whole window an hour forward.
+    const to = point.endLabel;
 
     if (current) {
       current.to = to;
@@ -202,7 +230,7 @@ export function buildAlertRanges(
     } else {
       current = {
         severity,
-        from: formatHourLabel(point.timeStr),
+        from: point.hourLabel,
         to,
         worstDifference: difference,
         reserve: point.reserve,
@@ -221,10 +249,6 @@ export function buildAlertRanges(
 function stripIndex(range: AlertRange & { lastIndex: number }): AlertRange {
   const { lastIndex: _lastIndex, ...rest } = range;
   return rest;
-}
-
-function endOfHourLabel(point: PSEDataPoint): string {
-  return formatHourLabel(formatDateTimeApi(new Date(point.time.getTime() + HOUR_MS)));
 }
 
 /**

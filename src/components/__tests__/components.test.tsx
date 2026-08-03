@@ -67,6 +67,8 @@ describe('CurrentStatusCard', () => {
     timeStr: '2026-08-03 21:00:00',
     businessDate: '2026-08-03',
     period: '20 - 21',
+    hourLabel: '20:00',
+    endLabel: '21:00',
     reserve,
     required,
   });
@@ -84,6 +86,9 @@ describe('CurrentStatusCard', () => {
     expect(screen.getByText('1897 MW')).toBeInTheDocument();
     expect(screen.getByText('1900 MW')).toBeInTheDocument();
     expect(screen.getByText('ALARM')).toBeInTheDocument();
+    // The block runs 20:00-21:00; its stamp is 21:00, which is what the card
+    // used to show — an hour ahead of the time it describes.
+    expect(screen.getByText('godzina 20:00–21:00')).toBeInTheDocument();
   });
 
   it('flags cached data rather than presenting it as current', () => {
