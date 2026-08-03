@@ -1,23 +1,172 @@
 @import "tailwindcss";
 
-/* Safe area insets for iOS */
-body {
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
+/* ---------------------------------------------------------------------------
+   Design tokens
+
+   Declared as plain custom properties so a single `prefers-color-scheme` block
+   can swap the whole palette, then re-exported through `@theme inline` so
+   Tailwind utilities (bg-surface, text-secondary, …) resolve to the variable
+   rather than to a baked-in value.
+   --------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light dark;
+
+  /* surfaces */
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --surface-2: #f2f2f7;
+  --surface-3: #e9e9ee;
+  --border: #e5e5ea;
+  --separator: rgba(60, 60, 67, 0.18);
+
+  /* text */
+  --text: #000000;
+  --text-secondary: #6c6c70;
+  --text-tertiary: #8e8e93;
+  --on-accent: #ffffff;
+
+  /* semantic — `-text` variants carry enough contrast to sit on --surface,
+     `-soft` variants are backgrounds only */
+  --ok: #34c759;
+  --ok-text: #1c7a35;
+  --ok-soft: #e8f8ed;
+
+  --warn: #ff9500;
+  --warn-text: #9a5b00;
+  --warn-soft: #fff4e5;
+
+  --alarm: #ff3b30;
+  --alarm-text: #c9271d;
+  --alarm-soft: #ffeceb;
+
+  /* interactive */
+  --accent: #007aff;
+  --accent-text: #0062cc;
+
+  /* chart series */
+  --series-reserve: #007aff;
+  --series-required: #8e8e93;
+
+  /* layout */
+  --header-height: 3.5rem;
 }
 
-/* Disable tap highlight on iOS */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --surface-2: #2c2c2e;
+    --surface-3: #3a3a3c;
+    --border: #38383a;
+    --separator: rgba(84, 84, 88, 0.6);
+
+    --text: #ffffff;
+    --text-secondary: #aeaeb2;
+    --text-tertiary: #8e8e93;
+
+    --ok: #30d158;
+    --ok-text: #5fe07f;
+    --ok-soft: rgba(48, 209, 88, 0.16);
+
+    --warn: #ff9f0a;
+    --warn-text: #ffb84d;
+    --warn-soft: rgba(255, 159, 10, 0.16);
+
+    --alarm: #ff453a;
+    --alarm-text: #ff7a70;
+    --alarm-soft: rgba(255, 69, 58, 0.18);
+
+    --accent: #0a84ff;
+    --accent-text: #64b5ff;
+
+    --series-reserve: #0a84ff;
+    --series-required: #98989d;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-separator: var(--separator);
+
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-on-accent: var(--on-accent);
+
+  --color-ok: var(--ok);
+  --color-ok-text: var(--ok-text);
+  --color-ok-soft: var(--ok-soft);
+
+  --color-warn: var(--warn);
+  --color-warn-text: var(--warn-text);
+  --color-warn-soft: var(--warn-soft);
+
+  --color-alarm: var(--alarm);
+  --color-alarm-text: var(--alarm-text);
+  --color-alarm-soft: var(--alarm-soft);
+
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  /* No safe-area padding here: the sticky header handles its own inset, so it
+     can extend its background under the notch while keeping content clear. */
+  overscroll-behavior-y: contain;
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Custom spinner animation */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+/* Measurements and money-like figures must not jitter as values change. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 
-.animate-spin {
-  animation: spin 1s ease-in-out infinite;
+/* Collapsible sections: animatable and free of magic max-height values that
+   silently clip content once a section grows. */
+.collapsible {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 300ms ease;
+}
+
+.collapsible[data-collapsed="true"] {
+  grid-template-rows: 0fr;
+}
+
+.collapsible > * {
+  overflow: hidden;
+  min-height: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,68 +1,98 @@
 import React from 'react';
-import { AlertSet } from '../types';
+import { AlertRange } from '../types';
 import { DAY_NAMES } from '../utils/constants';
-import { formatTime } from '../utils/dateHelpers';
+import { AlertIcon, CheckIcon } from './icons';
 
 interface AlertsPanelProps {
-  alerts: AlertSet;
+  ranges: AlertRange[];
   currentDayOffset: number;
 }
 
+const formatMW = (value: number) =>
+  new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
+
+const SEVERITY_STYLE = {
+  red: {
+    wrapper: 'bg-alarm-soft',
+    bar: 'bg-alarm',
+    text: 'text-alarm-text',
+    label: 'Alarm',
+  },
+  orange: {
+    wrapper: 'bg-warn-soft',
+    bar: 'bg-warn',
+    text: 'text-warn-text',
+    label: 'Uwaga',
+  },
+} as const;
+
+/**
+ * Consecutive alert hours arrive pre-merged into ranges: a four-hour risk window
+ * reads as one "17:00-21:00" entry instead of four near-identical rows.
+ */
 const AlertsPanel: React.FC<AlertsPanelProps> = ({
-  alerts,
+  ranges,
   currentDayOffset,
 }) => {
-  const totalAlerts = alerts.orange.length + alerts.red.length;
   const dayName = DAY_NAMES[currentDayOffset as 0 | 1 | 2] ?? '';
+  const hours = ranges.reduce((sum, range) => sum + range.hours, 0);
 
   return (
-    <div className="bg-white p-3 max-h-[40vh] overflow-y-auto">
-      <div className="flex items-center mb-3">
-        <h3 className="m-0 text-base font-semibold">
-          Alerty - {dayName}
-        </h3>
-        {totalAlerts > 0 && (
-          <div className="bg-[#ff3b30] text-white text-xs px-1.5 py-0.5 rounded-[10px] ml-2 min-w-[16px] text-center">
-            {totalAlerts}
-          </div>
+    <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h2 className="text-[15px] font-semibold text-text">
+          Alerty <span className="text-text-tertiary">· {dayName}</span>
+        </h2>
+        {hours > 0 && (
+          <span className="tnum rounded-full bg-alarm px-2 py-0.5 text-[11px] font-semibold text-white">
+            {hours} godz.
+          </span>
         )}
       </div>
 
-      {totalAlerts === 0 ? (
-        <div className="text-center py-5 text-[#8e8e93]">
+      {ranges.length === 0 ? (
+        <div className="flex items-center gap-2 rounded-xl bg-ok-soft px-3 py-3 text-[13px] text-ok-text">
+          <CheckIcon className="h-4 w-4 shrink-0" />
           Brak alertów w tym dniu
         </div>
       ) : (
-        <div>
-          {alerts.red.map((alert, i) => (
-            <div
-              key={`red-${i}`}
-              className="px-3 py-2 my-1 rounded-lg text-[13px] bg-[#ffebee] border-l-[3px] border-l-[#ff3b30]"
-            >
-              <strong>{formatTime(alert.time)}</strong>
-              <br />
-              Rezerwa: {alert.reserve.toFixed(0)} MW | Wymagana:{' '}
-              {alert.required.toFixed(0)} MW
-              <br />
-              <small>Margines: {alert.difference.toFixed(0)} MW</small>
-            </div>
-          ))}
-          {alerts.orange.map((alert, i) => (
-            <div
-              key={`orange-${i}`}
-              className="px-3 py-2 my-1 rounded-lg text-[13px] bg-[#fff8e1] border-l-[3px] border-l-[#ff9500]"
-            >
-              <strong>{formatTime(alert.time)}</strong>
-              <br />
-              Rezerwa: {alert.reserve.toFixed(0)} MW | Wymagana:{' '}
-              {alert.required.toFixed(0)} MW
-              <br />
-              <small>Margines: {alert.difference.toFixed(0)} MW</small>
-            </div>
-          ))}
-        </div>
+        <ul className="space-y-2">
+          {ranges.map((range) => {
+            const style = SEVERITY_STYLE[range.severity];
+            return (
+              <li
+                key={`${range.severity}-${range.from}`}
+                className={`flex gap-3 overflow-hidden rounded-xl ${style.wrapper}`}
+              >
+                <span className={`w-1 shrink-0 ${style.bar}`} aria-hidden />
+                <div className="min-w-0 flex-1 py-2.5 pr-3">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="tnum text-[15px] font-semibold text-text">
+                      {range.from}–{range.to}
+                    </span>
+                    <span
+                      className={`flex items-center gap-1 text-[11px] font-semibold ${style.text}`}
+                    >
+                      <AlertIcon className="h-3.5 w-3.5" />
+                      {style.label}
+                    </span>
+                  </div>
+                  <p className="tnum mt-0.5 text-[12px] text-text-secondary">
+                    Najniższy margines{' '}
+                    <span className={`font-semibold ${style.text}`}>
+                      {range.worstDifference > 0 ? '+' : ''}
+                      {formatMW(range.worstDifference)} MW
+                    </span>{' '}
+                    · rezerwa {formatMW(range.reserve)} / wymagana{' '}
+                    {formatMW(range.required)} MW
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
       )}
-    </div>
+    </section>
   );
 };
 

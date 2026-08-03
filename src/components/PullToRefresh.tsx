@@ -1,5 +1,6 @@
 import React from 'react';
 import { PULL_THRESHOLD_PX } from '../utils/constants';
+import { ArrowDownIcon, RefreshIcon } from './icons';
 
 interface PullToRefreshProps {
   pullDistance: number;
@@ -7,6 +8,8 @@ interface PullToRefreshProps {
   isPulling: boolean;
   isReady: boolean;
 }
+
+const INDICATOR_HEIGHT = 64;
 
 const PullToRefresh: React.FC<PullToRefreshProps> = ({
   pullDistance,
@@ -17,30 +20,35 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
   if (!isPulling && !isRefreshing) return null;
 
   const progress = Math.min(pullDistance / PULL_THRESHOLD_PX, 1);
+  // Travel the full distance: halving it left the indicator permanently
+  // half-hidden above the fold, no matter how far the user pulled.
+  const offset = isRefreshing
+    ? INDICATOR_HEIGHT
+    : Math.min(pullDistance, INDICATOR_HEIGHT);
 
   return (
     <div
-      className="absolute top-[-80px] left-0 right-0 h-[80px] flex items-center justify-center bg-gradient-to-br from-[#c0392b] to-[#e74c3c] text-white font-semibold text-sm z-10 rounded-b-[15px] shadow-md transition-transform duration-300"
+      className="pointer-events-none absolute inset-x-0 z-10 flex items-center justify-center gap-2 text-[13px] font-medium text-text-secondary"
       style={{
-        transform: `translateY(${pullDistance * 0.5}px)`,
-        opacity: progress,
+        top: `-${INDICATOR_HEIGHT}px`,
+        height: `${INDICATOR_HEIGHT}px`,
+        transform: `translateY(${offset}px)`,
+        opacity: isRefreshing ? 1 : progress,
       }}
     >
       {isRefreshing ? (
         <>
-          <div className="inline-block w-4 h-4 border-2 border-white/30 rounded-full border-t-white animate-spin mr-2" />
-          Odświeżanie...
+          <RefreshIcon className="h-4 w-4 animate-spin" />
+          Odświeżanie…
         </>
       ) : (
         <>
-          <span
-            className={`mr-2 text-lg transition-transform duration-300 ${
+          <ArrowDownIcon
+            className={`h-4 w-4 transition-transform duration-300 ${
               isReady ? 'rotate-180' : ''
             }`}
-          >
-            {'\u2193'}
-          </span>
-          {isReady ? 'Puść aby odświeżyć' : 'Pociągnij aby odświeżyć'}
+          />
+          {isReady ? 'Puść, aby odświeżyć' : 'Pociągnij, aby odświeżyć'}
         </>
       )}
     </div>
