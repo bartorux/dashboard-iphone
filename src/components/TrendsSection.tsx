@@ -10,8 +10,10 @@ import {
   safeAvg,
   getDataForDay,
   findAlerts,
+  classifyMargin,
 } from '../utils/dataTransform';
 import { addDays, formatDate, formatHourLabel } from '../utils/dateHelpers';
+import { STATUS_TEXT } from '../utils/status';
 import { ChevronDownIcon } from './icons';
 
 interface TrendsSectionProps {
@@ -82,8 +84,11 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
     );
     if (currentAvg === null || otherAvg === null) return null;
 
-    const diff = currentAvg - otherAvg;
-    const pct = otherAvg !== 0 ? (diff / Math.abs(otherAvg)) * 100 : 0;
+    // Measured as "other day relative to the selected one", matching the way
+    // the row reads left to right. The opposite sign convention made the
+    // comparison and the trend tile contradict each other on screen.
+    const diff = otherAvg - currentAvg;
+    const pct = currentAvg !== 0 ? (diff / Math.abs(currentAvg)) * 100 : 0;
     return { currentAvg, otherAvg, diff, pct, label };
   }, [allData, currentDayOffset, reserves]);
 
@@ -91,7 +96,7 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
     if (!comparison) {
       return { text: 'brak danych', value: 0, tone: 'text-text-tertiary' };
     }
-    const diff = -comparison.diff; // other day relative to the selected one
+    const diff = comparison.diff;
     if (Math.abs(diff) > TREND_MAX_REASONABLE) {
       return { text: 'brak danych', value: 0, tone: 'text-text-tertiary' };
     }
@@ -254,7 +259,17 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
                         {dayNameFor(point.businessDate)}{' '}
                         {formatHourLabel(point.timeStr)}
                       </span>
-                      <span className="font-medium text-text">
+                      <span
+                        className={`font-semibold ${
+                          STATUS_TEXT[
+                            classifyMargin(
+                              difference,
+                              orangeThreshold,
+                              redThreshold
+                            )
+                          ]
+                        }`}
+                      >
                         {difference > 0 ? '+' : ''}
                         {formatMW(difference)} MW
                       </span>

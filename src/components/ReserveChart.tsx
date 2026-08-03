@@ -213,7 +213,8 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
             data={rows}
-            margin={{ top: 6, right: 10, bottom: 4, left: -12 }}
+            /* top leaves room for the "teraz" label, which sits above the plot */
+            margin={{ top: 18, right: 10, bottom: 4, left: -12 }}
           >
             <defs>
               <linearGradient id="reserveFill" x1="0" y1="0" x2="0" y2="1">

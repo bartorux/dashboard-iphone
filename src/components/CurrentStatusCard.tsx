@@ -45,7 +45,7 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
 
       {margin === null ? (
         <div className="mt-3 text-2xl font-semibold text-text-tertiary">
-          Brak danych
+          Brak odczytu
         </div>
       ) : (
         <>
