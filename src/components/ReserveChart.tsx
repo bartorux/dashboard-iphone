@@ -10,25 +10,36 @@ import {
   Tooltip,
   ReferenceLine,
 } from 'recharts';
-import { PSEDataPoint, SystemStatus } from '../types';
-
+import { PSEDataPoint } from '../types';
 import { niceScale } from '../utils/scale';
 import { classifyMargin } from '../utils/dataTransform';
 import { useChartColors } from '../hooks/useChartColors';
 import { STATUS_LABEL, STATUS_TEXT } from '../utils/status';
+import {
+  ANIMATION_MS,
+  AreaSwatch,
+  CHART_BOX,
+  CHART_MARGIN,
+  ChartLegend,
+  ChartTooltipBox,
+  LineSwatch,
+  TooltipRow,
+  axisWidthFor,
+  formatMW,
+  hourTicks,
+  shortHour,
+} from './chart/shared';
 
 interface ReserveChartProps {
   data: PSEDataPoint[];
   orangeThreshold: number;
   redThreshold: number;
   currentHourLabel: string | null;
-  isLoading: boolean;
 }
 
-interface ChartRow {
+interface Row {
   /** Hour the block starts, e.g. "19:00" — also the X category. */
   key: string;
-  /** Hour the block ends, shown in the tooltip so the span is unambiguous. */
   endLabel: string;
   reserve: number | null;
   required: number | null;
@@ -40,26 +51,15 @@ interface ChartRow {
   warnTop: number | null;
 }
 
-const formatMW = (value: number) =>
-  new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
-
-/** Curves redraw rather than jump when the selected day changes. */
-const ANIMATION_MS = 450;
-
-/**
- * Recharts injects `active`/`payload`/`label` into whatever element is passed as
- * `content`, but its exported prop types don't describe that for custom content,
- * so the shape is declared here.
- */
-interface ChartTooltipProps {
+interface TooltipProps {
   active?: boolean;
   label?: string | number;
-  payload?: Array<{ payload: ChartRow }>;
+  payload?: Array<{ payload: Row }>;
   orangeThreshold: number;
   redThreshold: number;
 }
 
-const ChartTooltip: React.FC<ChartTooltipProps> = ({
+const ReserveTooltip: React.FC<TooltipProps> = ({
   active,
   payload,
   label,
@@ -67,14 +67,14 @@ const ChartTooltip: React.FC<ChartTooltipProps> = ({
   redThreshold,
 }) => {
   if (!active || !payload?.length) return null;
-
   const row = payload[0].payload;
+
   if (row.reserve === null || row.required === null) {
     return (
-      <div className="rounded-xl bg-surface px-3 py-2 text-[12px] shadow-lg ring-1 ring-separator">
+      <ChartTooltipBox>
         <div className="font-semibold text-text">{String(label)}</div>
         <div className="text-text-tertiary">Brak danych</div>
-      </div>
+      </ChartTooltipBox>
     );
   }
 
@@ -82,7 +82,7 @@ const ChartTooltip: React.FC<ChartTooltipProps> = ({
   const status = classifyMargin(margin, orangeThreshold, redThreshold);
 
   return (
-    <div className="min-w-[10rem] rounded-xl bg-surface px-3 py-2 text-[12px] shadow-lg ring-1 ring-separator">
+    <ChartTooltipBox>
       <div className="mb-1 flex items-baseline justify-between gap-3">
         <span className="font-semibold text-text">
           {String(label)}&ndash;{row.endLabel}
@@ -92,27 +92,16 @@ const ChartTooltip: React.FC<ChartTooltipProps> = ({
         </span>
       </div>
       <dl className="space-y-0.5">
-        <div className="flex justify-between gap-4">
-          <dt className="text-text-secondary">Rezerwa</dt>
-          <dd className="tnum font-medium text-text">
-            {formatMW(row.reserve)} MW
-          </dd>
-        </div>
-        <div className="flex justify-between gap-4">
-          <dt className="text-text-secondary">Wymagana</dt>
-          <dd className="tnum font-medium text-text">
-            {formatMW(row.required)} MW
-          </dd>
-        </div>
-        <div className="mt-1 flex justify-between gap-4 border-t border-separator pt-1">
-          <dt className="text-text-secondary">Margines</dt>
-          <dd className={`tnum font-semibold ${STATUS_TEXT[status]}`}>
-            {margin > 0 ? '+' : ''}
-            {formatMW(margin)} MW
-          </dd>
-        </div>
+        <TooltipRow label="Rezerwa" value={`${formatMW(row.reserve)} MW`} />
+        <TooltipRow label="Wymagana" value={`${formatMW(row.required)} MW`} />
+        <TooltipRow
+          label="Margines"
+          value={`${margin > 0 ? '+' : ''}${formatMW(margin)} MW`}
+          tone={STATUS_TEXT[status]}
+          divider
+        />
       </dl>
-    </div>
+    </ChartTooltipBox>
   );
 };
 
@@ -121,11 +110,10 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
   orangeThreshold,
   redThreshold,
   currentHourLabel,
-  isLoading,
 }) => {
   const colors = useChartColors();
 
-  const rows = useMemo<ChartRow[]>(
+  const rows = useMemo<Row[]>(
     () =>
       data.map((point) => {
         const { reserve, required } = point;
@@ -136,8 +124,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
           required,
           // Bands follow the required curve, because the alert thresholds are
           // margins above it — a flat horizontal band would misrepresent them.
-          zoneAlarm:
-            required === null ? null : [0, required + redThreshold],
+          zoneAlarm: required === null ? null : [0, required + redThreshold],
           zoneWarn:
             required === null
               ? null
@@ -150,10 +137,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
   );
 
   const scale = useMemo(() => {
-    const values = rows.flatMap((row) => [
-      row.reserve,
-      row.zoneWarn?.[1] ?? null,
-    ]);
+    const values = rows.flatMap((row) => [row.reserve, row.zoneWarn?.[1] ?? null]);
     const valid = values.filter(
       (v): v is number => v !== null && Number.isFinite(v)
     );
@@ -162,24 +146,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
     return niceScale(valid.length > 0 ? Math.max(...valid) : NaN);
   }, [rows]);
 
-  /**
-   * Width has to follow the widest tick label. A fixed value sized for four
-   * digits clips the fifth once the reserve passes 10 000 MW.
-   */
-  const yAxisWidth = useMemo(() => {
-    const longest = Math.max(
-      ...scale.ticks.map((tick) => formatMW(tick).length)
-    );
-    // ~6.1px per digit at 11px, plus tick margin and a little breathing room
-    return Math.ceil(longest * 6.5) + 18;
-  }, [scale]);
-
-  const xTicks = useMemo(() => {
-    const ticks = rows.filter((_, i) => i % 4 === 0).map((row) => row.key);
-    const last = rows[rows.length - 1];
-    if (last && !ticks.includes(last.key)) ticks.push(last.key);
-    return ticks;
-  }, [rows]);
+  const ticks = useMemo(() => hourTicks(rows.map((row) => row.key)), [rows]);
 
   /** Hours breaching a threshold, marked with a vertical rule on the chart. */
   const alertHours = useMemo(
@@ -196,85 +163,40 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
             ? { key: row.key, status }
             : null;
         })
-        .filter((entry): entry is { key: string; status: 'alarm' | 'warn' } =>
-          entry !== null
+        .filter(
+          (entry): entry is { key: string; status: 'alarm' | 'warn' } =>
+            entry !== null
         ),
     [rows, orangeThreshold, redThreshold]
   );
 
-  if (isLoading && data.length === 0) {
-    return (
-      <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
-        <div className="h-[16rem] animate-pulse rounded-xl bg-surface-2" />
-      </section>
-    );
-  }
-
-  if (data.length === 0) {
-    return (
-      <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
-        <div className="grid h-[16rem] place-items-center text-[13px] text-text-tertiary">
-          Brak danych do wyświetlenia
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section className="mx-3 mt-3 rounded-2xl bg-surface p-3 shadow-sm">
-      <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-1">
-        <h2 className="text-[15px] font-semibold text-text">
-          Rezerwa mocy <span className="text-text-tertiary">(MW)</span>
-        </h2>
-        <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-secondary">
-          <li className="flex items-center gap-1.5">
-            <span
-              className="h-0.5 w-4 rounded-full"
-              style={{ background: colors.reserve }}
-            />
-            Dostępna
-          </li>
-          <li className="flex items-center gap-1.5">
-            <span
-              className="h-0 w-4 border-t-2 border-dashed"
-              style={{ borderColor: colors.required }}
-            />
-            Wymagana
-          </li>
-          {/* Swatches take the same values the bands are painted with, so the
-              legend cannot drift away from the chart. */}
-          <li className="flex items-center gap-1.5">
-            <span
-              className="h-2.5 w-2.5 rounded-[3px] border"
-              style={{
-                background: colors.bandWarn,
-                borderColor: colors.bandWarnEdge,
-              }}
-            />
-            Uwaga
-          </li>
-          <li className="flex items-center gap-1.5">
-            <span
-              className="h-2.5 w-2.5 rounded-[3px] border"
-              style={{
-                background: colors.bandAlarm,
-                borderColor: colors.bandAlarmEdge,
-              }}
-            />
-            Alarm
-          </li>
-        </ul>
-      </div>
+    <>
+      <ChartLegend
+        items={[
+          { label: 'Dostępna', swatch: <LineSwatch color={colors.reserve} /> },
+          {
+            label: 'Wymagana',
+            swatch: <LineSwatch color={colors.required} dashed />,
+          },
+          {
+            label: 'Uwaga',
+            swatch: (
+              <AreaSwatch fill={colors.bandWarn} border={colors.bandWarnEdge} />
+            ),
+          },
+          {
+            label: 'Alarm',
+            swatch: (
+              <AreaSwatch fill={colors.bandAlarm} border={colors.bandAlarmEdge} />
+            ),
+          },
+        ]}
+      />
 
-      <div className="h-[45vh] max-h-[22rem] min-h-[15rem] w-full">
+      <div className={CHART_BOX}>
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            data={rows}
-            /* top leaves room for the "teraz" label, which sits above the plot.
-               left stays at 0: a negative inset pulls the Y axis past the SVG
-               edge and clips the first digit of every label. */
-            margin={{ top: 18, right: 10, bottom: 4, left: 0 }}
-          >
+          <ComposedChart data={rows} margin={CHART_MARGIN}>
             <CartesianGrid
               vertical={false}
               stroke={colors.grid}
@@ -283,9 +205,9 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
 
             <XAxis
               dataKey="key"
-              ticks={xTicks}
+              ticks={ticks}
               interval={0}
-              tickFormatter={(value: string) => value.slice(0, -3)}
+              tickFormatter={shortHour}
               tick={{ fontSize: 11, fill: colors.axis }}
               tickLine={false}
               axisLine={{ stroke: colors.grid }}
@@ -299,7 +221,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               tickFormatter={formatMW}
               tickLine={false}
               axisLine={false}
-              width={yAxisWidth}
+              width={axisWidthFor(scale.ticks)}
             />
 
             {/* Threshold bands, drawn behind the series */}
@@ -311,7 +233,6 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               fillOpacity={1}
               animationDuration={ANIMATION_MS}
               activeDot={false}
-              legendType="none"
               connectNulls={false}
             />
             <Area
@@ -322,7 +243,6 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               fillOpacity={1}
               animationDuration={ANIMATION_MS}
               activeDot={false}
-              legendType="none"
               connectNulls={false}
             />
 
@@ -337,7 +257,6 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               connectNulls={false}
               animationDuration={ANIMATION_MS}
               activeDot={false}
-              legendType="none"
             />
             <Line
               type="monotone"
@@ -348,7 +267,6 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               connectNulls={false}
               animationDuration={ANIMATION_MS}
               activeDot={false}
-              legendType="none"
             />
 
             {/* Vertical rule on every hour that breaches a threshold */}
@@ -365,7 +283,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
 
             <Tooltip
               content={
-                <ChartTooltip
+                <ReserveTooltip
                   orangeThreshold={orangeThreshold}
                   redThreshold={redThreshold}
                 />
@@ -410,12 +328,17 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               dot={false}
               connectNulls={false}
               animationDuration={ANIMATION_MS}
-              activeDot={{ r: 4, fill: colors.reserve, stroke: colors.surface, strokeWidth: 2 }}
+              activeDot={{
+                r: 4,
+                fill: colors.reserve,
+                stroke: colors.surface,
+                strokeWidth: 2,
+              }}
             />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
-    </section>
+    </>
   );
 };
 

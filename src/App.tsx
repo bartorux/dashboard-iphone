@@ -3,7 +3,7 @@ import { useRegisterSW } from 'virtual:pwa-register/react';
 import Header, { ConnectionState } from './components/Header';
 import CurrentStatusCard from './components/CurrentStatusCard';
 import DayNavigation from './components/DayNavigation';
-import ReserveChart from './components/ReserveChart';
+import ChartSection from './components/ChartSection';
 import TrendsSection from './components/TrendsSection';
 import AlertsPanel from './components/AlertsPanel';
 import SettingsPanel from './components/SettingsPanel';
@@ -208,8 +208,8 @@ function App() {
           onSwitchDay={handleSwitchDay}
         />
 
-        <ReserveChart
-          data={dayData}
+        <ChartSection
+          dayData={dayData}
           orangeThreshold={orangeThreshold}
           redThreshold={redThreshold}
           currentHourLabel={

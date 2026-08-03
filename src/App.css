@@ -65,6 +65,16 @@
   --l-band-warn-edge: rgba(255, 149, 0, 0.5);
   --d-band-warn-edge: rgba(255, 159, 10, 0.6);
 
+  /* Generation view. Demand is the reference the rest is read against, so it
+     takes the highest-contrast colour; PV and wind sit under it as areas. */
+  --l-series-demand: #1c1c1e;   --d-series-demand: #e5e5ea;
+  --l-series-pv: #ffb020;       --d-series-pv: #ffcc55;
+  --l-series-wind: #32ade6;     --d-series-wind: #64d2ff;
+  --l-series-exchange: #af52de; --d-series-exchange: #bf5af2;
+  --l-series-history: #8e8e93;  --d-series-history: #98989d;
+  --l-band-history: rgba(142, 142, 147, 0.18);
+  --d-band-history: rgba(152, 152, 157, 0.22);
+
   /* layout */
   --header-height: 3.5rem;
 
@@ -97,6 +107,12 @@
   --band-warn: var(--l-band-warn);
   --band-alarm-edge: var(--l-band-alarm-edge);
   --band-warn-edge: var(--l-band-warn-edge);
+  --series-demand: var(--l-series-demand);
+  --series-pv: var(--l-series-pv);
+  --series-wind: var(--l-series-wind);
+  --series-exchange: var(--l-series-exchange);
+  --series-history: var(--l-series-history);
+  --band-history: var(--l-band-history);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -128,6 +144,12 @@
     --band-warn: var(--d-band-warn);
     --band-alarm-edge: var(--d-band-alarm-edge);
     --band-warn-edge: var(--d-band-warn-edge);
+    --series-demand: var(--d-series-demand);
+    --series-pv: var(--d-series-pv);
+    --series-wind: var(--d-series-wind);
+    --series-exchange: var(--d-series-exchange);
+    --series-history: var(--d-series-history);
+    --band-history: var(--d-band-history);
   }
 }
 
@@ -159,6 +181,12 @@
   --band-warn: var(--d-band-warn);
   --band-alarm-edge: var(--d-band-alarm-edge);
   --band-warn-edge: var(--d-band-warn-edge);
+  --series-demand: var(--d-series-demand);
+  --series-pv: var(--d-series-pv);
+  --series-wind: var(--d-series-wind);
+  --series-exchange: var(--d-series-exchange);
+  --series-history: var(--d-series-history);
+  --band-history: var(--d-band-history);
 }
 
 @theme inline {

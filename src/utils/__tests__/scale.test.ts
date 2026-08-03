@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { niceScale, NICE_STEPS } from '../scale';
+import { niceScale, niceScaleRange, NICE_STEPS } from '../scale';
 
 /**
  * Bug: ReserveChart used domain={[0, max * 1.1]}, so Recharts divided that raw
@@ -42,6 +42,51 @@ describe('niceScale', () => {
       expect(Number.isFinite(max)).toBe(true);
       expect(max).toBeGreaterThan(0);
       expect(ticks.every(Number.isFinite)).toBe(true);
+    }
+  });
+});
+
+describe('niceScaleRange', () => {
+  const cases: [number, number][] = [
+    [-2000, 6000],
+    [-155, 3400],
+    [0, 5000],
+    [-50, 50],
+    [200, 900],
+    [-12000, 24000],
+  ];
+
+  it.each(cases)('keeps ticks round for %i..%i', (min, max) => {
+    const scale = niceScaleRange(min, max);
+    const step = scale.ticks[1] - scale.ticks[0];
+
+    expect(NICE_STEPS).toContain(step);
+    scale.ticks.forEach((tick, i) =>
+      expect(tick).toBeCloseTo(scale.min + i * step, 6)
+    );
+    expect(scale.ticks.length).toBeGreaterThanOrEqual(4);
+    expect(scale.ticks.length).toBeLessThanOrEqual(7);
+  });
+
+  it.each(cases)('contains the data for %i..%i', (min, max) => {
+    const scale = niceScaleRange(min, max);
+
+    expect(scale.min).toBeLessThanOrEqual(Math.min(min, 0));
+    expect(scale.max).toBeGreaterThanOrEqual(max);
+  });
+
+  it('always puts zero on a tick, so the sign is readable from the axis', () => {
+    for (const [min, max] of cases) {
+      expect(niceScaleRange(min, max).ticks).toContain(0);
+    }
+  });
+
+  it('survives empty or nonsensical data', () => {
+    for (const [min, max] of [[NaN, NaN], [0, 0], [Infinity, -Infinity]]) {
+      const scale = niceScaleRange(min, max);
+      expect(Number.isFinite(scale.min)).toBe(true);
+      expect(Number.isFinite(scale.max)).toBe(true);
+      expect(scale.max).toBeGreaterThan(scale.min);
     }
   });
 });

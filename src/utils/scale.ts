@@ -49,3 +49,42 @@ export function niceScale(dataMax: number): Scale {
     ticks: Array.from({ length: MIN_TICKS + 1 }, (_, i) => i * step),
   };
 }
+
+export interface RangeScale extends Scale {
+  min: number;
+}
+
+/**
+ * Same idea as niceScale, but for series that go below zero — a reserve margin
+ * does, whenever available capacity fails to cover what is required. Zero always
+ * lands on a tick, so the sign of a value is readable from the axis alone.
+ */
+export function niceScaleRange(
+  dataMin: number,
+  dataMax: number
+): RangeScale {
+  const lo = Number.isFinite(dataMin) ? Math.min(dataMin, 0) : 0;
+  const hi = Number.isFinite(dataMax) && dataMax > 0 ? dataMax : 1000;
+  const padding = (hi - lo) * 0.05 || 100;
+
+  for (const step of NICE_STEPS) {
+    const min = Math.floor((lo - padding) / step) * step;
+    const max = Math.ceil((hi + padding) / step) * step;
+    const count = Math.round((max - min) / step) + 1;
+    if (count < MIN_TICKS || count > MAX_TICKS) continue;
+
+    return {
+      min,
+      max,
+      ticks: Array.from({ length: count }, (_, i) => min + i * step),
+    };
+  }
+
+  const step = Math.ceil((hi - lo + 2 * padding) / MIN_TICKS) || 1;
+  const min = Math.floor((lo - padding) / step) * step;
+  return {
+    min,
+    max: min + step * MIN_TICKS,
+    ticks: Array.from({ length: MIN_TICKS + 1 }, (_, i) => min + i * step),
+  };
+}

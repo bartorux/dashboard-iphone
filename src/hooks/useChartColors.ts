@@ -20,6 +20,12 @@ const TOKENS = {
   bandWarn: '--band-warn',
   bandAlarmEdge: '--band-alarm-edge',
   bandWarnEdge: '--band-warn-edge',
+  demand: '--series-demand',
+  pv: '--series-pv',
+  wind: '--series-wind',
+  exchange: '--series-exchange',
+  history: '--series-history',
+  bandHistory: '--band-history',
 } as const;
 
 export type ChartColors = Record<keyof typeof TOKENS, string>;
@@ -40,6 +46,12 @@ const FALLBACK: ChartColors = {
   bandWarn: 'rgba(255,149,0,0.12)',
   bandAlarmEdge: 'rgba(255,59,48,0.5)',
   bandWarnEdge: 'rgba(255,149,0,0.5)',
+  demand: '#1c1c1e',
+  pv: '#ffb020',
+  wind: '#32ade6',
+  exchange: '#af52de',
+  history: '#8e8e93',
+  bandHistory: 'rgba(142,142,147,0.18)',
 };
 
 function readColors(): ChartColors {

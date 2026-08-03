@@ -20,9 +20,16 @@ const FORECAST_FIELDS = [
   'planned_exchange',
 ].join(',');
 
-/** History only needs enough to recompute the margin. ~7.5 KB gzipped for 30 days. */
+/**
+ * History only needs enough to recompute the margin and label the hour. Still a
+ * fraction of the full row - 30 days measure ~11 KB gzipped. plan_dtime and
+ * period are included so history flows through the same processData as live
+ * data, rather than a parallel path that could drift from it.
+ */
 const HISTORY_FIELDS = [
   'business_date',
+  'period',
+  'plan_dtime',
   'plan_dtime_utc',
   'req_pow_res',
   'surplus_cap_avail_tso',

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Settings } from '../types';
 import { ThemePreference } from '../hooks/useTheme';
+import SegmentedControl from './SegmentedControl';
 
 const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
   { value: 'system', label: 'Systemowy' },
@@ -76,31 +77,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         <div className="mt-3 rounded-2xl bg-surface p-4 shadow-sm">
           <h2 className="mb-2 text-[15px] font-semibold text-text">Wygląd</h2>
 
-          <div
+          <SegmentedControl
+            ariaLabel="Motyw"
             role="radiogroup"
-            aria-label="Motyw"
-            className="mb-4 flex rounded-xl bg-surface-3 p-1"
-          >
-            {THEME_OPTIONS.map((option) => {
-              const active = theme === option.value;
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  role="radio"
-                  aria-checked={active}
-                  onClick={() => onThemeChange(option.value)}
-                  className={`min-h-9 flex-1 rounded-[10px] text-[13px] font-medium transition-colors ${
-                    active
-                      ? 'bg-surface text-text shadow-sm'
-                      : 'text-text-secondary'
-                  }`}
-                >
-                  {option.label}
-                </button>
-              );
-            })}
-          </div>
+            value={theme}
+            onChange={onThemeChange}
+            segments={THEME_OPTIONS.map(({ value, label }) => ({ value, label }))}
+            className="mb-4"
+          />
 
           <h2 className="mb-3 text-[15px] font-semibold text-text">
             Ustawienia alertów
