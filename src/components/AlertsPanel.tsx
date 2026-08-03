@@ -6,6 +6,8 @@ import { AlertIcon, CheckIcon } from './icons';
 interface AlertsPanelProps {
   ranges: AlertRange[];
   currentDayOffset: number;
+  /** False when the day has no readings at all — distinct from "no alerts". */
+  hasData: boolean;
 }
 
 const formatMW = (value: number) =>
@@ -33,6 +35,7 @@ const SEVERITY_STYLE = {
 const AlertsPanel: React.FC<AlertsPanelProps> = ({
   ranges,
   currentDayOffset,
+  hasData,
 }) => {
   const dayName = DAY_NAMES[currentDayOffset as 0 | 1 | 2] ?? '';
   const hours = ranges.reduce((sum, range) => sum + range.hours, 0);
@@ -50,7 +53,13 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
         )}
       </div>
 
-      {ranges.length === 0 ? (
+      {!hasData ? (
+        // Without readings we cannot claim an all-clear — a green "no alerts"
+        // here would present missing data as a confirmed safe state.
+        <div className="rounded-xl bg-surface-2 px-3 py-3 text-[13px] text-text-tertiary">
+          Brak danych dla tego dnia
+        </div>
+      ) : ranges.length === 0 ? (
         <div className="flex items-center gap-2 rounded-xl bg-ok-soft px-3 py-3 text-[13px] text-ok-text">
           <CheckIcon className="h-4 w-4 shrink-0" />
           Brak alertów w tym dniu

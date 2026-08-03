@@ -129,6 +129,12 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
     };
   }, [allData, orangeThreshold]);
 
+  /** No readings at all is a different thing from readings that look fine. */
+  const hasHorizonData = useMemo(
+    () => allData.some((point) => point.reserve !== null),
+    [allData]
+  );
+
   const prediction = useMemo(() => {
     const alerts = findAlerts(allData, orangeThreshold, redThreshold);
     const deltas: number[] = [];
@@ -240,7 +246,11 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
             <h3 className="mb-2 text-[13px] font-semibold text-text">
               Godziny ryzyka <span className="text-text-tertiary">· 72h</span>
             </h3>
-            {critical.count === 0 ? (
+            {!hasHorizonData ? (
+              <p className="text-[13px] text-text-tertiary">
+                Brak danych z najbliższych 72 godzin
+              </p>
+            ) : critical.count === 0 ? (
               <p className="text-[13px] text-ok-text">
                 Brak godzin ryzyka w najbliższych 72 godzinach
               </p>
@@ -284,31 +294,39 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
             <h3 className="mb-2 text-[13px] font-semibold text-text">
               Predykcja alertów
             </h3>
-            <p
-              className={`text-[13px] ${
-                prediction.total === 0
-                  ? 'text-ok-text'
-                  : prediction.hasRed
-                  ? 'text-alarm-text'
-                  : 'text-warn-text'
-              }`}
-            >
-              {prediction.total === 0
-                ? 'Niskie prawdopodobieństwo alertów'
-                : prediction.hasRed
-                ? 'Wysokie ryzyko alertów krytycznych'
-                : 'Umiarkowane ryzyko alertów'}
-            </p>
-            <p className="tnum mt-0.5 text-[11px] text-text-tertiary">
-              Zmiana godzinowa:{' '}
-              {prediction.avgTrend > 10
-                ? 'rosnąca'
-                : prediction.avgTrend < -10
-                ? 'spadkowa'
-                : 'stabilna'}{' '}
-              ({prediction.avgTrend > 0 ? '+' : ''}
-              {prediction.avgTrend.toFixed(0)} MW/h)
-            </p>
+            {!hasHorizonData ? (
+              <p className="text-[13px] text-text-tertiary">
+                Brak podstaw do oceny — nie pobrano danych
+              </p>
+            ) : (
+              <>
+                <p
+                  className={`text-[13px] ${
+                    prediction.total === 0
+                      ? 'text-ok-text'
+                      : prediction.hasRed
+                      ? 'text-alarm-text'
+                      : 'text-warn-text'
+                  }`}
+                >
+                  {prediction.total === 0
+                    ? 'Niskie prawdopodobieństwo alertów'
+                    : prediction.hasRed
+                    ? 'Wysokie ryzyko alertów krytycznych'
+                    : 'Umiarkowane ryzyko alertów'}
+                </p>
+                <p className="tnum mt-0.5 text-[11px] text-text-tertiary">
+                  Zmiana godzinowa:{' '}
+                  {prediction.avgTrend > 10
+                    ? 'rosnąca'
+                    : prediction.avgTrend < -10
+                    ? 'spadkowa'
+                    : 'stabilna'}{' '}
+                  ({prediction.avgTrend > 0 ? '+' : ''}
+                  {prediction.avgTrend.toFixed(0)} MW/h)
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>

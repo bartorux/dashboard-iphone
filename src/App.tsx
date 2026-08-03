@@ -214,7 +214,11 @@ function App() {
           isLoading={isLoading}
         />
 
-        <AlertsPanel ranges={alertRanges} currentDayOffset={currentDayOffset} />
+        <AlertsPanel
+          ranges={alertRanges}
+          currentDayOffset={currentDayOffset}
+          hasData={dayData.some((point) => point.reserve !== null)}
+        />
 
         <TrendsSection
           dayData={dayData}

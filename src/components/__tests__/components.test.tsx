@@ -114,7 +114,7 @@ describe('AlertsPanel', () => {
   };
 
   it('renders a merged range as a single entry', () => {
-    render(<AlertsPanel ranges={[range]} currentDayOffset={0} />);
+    render(<AlertsPanel ranges={[range]} currentDayOffset={0} hasData />);
 
     expect(screen.getAllByRole('listitem')).toHaveLength(1);
     expect(screen.getByText('20:00–23:00')).toBeInTheDocument();
@@ -122,9 +122,16 @@ describe('AlertsPanel', () => {
   });
 
   it('confirms an all-clear day instead of showing an empty list', () => {
-    render(<AlertsPanel ranges={[]} currentDayOffset={1} />);
+    render(<AlertsPanel ranges={[]} currentDayOffset={1} hasData />);
 
     expect(screen.getByText('Brak alertów w tym dniu')).toBeInTheDocument();
     expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+  });
+
+  it('does not present missing data as an all-clear', () => {
+    render(<AlertsPanel ranges={[]} currentDayOffset={2} hasData={false} />);
+
+    expect(screen.getByText('Brak danych dla tego dnia')).toBeInTheDocument();
+    expect(screen.queryByText('Brak alertów w tym dniu')).not.toBeInTheDocument();
   });
 });
