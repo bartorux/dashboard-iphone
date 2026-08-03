@@ -2,6 +2,32 @@ import { PSERawItem } from '../types';
 import { API_URL, DAYS_TO_FETCH } from './constants';
 import { addDays, formatDateTimeApi, getStartOfToday } from './dateHelpers';
 
+/**
+ * Fields the app actually reads. The endpoint serves 16 per row; asking for
+ * these 11 cuts the response from ~55 KB to ~24 KB before compression.
+ */
+const FORECAST_FIELDS = [
+  'business_date',
+  'period',
+  'plan_dtime',
+  'plan_dtime_utc',
+  'req_pow_res',
+  'surplus_cap_avail_tso',
+  'grid_demand_fcst',
+  'fcst_pv_tot_gen',
+  'fcst_wi_tot_gen',
+  'sum_unav_oper_cond',
+  'planned_exchange',
+].join(',');
+
+/** History only needs enough to recompute the margin. ~7.5 KB gzipped for 30 days. */
+const HISTORY_FIELDS = [
+  'business_date',
+  'plan_dtime_utc',
+  'req_pow_res',
+  'surplus_cap_avail_tso',
+].join(',');
+
 async function query(params: string): Promise<PSERawItem[] | null> {
   try {
     const response = await fetch(`${API_URL}?${params}`);
@@ -30,7 +56,7 @@ export async function fetchPSEData(): Promise<PSERawItem[]> {
   const filtered = await query(
     `$filter=${encodeURIComponent(
       `plan_dtime ge '${start}' and plan_dtime le '${to}'`
-    )}&$orderby=plan_dtime&$first=200`
+    )}&$select=${FORECAST_FIELDS}&$orderby=plan_dtime&$first=200`
   );
   if (filtered) return filtered;
 
@@ -38,7 +64,26 @@ export async function fetchPSEData(): Promise<PSERawItem[]> {
   // records (June 2024), which all fall outside the window and render as an
   // empty chart.
   const latest = await query(
-    `$orderby=${encodeURIComponent('plan_dtime desc')}&$first=200`
+    `$select=${FORECAST_FIELDS}&$orderby=${encodeURIComponent(
+      'plan_dtime desc'
+    )}&$first=200`
   );
   return latest ?? [];
+}
+
+/**
+ * Past business days, for judging whether today's profile is unusual.
+ * Excludes today, whose figures are still a forecast being revised.
+ */
+export async function fetchPSEHistory(days = 30): Promise<PSERawItem[]> {
+  const startOfToday = getStartOfToday();
+  const from = formatDateTimeApi(addDays(startOfToday, -days)).slice(0, 10);
+  const to = formatDateTimeApi(addDays(startOfToday, -1)).slice(0, 10);
+
+  const rows = await query(
+    `$filter=${encodeURIComponent(
+      `business_date ge '${from}' and business_date le '${to}'`
+    )}&$select=${HISTORY_FIELDS}&$orderby=plan_dtime&$first=1000`
+  );
+  return rows ?? [];
 }

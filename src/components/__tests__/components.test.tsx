@@ -5,6 +5,7 @@ import CurrentStatusCard from '../CurrentStatusCard';
 import AlertsPanel from '../AlertsPanel';
 import SettingsPanel from '../SettingsPanel';
 import { AlertRange, PSEDataPoint, Settings } from '../../types';
+import { makePoint } from '../../test/factories';
 
 const noop = () => {};
 
@@ -62,16 +63,16 @@ describe('Header', () => {
 });
 
 describe('CurrentStatusCard', () => {
-  const point = (reserve: number, required: number): PSEDataPoint => ({
-    time: new Date('2026-08-03T19:00:00Z'),
-    timeStr: '2026-08-03 21:00:00',
-    businessDate: '2026-08-03',
-    period: '20 - 21',
-    hourLabel: '20:00',
-    endLabel: '21:00',
-    reserve,
-    required,
-  });
+  const point = (reserve: number, required: number): PSEDataPoint =>
+    makePoint({
+      time: new Date('2026-08-03T19:00:00Z'),
+      timeStr: '2026-08-03 21:00:00',
+      period: '20 - 21',
+      hourLabel: '20:00',
+      endLabel: '21:00',
+      reserve,
+      required,
+    });
 
   it('shows the margin with an explicit sign and both source values', () => {
     render(

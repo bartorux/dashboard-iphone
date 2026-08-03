@@ -7,6 +7,7 @@ import {
   safeAvg,
 } from '../dataTransform';
 import { PSERawItem } from '../../types';
+import { makePoint } from '../../test/factories';
 
 import fixture72h from '../__fixtures__/pse-72h.json';
 import fixtureAutumn from '../__fixtures__/pse-dst-autumn.json';
@@ -136,16 +137,8 @@ describe('getDataForDay', () => {
 });
 
 describe('findAlerts', () => {
-  const point = (reserve: number | null, required: number | null, key: string) => ({
-    time: new Date('2026-08-03T01:00:00Z'),
-    timeStr: key,
-    businessDate: '2026-08-03',
-    period: '00 - 01',
-    hourLabel: '00:00',
-    endLabel: '01:00',
-    reserve,
-    required,
-  });
+  const point = (reserve: number | null, required: number | null, key: string) =>
+    makePoint({ timeStr: key, reserve, required });
 
   it('treats a margin exactly at the threshold as an alert', () => {
     const { red, orange } = findAlerts([point(1300, 1000, 'a')], 500, 300);

@@ -91,6 +91,11 @@ export function processData(rawData: PSERawItem[]): PSEDataPoint[] {
         ...hourLabels(period, time),
         reserve: getAvailableReserve(item),
         required: toNumber(item.req_pow_res),
+        demand: toNumber(item.grid_demand_fcst),
+        pv: toNumber(item.fcst_pv_tot_gen),
+        wind: toNumber(item.fcst_wi_tot_gen),
+        outages: toNumber(item.sum_unav_oper_cond),
+        exchange: toNumber(item.planned_exchange),
       } satisfies PSEDataPoint;
     })
     .filter((p): p is PSEDataPoint => p !== null)
@@ -119,6 +124,11 @@ export function processData(rawData: PSERawItem[]): PSEDataPoint[] {
           ...hourLabels('', instant),
           reserve: null,
           required: null,
+          demand: null,
+          pv: null,
+          wind: null,
+          outages: null,
+          exchange: null,
         });
       }
     }

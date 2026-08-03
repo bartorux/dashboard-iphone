@@ -7,6 +7,7 @@ import {
   getUpcomingStatus,
 } from '../dataTransform';
 import { PSEDataPoint } from '../../types';
+import { makePoint } from '../../test/factories';
 
 const HOUR = 60 * 60 * 1000;
 const BASE = Date.UTC(2026, 7, 3, 0, 0, 0);
@@ -16,17 +17,18 @@ function series(margins: (number | null)[]): PSEDataPoint[] {
   // Mirrors the real shape: plan_dtime is the period END, so index 0 carries the
   // 01:00 stamp while describing the 00:00-01:00 block.
   const pad = (n: number) => String(n).padStart(2, '0');
-  return margins.map((margin, index) => ({
-    // time is the period END, so block `index` covers BASE+index .. BASE+index+1
-    time: new Date(BASE + (index + 1) * HOUR),
-    timeStr: `2026-08-03 ${pad(index + 1)}:00:00`,
-    businessDate: '2026-08-03',
-    period: `${pad(index)} - ${pad(index + 1)}`,
-    hourLabel: `${pad(index)}:00`,
-    endLabel: `${pad(index + 1)}:00`,
-    reserve: margin === null ? null : 1000 + margin,
-    required: margin === null ? null : 1000,
-  }));
+  return margins.map((margin, index) =>
+    makePoint({
+      // time is the period END, so block `index` covers BASE+index .. BASE+index+1
+      time: new Date(BASE + (index + 1) * HOUR),
+      timeStr: `2026-08-03 ${pad(index + 1)}:00:00`,
+      period: `${pad(index)} - ${pad(index + 1)}`,
+      hourLabel: `${pad(index)}:00`,
+      endLabel: `${pad(index + 1)}:00`,
+      reserve: margin === null ? null : 1000 + margin,
+      required: margin === null ? null : 1000,
+    })
+  );
 }
 
 function rangesFor(margins: (number | null)[], orange = 500, red = 300) {

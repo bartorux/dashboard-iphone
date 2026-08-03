@@ -10,6 +10,17 @@ export interface PSERawItem {
   req_pow_res: string | number;
   surplus_cap_avail_tso?: string | number | null;
   avail_cap_gen_units_stor_prov?: string | number | null;
+
+  /**
+   * Context fields. Measured over 33 days, these explain the alarms almost
+   * entirely: alarm hours average +4366 MW of demand and −4153 MW of PV output
+   * against calm hours, and 73 of 92 fall between 17:00 and 23:00.
+   */
+  grid_demand_fcst?: string | number | null;
+  fcst_pv_tot_gen?: string | number | null;
+  fcst_wi_tot_gen?: string | number | null;
+  sum_unav_oper_cond?: string | number | null;
+  planned_exchange?: string | number | null;
 }
 
 export interface PSEDataPoint {
@@ -30,6 +41,17 @@ export interface PSEDataPoint {
   endLabel: string;
   reserve: number | null;
   required: number | null;
+
+  /** Forecast demand for the block. */
+  demand: number | null;
+  /** Forecast photovoltaic generation. */
+  pv: number | null;
+  /** Forecast wind generation. */
+  wind: number | null;
+  /** Sum of capacity unavailable for operational reasons. */
+  outages: number | null;
+  /** Planned cross-border exchange; negative means export. */
+  exchange: number | null;
 }
 
 export interface Alert {
