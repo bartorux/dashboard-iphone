@@ -37,18 +37,54 @@ export const shortHour = (value: string) => value.slice(0, -3);
 
 export const CHART_BOX = 'h-[45vh] max-h-[22rem] min-h-[15rem] w-full';
 
-export const ChartLegend: React.FC<{
-  items: { label: string; swatch: React.ReactNode }[];
-}> = ({ items }) => (
-  <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-secondary">
-    {items.map((item) => (
-      <li key={item.label} className="flex items-center gap-1.5">
-        {item.swatch}
-        {item.label}
-      </li>
-    ))}
-  </ul>
-);
+export interface LegendItem {
+  label: string;
+  swatch: React.ReactNode;
+  /**
+   * Shown only after the reader asks for it. A permanent paragraph above the
+   * chart pushed the chart itself off the first screen.
+   */
+  info?: string;
+}
+
+export const ChartLegend: React.FC<{ items: LegendItem[] }> = ({ items }) => {
+  const [openLabel, setOpenLabel] = React.useState<string | null>(null);
+  const open = items.find((item) => item.label === openLabel);
+
+  return (
+    <>
+      <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-secondary">
+        {items.map((item) => (
+          <li key={item.label} className="flex items-center gap-1.5">
+            {item.swatch}
+            {item.label}
+            {item.info && (
+              <button
+                type="button"
+                aria-label={`Co oznacza: ${item.label}`}
+                aria-expanded={openLabel === item.label}
+                onClick={() =>
+                  setOpenLabel((current) =>
+                    current === item.label ? null : item.label
+                  )
+                }
+                className="grid h-4 w-4 place-items-center rounded-full bg-surface-3 text-[9px] font-semibold text-text-secondary"
+              >
+                ?
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      {open?.info && (
+        <p className="mt-1.5 rounded-lg bg-surface-2 px-2 py-1.5 text-[11px] leading-relaxed text-text-secondary">
+          {open.info}
+        </p>
+      )}
+    </>
+  );
+};
 
 export const LineSwatch: React.FC<{ color: string; dashed?: boolean }> = ({
   color,

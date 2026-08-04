@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { useDismissibleTooltip } from '../chart/shared';
+import { ChartLegend, useDismissibleTooltip } from '../chart/shared';
 
 /** Stands in for a chart: reports what the tooltip gate currently says. */
 function Probe() {
@@ -87,5 +87,38 @@ describe('useDismissibleTooltip', () => {
 
     fireEvent.touchStart(screen.getByRole('button'), touch(10, 10));
     expect(state()).toBe('false');
+  });
+});
+
+describe('ChartLegend — explanation on demand', () => {
+  const items = [
+    { label: 'Dostępna', swatch: <span /> },
+    { label: 'Próg 1100 MW', swatch: <span />, info: 'Wyjaśnienie progu.' },
+  ];
+
+  it('keeps the explanation out of the way until asked', () => {
+    render(<ChartLegend items={items} />);
+
+    // A permanent paragraph pushed the chart off the first screen
+    expect(screen.queryByText('Wyjaśnienie progu.')).not.toBeInTheDocument();
+    expect(screen.getByText('Próg 1100 MW')).toBeInTheDocument();
+  });
+
+  it('reveals and hides it on tap', () => {
+    render(<ChartLegend items={items} />);
+    const button = screen.getByRole('button', { name: 'Co oznacza: Próg 1100 MW' });
+
+    fireEvent.click(button);
+    expect(screen.getByText('Wyjaśnienie progu.')).toBeInTheDocument();
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+
+    fireEvent.click(button);
+    expect(screen.queryByText('Wyjaśnienie progu.')).not.toBeInTheDocument();
+  });
+
+  it('offers no button for entries that need no explanation', () => {
+    render(<ChartLegend items={items} />);
+
+    expect(screen.getAllByRole('button')).toHaveLength(1);
   });
 });

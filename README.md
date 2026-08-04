@@ -35,8 +35,8 @@ kontrolerem, żeby strona nie rosła o kolejne wykresy.
 
 **Rezerwa** — dostępna i wymagana rezerwa, plus stała linia **1100 MW**. Operator może odstąpić
 od ogłoszenia okresu przywołania mimo spadku rezerwy poniżej wymaganej, jeżeli nadwyżka mocy nie
-jest niższa niż 1100 MW i uzna, że nie ma zagrożenia dla pokrycia zapotrzebowania. Próg dotyczy
-krzywej dostępnej rezerwy — schodzi ona poniżej niego w 2,3% godzin, więc zachowuje się jak
+jest niższa niż 1100 MW i uzna, że nie ma zagrożenia dla pokrycia zapotrzebowania. Wyjaśnienie kryje się pod znakiem zapytania przy pozycji legendy — na stałe zajmowało sześć linii
+i spychało wykres poza pierwszy ekran. Próg dotyczy krzywej dostępnej rezerwy — schodzi ona poniżej niego w 2,3% godzin, więc zachowuje się jak
 warunek wyjątkowy; odniesienie go do marginesu dawałoby 34,6%. To wartość regulacyjna, nie
 ustawienie użytkownika, dlatego ma odrębny styl od pasm progów alertów. Pasma tła to progi alertów odmierzane
 **od krzywej wymaganej**, nie wartości bezwzględne: czerwone sięga `wymagana +

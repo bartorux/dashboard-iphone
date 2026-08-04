@@ -197,19 +197,13 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
           {
             label: `Próg ${CALL_PERIOD_EXEMPTION_MW} MW`,
             swatch: <LineSwatch color={colors.threshold} dashed />,
+            info:
+              `Powyżej ${CALL_PERIOD_EXEMPTION_MW} MW operator może odstąpić od ogłoszenia ` +
+              'okresu przywołania mimo rezerwy poniżej wymaganej. ' +
+              'Przywołania ogłasza się w dni robocze 7:00–22:00.',
           },
         ]}
       />
-
-      {/* The bands come from the user's own thresholds; this line does not, so
-          it needs saying where it comes from. */}
-      <p className="mb-2 px-1 text-[11px] leading-relaxed text-text-secondary">
-        Mimo spadku rezerwy poniżej wymaganej operator może odstąpić od
-        ogłoszenia okresu przywołania, jeżeli nadwyżka mocy nie jest niższa niż{' '}
-        {CALL_PERIOD_EXEMPTION_MW} MW i uzna, że nie ma zagrożenia dla pokrycia
-        zapotrzebowania. Sam okres przywołania ogłasza się w dni robocze między
-        7:00 a 22:00, z co najmniej 8-godzinnym wyprzedzeniem.
-      </p>
 
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
