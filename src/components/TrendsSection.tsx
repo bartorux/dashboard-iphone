@@ -5,18 +5,14 @@ import {
   TREND_MAX_REASONABLE,
   TREND_STABLE_THRESHOLD,
 } from '../utils/constants';
-import {
-  getValidMargins,
-  safeAvg,
-  getDataForDay,
-  classifyMargin,
-} from '../utils/dataTransform';
+import { getValidMargins, safeAvg, classifyMargin } from '../utils/dataTransform';
 import { STATUS_TEXT } from '../utils/status';
 import { ChevronDownIcon } from './icons';
 
 interface TrendsSectionProps {
   dayData: PSEDataPoint[];
-  allData: PSEDataPoint[];
+  /** Today's slice, supplied ready-made so this component never reads the clock. */
+  todayData: PSEDataPoint[];
   currentDayOffset: number;
   orangeThreshold: number;
   redThreshold: number;
@@ -54,7 +50,7 @@ const Tile: React.FC<{
  */
 const TrendsSection: React.FC<TrendsSectionProps> = ({
   dayData,
-  allData,
+  todayData,
   currentDayOffset,
   orangeThreshold,
   redThreshold,
@@ -84,14 +80,14 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
     if (currentDayOffset === 0) return null;
 
     const selected = safeAvg(margins);
-    const today = safeAvg(getValidMargins(getDataForDay(allData, 0)));
+    const today = safeAvg(getValidMargins(todayData));
     if (selected === null || today === null) return null;
 
     // Reads left to right: selected day relative to today
     const diff = selected - today;
     const pct = today !== 0 ? (diff / Math.abs(today)) * 100 : 0;
     return { selected, today, diff, pct };
-  }, [allData, currentDayOffset, margins]);
+  }, [todayData, currentDayOffset, margins]);
 
   const trend = useMemo(() => {
     if (!comparison) {
@@ -110,23 +106,6 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
       tone: diff > 0 ? 'text-ok-text' : 'text-alarm-text',
     };
   }, [comparison]);
-
-  /** Riskiest hours of the selected day, worst first. */
-  const risky = useMemo(() => {
-    const scored = dayData
-      .filter(
-        (point): point is PSEDataPoint & { reserve: number; required: number } =>
-          point.reserve !== null && point.required !== null
-      )
-      .map((point) => ({ point, margin: point.reserve - point.required }))
-      .sort((a, b) => a.margin - b.margin);
-
-    return {
-      hasData: scored.length > 0,
-      count: scored.filter((item) => item.margin <= orangeThreshold).length,
-      worst: scored.slice(0, 3),
-    };
-  }, [dayData, orangeThreshold]);
 
   const dayName = DAY_NAMES[currentDayOffset as 0 | 1 | 2] ?? '';
 
@@ -222,41 +201,6 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
             </div>
           )}
 
-          <div className="mt-4 border-t border-separator pt-3">
-            <h3 className="mb-2 text-[13px] font-semibold text-text">
-              Godziny ryzyka <span className="text-text-tertiary">· {dayName.toLowerCase()}</span>
-            </h3>
-            {!risky.hasData ? (
-              <p className="text-[13px] text-text-tertiary">
-                Brak danych dla tego dnia
-              </p>
-            ) : risky.count === 0 ? (
-              <p className="text-[13px] text-ok-text">
-                Żadna godzina nie zbliża się do progu
-              </p>
-            ) : (
-              <>
-                <p className="text-[13px] text-warn-text">
-                  {risky.count} godz. z marginesem poniżej progu uwagi
-                </p>
-                <ul className="mt-1.5 space-y-1">
-                  {risky.worst.map(({ point, margin }) => (
-                    <li
-                      key={point.timeStr}
-                      className="tnum flex justify-between gap-3 text-[12px] text-text-secondary"
-                    >
-                      <span>
-                        {point.hourLabel}–{point.endLabel}
-                      </span>
-                      <span className={`font-semibold ${toneFor(margin)}`}>
-                        {signed(margin)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </div>
         </div>
       </div>
     </section>

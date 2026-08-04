@@ -84,6 +84,8 @@ export interface AlertRange {
   to: string;
   /** Worst (lowest) margin within the range. */
   worstDifference: number;
+  /** Hour at which that worst margin occurs, e.g. "20:00". */
+  worstHour: string;
   reserve: number;
   required: number;
   hours: number;

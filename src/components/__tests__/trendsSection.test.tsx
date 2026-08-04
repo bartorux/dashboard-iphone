@@ -22,11 +22,11 @@ const calmDay = (offset: number, margin: number): PSEDataPoint[] =>
     })
   );
 
-function renderSection(offset: number, dayData: PSEDataPoint[], allData: PSEDataPoint[]) {
+function renderSection(offset: number, dayData: PSEDataPoint[], todayData: PSEDataPoint[]) {
   return render(
     <TrendsSection
       dayData={dayData}
-      allData={allData}
+      todayData={todayData}
       currentDayOffset={offset}
       orangeThreshold={500}
       redThreshold={300}
@@ -61,7 +61,7 @@ describe('TrendsSection', () => {
 
     const today = calmDay(0, 1000);
     const tomorrow = calmDay(1, 1400);
-    renderSection(1, tomorrow, [...today, ...tomorrow]);
+    renderSection(1, tomorrow, today);
 
     expect(screen.getByText('Porównanie z dziś')).toBeInTheDocument();
     // The tile and the comparison row must agree — they once showed the same
@@ -77,19 +77,13 @@ describe('TrendsSection', () => {
     expect(screen.queryByText(/MW\/h/)).not.toBeInTheDocument();
   });
 
-  it('scopes risky hours to the selected day', () => {
+  it('no longer repeats what the alerts panel already says', () => {
     const day = calmDay(0, 1200);
     renderSection(0, day, day);
 
-    // Previously fixed at "· 72h", so switching days changed nothing here
-    expect(screen.getByText(/· dziś/)).toBeInTheDocument();
-    expect(screen.queryByText(/72h/)).not.toBeInTheDocument();
-  });
-
-  it('separates "no data" from "nothing near the threshold"', () => {
-    renderSection(0, [], []);
-
-    expect(screen.getByText('Brak danych dla tego dnia')).toBeInTheDocument();
+    // Both blocks reported the same hour count and the same worst margin for
+    // the same day; the alerts panel keeps it, with the worst hour folded in.
+    expect(screen.queryByText(/Godziny ryzyka/)).not.toBeInTheDocument();
   });
 
   it('gets the direction right on the real day pair that used to read backwards', () => {
@@ -99,8 +93,9 @@ describe('TrendsSection', () => {
     vi.setSystemTime(new Date(2026, 7, 2, 12));
 
     const all = processData(RAW);
+    const first = all.filter((p) => p.businessDate === '2026-08-02');
     const second = all.filter((p) => p.businessDate === '2026-08-03');
-    renderSection(1, second, all);
+    renderSection(1, second, first);
 
     const comparison = screen.getByText('Porównanie z dziś').parentElement!;
     expect(comparison.textContent).toMatch(/-\d/);

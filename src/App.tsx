@@ -36,6 +36,7 @@ function App() {
   const {
     allData,
     dayData,
+    todayData,
     currentDayOffset,
     switchDay,
     refreshData,
@@ -222,7 +223,7 @@ function App() {
 
         <TrendsSection
           dayData={dayData}
-          allData={allData}
+          todayData={todayData}
           currentDayOffset={currentDayOffset}
           orangeThreshold={orangeThreshold}
           redThreshold={redThreshold}

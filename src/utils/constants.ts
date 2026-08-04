@@ -15,6 +15,14 @@ export const HOUR_MS = 60 * 60 * 1000;
 
 export const DAYS_TO_FETCH = 3;
 
+/**
+ * The operator may refrain from declaring a call period despite the reserve
+ * falling below what is required, provided the surplus stays at or above this
+ * figure and it sees no threat to covering demand. A regulatory constant, not a
+ * user setting — deliberately separate from the alert thresholds.
+ */
+export const CALL_PERIOD_EXEMPTION_MW = 1100;
+
 export const TREND_MAX_REASONABLE = 2000;
 export const TREND_STABLE_THRESHOLD = 10;
 

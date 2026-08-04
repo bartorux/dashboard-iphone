@@ -72,6 +72,7 @@
   --l-series-wind: #32ade6;     --d-series-wind: #64d2ff;
   --l-series-exchange: #af52de; --d-series-exchange: #bf5af2;
   --l-series-other: #7d8590;    --d-series-other: #6e7681;
+  --l-series-threshold: #5856d6; --d-series-threshold: #a78bfa;
   --l-series-history: #8e8e93;  --d-series-history: #98989d;
   --l-band-history: rgba(142, 142, 147, 0.18);
   --d-band-history: rgba(152, 152, 157, 0.22);
@@ -113,6 +114,7 @@
   --series-wind: var(--l-series-wind);
   --series-exchange: var(--l-series-exchange);
   --series-other: var(--l-series-other);
+  --series-threshold: var(--l-series-threshold);
   --series-history: var(--l-series-history);
   --band-history: var(--l-band-history);
 }
@@ -151,8 +153,7 @@
     --series-wind: var(--d-series-wind);
     --series-exchange: var(--d-series-exchange);
     --series-other: var(--d-series-other);
-  --series-other: var(--d-series-other);
-    --series-other: var(--d-series-other);
+    --series-threshold: var(--d-series-threshold);
     --series-history: var(--d-series-history);
     --band-history: var(--d-band-history);
   }
@@ -191,6 +192,7 @@
   --series-wind: var(--d-series-wind);
   --series-exchange: var(--d-series-exchange);
   --series-other: var(--d-series-other);
+  --series-threshold: var(--d-series-threshold);
   --series-history: var(--d-series-history);
   --band-history: var(--d-band-history);
 }

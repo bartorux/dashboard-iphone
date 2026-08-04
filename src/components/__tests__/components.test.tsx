@@ -111,6 +111,7 @@ describe('AlertsPanel', () => {
     from: '20:00',
     to: '23:00',
     worstDifference: -155,
+    worstHour: '20:00',
     reserve: 1663,
     required: 1818,
     hours: 3,
@@ -122,6 +123,8 @@ describe('AlertsPanel', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(1);
     expect(screen.getByText('20:00–23:00')).toBeInTheDocument();
     expect(screen.getByText('3 godz.')).toBeInTheDocument();
+    // Absorbed from the risky-hours block that used to repeat this section
+    expect(screen.getByText(/o 20:00/)).toBeInTheDocument();
   });
 
   it('confirms an all-clear day instead of showing an empty list', () => {

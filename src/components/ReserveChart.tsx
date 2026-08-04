@@ -15,6 +15,7 @@ import { niceScale } from '../utils/scale';
 import { classifyMargin } from '../utils/dataTransform';
 import { useChartColors } from '../hooks/useChartColors';
 import { STATUS_LABEL, STATUS_TEXT } from '../utils/status';
+import { CALL_PERIOD_EXEMPTION_MW } from '../utils/constants';
 import {
   ANIMATION_MS,
   AreaSwatch,
@@ -193,8 +194,22 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               <AreaSwatch fill={colors.bandAlarm} border={colors.bandAlarmEdge} />
             ),
           },
+          {
+            label: `Próg ${CALL_PERIOD_EXEMPTION_MW} MW`,
+            swatch: <LineSwatch color={colors.threshold} dashed />,
+          },
         ]}
       />
+
+      {/* The bands come from the user's own thresholds; this line does not, so
+          it needs saying where it comes from. */}
+      <p className="mb-2 px-1 text-[11px] leading-relaxed text-text-secondary">
+        Mimo spadku rezerwy poniżej wymaganej operator może odstąpić od
+        ogłoszenia okresu przywołania, jeżeli nadwyżka mocy nie jest niższa niż{' '}
+        {CALL_PERIOD_EXEMPTION_MW} MW i uzna, że nie ma zagrożenia dla pokrycia
+        zapotrzebowania. Sam okres przywołania ogłasza się w dni robocze między
+        7:00 a 22:00, z co najmniej 8-godzinnym wyprzedzeniem.
+      </p>
 
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
@@ -292,6 +307,21 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
                 />
               }
               cursor={{ stroke: colors.axis, strokeDasharray: '3 3' }}
+            />
+
+            {/* Regulatory constant, deliberately styled apart from the alert
+                bands: those move with the user's settings, this one does not. */}
+            <ReferenceLine
+              y={CALL_PERIOD_EXEMPTION_MW}
+              stroke={colors.threshold}
+              strokeWidth={1.5}
+              strokeDasharray="6 3"
+              label={{
+                value: `${CALL_PERIOD_EXEMPTION_MW} MW`,
+                position: 'insideBottomRight',
+                fontSize: 10,
+                fill: colors.threshold,
+              }}
             />
 
             {currentHourLabel && (

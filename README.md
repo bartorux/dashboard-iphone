@@ -25,13 +25,20 @@ npm run dev
 | `npm run test:api` | test kontraktu na żywym API PSE — poza CI |
 | `node scripts/screenshots.mjs` | zrzuty ekranu iPhone'a w trybie jasnym i ciemnym |
 | `node scripts/states.mjs` | zrzuty stanów trudnych do wywołania ręcznie |
+| `npm run test:visual` | porównanie z wzorcami — wymaga uruchomionego `npm run dev` |
+| `npm run test:visual:update` | zapisanie nowych wzorców po świadomej zmianie wyglądu |
 
 ## Widoki wykresu
 
 Jedna karta, jedna oś czasu, trzy odczyty — przełączane segmentowanym
 kontrolerem, żeby strona nie rosła o kolejne wykresy.
 
-**Rezerwa** — dostępna i wymagana rezerwa. Pasma tła to progi alertów odmierzane
+**Rezerwa** — dostępna i wymagana rezerwa, plus stała linia **1100 MW**. Operator może odstąpić
+od ogłoszenia okresu przywołania mimo spadku rezerwy poniżej wymaganej, jeżeli nadwyżka mocy nie
+jest niższa niż 1100 MW i uzna, że nie ma zagrożenia dla pokrycia zapotrzebowania. Próg dotyczy
+krzywej dostępnej rezerwy — schodzi ona poniżej niego w 2,3% godzin, więc zachowuje się jak
+warunek wyjątkowy; odniesienie go do marginesu dawałoby 34,6%. To wartość regulacyjna, nie
+ustawienie użytkownika, dlatego ma odrębny styl od pasm progów alertów. Pasma tła to progi alertów odmierzane
 **od krzywej wymaganej**, nie wartości bezwzględne: czerwone sięga `wymagana +
 próg alarmu`, pomarańczowe do `wymagana + próg uwagi`. Dlatego falują razem
 z wymaganą, która zmienia się co godzinę.
@@ -65,6 +72,30 @@ marginesie mniej więcej w jednej parze na jedenaście; fixture
 
 Punktem odniesienia jest zawsze **dziś**, a nie dzień sąsiedni — inaczej odniesienie zmieniałoby
 się przy każdym przełączeniu zakładki. Na zakładce Dziś blok porównania się nie renderuje.
+
+## Świeżość danych
+
+Prognoza PSE jest korygowana często — dla trzech dób naliczyłem 32 różne momenty publikacji, czyli
+mniej więcej co godzinę–dwie. Dlatego aplikacja pobiera dane **przy powrocie z tła**, jeśli
+ostatnie pobranie jest starsze niż dwie minuty, i **wstrzymuje odpytywanie, gdy jest w tle**.
+Bez tego otwarcie appki po kilku godzinach pokazywałoby wersję kilkukrotnie już nieaktualną:
+`setInterval` w tle jest na iOS silnie dławiony.
+
+`getDataForDay` czyta zegar, więc wycinek doby jest przeliczany także przy **przełomie północy** —
+`usePSEData` trzyma w stanie bieżącą datę handlową i wpuszcza ją do zależności memo. Bez tego
+zakładki pokazywałyby nową datę, a wykres wciąż wczorajszą dobę, przez maksymalnie 15 minut.
+Timer jest liczony do najbliższej północy, nie co 24h — doby DST mają 23 albo 25 godzin.
+
+## Regresje wizualne
+
+`npm run test:visual` renderuje osiem scenariuszy (widoki wykresu, oba motywy, ustawienia, brak
+danych) i porównuje piksele z wzorcami w `screenshots/baseline/`. Powstało po tym, jak dwa defekty
+wizualne trafiły na produkcję mimo zielonych testów: ucięta oś Y i wcięcia w dymku, które nigdy
+się nie zastosowały.
+
+Zegar w przeglądarce jest **zamrożony**, bo aplikacja tnie dane po dzisiejszej dobie — bez tego
+wzorce psułyby się następnego dnia. Zrzuty zapisywane w skali 1×: układ łapie się tak samo,
+a pliki są kilkukrotnie mniejsze niż przy 3×. Poza CI, bo wymaga pobranej przeglądarki.
 
 ## Gesty
 

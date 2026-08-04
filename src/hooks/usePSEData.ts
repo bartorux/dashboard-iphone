@@ -3,6 +3,19 @@ import { PSEDataPoint, DayOffset } from '../types';
 import { fetchPSEData } from '../utils/api';
 import { processData, getDataForDay } from '../utils/dataTransform';
 import { REFRESH_INTERVAL_MS, STORAGE_PREFIX, HOUR_MS } from '../utils/constants';
+import { addDays, formatDate, getStartOfToday } from '../utils/dateHelpers';
+
+/**
+ * How stale data may be before returning to the app triggers a fetch. Short
+ * enough that reopening shows current figures, long enough that flicking
+ * between apps does not hammer the endpoint.
+ */
+const STALE_ON_RESUME_MS = 2 * 60 * 1000;
+
+/** Milliseconds until the next local midnight. */
+function msUntilMidnight(): number {
+  return addDays(getStartOfToday(), 1).getTime() - Date.now();
+}
 
 const DATA_CACHE_KEY = `${STORAGE_PREFIX}data-cache`;
 /** Beyond this the cache describes business days we no longer display. */
@@ -57,6 +70,8 @@ function loadDataCache(): CachedPayload | null {
 interface UsePSEDataReturn {
   allData: PSEDataPoint[];
   dayData: PSEDataPoint[];
+  /** Today's slice, so consumers never have to read the clock themselves. */
+  todayData: PSEDataPoint[];
   currentDayOffset: DayOffset;
   switchDay: (offset: DayOffset) => void;
   refreshData: () => Promise<void>;
@@ -78,13 +93,23 @@ export function usePSEData(): UsePSEDataReturn {
     cached?.timestamp || null
   );
 
+  /**
+   * The business date currently on screen. getDataForDay reads the clock, so
+   * without this in the dependency list the day slice kept describing yesterday
+   * after midnight while the tabs already showed the new date.
+   */
+  const [todayKey, setTodayKey] = useState(() => formatDate(new Date()));
+
   // Guards against overlapping fetches (interval + pull-to-refresh + mount).
   const isFetchingRef = useRef(false);
+  const lastFetchRef = useRef(0);
 
   const refreshData = useCallback(async () => {
     if (isFetchingRef.current) return;
     isFetchingRef.current = true;
     setIsLoading(true);
+
+    lastFetchRef.current = Date.now();
 
     try {
       const processed = processData(await fetchPSEData());
@@ -116,13 +141,67 @@ export function usePSEData(): UsePSEDataReturn {
 
   useEffect(() => {
     refreshData();
-    const intervalId = setInterval(refreshData, REFRESH_INTERVAL_MS);
-    return () => clearInterval(intervalId);
+
+    let intervalId: ReturnType<typeof setInterval> | undefined;
+
+    // No point waking every 15 minutes for data nobody is looking at; becoming
+    // visible refreshes anyway.
+    const startPolling = () => {
+      if (intervalId === undefined) {
+        intervalId = setInterval(refreshData, REFRESH_INTERVAL_MS);
+      }
+    };
+    const stopPolling = () => {
+      if (intervalId !== undefined) {
+        clearInterval(intervalId);
+        intervalId = undefined;
+      }
+    };
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        stopPolling();
+        return;
+      }
+      startPolling();
+      // Backgrounded timers are throttled hard on iOS, so returning to the app
+      // would otherwise show whatever was fetched before it was hidden — and
+      // PSE revises the forecast every hour or two.
+      if (Date.now() - lastFetchRef.current > STALE_ON_RESUME_MS) refreshData();
+    };
+
+    if (!document.hidden) startPolling();
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      stopPolling();
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [refreshData]);
+
+  /**
+   * Roll the business date over at midnight. Scheduled to the next midnight
+   * rather than every 24h: DST days are 23 or 25 hours long, so a fixed period
+   * would drift twice a year.
+   */
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setTodayKey(formatDate(new Date()));
+      // The three-day horizon just moved
+      refreshData();
+    }, msUntilMidnight() + 1000);
+
+    return () => clearTimeout(id);
+  }, [todayKey, refreshData]);
 
   const dayData = useMemo(
     () => getDataForDay(allData, currentDayOffset),
-    [allData, currentDayOffset]
+    [allData, currentDayOffset, todayKey]
+  );
+
+  const todayData = useMemo(
+    () => getDataForDay(allData, 0),
+    [allData, todayKey]
   );
 
   const hasData = useMemo(
@@ -133,6 +212,7 @@ export function usePSEData(): UsePSEDataReturn {
   return {
     allData,
     dayData,
+    todayData,
     currentDayOffset,
     switchDay,
     refreshData,

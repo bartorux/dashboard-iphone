@@ -92,8 +92,8 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
                       {range.worstDifference > 0 ? '+' : ''}
                       {formatMW(range.worstDifference)} MW
                     </span>{' '}
-                    · rezerwa {formatMW(range.reserve)} / wymagana{' '}
-                    {formatMW(range.required)} MW
+                    o {range.worstHour} · rezerwa {formatMW(range.reserve)} /
+                    wymagana {formatMW(range.required)} MW
                   </p>
                 </div>
               </li>

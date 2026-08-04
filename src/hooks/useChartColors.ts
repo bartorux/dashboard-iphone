@@ -25,6 +25,7 @@ const TOKENS = {
   wind: '--series-wind',
   exchange: '--series-exchange',
   other: '--series-other',
+  threshold: '--series-threshold',
   history: '--series-history',
   bandHistory: '--band-history',
 } as const;
@@ -52,6 +53,7 @@ const FALLBACK: ChartColors = {
   wind: '#32ade6',
   exchange: '#af52de',
   other: '#7d8590',
+  threshold: '#5856d6',
   history: '#8e8e93',
   bandHistory: 'rgba(142,142,147,0.18)',
 };

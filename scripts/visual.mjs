@@ -1,0 +1,169 @@
+/**
+ * Visual regression check.
+ *
+ * Twice in this project a visual defect reached production with every test
+ * green: a Y axis clipped by a negative margin, and tooltip indentation that
+ * silently never applied. Both were caught only by looking. This compares
+ * rendered pages against committed baselines so that class of change fails
+ * loudly instead.
+ *
+ *   node scripts/visual.mjs           compare against baselines
+ *   node scripts/visual.mjs --update  rewrite the baselines
+ *
+ * Run the dev server first. Kept out of CI: it needs a downloaded browser,
+ * which deploy.yml deliberately skips.
+ */
+import { chromium, devices } from 'playwright';
+import pixelmatch from 'pixelmatch';
+import { PNG } from 'pngjs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const baselineDir = resolve(root, 'screenshots/baseline');
+const diffDir = resolve(root, 'screenshots/diff');
+const url = process.env.PREVIEW_URL ?? 'http://localhost:5173/dashboard-iphone/';
+const update = process.argv.includes('--update');
+
+const forecast = readFileSync(
+  resolve(root, 'src/utils/__fixtures__/pse-72h.json'),
+  'utf8'
+);
+const history = readFileSync(
+  resolve(root, 'src/utils/__fixtures__/pse-30d.json'),
+  'utf8'
+);
+
+/**
+ * Antialiasing and font rendering wobble by a pixel between runs. This tolerance
+ * absorbs that without hiding a moved element.
+ */
+const PIXEL_THRESHOLD = 0.15;
+const MAX_DIFF_RATIO = 0.001; // 0.1% of pixels
+
+const SCENARIOS = [
+  { name: 'reserve-light', scheme: 'light' },
+  { name: 'reserve-dark', scheme: 'dark' },
+  { name: 'generation-light', scheme: 'light', view: 'Generacja' },
+  { name: 'history-light', scheme: 'light', view: 'Na tle 30 dni' },
+  { name: 'history-dark', scheme: 'dark', view: 'Na tle 30 dni' },
+  { name: 'tomorrow-light', scheme: 'light', day: 'Jutro' },
+  { name: 'settings-light', scheme: 'light', settings: true },
+  { name: 'no-data-light', scheme: 'light', offline: true },
+];
+
+mkdirSync(baselineDir, { recursive: true });
+if (existsSync(diffDir)) rmSync(diffDir, { recursive: true });
+mkdirSync(diffDir, { recursive: true });
+
+/**
+ * Baselines must not go stale overnight. The app slices data by today's
+ * business date, so without a frozen clock every capture would differ from the
+ * day the baseline was written.
+ */
+const FROZEN_TIME = new Date('2026-08-04T12:00:00+02:00');
+
+const browser = await chromium.launch();
+let failures = 0;
+let written = 0;
+
+for (const scenario of SCENARIOS) {
+  const context = await browser.newContext({
+    ...devices['iPhone 15 Pro'],
+    // Baselines are stored at 1x: layout regressions show up identically while
+    // the committed PNGs stay a fraction of the size of 3x captures.
+    deviceScaleFactor: 1,
+    colorScheme: scenario.scheme,
+    locale: 'pl-PL',
+    timezoneId: 'Europe/Warsaw',
+  });
+
+  await context.route('**/api.raporty.pse.pl/**', (route) => {
+    if (scenario.offline) return route.abort('failed');
+    const requested = decodeURIComponent(route.request().url());
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: requested.includes('business_date ge') ? history : forecast,
+    });
+  });
+
+  await context.clock.install({ time: FROZEN_TIME });
+
+  const page = await context.newPage();
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(1800);
+
+  if (scenario.day) {
+    await page.getByRole('tab', { name: new RegExp(scenario.day) }).click();
+    await page.waitForTimeout(1200);
+  }
+  if (scenario.view) {
+    await page.getByRole('tab', { name: scenario.view }).click();
+    await page.waitForTimeout(scenario.view.includes('30') ? 2600 : 1400);
+  }
+  if (scenario.settings) {
+    await page.getByRole('button', { name: 'Ustawienia' }).click();
+    await page.waitForTimeout(900);
+  }
+
+  const shot = await page.screenshot({ fullPage: true });
+  const baselinePath = resolve(baselineDir, `${scenario.name}.png`);
+
+  if (update || !existsSync(baselinePath)) {
+    writeFileSync(baselinePath, shot);
+    written++;
+    console.log(`${scenario.name}: baseline written`);
+    await context.close();
+    continue;
+  }
+
+  const expected = PNG.sync.read(readFileSync(baselinePath));
+  const actual = PNG.sync.read(shot);
+
+  if (expected.width !== actual.width || expected.height !== actual.height) {
+    failures++;
+    console.error(
+      `${scenario.name}: size changed ${expected.width}x${expected.height} -> ${actual.width}x${actual.height}`
+    );
+    writeFileSync(resolve(diffDir, `${scenario.name}-actual.png`), shot);
+    await context.close();
+    continue;
+  }
+
+  const diff = new PNG({ width: expected.width, height: expected.height });
+  const changed = pixelmatch(
+    expected.data,
+    actual.data,
+    diff.data,
+    expected.width,
+    expected.height,
+    { threshold: PIXEL_THRESHOLD }
+  );
+  const ratio = changed / (expected.width * expected.height);
+
+  if (ratio > MAX_DIFF_RATIO) {
+    failures++;
+    console.error(
+      `${scenario.name}: ${changed} pixels differ (${(ratio * 100).toFixed(3)}%)`
+    );
+    writeFileSync(resolve(diffDir, `${scenario.name}-diff.png`), PNG.sync.write(diff));
+    writeFileSync(resolve(diffDir, `${scenario.name}-actual.png`), shot);
+  } else {
+    console.log(`${scenario.name}: ok`);
+  }
+
+  await context.close();
+}
+
+await browser.close();
+
+if (written > 0) {
+  console.log(`\n${written} baseline(s) written — review them before committing.`);
+}
+if (failures > 0) {
+  console.error(`\n${failures} scenario(s) changed. Diffs in screenshots/diff/.`);
+  console.error('If the change is intended: node scripts/visual.mjs --update');
+}
+process.exit(failures > 0 ? 1 : 0);

@@ -250,6 +250,7 @@ export function buildAlertRanges(
       current.lastIndex = index;
       if (difference < current.worstDifference) {
         current.worstDifference = difference;
+        current.worstHour = point.hourLabel;
         current.reserve = point.reserve;
         current.required = point.required;
       }
@@ -259,6 +260,7 @@ export function buildAlertRanges(
         from: point.hourLabel,
         to,
         worstDifference: difference,
+        worstHour: point.hourLabel,
         reserve: point.reserve,
         required: point.required,
         hours: 1,
