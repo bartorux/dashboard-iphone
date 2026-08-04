@@ -21,23 +21,6 @@ const base = (className?: string) => ({
   className: className ?? 'w-5 h-5',
 });
 
-export const BellIcon: React.FC<IconProps> = ({ className }) => (
-  <svg {...base(className)}>
-    <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-    <path d="M13.7 21a2 2 0 0 1-3.4 0" />
-  </svg>
-);
-
-export const BellOffIcon: React.FC<IconProps> = ({ className }) => (
-  <svg {...base(className)}>
-    <path d="M13.7 21a2 2 0 0 1-3.4 0" />
-    <path d="M18.6 13A17 17 0 0 1 18 8" />
-    <path d="M6 8a6 6 0 0 1 .6-2.6" />
-    <path d="M3 17h15" />
-    <path d="M2 2l20 20" />
-  </svg>
-);
-
 export const SettingsIcon: React.FC<IconProps> = ({ className }) => (
   <svg {...base(className)}>
     <circle cx="12" cy="12" r="3" />

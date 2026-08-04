@@ -34,12 +34,10 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
   // to the default on every keystroke.
   const [orange, setOrange] = useState(String(settings.orangeThreshold));
   const [red, setRed] = useState(String(settings.redThreshold));
-  const [disableUpdates, setDisableUpdates] = useState(settings.disableUpdates);
 
   useEffect(() => {
     setOrange(String(settings.orangeThreshold));
     setRed(String(settings.redThreshold));
-    setDisableUpdates(settings.disableUpdates);
   }, [settings]);
 
   const handleSave = () => {
@@ -54,7 +52,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
     const error = onSave({
       orangeThreshold: orangeValue,
       redThreshold: redValue,
-      disableUpdates,
     });
 
     if (error) {
@@ -120,23 +117,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               step={50}
               className="tnum w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[15px] text-text outline-none focus:border-accent"
             />
-          </label>
-
-          <label className="flex cursor-pointer items-start gap-3 rounded-xl bg-surface-2 p-3">
-            <input
-              type="checkbox"
-              checked={disableUpdates}
-              onChange={(event) => setDisableUpdates(event.target.checked)}
-              className="mt-0.5 h-[18px] w-[18px] shrink-0 accent-accent"
-            />
-            <span className="flex-1">
-              <span className="block text-[13px] font-medium text-text">
-                Wycisz komunikaty o aktualizacjach
-              </span>
-              <span className="block text-[11px] text-text-tertiary">
-                Ukryje informacje o nowych wersjach aplikacji
-              </span>
-            </span>
           </label>
 
           <div className="mt-4 flex gap-2">

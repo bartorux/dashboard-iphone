@@ -48,7 +48,7 @@ const Tile: React.FC<{
  * alert thresholds act on.
  *
  * Averaging raw reserve, as this section used to, quietly ignores that the
- * required reserve moves as well: across 33 days it ranged 1285-2723 MW. Two
+ * required reserve moves as well: across 33 days its hourly value ranged 1033-2016 MW. Two
  * adjacent days compared by reserve reach the opposite conclusion to the same
  * pair compared by margin in roughly one case in eleven.
  */

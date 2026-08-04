@@ -12,10 +12,14 @@ const SETTINGS_KEY = `${STORAGE_PREFIX}settings`;
 const DEFAULT_SETTINGS: Settings = {
   orangeThreshold: DEFAULT_ORANGE_THRESHOLD,
   redThreshold: DEFAULT_RED_THRESHOLD,
-  disableUpdates: false,
   version: SETTINGS_VERSION,
 };
 
+/**
+ * Older entries may still carry a `disableUpdates` key from when the update
+ * banner existed. Spreading over the defaults ignores it, so no migration is
+ * needed — the extra field simply never reaches the app.
+ */
 function loadFromStorage(): Settings {
   try {
     const saved = localStorage.getItem(SETTINGS_KEY);
@@ -25,7 +29,20 @@ function loadFromStorage(): Settings {
       if (!parsed.version) {
         parsed.version = SETTINGS_VERSION;
       }
-      return { ...DEFAULT_SETTINGS, ...parsed };
+      // Only known keys: spreading the whole parsed object carried forward
+      // fields from settings that no longer exist, so the object disagreed
+      // with its own type.
+      return {
+        ...DEFAULT_SETTINGS,
+        orangeThreshold:
+          typeof parsed.orangeThreshold === 'number'
+            ? parsed.orangeThreshold
+            : DEFAULT_SETTINGS.orangeThreshold,
+        redThreshold:
+          typeof parsed.redThreshold === 'number'
+            ? parsed.redThreshold
+            : DEFAULT_SETTINGS.redThreshold,
+      };
     }
   } catch {
     // Corrupted data, use defaults

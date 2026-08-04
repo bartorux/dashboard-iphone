@@ -18,8 +18,6 @@ function renderHeader(
       status="ok"
       connection={connection}
       connectionText={connectionText}
-      notificationsSilenced={false}
-      onToggleNotifications={noop}
       onToggleSettings={noop}
     />
   );
@@ -42,23 +40,21 @@ describe('Header', () => {
     expect(screen.getByText('Brak danych z PSE')).toBeInTheDocument();
   });
 
-  it('exposes the notification toggle as a labelled control', () => {
-    const onToggle = vi.fn();
+  it('offers settings and nothing that only pretends to work', () => {
     render(
       <Header
         status="alarm"
         connection="online"
         connectionText="Zaktualizowano 20:15"
-        notificationsSilenced
-        onToggleNotifications={onToggle}
         onToggleSettings={noop}
       />
     );
 
-    expect(
-      screen.getByRole('button', { name: 'Włącz powiadomienia' })
-    ).toBeInTheDocument();
     expect(screen.getByText('ALARM')).toBeInTheDocument();
+    // The bell used to sit here toggling only its own icon: every caller passed
+    // force: true, so it silenced nothing.
+    expect(screen.getAllByRole('button')).toHaveLength(1);
+    expect(screen.getByRole('button', { name: 'Ustawienia' })).toBeInTheDocument();
   });
 });
 
@@ -147,7 +143,6 @@ describe('SettingsPanel — theme switch', () => {
   const settings: Settings = {
     orangeThreshold: 500,
     redThreshold: 300,
-    disableUpdates: false,
     version: 1,
   };
 
@@ -188,7 +183,6 @@ describe('SettingsPanel — thresholds', () => {
   const settings: Settings = {
     orangeThreshold: 500,
     redThreshold: 300,
-    disableUpdates: false,
     version: 1,
   };
 

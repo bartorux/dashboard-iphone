@@ -50,14 +50,20 @@ function toNumber(value: unknown): number | null {
 }
 
 /**
- * Extract available reserve from a raw API item.
- * Returns null if no valid value found (instead of 0 to avoid masking missing data).
+ * Available reserve, or null when PSE did not publish it.
+ *
+ * There is deliberately no fallback field. This used to fall back to
+ * `avail_cap_gen_units_stor_prov`, which measures a different quantity roughly
+ * 4.5x larger: it would have reported a margin of +13 273 MW where the true
+ * figure was +1 667 MW, showing a calm "OK" during a real alarm. It only ever
+ * stayed harmless because that field is not among those requested in api.ts —
+ * adding it there would have armed the trap.
+ *
+ * Missing data must look like missing data; processData turns it into a visible
+ * break in the line.
  */
 export function getAvailableReserve(item: PSERawItem): number | null {
-  return (
-    toNumber(item.surplus_cap_avail_tso) ??
-    toNumber(item.avail_cap_gen_units_stor_prov)
-  );
+  return toNumber(item.surplus_cap_avail_tso);
 }
 
 /**
@@ -323,7 +329,7 @@ export function getUpcomingStatus(
  * Margins (available minus required) for points where both parts are known.
  *
  * Averaging raw reserve instead hides that the *required* reserve moves too —
- * measured across 33 days it ranges 1285-2723 MW. Comparing two days by reserve
+ * measured across 33 days the hourly figure ranges 1033-2016 MW. Comparing two days by reserve
  * reaches the opposite conclusion to comparing them by margin in about one pair
  * in eleven.
  */

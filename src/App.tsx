@@ -57,12 +57,15 @@ function App() {
   const { installableState, isInstalled, install } = useInstallPrompt();
 
   const [settingsVisible, setSettingsVisible] = useState(false);
-  const [notificationsSilenced, setNotificationsSilenced] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
   const [notificationKey, setNotificationKey] = useState(0);
   const [clockTick, setClockTick] = useState(0);
 
-  const { needRefresh: [needRefresh], updateServiceWorker } = useRegisterSW();
+  // Kept for its side effect: this call is what registers the service worker.
+  // vite.config.ts sets no injectRegister, so nothing else does it — dropping
+  // the hook would silently end offline support and auto-updates, the very
+  // channel every later fix reaches the phone through.
+  useRegisterSW();
 
   useEffect(() => {
     const id = setInterval(() => setClockTick((tick) => tick + 1), CLOCK_TICK_MS);
@@ -123,14 +126,10 @@ function App() {
     }
   }, [horizonAlertCount]);
 
-  const showNotification = useCallback(
-    (message: string, force = false) => {
-      if (notificationsSilenced && !force) return;
-      setNotification(message);
-      setNotificationKey((key) => key + 1);
-    },
-    [notificationsSilenced]
-  );
+  const showNotification = useCallback((message: string) => {
+    setNotification(message);
+    setNotificationKey((key) => key + 1);
+  }, []);
 
   const handleSwitchDay = useCallback(
     (offset: DayOffset) => switchDay(offset),
@@ -142,8 +141,7 @@ function App() {
     showNotification(
       isIOS
         ? 'Safari: Udostępnij → Dodaj do ekranu głównego'
-        : 'Menu przeglądarki → Dodaj do ekranu głównego',
-      true
+        : 'Menu przeglądarki → Dodaj do ekranu głównego'
     );
   }, [showNotification]);
 
@@ -172,14 +170,6 @@ function App() {
         status={headerStatus}
         connection={connection}
         connectionText={connectionText}
-        notificationsSilenced={notificationsSilenced}
-        onToggleNotifications={() =>
-          setNotificationsSilenced((silenced) => {
-            const next = !silenced;
-            if (!next) showNotification('Powiadomienia włączone', true);
-            return next;
-          })
-        }
         onToggleSettings={() => setSettingsVisible((visible) => !visible)}
       />
 
@@ -198,7 +188,7 @@ function App() {
           onThemeChange={setTheme}
           onSave={saveSettings}
           onReset={resetSettings}
-          onNotification={(message) => showNotification(message, true)}
+          onNotification={showNotification}
           onClose={() => setSettingsVisible(false)}
         />
 
@@ -259,15 +249,6 @@ function App() {
             onShowInstructions={handleShowInstructions}
           />
 
-          {needRefresh && !settings.disableUpdates && (
-            <button
-              type="button"
-              onClick={() => updateServiceWorker(true)}
-              className="min-h-11 w-full rounded-xl bg-accent px-4 text-[15px] font-semibold text-white active:opacity-80"
-            >
-              Zainstaluj aktualizację
-            </button>
-          )}
         </div>
       </main>
 

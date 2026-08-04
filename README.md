@@ -59,7 +59,7 @@ dopiero przy pierwszym wejściu w ten widok i cache'owane do północy.
 
 Wszystkie wartości w tej sekcji to **margines** (`dostępna - wymagana`), nie surowa rezerwa.
 Uśrednianie samej rezerwy pomija fakt, że wymagana rezerwa też się zmienia — na 33 dobach wahała
-się od 1285 do 2723 MW. Porównanie dwóch dni po rezerwie daje wniosek przeciwny do porównania po
+się godzinowo od 1033 do 2016 MW. Porównanie dwóch dni po rezerwie daje wniosek przeciwny do porównania po
 marginesie mniej więcej w jednej parze na jedenaście; fixture
 `pse-reserve-vs-margin.json` utrwala jeden taki przypadek jako test regresji.
 

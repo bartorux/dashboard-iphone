@@ -1,5 +1,12 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { getValidMargins, getValidReserves, processData, getDataForDay, safeAvg } from '../dataTransform';
+import {
+  getAvailableReserve,
+  getValidMargins,
+  getValidReserves,
+  processData,
+  getDataForDay,
+  safeAvg,
+} from '../dataTransform';
 import { makePoint } from '../../test/factories';
 import { PSERawItem } from '../../types';
 
@@ -56,5 +63,33 @@ describe('reserve and margin can disagree — real PSE data', () => {
 
     expect(reserveChange).toBeGreaterThan(0);
     expect(marginChange).toBeLessThan(0);
+  });
+});
+
+describe('getAvailableReserve', () => {
+  it('reads the TSO surplus', () => {
+    expect(getAvailableReserve({ surplus_cap_avail_tso: 3359 } as PSERawItem)).toBe(
+      3359
+    );
+  });
+
+  it('never substitutes available capacity for the surplus', () => {
+    // These measure different things: on 2026-08-03 the surplus averaged 3359 MW
+    // while available capacity averaged 14 965 MW. Falling back would have
+    // reported a +13 273 MW margin instead of +1 667 MW — a calm "OK" during a
+    // real alarm. This test fails if the fallback ever comes back.
+    const reserve = getAvailableReserve({
+      surplus_cap_avail_tso: null,
+      avail_cap_gen_units_stor_prov: 14965,
+    } as PSERawItem);
+
+    expect(reserve).toBeNull();
+  });
+
+  it('reports absence as null rather than zero', () => {
+    expect(getAvailableReserve({} as PSERawItem)).toBeNull();
+    expect(
+      getAvailableReserve({ surplus_cap_avail_tso: 'nonsense' } as PSERawItem)
+    ).toBeNull();
   });
 });

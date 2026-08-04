@@ -5,7 +5,7 @@ import {
   STATUS_HEADER_BG,
   STATUS_LABEL,
 } from '../utils/status';
-import { BellIcon, BellOffIcon, SettingsIcon } from './icons';
+import { SettingsIcon } from './icons';
 
 export type ConnectionState = 'loading' | 'online' | 'cached' | 'error';
 
@@ -20,8 +20,6 @@ interface HeaderProps {
   status: SystemStatus;
   connection: ConnectionState;
   connectionText: string;
-  notificationsSilenced: boolean;
-  onToggleNotifications: () => void;
   onToggleSettings: () => void;
 }
 
@@ -38,8 +36,6 @@ const Header: React.FC<HeaderProps> = ({
   status,
   connection,
   connectionText,
-  notificationsSilenced,
-  onToggleNotifications,
   onToggleSettings,
 }) => (
   <header
@@ -65,22 +61,6 @@ const Header: React.FC<HeaderProps> = ({
           <span className="truncate">{connectionText}</span>
         </div>
       </div>
-
-      <button
-        type="button"
-        onClick={onToggleNotifications}
-        aria-pressed={notificationsSilenced}
-        aria-label={
-          notificationsSilenced
-            ? 'Włącz powiadomienia'
-            : 'Wycisz powiadomienia'
-        }
-        className={`grid place-items-center w-11 h-11 -mr-1 rounded-full transition-opacity active:bg-white/15 ${
-          notificationsSilenced ? 'opacity-50' : 'opacity-100'
-        }`}
-      >
-        {notificationsSilenced ? <BellOffIcon /> : <BellIcon />}
-      </button>
 
       <button
         type="button"

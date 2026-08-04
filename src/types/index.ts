@@ -98,7 +98,6 @@ export interface AlertHistory {
 export interface Settings {
   orangeThreshold: number;
   redThreshold: number;
-  disableUpdates: boolean;
   version: number;
 }
 
