@@ -55,9 +55,23 @@ rozstępu 10.–90. percentyla dla tej samej godziny w minionych dobach. Widok
 nazywa dzień po imieniu, bo obsługuje także Jutro i Pojutrze. Dane pobierane
 dopiero przy pierwszym wejściu w ten widok i cache'owane do północy.
 
+## Analiza i trendy
+
+Wszystkie wartości w tej sekcji to **margines** (`dostępna - wymagana`), nie surowa rezerwa.
+Uśrednianie samej rezerwy pomija fakt, że wymagana rezerwa też się zmienia — na 33 dobach wahała
+się od 1285 do 2723 MW. Porównanie dwóch dni po rezerwie daje wniosek przeciwny do porównania po
+marginesie mniej więcej w jednej parze na jedenaście; fixture
+`pse-reserve-vs-margin.json` utrwala jeden taki przypadek jako test regresji.
+
+Punktem odniesienia jest zawsze **dziś**, a nie dzień sąsiedni — inaczej odniesienie zmieniałoby
+się przy każdym przełączeniu zakładki. Na zakładce Dziś blok porównania się nie renderuje.
+
 ## Gesty
 
-Dotknięcie wykresu otwiera dymek ze szczegółami, powtórne go zamyka — Recharts
+Dotknięcie wykresu otwiera dymek ze szczegółami wraz z kropką na serii i pionową linią kursora;
+powtórne dotknięcie zamyka wszystkie trzy naraz. Kropka to `activeDot` serii, sterowany osobnym
+stanem niż dymek, więc trzeba ją wygasić jawnie — inaczej zostaje i wskazuje godzinę, którą
+użytkownik już zamknął. Powtórne dotknięcie zamyka dymek — Recharts
 otwiera go sam, ale na telefonie nie ma wskaźnika, który mógłby go zamknąć.
 Przeciąganie po wykresie odczytuje kolejne godziny i dymka nie zamyka.
 

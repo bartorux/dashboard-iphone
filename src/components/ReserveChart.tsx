@@ -331,12 +331,19 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               dot={false}
               connectNulls={false}
               animationDuration={ANIMATION_MS}
-              activeDot={{
-                r: 4,
-                fill: colors.reserve,
-                stroke: colors.surface,
-                strokeWidth: 2,
-              }}
+              /* Cleared with the tooltip: `active={false}` hides the box but
+                 the dot is series state, so it lingered and pointed at an hour
+                 the user had already dismissed. */
+              activeDot={
+                tooltipActive === false
+                  ? false
+                  : {
+                      r: 4,
+                      fill: colors.reserve,
+                      stroke: colors.surface,
+                      strokeWidth: 2,
+                    }
+              }
             />
           </ComposedChart>
         </ResponsiveContainer>

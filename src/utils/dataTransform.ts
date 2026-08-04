@@ -320,6 +320,24 @@ export function getUpcomingStatus(
 }
 
 /**
+ * Margins (available minus required) for points where both parts are known.
+ *
+ * Averaging raw reserve instead hides that the *required* reserve moves too —
+ * measured across 33 days it ranges 1285-2723 MW. Comparing two days by reserve
+ * reaches the opposite conclusion to comparing them by margin in about one pair
+ * in eleven.
+ */
+export function getValidMargins(data: PSEDataPoint[]): number[] {
+  const margins: number[] = [];
+  for (const point of data) {
+    if (point.reserve === null || point.required === null) continue;
+    const margin = point.reserve - point.required;
+    if (Number.isFinite(margin)) margins.push(margin);
+  }
+  return margins;
+}
+
+/**
  * Get valid (non-null, non-NaN) reserve values from data.
  */
 export function getValidReserves(data: PSEDataPoint[]): number[] {
