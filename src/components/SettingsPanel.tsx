@@ -96,8 +96,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               inputMode="numeric"
               value={orange}
               onChange={(event) => setOrange(event.target.value)}
-              min={100}
-              max={1000}
+              min={1}
+              max={2000}
               step={50}
               className="tnum w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[15px] text-text outline-none focus:border-accent"
             />
@@ -112,8 +112,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               inputMode="numeric"
               value={red}
               onChange={(event) => setRed(event.target.value)}
-              min={50}
-              max={500}
+              min={0}
+              max={1500}
               step={50}
               className="tnum w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[15px] text-text outline-none focus:border-accent"
             />

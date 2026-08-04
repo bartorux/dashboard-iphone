@@ -73,6 +73,21 @@ marginesie mniej więcej w jednej parze na jedenaście; fixture
 Punktem odniesienia jest zawsze **dziś**, a nie dzień sąsiedni — inaczej odniesienie zmieniałoby
 się przy każdym przełączeniu zakładki. Na zakładce Dziś blok porównania się nie renderuje.
 
+## Progi alertów
+
+Progi ustawiane przez użytkownika są ograniczone zakresem wziętym z rozkładu marginesu na 792
+zmierzonych godzinach. Alarm: **0–1500 MW**, uwaga: **1–2000 MW**, przy czym alarm musi być niższy.
+
+Dolna granica alarmu wynika z tego, że deficyt jest alarmem z definicji — wartość ujemna
+twierdziłaby coś przeciwnego i po cichu przestałaby oznaczać realne niedobory. Górne biorą się
+z pokrycia: próg 1500 MW oznacza już połowę wszystkich godzin, 2000 MW ponad dwie trzecie,
+a powyżej poziomy przestają cokolwiek rozróżniać.
+
+Wartość spoza zakresu jest **odrzucana z komunikatem**, nie przycinana po cichu — podmiana
+wpisanej liczby bez powiedzenia o tym jest gorsza niż odmowa. Wyjątkiem jest wczytywanie: wartości
+zapisane zanim granice powstały są przycinane, bo odmowa zostawiłaby aplikację bez ustawień,
+a zapisane wcześniej 999999 psułoby wykres przy każdym wejściu.
+
 ## Świeżość danych
 
 Prognoza PSE jest korygowana często — dla trzech dób naliczyłem 32 różne momenty publikacji, czyli

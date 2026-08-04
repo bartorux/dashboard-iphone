@@ -127,11 +127,10 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
 
       <div className="collapsible" data-collapsed={!expanded}>
         <div>
-          <p className="pt-2 text-[11px] leading-relaxed text-text-secondary">
-            Wszystkie wartości to <strong className="font-semibold text-text">margines</strong>,
-            czyli dostępna rezerwa minus wymagana.
-          </p>
-
+          {/* No definition line here: all four tiles carry the word "margines"
+              in their own labels, and the card at the top of the screen shows
+              the margin sitting above the available and required figures it is
+              derived from. */}
           <div className="grid grid-cols-2 gap-2 pt-3">
             <Tile
               label="Średni margines"

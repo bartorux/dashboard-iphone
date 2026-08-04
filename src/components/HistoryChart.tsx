@@ -228,15 +228,6 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
 
   return (
     <>
-      {/* The chart was legible but unexplained: it needs saying what the band
-          is before the shape means anything. */}
-      <p className="mb-2 px-1 text-[11px] leading-relaxed text-text-secondary">
-        Wykres pokazuje <strong className="font-semibold text-text">margines</strong>,
-        czyli dostępną rezerwę minus wymaganą. Poniżej zera rezerwa nie pokrywa
-        wymagań. Szare pasmo to zakres typowy dla danej godziny — mieściło się
-        w nim 80% z ostatnich {days} dni.
-      </p>
-
       {summary && (
         <p className="mb-2 px-1 text-[13px] font-medium text-text">{summary}</p>
       )}
@@ -250,6 +241,12 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
             swatch: (
               <AreaSwatch fill={colors.bandHistory} border={colors.history} />
             ),
+            // The band is the one entry that means nothing without explaining;
+            // 'Dziś' and 'Mediana' speak for themselves.
+            info:
+              'Wykres pokazuje margines, czyli dostępną rezerwę minus wymaganą — ' +
+              'poniżej zera rezerwa nie pokrywa wymagań. Pasmo to zakres typowy ' +
+              `dla danej godziny: mieściło się w nim 80% z ostatnich ${days} dni.`,
           },
         ]}
       />
