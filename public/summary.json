@@ -1,13 +1,13 @@
 {
   "headline": "W poniedziałek między 17:00 a 20:00 rezerwa nie pokryje wymaganego poziomu.",
-  "body": "Nadwyżka pozostanie powyżej progu, powyżej którego operator ma prawo nie ogłaszać przywołania. Do tych godzin pozostaje ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. W innych godzinach poniedziałku rezerwa pokryje wymagany poziom.",
-  "outlook": "W niedzielę i we wtorek nie ma podstaw do przywołania, a we wtorek o 20:00 margines będzie najniższy.",
-  "generatedAt": "2026-08-09T20:10:39.650Z",
+  "body": "Nadwyżka przekracza próg 1100 MW, więc operator ma prawo nie ogłaszać przywołania. Ogłoszenie może jeszcze nadejść, bo zostało więcej czasu niż wymagane ośmiogodzinne wyprzedzenie. W tym dniu występuje też jedna godzina z dodatnim marginesem, gdzie rezerwa pokrywa wymagany poziom i nie ma tam podstaw do przywołania.",
+  "outlook": "W niedzielę i we wtorek nie ma podstaw do przywołania; we wtorek o 20:00 margines osiąga najniższą wartość.",
+  "generatedAt": "2026-08-09T20:21:31.689Z",
   "dates": [
     "2026-08-09",
     "2026-08-10",
     "2026-08-11"
   ],
-  "assessment": "2026-08-09|W|none|1300|22:00|0|0|0|;2026-08-10|R|moderate|-200|18:00|1|2|11|moderate:17:00-20:00;2026-08-11|R|none|300|20:00|1|0|20|#v13",
+  "assessment": "2026-08-09|W|none|1300|22:00|0|0|0|;2026-08-10|R|moderate|-200|18:00|1|2|11|moderate:17:00-20:00;2026-08-11|R|none|300|20:00|1|0|20|#v15",
   "model": "gemini-3.5-flash-lite"
 }
