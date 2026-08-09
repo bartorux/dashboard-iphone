@@ -5,6 +5,8 @@ export interface Summary {
   body: string;
   outlook: string;
   generatedAt: string;
+  /** Business dates covered, so the card can name its own span. */
+  dates: string[];
 }
 
 /**
@@ -17,10 +19,20 @@ export const MAX_AGE_MS = 12 * 60 * 60 * 1000;
 function usable(value: unknown): value is Summary {
   if (typeof value !== 'object' || value === null) return false;
   const record = value as Record<string, unknown>;
+
+  const textFields = ['headline', 'body', 'outlook', 'generatedAt'].every(
+    (key) => typeof record[key] === 'string' && record[key] !== ''
+  );
+
+  // A card that cannot say which days it covers is the very thing this field
+  // exists to prevent, so a file without it is refused rather than shown bare.
+  const dates =
+    Array.isArray(record.dates) &&
+    record.dates.length > 0 &&
+    record.dates.every((entry) => typeof entry === 'string' && entry !== '');
+
   return (
-    ['headline', 'body', 'outlook', 'generatedAt'].every(
-      (key) => typeof record[key] === 'string' && record[key] !== ''
-    ) && !Number.isNaN(Date.parse(record.generatedAt as string))
+    textFields && dates && !Number.isNaN(Date.parse(record.generatedAt as string))
   );
 }
 

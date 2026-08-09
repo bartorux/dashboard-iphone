@@ -103,6 +103,7 @@ for (const scenario of SCENARIOS) {
         outlook:
           'W kolejnych dniach margines wraca powyżej typowego zakresu.',
         generatedAt: new Date(FROZEN_TIME.getTime() - 30 * 60 * 1000).toISOString(),
+        dates: ['2026-08-04', '2026-08-05', '2026-08-06'],
       }),
     });
   });

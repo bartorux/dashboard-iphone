@@ -28,6 +28,8 @@ env:
 jobs:
   summary:
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.publish.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
 
@@ -46,14 +48,16 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npx tsx scripts/summary.ts
 
-      # Committing is what publishes it: Pages is served from a build artifact,
-      # so the file reaches the phone through the existing deploy workflow, which
-      # this push triggers. No commit when nothing changed, so the deploy — and
-      # the service worker update behind it — only happens when there is news.
-      - name: Opublikuj, jesli sie zmienilo
+      # The commit is for durability — the summary and the assessment it rests on
+      # stay in history. It is NOT what publishes: a push made with GITHUB_TOKEN
+      # deliberately triggers no further workflow, so `deploy.yml` never sees it.
+      # Delivery is the job below, which runs only when this step changed something.
+      - name: Zapisz, jesli sie zmienilo
+        id: publish
         run: |
           if git diff --quiet -- public/summary.json; then
             echo "Bez zmian — nie publikuje."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name "github-actions[bot]"
@@ -63,3 +67,45 @@ jobs:
           # Someone may have pushed while the model was answering.
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+  # Publishes the site itself rather than hoping the commit above wakes the deploy
+  # workflow — it cannot. Gated on an actual change, so a quiet hour costs nothing
+  # and the service worker is not churned on the phone for identical content.
+  deploy:
+    needs: summary
+    if: needs.summary.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    # Same group as deploy.yml, so a code deploy and a summary deploy queue up
+    # behind each other instead of racing for Pages.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # The branch head, not the SHA that triggered the schedule — the summary
+      # commit landed after this run began.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4

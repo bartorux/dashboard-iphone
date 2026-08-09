@@ -16,6 +16,7 @@ const fresh = {
   body: 'Rezerwa pokrywa wymaganą wartość.',
   outlook: 'W kolejnych dniach bez zmian.',
   generatedAt: '2026-08-09T11:30:00Z',
+  dates: ['2026-08-09', '2026-08-10', '2026-08-11'],
 };
 
 describe('useSummary', () => {
@@ -58,6 +59,22 @@ describe('useSummary', () => {
     expect(missing.result.current).toBeNull();
     expect(broken.result.current).toBeNull();
     expect(offline.result.current).toBeNull();
+  });
+
+  it('refuses a file that cannot say which days it covers', async () => {
+    // A card without its span looks merely unrefreshed when the day tabs are
+    // switched and it does not follow — which is the confusion the field exists
+    // to prevent, so a bare label is worse than no card.
+    const { dates: _drop, ...withoutDates } = fresh;
+    respondWith(withoutDates);
+    const missing = renderHook(() => useSummary(NOW));
+
+    respondWith({ ...fresh, dates: [] });
+    const empty = renderHook(() => useSummary(NOW));
+
+    await new Promise((done) => setTimeout(done, 10));
+    expect(missing.result.current).toBeNull();
+    expect(empty.result.current).toBeNull();
   });
 
   it('rejects an unparseable timestamp rather than showing undated text', async () => {

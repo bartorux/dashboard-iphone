@@ -7,10 +7,20 @@ export const STATUS_LABEL: Record<SystemStatus, string> = {
   unknown: 'Brak danych',
 };
 
+/**
+ * Each one names its own horizon, because the bar reports only the next few
+ * hours (`getUpcomingStatus` weighs three blocks) while the card beneath it
+ * covers three days. Unqualified, a green "reserve is fine" read as a promise
+ * about the whole day and appeared to contradict a card warning about the
+ * evening — both true, but only one of them said what it was talking about.
+ *
+ * The horizon is worded rather than counted: the window is a detail of the
+ * implementation, and a figure there would invite reading it as a guarantee.
+ */
 export const STATUS_DESCRIPTION: Record<SystemStatus, string> = {
-  ok: 'Rezerwa mocy w normie',
-  warn: 'Rezerwa zbliża się do progu',
-  alarm: 'Rezerwa poniżej progu krytycznego',
+  ok: 'Najbliższe godziny w normie',
+  warn: 'Najbliższe godziny przy progu',
+  alarm: 'Najbliższe godziny poniżej progu',
   unknown: 'Brak danych do oceny',
 };
 

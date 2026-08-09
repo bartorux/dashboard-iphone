@@ -29,6 +29,12 @@ const target = resolve(root, 'public/summary.json');
 interface SummaryFile extends Summary {
   /** When the text was written, so the card can show its age. */
   generatedAt: string;
+  /**
+   * Business dates the text covers — stored as dates, never as a finished
+   * phrase. A summary written at 23:50 and read after midnight would carry a
+   * label calling a day "today" that had since become yesterday.
+   */
+  dates: string[];
   /** What it describes — a rewrite is pointless while this is unchanged. */
   assessment: string;
   model: string;
@@ -135,6 +141,7 @@ if (!verdict.ok) giveUp(`Odrzucone: ${verdict.reason}`);
 const file: SummaryFile = {
   ...summary,
   generatedAt: now.toISOString(),
+  dates: facts.map((day) => day.businessDate),
   assessment: key,
   model: MODEL,
 };

@@ -199,13 +199,16 @@ function App() {
           onClose={() => setSettingsVisible(false)}
         />
 
-        {summary && <SummaryCard summary={summary} />}
-
+        {/* The figure people open the app for comes first; the prose explains it
+            afterwards. Both stay above the day tabs, which is the line that
+            separates what does not follow the selected day from what does. */}
         <CurrentStatusCard
           point={currentPoint}
           status={currentStatus}
           isStale={isStale && hasData}
         />
+
+        {summary && <SummaryCard summary={summary} now={now} />}
 
         <DayNavigation
           currentDay={currentDayOffset}
