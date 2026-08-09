@@ -174,8 +174,19 @@ export function buildFacts(
  * something might be coming, not that anything is owed.
  */
 const RISK_WORD: Record<CallPeriodRisk, string> = {
-  high: 'PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE (nadwyżka poniżej progu 1100 MW, więc operator nie ma podstaw, by go nie ogłaszać)',
-  moderate: 'OPERATOR MOŻE NIE OGŁASZAĆ (rezerwa poniżej wymaganej, ale nadwyżka trzyma się powyżej progu 1100 MW)',
+  high:
+    'PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE — nadwyżka spada poniżej progu, ' +
+    'powyżej którego przepis pozwala przywołania nie ogłaszać, więc operator ' +
+    'traci tę podstawę',
+  // Named by what it does, not by a label. Handed "wartość regulacyjna", the
+  // model coined "próg regulacyjny" — a term the regulation does not use and
+  // which a reader can easily take for the required reserve, the one
+  // distinction this whole card rests on.
+  moderate:
+    'OPERATOR MA PRAWO NIE OGŁASZAĆ — rezerwa nie pokrywa wymaganego poziomu, ' +
+    'ale nadwyżka utrzymuje się powyżej progu, powyżej którego przepis pozwala ' +
+    'przywołania nie ogłaszać. To UPRAWNIENIE operatora, nie prognoza — nie ' +
+    'wiemy, jak z niego skorzysta',
   none: 'brak podstaw',
   unknown: 'nieznane',
 };
@@ -183,7 +194,7 @@ const RISK_WORD: Record<CallPeriodRisk, string> = {
 /** The same states in a few words, for places where the full clause will not fit. */
 const RISK_SHORT: Record<CallPeriodRisk, string> = {
   high: 'przywołanie powinno zostać ogłoszone',
-  moderate: 'operator może nie ogłaszać',
+  moderate: 'operator ma prawo nie ogłaszać',
   none: 'brak podstaw',
   unknown: 'nieznane',
 };
@@ -248,7 +259,7 @@ export function keyPoint(facts: DayFacts[]): string {
     return (
       `NAJWAŻNIEJSZE: nigdzie nie ma podstaw do przywołania, ale ` +
       `${near.weekday} ${near.businessDate} o ${near.worstHour} margines ` +
-      `podchodzi blisko granicy`
+      `zbliża się do granicy`
     );
   }
 
@@ -261,14 +272,14 @@ export function keyPoint(facts: DayFacts[]): string {
  * accounts for, so sending it would cost tokens to say less.
  */
 export function renderFacts(facts: DayFacts[], days: number): string {
-  if (facts.length === 0) return 'Brak danych o godzinach przed nami.';
+  if (facts.length === 0) return 'Brak danych o pozostałych godzinach.';
 
   const lines: string[] = [keyPoint(facts), ''];
 
   for (const day of facts) {
     lines.push(
       `${day.businessDate} (${day.weekday}${day.workingDay ? ', roboczy' : ', wolny'}), ` +
-        `godzin przed nami: ${day.hoursAhead}`
+        `godzin pozostało: ${day.hoursAhead}`
     );
 
     if (day.worstMargin !== null) {
@@ -308,8 +319,8 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       // out in words and slipped straight past the ban on numbers.
       lines.push(
         `    OSOBNO, w INNYCH godzinach tego dnia: ${day.nearThreshold} godz. ` +
-          `z cienkim, ale DODATNIM marginesem — tam rezerwa pokrywa wymaganą ` +
-          `i nie ma podstaw do przywołania`
+          `z wąskim, ale DODATNIM marginesem — tam rezerwa pokrywa wymagany ` +
+          `poziom i nie ma podstaw do przywołania`
       );
     }
 
