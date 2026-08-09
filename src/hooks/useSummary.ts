@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface Summary {
   headline: string;
@@ -43,13 +43,16 @@ function usable(value: unknown): value is Summary {
  * Every failure resolves to null and the card simply does not appear: the chart,
  * the alerts and the analysis all come straight from PSE and owe this nothing.
  */
-export function useSummary(now: Date): Summary | null {
+export function useSummary(now: Date): {
+  summary: Summary | null;
+  refresh: () => void;
+} {
   const [summary, setSummary] = useState<Summary | null>(null);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     let cancelled = false;
 
-    fetch(`${import.meta.env.BASE_URL}summary.json`)
+    fetch(`${import.meta.env.BASE_URL}summary.json`, { cache: 'no-store' })
       .then((response) => (response.ok ? response.json() : null))
       .then((value) => {
         if (!cancelled) setSummary(usable(value) ? value : null);
@@ -63,8 +66,30 @@ export function useSummary(now: Date): Summary | null {
     };
   }, []);
 
-  if (!summary) return null;
+  useEffect(() => load(), [load]);
+
+  /**
+   * Fetched once on mount was not enough. Returning to a PWA does not remount
+   * the page, so the chart refreshed itself on resume while the text above it
+   * stayed as it was — the two then described different moments, which is worse
+   * than either being briefly absent. The generator writes a new text every hour
+   * or so, and this is the only chance to pick it up short of killing the app.
+   */
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (!document.hidden) load();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () =>
+      document.removeEventListener('visibilitychange', handleVisibility);
+  }, [load]);
+
+  if (!summary) return { summary: null, refresh: load };
 
   const age = now.getTime() - Date.parse(summary.generatedAt);
-  return age >= 0 && age < MAX_AGE_MS ? summary : null;
+  return {
+    summary: age >= 0 && age < MAX_AGE_MS ? summary : null,
+    refresh: load,
+  };
 }

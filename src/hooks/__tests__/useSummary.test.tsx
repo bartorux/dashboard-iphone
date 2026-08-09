@@ -25,7 +25,7 @@ describe('useSummary', () => {
 
   it('returns a recent summary', async () => {
     respondWith(fresh);
-    const { result } = renderHook(() => useSummary(NOW));
+    const { result } = renderHook(() => useSummary(NOW).summary);
 
     await waitFor(() => expect(result.current).not.toBeNull());
     expect(result.current?.headline).toBe(fresh.headline);
@@ -36,7 +36,7 @@ describe('useSummary', () => {
       ...fresh,
       generatedAt: new Date(NOW.getTime() - MAX_AGE_MS - 1000).toISOString(),
     });
-    const { result } = renderHook(() => useSummary(NOW));
+    const { result } = renderHook(() => useSummary(NOW).summary);
 
     // Nothing to wait for — it must never appear.
     await new Promise((done) => setTimeout(done, 10));
@@ -47,18 +47,33 @@ describe('useSummary', () => {
     // None of these may take the rest of the screen down with them: the chart,
     // the alerts and the analysis all come straight from PSE.
     respondWith(null, false);
-    const missing = renderHook(() => useSummary(NOW));
+    const missing = renderHook(() => useSummary(NOW).summary);
 
     respondWith({ headline: 'bez reszty pol' });
-    const broken = renderHook(() => useSummary(NOW));
+    const broken = renderHook(() => useSummary(NOW).summary);
 
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
-    const offline = renderHook(() => useSummary(NOW));
+    const offline = renderHook(() => useSummary(NOW).summary);
 
     await new Promise((done) => setTimeout(done, 10));
     expect(missing.result.current).toBeNull();
     expect(broken.result.current).toBeNull();
     expect(offline.result.current).toBeNull();
+  });
+
+  it('fetches again when the app comes back to the foreground', async () => {
+    // Returning to a PWA does not remount the page, so a fetch on mount alone
+    // left the text as it was while the chart refreshed itself on resume — the
+    // two then described different moments. Killing the app was the only cure.
+    respondWith(fresh);
+    const { result } = renderHook(() => useSummary(NOW).summary);
+    await waitFor(() => expect(result.current).not.toBeNull());
+
+    const later = { ...fresh, headline: 'Nowa analiza.' };
+    respondWith(later);
+    document.dispatchEvent(new Event('visibilitychange'));
+
+    await waitFor(() => expect(result.current?.headline).toBe('Nowa analiza.'));
   });
 
   it('refuses a file that cannot say which days it covers', async () => {
@@ -67,10 +82,10 @@ describe('useSummary', () => {
     // to prevent, so a bare label is worse than no card.
     const { dates: _drop, ...withoutDates } = fresh;
     respondWith(withoutDates);
-    const missing = renderHook(() => useSummary(NOW));
+    const missing = renderHook(() => useSummary(NOW).summary);
 
     respondWith({ ...fresh, dates: [] });
-    const empty = renderHook(() => useSummary(NOW));
+    const empty = renderHook(() => useSummary(NOW).summary);
 
     await new Promise((done) => setTimeout(done, 10));
     expect(missing.result.current).toBeNull();
@@ -79,7 +94,7 @@ describe('useSummary', () => {
 
   it('rejects an unparseable timestamp rather than showing undated text', async () => {
     respondWith({ ...fresh, generatedAt: 'kiedys' });
-    const { result } = renderHook(() => useSummary(NOW));
+    const { result } = renderHook(() => useSummary(NOW).summary);
 
     await new Promise((done) => setTimeout(done, 10));
     expect(result.current).toBeNull();

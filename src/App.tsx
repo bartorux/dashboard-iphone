@@ -51,18 +51,29 @@ function App() {
   const { settings, saveSettings, resetSettings } = useSettings();
   const { preference: themePreference, setTheme } = useTheme();
   const browserOnline = useOnlineStatus();
-  const { pullDistance, isRefreshing, isPulling, isReady } = useTouchGestures({
-    onRefresh: refreshData,
-    // Swiping left moves forward in time, matching the order of the day tabs
-    onSwipeLeft: () => switchDay(Math.min(2, currentDayOffset + 1) as DayOffset),
-    onSwipeRight: () => switchDay(Math.max(0, currentDayOffset - 1) as DayOffset),
-  });
-  const { installableState, isInstalled, install } = useInstallPrompt();
 
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
   const [notificationKey, setNotificationKey] = useState(0);
   const [clockTick, setClockTick] = useState(0);
+
+  // Recomputed on the tick so the summary ages out on its own, without a reload.
+  const now = useMemo(() => new Date(), [clockTick]);
+  const { summary, refresh: refreshSummary } = useSummary(now);
+
+  /** Asking for fresh data means all of it, not only the figures. */
+  const refreshAll = useCallback(async () => {
+    refreshSummary();
+    await refreshData();
+  }, [refreshData, refreshSummary]);
+
+  const { pullDistance, isRefreshing, isPulling, isReady } = useTouchGestures({
+    onRefresh: refreshAll,
+    // Swiping left moves forward in time, matching the order of the day tabs
+    onSwipeLeft: () => switchDay(Math.min(2, currentDayOffset + 1) as DayOffset),
+    onSwipeRight: () => switchDay(Math.max(0, currentDayOffset - 1) as DayOffset),
+  });
+  const { installableState, isInstalled, install } = useInstallPrompt();
 
   // Kept for its side effect: this call is what registers the service worker.
   // vite.config.ts sets no injectRegister, so nothing else does it — dropping
@@ -93,10 +104,6 @@ function App() {
     const alerts = findAlerts(allData, orangeThreshold, redThreshold);
     return alerts.orange.length + alerts.red.length;
   }, [allData, orangeThreshold, redThreshold]);
-
-  // Recomputed on the tick so the summary ages out on its own, without a reload.
-  const now = useMemo(() => new Date(), [clockTick]);
-  const summary = useSummary(now);
 
   // clockTick is a dependency on purpose: both of these read the wall clock, so
   // they have to be recomputed as the hour rolls over, not only when data changes.
@@ -246,7 +253,7 @@ function App() {
         >
           <button
             type="button"
-            onClick={() => refreshData()}
+            onClick={refreshAll}
             disabled={isLoading}
             className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface px-4 text-[15px] font-medium text-accent-text shadow-sm active:opacity-70 disabled:opacity-50"
           >
