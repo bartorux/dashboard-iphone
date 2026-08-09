@@ -1,13 +1,13 @@
 {
-  "headline": "W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganej, ale operator może przywołania nie ogłaszać.",
-  "body": "W poniedziałek pojawią się dwie godziny z bardzo cienkim marginesem. Rezerwa wciąż pozostaje dodatnia, więc pokrywa wymaganą wartość. Nadwyżka trzyma się powyżej progu, więc ogłoszenie może jeszcze paść.",
-  "outlook": "W niedzielę i we wtorek nie ma podstaw do przywołania.",
-  "generatedAt": "2026-08-09T18:15:37.879Z",
+  "headline": "W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganej.",
+  "body": "Nadwyżka trzyma się powyżej progu, więc operator może nie ogłaszać przywołania, a okno pozostaje otwarte. Inne godziny tego dnia przyniosą dodatni margines, który pokrywa wymaganą rezerwę.",
+  "outlook": "W niedzielę oraz we wtorek rezerwa pokrywa wymaganą wartość i nie ma podstaw do przywołania.",
+  "generatedAt": "2026-08-09T18:20:06.152Z",
   "dates": [
     "2026-08-09",
     "2026-08-10",
     "2026-08-11"
   ],
-  "assessment": "2026-08-09|W|none|1200|20:00|0|0|0|;2026-08-10|R|moderate|-100|18:00|2|0|12|moderate:18:00-19:00;2026-08-11|R|none|200|20:00|1|0|20|#v4",
+  "assessment": "2026-08-09|W|none|1200|20:00|0|0|0|;2026-08-10|R|moderate|-100|18:00|2|0|12|moderate:18:00-19:00;2026-08-11|R|none|200|20:00|1|0|20|#v5",
   "model": "gemini-3.5-flash-lite"
 }
