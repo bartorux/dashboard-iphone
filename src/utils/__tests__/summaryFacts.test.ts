@@ -112,7 +112,7 @@ describe('buildFacts', () => {
 
     expect(facts[0].risk).toBe('none');
     expect(facts[0].nearThreshold).toBe(1);
-    expect(renderFacts(facts, 30)).toContain('blisko granicy');
+    expect(renderFacts(facts, 30)).toContain('w INNYCH godzinach');
   });
 
   it('does not call an hour close when it is a day off or outside the window', () => {

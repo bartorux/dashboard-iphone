@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 6;
+export const PROMPT_VERSION = 8;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -47,8 +47,9 @@ TAK NIE PISZ (asekuranckie, zdystansowane, bez konkretu):
 wymaganej wielkości, w związku z czym występuje ryzyko wezwania odbiorców."
 
 TAK PISZ (wprost, z godzinami, czasownikami):
-„W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganej. Nadwyżka
-zostaje jednak powyżej progu 1100 MW, więc operator może przywołania nie ogłaszać."
+„W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganego poziomu. Nadwyżka
+popozostaje jednak powyżej progu, powyżej którego operator ma prawo przywołania
+nie ogłaszać."
 
 ZAKAZANE zwroty, bo nic nie wnoszą: „sytuacja bilansowa", „bilans systemowy",
 „zasoby DSR", „jednostki DSR", „ciągłość pracy", „profil generacji".
@@ -68,16 +69,16 @@ ZASADY, bezwzględnie:
   „sytuacja będzie monitorowana".
 - NIE POWTARZAJ zasad ogłaszania przywołania. Czytelnik je zna.
 
-NAJWAŻNIEJSZE ROZRÓŻNIENIE, nie pomyl go W ŻADNĄ STRONĘ:
-- Margines DODATNI oznacza, że dostępna rezerwa POKRYWA wymaganą. Nawet bardzo
-  cienki margines nadal ją pokrywa.
-- Margines UJEMNY oznacza, że rezerwa NIE POKRYWA wymaganej. To są dwa opisy
+NAJWAŻNIEJSZE ROZRÓŻNIENIE, nie odwróć go:
+- Margines DODATNI oznacza, że dostępna rezerwa POKRYWA wymagany poziom. Nawet bardzo
+  wąski margines nadal go pokrywa.
+- Margines UJEMNY oznacza, że rezerwa NIE POKRYWA wymaganego poziomu. To są dwa opisy
   tego samego faktu, nie dwie osobne informacje.
 - Nigdy nie pisz, że rezerwa spadła poniżej wymaganej, jeśli margines jest dodatni.
-- Nigdy nie pisz, że rezerwa pokrywa wymaganą, jeśli margines jest ujemny.
+- Nigdy nie pisz, że rezerwa pokrywa wymagany poziom, jeśli margines jest ujemny.
 - ZDANIE ZAKAZANE, bo przeczy samo sobie: „rezerwa pokrywa wymaganą wartość,
   choć margines jest ujemny". Jeśli margines jest ujemny, napisz wprost, że
-  rezerwa nie pokrywa wymaganej.
+  rezerwa nie pokrywa wymaganego poziomu.
 
 Kontekst: okres przywołania to sytuacja, w której operator sieci wzywa odbiorców
 do ograniczenia poboru. Ogłasza go w dzień roboczy między 07:00 a 22:00,
@@ -85,29 +86,54 @@ z co najmniej ośmiogodzinnym wyprzedzeniem.
 
 DWIE RÓŻNE WIELKOŚCI — nazywaj je osobno, nigdy obie „progiem":
 - WYMAGANA REZERWA — poziom, który rezerwa ma pokryć. Zmienia się co godzinę.
-- PRÓG 1100 MW — osobna wartość regulacyjna. Powyżej niej operator może nie
-  ogłaszać przywołania.
-Rezerwa potrafi być poniżej wymaganej i jednocześnie powyżej progu 1100 MW.
+- PRÓG 1100 MW — inna, stała wielkość. Dopóki nadwyżka jest powyżej niego,
+  przepis pozwala operatorowi nie ogłaszać przywołania. Nie nazywaj go
+  „progiem regulacyjnym" — takiego terminu nie ma.
+Rezerwa bywa poniżej wymaganego poziomu i jednocześnie powyżej progu 1100 MW.
 To nie jest sprzeczność, to są dwie różne rzeczy.
 
 TRZY STANY — nie zlewaj ich w „ryzyko":
-- „OPERATOR MOŻE NIE OGŁASZAĆ" znaczy: rezerwa nie pokrywa wymaganej, ale
-  nadwyżka trzyma się powyżej progu 1100 MW, więc przepis pozwala operatorowi
-  przywołania nie ogłaszać. Pisz właśnie tak: że operator może go nie ogłaszać.
+- „OPERATOR MA PRAWO NIE OGŁASZAĆ" znaczy: rezerwa nie pokrywa wymaganego
+  poziomu, ale
+  nadwyżka utrzymuje się powyżej progu, więc przepis pozwala operatorowi
+  nie ogłaszać przywołania. Pisz właśnie tak: „operator ma prawo nie ogłaszać
+  przywołania".
 - „PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE" znaczy: nadwyżka spadła poniżej progu
-  1100 MW, więc operator nie ma już podstaw, by go nie ogłaszać. Nie pisz „musi"
+  1100 MW, więc operator traci podstawę, by przywołania nie ogłaszać. Nie pisz „musi"
   ani „na pewno" — to nie jest gwarancja.
-- „brak podstaw" znaczy dokładnie tyle: rezerwa pokrywa wymaganą albo godzina
+- „brak podstaw" znaczy dokładnie tyle: rezerwa pokrywa wymagany poziom albo godzina
   wypada poza dniem roboczym lub poza godzinami 07:00-22:00.
 
 NIE ŁĄCZ FAKTÓW W ZWIĄZKI PRZYCZYNOWE, których w nich nie ma:
 - Nie pisz „więc", „dlatego", „w związku z tym" między faktami, które po prostu
   stoją obok siebie. Wymieniaj je, nie tłumacz jednym drugiego.
-- Zwłaszcza: to, że nadwyżka trzyma się powyżej progu 1100 MW, jest powodem,
-  dla którego operator MOŻE NIE OGŁASZAĆ przywołania. Nigdy nie jest powodem,
+- Zwłaszcza: to, że nadwyżka utrzymuje się powyżej progu, jest powodem,
+  dla którego operator MA PRAWO nie ogłaszać przywołania. Nigdy nie jest powodem,
   dla którego ogłoszenie miałoby paść.
 - To, czy ogłoszenie może jeszcze nadejść, wynika wyłącznie z wymaganych ośmiu
   godzin wyprzedzenia. Nie wiąż tego z wysokością nadwyżki — to osobna sprawa.
+
+UPRAWNIENIE TO NIE PROGNOZA:
+- „Operator ma prawo nie ogłaszać" znaczy, że pozwala mu na to przepis. NIE
+  znaczy, że przewidujemy, co zrobi — tego nie wiemy.
+- Pisz „ma prawo nie ogłaszać" albo „przepis pozwala mu nie ogłaszać". Unikaj
+  samego „może", bo czyta się je i jako uprawnienie, i jako przypuszczenie,
+  a czytelnik musi wiedzieć, które z nich masz na myśli.
+
+JEDEN SŁOWNIK W CAŁYM TEKŚCIE:
+- Nad kartą stoi duża liczba MARGINESU, więc trzymaj się marginesu. Nie mieszaj
+  w jednym podsumowaniu „rezerwa nie pokrywa wymaganej" z „ujemny margines" —
+  to jest to samo powiedziane dwoma słownikami, a czytelnik musi tłumaczyć.
+- Nie zostawiaj przymiotnika bez rzeczownika. „Rezerwa pokryje wymaganą" urywa
+  się w połowie; pisz „pokryje wymagany poziom".
+- Nie mów o progu 1100 MW „próg regulacyjny" — takiego terminu nie ma i myli
+  się z wymaganą rezerwą. Nazwij go przez to, co robi: „próg, powyżej którego
+  operator ma prawo nie ogłaszać przywołania".
+
+NIE PRZECIWSTAWIAJ RZECZY, KTÓRE SIĘ NIE KŁÓCĄ:
+- „Nie ma podstaw, MIMO że margines jest dodatni" jest odwrotnie: dodatni
+  margines jest właśnie powodem, dla którego podstaw nie ma.
+- Używaj „choć", „mimo" tylko wtedy, gdy druga część naprawdę osłabia pierwszą.
 
 NIE UŻYWAJ METAFOR ANI SKRÓTÓW MYŚLOWYCH:
 - ZAKAZANE: „okno", „okno ogłoszenia", „okno pozostaje otwarte". Czytelnik nie
@@ -115,14 +141,14 @@ NIE UŻYWAJ METAFOR ANI SKRÓTÓW MYŚLOWYCH:
 - Pisz wprost, o co chodzi: „ogłoszenie może jeszcze nadejść" albo „na ogłoszenie
   jest już za późno".
 
-PISZ, KTÓRYCH GODZIN DOTYCZYSZ:
+PISZ, O KTÓRYCH GODZINACH MÓWISZ:
 - Jeśli w jednym dniu jedne godziny mają margines ujemny, a inne dodatni, powiedz
   wprost, że to różne godziny. Inaczej dwa prawdziwe zdania obok siebie czytają
   się jak zaprzeczenie.
 
 NARRACJA — to jest informacja, nie ostrzeżenie:
 - Nie pisz tak, jakby przywołanie było przesądzone, dopóki fakty tego nie mówią.
-  Przy stanie „operator może nie ogłaszać" najczęściej nic się nie wydarzy.
+  Przy stanie „operator ma prawo nie ogłaszać" najczęściej nic się nie wydarzy.
 - Nie strasz i nie dramatyzuj. Nie używaj słów „zagrożenie", „krytyczny",
   „alarmujący", „niebezpieczny".
 - Ale też nie pocieszaj na siłę. Jeśli rezerwa nie pokrywa wymaganej, napisz to
@@ -130,8 +156,18 @@ NARRACJA — to jest informacja, nie ostrzeżenie:
 
 FORMAT ODPOWIEDZI — dokładnie trzy linie, każda z etykietą na początku:
 NAGŁÓWEK: jedno zdanie, najważniejsza rzecz.
-TREŚĆ: dwa do trzech zdań o tym, co się dzieje i z czym można się zmierzyć.
+TREŚĆ: dwa albo trzy zdania o tym, co się dzieje i czego się spodziewać.
 DALEJ: jedno zdanie o kolejnych dniach.
+
+WZORZEC DLA DALEJ — ta linia łamała zasady najczęściej, bo jako jedyna nie
+miała przykładu:
+TAK NIE PISZ: „Niedziela i wtorek nie wykażą podstaw do przywołania, mimo
+wystąpienia cienkiego dodatniego marginesu w godzinach wieczornych."
+(dni niczego nie wykazują; „mimo" przeciwstawia rzeczy, która niczemu nie
+przeczy — dodatni margines JEST powodem braku podstaw; „w godzinach
+wieczornych" zamiast konkretnej godziny z faktów)
+TAK PISZ: „W niedzielę i we wtorek nie ma podstaw do przywołania, choć we
+wtorek o 20:00 margines robi się wąski."
 
 Żadnego JSON-a, żadnych cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 
@@ -229,6 +265,37 @@ export function validateSummary(
   // Told not to use digits, one run simply spelled the figure out instead.
   if (/megawat|MW\b|procent/i.test(whole)) {
     return { ok: false, reason: 'tekst podaje wielkość mocy' };
+  }
+
+  // Counts written out in words slipped past the ban on digits the same way:
+  // "dwie godziny" is a figure however it is spelled.
+  if (
+    /\b(jedn|dw|trz|czter|pię|sze|sied|osiem|osmi|dziewię|dziesię|kilk|kilkanaś)\w*\s+godzin\w*/i.test(
+      whole
+    )
+  ) {
+    return { ok: false, reason: 'liczba godzin zapisana słownie' };
+  }
+
+  /*
+   * Vague times, banned in the instruction and used anyway. The facts always
+   * carry the hour, so reaching for "in the evening hours" throws away the one
+   * thing the reader came for — and it is the phrase the instruction names as
+   * forbidden, which makes it the clearest case for a refusal rather than a
+   * request.
+   */
+  if (
+    /w godzinach (wieczorn|porann|popo|nocn)\w*|w wyznaczonym przedziale|w godzinach szczytu/i.test(
+      whole
+    )
+  ) {
+    return { ok: false, reason: 'mgliste określenie pory zamiast godziny' };
+  }
+
+  // A calque of "thin margin"; in Polish a margin is narrow, never thin. It
+  // came from my own wording of the facts and was copied three runs running.
+  if (/cienk\w*\s+(margines|marginesem|marginesu)/i.test(whole)) {
+    return { ok: false, reason: 'kalka „cienki margines" zamiast „wąski"' };
   }
 
   /*
