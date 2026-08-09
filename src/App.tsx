@@ -3,6 +3,7 @@ import { useRegisterSW } from 'virtual:pwa-register/react';
 import Header, { ConnectionState } from './components/Header';
 import CurrentStatusCard from './components/CurrentStatusCard';
 import SummaryCard from './components/SummaryCard';
+import EnergyDayCard from './components/EnergyDayCard';
 import DayNavigation from './components/DayNavigation';
 import ChartSection from './components/ChartSection';
 import TrendsSection from './components/TrendsSection';
@@ -30,6 +31,7 @@ import {
 } from './utils/dataTransform';
 import { DayOffset } from './types';
 import { DAY_NAMES } from './utils/constants';
+import { isEnergyDay } from './utils/energyDay';
 
 /** Re-evaluate "now" this often so the current hour rolls over on its own. */
 const CLOCK_TICK_MS = 30 * 1000;
@@ -216,6 +218,8 @@ function App() {
         />
 
         {summary && <SummaryCard summary={summary} now={now} />}
+
+        {isEnergyDay(now) && <EnergyDayCard />}
 
         <DayNavigation
           currentDay={currentDayOffset}

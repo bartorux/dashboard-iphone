@@ -67,7 +67,7 @@ const key = assessmentKey(facts);
 const existing = readExisting();
 
 if (dryRun) {
-  console.log(buildPrompt(facts, HISTORY_DAYS));
+  console.log(buildPrompt(facts, HISTORY_DAYS, now));
   console.log('\n---- ocena ----');
   console.log(key);
   process.exit(0);
@@ -96,9 +96,13 @@ const response = await fetch(
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: buildPrompt(facts, HISTORY_DAYS) }] }],
+      contents: [{ parts: [{ text: buildPrompt(facts, HISTORY_DAYS, now) }] }],
       generationConfig: {
-        temperature: 0.2,
+        // Raised from 0.2 for the sake of variety: the verdict rarely moves,
+        // so at the old setting an hourly rewrite produced the same paragraph
+        // and the card stopped being read. The facts are fixed and validation
+        // still refuses any figure, so what varies is wording, never substance.
+        temperature: 0.7,
         maxOutputTokens: 800,
         // Already minimal by default on this model, and set explicitly because
         // raising it measured three times the tokens and truncated the answer:

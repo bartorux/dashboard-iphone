@@ -55,8 +55,40 @@ DALEJ: jedno zdanie o kolejnych dniach.
 FAKTY:
 `;
 
-export function buildPrompt(facts: DayFacts[], historyDays: number): string {
-  return INSTRUCTION + renderFacts(facts, historyDays);
+/**
+ * A different thing to lead with each hour.
+ *
+ * The text is rewritten hourly while the verdict rarely moves, so left to
+ * itself the model opened the same way every time and the card stopped being
+ * read. Rotating what it starts from changes the shape of the sentence rather
+ * than dressing the same sentence in synonyms — which matters here, because on
+ * a monitoring screen fresh wording over unchanged facts reads as fresh news.
+ *
+ * Keyed to the hour rather than drawn at random, so the same facts at the same
+ * hour give the same text and a rerun is not a lottery.
+ */
+const EMPHASES = [
+  'Zacznij od tego, co czeka najbliżej w czasie.',
+  'Zacznij od najtrudniejszej godziny w całym horyzoncie.',
+  'Zacznij od tego, czy sytuacja jest typowa na tle ostatnich dni.',
+  'Zacznij od dnia, który wygląda najgorzej, choćby był ostatni.',
+  'Zacznij od stwierdzenia, czy w ogóle są podstawy do przywołania.',
+] as const;
+
+export function emphasisFor(now: Date): string {
+  return EMPHASES[now.getUTCHours() % EMPHASES.length];
+}
+
+export function buildPrompt(
+  facts: DayFacts[],
+  historyDays: number,
+  now: Date
+): string {
+  return (
+    INSTRUCTION +
+    renderFacts(facts, historyDays) +
+    `\n\nUJĘCIE NA TEN RAZ: ${emphasisFor(now)}`
+  );
 }
 
 /**
@@ -114,6 +146,13 @@ export function validateSummary(
   // Told not to use digits, one run simply spelled the figure out instead.
   if (/megawat|MW\b|procent/i.test(whole)) {
     return { ok: false, reason: 'tekst podaje wielkość mocy' };
+  }
+
+  // Loosened settings have twice produced Polish stripped of its diacritics, once
+  // with an invented escape — a Hungarian ű where ż belonged. A passage this long
+  // that contains not one of them was not written in Polish so much as near it.
+  if (!/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(whole)) {
+    return { ok: false, reason: 'tekst bez polskich znaków' };
   }
 
   for (const hour of whole.match(HOUR_PATTERN) ?? []) {

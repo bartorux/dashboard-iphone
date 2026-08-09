@@ -63,6 +63,19 @@ describe('validateSummary', () => {
     ).toBe(false);
   });
 
+  it('rejects Polish written without its diacritics', () => {
+    // The failure mode seen twice at looser settings, once producing a Hungarian
+    // ű in place of ż. Raising the temperature for variety makes it likelier,
+    // so it is refused outright rather than published.
+    const stripped = {
+      headline: 'Nie ma podstaw do ogloszenia okresu przywolania.',
+      body: 'Rezerwa pokrywa wymagana wartosc przez caly czas.',
+      outlook: 'W kolejnych dniach margines pozostaje bezpieczny.',
+    };
+
+    expect(validateSummary(stripped, HOURS).ok).toBe(false);
+  });
+
   it('rejects an hour that is not among the facts', () => {
     const verdict = validateSummary(
       { ...good, body: 'Najciaśniej będzie o 03:00.' },

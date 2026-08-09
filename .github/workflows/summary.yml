@@ -12,7 +12,11 @@ name: Podsumowanie AI
 # shows how old its text is, and hides it once it is too old to trust.
 on:
   schedule:
-    - cron: '5 * * * *'
+    # Deliberately an odd minute. At '5' the runs landed 35-45 minutes late every
+    # time: scheduled jobs queue behind everything else, and the top of the hour
+    # is where everyone points their crons. Nothing downstream cares which minute
+    # this is — the facts look forward, so they are as valid mid-hour as on it.
+    - cron: '37 * * * *'
   workflow_dispatch:
 
 permissions:
