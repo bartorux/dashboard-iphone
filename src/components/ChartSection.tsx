@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PSEDataPoint } from '../types';
+import { AlertRange, PSEDataPoint } from '../types';
 import ReserveChart from './ReserveChart';
 import GenerationChart from './GenerationChart';
 import HistoryChart from './HistoryChart';
@@ -21,6 +21,8 @@ interface ChartSectionProps {
   dayData: PSEDataPoint[];
   /** Which of the three days is on screen — the views label themselves with it. */
   dayLabel: string;
+  /** Passed through to the reserve view, which shades each range. */
+  alertRanges: AlertRange[];
   orangeThreshold: number;
   redThreshold: number;
   currentHourLabel: string | null;
@@ -35,6 +37,7 @@ interface ChartSectionProps {
 const ChartSection: React.FC<ChartSectionProps> = ({
   dayData,
   dayLabel,
+  alertRanges,
   orangeThreshold,
   redThreshold,
   currentHourLabel,
@@ -88,6 +91,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     return (
       <ReserveChart
         data={dayData}
+        alertRanges={alertRanges}
         orangeThreshold={orangeThreshold}
         redThreshold={redThreshold}
         currentHourLabel={currentHourLabel}
