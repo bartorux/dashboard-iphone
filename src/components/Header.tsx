@@ -47,14 +47,14 @@ const Header: React.FC<HeaderProps> = ({
         <div className="flex min-w-0 items-baseline gap-2">
           {/* shrink-0: the label is the headline and must never be the thing
               that gets clipped — the description absorbs the overflow. */}
-          <h1 className="shrink-0 text-[17px] font-semibold leading-tight">
+          <h1 className="shrink-0 text-[1.0625rem] font-semibold leading-tight">
             {STATUS_LABEL[status]}
           </h1>
-          <span className="min-w-0 truncate text-[13px] text-white/80">
+          <span className="min-w-0 truncate text-[0.8125rem] text-white/80">
             {STATUS_DESCRIPTION[status]}
           </span>
         </div>
-        <div className="flex items-center gap-1.5 text-[11px] text-white/75">
+        <div className="flex items-center gap-1.5 text-[0.6875rem] text-white/75">
           <span
             className={`w-1.5 h-1.5 rounded-full shrink-0 ${CONNECTION_DOT[connection]}`}
           />

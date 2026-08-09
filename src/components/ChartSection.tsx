@@ -72,7 +72,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     if (dayData.length === 0) {
       return (
         <div
-          className={`${CHART_BOX} grid place-items-center text-[13px] text-text-tertiary`}
+          className={`${CHART_BOX} grid place-items-center text-[0.8125rem] text-text-tertiary`}
         >
           Brak danych do wyświetlenia
         </div>
@@ -97,7 +97,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
 
   return (
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-3 shadow-sm">
-      <h2 className="mb-2 px-1 text-[15px] font-semibold text-text">
+      <h2 className="mb-2 px-1 text-[0.9375rem] font-semibold text-text">
         {active.title} <span className="text-text-tertiary">(MW)</span>
       </h2>
 

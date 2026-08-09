@@ -16,7 +16,7 @@ import { ENERGY_DAY_GREETING } from '../utils/energyDay';
  */
 const EnergyDayCard: React.FC = () => (
   <section className="mx-3 mt-3 rounded-2xl bg-surface px-4 py-3 shadow-sm">
-    <p className="text-[13px] leading-relaxed text-text-secondary">
+    <p className="text-[0.8125rem] leading-relaxed text-text-secondary">
       {ENERGY_DAY_GREETING}
     </p>
   </section>

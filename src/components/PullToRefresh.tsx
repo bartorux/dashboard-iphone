@@ -28,7 +28,7 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
 
   return (
     <div
-      className="pointer-events-none absolute inset-x-0 z-10 flex items-center justify-center gap-2 text-[13px] font-medium text-text-secondary"
+      className="pointer-events-none absolute inset-x-0 z-10 flex items-center justify-center gap-2 text-[0.8125rem] font-medium text-text-secondary"
       style={{
         top: `-${INDICATOR_HEIGHT}px`,
         height: `${INDICATOR_HEIGHT}px`,

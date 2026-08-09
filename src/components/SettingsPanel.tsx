@@ -72,7 +72,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
     <div className="collapsible mx-3" data-collapsed={!visible}>
       <div>
         <div className="mt-3 rounded-2xl bg-surface p-4 shadow-sm">
-          <h2 className="mb-2 text-[15px] font-semibold text-text">Wygląd</h2>
+          <h2 className="mb-2 text-[0.9375rem] font-semibold text-text">Wygląd</h2>
 
           <SegmentedControl
             ariaLabel="Motyw"
@@ -83,12 +83,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             className="mb-4"
           />
 
-          <h2 className="mb-3 text-[15px] font-semibold text-text">
+          <h2 className="mb-3 text-[0.9375rem] font-semibold text-text">
             Ustawienia alertów
           </h2>
 
           <label className="mb-3 block">
-            <span className="mb-1 block text-[13px] text-text-secondary">
+            <span className="mb-1 block text-[0.8125rem] text-text-secondary">
               Próg alertu „Uwaga" (MW)
             </span>
             <input
@@ -99,12 +99,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               min={1}
               max={2000}
               step={50}
-              className="tnum w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[15px] text-text outline-none focus:border-accent"
+              className="tnum w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[0.9375rem] text-text outline-none focus:border-accent"
             />
           </label>
 
           <label className="mb-3 block">
-            <span className="mb-1 block text-[13px] text-text-secondary">
+            <span className="mb-1 block text-[0.8125rem] text-text-secondary">
               Próg alertu „Alarm" (MW)
             </span>
             <input
@@ -115,7 +115,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               min={0}
               max={1500}
               step={50}
-              className="tnum w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[15px] text-text outline-none focus:border-accent"
+              className="tnum w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[0.9375rem] text-text outline-none focus:border-accent"
             />
           </label>
 
@@ -123,14 +123,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             <button
               type="button"
               onClick={handleSave}
-              className="min-h-11 flex-1 rounded-xl bg-accent px-4 text-[15px] font-semibold text-white active:opacity-80"
+              className="min-h-11 flex-1 rounded-xl bg-accent px-4 text-[0.9375rem] font-semibold text-white active:opacity-80"
             >
               Zapisz
             </button>
             <button
               type="button"
               onClick={handleReset}
-              className="min-h-11 flex-1 rounded-xl bg-surface-3 px-4 text-[15px] font-medium text-text active:opacity-80"
+              className="min-h-11 flex-1 rounded-xl bg-surface-3 px-4 text-[0.9375rem] font-medium text-text active:opacity-80"
             >
               Reset
             </button>

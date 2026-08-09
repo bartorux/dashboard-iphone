@@ -26,7 +26,7 @@ const NotificationBanner: React.FC<NotificationBannerProps> = ({ message }) => {
     <div
       role="status"
       aria-live="polite"
-      className={`pointer-events-none fixed inset-x-3 z-[1000] rounded-2xl bg-text px-4 py-3 text-center text-[14px] font-medium text-bg shadow-lg transition-all duration-300 ${
+      className={`pointer-events-none fixed inset-x-3 z-[1000] rounded-2xl bg-text px-4 py-3 text-center text-[0.875rem] font-medium text-bg shadow-lg transition-all duration-300 ${
         visible ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
       }`}
       style={{

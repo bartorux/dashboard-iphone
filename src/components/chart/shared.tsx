@@ -11,17 +11,48 @@ export const formatMW = (value: number) =>
 /** Curves redraw rather than jump when the selected day changes. */
 export const ANIMATION_MS = 450;
 
+/**
+ * Axis and label sizes for the charts, in the same scalable units as the rest
+ * of the app.
+ *
+ * Recharts takes these as props rather than CSS, so a number here would stay a
+ * fixed pixel count while everything around it grew — someone who had enlarged
+ * their text got roomier cards above a chart whose axis stayed just as small as
+ * before, which is the one part of the screen holding the numbers.
+ */
+export const AXIS_FONT_SIZE = '0.6875rem';
+export const LABEL_FONT_SIZE = '0.625rem';
+
 /** top leaves room for the "teraz" label, which sits above the plot area. */
 export const CHART_MARGIN = { top: 18, right: 10, bottom: 4, left: 0 };
 
 /**
+ * Root font size in pixels, or 16 where there is no document to ask.
+ *
+ * Everything else scales through rem, but Recharts wants the axis width as a
+ * number, so this is the one place that has to know what a rem is worth.
+ */
+function rootFontPx(): number {
+  if (typeof window === 'undefined') return 16;
+  const size = parseFloat(
+    window.getComputedStyle(document.documentElement).fontSize
+  );
+  return Number.isFinite(size) && size > 0 ? size : 16;
+}
+
+/**
  * Y axis width has to follow the widest tick label; a value sized for four
  * digits clips the fifth once a series passes 10 000 MW.
+ *
+ * Scaled by the root size, because the tick font is now in rem: a width fixed
+ * for an 11px label clipped the axis outright once the reader enlarged their
+ * text — the chart grew, the room for its numbers did not.
  */
 export function axisWidthFor(ticks: number[]): number {
   const longest = Math.max(...ticks.map((tick) => formatMW(tick).length));
-  // ~6.1px per digit at 11px, plus tick margin and a little breathing room
-  return Math.ceil(longest * 6.5) + 18;
+  const scale = rootFontPx() / 16;
+  // ~6.5px per digit at the default size, plus tick margin and breathing room
+  return Math.ceil(longest * 6.5 * scale) + Math.ceil(18 * scale);
 }
 
 /** Every fourth hour, always including the last, so the day reads 00 -> 23. */
@@ -53,7 +84,7 @@ export const ChartLegend: React.FC<{ items: LegendItem[] }> = ({ items }) => {
 
   return (
     <>
-      <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-secondary">
+      <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.6875rem] text-text-secondary">
         {items.map((item) => (
           <li key={item.label} className="flex items-center gap-1.5">
             {item.swatch}
@@ -68,7 +99,7 @@ export const ChartLegend: React.FC<{ items: LegendItem[] }> = ({ items }) => {
                     current === item.label ? null : item.label
                   )
                 }
-                className="grid h-4 w-4 place-items-center rounded-full bg-surface-3 text-[9px] font-semibold text-text-secondary"
+                className="grid h-4 w-4 place-items-center rounded-full bg-surface-3 text-[0.5625rem] font-semibold text-text-secondary"
               >
                 ?
               </button>
@@ -78,7 +109,7 @@ export const ChartLegend: React.FC<{ items: LegendItem[] }> = ({ items }) => {
       </ul>
 
       {open?.info && (
-        <p className="mt-1.5 rounded-lg bg-surface-2 px-2 py-1.5 text-[11px] leading-relaxed text-text-secondary">
+        <p className="mt-1.5 rounded-lg bg-surface-2 px-2 py-1.5 text-[0.6875rem] leading-relaxed text-text-secondary">
           {open.info}
         </p>
       )}
@@ -112,7 +143,7 @@ export const AreaSwatch: React.FC<{ fill: string; border: string }> = ({
 export const ChartTooltipBox: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <div className="min-w-[10rem] rounded-xl bg-surface px-3 py-2 text-[12px] shadow-lg ring-1 ring-separator">
+  <div className="min-w-[10rem] rounded-xl bg-surface px-3 py-2 text-[0.75rem] shadow-lg ring-1 ring-separator">
     {children}
   </div>
 );

@@ -17,6 +17,8 @@ import { useChartColors } from '../hooks/useChartColors';
 import { HistoryState } from '../hooks/useHistory';
 import {
   ANIMATION_MS,
+  AXIS_FONT_SIZE,
+  LABEL_FONT_SIZE,
   AreaSwatch,
   CHART_BOX,
   CHART_MARGIN,
@@ -90,7 +92,7 @@ const HistoryTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
     <ChartTooltipBox>
       <div className="mb-1 flex items-baseline justify-between gap-3">
         <span className="font-semibold text-text">{String(label)}</span>
-        <span className={`text-[11px] font-semibold ${STANDING_TONE[standing]}`}>
+        <span className={`text-[0.6875rem] font-semibold ${STANDING_TONE[standing]}`}>
           {STANDING_LABEL[standing]}
         </span>
       </div>
@@ -211,13 +213,13 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
     return (
       <div className={`${CHART_BOX} grid place-items-center`}>
         <div className="text-center">
-          <p className="text-[13px] text-text-tertiary">
+          <p className="text-[0.8125rem] text-text-tertiary">
             Nie udało się pobrać historii
           </p>
           <button
             type="button"
             onClick={onRetry}
-            className="mt-2 min-h-9 rounded-lg px-3 text-[13px] font-medium text-accent-text"
+            className="mt-2 min-h-9 rounded-lg px-3 text-[0.8125rem] font-medium text-accent-text"
           >
             Spróbuj ponownie
           </button>
@@ -229,7 +231,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
   return (
     <>
       {summary && (
-        <p className="mb-2 px-1 text-[13px] font-medium text-text">{summary}</p>
+        <p className="mb-2 px-1 text-[0.8125rem] font-medium text-text">{summary}</p>
       )}
 
       <ChartLegend
@@ -265,7 +267,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
               ticks={ticks}
               interval={0}
               tickFormatter={shortHour}
-              tick={{ fontSize: 11, fill: colors.axis }}
+              tick={{ fontSize: AXIS_FONT_SIZE, fill: colors.axis }}
               tickLine={false}
               axisLine={{ stroke: colors.grid }}
               tickMargin={8}
@@ -274,7 +276,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
             <YAxis
               domain={[scale.min, scale.max]}
               ticks={scale.ticks}
-              tick={{ fontSize: 11, fill: colors.axis }}
+              tick={{ fontSize: AXIS_FONT_SIZE, fill: colors.axis }}
               tickFormatter={formatMW}
               tickLine={false}
               axisLine={false}

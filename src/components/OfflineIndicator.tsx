@@ -15,7 +15,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
   return (
     <div
       role="status"
-      className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 bg-text-tertiary px-4 py-2 text-[13px] text-white"
+      className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-2 bg-text-tertiary px-4 py-2 text-[0.8125rem] text-white"
       style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
     >
       <CloudOffIcon className="h-4 w-4 shrink-0" />

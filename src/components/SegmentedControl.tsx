@@ -68,11 +68,11 @@ export function SegmentedControl<T extends string | number>({
               active ? 'text-text' : 'text-text-secondary'
             }`}
           >
-            <span className="block text-[13px] font-semibold leading-tight">
+            <span className="block text-[0.8125rem] font-semibold leading-tight">
               {segment.label}
             </span>
             {segment.sublabel && (
-              <span className="tnum block text-[11px] text-text-tertiary">
+              <span className="tnum block text-[0.6875rem] text-text-tertiary">
                 {segment.sublabel}
               </span>
             )}

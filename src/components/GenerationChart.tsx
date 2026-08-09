@@ -15,6 +15,8 @@ import { niceScaleRange } from '../utils/scale';
 import { useChartColors } from '../hooks/useChartColors';
 import {
   ANIMATION_MS,
+  AXIS_FONT_SIZE,
+  LABEL_FONT_SIZE,
   AreaSwatch,
   CHART_BOX,
   CHART_MARGIN,
@@ -125,7 +127,7 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
         />
         <TooltipRow label="Ubytki mocy" value={`${formatMW(row.outages ?? 0)} MW`} />
         {inconsistent && (
-          <div className="mt-1 border-t border-separator pt-1 text-[11px] text-warn-text">
+          <div className="mt-1 border-t border-separator pt-1 text-[0.6875rem] text-warn-text">
             Prognoza OZE przekracza generację łączną o{' '}
             {formatMW(Math.abs(row.otherRaw!))} MW — tak podaje PSE.
           </div>
@@ -189,7 +191,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
 
   if (rows.every((row) => row.demand === null)) {
     return (
-      <div className={`${CHART_BOX} grid place-items-center text-[13px] text-text-tertiary`}>
+      <div className={`${CHART_BOX} grid place-items-center text-[0.8125rem] text-text-tertiary`}>
         Brak danych o generacji
       </div>
     );
@@ -236,7 +238,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               ticks={ticks}
               interval={0}
               tickFormatter={shortHour}
-              tick={{ fontSize: 11, fill: colors.axis }}
+              tick={{ fontSize: AXIS_FONT_SIZE, fill: colors.axis }}
               tickLine={false}
               axisLine={{ stroke: colors.grid }}
               tickMargin={8}
@@ -245,7 +247,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
             <YAxis
               domain={[scale.min, scale.max]}
               ticks={scale.ticks}
-              tick={{ fontSize: 11, fill: colors.axis }}
+              tick={{ fontSize: AXIS_FONT_SIZE, fill: colors.axis }}
               tickFormatter={formatMW}
               tickLine={false}
               axisLine={false}
@@ -308,7 +310,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
                 label={{
                   value: 'teraz',
                   position: 'top',
-                  fontSize: 10,
+                  fontSize: LABEL_FONT_SIZE,
                   fill: colors.accent,
                 }}
               />

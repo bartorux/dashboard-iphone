@@ -43,11 +43,11 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
   return (
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="text-[15px] font-semibold text-text">
+        <h2 className="text-[0.9375rem] font-semibold text-text">
           Alerty <span className="text-text-tertiary">· {dayName}</span>
         </h2>
         {hours > 0 && (
-          <span className="tnum rounded-full bg-alarm px-2 py-0.5 text-[11px] font-semibold text-white">
+          <span className="tnum rounded-full bg-alarm px-2 py-0.5 text-[0.6875rem] font-semibold text-white">
             {hours} godz.
           </span>
         )}
@@ -56,11 +56,11 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
       {!hasData ? (
         // Without readings we cannot claim an all-clear — a green "no alerts"
         // here would present missing data as a confirmed safe state.
-        <div className="rounded-xl bg-surface-2 px-3 py-3 text-[13px] text-text-tertiary">
+        <div className="rounded-xl bg-surface-2 px-3 py-3 text-[0.8125rem] text-text-tertiary">
           Brak danych dla tego dnia
         </div>
       ) : ranges.length === 0 ? (
-        <div className="flex items-center gap-2 rounded-xl bg-ok-soft px-3 py-3 text-[13px] text-ok-text">
+        <div className="flex items-center gap-2 rounded-xl bg-ok-soft px-3 py-3 text-[0.8125rem] text-ok-text">
           <CheckIcon className="h-4 w-4 shrink-0" />
           Brak alertów w tym dniu
         </div>
@@ -76,17 +76,17 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
                 <span className={`w-1 shrink-0 ${style.bar}`} aria-hidden />
                 <div className="min-w-0 flex-1 py-2.5 pr-3">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="tnum text-[15px] font-semibold text-text">
+                    <span className="tnum text-[0.9375rem] font-semibold text-text">
                       {range.from}–{range.to}
                     </span>
                     <span
-                      className={`flex items-center gap-1 text-[11px] font-semibold ${style.text}`}
+                      className={`flex items-center gap-1 text-[0.6875rem] font-semibold ${style.text}`}
                     >
                       <AlertIcon className="h-3.5 w-3.5" />
                       {style.label}
                     </span>
                   </div>
-                  <p className="tnum mt-0.5 text-[12px] text-text-secondary">
+                  <p className="tnum mt-0.5 text-[0.75rem] text-text-secondary">
                     Najniższy margines{' '}
                     <span className={`font-semibold ${style.text}`}>
                       {range.worstDifference > 0 ? '+' : ''}

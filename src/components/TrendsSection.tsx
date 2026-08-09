@@ -31,11 +31,11 @@ const Tile: React.FC<{
   tone?: string;
 }> = ({ label, value, hint, tone = 'text-text' }) => (
   <div className="rounded-xl bg-surface-2 p-3">
-    <div className="text-[11px] text-text-secondary">{label}</div>
-    <div className={`tnum mt-0.5 text-[19px] font-semibold ${tone}`}>
+    <div className="text-[0.6875rem] text-text-secondary">{label}</div>
+    <div className={`tnum mt-0.5 text-[1.1875rem] font-semibold ${tone}`}>
       {value}
     </div>
-    <div className="text-[10px] text-text-tertiary">{hint}</div>
+    <div className="text-[0.625rem] text-text-tertiary">{hint}</div>
   </div>
 );
 
@@ -120,7 +120,7 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
         aria-expanded={expanded}
         className="flex w-full items-center justify-between gap-2 text-left"
       >
-        <h2 className="text-[15px] font-semibold text-text">Analiza i trendy</h2>
+        <h2 className="text-[0.9375rem] font-semibold text-text">Analiza i trendy</h2>
         <ChevronDownIcon
           className={`h-5 w-5 text-text-tertiary transition-transform duration-300 ${
             expanded ? '' : '-rotate-90'
@@ -164,39 +164,39 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
           {/* Hidden on today: a day compared with itself is always zero */}
           {currentDayOffset !== 0 && (
             <div className="mt-4 border-t border-separator pt-3">
-              <h3 className="mb-2 text-[13px] font-semibold text-text">
+              <h3 className="mb-2 text-[0.8125rem] font-semibold text-text">
                 Porównanie z dziś
               </h3>
               {comparison ? (
                 <div className="flex items-center justify-between gap-2 rounded-xl bg-surface-2 px-3 py-3">
                   <div>
-                    <div className="text-[11px] text-text-secondary">Dziś</div>
-                    <div className="tnum text-[15px] font-semibold text-text">
+                    <div className="text-[0.6875rem] text-text-secondary">Dziś</div>
+                    <div className="tnum text-[0.9375rem] font-semibold text-text">
                       {signed(comparison.today)}
                     </div>
                   </div>
                   <div className="text-center">
                     <div
-                      className={`tnum text-[17px] font-semibold ${
+                      className={`tnum text-[1.0625rem] font-semibold ${
                         comparison.diff >= 0 ? 'text-ok-text' : 'text-alarm-text'
                       }`}
                     >
                       {signed(comparison.diff)}
                     </div>
-                    <div className="tnum text-[10px] text-text-tertiary">
+                    <div className="tnum text-[0.625rem] text-text-tertiary">
                       {comparison.pct >= 0 ? '+' : ''}
                       {comparison.pct.toFixed(1)}%
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-[11px] text-text-secondary">{dayName}</div>
-                    <div className="tnum text-[15px] font-semibold text-text">
+                    <div className="text-[0.6875rem] text-text-secondary">{dayName}</div>
+                    <div className="tnum text-[0.9375rem] font-semibold text-text">
                       {signed(comparison.selected)}
                     </div>
                   </div>
                 </div>
               ) : (
-                <p className="text-[13px] text-text-tertiary">
+                <p className="text-[0.8125rem] text-text-tertiary">
                   Brak danych do porównania
                 </p>
               )}

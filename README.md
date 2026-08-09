@@ -147,22 +147,27 @@ wracałby rozwinięty przy każdym uruchomieniu. Nagłówek zostaje widoczny ró
 to on jest odpowiedzią. Preferencja leży w `localStorage` obok motywu i progów — treść analizy jest
 wspólna dla wszystkich, ustawienia są prywatne.
 
-## Dynamic Type — sonda, nie rozwiązanie
+## Dynamic Type
 
-W `App.css` na `:root` stoi `font: -apple-system-body`, a rozmiary w
-[SummaryCard.tsx](src/components/SummaryCard.tsx) są w `rem`. **To jest sonda do oceny na telefonie,
-nie gotowa funkcja.**
+Aplikacja skaluje się razem z ustawieniem **Rozmiar tekstu** w iPhonie. Sprawdzone na urządzeniu,
+z aplikacją dodaną do ekranu głównego — **działa**, wbrew temu, co sugerowała część źródeł
+o widokach osadzonych.
 
-Sama zamiana pikseli na `rem` **nic na iOS nie daje** — ustawienie rozmiaru tekstu w iPhonie nie
-jest stosowane do treści rysowanej przez przeglądarkę. Skalowanie zaczyna działać dopiero po
-podpięciu pod czcionkę systemową, od której `rem` ma co liczyć. Czy to dociera do aplikacji dodanej
-do ekranu głównego — **nie wiadomo**: źródła mówią, że w widokach osadzonych nie da się tego włączyć
-i z PWA jest prawdopodobnie tak samo.
+Trzeba obu rzeczy naraz i żadna sama nie wystarczy:
 
-**Jak sprawdzić:** Ustawienia → Ekran i jasność → Rozmiar tekstu, przesunąć suwak, otworzyć
-aplikację na nowo (zmiana wymaga przeładowania). Jeśli karta analizy się skaluje, a reszta nie —
-mechanizm działa i warto przerobić pozostałe **59 rozmiarów w 18 plikach**. Jeśli nic się nie
-zmienia, drogi nie ma i trzeba to tu zapisać, żeby nikt do niej nie wracał.
+1. `font: -apple-system-body` na `:root` w [App.css](src/App.css) — bez tego iOS nie stosuje
+   swojego ustawienia do treści rysowanej przez przeglądarkę i `rem` nie ma od czego liczyć
+2. wszystkie rozmiary tekstu w `rem`, nie w pikselach
+
+**Wykresy wymagały osobnego potraktowania.** Recharts przyjmuje rozmiar czcionki jako liczbę
+w propsach, nie przez CSS, więc podpisy osi zostawały małe, gdy reszta rosła — akurat ta część
+ekranu, która niesie liczby. Stąd `AXIS_FONT_SIZE` i `LABEL_FONT_SIZE`
+w [chart/shared.tsx](src/components/chart/shared.tsx). Z tego samego powodu `axisWidthFor` skaluje
+szerokość osi Y odczytanym rozmiarem bazowym: szerokość ustalona dla podpisu 11 px **ucinała oś**,
+gdy tekst urósł.
+
+Scenariusz wizualny `duzy-tekst-light` renderuje całość przy powiększonej czcionce, bo złamanie
+układu przy dużym tekście jest niewidoczne we wszystkich pozostałych zrzutach.
 
 ## Widoki wykresu
 

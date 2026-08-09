@@ -51,6 +51,11 @@ const SCENARIOS = [
   { name: 'tomorrow-light', scheme: 'light', day: 'Jutro' },
   { name: 'settings-light', scheme: 'light', settings: true },
   { name: 'no-data-light', scheme: 'light', offline: true },
+  // Sizes are in rem and the root is hooked to the system font, so raising the
+  // reader's text size scales the whole app. This captures the largest setting,
+  // because that is where a layout breaks — and a break there is invisible at
+  // the default size, which every other scenario uses.
+  { name: 'duzy-tekst-light', scheme: 'light', fontPx: 23 },
 ];
 
 mkdirSync(baselineDir, { recursive: true });
@@ -121,6 +126,19 @@ for (const scenario of SCENARIOS) {
   await context.clock.install({ time: FROZEN_TIME });
 
   const page = await context.newPage();
+
+  // Stands in for the iOS text-size slider, which Playwright cannot move: the
+  // root size is what that setting ultimately changes.
+  if (scenario.fontPx) {
+    await page.addInitScript((px) => {
+      document.addEventListener('DOMContentLoaded', () => {
+        const style = document.createElement('style');
+        style.textContent = `html { font-size: ${px}px !important; }`;
+        document.head.appendChild(style);
+      });
+    }, scenario.fontPx);
+  }
+
   await page.goto(url, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(1800);
 

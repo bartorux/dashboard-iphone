@@ -18,6 +18,8 @@ import { STATUS_LABEL, STATUS_TEXT } from '../utils/status';
 import { CALL_PERIOD_EXEMPTION_MW } from '../utils/constants';
 import {
   ANIMATION_MS,
+  AXIS_FONT_SIZE,
+  LABEL_FONT_SIZE,
   AreaSwatch,
   CHART_BOX,
   CHART_MARGIN,
@@ -89,7 +91,7 @@ const ReserveTooltip: React.FC<TooltipProps> = ({
         <span className="font-semibold text-text">
           {String(label)}&ndash;{row.endLabel}
         </span>
-        <span className={`text-[11px] font-semibold ${STATUS_TEXT[status]}`}>
+        <span className={`text-[0.6875rem] font-semibold ${STATUS_TEXT[status]}`}>
           {STATUS_LABEL[status]}
         </span>
       </div>
@@ -219,7 +221,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               ticks={ticks}
               interval={0}
               tickFormatter={shortHour}
-              tick={{ fontSize: 11, fill: colors.axis }}
+              tick={{ fontSize: AXIS_FONT_SIZE, fill: colors.axis }}
               tickLine={false}
               axisLine={{ stroke: colors.grid }}
               tickMargin={8}
@@ -228,7 +230,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
             <YAxis
               domain={[0, scale.max]}
               ticks={scale.ticks}
-              tick={{ fontSize: 11, fill: colors.axis }}
+              tick={{ fontSize: AXIS_FONT_SIZE, fill: colors.axis }}
               tickFormatter={formatMW}
               tickLine={false}
               axisLine={false}
@@ -313,7 +315,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               label={{
                 value: `${CALL_PERIOD_EXEMPTION_MW} MW`,
                 position: 'insideBottomRight',
-                fontSize: 10,
+                fontSize: LABEL_FONT_SIZE,
                 fill: colors.threshold,
               }}
             />
@@ -326,7 +328,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
                 label={{
                   value: 'teraz',
                   position: 'top',
-                  fontSize: 10,
+                  fontSize: LABEL_FONT_SIZE,
                   fill: colors.accent,
                 }}
               />

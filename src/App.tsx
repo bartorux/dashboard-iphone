@@ -259,7 +259,7 @@ function App() {
             type="button"
             onClick={refreshAll}
             disabled={isLoading}
-            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface px-4 text-[15px] font-medium text-accent-text shadow-sm active:opacity-70 disabled:opacity-50"
+            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface px-4 text-[0.9375rem] font-medium text-accent-text shadow-sm active:opacity-70 disabled:opacity-50"
           >
             <RefreshIcon className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             {isLoading ? 'Odświeżanie…' : 'Odśwież'}

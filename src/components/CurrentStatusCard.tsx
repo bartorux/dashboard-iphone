@@ -28,15 +28,15 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="text-[13px] text-text-secondary">
+          <div className="text-[0.8125rem] text-text-secondary">
             Margines rezerwy
           </div>
-          <div className="text-[11px] text-text-tertiary">
+          <div className="text-[0.6875rem] text-text-tertiary">
             {point ? `godzina ${point.hourLabel}–${point.endLabel}` : 'teraz'}
           </div>
         </div>
         <span
-          className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${STATUS_SOFT_BG[status]} ${STATUS_TEXT[status]}`}
+          className={`shrink-0 rounded-full px-2.5 py-1 text-[0.6875rem] font-semibold ${STATUS_SOFT_BG[status]} ${STATUS_TEXT[status]}`}
         >
           {STATUS_LABEL[status]}
         </span>
@@ -58,7 +58,7 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
             </span>
           </div>
 
-          <dl className="mt-4 flex gap-6 border-t border-separator pt-3 text-[13px]">
+          <dl className="mt-4 flex gap-6 border-t border-separator pt-3 text-[0.8125rem]">
             <div>
               <dt className="text-text-tertiary">Dostępna rezerwa</dt>
               <dd className="tnum font-semibold text-text">
@@ -76,7 +76,7 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
       )}
 
       {isStale && (
-        <p className="mt-3 text-[11px] text-text-tertiary">
+        <p className="mt-3 text-[0.6875rem] text-text-tertiary">
           Dane z pamięci podręcznej — mogą być nieaktualne.
         </p>
       )}
