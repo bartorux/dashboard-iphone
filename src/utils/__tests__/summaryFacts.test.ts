@@ -103,6 +103,34 @@ describe('buildFacts', () => {
     expect(high[0].belowTypical).toBe(0);
   });
 
+  it('flags a thin but positive margin, which the call-period rule alone would call fine', () => {
+    // The alert panel shows an alarm for this hour while the regulation sees no
+    // grounds at all — the card must be able to say "close" rather than appear
+    // to contradict the panel beneath it.
+    const data = [hourOn('2026-08-10', 20, { reserve: 2177, required: 2000 })];
+    const facts = buildFacts(data, [], BEFORE_ALL);
+
+    expect(facts[0].risk).toBe('none');
+    expect(facts[0].nearThreshold).toBe(1);
+    expect(renderFacts(facts, 30)).toContain('blisko granicy');
+  });
+
+  it('does not call an hour close when it is a day off or outside the window', () => {
+    const sunday = buildFacts(
+      [hourOn('2026-08-09', 20, { reserve: 2177, required: 2000 })],
+      [],
+      BEFORE_ALL
+    );
+    const night = buildFacts(
+      [hourOn('2026-08-10', 3, { reserve: 2177, required: 2000 })],
+      [],
+      BEFORE_ALL
+    );
+
+    expect(sunday[0].nearThreshold).toBe(0);
+    expect(night[0].nearThreshold).toBe(0);
+  });
+
   it('copes with no data at all', () => {
     expect(buildFacts([], [], BEFORE_ALL)).toEqual([]);
   });

@@ -127,8 +127,23 @@ function startHourOf(hourLabel: string): number {
   return match ? Number(match[1]) : NaN;
 }
 
-export function classifyHour(point: PSEDataPoint, now: Date): HourRisk {
+/**
+ * Whether an hour could carry a call period at all — a working day inside the
+ * 07:00-22:00 window. Separate from the margin test so callers can tell "no
+ * grounds because the reserve is fine" from "no grounds because it is Sunday
+ * night", which read the same in the verdict but mean opposite things.
+ */
+export function isEligibleHour(point: PSEDataPoint): boolean {
   const startHour = startHourOf(point.hourLabel);
+  return (
+    isWorkingDay(point.businessDate) &&
+    Number.isFinite(startHour) &&
+    startHour >= WINDOW_FIRST_HOUR &&
+    startHour <= WINDOW_LAST_HOUR
+  );
+}
+
+export function classifyHour(point: PSEDataPoint, now: Date): HourRisk {
   // `time` is the END of the block, which is what PSE stamps periods with.
   const startsAt = point.time.getTime() - HOUR_MS;
   const announceable =
@@ -136,12 +151,7 @@ export function classifyHour(point: PSEDataPoint, now: Date): HourRisk {
 
   const base = { hourLabel: point.hourLabel, announceable };
 
-  const inWindow =
-    Number.isFinite(startHour) &&
-    startHour >= WINDOW_FIRST_HOUR &&
-    startHour <= WINDOW_LAST_HOUR;
-
-  if (!isWorkingDay(point.businessDate) || !inWindow) {
+  if (!isEligibleHour(point)) {
     return { ...base, risk: 'none' };
   }
 

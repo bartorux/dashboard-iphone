@@ -3,10 +3,12 @@ import {
   CallPeriodRange,
   CallPeriodRisk,
   callPeriodRanges,
+  isEligibleHour,
   isWorkingDay,
   upcoming,
   worstRisk,
 } from './callPeriod';
+import { DEFAULT_RED_THRESHOLD } from './constants';
 import { marginDistribution, standingFor } from './history';
 
 export interface DayFacts {
@@ -30,7 +32,26 @@ export interface DayFacts {
    * ordinary — the same asymmetry already fixed once in the history chart.
    */
   aboveTypical: number;
+  /**
+   * Hours where the reserve still covers what is required, but only just.
+   *
+   * There is no call period here — that needs the reserve to fall *below* the
+   * requirement — yet the alert panel will be showing an alarm for the very same
+   * hour, and a card flatly reporting "no grounds" next to it reads as a
+   * contradiction. Reported as a fact so the summary can say "close" in words,
+   * without inventing a risk level the regulations do not have.
+   */
+  nearThreshold: number;
 }
+
+/**
+ * How thin a positive margin has to be to count as close. Uses the app's own
+ * default alarm threshold so both readings come from one figure.
+ *
+ * The generator runs on a schedule for everybody, so it cannot see any one
+ * person's saved thresholds — this is deliberately the default, not a setting.
+ */
+export const NEAR_THRESHOLD_MW = DEFAULT_RED_THRESHOLD;
 
 const weekdayFormat = new Intl.DateTimeFormat('pl-PL', {
   weekday: 'short',
@@ -128,6 +149,12 @@ export function buildFacts(
         ranges,
         belowTypical: countStanding(margins, distribution, 'below'),
         aboveTypical: countStanding(margins, distribution, 'above'),
+        nearThreshold: margins.filter(
+          (entry) =>
+            isEligibleHour(entry.point) &&
+            entry.margin >= 0 &&
+            entry.margin < NEAR_THRESHOLD_MW
+        ).length,
       };
     });
 }
@@ -165,6 +192,13 @@ export function renderFacts(facts: DayFacts[], days: number): string {
     }
 
     lines.push(`  ryzyko przywolania: ${RISK_WORD[day.risk]}`);
+
+    if (day.nearThreshold > 0) {
+      lines.push(
+        `    ale blisko granicy: ${day.nearThreshold} godz. z marginesem ` +
+          `ponizej ${NEAR_THRESHOLD_MW} MW (rezerwa wciaz pokrywa wymagana)`
+      );
+    }
 
     for (const range of day.ranges) {
       lines.push(
