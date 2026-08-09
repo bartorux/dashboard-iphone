@@ -15,13 +15,32 @@ export interface Summary {
 export const INSTRUCTION = `Na podstawie PONIŻSZYCH FAKTÓW napisz krótkie podsumowanie
 po polsku o rezerwach mocy w krajowej sieci elektroenergetycznej.
 
-JĘZYK — to najważniejsze:
-- Odbiorcy pracują w energetyce. Pisz zawodowo i rzeczowo, ale bez żargonu.
-- ZAKAZANE zwroty, bo nic nie wnoszą: „sytuacja bilansowa", „bilans systemowy",
-  „zasoby DSR", „jednostki DSR", „ciągłość pracy", „profil generacji".
-- ZAKAZANE kolokwializmy, na przykład „zrobi się ciasno", „na styk".
-- Mów wprost: rezerwa mocy, wymagana rezerwa, margines, okres przywołania.
-- Krótkie zdania. Pisz poprawną polszczyzną, z polskimi znakami.
+JAK MASZ PISAĆ — to najważniejsze:
+- Jak dyżurny inżynier, który mówi koledze, czego się spodziewać. Zawodowo,
+  ale normalnie. Odbiorcy pracują w energetyce.
+- CZASOWNIKI, nie rzeczowniki odczasownikowe. Pisz „rezerwa spadnie", nie
+  „nastąpi spadek rezerwy". Pisz „nie pokryje", nie „wystąpi brak pokrycia".
+- KONKRETNE GODZINY, kiedy fakty je podają. Pisz „między 18:00 a 19:00", nigdy
+  „w wyznaczonym przedziale czasowym" ani „w godzinach wieczornych".
+- Jedno zdanie, jedna myśl. Nie równoważ każdego zdania zastrzeżeniem —
+  powiedz rzecz wprost, a zastrzeżenie dodaj tylko wtedy, gdy naprawdę zmienia
+  wniosek.
+- Wytnij watę: „w pełni", „również", „ponadto", „w chwili obecnej", „należy
+  zauważyć". Jeśli słowo można usunąć bez straty, usuń je.
+- Pisz poprawną polszczyzną, z polskimi znakami.
+
+TAK NIE PISZ (asekuranckie, zdystansowane, bez konkretu):
+„W poniedziałek w wyznaczonym przedziale czasowym rezerwa nie pokrywa w pełni
+wymaganej wielkości, w związku z czym występuje ryzyko wezwania odbiorców."
+
+TAK PISZ (wprost, z godzinami, czasownikami):
+„W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganej. Operator
+może wtedy ogłosić przywołanie, choć nie musi."
+
+ZAKAZANE zwroty, bo nic nie wnoszą: „sytuacja bilansowa", „bilans systemowy",
+„zasoby DSR", „jednostki DSR", „ciągłość pracy", „profil generacji".
+ZAKAZANE kolokwializmy, na przykład „zrobi się ciasno", „na styk".
+Nazywaj rzeczy po imieniu: rezerwa mocy, wymagana rezerwa, margines, przywołanie.
 
 ZASADY, bezwzględnie:
 - NIE podawaj żadnych liczb. Żadnych megawatów, procentów, liczby godzin.
@@ -36,11 +55,16 @@ ZASADY, bezwzględnie:
   „sytuacja będzie monitorowana".
 - NIE POWTARZAJ zasad ogłaszania przywołania. Czytelnik je zna.
 
-NAJWAŻNIEJSZE ROZRÓŻNIENIE, nie pomyl go:
+NAJWAŻNIEJSZE ROZRÓŻNIENIE, nie pomyl go W ŻADNĄ STRONĘ:
 - Margines DODATNI oznacza, że dostępna rezerwa POKRYWA wymaganą. Nawet bardzo
   cienki margines nadal ją pokrywa.
-- Tylko margines UJEMNY oznacza, że rezerwa spadła poniżej wymaganej.
-- Nigdy nie pisz, że rezerwa spadła poniżej wymaganej, jeśli fakty tego nie mówią.
+- Margines UJEMNY oznacza, że rezerwa NIE POKRYWA wymaganej. To są dwa opisy
+  tego samego faktu, nie dwie osobne informacje.
+- Nigdy nie pisz, że rezerwa spadła poniżej wymaganej, jeśli margines jest dodatni.
+- Nigdy nie pisz, że rezerwa pokrywa wymaganą, jeśli margines jest ujemny.
+- ZDANIE ZAKAZANE, bo przeczy samo sobie: „rezerwa pokrywa wymaganą wartość,
+  choć margines jest ujemny". Jeśli margines jest ujemny, napisz wprost, że
+  rezerwa nie pokrywa wymaganej.
 
 Kontekst: okres przywołania to sytuacja, w której operator sieci wzywa odbiorców
 do ograniczenia poboru.
@@ -153,6 +177,22 @@ export function validateSummary(
   // that contains not one of them was not written in Polish so much as near it.
   if (!/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(whole)) {
     return { ok: false, reason: 'tekst bez polskich znaków' };
+  }
+
+  /*
+   * One published run said the reserve "covers the required value, although the
+   * margin is negative" — two descriptions of the same fact, asserted against
+   * each other. A negative margin IS the reserve failing to cover; there is no
+   * state in which both halves hold.
+   *
+   * The instruction forbids it, but an instruction is a request. This is the
+   * refusal: within a single sentence, a claim of coverage alongside the word
+   * "negative" is the inversion, whatever the surrounding facts happen to be.
+   */
+  for (const sentence of whole.split(/(?<=[.!?])\s+/)) {
+    if (/pokrywa|pokryje|pokrywaj/i.test(sentence) && /ujemn/i.test(sentence)) {
+      return { ok: false, reason: 'zdanie przeczy samo sobie o pokryciu' };
+    }
   }
 
   for (const hour of whole.match(HOUR_PATTERN) ?? []) {
