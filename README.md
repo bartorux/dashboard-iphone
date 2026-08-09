@@ -88,7 +88,13 @@ Minuta jest **nietypowa (`:37`)**, i to nie przypadek: przy `:05` przebiegi ląd
 godziny to moment, na który celuje najwięcej cronów. Nic dalej od tej minuty nie zależy — fakty
 patrzą przed siebie, więc środek godziny jest tak samo dobry jak jej początek.
 
-Model jest wołany **tylko gdy zmieni się ocena**, a odcisk oceny świadomie pomija liczbę godzin
+Model jest wołany, **gdy zmieni się ocena albo gdy tekst przekroczy sześć godzin**. To drugie
+jest zabezpieczeniem: karta chowa podsumowanie starsze niż dwanaście godzin, więc spokojna noc
+przy stabilnej prognozie mogłaby utrzymać ocenę niezmienioną na tyle długo, że karta zniknęłaby
+nad ranem — i to nie dlatego, że coś jest nie tak, tylko dlatego, że uznaliśmy tekst za wciąż
+dobry. Sześć godzin to połowa progu ukrycia, więc zapas jest szeroki.
+
+Odcisk oceny świadomie pomija liczbę godzin
 przed nami i średnią — obie zmieniają się co godzinę z samego upływu czasu, więc odcisk nigdy nie
 wyglądałby na niezmieniony i cały mechanizm byłby martwy. Najniższy margines jest zaokrąglany do
 stu megawatów, żeby drobna korekta prognozy nie liczyła się jako nowina.
