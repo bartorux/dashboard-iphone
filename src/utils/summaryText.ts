@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 4;
+export const PROMPT_VERSION = 5;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -99,6 +99,20 @@ TRZY STANY — nie zlewaj ich w „ryzyko":
   ani „na pewno" — to nie jest gwarancja.
 - „brak podstaw" znaczy dokładnie tyle: rezerwa pokrywa wymaganą albo godzina
   wypada poza dniem roboczym lub oknem 07:00-22:00.
+
+NIE ŁĄCZ FAKTÓW W ZWIĄZKI PRZYCZYNOWE, których w nich nie ma:
+- Nie pisz „więc", „dlatego", „w związku z tym" między faktami, które po prostu
+  stoją obok siebie. Wymieniaj je, nie tłumacz jednym drugiego.
+- Zwłaszcza: to, że nadwyżka trzyma się powyżej progu 1100 MW, jest powodem,
+  dla którego operator MOŻE NIE OGŁASZAĆ przywołania. Nigdy nie jest powodem,
+  dla którego ogłoszenie miałoby paść.
+- Okno ogłoszenia (osiem godzin wyprzedzenia) to osobna, niezależna informacja.
+  Nie wiąż jej z wysokością nadwyżki.
+
+PISZ, KTÓRYCH GODZIN DOTYCZYSZ:
+- Jeśli w jednym dniu jedne godziny mają margines ujemny, a inne dodatni, powiedz
+  wprost, że to różne godziny. Inaczej dwa prawdziwe zdania obok siebie czytają
+  się jak zaprzeczenie.
 
 NARRACJA — to jest informacja, nie ostrzeżenie:
 - Nie pisz tak, jakby przywołanie było przesądzone, dopóki fakty tego nie mówią.

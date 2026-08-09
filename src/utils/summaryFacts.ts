@@ -280,21 +280,31 @@ export function renderFacts(facts: DayFacts[], days: number): string {
 
     lines.push(`  okres przywołania: ${RISK_WORD[day.risk]}`);
 
-    if (day.nearThreshold > 0) {
+    for (const range of day.ranges) {
       lines.push(
-        // No figure here on purpose: given one, the model wrote it out in words
-        // and slipped straight past the ban on numbers.
-        `    ale blisko granicy: ${day.nearThreshold} godz. z bardzo cienkim ` +
-          `marginesem. UWAGA: margines wciąż DODATNI, rezerwa POKRYWA wymaganą`
+        `    ${range.from}-${range.to} (${range.hours} godz.): ${RISK_WORD[range.risk]}`
+      );
+      // On its own line, and labelled. Sharing a line with the state clause, the
+      // model read the two as cause and effect and wrote that the surplus
+      // holding above the threshold was why a declaration might still come —
+      // exactly backwards, since that is the reason one might not.
+      lines.push(
+        `      okno ogłoszenia (wymagane 8 godz. wyprzedzenia): ` +
+          (range.announceable ? 'wciąż otwarte' : 'już zamknięte')
       );
     }
 
-    for (const range of day.ranges) {
+    if (day.nearThreshold > 0) {
+      // Spelled out as OTHER hours. Left unscoped, this read as a denial of the
+      // headline: one sentence said the reserve would not cover what is
+      // required, the next that it does — both true, of different hours.
+      //
+      // No figure for the threshold on purpose: given one, the model wrote it
+      // out in words and slipped straight past the ban on numbers.
       lines.push(
-        `    ${range.from}-${range.to} (${range.hours} godz.): ${RISK_WORD[range.risk]}` +
-          (range.announceable
-            ? ', ogłoszenie może jeszcze paść'
-            : ', okno ogłoszenia zamknięte')
+        `    OSOBNO, w INNYCH godzinach tego dnia: ${day.nearThreshold} godz. ` +
+          `z cienkim, ale DODATNIM marginesem — tam rezerwa pokrywa wymaganą ` +
+          `i nie ma podstaw do przywołania`
       );
     }
 
