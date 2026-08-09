@@ -1,13 +1,13 @@
 {
-  "headline": "W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganej, ale operator może przywołania nie ogłaszać.",
-  "body": "Poniedziałek przyniesie ujemny margines o 18:00, jednak nadwyżka pozostanie powyżej progu regulacyjnego. Ogłoszenie może jeszcze nadejść ze względu na zachowany czas wyprzedzenia. W innych godzinach tego dnia rezerwa pokryje wymaganą.",
-  "outlook": "Niedziela i wtorek nie wykażą podstaw do przywołania, mimo wystąpienia cienkiego dodatniego marginesu w godzinach wieczornych.",
-  "generatedAt": "2026-08-09T18:27:48.674Z",
+  "headline": "W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganego poziomu.",
+  "body": "Operator ma prawo nie ogłaszać przywołania, bo nadwyżka utrzymuje się powyżej progu. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. W innych godzinach tego dnia rezerwa pokrywa wymagany poziom i brak podstaw do przywołania.",
+  "outlook": "W niedzielę i we wtorek nie ma podstaw do przywołania, choć we wtorek o 20:00 margines robi się wąski.",
+  "generatedAt": "2026-08-09T19:21:51.770Z",
   "dates": [
     "2026-08-09",
     "2026-08-10",
     "2026-08-11"
   ],
-  "assessment": "2026-08-09|W|none|1200|20:00|0|0|0|;2026-08-10|R|moderate|0|18:00|2|0|12|moderate:18:00-19:00;2026-08-11|R|none|300|20:00|1|0|20|#v6",
+  "assessment": "2026-08-09|W|none|1100|21:00|0|0|0|;2026-08-10|R|moderate|-100|18:00|3|0|12|moderate:18:00-19:00;2026-08-11|R|none|200|20:00|1|0|20|#v9",
   "model": "gemini-3.5-flash-lite"
 }
