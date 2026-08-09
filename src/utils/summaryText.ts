@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 15;
+export const PROMPT_VERSION = 16;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -82,6 +82,10 @@ bez urzędowego żargonu. Odbiorcy pracują w energetyce.
 - NIE POWTARZAJ TEGO SAMEGO SŁOWA w jednym zdaniu, jeśli da się inaczej.
   „powyżej progu, powyżej którego" brzmi jak potknięcie — rozbij na dwa zdania
   albo przeformułuj.
+- NIE POTWIERDZAJ BRAKU WIADOMOŚCI. Skoro nagłówek podaje godziny, w których
+  coś się dzieje, czytelnik wie, że w pozostałych nic się nie dzieje. Zdanie
+  „w innych godzinach rezerwa pokrywa wymagany poziom" zajmuje miejsce i nic
+  nie wnosi.
 - Poprawna polszczyzna, z polskimi znakami.
 
 TAK NIE PISZ (asekuracko, bez konkretu):
@@ -142,7 +146,9 @@ Dokładnie trzy wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadn
 cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
-TREŚĆ: dwa albo trzy zdania o tym, co się dzieje i czego się spodziewać.
+TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku — najczęściej
+dlaczego operator ma prawo nie ogłaszać przywołania i czy ogłoszenie może
+jeszcze nadejść.
 DALEJ: jedno zdanie o kolejnych dniach.
 
 WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:
