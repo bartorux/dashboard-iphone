@@ -203,9 +203,9 @@ const RISK_WORD: Record<CallPeriodRisk, string> = {
   // distinction this whole card rests on.
   moderate:
     'OPERATOR MA PRAWO NIE OGŁASZAĆ PRZYWOŁANIA — rezerwa nie pokrywa ' +
-    'wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW. ' +
-    'Dopóki tak jest, przepis pozwala operatorowi nie ogłaszać przywołania. ' +
-    'To UPRAWNIENIE, nie prognoza — nie wiadomo, czy operator z niego skorzysta',
+    'wymaganego poziomu, ale nadwyżka wciąż przekracza próg 1100 MW. ' +
+    'To UPRAWNIENIE z przepisu, nie prognoza — nie wiadomo, czy operator ' +
+    'z niego skorzysta',
   none: 'nie ma podstaw do przywołania',
   unknown: 'nie wiadomo, czy są podstawy do przywołania',
 };
@@ -317,7 +317,7 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       );
     }
 
-    lines.push(`  okres przywołania: ${RISK_WORD[day.risk]}`);
+    lines.push(`  stan: ${RISK_WORD[day.risk]}`);
 
     for (const range of day.ranges) {
       lines.push(
@@ -333,8 +333,8 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       // part that explained what the window was.
       lines.push(
         range.announceable
-          ? '      ogłoszenie może jeszcze nadejść (do tych godzin zostało ponad 8 godz. wymaganego wyprzedzenia)'
-          : '      ogłoszenie już nie nadejdzie, jeśli dotąd nie zostało ogłoszone (zostało mniej niż 8 godz. wymaganego wyprzedzenia)'
+          ? '      ogłoszenie może jeszcze nadejść — zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie'
+          : '      na ogłoszenie jest już za późno — zostało mniej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie'
       );
     }
 
@@ -346,9 +346,9 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       // No figure for the threshold on purpose: given one, the model wrote it
       // out in words and slipped straight past the ban on numbers.
       lines.push(
-        `    OSOBNO, w INNYCH godzinach tego dnia: ${day.nearThreshold} godz. ` +
-          `z wąskim, ale DODATNIM marginesem — w tych godzinach rezerwa pokrywa ` +
-          `wymagany poziom i nie ma podstaw do przywołania`
+        `    OSOBNO — poza powyższym zakresem tego dnia jest ` +
+          `${day.nearThreshold} godz. z wąskim, ale DODATNIM marginesem: ` +
+          `rezerwa pokrywa wymagany poziom i nie ma tam podstaw do przywołania`
       );
     }
 
