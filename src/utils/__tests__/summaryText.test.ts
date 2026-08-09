@@ -84,7 +84,7 @@ describe('validateSummary', () => {
     // text sat frozen while each rerun looked like "no change".
     const correct = {
       ...good,
-      body: 'Między 18:00 a 19:00 margines jest ujemny, więc rezerwa nie pokrywa wymaganego poziomu.',
+      body: 'O 20:00 margines jest ujemny, więc rezerwa nie pokrywa wymaganego poziomu.',
     };
 
     expect(validateSummary(correct, HOURS)).toEqual({ ok: true });
