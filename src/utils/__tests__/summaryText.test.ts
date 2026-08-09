@@ -78,6 +78,18 @@ describe('validateSummary', () => {
     expect(verdict).toMatchObject({ reason: expect.stringContaining('przeczy') });
   });
 
+  it('allows the correct pairing, which the instruction actually demands', () => {
+    // Checking for the two words alone rejected this — and the instruction asks
+    // for exactly this sentence — so every run was refused and the published
+    // text sat frozen while each rerun looked like "no change".
+    const correct = {
+      ...good,
+      body: 'Między 18:00 a 19:00 margines jest ujemny, więc rezerwa nie pokrywa wymaganego poziomu.',
+    };
+
+    expect(validateSummary(correct, HOURS)).toEqual({ ok: true });
+  });
+
   it('still allows the two words in separate sentences, where both can be true', () => {
     const fine = {
       ...good,

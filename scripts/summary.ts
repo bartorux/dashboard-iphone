@@ -115,9 +115,19 @@ if (!apiKey) {
   process.exit(existing ? 0 : 1);
 }
 
-/** Keeps whatever is already on disk and ends the run without failing it. */
+/**
+ * Keeps whatever is already on disk and ends the run without failing it.
+ *
+ * Raised as a workflow warning, not just a log line. From the outside a refused
+ * answer looked exactly like an unchanged assessment — both end with the deploy
+ * job skipped — so a validator rejecting every single run was indistinguishable
+ * from a quiet hour, and the published text sat frozen with nothing to show why.
+ */
 function giveUp(reason: string): never {
   console.error(`${reason} — zostawiam poprzednie podsumowanie.`);
+  if (process.env.GITHUB_ACTIONS) {
+    console.log(`::warning title=Podsumowanie nieodświeżone::${reason}`);
+  }
   process.exit(0);
 }
 

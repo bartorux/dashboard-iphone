@@ -329,7 +329,19 @@ export function validateSummary(
    * "negative" is the inversion, whatever the surrounding facts happen to be.
    */
   for (const sentence of whole.split(/(?<=[.!?])\s+/)) {
-    if (/pokrywa|pokryje|pokrywaj/i.test(sentence) && /ujemn/i.test(sentence)) {
+    if (!/ujemn/i.test(sentence)) continue;
+
+    // Negated coverage is the correct pairing, not the contradiction: "the
+    // margin is negative, so the reserve does NOT cover what is required" says
+    // one thing twice, which is exactly what the instruction asks for. Checking
+    // for the words alone rejected that sentence — and the instruction demands
+    // it — so every run was refused and the text sat frozen.
+    const affirmative = sentence.replace(
+      /\bnie\s+(pokrywa|pokryje|pokrywaj\w*|pokryw\w*)/gi,
+      ''
+    );
+
+    if (/\b(pokrywa|pokryje|pokrywaj)\w*/i.test(affirmative)) {
       return { ok: false, reason: 'zdanie przeczy samo sobie o pokryciu' };
     }
   }
