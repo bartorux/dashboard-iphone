@@ -63,6 +63,31 @@ describe('validateSummary', () => {
     ).toBe(false);
   });
 
+  it('rejects a sentence that contradicts itself about coverage', () => {
+    // Published once: the reserve "covers the required value, although the
+    // margin is negative" — two descriptions of one fact set against each
+    // other. There is no state in which both halves hold.
+    const inverted = {
+      ...good,
+      body:
+        'W poniedziałek rezerwa pokrywa wymaganą wartość, choć margines jest ujemny.',
+    };
+
+    const verdict = validateSummary(inverted, HOURS);
+    expect(verdict.ok).toBe(false);
+    expect(verdict).toMatchObject({ reason: expect.stringContaining('przeczy') });
+  });
+
+  it('still allows the two words in separate sentences, where both can be true', () => {
+    const fine = {
+      ...good,
+      body:
+        'W niedzielę rezerwa pokrywa wymaganą wartość. W poniedziałek margines jest ujemny.',
+    };
+
+    expect(validateSummary(fine, HOURS).ok).toBe(true);
+  });
+
   it('rejects Polish written without its diacritics', () => {
     // The failure mode seen twice at looser settings, once producing a Hungarian
     // ű in place of ż. Raising the temperature for variety makes it likelier,
