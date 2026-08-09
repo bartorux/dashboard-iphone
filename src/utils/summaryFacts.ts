@@ -169,6 +169,39 @@ const RISK_WORD: Record<CallPeriodRisk, string> = {
 const round = (value: number) => `${value > 0 ? '+' : ''}${Math.round(value)} MW`;
 
 /**
+ * A canonical string of everything the summary is actually about, used to decide
+ * whether the text needs rewriting at all.
+ *
+ * Deliberately excludes `hoursAhead` and the average: both shift every single
+ * hour as the day is consumed, so keying on them would mean the assessment never
+ * looked unchanged and the model ran every hour regardless — which was the whole
+ * thing this was meant to avoid. The worst margin is rounded for the same reason,
+ * so a forecast nudged by a few megawatts does not count as news.
+ *
+ * Stored whole rather than hashed: it is short, and an exact comparison cannot
+ * collide the way a hash can, where a collision would silently skip an update.
+ */
+export function assessmentKey(facts: DayFacts[]): string {
+  return facts
+    .map((day) =>
+      [
+        day.businessDate,
+        day.workingDay ? 'R' : 'W',
+        day.risk,
+        day.worstMargin === null ? '-' : Math.round(day.worstMargin / 100) * 100,
+        day.worstHour ?? '-',
+        day.nearThreshold,
+        day.belowTypical,
+        day.aboveTypical,
+        day.ranges
+          .map((range) => `${range.risk}:${range.from}-${range.to}`)
+          .join(','),
+      ].join('|')
+    )
+    .join(';');
+}
+
+/**
  * The single most notable thing, worked out here rather than left to the model.
  *
  * Asked to pick it out of the facts itself, the model got the day wrong roughly
