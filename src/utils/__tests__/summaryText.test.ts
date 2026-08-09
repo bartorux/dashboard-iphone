@@ -50,6 +50,28 @@ describe('validateSummary', () => {
     expect(validateSummary(good, HOURS)).toEqual({ ok: true });
   });
 
+  it('lets the 1100 MW threshold through, since the facts hand it over', () => {
+    // Banning it deadlocked the generator: the facts and the instruction both
+    // put "próg 1100 MW" in front of the model, then every answer quoting it was
+    // refused. It is a fixed figure from the regulation, not a reading of the
+    // hour, so it cannot be wrong about the situation.
+    const withThreshold = {
+      ...good,
+      body: 'Nadwyżka wciąż przekracza próg 1100 MW, więc operator ma prawo nie ogłaszać przywołania.',
+    };
+
+    expect(validateSummary(withThreshold, HOURS)).toEqual({ ok: true });
+  });
+
+  it('still refuses any other figure, even beside the permitted one', () => {
+    const mixed = {
+      ...good,
+      body: 'Nadwyżka przekracza próg 1100 MW, a margines wynosi 250 MW.',
+    };
+
+    expect(validateSummary(mixed, HOURS).ok).toBe(false);
+  });
+
   it('rejects a power figure, however it is written', () => {
     expect(
       validateSummary({ ...good, body: 'Margines spada do 177 MW.' }, HOURS).ok

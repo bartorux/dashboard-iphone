@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 14;
+export const PROMPT_VERSION = 15;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -98,6 +98,8 @@ przywołania."
 LICZBY:
 - Żadnych wielkości mocy ani procentów — ani cyframi, ani słownie. To jedyne,
   co mógłbyś przeinaczyć, a aplikacja pokazuje te wartości obok.
+- JEDYNY WYJĄTEK: wolno napisać „próg 1100 MW". To stała z przepisu, nie odczyt
+  z prognozy. Żadnej innej wartości w megawatach nie podawaj.
 - Cyframi zapisuj wyłącznie godziny HH:MM występujące w faktach.
 - Liczbę godzin możesz podać słownie: „przez trzy godziny", „tylko w tej jednej
   godzinie". Tak najkrócej powiesz, ilu godzin dotyczy rzecz.
@@ -243,8 +245,17 @@ export function validateSummary(
 
   const whole = `${summary.headline}\n${summary.body}\n${summary.outlook}`;
 
-  // Told not to use digits, one run simply spelled the figure out instead.
-  if (/megawat|MW\b|procent/i.test(whole)) {
+  /*
+   * Told not to use digits, one run simply spelled the figure out instead — so
+   * the ban covers words too. The one exception is the 1100 MW threshold, which
+   * is a fixed figure from the regulation rather than a reading of the current
+   * hour: it cannot be wrong about the situation, and both the facts and this
+   * instruction hand it to the model repeatedly. Forbidding it meant the input
+   * demonstrated the very thing the output was refused for, and every answer was
+   * rejected.
+   */
+  const bezStalej = whole.replace(/\b1100\s*MW\b/gi, '');
+  if (/megawat|MW\b|procent/i.test(bezStalej)) {
     return { ok: false, reason: 'tekst podaje wielkość mocy' };
   }
 
@@ -324,7 +335,9 @@ export function validateSummary(
     }
   }
 
-  const withoutHours = whole.replace(HOUR_PATTERN, '');
+  const withoutHours = whole
+    .replace(/\b1100\s*MW\b/gi, '')
+    .replace(HOUR_PATTERN, '');
   if (/\d/.test(withoutHours)) {
     return { ok: false, reason: 'tekst zawiera liczbę spoza godzin' };
   }
