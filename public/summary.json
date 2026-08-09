@@ -1,13 +1,13 @@
 {
-  "headline": "W poniedziałek wystąpi umiarkowane ryzyko przywołania w godzinach 18:00-19:00.",
-  "body": "W niedzielę nie ma podstaw do przywołania. W poniedziałek pojawią się godziny z bardzo cienkim marginesem, jednak dostępna rezerwa wciąż pokrywa wymaganą, a ogłoszenie może jeszcze paść.",
-  "outlook": "We wtorek ryzyko przywołania nie wystąpi, pomimo wystąpienia jednej godziny z bardzo cienkim marginesem, który nadal pozostaje dodatni.",
-  "generatedAt": "2026-08-09T17:41:34.168Z",
+  "headline": "W poniedziałek występuje umiarkowane ryzyko przywołania odbiorców do ograniczenia poboru, a w pozostałe dni rezerwy mieszczą się w typowym zakresie.",
+  "body": "W niedzielę i wtorek dostępne rezerwy w pełni pokrywają wymaganą wielkość, mimo wystąpienia godzin z bardzo cienkim marginesem. W poniedziałek w wyznaczonym przedziale czasowym rezerwa również pokrywa wymaganą wartość, choć margines jest ujemny i występuje ryzyko wezwania do ograniczenia poboru.",
+  "outlook": "We wtorek sytuacja wraca do normy i nie ma podstaw do przywoływania odbiorców.",
+  "generatedAt": "2026-08-09T17:53:54.108Z",
   "dates": [
     "2026-08-09",
     "2026-08-10",
     "2026-08-11"
   ],
-  "assessment": "2026-08-09|W|none|800|20:00|0|0|0|;2026-08-10|R|moderate|-100|18:00|3|0|13|moderate:18:00-19:00;2026-08-11|R|none|200|20:00|1|0|20|",
+  "assessment": "2026-08-09|W|none|900|21:00|0|0|0|;2026-08-10|R|moderate|-100|18:00|3|0|12|moderate:18:00-19:00;2026-08-11|R|none|200|20:00|1|0|20|",
   "model": "gemini-3.5-flash-lite"
 }
