@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import Header, { ConnectionState } from './components/Header';
 import CurrentStatusCard from './components/CurrentStatusCard';
+import SummaryCard from './components/SummaryCard';
 import DayNavigation from './components/DayNavigation';
 import ChartSection from './components/ChartSection';
 import TrendsSection from './components/TrendsSection';
@@ -19,6 +20,7 @@ import { useTouchGestures } from './hooks/useTouchGestures';
 import { useInstallPrompt } from './hooks/useInstallPrompt';
 import { useThemeColorMeta } from './hooks/useThemeColorMeta';
 import { useTheme } from './hooks/useTheme';
+import { useSummary } from './hooks/useSummary';
 import {
   buildAlertRanges,
   classifyMargin,
@@ -91,6 +93,10 @@ function App() {
     const alerts = findAlerts(allData, orangeThreshold, redThreshold);
     return alerts.orange.length + alerts.red.length;
   }, [allData, orangeThreshold, redThreshold]);
+
+  // Recomputed on the tick so the summary ages out on its own, without a reload.
+  const now = useMemo(() => new Date(), [clockTick]);
+  const summary = useSummary(now);
 
   // clockTick is a dependency on purpose: both of these read the wall clock, so
   // they have to be recomputed as the hour rolls over, not only when data changes.
@@ -192,6 +198,8 @@ function App() {
           onNotification={showNotification}
           onClose={() => setSettingsVisible(false)}
         />
+
+        {summary && <SummaryCard summary={summary} />}
 
         <CurrentStatusCard
           point={currentPoint}

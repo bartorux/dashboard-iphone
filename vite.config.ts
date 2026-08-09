@@ -26,6 +26,19 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
+            // Written by a scheduled job, not by the build, and json falls
+            // outside the default precache patterns — so without this the card
+            // simply vanishes offline. Network first keeps it current when there
+            // is a connection, and readable when there is not.
+            urlPattern: /\/summary\.json$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'summary-cache',
+              expiration: { maxEntries: 1, maxAgeSeconds: 24 * 60 * 60 },
+              networkTimeoutSeconds: 5,
+            },
+          },
+          {
             urlPattern: /^https:\/\/api\.raporty\.pse\.pl/,
             handler: 'NetworkFirst',
             options: {

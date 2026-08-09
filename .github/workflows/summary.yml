@@ -1,0 +1,65 @@
+name: Podsumowanie AI
+
+# Hourly rather than at a fixed hour, and that is the answer to the timezone
+# problem rather than a shrug at it: cron here is UTC while PSE publishes on
+# Polish time, so any fixed hour would drift by one across the DST switch.
+# Running every hour, the offset stops mattering — and inside the job every
+# instant comes from `plan_dtime_utc`, the only PSE field that survives the
+# autumn switch (`plan_dtime` carries a literal "03a" hour that cannot be parsed).
+#
+# Scheduled runs in Actions can be delayed under load, so "hourly" is an effort
+# rather than a promise. Nothing downstream depends on punctuality: the card
+# shows how old its text is, and hides it once it is too old to trust.
+on:
+  schedule:
+    - cron: '5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: summary
+  cancel-in-progress: false
+
+env:
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+jobs:
+  summary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - run: npm ci
+
+      # Writes public/summary.json only when the assessment has changed and the
+      # answer passes validation. Exits 0 either way: a scheduled job must not go
+      # red because the model was briefly unavailable.
+      - name: Wygeneruj podsumowanie
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npx tsx scripts/summary.ts
+
+      # Committing is what publishes it: Pages is served from a build artifact,
+      # so the file reaches the phone through the existing deploy workflow, which
+      # this push triggers. No commit when nothing changed, so the deploy — and
+      # the service worker update behind it — only happens when there is news.
+      - name: Opublikuj, jesli sie zmienilo
+        run: |
+          if git diff --quiet -- public/summary.json; then
+            echo "Bez zmian — nie publikuje."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/summary.json
+          git commit -m "Odswiez podsumowanie"
+          # Someone may have pushed while the model was answering.
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

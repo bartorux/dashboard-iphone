@@ -79,6 +79,34 @@ for (const scenario of SCENARIOS) {
     timezoneId: 'Europe/Warsaw',
   });
 
+  /**
+   * The summary is written by a scheduled job, so the file on disk carries a
+   * real timestamp and would read as coming from the future against the frozen
+   * clock — which the card correctly refuses to show. Served here with a stamp
+   * relative to that clock, so the card is actually covered; `offline` drops it
+   * to prove the rest of the screen stands without it.
+   */
+  await context.route('**/summary.json', (route) => {
+    if (scenario.offline) return route.abort('failed');
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      // Worded to match the fixture it sits above, where the evening margin
+      // goes negative — a baseline that contradicts its own chart teaches the
+      // eye to ignore exactly what these captures exist to catch.
+      body: JSON.stringify({
+        headline:
+          'Wieczorem rezerwa nie pokrywa wymaganej wartości, są podstawy do przywołania.',
+        body:
+          'Od godziny 17:00 do 23:00 dostępna rezerwa spada poniżej wymaganej, ' +
+          'najgłębiej o 19:00. Okno ogłoszenia dla części tych godzin jest już zamknięte.',
+        outlook:
+          'W kolejnych dniach margines wraca powyżej typowego zakresu.',
+        generatedAt: new Date(FROZEN_TIME.getTime() - 30 * 60 * 1000).toISOString(),
+      }),
+    });
+  });
+
   await context.route('**/api.raporty.pse.pl/**', (route) => {
     if (scenario.offline) return route.abort('failed');
     const requested = decodeURIComponent(route.request().url());
