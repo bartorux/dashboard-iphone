@@ -88,6 +88,26 @@ describe('validateSummary', () => {
     expect(validateSummary(fine, HOURS).ok).toBe(true);
   });
 
+  it('rejects the window metaphor, which reached a published summary', () => {
+    // "The window stays open" — from my own wording of the facts, shortened by
+    // the model until nothing was left to say what the window was.
+    const metaphor = {
+      ...good,
+      body: 'Operator może nie ogłaszać przywołania, a okno pozostaje otwarte.',
+    };
+
+    expect(validateSummary(metaphor, HOURS).ok).toBe(false);
+  });
+
+  it('accepts the same fact said plainly', () => {
+    const plain = {
+      ...good,
+      body: 'Operator może nie ogłaszać przywołania. Ogłoszenie może jeszcze nadejść.',
+    };
+
+    expect(validateSummary(plain, HOURS).ok).toBe(true);
+  });
+
   it('rejects Polish written without its diacritics', () => {
     // The failure mode seen twice at looser settings, once producing a Hungarian
     // ű in place of ż. Raising the temperature for variety makes it likelier,

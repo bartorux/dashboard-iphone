@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 5;
+export const PROMPT_VERSION = 6;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -98,7 +98,7 @@ TRZY STANY — nie zlewaj ich w „ryzyko":
   1100 MW, więc operator nie ma już podstaw, by go nie ogłaszać. Nie pisz „musi"
   ani „na pewno" — to nie jest gwarancja.
 - „brak podstaw" znaczy dokładnie tyle: rezerwa pokrywa wymaganą albo godzina
-  wypada poza dniem roboczym lub oknem 07:00-22:00.
+  wypada poza dniem roboczym lub poza godzinami 07:00-22:00.
 
 NIE ŁĄCZ FAKTÓW W ZWIĄZKI PRZYCZYNOWE, których w nich nie ma:
 - Nie pisz „więc", „dlatego", „w związku z tym" między faktami, które po prostu
@@ -106,8 +106,14 @@ NIE ŁĄCZ FAKTÓW W ZWIĄZKI PRZYCZYNOWE, których w nich nie ma:
 - Zwłaszcza: to, że nadwyżka trzyma się powyżej progu 1100 MW, jest powodem,
   dla którego operator MOŻE NIE OGŁASZAĆ przywołania. Nigdy nie jest powodem,
   dla którego ogłoszenie miałoby paść.
-- Okno ogłoszenia (osiem godzin wyprzedzenia) to osobna, niezależna informacja.
-  Nie wiąż jej z wysokością nadwyżki.
+- To, czy ogłoszenie może jeszcze nadejść, wynika wyłącznie z wymaganych ośmiu
+  godzin wyprzedzenia. Nie wiąż tego z wysokością nadwyżki — to osobna sprawa.
+
+NIE UŻYWAJ METAFOR ANI SKRÓTÓW MYŚLOWYCH:
+- ZAKAZANE: „okno", „okno ogłoszenia", „okno pozostaje otwarte". Czytelnik nie
+  wie, co to okno, a wyjaśnienie i tak wypada ze zdania.
+- Pisz wprost, o co chodzi: „ogłoszenie może jeszcze nadejść" albo „na ogłoszenie
+  jest już za późno".
 
 PISZ, KTÓRYCH GODZIN DOTYCZYSZ:
 - Jeśli w jednym dniu jedne godziny mają margines ujemny, a inne dodatni, powiedz
@@ -223,6 +229,19 @@ export function validateSummary(
   // Told not to use digits, one run simply spelled the figure out instead.
   if (/megawat|MW\b|procent/i.test(whole)) {
     return { ok: false, reason: 'tekst podaje wielkość mocy' };
+  }
+
+  /*
+   * "The window stays open" reached a published summary. It came from my own
+   * wording of the facts, shortened by the model until the only clause
+   * explaining what the window was had fallen away — and the person who had to
+   * ask what it meant knows this domain professionally.
+   *
+   * The facts now say it plainly instead, and this refuses the metaphor if it
+   * comes back.
+   */
+  if (/\bokn[oaie]\w*\b/i.test(whole)) {
+    return { ok: false, reason: 'tekst używa metafory okna zamiast wprost' };
   }
 
   // Loosened settings have twice produced Polish stripped of its diacritics, once
