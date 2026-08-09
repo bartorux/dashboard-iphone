@@ -169,6 +169,39 @@ const RISK_WORD: Record<CallPeriodRisk, string> = {
 const round = (value: number) => `${value > 0 ? '+' : ''}${Math.round(value)} MW`;
 
 /**
+ * The single most notable thing, worked out here rather than left to the model.
+ *
+ * Asked to pick it out of the facts itself, the model got the day wrong roughly
+ * every other run — reporting a Tuesday evening as "today". Choosing which day
+ * matters is reasoning, and reasoning belongs in code; the model is left with
+ * wording, which is all it is reliable at.
+ */
+export function keyPoint(facts: DayFacts[]): string {
+  const worst = facts.find((day) => day.risk === 'high')
+    ?? facts.find((day) => day.risk === 'moderate');
+
+  if (worst) {
+    const range = worst.ranges[0];
+    return (
+      `NAJWAŻNIEJSZE: ${worst.weekday} ${worst.businessDate}, ryzyko przywołania ` +
+      `${RISK_WORD[worst.risk]}` +
+      (range ? ` w godzinach ${range.from}-${range.to}` : '')
+    );
+  }
+
+  const near = facts.find((day) => day.nearThreshold > 0);
+  if (near && near.worstHour) {
+    return (
+      `NAJWAŻNIEJSZE: nigdzie nie ma podstaw do przywołania, ale ` +
+      `${near.weekday} ${near.businessDate} o ${near.worstHour} margines ` +
+      `podchodzi blisko granicy`
+    );
+  }
+
+  return 'NAJWAŻNIEJSZE: w żadnym z dni nie ma podstaw do przywołania';
+}
+
+/**
  * The facts as a dozen or so lines of text. Deliberately not the PSE JSON: the
  * raw payload is both far larger and full of fields the assessment already
  * accounts for, so sending it would cost tokens to say less.
@@ -176,7 +209,7 @@ const round = (value: number) => `${value > 0 ? '+' : ''}${Math.round(value)} MW
 export function renderFacts(facts: DayFacts[], days: number): string {
   if (facts.length === 0) return 'Brak danych o godzinach przed nami.';
 
-  const lines: string[] = [];
+  const lines: string[] = [keyPoint(facts), ''];
 
   for (const day of facts) {
     lines.push(
@@ -186,17 +219,19 @@ export function renderFacts(facts: DayFacts[], days: number): string {
 
     if (day.worstMargin !== null) {
       lines.push(
-        `  margines najnizszy ${round(day.worstMargin)} o ${day.worstHour}` +
-          (day.averageMargin !== null ? `, sredni ${round(day.averageMargin)}` : '')
+        `  margines najniższy ${round(day.worstMargin)} o ${day.worstHour}` +
+          (day.averageMargin !== null ? `, średni ${round(day.averageMargin)}` : '')
       );
     }
 
-    lines.push(`  ryzyko przywolania: ${RISK_WORD[day.risk]}`);
+    lines.push(`  ryzyko przywołania: ${RISK_WORD[day.risk]}`);
 
     if (day.nearThreshold > 0) {
       lines.push(
-        `    ale blisko granicy: ${day.nearThreshold} godz. z marginesem ` +
-          `ponizej ${NEAR_THRESHOLD_MW} MW (rezerwa wciaz pokrywa wymagana)`
+        // No figure here on purpose: given one, the model wrote it out in words
+        // and slipped straight past the ban on numbers.
+        `    ale blisko granicy: ${day.nearThreshold} godz. z bardzo cienkim ` +
+          `marginesem. UWAGA: margines wciąż DODATNI, rezerwa POKRYWA wymaganą`
       );
     }
 
@@ -204,19 +239,19 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       lines.push(
         `    ${RISK_WORD[range.risk]} ${range.from}-${range.to} (${range.hours} godz.)` +
           (range.announceable
-            ? ', ogloszenie moze jeszcze paisc'
-            : ', okno ogloszenia zamkniete')
+            ? ', ogłoszenie może jeszcze paść'
+            : ', okno ogłoszenia zamknięte')
       );
     }
 
     if (day.belowTypical > 0) {
       lines.push(
-        `  ponizej typowego zakresu z ${days} dni: ${day.belowTypical} godz.`
+        `  poniżej typowego zakresu z ${days} dni: ${day.belowTypical} godz.`
       );
     }
     if (day.aboveTypical > 0) {
       lines.push(
-        `  powyzej typowego zakresu z ${days} dni: ${day.aboveTypical} godz.`
+        `  powyżej typowego zakresu z ${days} dni: ${day.aboveTypical} godz.`
       );
     }
   }

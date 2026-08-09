@@ -145,7 +145,7 @@ describe('renderFacts', () => {
     const text = renderFacts(buildFacts(data, [], BEFORE_ALL), 30);
 
     expect(text).toContain('2026-08-10');
-    expect(text).toContain('ryzyko przywolania');
+    expect(text).toContain('ryzyko przywołania');
     // Sending PSE's JSON would cost far more tokens to say less.
     expect(text.length).toBeLessThan(1200);
   });
