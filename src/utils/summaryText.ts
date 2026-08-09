@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 8;
+export const PROMPT_VERSION = 9;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -48,7 +48,7 @@ wymaganej wielkości, w związku z czym występuje ryzyko wezwania odbiorców."
 
 TAK PISZ (wprost, z godzinami, czasownikami):
 „W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganego poziomu. Nadwyżka
-popozostaje jednak powyżej progu, powyżej którego operator ma prawo przywołania
+pozostaje jednak powyżej progu, powyżej którego operator ma prawo przywołania
 nie ogłaszać."
 
 ZAKAZANE zwroty, bo nic nie wnoszą: „sytuacja bilansowa", „bilans systemowy",
@@ -57,9 +57,12 @@ ZAKAZANE kolokwializmy, na przykład „zrobi się ciasno", „na styk".
 Nazywaj rzeczy po imieniu: rezerwa mocy, wymagana rezerwa, margines, przywołanie.
 
 ZASADY, bezwzględnie:
-- NIE podawaj żadnych liczb. Żadnych megawatów, procentów, liczby godzin.
-  Nie zapisuj ich też słownie. Jedyne dozwolone cyfry to godziny w formacie
-  HH:MM występujące w faktach.
+- NIE podawaj wielkości mocy ani procentów — ani cyframi, ani słownie. To
+  jedyne, co model mógłby przekręcić, a aplikacja pokazuje je obok.
+- Cyframi zapisuj wyłącznie godziny w formacie HH:MM występujące w faktach.
+- Liczbę godzin możesz podać SŁOWNIE, jeśli wynika z faktów: „przez trzy
+  godziny", „tylko w tej jednej godzinie". To bywa najkrótszy sposób
+  powiedzenia, jak szeroki jest problem.
 - Nie wymyślaj faktów. Pisz wyłącznie o tym, co jest poniżej.
 - Nie pisz o teście ani o testowym okresie przywołania — tych danych nie mamy.
 - Nie przypisuj operatorowi zamiarów ani przewidywań. Nie wiemy, co planuje.
@@ -94,9 +97,8 @@ To nie jest sprzeczność, to są dwie różne rzeczy.
 
 TRZY STANY — nie zlewaj ich w „ryzyko":
 - „OPERATOR MA PRAWO NIE OGŁASZAĆ" znaczy: rezerwa nie pokrywa wymaganego
-  poziomu, ale
-  nadwyżka utrzymuje się powyżej progu, więc przepis pozwala operatorowi
-  nie ogłaszać przywołania. Pisz właśnie tak: „operator ma prawo nie ogłaszać
+  poziomu, ale nadwyżka utrzymuje się powyżej progu, więc przepis pozwala
+  operatorowi nie ogłaszać przywołania. Pisz właśnie tak: „operator ma prawo nie ogłaszać
   przywołania".
 - „PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE" znaczy: nadwyżka spadła poniżej progu
   1100 MW, więc operator traci podstawę, by przywołania nie ogłaszać. Nie pisz „musi"
@@ -267,15 +269,6 @@ export function validateSummary(
     return { ok: false, reason: 'tekst podaje wielkość mocy' };
   }
 
-  // Counts written out in words slipped past the ban on digits the same way:
-  // "dwie godziny" is a figure however it is spelled.
-  if (
-    /\b(jedn|dw|trz|czter|pię|sze|sied|osiem|osmi|dziewię|dziesię|kilk|kilkanaś)\w*\s+godzin\w*/i.test(
-      whole
-    )
-  ) {
-    return { ok: false, reason: 'liczba godzin zapisana słownie' };
-  }
 
   /*
    * Vague times, banned in the instruction and used anyway. The facts always
