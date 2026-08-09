@@ -7,6 +7,19 @@ export interface Summary {
 }
 
 /**
+ * Bumped whenever the instruction or the wording of the facts changes.
+ *
+ * The stored text is skipped while the assessment looks unchanged, and the
+ * assessment measures values rather than words — so a rewritten prompt would
+ * have taken effect only once the grid itself moved, leaving a summary written
+ * under rules we had since corrected. Twice already that would have kept a
+ * sentence in place that contradicted itself.
+ *
+ * Raising this forces exactly one regeneration and nothing more.
+ */
+export const PROMPT_VERSION = 3;
+
+/**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
  * instruction was plain ASCII came back stripped of them, and once with an
  * invented escape — a Hungarian ű where ż belonged. The model mirrors the

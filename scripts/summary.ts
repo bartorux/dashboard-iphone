@@ -17,7 +17,12 @@ import { fileURLToPath } from 'node:url';
 import { fetchPSEData, fetchPSEHistory } from '../src/utils/api';
 import { processData } from '../src/utils/dataTransform';
 import { assessmentKey, buildFacts, renderFacts } from '../src/utils/summaryFacts';
-import { buildPrompt, parseSummary, validateSummary } from '../src/utils/summaryText';
+import {
+  PROMPT_VERSION,
+  buildPrompt,
+  parseSummary,
+  validateSummary,
+} from '../src/utils/summaryText';
 import type { Summary } from '../src/utils/summaryText';
 
 const HISTORY_DAYS = 30;
@@ -63,7 +68,9 @@ if (facts.length === 0) {
   process.exit(0);
 }
 
-const key = assessmentKey(facts);
+// The prompt version rides along, so correcting how we say things forces one
+// rewrite instead of waiting for the grid to move.
+const key = `${assessmentKey(facts)}#v${PROMPT_VERSION}`;
 const existing = readExisting();
 
 if (dryRun) {
