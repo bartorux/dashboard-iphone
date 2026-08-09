@@ -194,18 +194,18 @@ export function buildFacts(
  */
 const RISK_WORD: Record<CallPeriodRisk, string> = {
   high:
-    'PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE — nadwyżka spada poniżej progu, ' +
-    'powyżej którego przepis pozwala przywołania nie ogłaszać, więc operator ' +
-    'traci podstawę, by przywołania nie ogłaszać',
+    'PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE — nadwyżka spadła poniżej progu ' +
+    '1100 MW. Dopóki go przekraczała, przepis pozwalał operatorowi nie ' +
+    'ogłaszać przywołania; teraz operator traci tę podstawę',
   // Named by what it does, not by a label. Handed "wartość regulacyjna", the
   // model coined "próg regulacyjny" — a term the regulation does not use and
   // which a reader can easily take for the required reserve, the one
   // distinction this whole card rests on.
   moderate:
-    'OPERATOR MA PRAWO NIE OGŁASZAĆ PRZYWOŁANIA — rezerwa nie pokrywa wymaganego poziomu, ' +
-    'ale nadwyżka utrzymuje się powyżej progu, powyżej którego przepis pozwala ' +
-    'przywołania nie ogłaszać. To UPRAWNIENIE operatora, nie prognoza — nie ' +
-    'wiadomo, czy operator z niego skorzysta',
+    'OPERATOR MA PRAWO NIE OGŁASZAĆ PRZYWOŁANIA — rezerwa nie pokrywa ' +
+    'wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW. ' +
+    'Dopóki tak jest, przepis pozwala operatorowi nie ogłaszać przywołania. ' +
+    'To UPRAWNIENIE, nie prognoza — nie wiadomo, czy operator z niego skorzysta',
   none: 'nie ma podstaw do przywołania',
   unknown: 'nie wiadomo, czy są podstawy do przywołania',
 };

@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 12;
+export const PROMPT_VERSION = 13;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -77,6 +77,9 @@ bez urzędowego żargonu. Odbiorcy pracują w energetyce.
 - POWIEDZ, O KTÓRYCH GODZINACH MÓWISZ. Jeśli w jednym dniu jedne godziny mają
   margines ujemny, a inne dodatni, nazwij to wprost — inaczej dwa prawdziwe
   zdania obok siebie czytają się jak zaprzeczenie.
+- NIE POWTARZAJ TEGO SAMEGO SŁOWA w jednym zdaniu, jeśli da się inaczej.
+  „powyżej progu, powyżej którego" brzmi jak potknięcie — rozbij na dwa zdania
+  albo przeformułuj.
 - Poprawna polszczyzna, z polskimi znakami.
 
 TAK NIE PISZ (asekuracko, bez konkretu):
