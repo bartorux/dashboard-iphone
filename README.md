@@ -27,6 +27,78 @@ npm run dev
 | `node scripts/states.mjs` | zrzuty stanów trudnych do wywołania ręcznie |
 | `npm run test:visual` | porównanie z wzorcami — wymaga uruchomionego `npm run dev` |
 | `npm run test:visual:update` | zapisanie nowych wzorców po świadomej zmianie wyglądu |
+| `npx tsx scripts/facts.ts` | fakty wysyłane do modelu, policzone z żywych danych — bez klucza |
+| `npx tsx scripts/summary.ts --dry-run` | to samo plus pełne zapytanie i odcisk oceny |
+| `GEMINI_API_KEY=… npx tsx scripts/summary.ts` | wygenerowanie `public/summary.json` |
+
+## Analiza AI
+
+Karta pod bieżącym marginesem odpowiada zdaniem na pytanie, po które sięga się najczęściej:
+**czy grozi okres przywołania** — w horyzoncie trzech dni, na tle ostatnich 30 dób.
+
+**Ocenę liczy kod, model wyłącznie ją opisuje.** Warunki przywołania są sformalizowane, więc
+`callPeriod.ts` rozstrzyga je arytmetyką: dzień roboczy, godziny 07:00–22:00, rezerwa poniżej
+wymaganej, próg 1100 MW. Model dostaje gotowy wniosek — łącznie ze wskazaniem, **który dzień jest
+istotny**, bo proszony o wybranie go samodzielnie mylił się mniej więcej co drugi raz, podając
+wtorkowy wieczór jako „dziś".
+
+**Żadna liczba w tekście nie pochodzi od modelu.** Instrukcja zakazuje cyfr poza godzinami
+`HH:MM`, a walidacja odrzuca tekst z liczbą, z godziną spoza faktów oraz z wielkością mocy zapisaną
+słownie — bo tak jeden przebieg obszedł zakaz, pisząc „granicy trzystu megawatów".
+
+**Kalendarz dni roboczych** liczy święta ruchome od Wielkanocy. Bez tego Boże Ciało czy
+Poniedziałek Wielkanocny wyszłyby jako dzień roboczy i ocena kłamałaby dokładnie w dni,
+w które najmniej osób patrzy na dashboard.
+
+**Patrzymy wyłącznie przed siebie.** Godziny, które minęły, wypadają z oceny: ogłoszenie wymaga
+ośmiogodzinnego wyprzedzenia, więc nic już z nimi nie zrobisz, a wliczanie ich kazałoby o południu
+uznać dzień za groźny na podstawie nocy dawno zamkniętej.
+
+Poza zakresem świadomie: **testowy okres przywołania (TOP)**. Jest z definicji niezwiązany ze
+stanem systemu, ogłaszany najwyżej raz na kwartał, a PSE nie udostępnia ogłoszeń interfejsem
+maszynowym — pytany o to model musiałby zmyślać.
+
+### Jak to jest dostarczane
+
+Generowanie zachodzi **wyłącznie w harmonogramie**, nigdy przy wejściu na stronę. Przeglądarka
+czyta gotowy `public/summary.json`, więc liczba odwiedzających nie ma wpływu na zużycie limitu.
+
+`.github/workflows/summary.yml` chodzi **co godzinę o pięć po**, nie o stałej porze — to rozpuszcza
+różnicę między UTC w cronie a czasem polskim w danych PSE, bo przy pracy co godzinę przesunięcie
+przestaje mieć znaczenie. Wewnątrz i tak wszystko liczy się z `plan_dtime_utc`.
+
+Model jest wołany **tylko gdy zmieni się ocena**, a odcisk oceny świadomie pomija liczbę godzin
+przed nami i średnią — obie zmieniają się co godzinę z samego upływu czasu, więc odcisk nigdy nie
+wyglądałby na niezmieniony i cały mechanizm byłby martwy. Najniższy margines jest zaokrąglany do
+stu megawatów, żeby drobna korekta prognozy nie liczyła się jako nowina.
+
+**Workflow publikuje stronę sam.** Commit nie wystarcza: push wykonany `GITHUB_TOKEN`-em celowo nie
+uruchamia kolejnych workflowów, więc `deploy.yml` nigdy go nie widzi. Bez tego analiza przeliczała
+się co godzinę do pliku, którego nikt nie serwował. Publikacja jest warunkowana faktyczną zmianą,
+więc spokojna godzina nie rusza service workera na telefonach.
+
+Wymagane w ustawieniach repozytorium: sekret **`GEMINI_API_KEY`** oraz **Settings → Actions →
+Workflow permissions → Read and write**. Bez tego drugiego deklaracja `contents: write` w workflow
+nic nie da — może uprawnienia tylko zawężać, nigdy rozszerzać.
+
+Model: `gemini-3.5-flash-lite`, myślenie na `minimal`. Podnoszenie go zmierzono jako szkodliwe —
+1919 tokenów myślenia, trzykrotny koszt i ucięta odpowiedź. Całe rozumowanie zrobiono w kodzie,
+więc nie ma tam czego przemyśliwać. Jedno wywołanie to ~1150 tokenów, maksymalnie 24 na dobę,
+czyli około 2,4% darmowego limitu.
+
+### Zachowanie karty
+
+Znika, gdy tekst ma ponad **12 godzin** — analiza wskazuje konkretne godziny, a gdy te miną, opisuje
+inny dzień niż wykres pod nią. Brak pliku, uszkodzony JSON i brak sieci kończą się tak samo: karty
+nie ma, reszta ekranu działa bez zmian, bo wszystko poza nią pochodzi wprost z PSE.
+
+Zakres dni jest **wyliczany przy czytaniu**, nigdy zapisywany do pliku — inaczej analiza napisana
+o 23:50 i otwarta po północy nazywałaby „dziś" dzień, który już był wczoraj.
+
+Kartę można zwinąć, a wybór jest **zapamiętywany na urządzeniu**; trzymany w stanie komponentu
+wracałby rozwinięty przy każdym uruchomieniu. Nagłówek zostaje widoczny również po zwinięciu, bo
+to on jest odpowiedzią. Preferencja leży w `localStorage` obok motywu i progów — treść analizy jest
+wspólna dla wszystkich, ustawienia są prywatne.
 
 ## Widoki wykresu
 
@@ -111,6 +183,18 @@ się nie zastosowały.
 Zegar w przeglądarce jest **zamrożony**, bo aplikacja tnie dane po dzisiejszej dobie — bez tego
 wzorce psułyby się następnego dnia. Zrzuty zapisywane w skali 1×: układ łapie się tak samo,
 a pliki są kilkukrotnie mniejsze niż przy 3×. Poza CI, bo wymaga pobranej przeglądarki.
+
+`summary.json` jest w tych scenariuszach **podstawiany**: prawdziwy plik nosi bieżący znacznik
+czasu, który wobec zamrożonego zegara wygląda na przyszłość — a kartę, która twierdzi, że powstała
+jutro, aplikacja słusznie odrzuca, więc bez podstawienia znikała ze wszystkich zrzutów. Podstawiony
+tekst jest dobrany do danych, nad którymi stoi: wzorzec przeczący własnemu wykresowi uczy oko
+pomijać dokładnie to, co te zrzuty mają łapać.
+
+**Czego ten mechanizm nie zauważy:** zmian mniejszych niż tolerancja **0,1%** strony. Dodanie
+ikony 16×16 to 0,04% i przechodzi jako „ok" na wszystkich ośmiu scenariuszach. Tolerancja jest
+potrzebna, żeby wygładzanie czcionek nie generowało fałszywych alarmów, ale to znaczy, że
+regresja wizualna pilnuje **układu**, a nie obecności drobnych elementów — te trzeba obejrzeć,
+wymuszając zapis wzorców.
 
 ## Gesty
 
