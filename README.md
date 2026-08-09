@@ -52,9 +52,11 @@ przywołania: gdy nadwyżka mocy ponad zapotrzebowanie sieci nie jest niższa ni
 
 „Powinno", nie „musi": przepis mówi, kiedy wolno odstąpić, a nie nakłada wprost obowiązku
 w drugą stronę. To osobna warstwa od **progów alertów ustawianych przez użytkownika** — te
-sygnalizują wcześniej i mówią, że coś może się zdarzyć, nie że cokolwiek jest należne. Model dostaje gotowy wniosek — łącznie ze wskazaniem, **który dzień jest
-istotny**, bo proszony o wybranie go samodzielnie mylił się mniej więcej co drugi raz, podając
-wtorkowy wieczór jako „dziś".
+sygnalizują wcześniej i mówią, że coś może się zdarzyć, nie że cokolwiek jest należne.
+
+Model dostaje gotowy wniosek — łącznie ze wskazaniem, **który dzień jest istotny**, bo proszony
+o wybranie go samodzielnie mylił się mniej więcej co drugi raz, podając wtorkowy wieczór
+jako „dziś".
 
 **Żadna liczba w tekście nie pochodzi od modelu.** Instrukcja zakazuje cyfr poza godzinami
 `HH:MM`, a walidacja odrzuca tekst z liczbą, z godziną spoza faktów oraz z wielkością mocy zapisaną
@@ -77,9 +79,14 @@ maszynowym — pytany o to model musiałby zmyślać.
 Generowanie zachodzi **wyłącznie w harmonogramie**, nigdy przy wejściu na stronę. Przeglądarka
 czyta gotowy `public/summary.json`, więc liczba odwiedzających nie ma wpływu na zużycie limitu.
 
-`.github/workflows/summary.yml` chodzi **co godzinę o pięć po**, nie o stałej porze — to rozpuszcza
+`.github/workflows/summary.yml` chodzi **co godzinę**, nie o stałej porze dnia — to rozpuszcza
 różnicę między UTC w cronie a czasem polskim w danych PSE, bo przy pracy co godzinę przesunięcie
 przestaje mieć znaczenie. Wewnątrz i tak wszystko liczy się z `plan_dtime_utc`.
+
+Minuta jest **nietypowa (`:37`)**, i to nie przypadek: przy `:05` przebiegi lądowały regularnie
+35–45 minut po czasie. Zadania cykliczne stoją w kolejce za wszystkim innym, a początek pełnej
+godziny to moment, na który celuje najwięcej cronów. Nic dalej od tej minuty nie zależy — fakty
+patrzą przed siebie, więc środek godziny jest tak samo dobry jak jej początek.
 
 Model jest wołany **tylko gdy zmieni się ocena**, a odcisk oceny świadomie pomija liczbę godzin
 przed nami i średnią — obie zmieniają się co godzinę z samego upływu czasu, więc odcisk nigdy nie
