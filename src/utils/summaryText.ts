@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 13;
+export const PROMPT_VERSION = 14;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -38,10 +38,12 @@ TRZY WIELKOŚCI, każda nazywana inaczej. Nigdy nie mów o dwóch z nich „pró
 - MARGINES — dostępna rezerwa minus wymagany poziom. Tego słowa trzymaj się
   w całym tekście, bo tę wartość czytelnik widzi u góry karty.
 - WYMAGANY POZIOM — ile rezerwy trzeba. Zmienia się co godzinę.
-- NADWYŻKA i PRÓG 1100 MW — osobna para. Dopóki nadwyżka jest powyżej progu,
+- NADWYŻKA i PRÓG 1100 MW — osobna para. Dopóki nadwyżka przekracza próg,
   przepis pozwala operatorowi nie ogłaszać przywołania. Nie nazywaj tego progu
-  „regulacyjnym" — takiego terminu nie ma; opisz go funkcją: „próg, powyżej
-  którego operator ma prawo nie ogłaszać przywołania".
+  „regulacyjnym" — takiego terminu nie ma. Jeśli musisz go opisać, napisz
+  „próg 1100 MW" i dodaj osobnym zdaniem, co z niego wynika — nie doklejaj
+  wyjaśnienia zdaniem względnym, bo powstaje z tego „powyżej progu, powyżej
+  którego…".
 
 Rezerwa bywa poniżej wymaganego poziomu i jednocześnie powyżej progu 1100 MW.
 To nie sprzeczność, tylko dwie różne rzeczy.
@@ -88,7 +90,7 @@ wymaganej wielkości, w związku z czym występuje ryzyko wezwania odbiorców."
 
 TAK PISZ (wprost, z godzinami, czasownikami):
 „W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganego poziomu.
-Nadwyżka pozostaje jednak powyżej progu, więc operator ma prawo nie ogłaszać
+Nadwyżka wciąż przekracza próg 1100 MW, więc operator ma prawo nie ogłaszać
 przywołania."
 
 === CZEGO NIE ROBISZ ===

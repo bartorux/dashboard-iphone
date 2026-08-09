@@ -112,7 +112,7 @@ describe('buildFacts', () => {
 
     expect(facts[0].risk).toBe('none');
     expect(facts[0].nearThreshold).toBe(1);
-    expect(renderFacts(facts, 30)).toContain('w INNYCH godzinach');
+    expect(renderFacts(facts, 30)).toContain('poza powyższym zakresem');
   });
 
   it('does not call an hour close when it is a day off or outside the window', () => {
@@ -177,7 +177,7 @@ describe('renderFacts', () => {
     const text = renderFacts(buildFacts(data, [], BEFORE_ALL), 30);
 
     expect(text).toContain('2026-08-10');
-    expect(text).toContain('okres przywołania');
+    expect(text).toContain('stan:');
     // Names the state the regulation provides for, not a level of alarm of ours.
     expect(text).toContain('PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE');
     // "Refrain from declaring", not "withdraw from": the second presupposes a
