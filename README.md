@@ -115,6 +115,24 @@ Model: `gemini-3.5-flash-lite`, myślenie na `minimal`. Podnoszenie go zmierzono
 więc nie ma tam czego przemyśliwać. Jedno wywołanie to ~1150 tokenów, maksymalnie 24 na dobę,
 czyli około 2,4% darmowego limitu.
 
+### Strażnik świeżości
+
+`.github/workflows/analiza-zywa.yml` sprawdza raz dziennie, czy **opublikowana** analiza nie jest
+starsza niż 15 godzin, i **czerwieni się**, jeśli jest.
+
+Bez tego cała funkcja mogłaby umrzeć po cichu: gdy harmonogram przestanie chodzić — GitHub wyłącza
+zadania cykliczne po 60 dniach bezczynności repozytorium, klucz może wygasnąć, limit się skończyć —
+nie zdarzy się nic głośnego. Tekst przestanie się odświeżać, po dwunastu godzinach karta zniknie,
+a reszta dashboardu będzie działać normalnie. Zauważyłbyś to dopiero, sięgając po kartę.
+
+Sprawdzany jest plik **z GitHub Pages, nie z repozytorium**. To rozróżnienie ma znaczenie: commit
+może wylądować przy zepsutym wdrożeniu i wtedy repozytorium wygląda zdrowo, a karta na telefonie
+i tak jest stara.
+
+Próg 15 godzin, bo generator odświeża co najwyżej co 6 godzin — piętnaście oznacza więc co najmniej
+dwa nieudane cykle. Krótszy dawałby fałszywe alarmy przy opóźnieniach harmonogramu, które w Actions
+są normą.
+
 ### Zachowanie karty
 
 Znika, gdy tekst ma ponad **12 godzin** — analiza wskazuje konkretne godziny, a gdy te miną, opisuje
@@ -128,6 +146,23 @@ Kartę można zwinąć, a wybór jest **zapamiętywany na urządzeniu**; trzyman
 wracałby rozwinięty przy każdym uruchomieniu. Nagłówek zostaje widoczny również po zwinięciu, bo
 to on jest odpowiedzią. Preferencja leży w `localStorage` obok motywu i progów — treść analizy jest
 wspólna dla wszystkich, ustawienia są prywatne.
+
+## Dynamic Type — sonda, nie rozwiązanie
+
+W `App.css` na `:root` stoi `font: -apple-system-body`, a rozmiary w
+[SummaryCard.tsx](src/components/SummaryCard.tsx) są w `rem`. **To jest sonda do oceny na telefonie,
+nie gotowa funkcja.**
+
+Sama zamiana pikseli na `rem` **nic na iOS nie daje** — ustawienie rozmiaru tekstu w iPhonie nie
+jest stosowane do treści rysowanej przez przeglądarkę. Skalowanie zaczyna działać dopiero po
+podpięciu pod czcionkę systemową, od której `rem` ma co liczyć. Czy to dociera do aplikacji dodanej
+do ekranu głównego — **nie wiadomo**: źródła mówią, że w widokach osadzonych nie da się tego włączyć
+i z PWA jest prawdopodobnie tak samo.
+
+**Jak sprawdzić:** Ustawienia → Ekran i jasność → Rozmiar tekstu, przesunąć suwak, otworzyć
+aplikację na nowo (zmiana wymaga przeładowania). Jeśli karta analizy się skaluje, a reszta nie —
+mechanizm działa i warto przerobić pozostałe **59 rozmiarów w 18 plikach**. Jeśli nic się nie
+zmienia, drogi nie ma i trzeba to tu zapisać, żeby nikt do niej nie wracał.
 
 ## Widoki wykresu
 

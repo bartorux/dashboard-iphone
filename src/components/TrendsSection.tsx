@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { PSEDataPoint } from '../types';
 import {
   DAY_NAMES,
@@ -7,6 +7,7 @@ import {
 } from '../utils/constants';
 import { getValidMargins, safeAvg, classifyMargin } from '../utils/dataTransform';
 import { STATUS_TEXT } from '../utils/status';
+import { usePersistentFlag } from '../hooks/usePersistentFlag';
 import { ChevronDownIcon } from './icons';
 
 interface TrendsSectionProps {
@@ -55,7 +56,9 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
   orangeThreshold,
   redThreshold,
 }) => {
-  const [expanded, setExpanded] = useState(true);
+  // Persisted like the analysis card's: two chevrons on one screen behaving
+  // differently — one remembering, one not — was an inconsistency of my own making.
+  const [expanded, setExpanded] = usePersistentFlag('trends-expanded', true);
 
   const margins = useMemo(() => getValidMargins(dayData), [dayData]);
   const avgMargin = useMemo(() => safeAvg(margins), [margins]);
@@ -113,7 +116,7 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
       <button
         type="button"
-        onClick={() => setExpanded((value) => !value)}
+        onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
         className="flex w-full items-center justify-between gap-2 text-left"
       >

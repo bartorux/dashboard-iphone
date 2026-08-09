@@ -23,6 +23,10 @@ const timeFormat = new Intl.DateTimeFormat('pl-PL', {
  * would add text to a screen already asked twice to carry less of it, and would
  * put a second, unverified copy of each figure on the page.
  */
+// SONDA Dynamic Type: rozmiary w rem tylko tutaj. Jeśli po zmianie rozmiaru
+// tekstu w ustawieniach iPhone'a ta karta się skaluje, a reszta nie —
+// mechanizm działa i warto przerobić pozostałe pliki. Jeśli nic się nie
+// zmienia, drogi nie ma i temat zamykamy.
 const SummaryCard: React.FC<SummaryCardProps> = ({ summary, now }) => {
   const [expanded, setExpanded] = usePersistentFlag('summary-expanded', true);
   const span = dayRangeLabel(summary.dates, now);
@@ -42,7 +46,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ summary, now }) => {
         aria-expanded={expanded}
         className="flex w-full items-center justify-between gap-2 text-left"
       >
-        <span className="min-w-0 truncate text-[11px] text-text-tertiary">
+        <span className="min-w-0 truncate text-[0.6875rem] text-text-tertiary">
           Analiza AI
           {span && ` · ${span}`}
           {` · ${timeFormat.format(new Date(summary.generatedAt))}`}
@@ -56,13 +60,13 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ summary, now }) => {
 
       {/* The headline survives collapsing: it is the answer, and a card folded
           down to nothing but its own label would be worth less than no card. */}
-      <p className="mt-1.5 text-[15px] font-semibold leading-snug text-text">
+      <p className="mt-1.5 text-[0.9375rem] font-semibold leading-snug text-text">
         {summary.headline}
       </p>
 
       <div className="collapsible" data-collapsed={!expanded}>
         <div>
-          <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
+          <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-text-secondary">
             {summary.body} {summary.outlook}
           </p>
         </div>

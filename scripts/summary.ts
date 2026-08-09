@@ -23,6 +23,7 @@ import {
   parseSummary,
   validateSummary,
 } from '../src/utils/summaryText';
+import { decideRun } from '../src/utils/summaryRun';
 import type { Summary } from '../src/utils/summaryText';
 
 const HISTORY_DAYS = 30;
@@ -80,34 +81,15 @@ if (dryRun) {
   process.exit(0);
 }
 
-/**
- * Rewrite anyway once the stored text gets old, even when nothing has moved.
- *
- * The card hides a summary past twelve hours, so a genuinely quiet night — the
- * forecast stable, today's hours spent — would let the assessment sit unchanged
- * long enough for the card to vanish by morning. It would disappear not because
- * anything was wrong but because we had decided the text was still good, which
- * is precisely backwards: a calm night is when "nothing to worry about" is worth
- * saying.
- *
- * Half the display cutoff, so there is always a wide margin. Costs a handful of
- * extra calls a day against a limit we use about two percent of.
- */
-const MAX_STALE_MS = 6 * 60 * 60 * 1000;
+const decyzja = decideRun({
+  storedAssessment: existing?.assessment ?? null,
+  storedAt: existing ? new Date(existing.generatedAt) : null,
+  key,
+  now,
+});
 
-const storedAge = existing
-  ? now.getTime() - Date.parse(existing.generatedAt)
-  : Infinity;
-
-if (existing?.assessment === key && storedAge < MAX_STALE_MS) {
-  const hours = Math.round(storedAge / (60 * 60 * 1000));
-  console.log(`Ocena bez zmian, tekst sprzed ${hours} h — nie wolam modelu.`);
-  process.exit(0);
-}
-
-if (existing?.assessment === key) {
-  console.log('Ocena bez zmian, ale tekst sie starzeje — odswiezam.');
-}
+console.log(decyzja.reason);
+if (!decyzja.generate) process.exit(0);
 
 const apiKey = process.env.GEMINI_API_KEY;
 if (!apiKey) {

@@ -1,0 +1,61 @@
+name: Analiza AI zyje
+
+# The whole feature can die without a sound. If the schedule stops running —
+# GitHub disables cron on repositories idle for 60 days, a key expires, a quota
+# runs out — nothing goes red. The text simply stops being rewritten, the card
+# hides itself after twelve hours, and the rest of the dashboard carries on as
+# though all were well. You would find out by reaching for the card and not
+# finding it, which is exactly when it was needed.
+#
+# So this fails loudly instead, the same way api-contract.yml guards the shape
+# PSE serves.
+on:
+  schedule:
+    - cron: '40 7 * * *' # 07:40 UTC, once the morning runs have had their chance
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  swiezosc:
+    runs-on: ubuntu-latest
+    steps:
+      # Deliberately the PUBLISHED file, not the one in the repository. They can
+      # disagree: a commit may land while the deploy is broken, and then the card
+      # is stale on every phone while the repository looks perfectly healthy.
+      - name: Sprawdz wiek opublikowanej analizy
+        run: |
+          set -euo pipefail
+
+          # Beyond two missed refresh cycles. The generator rewrites at least
+          # every 6 h and the card hides anything past 12 h, so by 15 h the card
+          # has already vanished for readers. A tighter bound would cry wolf over
+          # the scheduling delays that are routine here.
+          PROG_GODZIN=15
+
+          URL="https://bartorux.github.io/dashboard-iphone/summary.json"
+          echo "Sprawdzam $URL"
+
+          if ! curl -fsS --max-time 30 "$URL" -o summary.json; then
+            echo "::error title=Analiza niedostepna::Nie udalo sie pobrac $URL"
+            exit 1
+          fi
+
+          POWSTAL=$(python3 -c "import json;print(json.load(open('summary.json'))['generatedAt'])")
+          WIEK_H=$(python3 -c "
+          import json, datetime
+          t = json.load(open('summary.json'))['generatedAt']
+          powstal = datetime.datetime.fromisoformat(t.replace('Z', '+00:00'))
+          teraz = datetime.datetime.now(datetime.timezone.utc)
+          print(round((teraz - powstal).total_seconds() / 3600, 1))
+          ")
+
+          echo "Analiza powstala: $POWSTAL (przed $WIEK_H godz.)"
+
+          if python3 -c "import sys; sys.exit(0 if float('$WIEK_H') > $PROG_GODZIN else 1)"; then
+            echo "::error title=Analiza nieodswiezana::Opublikowana analiza ma $WIEK_H godz., prog to $PROG_GODZIN. Karta zdazyla juz zniknac czytelnikom. Sprawdz przebiegi zadania 'Podsumowanie AI' oraz sekret GEMINI_API_KEY."
+            exit 1
+          fi
+
+          echo "W porzadku — analiza miesci sie w progu $PROG_GODZIN godz."

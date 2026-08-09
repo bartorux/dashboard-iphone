@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import TrendsSection from '../TrendsSection';
 import { processData } from '../../utils/dataTransform';
 import { makePoint } from '../../test/factories';
@@ -99,5 +99,29 @@ describe('TrendsSection', () => {
 
     const comparison = screen.getByText('Porównanie z dziś').parentElement!;
     expect(comparison.textContent).toMatch(/-\d/);
+  });
+});
+
+describe('TrendsSection — zwijanie', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('zapamietuje zwiniecie, tak samo jak karta analizy', () => {
+    // Two chevrons on one screen behaving differently — one remembering the
+    // choice, one springing back open — was an inconsistency of my own making.
+    const props = {
+      dayData: [] as PSEDataPoint[],
+      todayData: [] as PSEDataPoint[],
+      currentDayOffset: 0 as const,
+      orangeThreshold: 500,
+      redThreshold: 300,
+    };
+
+    const { unmount } = render(<TrendsSection {...props} />);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(screen.getByRole('button'));
+    unmount();
+
+    render(<TrendsSection {...props} />);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'false');
   });
 });

@@ -235,6 +235,19 @@
 
 html {
   background: var(--bg);
+
+  /*
+   * SONDA Dynamic Type — do oceny na telefonie, patrz README.
+   *
+   * Converting sizes to rem achieves nothing on its own: iOS does not apply its
+   * text-size setting to content the browser draws. Only hooking the root to the
+   * system font makes Safari size it by the reader's preference, and rem then
+   * has something to scale from. Whether this reaches an app added to the home
+   * screen is genuinely unclear — sources say embedded views cannot opt in, and
+   * that a PWA is probably the same. Hence one component first, not fifty-nine.
+   */
+  font: -apple-system-body;
+  font-family: var(--font-sans);
 }
 
 body {
