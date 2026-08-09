@@ -42,6 +42,14 @@ export interface DayFacts {
    * without inventing a risk level the regulations do not have.
    */
   nearThreshold: number;
+  /**
+   * Hour of the tightest of those, or null when there are none.
+   *
+   * Separate from `worstHour`, which is the lowest margin of the whole day and
+   * may fall at night or carry a deficit — hours this count deliberately
+   * excludes, so naming one of them alongside it pointed at the wrong time.
+   */
+  nearestHour: string | null;
 }
 
 /**
@@ -131,6 +139,16 @@ export function buildFacts(
 
       const ranges = callPeriodRanges(points, now);
 
+      // Hours that keep a positive margin but only just — and only those the
+      // rules could apply to, so a night hour never turns up in a sentence
+      // about working-day risk.
+      const near = margins.filter(
+        (entry) =>
+          isEligibleHour(entry.point) &&
+          entry.margin >= 0 &&
+          entry.margin < NEAR_THRESHOLD_MW
+      );
+
       return {
         businessDate,
         weekday: weekdayOf(businessDate),
@@ -149,12 +167,13 @@ export function buildFacts(
         ranges,
         belowTypical: countStanding(margins, distribution, 'below'),
         aboveTypical: countStanding(margins, distribution, 'above'),
-        nearThreshold: margins.filter(
-          (entry) =>
-            isEligibleHour(entry.point) &&
-            entry.margin >= 0 &&
-            entry.margin < NEAR_THRESHOLD_MW
-        ).length,
+        nearThreshold: near.length,
+        nearestHour:
+          near.length > 0
+            ? near.reduce((tightest, entry) =>
+                entry.margin < tightest.margin ? entry : tightest
+              ).point.hourLabel
+            : null,
       };
     });
 }
@@ -177,26 +196,26 @@ const RISK_WORD: Record<CallPeriodRisk, string> = {
   high:
     'PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE — nadwyżka spada poniżej progu, ' +
     'powyżej którego przepis pozwala przywołania nie ogłaszać, więc operator ' +
-    'traci tę podstawę',
+    'traci podstawę, by przywołania nie ogłaszać',
   // Named by what it does, not by a label. Handed "wartość regulacyjna", the
   // model coined "próg regulacyjny" — a term the regulation does not use and
   // which a reader can easily take for the required reserve, the one
   // distinction this whole card rests on.
   moderate:
-    'OPERATOR MA PRAWO NIE OGŁASZAĆ — rezerwa nie pokrywa wymaganego poziomu, ' +
+    'OPERATOR MA PRAWO NIE OGŁASZAĆ PRZYWOŁANIA — rezerwa nie pokrywa wymaganego poziomu, ' +
     'ale nadwyżka utrzymuje się powyżej progu, powyżej którego przepis pozwala ' +
     'przywołania nie ogłaszać. To UPRAWNIENIE operatora, nie prognoza — nie ' +
-    'wiemy, jak z niego skorzysta',
-  none: 'brak podstaw',
-  unknown: 'nieznane',
+    'wiadomo, czy operator z niego skorzysta',
+  none: 'nie ma podstaw do przywołania',
+  unknown: 'nie wiadomo, czy są podstawy do przywołania',
 };
 
 /** The same states in a few words, for places where the full clause will not fit. */
 const RISK_SHORT: Record<CallPeriodRisk, string> = {
   high: 'przywołanie powinno zostać ogłoszone',
-  moderate: 'operator ma prawo nie ogłaszać',
-  none: 'brak podstaw',
-  unknown: 'nieznane',
+  moderate: 'operator ma prawo nie ogłaszać przywołania',
+  none: 'nie ma podstaw do przywołania',
+  unknown: 'nie wiadomo, czy są podstawy do przywołania',
 };
 
 const round = (value: number) => `${value > 0 ? '+' : ''}${Math.round(value)} MW`;
@@ -247,7 +266,13 @@ export function keyPoint(facts: DayFacts[]): string {
     ?? facts.find((day) => day.risk === 'moderate');
 
   if (worst) {
-    const range = worst.ranges[0];
+    // Matched to the verdict, not simply the earliest. Ranges come back in
+    // chronological order, so a day carrying a milder range in the morning and
+    // the worst one in the evening announced the evening's verdict over the
+    // morning's hours — the right label bolted to the wrong time.
+    const range =
+      worst.ranges.find((entry) => entry.risk === worst.risk) ?? worst.ranges[0];
+
     return (
       `NAJWAŻNIEJSZE: ${worst.weekday} ${worst.businessDate} — ${RISK_SHORT[worst.risk]}` +
       (range ? ` w godzinach ${range.from}-${range.to}` : '')
@@ -255,11 +280,14 @@ export function keyPoint(facts: DayFacts[]): string {
   }
 
   const near = facts.find((day) => day.nearThreshold > 0);
-  if (near && near.worstHour) {
+  if (near && near.nearestHour) {
+    // `worstHour` is the lowest margin of the whole day, which may fall at night
+    // or carry a deficit — neither of which this sentence is about. The hour
+    // named is the tightest among those it actually covers.
     return (
-      `NAJWAŻNIEJSZE: nigdzie nie ma podstaw do przywołania, ale ` +
-      `${near.weekday} ${near.businessDate} o ${near.worstHour} margines ` +
-      `zbliża się do granicy`
+      `NAJWAŻNIEJSZE: w żadnym z dni nie ma podstaw do przywołania, ale ` +
+      `${near.weekday} ${near.businessDate} o ${near.nearestHour} margines ` +
+      `jest wąski, choć wciąż dodatni`
     );
   }
 
@@ -284,8 +312,8 @@ export function renderFacts(facts: DayFacts[], days: number): string {
 
     if (day.worstMargin !== null) {
       lines.push(
-        `  margines najniższy ${round(day.worstMargin)} o ${day.worstHour}` +
-          (day.averageMargin !== null ? `, średni ${round(day.averageMargin)}` : '')
+        `  najniższy margines ${round(day.worstMargin)} o ${day.worstHour}` +
+          (day.averageMargin !== null ? `, średni margines ${round(day.averageMargin)}` : '')
       );
     }
 
@@ -306,7 +334,7 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       lines.push(
         range.announceable
           ? '      ogłoszenie może jeszcze nadejść (do tych godzin zostało ponad 8 godz. wymaganego wyprzedzenia)'
-          : '      ogłoszenie już nie nadejdzie, jeśli dotąd nie padło (zostało mniej niż 8 godz. wymaganego wyprzedzenia)'
+          : '      ogłoszenie już nie nadejdzie, jeśli dotąd nie zostało ogłoszone (zostało mniej niż 8 godz. wymaganego wyprzedzenia)'
       );
     }
 
@@ -319,19 +347,19 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       // out in words and slipped straight past the ban on numbers.
       lines.push(
         `    OSOBNO, w INNYCH godzinach tego dnia: ${day.nearThreshold} godz. ` +
-          `z wąskim, ale DODATNIM marginesem — tam rezerwa pokrywa wymagany ` +
-          `poziom i nie ma podstaw do przywołania`
+          `z wąskim, ale DODATNIM marginesem — w tych godzinach rezerwa pokrywa ` +
+          `wymagany poziom i nie ma podstaw do przywołania`
       );
     }
 
     if (day.belowTypical > 0) {
       lines.push(
-        `  poniżej typowego zakresu z ${days} dni: ${day.belowTypical} godz.`
+        `  margines poniżej typowego zakresu z ostatnich ${days} dni: ${day.belowTypical} godz.`
       );
     }
     if (day.aboveTypical > 0) {
       lines.push(
-        `  powyżej typowego zakresu z ${days} dni: ${day.aboveTypical} godz.`
+        `  margines powyżej typowego zakresu z ostatnich ${days} dni: ${day.aboveTypical} godz.`
       );
     }
   }

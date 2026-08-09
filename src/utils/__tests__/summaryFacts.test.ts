@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildFacts, renderFacts } from '../summaryFacts';
+import { buildFacts, keyPoint, renderFacts } from '../summaryFacts';
 import { makePoint } from '../../test/factories';
 
 const pad = (value: number) => String(value).padStart(2, '0');
@@ -129,6 +129,38 @@ describe('buildFacts', () => {
 
     expect(sunday[0].nearThreshold).toBe(0);
     expect(night[0].nearThreshold).toBe(0);
+  });
+
+  it('quotes the hours of the range it names, not merely the first of the day', () => {
+    // Ranges arrive chronologically. A day with a milder morning range and the
+    // worst one in the evening announced the evening's verdict over the
+    // morning's hours — the right label bolted to the wrong time.
+    const data = [
+      // Morning: deficit but surplus above the exemption — operator may refrain.
+      hourOn('2026-08-10', 8, { reserve: 1500, required: 2000 }),
+      hourOn('2026-08-10', 12, { reserve: 5000, required: 2000 }),
+      // Evening: surplus below the exemption — grounds to refrain fall away.
+      hourOn('2026-08-10', 19, { reserve: 800, required: 2000 }),
+    ];
+    const point = keyPoint(buildFacts(data, [], BEFORE_ALL));
+
+    expect(point).toContain('przywołanie powinno zostać ogłoszone');
+    expect(point).toContain('19:00');
+    expect(point).not.toContain('08:00');
+  });
+
+  it('names an hour the sentence about narrow margins actually covers', () => {
+    // `worstHour` is the lowest margin of the whole day, which here falls at
+    // 03:00 — a night hour no call period can apply to, and the very sort this
+    // count excludes.
+    const data = [
+      hourOn('2026-08-10', 3, { reserve: 2050, required: 2000 }),
+      hourOn('2026-08-10', 19, { reserve: 2100, required: 2000 }),
+    ];
+    const point = keyPoint(buildFacts(data, [], BEFORE_ALL));
+
+    expect(point).toContain('19:00');
+    expect(point).not.toContain('03:00');
   });
 
   it('copes with no data at all', () => {
