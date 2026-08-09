@@ -288,9 +288,14 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       // model read the two as cause and effect and wrote that the surplus
       // holding above the threshold was why a declaration might still come —
       // exactly backwards, since that is the reason one might not.
+      //
+      // Said plainly, without the "window" figure of speech this used to carry:
+      // the model shortened it to "the window stays open" and dropped the only
+      // part that explained what the window was.
       lines.push(
-        `      okno ogłoszenia (wymagane 8 godz. wyprzedzenia): ` +
-          (range.announceable ? 'wciąż otwarte' : 'już zamknięte')
+        range.announceable
+          ? '      ogłoszenie może jeszcze nadejść (do tych godzin zostało ponad 8 godz. wymaganego wyprzedzenia)'
+          : '      ogłoszenie już nie nadejdzie, jeśli dotąd nie padło (zostało mniej niż 8 godz. wymaganego wyprzedzenia)'
       );
     }
 
