@@ -207,7 +207,6 @@ function App() {
         <ChartSection
           dayData={dayData}
           dayLabel={DAY_NAMES[currentDayOffset]}
-          alertRanges={alertRanges}
           orangeThreshold={orangeThreshold}
           redThreshold={redThreshold}
           currentHourLabel={

@@ -53,15 +53,13 @@
   --l-series-reserve: #007aff;  --d-series-reserve: #0a84ff;
   --l-series-required: #8e8e93; --d-series-required: #98989d;
 
-  /* Shading over hours that actually breached a threshold. Declared as finished
-     rgba values rather than a colour plus an opacity prop, because the same tint
-     does not read the same on both surfaces - and here dark needs *less*, not
-     more: a saturated red over near-black has nothing competing with it, so a
-     value tuned on white turns the evening into a slab and swallows the curve. */
-  --l-breach-alarm: rgba(255, 59, 48, 0.14);
-  --d-breach-alarm: rgba(255, 69, 58, 0.11);
-  --l-breach-warn: rgba(255, 149, 0, 0.16);
-  --d-breach-warn: rgba(255, 159, 10, 0.13);
+  /* Threshold bands. Declared as finished rgba values rather than a colour plus
+     an opacity prop, because a tint that reads correctly on white is far too
+     faint on #1c1c1e - dark mode needs roughly double. */
+  --l-band-alarm: rgba(255, 59, 48, 0.10);
+  --d-band-alarm: rgba(255, 69, 58, 0.20);
+  --l-band-warn: rgba(255, 149, 0, 0.12);
+  --d-band-warn: rgba(255, 159, 10, 0.20);
   --l-band-alarm-edge: rgba(255, 59, 48, 0.5);
   --d-band-alarm-edge: rgba(255, 69, 58, 0.6);
   --l-band-warn-edge: rgba(255, 149, 0, 0.5);
@@ -107,8 +105,8 @@
   --accent-text: var(--l-accent-text);
   --series-reserve: var(--l-series-reserve);
   --series-required: var(--l-series-required);
-  --breach-alarm: var(--l-breach-alarm);
-  --breach-warn: var(--l-breach-warn);
+  --band-alarm: var(--l-band-alarm);
+  --band-warn: var(--l-band-warn);
   --band-alarm-edge: var(--l-band-alarm-edge);
   --band-warn-edge: var(--l-band-warn-edge);
   --series-demand: var(--l-series-demand);
@@ -146,8 +144,8 @@
     --accent-text: var(--d-accent-text);
     --series-reserve: var(--d-series-reserve);
     --series-required: var(--d-series-required);
-    --breach-alarm: var(--d-breach-alarm);
-    --breach-warn: var(--d-breach-warn);
+    --band-alarm: var(--d-band-alarm);
+    --band-warn: var(--d-band-warn);
     --band-alarm-edge: var(--d-band-alarm-edge);
     --band-warn-edge: var(--d-band-warn-edge);
     --series-demand: var(--d-series-demand);
@@ -185,8 +183,8 @@
   --accent-text: var(--d-accent-text);
   --series-reserve: var(--d-series-reserve);
   --series-required: var(--d-series-required);
-  --breach-alarm: var(--d-breach-alarm);
-  --breach-warn: var(--d-breach-warn);
+  --band-alarm: var(--d-band-alarm);
+  --band-warn: var(--d-band-warn);
   --band-alarm-edge: var(--d-band-alarm-edge);
   --band-warn-edge: var(--d-band-warn-edge);
   --series-demand: var(--d-series-demand);

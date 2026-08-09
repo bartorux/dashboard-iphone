@@ -2,18 +2,17 @@ import React, { useMemo } from 'react';
 import {
   ResponsiveContainer,
   ComposedChart,
+  Area,
   Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  ReferenceArea,
   ReferenceLine,
 } from 'recharts';
-import { AlertRange, PSEDataPoint } from '../types';
+import { PSEDataPoint } from '../types';
 import { niceScale } from '../utils/scale';
 import { classifyMargin } from '../utils/dataTransform';
-import { alertSpans } from '../utils/alertSpans';
 import { useChartColors } from '../hooks/useChartColors';
 import { STATUS_LABEL, STATUS_TEXT } from '../utils/status';
 import { CALL_PERIOD_EXEMPTION_MW } from '../utils/constants';
@@ -35,11 +34,6 @@ import {
 
 interface ReserveChartProps {
   data: PSEDataPoint[];
-  /**
-   * Breaching hours already merged into ranges — the very same array the alerts
-   * panel lists, handed down rather than recomputed so the two cannot disagree.
-   */
-  alertRanges: AlertRange[];
   orangeThreshold: number;
   redThreshold: number;
   currentHourLabel: string | null;
@@ -51,14 +45,10 @@ interface Row {
   endLabel: string;
   reserve: number | null;
   required: number | null;
-  /**
-   * The two thresholds, as curves the reserve is read against. Drawn as lines
-   * rather than filled zones: the alarm zone reached from the axis floor to
-   * `required + redThreshold`, which is some 40% of the plot, so it painted the
-   * chart red on every day including the calm ones. Emphasis now belongs to the
-   * breaches, which are shaded — a threshold is a boundary you measure against,
-   * not an event.
-   */
+  /** [bottom, top] band the margin must stay above — drawn as a range area. */
+  zoneAlarm: [number, number] | null;
+  zoneWarn: [number, number] | null;
+  /** Upper edge of each band, stroked so the boundary is a crisp line. */
   alarmTop: number | null;
   warnTop: number | null;
 }
@@ -119,7 +109,6 @@ const ReserveTooltip: React.FC<TooltipProps> = ({
 
 const ReserveChart: React.FC<ReserveChartProps> = ({
   data,
-  alertRanges,
   orangeThreshold,
   redThreshold,
   currentHourLabel,
@@ -136,8 +125,13 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
           endLabel: point.endLabel,
           reserve,
           required,
-          // Both follow the required curve, because the alert thresholds are
-          // margins above it — a flat horizontal line would misrepresent them.
+          // Bands follow the required curve, because the alert thresholds are
+          // margins above it — a flat horizontal band would misrepresent them.
+          zoneAlarm: required === null ? null : [0, required + redThreshold],
+          zoneWarn:
+            required === null
+              ? null
+              : [required + redThreshold, required + orangeThreshold],
           alarmTop: required === null ? null : required + redThreshold,
           warnTop: required === null ? null : required + orangeThreshold,
         };
@@ -146,7 +140,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
   );
 
   const scale = useMemo(() => {
-    const values = rows.flatMap((row) => [row.reserve, row.warnTop]);
+    const values = rows.flatMap((row) => [row.reserve, row.zoneWarn?.[1] ?? null]);
     const valid = values.filter(
       (v): v is number => v !== null && Number.isFinite(v)
     );
@@ -157,9 +151,26 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
 
   const ticks = useMemo(() => hourTicks(rows.map((row) => row.key)), [rows]);
 
-  const spans = useMemo(
-    () => alertSpans(rows.map((row) => row.key), alertRanges),
-    [alertRanges, rows]
+  /** Hours breaching a threshold, marked with a vertical rule on the chart. */
+  const alertHours = useMemo(
+    () =>
+      rows
+        .map((row) => {
+          if (row.reserve === null || row.required === null) return null;
+          const status = classifyMargin(
+            row.reserve - row.required,
+            orangeThreshold,
+            redThreshold
+          );
+          return status === 'alarm' || status === 'warn'
+            ? { key: row.key, status }
+            : null;
+        })
+        .filter(
+          (entry): entry is { key: string; status: 'alarm' | 'warn' } =>
+            entry !== null
+        ),
+    [rows, orangeThreshold, redThreshold]
   );
 
   return (
@@ -173,22 +184,14 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
           },
           {
             label: 'Uwaga',
-            // Border is the threshold line, fill is the shading over hours that
-            // crossed it — so the swatch shows both halves of what is drawn.
             swatch: (
-              <AreaSwatch
-                fill={colors.breachWarn}
-                border={colors.bandWarnEdge}
-              />
+              <AreaSwatch fill={colors.bandWarn} border={colors.bandWarnEdge} />
             ),
           },
           {
             label: 'Alarm',
             swatch: (
-              <AreaSwatch
-                fill={colors.breachAlarm}
-                border={colors.bandAlarmEdge}
-              />
+              <AreaSwatch fill={colors.bandAlarm} border={colors.bandAlarmEdge} />
             ),
           },
           {
@@ -232,8 +235,30 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               width={axisWidthFor(scale.ticks)}
             />
 
-            {/* The thresholds themselves. A flat tint reads as a smudge; the
-                boundary is the thing you actually measure the curve against. */}
+            {/* Threshold bands, drawn behind the series */}
+            <Area
+              type="monotone"
+              dataKey="zoneAlarm"
+              stroke="none"
+              fill={colors.bandAlarm}
+              fillOpacity={1}
+              animationDuration={ANIMATION_MS}
+              activeDot={false}
+              connectNulls={false}
+            />
+            <Area
+              type="monotone"
+              dataKey="zoneWarn"
+              stroke="none"
+              fill={colors.bandWarn}
+              fillOpacity={1}
+              animationDuration={ANIMATION_MS}
+              activeDot={false}
+              connectNulls={false}
+            />
+
+            {/* Band edges. A flat tint alone reads as a smudge; the boundary is
+                the thing you actually measure the curve against. */}
             <Line
               type="monotone"
               dataKey="alarmTop"
@@ -255,24 +280,15 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               activeDot={false}
             />
 
-            {/* One span per breach, not one rule per hour: consecutive breaching
-                hours used to draw a rule each, and an evening block of eight
-                merged into hatching that read as damage to the chart rather than
-                as information. */}
-            {spans.map(({ key, from, to, severity }) => (
-              <ReferenceArea
+            {/* Vertical rule on every hour that breaches a threshold */}
+            {alertHours.map(({ key, status }) => (
+              <ReferenceLine
                 key={`alert-${key}`}
-                x1={from}
-                x2={to}
-                fill={severity === 'red' ? colors.breachAlarm : colors.breachWarn}
-                fillOpacity={1}
-                stroke={
-                  severity === 'red'
-                    ? colors.bandAlarmEdge
-                    : colors.bandWarnEdge
-                }
-                strokeOpacity={0.5}
-                strokeWidth={1}
+                x={key}
+                stroke={status === 'alarm' ? colors.alarm : colors.warn}
+                strokeWidth={status === 'alarm' ? 1.5 : 1}
+                strokeDasharray="4 4"
+                strokeOpacity={0.55}
               />
             ))}
 
@@ -294,13 +310,9 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               stroke={colors.threshold}
               strokeWidth={1.5}
               strokeDasharray="6 3"
-              /* Left, not right: the reserve dips towards this line in the
-                 evening, so a label at the right-hand end sat on the curve
-                 exactly when the line mattered most. The early hours below it
-                 are reliably empty — that is the shape of a demand day. */
               label={{
                 value: `${CALL_PERIOD_EXEMPTION_MW} MW`,
-                position: 'insideBottomLeft',
+                position: 'insideBottomRight',
                 fontSize: 10,
                 fill: colors.threshold,
               }}
