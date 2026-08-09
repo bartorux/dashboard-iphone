@@ -67,7 +67,19 @@ NAJWAŻNIEJSZE ROZRÓŻNIENIE, nie pomyl go W ŻADNĄ STRONĘ:
   rezerwa nie pokrywa wymaganej.
 
 Kontekst: okres przywołania to sytuacja, w której operator sieci wzywa odbiorców
-do ograniczenia poboru.
+do ograniczenia poboru. Ogłasza go w dzień roboczy między 07:00 a 22:00,
+z co najmniej ośmiogodzinnym wyprzedzeniem.
+
+DWA RÓŻNE STANY — nie zlewaj ich w „ryzyko":
+- „OPERATOR MOŻE ODSTĄPIĆ" znaczy: rezerwa nie pokrywa wymaganej, ale nadwyżka
+  ponad zapotrzebowanie trzyma się co najmniej 1100 MW, więc operator ma prawo
+  nie ogłaszać przywołania. Pisz, że przywołanie jest możliwe, ale operator może
+  od niego odstąpić.
+- „PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE" znaczy: nadwyżka spadła poniżej
+  1100 MW, więc odpada podstawa do odstąpienia. Pisz, że przywołanie powinno
+  zostać ogłoszone. Nie pisz „musi" ani „na pewno" — to nie jest gwarancja.
+- „brak podstaw" znaczy dokładnie tyle: rezerwa pokrywa wymaganą albo godzina
+  wypada poza dniem roboczym lub oknem 07:00-22:00.
 
 FORMAT ODPOWIEDZI — dokładnie trzy linie, każda z etykietą na początku:
 NAGŁÓWEK: jedno zdanie, najważniejsza rzecz.

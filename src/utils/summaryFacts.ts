@@ -159,9 +159,31 @@ export function buildFacts(
     });
 }
 
+/**
+ * Names the legal state, not a level of alarm.
+ *
+ * "High" and "moderate" were labels of mine and said nothing about what the
+ * regulation actually provides for. What it provides for is when the operator
+ * may REFRAIN from declaring: the surplus over grid demand staying at or above
+ * 1100 MW, and the operator seeing no threat to covering demand — both together.
+ * Below 1100 the first condition fails, so the grounds for refraining fall away
+ * and a call period should follow. "Should", not "must": the rule governs when
+ * declaring may be skipped rather than imposing the reverse obligation outright.
+ *
+ * The user's own alert thresholds are a separate, earlier layer — they say
+ * something might be coming, not that anything is owed.
+ */
 const RISK_WORD: Record<CallPeriodRisk, string> = {
-  high: 'WYSOKIE',
-  moderate: 'UMIARKOWANE',
+  high: 'PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE (nadwyżka poniżej 1100 MW, odpada podstawa do odstąpienia)',
+  moderate: 'OPERATOR MOŻE ODSTĄPIĆ (rezerwa poniżej wymaganej, ale nadwyżka co najmniej 1100 MW)',
+  none: 'brak podstaw',
+  unknown: 'nieznane',
+};
+
+/** The same states in a few words, for places where the full clause will not fit. */
+const RISK_SHORT: Record<CallPeriodRisk, string> = {
+  high: 'przywołanie powinno zostać ogłoszone',
+  moderate: 'operator może odstąpić',
   none: 'brak podstaw',
   unknown: 'nieznane',
 };
@@ -216,8 +238,7 @@ export function keyPoint(facts: DayFacts[]): string {
   if (worst) {
     const range = worst.ranges[0];
     return (
-      `NAJWAŻNIEJSZE: ${worst.weekday} ${worst.businessDate}, ryzyko przywołania ` +
-      `${RISK_WORD[worst.risk]}` +
+      `NAJWAŻNIEJSZE: ${worst.weekday} ${worst.businessDate} — ${RISK_SHORT[worst.risk]}` +
       (range ? ` w godzinach ${range.from}-${range.to}` : '')
     );
   }
@@ -257,7 +278,7 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       );
     }
 
-    lines.push(`  ryzyko przywołania: ${RISK_WORD[day.risk]}`);
+    lines.push(`  okres przywołania: ${RISK_WORD[day.risk]}`);
 
     if (day.nearThreshold > 0) {
       lines.push(
@@ -270,7 +291,7 @@ export function renderFacts(facts: DayFacts[], days: number): string {
 
     for (const range of day.ranges) {
       lines.push(
-        `    ${RISK_WORD[range.risk]} ${range.from}-${range.to} (${range.hours} godz.)` +
+        `    ${range.from}-${range.to} (${range.hours} godz.): ${RISK_WORD[range.risk]}` +
           (range.announceable
             ? ', ogłoszenie może jeszcze paść'
             : ', okno ogłoszenia zamknięte')

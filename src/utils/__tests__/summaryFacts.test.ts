@@ -145,7 +145,9 @@ describe('renderFacts', () => {
     const text = renderFacts(buildFacts(data, [], BEFORE_ALL), 30);
 
     expect(text).toContain('2026-08-10');
-    expect(text).toContain('ryzyko przywołania');
+    expect(text).toContain('okres przywołania');
+    // Names the state the regulation provides for, not a level of alarm of ours.
+    expect(text).toContain('PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE');
     // Sending PSE's JSON would cost far more tokens to say less.
     expect(text.length).toBeLessThan(1200);
   });

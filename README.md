@@ -38,7 +38,21 @@ Karta pod bieżącym marginesem odpowiada zdaniem na pytanie, po które sięga s
 
 **Ocenę liczy kod, model wyłącznie ją opisuje.** Warunki przywołania są sformalizowane, więc
 `callPeriod.ts` rozstrzyga je arytmetyką: dzień roboczy, godziny 07:00–22:00, rezerwa poniżej
-wymaganej, próg 1100 MW. Model dostaje gotowy wniosek — łącznie ze wskazaniem, **który dzień jest
+wymaganej, próg 1100 MW.
+
+Nazwy stanów biorą się wprost z przepisu, który reguluje, kiedy operator **może nie ogłaszać**
+przywołania: gdy nadwyżka mocy ponad zapotrzebowanie sieci nie jest niższa niż **1100 MW**
+*i* operator uzna, że nie ma zagrożenia dla pokrycia zapotrzebowania — oba warunki łącznie.
+
+| stan | co znaczy |
+| --- | --- |
+| brak podstaw | rezerwa pokrywa wymaganą, albo godzina wypada poza dniem roboczym lub oknem 07:00–22:00 |
+| operator może odstąpić | rezerwa poniżej wymaganej, ale nadwyżka co najmniej 1100 MW — pierwszy warunek odstąpienia spełniony |
+| przywołanie powinno zostać ogłoszone | nadwyżka poniżej 1100 MW, więc podstawa do odstąpienia odpada |
+
+„Powinno", nie „musi": przepis mówi, kiedy wolno odstąpić, a nie nakłada wprost obowiązku
+w drugą stronę. To osobna warstwa od **progów alertów ustawianych przez użytkownika** — te
+sygnalizują wcześniej i mówią, że coś może się zdarzyć, nie że cokolwiek jest należne. Model dostaje gotowy wniosek — łącznie ze wskazaniem, **który dzień jest
 istotny**, bo proszony o wybranie go samodzielnie mylił się mniej więcej co drugi raz, podając
 wtorkowy wieczór jako „dziś".
 
