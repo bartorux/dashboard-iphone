@@ -1,6 +1,8 @@
 import React from 'react';
 import { Summary } from '../hooks/useSummary';
+import { usePersistentFlag } from '../hooks/usePersistentFlag';
 import { dayRangeLabel } from '../utils/dayLabels';
+import { ChevronDownIcon } from './icons';
 
 interface SummaryCardProps {
   summary: Summary;
@@ -22,30 +24,49 @@ const timeFormat = new Intl.DateTimeFormat('pl-PL', {
  * put a second, unverified copy of each figure on the page.
  */
 const SummaryCard: React.FC<SummaryCardProps> = ({ summary, now }) => {
+  const [expanded, setExpanded] = usePersistentFlag('summary-expanded', true);
   const span = dayRangeLabel(summary.dates, now);
 
   return (
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
-      {/* Above the text, not below it.
-          As a footer this said what you had just read only once you had read it,
-          and left the card indistinguishable from every other one on the screen.
-          Here it does three jobs at no cost in height: names the days covered —
-          without which the card looks merely unrefreshed when the day tabs are
-          switched and it does not follow — marks the prose as a model's, and
-          sets the card apart from the figures around it. */}
-      <p className="text-[11px] text-text-tertiary">
-        Analiza AI
-        {span && ` · ${span}`}
-        {` · ${timeFormat.format(new Date(summary.generatedAt))}`}
-      </p>
+      {/* The label sits above the text, not below it. As a footer it said what
+          you had just read only once you had read it, and left the card
+          indistinguishable from every other one. Here it does three jobs at no
+          cost in height: names the days covered — without which the card looks
+          merely unrefreshed when the day tabs are switched and it does not
+          follow — marks the prose as a model's, and sets the card apart from the
+          figures around it. */}
+      <button
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
+        className="flex w-full items-center justify-between gap-2 text-left"
+      >
+        <span className="min-w-0 truncate text-[11px] text-text-tertiary">
+          Analiza AI
+          {span && ` · ${span}`}
+          {` · ${timeFormat.format(new Date(summary.generatedAt))}`}
+        </span>
+        <ChevronDownIcon
+          className={`h-4 w-4 shrink-0 text-text-tertiary transition-transform duration-300 ${
+            expanded ? '' : '-rotate-90'
+          }`}
+        />
+      </button>
 
+      {/* The headline survives collapsing: it is the answer, and a card folded
+          down to nothing but its own label would be worth less than no card. */}
       <p className="mt-1.5 text-[15px] font-semibold leading-snug text-text">
         {summary.headline}
       </p>
 
-      <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
-        {summary.body} {summary.outlook}
-      </p>
+      <div className="collapsible" data-collapsed={!expanded}>
+        <div>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
+            {summary.body} {summary.outlook}
+          </p>
+        </div>
+      </div>
     </section>
   );
 };
