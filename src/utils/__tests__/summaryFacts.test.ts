@@ -148,6 +148,9 @@ describe('renderFacts', () => {
     expect(text).toContain('okres przywołania');
     // Names the state the regulation provides for, not a level of alarm of ours.
     expect(text).toContain('PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE');
+    // "Refrain from declaring", not "withdraw from": the second presupposes a
+    // declaration already hanging over the reader, which is not what is meant.
+    expect(text).not.toContain('ODSTĄPIĆ');
     // Sending PSE's JSON would cost far more tokens to say less.
     expect(text.length).toBeLessThan(1200);
   });

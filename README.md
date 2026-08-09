@@ -47,11 +47,13 @@ przywołania: gdy nadwyżka mocy ponad zapotrzebowanie sieci nie jest niższa ni
 | stan | co znaczy |
 | --- | --- |
 | brak podstaw | rezerwa pokrywa wymaganą, albo godzina wypada poza dniem roboczym lub oknem 07:00–22:00 |
-| operator może odstąpić | rezerwa poniżej wymaganej, ale nadwyżka co najmniej 1100 MW — pierwszy warunek odstąpienia spełniony |
-| przywołanie powinno zostać ogłoszone | nadwyżka poniżej 1100 MW, więc podstawa do odstąpienia odpada |
+| operator może nie ogłaszać | rezerwa poniżej wymaganej, ale nadwyżka trzyma się powyżej progu 1100 MW |
+| przywołanie powinno zostać ogłoszone | nadwyżka poniżej progu 1100 MW, więc operator nie ma już podstaw, by go nie ogłaszać |
 
-„Powinno", nie „musi": przepis mówi, kiedy wolno odstąpić, a nie nakłada wprost obowiązku
-w drugą stronę. To osobna warstwa od **progów alertów ustawianych przez użytkownika** — te
+„Może nie ogłaszać", nie „może odstąpić": drugie zakłada, że przywołanie już wisi i operator
+się z niego wycofuje — a przepis mówi wprost, że **operator może nie ogłaszać** okresu przywołania.
+Bliżej źródła i mniej alarmująco. Podobnie „powinno", nie „musi": przepis reguluje, kiedy wolno
+nie ogłaszać, a nie nakłada wprost obowiązku w drugą stronę. To osobna warstwa od **progów alertów ustawianych przez użytkownika** — te
 sygnalizują wcześniej i mówią, że coś może się zdarzyć, nie że cokolwiek jest należne.
 
 Model dostaje gotowy wniosek — łącznie ze wskazaniem, **który dzień jest istotny**, bo proszony

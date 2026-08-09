@@ -174,8 +174,8 @@ export function buildFacts(
  * something might be coming, not that anything is owed.
  */
 const RISK_WORD: Record<CallPeriodRisk, string> = {
-  high: 'PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE (nadwyżka poniżej 1100 MW, odpada podstawa do odstąpienia)',
-  moderate: 'OPERATOR MOŻE ODSTĄPIĆ (rezerwa poniżej wymaganej, ale nadwyżka co najmniej 1100 MW)',
+  high: 'PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE (nadwyżka poniżej progu 1100 MW, więc operator nie ma podstaw, by go nie ogłaszać)',
+  moderate: 'OPERATOR MOŻE NIE OGŁASZAĆ (rezerwa poniżej wymaganej, ale nadwyżka trzyma się powyżej progu 1100 MW)',
   none: 'brak podstaw',
   unknown: 'nieznane',
 };
@@ -183,7 +183,7 @@ const RISK_WORD: Record<CallPeriodRisk, string> = {
 /** The same states in a few words, for places where the full clause will not fit. */
 const RISK_SHORT: Record<CallPeriodRisk, string> = {
   high: 'przywołanie powinno zostać ogłoszone',
-  moderate: 'operator może odstąpić',
+  moderate: 'operator może nie ogłaszać',
   none: 'brak podstaw',
   unknown: 'nieznane',
 };

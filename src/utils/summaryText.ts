@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 3;
+export const PROMPT_VERSION = 4;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -47,8 +47,8 @@ TAK NIE PISZ (asekuranckie, zdystansowane, bez konkretu):
 wymaganej wielkości, w związku z czym występuje ryzyko wezwania odbiorców."
 
 TAK PISZ (wprost, z godzinami, czasownikami):
-„W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganej. Operator
-może wtedy ogłosić przywołanie, choć nie musi."
+„W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganej. Nadwyżka
+zostaje jednak powyżej progu 1100 MW, więc operator może przywołania nie ogłaszać."
 
 ZAKAZANE zwroty, bo nic nie wnoszą: „sytuacja bilansowa", „bilans systemowy",
 „zasoby DSR", „jednostki DSR", „ciągłość pracy", „profil generacji".
@@ -83,16 +83,30 @@ Kontekst: okres przywołania to sytuacja, w której operator sieci wzywa odbiorc
 do ograniczenia poboru. Ogłasza go w dzień roboczy między 07:00 a 22:00,
 z co najmniej ośmiogodzinnym wyprzedzeniem.
 
-DWA RÓŻNE STANY — nie zlewaj ich w „ryzyko":
-- „OPERATOR MOŻE ODSTĄPIĆ" znaczy: rezerwa nie pokrywa wymaganej, ale nadwyżka
-  ponad zapotrzebowanie trzyma się co najmniej 1100 MW, więc operator ma prawo
-  nie ogłaszać przywołania. Pisz, że przywołanie jest możliwe, ale operator może
-  od niego odstąpić.
-- „PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE" znaczy: nadwyżka spadła poniżej
-  1100 MW, więc odpada podstawa do odstąpienia. Pisz, że przywołanie powinno
-  zostać ogłoszone. Nie pisz „musi" ani „na pewno" — to nie jest gwarancja.
+DWIE RÓŻNE WIELKOŚCI — nazywaj je osobno, nigdy obie „progiem":
+- WYMAGANA REZERWA — poziom, który rezerwa ma pokryć. Zmienia się co godzinę.
+- PRÓG 1100 MW — osobna wartość regulacyjna. Powyżej niej operator może nie
+  ogłaszać przywołania.
+Rezerwa potrafi być poniżej wymaganej i jednocześnie powyżej progu 1100 MW.
+To nie jest sprzeczność, to są dwie różne rzeczy.
+
+TRZY STANY — nie zlewaj ich w „ryzyko":
+- „OPERATOR MOŻE NIE OGŁASZAĆ" znaczy: rezerwa nie pokrywa wymaganej, ale
+  nadwyżka trzyma się powyżej progu 1100 MW, więc przepis pozwala operatorowi
+  przywołania nie ogłaszać. Pisz właśnie tak: że operator może go nie ogłaszać.
+- „PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE" znaczy: nadwyżka spadła poniżej progu
+  1100 MW, więc operator nie ma już podstaw, by go nie ogłaszać. Nie pisz „musi"
+  ani „na pewno" — to nie jest gwarancja.
 - „brak podstaw" znaczy dokładnie tyle: rezerwa pokrywa wymaganą albo godzina
   wypada poza dniem roboczym lub oknem 07:00-22:00.
+
+NARRACJA — to jest informacja, nie ostrzeżenie:
+- Nie pisz tak, jakby przywołanie było przesądzone, dopóki fakty tego nie mówią.
+  Przy stanie „operator może nie ogłaszać" najczęściej nic się nie wydarzy.
+- Nie strasz i nie dramatyzuj. Nie używaj słów „zagrożenie", „krytyczny",
+  „alarmujący", „niebezpieczny".
+- Ale też nie pocieszaj na siłę. Jeśli rezerwa nie pokrywa wymaganej, napisz to
+  wprost i spokojnie.
 
 FORMAT ODPOWIEDZI — dokładnie trzy linie, każda z etykietą na początku:
 NAGŁÓWEK: jedno zdanie, najważniejsza rzecz.
@@ -120,7 +134,7 @@ const EMPHASES = [
   'Zacznij od tego, co czeka najbliżej w czasie.',
   'Zacznij od najtrudniejszej godziny w całym horyzoncie.',
   'Zacznij od tego, czy sytuacja jest typowa na tle ostatnich dni.',
-  'Zacznij od dnia, który wygląda najgorzej, choćby był ostatni.',
+  'Zacznij od dnia, który wymaga najwięcej uwagi, choćby był ostatni.',
   'Zacznij od stwierdzenia, czy w ogóle są podstawy do przywołania.',
 ] as const;
 
