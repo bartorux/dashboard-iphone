@@ -189,7 +189,7 @@ function App() {
         onToggleSettings={() => setSettingsVisible((visible) => !visible)}
       />
 
-      <main className="tresc relative flex-1 overflow-x-hidden pb-6">
+      <main className="content-width relative flex-1 overflow-x-hidden pb-6">
         <PullToRefresh
           pullDistance={pullDistance}
           isRefreshing={isRefreshing}

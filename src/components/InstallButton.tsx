@@ -42,14 +42,14 @@ const InstallButton: React.FC<InstallButtonProps> = ({
    * breakpoint and is exactly the device the instructions are written for. Only
    * `manual` — a desktop browser with no install prompt — actually disappears.
    */
-  const tylkoInstrukcja = installableState !== true;
+  const adviceOnly = installableState !== true;
 
   return (
     <button
       type="button"
       onClick={handleClick}
       className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface-2 px-4 text-[0.9375rem] font-medium text-accent-text active:opacity-70 ${
-        tylkoInstrukcja ? 'xl:hidden' : ''
+        adviceOnly ? 'xl:hidden' : ''
       }`}
     >
       <DownloadIcon className="h-4 w-4" />

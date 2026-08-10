@@ -262,7 +262,7 @@ export function assessmentKey(facts: DayFacts[]): string {
  * wording, which is all it is reliable at.
  */
 /** A day still open to a declaration — somewhere in it, the notice period holds. */
-function otwartyNaOgloszenie(day: DayFacts): boolean {
+function stillAnnounceable(day: DayFacts): boolean {
   return day.ranges.some((range) => range.announceable);
 }
 
@@ -281,12 +281,12 @@ export function keyPoint(facts: DayFacts[]): string {
    * disappears either way — the facts carry every day, so the model can mention
    * it regardless.
    */
-  const otwarte = facts.filter(otwartyNaOgloszenie);
-  const najgorszy = (dni: DayFacts[]) =>
-    dni.find((day) => day.risk === 'high') ??
-    dni.find((day) => day.risk === 'moderate');
+  const stillOpen = facts.filter(stillAnnounceable);
+  const gravest = (days: DayFacts[]) =>
+    days.find((day) => day.risk === 'high') ??
+    days.find((day) => day.risk === 'moderate');
 
-  const worst = najgorszy(otwarte) ?? najgorszy(facts);
+  const worst = gravest(stillOpen) ?? gravest(facts);
 
   if (worst) {
     // Matched to the verdict, not simply the earliest. Ranges come back in
@@ -296,10 +296,10 @@ export function keyPoint(facts: DayFacts[]): string {
     //
     // Among ranges of that verdict, one still open to a declaration wins, for
     // the same reason the day did.
-    const pasujace = worst.ranges.filter((entry) => entry.risk === worst.risk);
+    const matching = worst.ranges.filter((entry) => entry.risk === worst.risk);
     const range =
-      pasujace.find((entry) => entry.announceable) ??
-      pasujace[0] ??
+      matching.find((entry) => entry.announceable) ??
+      matching[0] ??
       worst.ranges[0];
 
     return (

@@ -248,7 +248,7 @@
  * eye. Between them the layout fills what it is given.
  */
 @media (min-width: 48rem) {
-  .tresc {
+  .content-width {
     /*
      * width is not redundant next to max-width. `main` is a flex item, and an
      * auto inline margin on one suppresses the stretch it would otherwise get
@@ -262,8 +262,16 @@
 }
 
 @media (min-width: 80rem) {
-  .tresc {
+  .content-width {
     max-width: 110rem;
+    /*
+     * Between 80rem and 110rem the column is as wide as the window, so the only
+     * thing between a card and the edge of the screen is the 12px gutter every
+     * card carries. On a 1440px laptop that reads as content about to fall off.
+     * Past 110rem the centring supplies a margin of its own and this simply adds
+     * to it.
+     */
+    padding-inline: 1rem;
   }
 }
 

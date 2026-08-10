@@ -9,7 +9,7 @@ const przed = (hours: number) =>
   new Date(TERAZ.getTime() - hours * 60 * 60 * 1000);
 
 describe('decideRun', () => {
-  it('pomija, gdy ocena bez zmian i tekst swiezy', () => {
+  it('skips while the assessment holds and the text is still fresh', () => {
     const d = decideRun({
       storedAssessment: KLUCZ,
       storedAt: przed(1),
@@ -21,7 +21,7 @@ describe('decideRun', () => {
     expect(d.reason).toContain('bez zmian');
   });
 
-  it('generuje, gdy ocena sie zmienila', () => {
+  it('generates once the assessment moves', () => {
     const d = decideRun({
       storedAssessment: KLUCZ,
       storedAt: przed(1),
@@ -33,7 +33,7 @@ describe('decideRun', () => {
     expect(d.reason).toContain('zmieni');
   });
 
-  it('generuje mimo niezmienionej oceny, gdy tekst sie zestarzal', () => {
+  it('generates on an unchanged assessment once the text has aged out', () => {
     // The guard against the card vanishing overnight: without it a stable
     // forecast would hold the assessment still until the twelve-hour cutoff hid
     // the summary — and a calm night is when "nothing to worry about" is worth
@@ -49,7 +49,7 @@ describe('decideRun', () => {
     expect(d.reason).toContain('schowa');
   });
 
-  it('trzyma granice szesciu godzin dokladnie', () => {
+  it('holds the six-hour boundary exactly', () => {
     const tuz = decideRun({
       storedAssessment: KLUCZ,
       storedAt: new Date(TERAZ.getTime() - MAX_STALE_MS + 60_000),
@@ -67,7 +67,7 @@ describe('decideRun', () => {
     expect(dokladnie.generate).toBe(true);
   });
 
-  it('generuje, gdy nie ma jeszcze zadnego podsumowania', () => {
+  it('generates when there is no summary yet', () => {
     const d = decideRun({
       storedAssessment: null,
       storedAt: null,
@@ -79,7 +79,7 @@ describe('decideRun', () => {
     expect(d.reason).toContain('Brak');
   });
 
-  it('generuje, gdy zapisany czas jest z przyszlosci', () => {
+  it('generates when the stored time is in the future', () => {
     // A clock disagreement would otherwise read as permanently fresh and freeze
     // the text until it aged back into the past.
     const d = decideRun({
@@ -93,7 +93,7 @@ describe('decideRun', () => {
     expect(d.reason).toContain('przyszlosci');
   });
 
-  it('podaje powod nadajacy sie prosto do logu zadania', () => {
+  it('gives a reason fit to drop straight into the job log', () => {
     const d = decideRun({
       storedAssessment: KLUCZ,
       storedAt: przed(2),
