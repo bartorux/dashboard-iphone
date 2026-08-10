@@ -69,6 +69,23 @@ describe('TrendsSection', () => {
     expect(screen.getAllByText('+400 MW')).toHaveLength(2);
   });
 
+  it('reports a large difference instead of calling it missing data', () => {
+    // Live case that prompted this: today averaged +1471 MW against tomorrow's
+    // +3875 MW. A 2000 MW ceiling turned that into "brak danych" in the tile
+    // while the row underneath printed the figure correctly — the card
+    // contradicting itself about data it plainly had.
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 7, 2, 12));
+
+    const today = calmDay(0, 1471);
+    const tomorrow = calmDay(1, 3875);
+    renderSection(1, tomorrow, today);
+
+    expect(screen.queryByText('brak danych')).not.toBeInTheDocument();
+    // Once in the tile, once in the comparison row beneath it.
+    expect(screen.getAllByText('+2404 MW')).toHaveLength(2);
+  });
+
   it('drops the block that presented a forecast count as a prediction', () => {
     const day = calmDay(0, 1200);
     renderSection(0, day, day);

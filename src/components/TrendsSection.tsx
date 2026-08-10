@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { PSEDataPoint } from '../types';
 import {
   DAY_NAMES,
-  TREND_MAX_REASONABLE,
   TREND_STABLE_THRESHOLD,
 } from '../utils/constants';
 import { getValidMargins, safeAvg, classifyMargin } from '../utils/dataTransform';
@@ -97,9 +96,17 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
       return { text: '—', value: 0, tone: 'text-text-tertiary' };
     }
     const { diff } = comparison;
-    if (Math.abs(diff) > TREND_MAX_REASONABLE) {
-      return { text: 'brak danych', value: 0, tone: 'text-text-tertiary' };
-    }
+    /*
+     * There is no ceiling on how large this may be.
+     *
+     * One used to sit here at 2000 MW, inherited from the pre-React app without
+     * a note or a test, and anything above it was reported as "brak danych".
+     * Both halves of that were wrong: the figure exists, and the very same card
+     * printed it correctly two lines below when expanded. A quiet evening
+     * against a windy tomorrow is worth several thousand megawatts and is not an
+     * error. Genuinely absent data is caught earlier, where safeAvg returns null
+     * and this whole comparison comes back empty.
+     */
     if (Math.abs(diff) < TREND_STABLE_THRESHOLD) {
       return { text: 'jak dziś', value: 0, tone: 'text-text-tertiary' };
     }
