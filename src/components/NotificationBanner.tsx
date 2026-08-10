@@ -26,7 +26,15 @@ const NotificationBanner: React.FC<NotificationBannerProps> = ({ message }) => {
     <div
       role="status"
       aria-live="polite"
-      className={`pointer-events-none fixed inset-x-3 z-[1000] rounded-2xl bg-text px-4 py-3 text-center text-[0.875rem] font-medium text-bg shadow-lg transition-all duration-300 ${
+      // The width cap keeps a one-line message from becoming a bar across a
+      // 24-inch monitor. Being `fixed`, it centres on the viewport rather than
+      // on the content column — which is where a transient message belongs.
+      //
+      // Written as an arbitrary value on purpose: Tailwind scans this file as
+      // plain text, so a named size mentioned even in a comment would generate
+      // the utility and its theme variable, and the stylesheet the phone sees
+      // would stop being identical to the one it had.
+      className={`pointer-events-none fixed inset-x-3 z-[1000] rounded-2xl bg-text px-4 py-3 text-center text-[0.875rem] font-medium text-bg shadow-lg transition-all duration-300 md:mx-auto md:max-w-[28rem] ${
         visible ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
       }`}
       style={{

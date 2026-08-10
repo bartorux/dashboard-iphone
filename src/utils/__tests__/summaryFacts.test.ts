@@ -170,7 +170,7 @@ describe('buildFacts', () => {
    */
   const POPOLUDNIE = new Date('2026-08-10T14:00:00Z');
 
-  it('prowadzi dniem otwartym, nawet gdy gorszy dzien jest juz przesadzony', () => {
+  it('leads with a day still open, even when a graver one is already settled', () => {
     // Leading purely by severity put a Monday evening on top whose notice period
     // had lapsed — the next sentence admitted it — while a Wednesday the operator
     // could still act on waited until the last line.
@@ -186,7 +186,7 @@ describe('buildFacts', () => {
     expect(point).not.toContain('2026-08-10');
   });
 
-  it('wraca do najgorszego dnia, gdy zadne okno nie jest juz otwarte', () => {
+  it('falls back to the gravest day once every window has closed', () => {
     const data = [
       hourOn('2026-08-10', 18, { reserve: 800, required: 2000 }),
       hourOn('2026-08-10', 19, { reserve: 1500, required: 2000 }),
@@ -197,7 +197,7 @@ describe('buildFacts', () => {
     expect(point).toContain('przywołanie powinno zostać ogłoszone');
   });
 
-  it('w obrebie dnia woli zakres, dla ktorego ogloszenie moze jeszcze paisc', () => {
+  it('prefers the range within a day that can still be announced', () => {
     // Both carry the same verdict; only one can still be acted upon.
     const data = [
       hourOn('2026-08-11', 8, { reserve: 800, required: 2000 }),

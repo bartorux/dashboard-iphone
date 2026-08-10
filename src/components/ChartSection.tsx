@@ -101,12 +101,16 @@ const ChartSection: React.FC<ChartSectionProps> = ({
         {active.title} <span className="text-text-tertiary">(MW)</span>
       </h2>
 
+      {/* Same width and same left edge as the day tabs above the card — see the
+          note in DayNavigation. Two controls of the same kind, one under the
+          other, read as a pair; the same two a dozen pixels apart read as a
+          mistake, and at opposite ends of the card as two unrelated things. */}
       <SegmentedControl
         ariaLabel="Widok wykresu"
         value={view}
         onChange={setView}
         segments={VIEWS.map(({ value, label }) => ({ value, label }))}
-        className="mb-2"
+        className="mb-2 xl:w-[34rem]"
       />
 
       {body()}

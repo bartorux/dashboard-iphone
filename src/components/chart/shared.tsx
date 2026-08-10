@@ -55,18 +55,32 @@ export function axisWidthFor(ticks: number[]): number {
   return Math.ceil(longest * 6.5 * scale) + Math.ceil(18 * scale);
 }
 
-/** Every fourth hour, always including the last, so the day reads 00 -> 23. */
+/**
+ * Every fourth hour, and nothing else.
+ *
+ * The final hour used to be appended whatever the rhythm, so a full day read
+ * 00 04 08 12 16 20 23 — five gaps of four and then one of three. It was there
+ * to show where the day ends, but the axis already runs that far; all the label
+ * added was a stutter at the one end of the scale the eye travels to last.
+ */
 export function hourTicks(keys: string[]): string[] {
-  const ticks = keys.filter((_, index) => index % 4 === 0);
-  const last = keys[keys.length - 1];
-  if (last && !ticks.includes(last)) ticks.push(last);
-  return ticks;
+  return keys.filter((_, index) => index % 4 === 0);
 }
 
 /** "19:00" -> "19" */
 export const shortHour = (value: string) => value.slice(0, -3);
 
-export const CHART_BOX = 'h-[45vh] max-h-[22rem] min-h-[15rem] w-full';
+/**
+ * Chart height.
+ *
+ * The ceiling has to rise with the width or the curve flattens into a strip:
+ * left at 22rem, a chart given a 24-inch monitor is nearly four times as wide as
+ * it is tall, and the shape of the evening — the thing being read — disappears
+ * into a horizontal smear. The phone keeps 45vh capped at 22rem exactly as
+ * before; both larger sizes only ever apply above a breakpoint it cannot reach.
+ */
+export const CHART_BOX =
+  'h-[45vh] max-h-[22rem] min-h-[15rem] w-full md:max-h-[26rem] xl:h-[52vh] xl:max-h-[36rem]';
 
 export interface LegendItem {
   label: string;

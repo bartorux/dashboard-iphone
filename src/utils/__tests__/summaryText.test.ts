@@ -38,7 +38,7 @@ describe('buildPrompt', () => {
    * Nothing else guards the wording of the prompt, which is how both lasted
    * seventeen revisions of it.
    */
-  it('nie podsuwa modelowi slow, ktore potem odrzucamy w odpowiedzi', () => {
+  it('never shows the model a word we go on to reject in its reply', () => {
     // Every hour of the day, so all five rotating variants are covered.
     const prompt = Array.from({ length: 24 }, (_, hour) =>
       buildPrompt(

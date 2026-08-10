@@ -169,6 +169,49 @@ gdy tekst urósł.
 Scenariusz wizualny `duzy-tekst-light` renderuje całość przy powiększonej czcionce, bo złamanie
 układu przy dużym tekście jest niewidoczne we wszystkich pozostałych zrzutach.
 
+## Układ na szerokim ekranie
+
+Ten sam adres obsługuje telefon i biurowy monitor. **Nie ma tu wykrywania urządzenia** — jest jeden
+dokument i jeden zestaw reguł z warunkiem szerokości.
+
+| szerokość okna | co widać |
+|---|---|
+| do 48rem (768 px) | pojedyncza kolumna na pełną szerokość — układ, dla którego aplikacja powstała |
+| 48–80rem | ta sama kolumna, ograniczona do 48rem i wyśrodkowana |
+| od 80rem (1280 px) | dwie kolumny, treść do 110rem; przy 1920×1080 całość mieści się bez przewijania |
+
+Klasa `.content-width` w [App.css](src/App.css) niesie szerokość dla nagłówka i dla strony pod nim,
+żeby te dwa nie mogły się rozjechać. Wysokość wykresu rośnie razem z szerokością
+(`CHART_BOX` w [chart/shared.tsx](src/components/chart/shared.tsx)) — przy stałym pułapie 22rem
+wykres na monitorze byłby czterokrotnie szerszy niż wyższy i kształt wieczoru znikałby w pasku.
+
+**Podział na kolumny idzie wzdłuż linii, którą rysuje już kolejność czytania:** to, co **nie zależy**
+od wybranego dnia (bieżący margines, analiza AI, trendy), stoi po prawej; to, co za nim podąża
+(zakładki dni, wykres, alerty) — po lewej. Dla ekranu stojącego otwartego cały dzień liczy się
+bardziej to, że prawa kolumna nie drga przy przełączaniu dni, niż kolejność czytania. Rozmieszczenie
+w [App.tsx](src/App.tsx) jest **jawne, a nie wynikające z kolejności w kodzie**, bo ta kolejność
+należy do telefonu i nie może się zmienić.
+
+### Dlaczego nie dwie osobne strony
+
+Rozpoznawanie urządzenia po nagłówku przeglądarki musiałby zrobić serwer, a GitHub Pages serwuje
+pliki statyczne. Zostałoby przełączanie w JavaScripcie po wczytaniu, czyli wysyłanie obu wersji
+i chowanie jednej. Gorsze jest drugie: PWA to jeden adres startowy, jeden manifest i **jeden service
+worker, który zapamiętuje stronę w pamięci telefonu**. Dwie różne wersje pod jednym adresem znaczą,
+że zapisze tę, którą akurat dostał, i może potem podać telefonowi wersję na monitor.
+
+### Jak sprawdzić, że telefon został nietknięty
+
+Zielony przebieg regresji wizualnej **nie jest** na to dowodem (patrz niżej). Dowodem jest to, że
+reguły dla szerokich ekranów **w ogóle nie powstają** poniżej progu. Sprawdza się to, biorąc
+zbudowany arkusz stylów, usuwając z niego wszystkie bloki `@media` z `min-width` i porównując resztę
+z plikiem pobranym z działającej strony. Przy wprowadzaniu tego układu obie strony miały 25 038
+znaków, identycznych co do znaku.
+
+Ta metoda wyłapała też rzecz, której oko nie widzi: **komentarz w kodzie potrafi zmienić CSS**.
+Tailwind skanuje pliki jako zwykły tekst, więc nazwa klasy wspomniana w komentarzu generuje regułę
+wraz ze zmienną motywu.
+
 ## Widoki wykresu
 
 Jedna karta, jedna oś czasu, trzy odczyty — przełączane segmentowanym
@@ -244,8 +287,8 @@ Timer jest liczony do najbliższej północy, nie co 24h — doby DST mają 23 a
 
 ## Regresje wizualne
 
-`npm run test:visual` renderuje dziewięć scenariuszy (widoki wykresu, oba motywy, ustawienia, brak
-danych, powiększony tekst systemowy) i porównuje piksele z wzorcami w `screenshots/baseline/`. Powstało po tym, jak dwa defekty
+`npm run test:visual` renderuje dwanaście scenariuszy (widoki wykresu, oba motywy, ustawienia, brak
+danych, powiększony tekst systemowy, a od v3.24.0 trzy przy 1920×1080) i porównuje piksele z wzorcami w `screenshots/baseline/`. Powstało po tym, jak dwa defekty
 wizualne trafiły na produkcję mimo zielonych testów: ucięta oś Y i wcięcia w dymku, które nigdy
 się nie zastosowały.
 
@@ -260,10 +303,15 @@ tekst jest dobrany do danych, nad którymi stoi: wzorzec przeczący własnemu wy
 pomijać dokładnie to, co te zrzuty mają łapać.
 
 **Czego ten mechanizm nie zauważy:** zmian mniejszych niż tolerancja **0,1%** strony. Dodanie
-ikony 16×16 to 0,04% i przechodzi jako „ok" na wszystkich dziewięciu scenariuszach. Tolerancja jest
+ikony 16×16 to 0,04% i przechodzi jako „ok" na wszystkich dwunastu scenariuszach. Tolerancja jest
 potrzebna, żeby wygładzanie czcionek nie generowało fałszywych alarmów, ale to znaczy, że
 regresja wizualna pilnuje **układu**, a nie obecności drobnych elementów — te trzeba obejrzeć,
 wymuszając zapis wzorców.
+
+To nie jest zastrzeżenie teoretyczne. Usunięcie jednej etykiety z osi X przeszło jako `ok` we
+wszystkich dwunastu scenariuszach, a dopiero zapis wzorców pokazał, że **jedenaście z nich zmieniło
+się na dysku**. Wniosek na przyszłość: zielony przebieg mówi „układ się nie rozjechał", nie „nic się
+nie zmieniło". Jeżeli potrzebny jest ten drugi wniosek — przepisać wzorce i sprawdzić `git status`.
 
 ## Gesty
 

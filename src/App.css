@@ -230,6 +230,52 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Szerokość treści
+   --------------------------------------------------------------------------- */
+
+/*
+ * Shared by the header bar and the page beneath it, so the two cannot drift
+ * apart — a header whose contents end somewhere other than the column below it
+ * reads as two unrelated pages stacked on top of each other.
+ *
+ * Deliberately declared only inside media queries. Below 48rem this class
+ * contributes nothing at all: not the same values as before, but no declaration
+ * whatsoever, so the phone cannot be affected by anything written here. That is
+ * a stronger guarantee than comparing screenshots afterwards.
+ *
+ * 48rem is where a single column stops being a stretched phone; 110rem is where
+ * a very wide screen stops being usable and starts being a long walk for the
+ * eye. Between them the layout fills what it is given.
+ */
+@media (min-width: 48rem) {
+  .content-width {
+    /*
+     * width is not redundant next to max-width. `main` is a flex item, and an
+     * auto inline margin on one suppresses the stretch it would otherwise get
+     * from the column — leaving it sized to its own content. Measured: 985px
+     * inside a container allowing 1760.
+     */
+    width: 100%;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+}
+
+@media (min-width: 80rem) {
+  .content-width {
+    max-width: 110rem;
+    /*
+     * Between 80rem and 110rem the column is as wide as the window, so the only
+     * thing between a card and the edge of the screen is the 12px gutter every
+     * card carries. On a 1440px laptop that reads as content about to fall off.
+     * Past 110rem the centring supplies a margin of its own and this simply adds
+     * to it.
+     */
+    padding-inline: 1rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Base
    --------------------------------------------------------------------------- */
 

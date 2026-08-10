@@ -42,7 +42,9 @@ const Header: React.FC<HeaderProps> = ({
     className={`sticky top-0 z-50 text-white transition-colors duration-500 ${STATUS_HEADER_BG[status]}`}
     style={{ paddingTop: 'env(safe-area-inset-top)' }}
   >
-    <div className="flex items-center gap-3 px-4 h-14">
+    {/* The bar itself stays full width so its status colour reaches both edges
+        of the screen; only its contents line up with the column below. */}
+    <div className="content-width flex items-center gap-3 px-4 h-14">
       <div className="min-w-0 flex-1">
         <div className="flex min-w-0 items-baseline gap-2">
           {/* shrink-0: the label is the headline and must never be the thing

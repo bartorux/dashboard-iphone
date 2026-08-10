@@ -56,7 +56,25 @@ const SCENARIOS = [
   // because that is where a layout breaks — and a break there is invisible at
   // the default size, which every other scenario uses.
   { name: 'duzy-tekst-light', scheme: 'light', fontPx: 23 },
+  // The office monitor this is meant to sit on all day. Above 80rem the page
+  // splits into two columns, and nothing else in this list can see that — every
+  // other scenario runs at 393px, where those rules do not exist.
+  { name: 'monitor-light', scheme: 'light', monitor: true },
+  { name: 'monitor-dark', scheme: 'dark', monitor: true },
+  { name: 'monitor-settings', scheme: 'light', monitor: true, settings: true },
 ];
+
+/**
+ * A 24-inch office monitor. Dropping `hasTouch` along with the phone profile is
+ * the point rather than a side effect: it turns off the touch path of the chart
+ * tooltip and the swipe gestures, which is exactly what a browser driven by a
+ * mouse does.
+ */
+const MONITOR = {
+  viewport: { width: 1920, height: 1080 },
+  isMobile: false,
+  hasTouch: false,
+};
 
 mkdirSync(baselineDir, { recursive: true });
 if (existsSync(diffDir)) rmSync(diffDir, { recursive: true });
@@ -75,7 +93,7 @@ let written = 0;
 
 for (const scenario of SCENARIOS) {
   const context = await browser.newContext({
-    ...devices['iPhone 15 Pro'],
+    ...(scenario.monitor ? MONITOR : devices['iPhone 15 Pro']),
     // Baselines are stored at 1x: layout regressions show up identically while
     // the committed PNGs stay a fraction of the size of 3x captures.
     deviceScaleFactor: 1,
