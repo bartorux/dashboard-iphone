@@ -176,6 +176,12 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
    * Counts both directions: an hour above the band is also atypical, and
    * reporting only the downside would call such a day entirely ordinary.
    */
+  /*
+   * Counts the whole day, and says so. The analysis card counts the same
+   * hours against the same band but only among those still ahead, so
+   * without naming the window the two cards read as contradicting each
+   * other every afternoon.
+   */
   const summary = useMemo(() => {
     const compared = rows.filter((row) => row.today !== null && row.band);
     if (compared.length === 0) return null;
@@ -191,14 +197,14 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
       // 1 / 2-4 / 5+ and would need a table to get right for one sentence.
       const rest =
         above.length > 0 ? `, a przez ${above.length} godz. powyżej` : '';
-      return `${dayLabel}: przez ${below.length} godz. margines poniżej typowego zakresu${rest}. Najciaśniej o ${worst.key}.`;
+      return `${dayLabel}, cała doba: przez ${below.length} godz. margines poniżej typowego zakresu${rest}. Najciaśniej o ${worst.key}.`;
     }
 
     if (above.length > 0) {
-      return `${dayLabel}: margines nigdzie nie schodzi poniżej normy, a przez ${above.length} godz. zapas jest większy niż zwykle.`;
+      return `${dayLabel}, cała doba: margines nigdzie nie schodzi poniżej normy, a przez ${above.length} godz. zapas jest większy niż zwykle.`;
     }
 
-    return `${dayLabel}: każda godzina mieści się w typowym zakresie.`;
+    return `${dayLabel}, cała doba: każda godzina mieści się w typowym zakresie.`;
   }, [rows, dayLabel]);
 
   if (state === 'loading' || state === 'idle') {
