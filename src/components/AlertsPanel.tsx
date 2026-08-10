@@ -65,7 +65,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
           Brak alertów w tym dniu
         </div>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-2 xl:grid xl:grid-cols-2 xl:gap-2 xl:space-y-0">
           {ranges.map((range) => {
             const style = SEVERITY_STYLE[range.severity];
             return (

@@ -15,7 +15,7 @@ const DayNavigation: React.FC<DayNavigationProps> = ({
   currentDay,
   onSwitchDay,
 }) => (
-  <div className="mx-3 mt-3">
+  <div className="mx-3 mt-3 xl:max-w-[34rem]">
     <SegmentedControl
       ariaLabel="Wybór dnia"
       value={currentDay}

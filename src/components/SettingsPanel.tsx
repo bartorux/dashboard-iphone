@@ -99,7 +99,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               min={1}
               max={2000}
               step={50}
-              className="tnum w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[0.9375rem] text-text outline-none focus:border-accent"
+              className="tnum w-full md:max-w-[12rem] rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[0.9375rem] text-text outline-none focus:border-accent"
             />
           </label>
 
@@ -115,7 +115,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               min={0}
               max={1500}
               step={50}
-              className="tnum w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[0.9375rem] text-text outline-none focus:border-accent"
+              className="tnum w-full md:max-w-[12rem] rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-[0.9375rem] text-text outline-none focus:border-accent"
             />
           </label>
 

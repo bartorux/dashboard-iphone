@@ -66,7 +66,17 @@ export function hourTicks(keys: string[]): string[] {
 /** "19:00" -> "19" */
 export const shortHour = (value: string) => value.slice(0, -3);
 
-export const CHART_BOX = 'h-[45vh] max-h-[22rem] min-h-[15rem] w-full';
+/**
+ * Chart height.
+ *
+ * The ceiling has to rise with the width or the curve flattens into a strip:
+ * left at 22rem, a chart given a 24-inch monitor is nearly four times as wide as
+ * it is tall, and the shape of the evening — the thing being read — disappears
+ * into a horizontal smear. The phone keeps 45vh capped at 22rem exactly as
+ * before; both larger sizes only ever apply above a breakpoint it cannot reach.
+ */
+export const CHART_BOX =
+  'h-[45vh] max-h-[22rem] min-h-[15rem] w-full md:max-h-[26rem] xl:h-[52vh] xl:max-h-[36rem]';
 
 export interface LegendItem {
   label: string;

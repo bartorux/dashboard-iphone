@@ -244,8 +244,8 @@ Timer jest liczony do najbliższej północy, nie co 24h — doby DST mają 23 a
 
 ## Regresje wizualne
 
-`npm run test:visual` renderuje dziewięć scenariuszy (widoki wykresu, oba motywy, ustawienia, brak
-danych, powiększony tekst systemowy) i porównuje piksele z wzorcami w `screenshots/baseline/`. Powstało po tym, jak dwa defekty
+`npm run test:visual` renderuje dwanaście scenariuszy (widoki wykresu, oba motywy, ustawienia, brak
+danych, powiększony tekst systemowy, a od v3.24.0 trzy przy 1920×1080) i porównuje piksele z wzorcami w `screenshots/baseline/`. Powstało po tym, jak dwa defekty
 wizualne trafiły na produkcję mimo zielonych testów: ucięta oś Y i wcięcia w dymku, które nigdy
 się nie zastosowały.
 
@@ -260,7 +260,7 @@ tekst jest dobrany do danych, nad którymi stoi: wzorzec przeczący własnemu wy
 pomijać dokładnie to, co te zrzuty mają łapać.
 
 **Czego ten mechanizm nie zauważy:** zmian mniejszych niż tolerancja **0,1%** strony. Dodanie
-ikony 16×16 to 0,04% i przechodzi jako „ok" na wszystkich dziewięciu scenariuszach. Tolerancja jest
+ikony 16×16 to 0,04% i przechodzi jako „ok" na wszystkich dwunastu scenariuszach. Tolerancja jest
 potrzebna, żeby wygładzanie czcionek nie generowało fałszywych alarmów, ale to znaczy, że
 regresja wizualna pilnuje **układu**, a nie obecności drobnych elementów — te trzeba obejrzeć,
 wymuszając zapis wzorców.

@@ -189,7 +189,7 @@ function App() {
         onToggleSettings={() => setSettingsVisible((visible) => !visible)}
       />
 
-      <main className="relative flex-1 overflow-x-hidden pb-6">
+      <main className="tresc relative flex-1 overflow-x-hidden pb-6">
         <PullToRefresh
           pullDistance={pullDistance}
           isRefreshing={isRefreshing}
@@ -208,70 +208,97 @@ function App() {
           onClose={() => setSettingsVisible(false)}
         />
 
-        {/* The figure people open the app for comes first; the prose explains it
-            afterwards. Both stay above the day tabs, which is the line that
-            separates what does not follow the selected day from what does. */}
-        <CurrentStatusCard
-          point={currentPoint}
-          status={currentStatus}
-          isStale={isStale && hasData}
-        />
+        {/*
+          One column up to 80rem, two above it.
 
-        {summary && <SummaryCard summary={summary} now={now} />}
+          The split is not "top half, bottom half" but the line the reading order
+          already draws: what does NOT follow the selected day (the current
+          margin, the analysis) against what does (tabs, chart, alerts, trends).
+          On a screen left open all day that matters more than reading order —
+          the right-hand column never moves when someone switches to tomorrow,
+          so the eye keeps finding the answer in the same place.
 
-        {isEnergyDay(now) && <EnergyDayCard />}
+          Placement is explicit rather than by source order, because the source
+          order is the phone's and must not change: every child keeps the
+          position it has today, and only above 80rem is it sent to a column.
+        */}
+        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_28rem] xl:grid-rows-[auto_auto_1fr] xl:items-start xl:gap-4">
+          <div className="xl:col-start-2 xl:row-start-1">
+            {/* The figure people open the app for comes first; the prose explains
+                it afterwards. Both stay above the day tabs. */}
+            <CurrentStatusCard
+              point={currentPoint}
+              status={currentStatus}
+              isStale={isStale && hasData}
+            />
 
-        <DayNavigation
-          currentDay={currentDayOffset}
-          onSwitchDay={handleSwitchDay}
-        />
+            {summary && <SummaryCard summary={summary} now={now} />}
 
-        <ChartSection
-          dayData={dayData}
-          dayLabel={DAY_NAMES[currentDayOffset]}
-          orangeThreshold={orangeThreshold}
-          redThreshold={redThreshold}
-          currentHourLabel={
-            currentDayOffset === 0 ? currentPoint?.hourLabel ?? null : null
-          }
-          isLoading={isLoading}
-        />
+            {isEnergyDay(now) && <EnergyDayCard />}
+          </div>
 
-        <AlertsPanel
-          ranges={alertRanges}
-          currentDayOffset={currentDayOffset}
-          hasData={dayData.some((point) => point.reserve !== null)}
-        />
+          <div className="xl:col-start-1 xl:row-start-1 xl:row-span-3">
+            <DayNavigation
+              currentDay={currentDayOffset}
+              onSwitchDay={handleSwitchDay}
+            />
 
-        <TrendsSection
-          dayData={dayData}
-          todayData={todayData}
-          currentDayOffset={currentDayOffset}
-          orangeThreshold={orangeThreshold}
-          redThreshold={redThreshold}
-        />
+            <ChartSection
+              dayData={dayData}
+              dayLabel={DAY_NAMES[currentDayOffset]}
+              orangeThreshold={orangeThreshold}
+              redThreshold={redThreshold}
+              currentHourLabel={
+                currentDayOffset === 0 ? currentPoint?.hourLabel ?? null : null
+              }
+              isLoading={isLoading}
+            />
 
-        <div
-          className="mx-3 mt-3 space-y-2"
-          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-        >
-          <button
-            type="button"
-            onClick={refreshAll}
-            disabled={isLoading}
-            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface px-4 text-[0.9375rem] font-medium text-accent-text shadow-sm active:opacity-70 disabled:opacity-50"
+            <AlertsPanel
+              ranges={alertRanges}
+              currentDayOffset={currentDayOffset}
+              hasData={dayData.some((point) => point.reserve !== null)}
+            />
+
+          </div>
+
+          {/* Its own cell rather than part of the chart column: the tiles are
+              small, and on a monitor they fill the space under the analysis that
+              would otherwise sit empty beside a tall chart. */}
+          <div className="xl:col-start-2 xl:row-start-2">
+            <TrendsSection
+              dayData={dayData}
+              todayData={todayData}
+              currentDayOffset={currentDayOffset}
+              orangeThreshold={orangeThreshold}
+              redThreshold={redThreshold}
+            />
+          </div>
+
+          {/* Under the right-hand column, where a full-width refresh button
+              across a 24-inch monitor would be absurd. */}
+          <div
+            className="mx-3 mt-3 space-y-2 xl:col-start-2 xl:row-start-3 xl:self-start"
+            style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
           >
-            <RefreshIcon className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            {isLoading ? 'Odświeżanie…' : 'Odśwież'}
-          </button>
+            <button
+              type="button"
+              onClick={refreshAll}
+              disabled={isLoading}
+              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface px-4 text-[0.9375rem] font-medium text-accent-text shadow-sm active:opacity-70 disabled:opacity-50"
+            >
+              <RefreshIcon className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+              {isLoading ? 'Odświeżanie…' : 'Odśwież'}
+            </button>
 
-          <InstallButton
-            installableState={installableState}
-            isInstalled={isInstalled}
-            onInstall={install}
-            onShowInstructions={handleShowInstructions}
-          />
+            <InstallButton
+              installableState={installableState}
+              isInstalled={isInstalled}
+              onInstall={install}
+              onShowInstructions={handleShowInstructions}
+            />
 
+          </div>
         </div>
       </main>
 
