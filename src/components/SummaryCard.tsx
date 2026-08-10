@@ -23,10 +23,8 @@ const timeFormat = new Intl.DateTimeFormat('pl-PL', {
  * would add text to a screen already asked twice to carry less of it, and would
  * put a second, unverified copy of each figure on the page.
  */
-// SONDA Dynamic Type: rozmiary w rem tylko tutaj. Jeśli po zmianie rozmiaru
-// tekstu w ustawieniach iPhone'a ta karta się skaluje, a reszta nie —
-// mechanizm działa i warto przerobić pozostałe pliki. Jeśli nic się nie
-// zmienia, drogi nie ma i temat zamykamy.
+// Sizes in rem, like everywhere else, so the reader's iPhone text-size setting
+// carries through — see the root rule in App.css for how it is hooked up.
 const SummaryCard: React.FC<SummaryCardProps> = ({ summary, now }) => {
   const [expanded, setExpanded] = usePersistentFlag('summary-expanded', true);
   const span = dayRangeLabel(summary.dates, now);

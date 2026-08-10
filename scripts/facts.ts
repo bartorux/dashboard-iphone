@@ -3,7 +3,11 @@
  * PSE data. Kept separate from the generator so the input can be inspected on
  * its own, without a key and without spending quota.
  *
- *   node --experimental-strip-types scripts/facts.ts
+ *   npx tsx scripts/facts.ts
+ *
+ * Not `node --experimental-strip-types`: Node strips the types happily enough
+ * but cannot resolve the bundler-style directory imports these modules use, and
+ * fails with ERR_UNSUPPORTED_DIR_IMPORT before running a line.
  */
 import { fetchPSEData, fetchPSEHistory } from '../src/utils/api';
 import { processData } from '../src/utils/dataTransform';

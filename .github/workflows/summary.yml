@@ -12,10 +12,16 @@ name: Podsumowanie AI
 # shows how old its text is, and hides it once it is too old to trust.
 on:
   schedule:
-    # Deliberately an odd minute. At '5' the runs landed 35-45 minutes late every
-    # time: scheduled jobs queue behind everything else, and the top of the hour
-    # is where everyone points their crons. Nothing downstream cares which minute
-    # this is — the facts look forward, so they are as valid mid-hour as on it.
+    # The minute is arbitrary and moving it will not help. Moving from '5' to
+    # '37' was meant to dodge the crowd at the top of the hour; a day of runs
+    # afterwards landed at :02, :03, :56, :09, :54, :33, :01, :46, :29, :03, :35
+    # — 15-30 minutes late regardless, scattered across the whole hour. GitHub
+    # queues scheduled jobs when it has capacity, and the requested minute is a
+    # hint.
+    #
+    # Nothing downstream depends on punctuality: the facts look forward, so they
+    # are as valid mid-hour as on it, and the freshness canary catches a genuine
+    # stall at 15 hours.
     - cron: '37 * * * *'
   workflow_dispatch:
 

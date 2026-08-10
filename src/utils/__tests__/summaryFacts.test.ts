@@ -163,6 +163,56 @@ describe('buildFacts', () => {
     expect(point).not.toContain('03:00');
   });
 
+  /*
+   * Notice runs out eight hours before a block. Anchoring "now" at 14:00 leaves
+   * the same evening settled and later days still open, which is exactly the
+   * split these two tests turn on.
+   */
+  const POPOLUDNIE = new Date('2026-08-10T14:00:00Z');
+
+  it('prowadzi dniem otwartym, nawet gdy gorszy dzien jest juz przesadzony', () => {
+    // Leading purely by severity put a Monday evening on top whose notice period
+    // had lapsed — the next sentence admitted it — while a Wednesday the operator
+    // could still act on waited until the last line.
+    const data = [
+      // Monday 18:00 is four hours off: nothing can be declared for it now.
+      hourOn('2026-08-10', 18, { reserve: 800, required: 2000 }),
+      // Wednesday is days away and still open, though its verdict is milder.
+      hourOn('2026-08-12', 20, { reserve: 1500, required: 2000 }),
+    ];
+    const point = keyPoint(buildFacts(data, [], POPOLUDNIE));
+
+    expect(point).toContain('2026-08-12');
+    expect(point).not.toContain('2026-08-10');
+  });
+
+  it('wraca do najgorszego dnia, gdy zadne okno nie jest juz otwarte', () => {
+    const data = [
+      hourOn('2026-08-10', 18, { reserve: 800, required: 2000 }),
+      hourOn('2026-08-10', 19, { reserve: 1500, required: 2000 }),
+    ];
+    const point = keyPoint(buildFacts(data, [], POPOLUDNIE));
+
+    expect(point).toContain('2026-08-10');
+    expect(point).toContain('przywołanie powinno zostać ogłoszone');
+  });
+
+  it('w obrebie dnia woli zakres, dla ktorego ogloszenie moze jeszcze paisc', () => {
+    // Both carry the same verdict; only one can still be acted upon.
+    const data = [
+      hourOn('2026-08-11', 8, { reserve: 800, required: 2000 }),
+      hourOn('2026-08-11', 12, { reserve: 5000, required: 2000 }),
+      hourOn('2026-08-11', 20, { reserve: 800, required: 2000 }),
+    ];
+    // Late enough that the morning has lapsed but the evening has not.
+    const point = keyPoint(
+      buildFacts(data, [], new Date('2026-08-11T05:00:00Z'))
+    );
+
+    expect(point).toContain('20:00');
+    expect(point).not.toContain('08:00');
+  });
+
   it('copes with no data at all', () => {
     expect(buildFacts([], [], BEFORE_ALL)).toEqual([]);
   });

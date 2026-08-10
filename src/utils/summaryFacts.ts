@@ -261,17 +261,46 @@ export function assessmentKey(facts: DayFacts[]): string {
  * matters is reasoning, and reasoning belongs in code; the model is left with
  * wording, which is all it is reliable at.
  */
+/** A day still open to a declaration — somewhere in it, the notice period holds. */
+function otwartyNaOgloszenie(day: DayFacts): boolean {
+  return day.ranges.some((range) => range.announceable);
+}
+
 export function keyPoint(facts: DayFacts[]): string {
-  const worst = facts.find((day) => day.risk === 'high')
-    ?? facts.find((day) => day.risk === 'moderate');
+  /*
+   * What can still change comes first.
+   *
+   * Picking purely by severity led the summary with a Monday evening whose
+   * notice period had already lapsed — the next sentence said as much — while a
+   * Wednesday the operator could still act on waited until the last line. For
+   * someone asking whether they are about to be called, that is backwards: the
+   * settled matter on top, the open one at the bottom.
+   *
+   * Severity still decides among the days that remain open, and a day whose
+   * window has closed can still lead when no other qualifies. It never
+   * disappears either way — the facts carry every day, so the model can mention
+   * it regardless.
+   */
+  const otwarte = facts.filter(otwartyNaOgloszenie);
+  const najgorszy = (dni: DayFacts[]) =>
+    dni.find((day) => day.risk === 'high') ??
+    dni.find((day) => day.risk === 'moderate');
+
+  const worst = najgorszy(otwarte) ?? najgorszy(facts);
 
   if (worst) {
     // Matched to the verdict, not simply the earliest. Ranges come back in
     // chronological order, so a day carrying a milder range in the morning and
     // the worst one in the evening announced the evening's verdict over the
     // morning's hours — the right label bolted to the wrong time.
+    //
+    // Among ranges of that verdict, one still open to a declaration wins, for
+    // the same reason the day did.
+    const pasujace = worst.ranges.filter((entry) => entry.risk === worst.risk);
     const range =
-      worst.ranges.find((entry) => entry.risk === worst.risk) ?? worst.ranges[0];
+      pasujace.find((entry) => entry.announceable) ??
+      pasujace[0] ??
+      worst.ranges[0];
 
     return (
       `NAJWAŻNIEJSZE: ${worst.weekday} ${worst.businessDate} — ${RISK_SHORT[worst.risk]}` +
