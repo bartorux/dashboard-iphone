@@ -235,4 +235,36 @@ describe('worstRisk', () => {
     ).toBe('high');
     expect(worstRisk([])).toBe('none');
   });
+
+  it('separates having no grounds from having nothing to look at', () => {
+    // The filler this app synthesises for a day PSE has not published yet: the
+    // hours exist, the readings do not. Ranges are only built for high and
+    // moderate, so such a day leaves exactly the trace a perfectly safe one
+    // does — none — and used to be announced as "nie ma podstaw do przywołania".
+    const before = new Date('2026-08-09T00:00:00Z');
+    const blank = [10, 14, 19].map((h) =>
+      hourOn('2026-08-10', h, { reserve: null, required: null })
+    );
+    const safe = [10, 14, 19].map((h) =>
+      hourOn('2026-08-10', h, { reserve: 5000, required: 2000 })
+    );
+
+    expect(worstRisk(callPeriodRanges(blank, before), blank, before)).toBe(
+      'unknown'
+    );
+    expect(worstRisk(callPeriodRanges(safe, before), safe, before)).toBe('none');
+  });
+
+  it('does not call a night unknown — nothing is due then, and that is known', () => {
+    // Outside 07:00-22:00 no call period can be declared whatever the readings,
+    // so an absent one is not a gap in what we know.
+    const before = new Date('2026-08-09T00:00:00Z');
+    const night = [1, 3, 5].map((h) =>
+      hourOn('2026-08-10', h, { reserve: null, required: null })
+    );
+
+    expect(worstRisk(callPeriodRanges(night, before), night, before)).toBe(
+      'none'
+    );
+  });
 });

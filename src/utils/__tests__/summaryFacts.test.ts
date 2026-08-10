@@ -213,6 +213,23 @@ describe('buildFacts', () => {
     expect(point).not.toContain('08:00');
   });
 
+  it('says a day is unreadable rather than reassuring about it', () => {
+    // The most soothing sentence in the app used to be said flatly about a day
+    // carrying no readings, because ranges are built for high and moderate only
+    // and a blank day leaves the same trace as a safe one.
+    const data = [
+      ...[10, 14, 19].map((h) =>
+        hourOn('2026-08-10', h, { reserve: null, required: null })
+      ),
+      hourOn('2026-08-11', 19, { reserve: 5000, required: 2000 }),
+    ];
+    const point = keyPoint(buildFacts(data, [], BEFORE_ALL));
+
+    expect(point).toContain('brakuje odczytów');
+    expect(point).toContain('2026-08-10');
+    expect(point).not.toContain('w żadnym z dni nie ma podstaw');
+  });
+
   it('copes with no data at all', () => {
     expect(buildFacts([], [], BEFORE_ALL)).toEqual([]);
   });
