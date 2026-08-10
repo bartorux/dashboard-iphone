@@ -31,11 +31,26 @@ const InstallButton: React.FC<InstallButtonProps> = ({
     }
   };
 
+  /*
+   * The two instructional variants explain how to put the page on a home
+   * screen. On a monitor left open as the main page that is advice nobody asked
+   * for, so above 80rem they are hidden.
+   *
+   * Keyed to the state and not to width alone. `installableState === true` means
+   * the browser is offering a real install and the button does something, so it
+   * stays. `ios` stays too, because an iPad in landscape is wider than the
+   * breakpoint and is exactly the device the instructions are written for. Only
+   * `manual` — a desktop browser with no install prompt — actually disappears.
+   */
+  const tylkoInstrukcja = installableState !== true;
+
   return (
     <button
       type="button"
       onClick={handleClick}
-      className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface-2 px-4 text-[0.9375rem] font-medium text-accent-text active:opacity-70"
+      className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface-2 px-4 text-[0.9375rem] font-medium text-accent-text active:opacity-70 ${
+        tylkoInstrukcja ? 'xl:hidden' : ''
+      }`}
     >
       <DownloadIcon className="h-4 w-4" />
       {LABELS[String(installableState)] ?? 'Zainstaluj aplikację'}
