@@ -91,12 +91,6 @@ export interface AlertRange {
   hours: number;
 }
 
-export interface AlertHistory {
-  orange: (Alert & { detectedAt: number })[];
-  red: (Alert & { detectedAt: number })[];
-  lastResetDate: string | null;
-}
-
 export interface Settings {
   orangeThreshold: number;
   redThreshold: number;

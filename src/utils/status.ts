@@ -49,13 +49,6 @@ export const STATUS_SOFT_BG: Record<SystemStatus, string> = {
   unknown: 'bg-surface-2',
 };
 
-export const STATUS_DOT: Record<SystemStatus, string> = {
-  ok: 'bg-ok',
-  warn: 'bg-warn',
-  alarm: 'bg-alarm',
-  unknown: 'bg-text-tertiary',
-};
-
 /** Raw values for `<meta name="theme-color">`, which cannot take a CSS variable. */
 export const STATUS_THEME_COLOR: Record<SystemStatus, string> = {
   ok: '#34c759',

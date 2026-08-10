@@ -80,20 +80,11 @@ export default defineConfig({
             purpose: 'maskable',
           },
         ],
-        shortcuts: [
-          {
-            name: 'Aktualne alerty',
-            short_name: 'Alerty',
-            description: 'Zobacz aktualne alerty rezerw mocy',
-            url: './#alerts',
-          },
-          {
-            name: 'Odśwież dane',
-            short_name: 'Odśwież',
-            description: 'Ręczne odświeżenie danych z PSE',
-            url: './#refresh',
-          },
-        ],
+        // No `shortcuts`. Two used to sit here promising "Aktualne alerty" and
+        // "Odśwież dane" through `./#alerts` and `./#refresh`, but nothing in
+        // the app has ever read `location.hash` — both merely opened it as
+        // usual. Safari does not render manifest shortcuts at all, so on the
+        // phone this app is installed on they were invisible as well as inert.
         prefer_related_applications: false,
       },
     }),

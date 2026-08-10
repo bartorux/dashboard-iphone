@@ -56,12 +56,6 @@ export function formatHourLabel(timeStr: string): string {
   return match ? `${match[4]}:${match[5]}` : timeStr;
 }
 
-/** Short axis label: "2026-08-03 14:00:00" -> "14". */
-export function formatHourShort(timeStr: string): string {
-  const match = PSE_STAMP.exec(timeStr);
-  return match ? match[4] : timeStr;
-}
-
 /**
  * PSE labels a period by its span, e.g. "19 - 20" for the block covering
  * 19:00-20:00. `plan_dtime` carries only the END of that span, so the period
