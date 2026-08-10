@@ -246,9 +246,37 @@ export function callPeriodRanges(
   return ranges;
 }
 
-/** Worst risk present across a day, for a one-word verdict. */
-export function worstRisk(ranges: CallPeriodRange[]): CallPeriodRisk {
+/**
+ * True when not one hour the rules could apply to carries a reading.
+ *
+ * Needed because an empty range list means two opposite things. Ranges are only
+ * ever built for `high` and `moderate`, so hours classified `unknown` — the
+ * filler this app synthesises for a day PSE has not published yet — leave
+ * exactly the same trace as hours that are perfectly safe: none at all.
+ *
+ * Without this distinction the summary announces "w żadnym z dni nie ma podstaw
+ * do przywołania" about a day it has never seen, which is the one sentence this
+ * app must never get wrong.
+ */
+export function nothingKnown(points: PSEDataPoint[], now: Date): boolean {
+  const eligible = upcoming(points, now).filter(isEligibleHour);
+  if (eligible.length === 0) return false; // a night, a weekend: knowably nothing
+  return eligible.every((point) => classifyHour(point, now).risk === 'unknown');
+}
+
+/**
+ * Worst risk present across a day, for a one-word verdict.
+ *
+ * Takes the hours as well as the ranges: `none` has to mean "looked, and there
+ * are no grounds", never "had nothing to look at".
+ */
+export function worstRisk(
+  ranges: CallPeriodRange[],
+  points?: PSEDataPoint[],
+  now?: Date
+): CallPeriodRisk {
   if (ranges.some((range) => range.risk === 'high')) return 'high';
   if (ranges.some((range) => range.risk === 'moderate')) return 'moderate';
+  if (points && now && nothingKnown(points, now)) return 'unknown';
   return 'none';
 }

@@ -163,7 +163,7 @@ export function buildFacts(
                   margins.length
               )
             : null,
-        risk: worstRisk(ranges),
+        risk: worstRisk(ranges, points, now),
         ranges,
         belowTypical: countStanding(margins, distribution, 'below'),
         aboveTypical: countStanding(margins, distribution, 'above'),
@@ -306,6 +306,20 @@ export function keyPoint(facts: DayFacts[]): string {
       `NAJWAŻNIEJSZE: ${worst.weekday} ${worst.businessDate} — ${RISK_SHORT[worst.risk]}` +
       (range ? ` w godzinach ${range.from}-${range.to}` : '')
     );
+  }
+
+  /*
+   * A day nobody can vouch for outranks a narrow margin, and outranks silence
+   * altogether. "W żadnym z dni nie ma podstaw" used to be said flatly here even
+   * when one of the days carried no readings at all — the most reassuring
+   * sentence in the app, about a day it had never seen.
+   */
+  const unknown = facts.filter((day) => day.risk === 'unknown');
+  if (unknown.length > 0) {
+    const dni = unknown
+      .map((day) => `${day.weekday} ${day.businessDate}`)
+      .join(', ');
+    return `NAJWAŻNIEJSZE: dla ${dni} brakuje odczytów, więc nie wiadomo, czy są podstawy do przywołania`;
   }
 
   const near = facts.find((day) => day.nearThreshold > 0);

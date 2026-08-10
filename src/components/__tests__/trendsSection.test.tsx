@@ -86,6 +86,19 @@ describe('TrendsSection', () => {
     expect(screen.getAllByText('+2404 MW')).toHaveLength(2);
   });
 
+  it('prints a near-zero difference instead of the words "jak dziś"', () => {
+    // The surviving half of the same if-chain as the removed ceiling: any
+    // difference under 10 MW was replaced by words, while the row four lines
+    // below printed it as a figure. One card, two answers about one number.
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 7, 2, 12));
+
+    renderSection(1, calmDay(1, 1478), calmDay(0, 1471));
+
+    expect(screen.queryByText('jak dziś')).not.toBeInTheDocument();
+    expect(screen.getAllByText('+7 MW')).toHaveLength(2);
+  });
+
   it('drops the block that presented a forecast count as a prediction', () => {
     const day = calmDay(0, 1200);
     renderSection(0, day, day);

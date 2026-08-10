@@ -209,7 +209,13 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
     );
   }
 
-  if (state === 'error' || rows.length === 0) {
+  /*
+   * A failed fetch and an empty distribution are not the same thing, and used to
+   * share one message. Retrying cannot help the second: the download succeeded
+   * and every hour simply fell short of the samples a spread needs. Offering the
+   * button anyway sends someone to press it until they give up.
+   */
+  if (state === 'error') {
     return (
       <div className={`${CHART_BOX} grid place-items-center`}>
         <div className="text-center">
@@ -224,6 +230,16 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
             Spróbuj ponownie
           </button>
         </div>
+      </div>
+    );
+  }
+
+  if (rows.length === 0) {
+    return (
+      <div className={`${CHART_BOX} grid place-items-center`}>
+        <p className="max-w-[18rem] text-center text-[0.8125rem] text-text-tertiary">
+          Za mało dni w historii, żeby pokazać typowy zakres
+        </p>
       </div>
     );
   }

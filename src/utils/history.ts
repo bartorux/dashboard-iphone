@@ -30,8 +30,15 @@ export function percentile(sorted: number[], fraction: number): number {
  *
  * Buckets by the block's own hour label rather than by position in the array:
  * DST days carry 23 or 25 blocks, so an index-based bucket would smear every
- * later hour of those days into the wrong slot. The autumn "03a" block keeps
- * its own bucket, which is honest — it is a real, separate hour.
+ * later hour of those days into the wrong slot. The autumn "03a" block gets its
+ * own bucket, which is what keeps the rest of that day straight — but the bucket
+ * is then dropped, because one occurrence in a thirty-day window cannot support
+ * a p10-p90 spread. That is correct, and worth saying plainly: an earlier note
+ * here claimed the hour was kept.
+ *
+ * `minSamples` is why a successful download can still yield nothing. The caller
+ * must not report that as a failed fetch — the two need different words, and
+ * only one of them is worth a retry button.
  */
 export function marginDistribution(
   points: PSEDataPoint[],
