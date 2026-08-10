@@ -81,6 +81,30 @@ describe('niceScaleRange', () => {
     }
   });
 
+  it('never draws the curve along the frame', () => {
+    for (const [min, max] of cases) {
+      const scale = niceScaleRange(min, max);
+      expect(scale.max).toBeGreaterThan(max);
+      if (min < 0) expect(scale.min).toBeLessThan(min);
+    }
+  });
+
+  it('does not lose a whole step of height to rounding, as it did on 10 August', () => {
+    // Live case. Two consecutive days of generation data, 800 MW apart in
+    // extent, produced axes of wildly different height: padding was applied
+    // before snapping, pushing the upper bound past 20 000, which needed eight
+    // ticks at a step of 5000, was rejected for exceeding the limit, and fell
+    // through to a step of 10 000.
+    const dzis = niceScaleRange(-4240, 19639);
+    const jutro = niceScaleRange(-3051, 18853);
+
+    expect(dzis.max - dzis.min).toBe(jutro.max - jutro.min);
+
+    // The data has to fill most of what the axis offers.
+    const zajetosc = (19639 - -4240) / (dzis.max - dzis.min);
+    expect(zajetosc).toBeGreaterThan(0.85);
+  });
+
   it('survives empty or nonsensical data', () => {
     for (const [min, max] of [[NaN, NaN], [0, 0], [Infinity, -Infinity]]) {
       const scale = niceScaleRange(min, max);
