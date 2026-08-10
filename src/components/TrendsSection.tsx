@@ -91,9 +91,12 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
     return { selected, today, diff, pct };
   }, [todayData, currentDayOffset, margins]);
 
-  const trend = useMemo(() => {
+  const trend = useMemo((): { value: number | null; tone: string } => {
+    // null, not 0: a difference of zero is a real reading and has to be
+    // printable. Conflating the two is how "jak dziś" came to stand in for a
+    // figure the card was showing anyway.
     if (!comparison) {
-      return { text: '—', value: 0, tone: 'text-text-tertiary' };
+      return { value: null, tone: 'text-text-tertiary' };
     }
     const { diff } = comparison;
     /*
@@ -107,13 +110,24 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
      * error. Genuinely absent data is caught earlier, where safeAvg returns null
      * and this whole comparison comes back empty.
      */
-    if (Math.abs(diff) < TREND_STABLE_THRESHOLD) {
-      return { text: 'jak dziś', value: 0, tone: 'text-text-tertiary' };
-    }
+    /*
+     * The tile always carries the figure, even when it rounds to nothing much.
+     *
+     * A second threshold used to live here, replacing any difference under 10 MW
+     * with the words "jak dziś" — while the row four lines below printed the same
+     * difference as "+7 MW" and "+0,5%". That is the same card giving two answers
+     * about one number, which is exactly what the ceiling above it did until it
+     * was removed. A near-zero difference is worth showing as near-zero; the
+     * neutral tone already says it is nothing to act on.
+     */
     return {
-      text: diff > 0 ? 'lepiej' : 'gorzej',
       value: diff,
-      tone: diff > 0 ? 'text-ok-text' : 'text-alarm-text',
+      tone:
+        Math.abs(diff) < TREND_STABLE_THRESHOLD
+          ? 'text-text-tertiary'
+          : diff > 0
+          ? 'text-ok-text'
+          : 'text-alarm-text',
     };
   }, [comparison]);
 
@@ -150,7 +164,7 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
             />
             <Tile
               label="Względem dziś"
-              value={trend.value !== 0 ? signed(trend.value) : trend.text}
+              value={trend.value !== null ? signed(trend.value) : '—'}
               hint={currentDayOffset === 0 ? 'wybrany dzień to dziś' : 'różnica średnich'}
               tone={trend.tone}
             />
