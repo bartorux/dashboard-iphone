@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 17;
+export const PROMPT_VERSION = 18;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -33,6 +33,7 @@ stanu rezerw mocy w krajowej sieci elektroenergetycznej.
 Okres przywołania to sytuacja, w której operator wzywa odbiorców do ograniczenia
 poboru. Ogłasza go w dzień roboczy między 07:00 a 22:00, z co najmniej
 ośmiogodzinnym wyprzedzeniem. Nie powtarzaj tych zasad w tekście — czytelnik je zna.
+Nazywaj to zawsze „przywołaniem" — jedna nazwa na jedną rzecz.
 
 TRZY WIELKOŚCI, każda nazywana inaczej. Nigdy nie mów o dwóch z nich „próg":
 - MARGINES — dostępna rezerwa minus wymagany poziom. Tego słowa trzymaj się
@@ -81,7 +82,8 @@ bez urzędowego żargonu. Odbiorcy pracują w energetyce.
   zdania obok siebie czytają się jak zaprzeczenie.
 - NIE POWTARZAJ TEGO SAMEGO SŁOWA w jednym zdaniu, jeśli da się inaczej.
   „powyżej progu, powyżej którego" brzmi jak potknięcie — rozbij na dwa zdania
-  albo przeformułuj.
+  albo przeformułuj. To samo dotyczy zdań sąsiadujących: dwa pod rząd nie mogą
+  wisieć na tym samym „więc", „dlatego" ani „w związku z tym".
 - NIE POTWIERDZAJ BRAKU WIADOMOŚCI. Skoro nagłówek podaje godziny, w których
   coś się dzieje, czytelnik wie, że w pozostałych nic się nie dzieje. Zdanie
   „w innych godzinach rezerwa pokrywa wymagany poziom" zajmuje miejsce i nic
@@ -90,12 +92,18 @@ bez urzędowego żargonu. Odbiorcy pracują w energetyce.
 
 TAK NIE PISZ (asekuracko, bez konkretu):
 „W poniedziałek w wyznaczonym przedziale czasowym rezerwa nie pokrywa w pełni
-wymaganej wielkości, w związku z czym występuje ryzyko wezwania odbiorców."
+wymaganej wielkości, w związku z czym występuje ryzyko ogłoszenia przywołania."
 
 TAK PISZ (wprost, z godzinami, czasownikami):
 „W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganego poziomu.
 Nadwyżka wciąż przekracza próg 1100 MW, więc operator ma prawo nie ogłaszać
 przywołania."
+
+TAK TEŻ PISZ — ta sama zależność, inny rytm. Miej oba pod ręką, bo dwa zdania
+z rzędu na jednym „więc" brzmią mechanicznie:
+„W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganego poziomu.
+Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo
+nie ogłaszać przywołania."
 
 === CZEGO NIE ROBISZ ===
 
@@ -177,7 +185,7 @@ FAKTY:
  */
 const EMPHASES = [
   'Zacznij od najbliższych godzin.',
-  'Zacznij od najtrudniejszej godziny w całym horyzoncie.',
+  'Zacznij od najtrudniejszej godziny ze wszystkich dni.',
   'Zacznij od tego, czy sytuacja jest typowa na tle ostatnich dni.',
   'Zacznij od dnia, który wymaga najwięcej uwagi, choćby był ostatni.',
   'Zacznij od tego, czy w ogóle są podstawy do przywołania.',

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseSummary, validateSummary } from '../summaryText';
+import { buildPrompt, parseSummary, validateSummary } from '../summaryText';
 import { assessmentKey, buildFacts } from '../summaryFacts';
 import { makePoint } from '../../test/factories';
 
@@ -26,6 +26,37 @@ const good = {
   body: 'Rezerwa pokrywa wymaganą wartość. Najciaśniej będzie o 20:00.',
   outlook: 'W kolejnych dniach margines pozostaje bezpieczny.',
 };
+
+describe('buildPrompt', () => {
+  /*
+   * Two words we spent a round rejecting in the output turned out to have been
+   * put in front of the model by us. „horyzont" existed nowhere in this codebase
+   * except one rotating variant, and „wezwanie" nowhere except inside a sentence
+   * held up as an example of bad writing — the model lifted the noun out of it.
+   * Neither survived long enough to be traced by reading the summaries alone.
+   *
+   * Nothing else guards the wording of the prompt, which is how both lasted
+   * seventeen revisions of it.
+   */
+  it('nie podsuwa modelowi slow, ktore potem odrzucamy w odpowiedzi', () => {
+    // Every hour of the day, so all five rotating variants are covered.
+    const prompt = Array.from({ length: 24 }, (_, hour) =>
+      buildPrompt(
+        buildFacts(
+          [hourOn('2026-08-10', 19, { reserve: 800, required: 2000 })],
+          [],
+          new Date('2026-08-09T00:00:00Z')
+        ),
+        30,
+        new Date(`2026-08-09T${pad(hour)}:00:00Z`)
+      )
+    ).join('\n');
+
+    expect(prompt).not.toMatch(/horyzon/i);
+    // „wzywa" in the opening definition is the verb and stays; this is the noun.
+    expect(prompt).not.toMatch(/wezwan/i);
+  });
+});
 
 describe('parseSummary', () => {
   it('reads the three labelled lines', () => {
