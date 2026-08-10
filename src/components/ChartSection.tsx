@@ -97,17 +97,23 @@ const ChartSection: React.FC<ChartSectionProps> = ({
 
   return (
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-3 shadow-sm">
-      <h2 className="mb-2 px-1 text-[0.9375rem] font-semibold text-text">
-        {active.title} <span className="text-text-tertiary">(MW)</span>
-      </h2>
+      {/* Stacked on a phone, where there is no room for anything else. On a
+          monitor the title and the switcher share one line: a 34rem control
+          adrift in a 100rem card reads as something that failed to stretch
+          rather than something placed. */}
+      <div className="xl:mb-2 xl:flex xl:items-center xl:justify-between xl:gap-4">
+        <h2 className="mb-2 px-1 text-[0.9375rem] font-semibold text-text xl:mb-0">
+          {active.title} <span className="text-text-tertiary">(MW)</span>
+        </h2>
 
-      <SegmentedControl
-        ariaLabel="Widok wykresu"
-        value={view}
-        onChange={setView}
-        segments={VIEWS.map(({ value, label }) => ({ value, label }))}
-        className="mb-2 xl:max-w-[34rem]"
-      />
+        <SegmentedControl
+          ariaLabel="Widok wykresu"
+          value={view}
+          onChange={setView}
+          segments={VIEWS.map(({ value, label }) => ({ value, label }))}
+          className="mb-2 xl:mb-0 xl:w-[34rem] xl:shrink-0"
+        />
+      </div>
 
       {body()}
     </section>
