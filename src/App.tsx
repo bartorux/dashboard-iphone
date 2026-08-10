@@ -28,6 +28,7 @@ import {
   findAlerts,
   findCurrentPoint,
   getUpcomingStatus,
+  hasReadings,
 } from './utils/dataTransform';
 import { DayOffset } from './types';
 import { DAY_NAMES } from './utils/constants';
@@ -257,7 +258,7 @@ function App() {
             <AlertsPanel
               ranges={alertRanges}
               currentDayOffset={currentDayOffset}
-              hasData={dayData.some((point) => point.reserve !== null)}
+              hasData={hasReadings(dayData)}
             />
 
           </div>

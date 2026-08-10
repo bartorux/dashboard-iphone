@@ -335,6 +335,24 @@ export function getUpcomingStatus(
  * reaches the opposite conclusion to comparing them by margin in about one pair
  * in eleven.
  */
+/**
+ * Whether anything here can actually be judged.
+ *
+ * "Has data" was tested as `reserve !== null` in two places, while everything
+ * that classifies an hour — findAlerts, classifyMargin, the call-period rules —
+ * needs the required level as well. A day carrying reserve figures but no
+ * required level therefore counted as present, produced no alerts because no
+ * hour could be classified, and earned a green "Brak alertów w tym dniu": an
+ * all-clear derived from readings nobody could read.
+ *
+ * One predicate, so the question and the answer cannot drift apart again.
+ */
+export function hasReadings(data: PSEDataPoint[]): boolean {
+  return data.some(
+    (point) => point.reserve !== null && point.required !== null
+  );
+}
+
 export function getValidMargins(data: PSEDataPoint[]): number[] {
   const margins: number[] = [];
   for (const point of data) {

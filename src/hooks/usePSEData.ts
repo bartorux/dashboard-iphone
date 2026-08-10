@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { PSEDataPoint, DayOffset } from '../types';
 import { fetchPSEData } from '../utils/api';
-import { processData, getDataForDay } from '../utils/dataTransform';
+import { processData, getDataForDay,
+  hasReadings,
+} from '../utils/dataTransform';
 import { REFRESH_INTERVAL_MS, STORAGE_PREFIX, HOUR_MS } from '../utils/constants';
 import { addDays, formatDate, getStartOfToday } from '../utils/dateHelpers';
 
@@ -205,7 +207,7 @@ export function usePSEData(): UsePSEDataReturn {
   );
 
   const hasData = useMemo(
-    () => allData.some((point) => point.reserve !== null),
+    () => hasReadings(allData),
     [allData]
   );
 

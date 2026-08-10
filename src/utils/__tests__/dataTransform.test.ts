@@ -4,6 +4,7 @@ import {
   getDataForDay,
   findAlerts,
   getValidReserves,
+  hasReadings,
   safeAvg,
 } from '../dataTransform';
 import { PSERawItem } from '../../types';
@@ -236,5 +237,30 @@ describe('processData — hour labels', () => {
     expect(filled).toBeDefined();
     expect(filled!.period).toBe('');
     expect(filled!.hourLabel).toMatch(/^\d{2}:00$/);
+  });
+});
+
+describe('hasReadings', () => {
+  it('refuses to call a day present when nothing in it can be judged', () => {
+    // The bug this replaced: "has data" tested the reserve alone, while every
+    // classifier needs the required level too. A day like this counted as
+    // present, produced no alerts because no hour could be classified, and
+    // earned a green "Brak alertów w tym dniu".
+    const bezWymaganej = [
+      makePoint({ reserve: 2000, required: null }),
+      makePoint({ reserve: 2100, required: null }),
+    ];
+    expect(hasReadings(bezWymaganej)).toBe(false);
+    expect(findAlerts(bezWymaganej, 500, 300).red).toHaveLength(0);
+  });
+
+  it('accepts a day where at least one hour carries both figures', () => {
+    expect(
+      hasReadings([
+        makePoint({ reserve: null, required: null }),
+        makePoint({ reserve: 2000, required: 1800 }),
+      ])
+    ).toBe(true);
+    expect(hasReadings([])).toBe(false);
   });
 });
