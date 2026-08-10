@@ -237,7 +237,8 @@ html {
   background: var(--bg);
 
   /*
-   * SONDA Dynamic Type — do oceny na telefonie, patrz README.
+   * Dynamic Type. Confirmed working in a home-screen PWA, contrary to what most
+   * sources on the subject claim.
    *
    * Converting sizes to rem achieves nothing on its own: iOS does not apply its
    * text-size setting to content the browser draws. Only hooking the root to the
