@@ -87,7 +87,14 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
 
     // Reads left to right: selected day relative to today
     const diff = selected - today;
-    const pct = today !== 0 ? (diff / Math.abs(today)) * 100 : 0;
+    /*
+     * null, not 0. There is no percentage of nothing, and the guard used to
+     * answer the question anyway: a real difference of thousands of megawatts
+     * printed as "+0,0%" beside a correct "+3875 MW". Rare — these are averages
+     * of floats — but a guard against dividing by zero should fall silent, not
+     * produce a confident figure.
+     */
+    const pct = today !== 0 ? (diff / Math.abs(today)) * 100 : null;
     return { selected, today, diff, pct };
   }, [todayData, currentDayOffset, margins]);
 
@@ -168,16 +175,26 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
               hint={currentDayOffset === 0 ? 'wybrany dzień to dziś' : 'różnica średnich'}
               tone={trend.tone}
             />
+            {/*
+              The window has to be named, because the analysis card above reports
+              the same quantity over a different one — it looks only at hours
+              still ahead, which is right for a question about being called, and
+              these tiles summarise the whole day, which is right for a day.
+              Measured on a live evening: this tile read −325 MW at 19:00 while
+              the card above said +1535 MW at 22:00. Both true, both labelled
+              "the hardest hour", 1860 MW apart, one screen. It happens every day
+              once the worst hour has passed.
+            */}
             <Tile
               label="Najniższy margines"
               value={minMargin !== null ? signed(minMargin) : '—'}
-              hint="najtrudniejsza godzina"
+              hint="najtrudniejsza godzina doby"
               tone={toneFor(minMargin)}
             />
             <Tile
               label="Najwyższy margines"
               value={maxMargin !== null ? signed(maxMargin) : '—'}
-              hint="największy zapas"
+              hint="największy zapas doby"
               tone={toneFor(maxMargin)}
             />
           </div>
@@ -204,10 +221,12 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
                     >
                       {signed(comparison.diff)}
                     </div>
-                    <div className="tnum text-[0.625rem] text-text-tertiary">
-                      {comparison.pct >= 0 ? '+' : ''}
-                      {comparison.pct.toFixed(1)}%
-                    </div>
+                    {comparison.pct !== null && (
+                      <div className="tnum text-[0.625rem] text-text-tertiary">
+                        {comparison.pct >= 0 ? '+' : ''}
+                        {comparison.pct.toFixed(1)}%
+                      </div>
+                    )}
                   </div>
                   <div className="text-right">
                     <div className="text-[0.6875rem] text-text-secondary">{dayName}</div>

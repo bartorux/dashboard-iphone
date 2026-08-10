@@ -99,6 +99,29 @@ describe('TrendsSection', () => {
     expect(screen.getAllByText('+7 MW')).toHaveLength(2);
   });
 
+  it('says nothing rather than "+0,0%" when there is nothing to divide by', () => {
+    // A day averaging exactly zero used to make the guard answer anyway: a real
+    // difference printed beside a confident "+0,0%".
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 7, 2, 12));
+
+    renderSection(1, calmDay(1, 2000), calmDay(0, 0));
+
+    // The difference itself is still reported; only the ratio is withheld.
+    expect(screen.getAllByText('+2000 MW').length).toBeGreaterThan(0);
+    expect(screen.queryByText(/%/)).not.toBeInTheDocument();
+  });
+
+  it('names the window its extremes are taken over', () => {
+    // The analysis card reports the same quantity over the hours still ahead.
+    // Measured live: this tile read −325 MW at 19:00 while the card above said
+    // +1535 MW at 22:00 — both true, 1860 MW apart, one screen.
+    renderSection(0, calmDay(0, 1200), calmDay(0, 1200));
+
+    expect(screen.getByText('najtrudniejsza godzina doby')).toBeInTheDocument();
+    expect(screen.getByText('największy zapas doby')).toBeInTheDocument();
+  });
+
   it('drops the block that presented a forecast count as a prediction', () => {
     const day = calmDay(0, 1200);
     renderSection(0, day, day);
