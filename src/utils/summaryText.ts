@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 18;
+export const PROMPT_VERSION = 19;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -122,7 +122,9 @@ ZAKAZANE SŁOWA I ZWROTY:
   „ciągłość pracy", „profil generacji"
 - kolokwializmy: „zrobi się ciasno", „na styk"
 - straszenie: „zagrożenie", „krytyczny", „alarmujący", „niebezpieczny"
-- mgliste pory: „w godzinach wieczornych", „w wyznaczonym przedziale czasowym"
+- mgliste pory: „w godzinach wieczornych", „w wyznaczonym przedziale czasowym",
+  a także same przysłówki — „wieczorem", „rano", „po południu", „nocą". Skoro
+  fakty podają godzinę, podaj godzinę; dotyczy to zwłaszcza nagłówka.
 - metafora okna: „okno", „okno ogłoszenia", „okno pozostaje otwarte" — czytelnik
   nie wie, co to okno. Pisz „ogłoszenie może jeszcze nadejść" albo „na ogłoszenie
   jest już za późno".

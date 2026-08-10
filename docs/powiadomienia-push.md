@@ -1,14 +1,22 @@
-# Powiadomienia push o alarmach — projekt zaparkowany
+# Powiadomienia push o alarmach — projekt odrzucony
 
-Zaprojektowane i zmierzone 2026-08-03, **nie zaimplementowane**. Dokument istnieje po to, żeby
-przy powrocie do tematu nie odtwarzać analizy od zera.
+Zaprojektowane i zmierzone 2026-08-03, **nie zaimplementowane**, a **2026-08-10 odrzucone**:
+powiadomienia nie są potrzebne. Dokument zostaje, bo analiza jest dobra i nadal prawdziwa — ale
+zostaje jako decyzja, nie jako zaproszenie. Kto wróci do tematu, niech wróci świadomie.
+
+Gdyby wracać, dwie rzeczy przemawiają za tym mocniej niż w dniu projektowania, a jedna słabiej.
+Wszystkie trzy są niżej: **wyzwalanie na stanie regulaminowym** zamiast na progach alertów,
+**koszt migracji service workera** okazał się mniejszy, a **przesłanka o dzwonku** zdążyła się
+zdezaktualizować.
 
 ## Problem
 
-Aplikacja nigdy sama o niczym nie informuje. W kodzie nie ma `Notification` ani `PushManager`;
-dzwonek w nagłówku wycisza wyłącznie komunikaty wewnątrz aplikacji, a odznaka na ikonie
-aktualizuje się tylko wtedy, gdy aplikacja jest uruchomiona. O alarmie dowiesz się dopiero po jej
-otwarciu.
+Aplikacja nigdy sama o niczym nie informuje. W kodzie nie ma `Notification` ani `PushManager`,
+a odznaka na ikonie aktualizuje się tylko wtedy, gdy aplikacja jest uruchomiona. O alarmie dowiesz
+się dopiero po jej otwarciu.
+
+*(Wcześniejsza wersja tego akapitu opisywała dzwonek w nagłówku i proponowała przerobić go na
+przełącznik powiadomień. Dzwonka nie ma — usunięty, bo wyciszał wyłącznie własną ikonę.)*
 
 ## Ile realnie byłoby powiadomień
 
@@ -27,6 +35,25 @@ Najważniejsza konsekwencja: **ciąg pięciu godzin alarmowych to jedno zdarzeni
 w bloki byłyby 92 powiadomienia miesięcznie zamiast 25. Ponieważ jednak alarmy zdarzają się
 w dwóch trzecich dni, poranne podsumowanie *plus* przypomnienie przed każdym zdarzeniem dałoby
 ~10 tygodniowo — dlatego przypomnienie musi być warunkowe.
+
+### Inny wyzwalacz zmienia częstotliwość pięciokrotnie
+
+Powyższy pomiar opiera się na **progach alertów**, czyli na wartościach ustawianych przez
+użytkownika. Od tamtej pory doszedł `src/utils/callPeriod.ts` ze stanem wynikającym z regulaminu,
+a to zupełnie inna miara. Pomiar na 45 dniach (1080 godzin, 31 dni roboczych), liczony wyłącznie
+w oknie 7:00–22:00 w dni robocze:
+
+| stan | godzin | zdarzeń ciągłych | tygodniowo |
+|---|---|---|---|
+| przywołanie powinno zostać ogłoszone (nadwyżka < 1100 MW) | 18 | **7** | ~1,1 |
+| operator ma prawo nie ogłaszać (deficyt, nadwyżka ≥ 1100 MW) | 33 | 23 | ~3,6 |
+
+Siedem zdarzeń na 45 dni, każde w innym dniu. Najniższa nadwyżka w oknie: 144 MW.
+
+To zmienia całą arytmetykę wysyłki. Przy ~1,1 zdarzenia tygodniowo **reguły z sekcji niżej —
+ciche godziny, poranna kolejka, warunkowe przypomnienie — są w większości zbędne**: powstały po to,
+żeby ujarzmić pięć razy częstszy strumień. Wyzwalacz regulaminowy odpala rzadko i zawsze z powodu,
+który da się nazwać jednym zdaniem.
 
 ## Architektura bez serwera
 
@@ -82,6 +109,16 @@ aktualizowania** (`skipWaiting`, `clientsClaim`, `cleanupOutdatedCaches`) — ty
 nowe wersje wchodzą na telefon bez reinstalacji, więc jego zepsucie odcięłoby drogę dostarczania
 kolejnych poprawek.
 
+Sprawdzone 2026-08-10: **kod aplikacji nie wymaga przy tym żadnych zmian.** `src/App.tsx` woła
+`useRegisterSW()` z `virtual:pwa-register/react`, a ten moduł plugin dostarcza tak samo przy obu
+strategiach. Do przepisania ręcznie zostaje wyłącznie zawartość service workera: precache, dwie
+reguły `runtimeCaching` i trzy powyższe zachowania. Pakiety `workbox-precaching`, `workbox-routing`
+i `workbox-strategies` są w drzewie tylko tranzytywnie — trzeba je wciągnąć wprost.
+
+Nic tego nie pilnuje automatycznie: `deploy.yml` uruchamia `typecheck`, `test` i `build`, a żaden
+test nie dotyka service workera. Sprawdzenie po migracji musiałoby być ręczne — wdrożyć zmianę
+i potwierdzić, że wchodzi na telefon sama.
+
 Żadnego cichego push: Safari na iOS wymaga, by każde odebrane powiadomienie zostało faktycznie
 wyświetlone, a pominięcie `showNotification` grozi odebraniem uprawnienia. Dlatego filtrowanie
 dzieje się po stronie workflow, nie w service workerze.
@@ -95,8 +132,9 @@ Hook `usePushSubscription`: stany `unsupported` / `denied` / `off` / `on`; włą
 wykrywa, oznacza subskrypcję jako martwą i przestaje wysyłać. To nie jest atrapa ukrywająca
 powiadomienia lokalnie.
 
-Dzwonek w nagłówku przestaje wyciszać komunikaty wewnętrzne i staje się skrótem do tego samego
-przełącznika — jeden spójny sens zamiast dwóch różnych „powiadomień".
+Przełącznik trafiłby do ustawień. Pierwotnie miał tu stanąć dzwonek z nagłówka, ale ten zniknął —
+wyciszał wyłącznie własną ikonę, więc nie było czego przerabiać. Trwałą flagę per urządzenie niesie
+gotowy `usePersistentFlag` z `src/hooks/`.
 
 ## Dwa ograniczenia, które trzeba zaakceptować
 
