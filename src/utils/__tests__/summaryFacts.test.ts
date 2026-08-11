@@ -273,6 +273,35 @@ describe('renderFacts', () => {
     expect(text.length).toBeLessThan(1200);
   });
 
+  it('names the hard hour only on a day that has one', () => {
+    // Every day used to carry "najniższy margines … o HH:MM", quiet days
+    // included. Harmless at three days; at five it handed the model five hours
+    // and the DALEJ line came back as a list of four, each copied from these
+    // lines. On a comfortable day the lowest hour is not a hard hour.
+    const spokojny = buildFacts(
+      [hourOn('2026-08-10', 19, { reserve: 6000, required: 2000 })],
+      [],
+      BEFORE_ALL
+    );
+    expect(renderFacts(spokojny, 30)).not.toContain('o 19:00');
+
+    // A narrow but positive margin is worth pointing at, and keeps its hour.
+    const waski = buildFacts(
+      [hourOn('2026-08-10', 19, { reserve: 2100, required: 2000 })],
+      [],
+      BEFORE_ALL
+    );
+    expect(renderFacts(waski, 30)).toContain('o 19:00');
+
+    // So are grounds for a call period.
+    const podstawy = buildFacts(
+      [hourOn('2026-08-10', 19, { reserve: 800, required: 2000 })],
+      [],
+      BEFORE_ALL
+    );
+    expect(renderFacts(podstawy, 30)).toContain('o 19:00');
+  });
+
   it('says so plainly when there is nothing ahead', () => {
     expect(renderFacts([], 30)).toMatch(/Brak danych/);
   });
