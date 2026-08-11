@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 23;
+export const PROMPT_VERSION = 24;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -160,10 +160,10 @@ TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku — najcz
 dlaczego operator ma prawo nie ogłaszać przywołania i czy ogłoszenie może
 jeszcze nadejść.
 GDY W ŻADNYM DNIU NIE MA PODSTAW, oba te tematy odpadają — nie ma czego
-uzasadniać ani na co czekać. Wtedy TREŚĆ mówi o czym innym: która godzina jest
-najciaśniejsza i jak okres wypada na tle ostatnich dni. NIE STWIERDZAJ tu, że
-podstaw nie ma — to należy do wiersza DALEJ i pada w całym tekście RAZ. Dwa
-zdania pod rząd o tym samym braku podstaw czytają się jak zacinanie się.
+uzasadniać ani na co czekać. Wtedy TREŚĆ to JEDNO ZDANIE, nie dwa, i mówi
+o czym innym: która godzina jest najciaśniejsza albo jak okres wypada na tle
+ostatnich dni. Werdykt o braku podstaw należy do wiersza DALEJ i pada w całym
+tekście RAZ — drugie zdanie tutaj nie ma czego powiedzieć, więc go nie ma.
 DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
