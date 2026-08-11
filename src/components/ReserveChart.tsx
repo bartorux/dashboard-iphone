@@ -282,18 +282,6 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               activeDot={false}
             />
 
-            {/* Vertical rule on every hour that breaches a threshold */}
-            {alertHours.map(({ key, status }) => (
-              <ReferenceLine
-                key={`alert-${key}`}
-                x={key}
-                stroke={status === 'alarm' ? colors.alarm : colors.warn}
-                strokeWidth={status === 'alarm' ? 1.5 : 1}
-                strokeDasharray="4 4"
-                strokeOpacity={0.55}
-              />
-            ))}
-
             <Tooltip
               active={tooltipActive}
               content={
@@ -333,6 +321,34 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
                 }}
               />
             )}
+
+            {/*
+              Vertical rule on every hour that breaches a threshold — drawn after
+              the "teraz" line on purpose.
+
+              Recharts paints in source order, so while these came first the blue
+              line sat on top of them. Whenever the current hour was itself an
+              alert hour the two landed on the same x and the red dash vanished
+              underneath: the header went red, the panel listed the range, and the
+              chart showed no marking at the one hour it mattered most. Measured
+              live at 08:28 — two rules at x=366, only the blue one visible.
+
+              The "teraz" label sits above the plot area, so it stays legible even
+              where the dash now wins.
+            */}
+            {alertHours.map(({ key, status }) => (
+              <ReferenceLine
+                key={`alert-${key}`}
+                x={key}
+                stroke={status === 'alarm' ? colors.alarm : colors.warn}
+                strokeWidth={status === 'alarm' ? 1.5 : 1}
+                strokeDasharray="4 4"
+                /* Full strength where it lands on the "teraz" line, or the dash
+                   reads as a tint of the blue underneath rather than a mark of
+                   its own — and this is the one alert hour already happening. */
+                strokeOpacity={key === currentHourLabel ? 1 : 0.55}
+              />
+            ))}
 
             <Line
               type="monotone"

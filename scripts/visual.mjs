@@ -64,6 +64,12 @@ const SCENARIOS = [
   { name: 'monitor-light', scheme: 'light', monitor: true },
   { name: 'monitor-dark', scheme: 'dark', monitor: true },
   { name: 'monitor-settings', scheme: 'light', monitor: true, settings: true },
+  // The current hour being itself an alert hour: the two vertical rules land on
+  // one x, and the blue "teraz" line used to be painted over the red dash, so
+  // the chart showed nothing at the one hour already happening. No other
+  // scenario can see it — the shared clock sits at midday, where the fixture is
+  // calm.
+  { name: 'teraz-w-alercie', scheme: 'light', at: '2026-08-04T19:30:00+02:00' },
 ];
 
 /**
@@ -88,6 +94,10 @@ mkdirSync(diffDir, { recursive: true });
  * day the baseline was written.
  */
 const FROZEN_TIME = new Date('2026-08-04T12:00:00+02:00');
+
+/** A scenario may pin its own moment; everything else shares the one above. */
+const clockFor = (scenario) =>
+  scenario.at ? new Date(scenario.at) : FROZEN_TIME;
 
 const browser = await chromium.launch();
 let failures = 0;
@@ -127,7 +137,7 @@ for (const scenario of SCENARIOS) {
           'najgłębiej o 19:00. Okno ogłoszenia dla części tych godzin jest już zamknięte.',
         outlook:
           'W kolejnych dniach margines wraca powyżej typowego zakresu.',
-        generatedAt: new Date(FROZEN_TIME.getTime() - 30 * 60 * 1000).toISOString(),
+        generatedAt: new Date(clockFor(scenario).getTime() - 30 * 60 * 1000).toISOString(),
         dates: ['2026-08-04', '2026-08-05', '2026-08-06'],
       }),
     });
@@ -143,7 +153,7 @@ for (const scenario of SCENARIOS) {
     });
   });
 
-  await context.clock.install({ time: FROZEN_TIME });
+  await context.clock.install({ time: clockFor(scenario) });
 
   const page = await context.newPage();
 
