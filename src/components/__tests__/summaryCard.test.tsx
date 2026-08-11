@@ -16,12 +16,17 @@ const summary: Summary = {
 describe('SummaryCard', () => {
   beforeEach(() => localStorage.clear());
 
-  it('says which days it covers and that a model wrote it', () => {
+  it('says a model wrote it and when, and no longer which days', () => {
     render(<SummaryCard summary={summary} now={NOW} />);
 
-    // Without the span the card reads as merely unrefreshed once the day tabs
-    // are switched and it does not follow them.
-    expect(screen.getByText(/Analiza AI/)).toHaveTextContent('dziś–pojutrze');
+    // The span was here because the card covered three days while the tabs
+    // covered three of their own, and switching to a day it did not discuss made
+    // it read as unrefreshed. The two windows are the same set now, so the span
+    // repeated what the tabs already showed. What a reader does check is how old
+    // the text is.
+    const eyebrow = screen.getByText(/Analiza AI/);
+    expect(eyebrow).not.toHaveTextContent('dziś');
+    expect(eyebrow).toHaveTextContent(/\d{2}:\d{2}/);
   });
 
   it('starts expanded', () => {
