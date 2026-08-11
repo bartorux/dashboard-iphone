@@ -221,7 +221,9 @@ for (const day of facts) {
   }
 }
 
-const verdict = validateSummary(summary, allowedHours);
+const allowedDayNames = facts.map((day) => day.spokenName).filter(Boolean);
+
+const verdict = validateSummary(summary, allowedHours, allowedDayNames);
 if (!verdict.ok) giveUp(`Odrzucone: ${verdict.reason}`);
 
 const file: SummaryFile = {

@@ -298,6 +298,54 @@ describe('validateSummary', () => {
     expect(validateSummary(summary, HOURS)).toEqual({ ok: true });
   });
 
+  describe('data w nazwie dnia', () => {
+    const zData = {
+      ...good,
+      body: 'Najciaśniej wypada poniedziałek 17 sierpnia o 20:00.',
+    };
+
+    it('refuses it when the facts never handed that name over', () => {
+      // The ban on digits is what keeps every figure on this screen ours. It
+      // only relaxes for names we supplied.
+      expect(validateSummary(zData, HOURS)).toMatchObject({
+        ok: false,
+        reason: 'tekst zawiera liczbę spoza godzin',
+      });
+    });
+
+    it('accepts it once the facts did', () => {
+      /*
+       * The deadlock this fixes. The window reaches over a weekend, so a day
+       * beyond this week is named with its date and the instruction demands it
+       * be copied whole — while the validator refused every answer for carrying
+       * a digit. One published run, one warning, and the card frozen: exactly
+       * what the 1100 MW exception was written to end, repeated.
+       */
+      expect(
+        validateSummary(zData, HOURS, ['poniedziałek 17 sierpnia'])
+      ).toEqual({ ok: true });
+    });
+
+    it('clears the long name before the short one that is its prefix', () => {
+      // Strip "poniedziałek" first and " 17 sierpnia" is left stranded, so a
+      // correct answer would be refused for the digit we ourselves supplied.
+      expect(
+        validateSummary(zData, HOURS, ['poniedziałek', 'poniedziałek 17 sierpnia'])
+      ).toEqual({ ok: true });
+    });
+
+    it('still refuses a figure the model made up', () => {
+      const zmyslone = {
+        ...good,
+        body: 'W poniedziałek 17 sierpnia o 20:00 zabraknie 250 jednostek.',
+      };
+
+      expect(
+        validateSummary(zmyslone, HOURS, ['poniedziałek 17 sierpnia'])
+      ).toMatchObject({ ok: false });
+    });
+  });
+
   it('refuses a headline with both lines beneath it empty', () => {
     // No shape ever asks for that, and it is the one combination the pairwise
     // rule above would otherwise let through.

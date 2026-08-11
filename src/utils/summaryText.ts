@@ -454,7 +454,14 @@ const HOUR_PATTERN = /\b\d{1,2}:\d{2}\b/g;
  */
 export function validateSummary(
   summary: Summary,
-  allowedHours: Set<string>
+  allowedHours: Set<string>,
+  /**
+   * Day names exactly as the facts spelled them, e.g. "poniedziałek 17 sierpnia".
+   *
+   * Needed because those are the only place a digit may legitimately appear
+   * outside an hour, and only in the form we supplied.
+   */
+  allowedDayNames: string[] = []
 ): { ok: true } | { ok: false; reason: string } {
   for (const [key, limit] of Object.entries(LIMITS) as Array<
     [keyof Summary, number]
@@ -590,7 +597,25 @@ export function validateSummary(
     }
   }
 
-  const withoutHours = whole
+  /*
+   * Day names are stripped before the digit ban, for the same reason the 1100 MW
+   * threshold is: we hand them to the model ourselves.
+   *
+   * The window reaches over a weekend, so a day beyond this week is named with
+   * its date — "poniedziałek 17 sierpnia" — and the instruction insists on
+   * copying that verbatim rather than shortening it. Without this the run
+   * refused every answer for containing the very digits it had just demanded,
+   * and the card sat frozen with a warning: exactly the deadlock the 1100 MW
+   * exception was written to end.
+   *
+   * Only the exact phrases the facts carried are cleared, so a figure the model
+   * invented still has nothing to hide behind.
+   */
+  const withoutHours = [...allowedDayNames]
+    // Longest first, or a bare "poniedziałek" strips the prefix of
+    // "poniedziałek 17 sierpnia" and leaves the date stranded to be refused.
+    .sort((a, b) => b.length - a.length)
+    .reduce((text, name) => (name ? text.split(name).join('') : text), whole)
     .replace(/\b1100\s*MW\b/gi, '')
     .replace(HOUR_PATTERN, '');
   if (/\d/.test(withoutHours)) {
