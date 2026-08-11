@@ -17,7 +17,7 @@ const outDir = process.argv[2] ?? resolve(root, 'screenshots');
 const url = process.env.PREVIEW_URL ?? 'http://localhost:5173/dashboard-iphone/';
 
 const fixture = readFileSync(
-  resolve(root, 'src/utils/__fixtures__/pse-72h.json'),
+  resolve(root, 'src/utils/__fixtures__/pse-okno.json'),
   'utf8'
 );
 

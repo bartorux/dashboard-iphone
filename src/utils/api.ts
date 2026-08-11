@@ -1,5 +1,6 @@
 import { PSERawItem } from '../types';
-import { API_URL, DAYS_TO_FETCH } from './constants';
+import { API_URL, FORECAST_ROW_LIMIT } from './constants';
+import { daysToFetch } from './dayWindow';
 import { addDays, formatDateTimeApi, getStartOfToday } from './dateHelpers';
 
 /**
@@ -58,14 +59,14 @@ export async function fetchPSEData(): Promise<PSERawItem[]> {
   // timestamp: the filter compares strings, so a date-only upper bound sorts
   // *before* "…-06 00:00:00" and silently drops the last hour of the range.
   const from = formatDateTimeApi(new Date(startOfToday.getTime()));
-  const to = formatDateTimeApi(addDays(startOfToday, DAYS_TO_FETCH));
+  const to = formatDateTimeApi(addDays(startOfToday, daysToFetch(new Date())));
 
   const start = from.replace(' 00:00:00', ' 01:00:00');
 
   const filtered = await query(
     `$filter=${encodeURIComponent(
       `plan_dtime ge '${start}' and plan_dtime le '${to}'`
-    )}&$select=${FORECAST_FIELDS}&$orderby=plan_dtime&$first=200`
+    )}&$select=${FORECAST_FIELDS}&$orderby=plan_dtime&$first=${FORECAST_ROW_LIMIT}`
   );
   if (filtered) return filtered;
 

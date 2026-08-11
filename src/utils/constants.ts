@@ -27,7 +27,13 @@ export const SETTINGS_VERSION = 1;
 
 export const HOUR_MS = 60 * 60 * 1000;
 
-export const DAYS_TO_FETCH = 3;
+/**
+ * Row cap on the forecast query. PSE truncates silently past it, so it has to
+ * clear the widest window `visibleDayOffsets` can produce — five working days
+ * over a weekend and a run of holidays — with room to spare. At 24 rows a day,
+ * 400 covers sixteen calendar days against a worst case of about eight.
+ */
+export const FORECAST_ROW_LIMIT = 400;
 
 /**
  * The operator may refrain from declaring a call period despite the reserve
@@ -39,4 +45,3 @@ export const CALL_PERIOD_EXEMPTION_MW = 1100;
 
 export const TREND_STABLE_THRESHOLD = 10;
 
-export const DAY_NAMES = ['Dziś', 'Jutro', 'Pojutrze'] as const;

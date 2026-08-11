@@ -14,7 +14,7 @@ const outDir = process.argv[2] ?? resolve(root, 'screenshots');
 const url = process.env.PREVIEW_URL ?? 'http://localhost:5173/dashboard-iphone/';
 
 const fixture = readFileSync(
-  resolve(root, 'src/utils/__fixtures__/pse-72h.json'),
+  resolve(root, 'src/utils/__fixtures__/pse-okno.json'),
   'utf8'
 );
 
@@ -72,11 +72,11 @@ await capture('settings', {
   after: (page) => page.getByRole('button', { name: 'Ustawienia' }).click(),
 });
 await capture('day-after-tomorrow', {
-  after: (page) => page.getByRole('tab', { name: /Pojutrze/ }).click(),
+  after: (page) => page.getByRole('tab').nth(2).click(),
 });
 await capture('tomorrow-dark', {
   colorScheme: 'dark',
-  after: (page) => page.getByRole('tab', { name: /Jutro/ }).click(),
+  after: (page) => page.getByRole('tab').nth(1).click(),
 });
 
 await browser.close();

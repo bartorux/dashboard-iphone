@@ -8,6 +8,7 @@ import {
   upcoming,
   worstRisk,
 } from './callPeriod';
+import { weekdayOf } from './dateHelpers';
 import { DEFAULT_RED_THRESHOLD } from './constants';
 import { marginDistribution, standingFor } from './history';
 
@@ -60,20 +61,6 @@ export interface DayFacts {
  * person's saved thresholds — this is deliberately the default, not a setting.
  */
 export const NEAR_THRESHOLD_MW = DEFAULT_RED_THRESHOLD;
-
-const weekdayFormat = new Intl.DateTimeFormat('pl-PL', {
-  weekday: 'short',
-  timeZone: 'UTC',
-});
-
-function weekdayOf(businessDate: string): string {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(businessDate);
-  if (!match) return '';
-  const [, year, month, day] = match;
-  return weekdayFormat.format(
-    new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)))
-  );
-}
 
 function countStanding(
   margins: Array<{ point: PSEDataPoint; margin: number }>,

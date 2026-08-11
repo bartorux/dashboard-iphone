@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertRange } from '../types';
-import { DAY_NAMES } from '../utils/constants';
+import { dayLabel } from '../utils/dayWindow';
 import { AlertIcon, CheckIcon } from './icons';
 
 interface AlertsPanelProps {
@@ -37,7 +37,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
   currentDayOffset,
   hasData,
 }) => {
-  const dayName = DAY_NAMES[currentDayOffset as 0 | 1 | 2] ?? '';
+  const dayName = dayLabel(currentDayOffset);
   const hours = ranges.reduce((sum, range) => sum + range.hours, 0);
 
   return (

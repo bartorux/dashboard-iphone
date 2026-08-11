@@ -27,7 +27,10 @@ describe('fetchPSEData', () => {
     // Bug 1.1: date-only bounds excluded "2026-08-06 00:00:00" through string
     // comparison, permanently cutting the last hour of the third day
     expect(url).toContain("ge '2026-08-03 01:00:00'");
-    expect(url).toContain("le '2026-08-06 00:00:00'");
+    // Monday, so the five working days on offer run Mon-Fri and the window ends
+    // at midnight after Friday. The upper bound follows the day window rather
+    // than a fixed count, or the last tab would have no data behind it.
+    expect(url).toContain("le '2026-08-08 00:00:00'");
     expect(url).toContain('$orderby=plan_dtime');
   });
 

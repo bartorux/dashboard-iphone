@@ -1,9 +1,7 @@
 import React, { useMemo } from 'react';
 import { PSEDataPoint } from '../types';
-import {
-  DAY_NAMES,
-  TREND_STABLE_THRESHOLD,
-} from '../utils/constants';
+import { TREND_STABLE_THRESHOLD } from '../utils/constants';
+import { dayLabel } from '../utils/dayWindow';
 import { getValidMargins, safeAvg, classifyMargin } from '../utils/dataTransform';
 import { STATUS_TEXT } from '../utils/status';
 import { usePersistentFlag } from '../hooks/usePersistentFlag';
@@ -138,7 +136,7 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
     };
   }, [comparison]);
 
-  const dayName = DAY_NAMES[currentDayOffset as 0 | 1 | 2] ?? '';
+  const dayName = dayLabel(currentDayOffset);
 
   return (
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
