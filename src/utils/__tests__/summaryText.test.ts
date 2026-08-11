@@ -64,6 +64,15 @@ describe('prompt bez wiersza TREŚĆ', () => {
     [],
     new Date('2026-08-09T00:00:00Z')
   );
+  // Narrow but positive: one fact, which the headline takes. Counting it as
+  // something to explain left TREŚĆ with the verdict again — published as the
+  // same hour in the headline and the body, and the verdict in both body and
+  // outlook.
+  const waski = buildFacts(
+    [hourOn('2026-08-10', 19, { reserve: 2100, required: 2000 })],
+    [],
+    new Date('2026-08-09T00:00:00Z')
+  );
   const cos = buildFacts(
     [hourOn('2026-08-10', 19, { reserve: 800, required: 2000 })],
     [],
@@ -82,6 +91,14 @@ describe('prompt bez wiersza TREŚĆ', () => {
     // The three-line preamble has to go with it, or the prompt contradicts
     // itself about how many lines it wants.
     expect(prompt).not.toContain('Dokładnie trzy wiersze');
+  });
+
+  it('drops it for a narrow margin too, which is one fact and no more', () => {
+    expect(waski[0].nearThreshold).toBeGreaterThan(0);
+    expect(waski[0].risk).toBe('none');
+
+    const prompt = buildPrompt(waski, 30, new Date('2026-08-09T10:00:00Z'));
+    expect(prompt).toContain('Dokładnie DWA wiersze');
   });
 
   it('keeps it when a day carries grounds', () => {
