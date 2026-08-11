@@ -31,6 +31,37 @@ describe('useSummary', () => {
     expect(result.current?.headline).toBe(fresh.headline);
   });
 
+  /*
+   * The layer that took the card off production once already.
+   *
+   * Either line beneath the headline may be empty, depending on the shape the
+   * prompt asked for — TREŚĆ on a quiet period with nothing to explain, DALEJ on
+   * a quiet period with a cause, since there the verdict belongs in the headline.
+   * The generator and the validator both know that; this guard is the third and
+   * last to be told, and the time it was not, a perfectly good summary published
+   * and the card silently was not there.
+   */
+  it.each([
+    ['no body', { ...fresh, body: '' }],
+    ['no outlook', { ...fresh, outlook: '' }],
+  ])('shows a summary with %s', async (_label, payload) => {
+    respondWith(payload);
+    const { result } = renderHook(() => useSummary(NOW).summary);
+
+    await waitFor(() => expect(result.current).not.toBeNull());
+    expect(result.current?.headline).toBe(fresh.headline);
+  });
+
+  it('refuses a headline with nothing under it', async () => {
+    // Empty in pairs is the one combination no shape ever asks for, and a card
+    // showing only its own answer would be thinner than the fields promise.
+    respondWith({ ...fresh, body: '', outlook: '' });
+    const { result } = renderHook(() => useSummary(NOW).summary);
+
+    await new Promise((done) => setTimeout(done, 10));
+    expect(result.current).toBeNull();
+  });
+
   it('hides a summary too old to describe the same day', async () => {
     respondWith({
       ...fresh,

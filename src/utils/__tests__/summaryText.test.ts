@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { buildPrompt, parseSummary, validateSummary } from '../summaryText';
+import {
+  INSTRUCTION,
+  buildPrompt,
+  parseSummary,
+  swap,
+  validateSummary,
+} from '../summaryText';
 import { assessmentKey, buildFacts } from '../summaryFacts';
 import { makePoint } from '../../test/factories';
 
@@ -125,14 +131,52 @@ describe('prompt bez wiersza TREŚĆ', () => {
 
     const prompt = buildPrompt(bezwietrznie, 30, new Date('2026-08-09T10:00:00Z'));
 
-    expect(prompt).not.toContain('Dokładnie DWA wiersze');
-    // The middle line has ONE job here. Given the general two-sentence brief
-    // instead, v27 filled it with the verdict and never mentioned the wind —
-    // published as "nie ma podstaw do przywołania" in both TREŚĆ and DALEJ.
-    expect(prompt).toContain('TREŚĆ: DWA zdania o wskazanej godzinie');
-    expect(prompt).toContain('ZAWSZE podaj DZIEŃ przy godzinie');
-    // Not the general brief, which is what let the verdict back in.
+    // Answer first: the headline states plainly that nothing is coming, and the
+    // cause follows as detail. The arrangement this replaced forbade the
+    // headline from saying it, so it reached for "rezerwa spada najniżej" and
+    // the two lines beneath spent their words taking that back.
+    expect(prompt).toContain('w tych dniach nie ma podstaw do przywołania');
+    expect(prompt).toContain('TREŚĆ: JEDNO zdanie o godzinie');
+    expect(prompt).toContain('ZAWSZE z dniem');
+    // Not the general brief, which is what let the verdict into the body.
     expect(prompt).not.toContain('TREŚĆ: DWA zdania. Każde ma nieść');
+  });
+
+  it('stops describing DALEJ once it has stopped asking for it', () => {
+    // Left in, the instruction went on explaining at length how to write a line
+    // it had just said not to write — and the examples there carry the very
+    // phrase the headline is now meant to own.
+    const history = Array.from({ length: 4 }, (_, day) =>
+      hourOn(`2026-08-0${day + 1}`, 19, { reserve: 6000, required: 2000 })
+    );
+    const bezwietrznie = buildFacts(
+      [hourOn('2026-08-10', 19, { reserve: 6000, required: 2000, wind: 400 })],
+      history,
+      new Date('2026-08-09T00:00:00Z')
+    );
+
+    const prompt = buildPrompt(bezwietrznie, 30, new Date('2026-08-09T10:00:00Z'));
+
+    expect(prompt).toContain('Wiersza DALEJ tym razem NIE MA');
+    expect(prompt).not.toContain('WZORZEC DLA DALEJ');
+    expect(prompt).not.toContain('DALEJ: jedno zdanie o kolejnych dniach');
+  });
+
+  it('throws rather than quietly leaving the instruction unchanged', () => {
+    // The failure this exists for: a replacement that matches nothing used to
+    // report success, and the run would publish the default shape while looking
+    // like it had applied the variant. A throw fails the job instead, which
+    // leaves the previous summary in place and raises a warning.
+    expect(() => swap('abc', 'nie ma tego', 'x')).toThrow(/Fragment instrukcji/);
+    expect(swap('abc', 'b', 'B')).toBe('aBc');
+  });
+
+  it('fails loudly if the instruction is reworded without the variants', () => {
+    // A replacement that matches nothing used to report success and publish the
+    // wrong shape. This is the guard that turns that into a failed run, which
+    // leaves the previous summary in place instead.
+    expect(INSTRUCTION).toContain('DALEJ: jedno zdanie o kolejnych dniach');
+    expect(INSTRUCTION).toContain('WZORZEC DLA DALEJ');
   });
 
   it('hands the verdict phrase over once, not once per day', () => {
@@ -226,11 +270,36 @@ describe('parseSummary', () => {
     expect(parseSummary('NAGŁÓWEK: Samotne zdanie.')).toBeNull();
     expect(parseSummary('zupelnie co innego')).toBeNull();
   });
+
+  it.each([
+    ['without DALEJ', 'NAGŁÓWEK: Pierwsze zdanie.\nTREŚĆ: Drugie zdanie.'],
+    ['without TREŚĆ', 'NAGŁÓWEK: Pierwsze zdanie.\nDALEJ: Trzecie zdanie.'],
+  ])('reads a two-line reply %s', (_label, text) => {
+    // Both shapes are asked for by design — which line is dropped depends on
+    // whether the quiet period has a cause to explain. Refusing either here
+    // would throw away a perfectly good answer and freeze the card.
+    expect(parseSummary(text)).not.toBeNull();
+  });
 });
 
 describe('validateSummary', () => {
   it('accepts prose whose only digits are hours we computed', () => {
     expect(validateSummary(good, HOURS)).toEqual({ ok: true });
+  });
+
+  it.each([
+    ['an empty body', { ...good, body: '' }],
+    ['an empty outlook', { ...good, outlook: '' }],
+  ])('accepts %s, since each shape drops one', (_label, summary) => {
+    expect(validateSummary(summary, HOURS)).toEqual({ ok: true });
+  });
+
+  it('refuses a headline with both lines beneath it empty', () => {
+    // No shape ever asks for that, and it is the one combination the pairwise
+    // rule above would otherwise let through.
+    expect(
+      validateSummary({ ...good, body: '', outlook: '' }, HOURS)
+    ).toMatchObject({ ok: false });
   });
 
   it('lets the 1100 MW threshold through, since the facts hand it over', () => {

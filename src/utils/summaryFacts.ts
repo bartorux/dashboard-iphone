@@ -159,6 +159,7 @@ export function buildFacts(
       );
 
       const ranges = callPeriodRanges(points, now);
+      const risk = worstRisk(ranges, points, now);
 
       // Hours that keep a positive margin but only just — and only those the
       // rules could apply to, so a night hour never turns up in a sentence
@@ -184,7 +185,7 @@ export function buildFacts(
                   margins.length
               )
             : null,
-        risk: worstRisk(ranges, points, now),
+        risk,
         ranges,
         belowTypical: countStanding(margins, distribution, 'below'),
         aboveTypical: countStanding(margins, distribution, 'above'),
@@ -200,7 +201,12 @@ export function buildFacts(
         // hard hour; computing it everywhere would put a cause under days that
         // have no effect to explain.
         drivers: worst
-          ? describeDrivers(explainHour(worst.point, norms.get(worst.point.hourLabel)))
+          ? describeDrivers(
+              explainHour(worst.point, norms.get(worst.point.hourLabel)),
+              // On a day the regulation has nothing to say about, the 30-day
+              // standing printed beneath already carries the "but".
+              risk !== 'none'
+            )
           : null,
         worstStanding: worst
           ? standingFor(worst.margin, distribution.get(worst.point.hourLabel))

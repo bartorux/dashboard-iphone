@@ -202,7 +202,19 @@ function wordFor(driver: Driver): string {
  * Null rather than "wszystko typowe": a line saying nothing is a line the model
  * will find a way to repeat.
  */
-export function describeDrivers(explanation: HourExplanation): string | null {
+export function describeDrivers(
+  explanation: HourExplanation,
+  /**
+   * Whether the clause may carry what is holding the margin up.
+   *
+   * Off on a day with no grounds, where the 30-day standing beside it already
+   * plays that part: two reassurances against one worry turned the sentence into
+   * a see-saw — "najciaśniej… ale ubytki nisko… ale i tak typowo" — balanced to
+   * the point of saying nothing. Where the regulation does have something to
+   * say, the trade-off is the substance and stays.
+   */
+  includeCounterweight = true
+): string | null {
   if (explanation.worse.length === 0) return null;
 
   /*
@@ -219,11 +231,13 @@ export function describeDrivers(explanation: HourExplanation): string | null {
    * Ordinary demand is still worth saying when nothing else is holding the
    * margin up, since then it is the whole of the good news.
    */
-  const counterweight = explanation.better
-    ? `w drugą stronę ${wordFor(explanation.better)}`
-    : explanation.demandTypical
-      ? 'zapotrzebowanie typowe'
-      : null;
+  const counterweight = !includeCounterweight
+    ? null
+    : explanation.better
+      ? `w drugą stronę ${wordFor(explanation.better)}`
+      : explanation.demandTypical
+        ? 'zapotrzebowanie typowe'
+        : null;
 
   const clause = explanation.worse.map(wordFor).join(', ');
   return counterweight ? `${clause}; ${counterweight}` : clause;
