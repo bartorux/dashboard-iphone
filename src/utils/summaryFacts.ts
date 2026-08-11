@@ -11,7 +11,7 @@ import {
 import { weekdayOf } from './dateHelpers';
 import { visibleBusinessDates } from './dayWindow';
 import { DEFAULT_RED_THRESHOLD } from './constants';
-import { marginDistribution, standingFor } from './history';
+import { Standing, marginDistribution, standingFor } from './history';
 import { describeDrivers, explainHour, generationNorms } from './generationNorm';
 
 export interface DayFacts {
@@ -62,6 +62,17 @@ export interface DayFacts {
    * numbers to compare.
    */
   drivers: string | null;
+  /**
+   * Where the day's hardest hour sits against the same hour over 30 days.
+   *
+   * Separate from `belowTypical`/`aboveTypical`, which count hours across the
+   * whole day and say nothing about the one hour being discussed. Without it the
+   * middle line had exactly one fact to work with and came back as a
+   * transcription of it; this is the second, genuinely different thing that can
+   * be said about the same hour — that being the tightest hour of the week does
+   * not by itself make it unusual.
+   */
+  worstStanding: Standing;
 }
 
 /**
@@ -191,6 +202,9 @@ export function buildFacts(
         drivers: worst
           ? describeDrivers(explainHour(worst.point, norms.get(worst.point.hourLabel)))
           : null,
+        worstStanding: worst
+          ? standingFor(worst.margin, distribution.get(worst.point.hourLabel))
+          : 'unknown',
       };
     });
 }
@@ -468,6 +482,19 @@ export function renderFacts(facts: DayFacts[], days: number): string {
      */
     if (isLead && day.drivers) {
       lines.push(`    dlaczego akurat ta godzina: ${day.drivers}`);
+
+      // The second thing worth saying about the same hour, and the one that
+      // stops the middle line being a transcription of the first: tightest of
+      // the week and entirely ordinary for the time of day are both true at
+      // once, and only the pair of them describes the evening honestly.
+      const STANDING_WORD: Record<Standing, string | null> = {
+        below: `poniżej typowego zakresu dla tej godziny z ostatnich ${days} dni`,
+        typical: `w typowym zakresie dla tej godziny z ostatnich ${days} dni`,
+        above: `powyżej typowego zakresu dla tej godziny z ostatnich ${days} dni`,
+        unknown: null,
+      };
+      const standing = STANDING_WORD[day.worstStanding];
+      if (standing) lines.push(`    sama ta godzina wypada ${standing}`);
     }
 
     for (const range of day.ranges) {

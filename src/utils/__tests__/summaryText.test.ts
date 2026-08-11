@@ -21,9 +21,12 @@ function hourOn(
 
 const HOURS = new Set(['19:00', '20:00']);
 
+// The body names its day. Under the rule added after a published run said
+// "O 20:00 wiatr spada poniżej normy" on a Tuesday about Thursday, a summary
+// without one is not a valid summary.
 const good = {
   headline: 'Nie ma podstaw do ogłoszenia okresu przywołania.',
-  body: 'Rezerwa pokrywa wymaganą wartość. Najciaśniej będzie o 20:00.',
+  body: 'Rezerwa pokrywa wymaganą wartość. Najciaśniej będzie w czwartek o 20:00.',
   outlook: 'W kolejnych dniach margines pozostaje bezpieczny.',
 };
 
@@ -126,8 +129,10 @@ describe('prompt bez wiersza TREŚĆ', () => {
     // The middle line has ONE job here. Given the general two-sentence brief
     // instead, v27 filled it with the verdict and never mentioned the wind —
     // published as "nie ma podstaw do przywołania" in both TREŚĆ and DALEJ.
-    expect(prompt).toContain('TREŚĆ: JEDNO zdanie, wyłącznie o tym, DLACZEGO');
-    expect(prompt).not.toContain('TREŚĆ: DWA zdania');
+    expect(prompt).toContain('TREŚĆ: DWA zdania o wskazanej godzinie');
+    expect(prompt).toContain('ZAWSZE podaj DZIEŃ przy godzinie');
+    // Not the general brief, which is what let the verdict back in.
+    expect(prompt).not.toContain('TREŚĆ: DWA zdania. Każde ma nieść');
   });
 
   it('hands the verdict phrase over once, not once per day', () => {
@@ -284,7 +289,7 @@ describe('validateSummary', () => {
     // text sat frozen while each rerun looked like "no change".
     const correct = {
       ...good,
-      body: 'O 20:00 margines jest ujemny, więc rezerwa nie pokrywa wymaganego poziomu.',
+      body: 'W czwartek o 20:00 margines jest ujemny, więc rezerwa nie pokrywa wymaganego poziomu.',
     };
 
     expect(validateSummary(correct, HOURS)).toEqual({ ok: true });
@@ -333,9 +338,41 @@ describe('validateSummary', () => {
     expect(validateSummary(stripped, HOURS).ok).toBe(false);
   });
 
+  it('rejects an hour in the body with no day attached', () => {
+    // Published on the first run of the cause layer: "O 20:00 wiatr spada
+    // poniżej normy…" — written on a Tuesday about Thursday, with the day tabs
+    // directly beneath the card. A card about timing must not leave the day to
+    // be guessed.
+    const verdict = validateSummary(
+      { ...good, body: 'O 20:00 wiatr spada poniżej normy.' },
+      HOURS
+    );
+
+    expect(verdict).toMatchObject({ ok: false, reason: expect.stringContaining('dnia') });
+  });
+
+  it.each(['w czwartek o 20:00', 'dziś o 20:00', 'jutro o 20:00'])(
+    'accepts %s',
+    (fragment) => {
+      expect(
+        validateSummary({ ...good, body: `Najciaśniej ${fragment}.` }, HOURS)
+      ).toEqual({ ok: true });
+    }
+  );
+
+  it('leaves a body without any hour alone', () => {
+    // The rule is about an hour missing its day, not about demanding a day.
+    expect(
+      validateSummary(
+        { ...good, body: 'Rezerwa pokrywa wymagany poziom przez cały okres.' },
+        HOURS
+      )
+    ).toEqual({ ok: true });
+  });
+
   it('rejects an hour that is not among the facts', () => {
     const verdict = validateSummary(
-      { ...good, body: 'Najciaśniej będzie o 03:00.' },
+      { ...good, body: 'W czwartek najciaśniej będzie o 03:00.' },
       HOURS
     );
     expect(verdict.ok).toBe(false);

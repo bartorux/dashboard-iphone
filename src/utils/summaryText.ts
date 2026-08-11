@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 28;
+export const PROMPT_VERSION = 29;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -220,11 +220,16 @@ cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 NAGŁÓWEK: jedno zdanie o tym, co w tym okresie jest najciaśniejsze albo jak
 wypada on na tle ostatnich dni. NIE stwierdzaj tu braku podstaw — to należy
 do DALEJ.
-TREŚĆ: JEDNO zdanie, wyłącznie o tym, DLACZEGO wskazana godzina jest
-najciaśniejsza — co obniża rezerwę i co ją trzyma. Powód opisz SŁOWAMI z faktów
-(„wiatr poniżej normy"), bez liczb. Nie zgaduj przyczyny, której w faktach nie
-ma: pogoda, awarie i remonty to domysły, dopóki fakty ich nie nazywają.
-O tym, czy są podstawy do przywołania, pisze DALEJ i tylko DALEJ.`;
+TREŚĆ: DWA zdania o wskazanej godzinie i o niczym innym.
+- Pierwsze: DLACZEGO akurat ona jest najciaśniejsza — co obniża rezerwę i co ją
+  trzyma. Napisz to jako zależność, nie jako wyliczankę czynników.
+- Drugie: jak ta godzina wypada na tle tej samej pory z ostatnich dni.
+- ZAWSZE podaj DZIEŃ przy godzinie („w czwartek o 20:00"). Sama godzina zostanie
+  odczytana jako dzisiejsza, a zwykle nie jest.
+- Powód opisz SŁOWAMI z faktów („wiatr poniżej normy"), bez liczb. Nie zgaduj
+  przyczyny, której w faktach nie ma: pogoda, awarie i remonty to domysły,
+  dopóki fakty ich nie nazywają.
+- O tym, czy są podstawy do przywołania, pisze DALEJ i tylko DALEJ.`;
 
 /**
  * The two-line format, used when no day has grounds and nothing explains the
@@ -434,6 +439,23 @@ export function validateSummary(
     )
   ) {
     return { ok: false, reason: 'mgliste określenie pory zamiast godziny' };
+  }
+
+  /*
+   * An hour with no day attached is read as today's, and usually is not.
+   *
+   * Published on the first run of the cause layer: "O 20:00 wiatr spada poniżej
+   * normy…", on a Tuesday, about Thursday. The day tabs sit directly beneath the
+   * card, so an unqualified hour points the reader at the wrong one — and the
+   * card exists to answer a question about timing.
+   *
+   * Only the body is checked. The headline names the day when it has one to
+   * name, and the outlook speaks about the days collectively.
+   */
+  const DAY_WORD =
+    /poniedział|wtor|środ|czwart|piąt|sobot|niedziel|dziś|dzisiaj|jutro/i;
+  if (/\d{1,2}:\d{2}/.test(summary.body) && !DAY_WORD.test(summary.body)) {
+    return { ok: false, reason: 'godzina w treści bez nazwy dnia' };
   }
 
   // A calque of "thin margin"; in Polish a margin is narrow, never thin. It

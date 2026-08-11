@@ -427,6 +427,29 @@ describe('renderFacts', () => {
     );
   });
 
+  it('says how the named hour compares with the same hour before', () => {
+    /*
+     * History where 20:00 sits far above the rest of the day, so the standing
+     * can only come out right if it is read for the hour being discussed. With a
+     * flat history every hour shares one band and looking up the wrong one would
+     * give the same answer — which is how this went untested at first.
+     */
+    const history = ['2026-08-01', '2026-08-02', '2026-08-03', '2026-08-04']
+      .flatMap((date) => dayOf(date, 5000))
+      .map((point) =>
+        point.hourLabel === '20:00' ? { ...point, reserve: 9000 } : point
+      );
+
+    const tekst = renderFacts(
+      buildFacts([...windlessDay('2026-08-10', 6000)], history, BEFORE_ALL),
+      30
+    );
+
+    // Margin 3500 at 20:00 against a 7000 band for that hour — below. Against
+    // the 3000 band the rest of the day carries, it would read as above.
+    expect(tekst).toContain('sama ta godzina wypada poniżej typowego zakresu');
+  });
+
   it('offers no cause when the mix is unremarkable', () => {
     // A line saying everything is normal is a line the model will find a way to
     // repeat.
