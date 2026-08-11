@@ -346,6 +346,46 @@ describe('validateSummary', () => {
     });
   });
 
+  describe('dzien tygodnia w liczbie mnogiej', () => {
+    it('refuses the distributive form', () => {
+      /*
+       * Published once in sixty-one texts: "W środy, piątki i poniedziałek
+       * 17 sierpnia margines jest wąski". That reads as every Wednesday and
+       * every Friday, while the window holds exactly one of each — and the
+       * reader is here to find out about a particular evening.
+       */
+      const mnoga = {
+        ...good,
+        outlook: 'W środy i piątki margines jest wąski.',
+      };
+
+      expect(validateSummary(mnoga, HOURS)).toMatchObject({
+        ok: false,
+        reason: 'dzień tygodnia w liczbie mnogiej',
+      });
+    });
+
+    it.each([
+      ['w środę i piątek', 'W środę i piątek margines jest wąski.'],
+      ['do środy', 'Do środy margines pozostaje szeroki.'],
+      ['od soboty', 'Od soboty margines rośnie.'],
+    ])('leaves the singular alone: %s', (_label, outlook) => {
+      // "środy" and "soboty" are the genitive singular as well as the plural,
+      // so the rule hangs on the preposition — banning the bare word would
+      // refuse correct Polish.
+      expect(validateSummary({ ...good, outlook }, HOURS)).toEqual({ ok: true });
+    });
+
+    it('catches the form that takes "we"', () => {
+      expect(
+        validateSummary(
+          { ...good, outlook: 'We wtorki margines jest wąski.' },
+          HOURS
+        )
+      ).toMatchObject({ ok: false });
+    });
+  });
+
   it('refuses a headline with both lines beneath it empty', () => {
     // No shape ever asks for that, and it is the one combination the pairwise
     // rule above would otherwise let through.
