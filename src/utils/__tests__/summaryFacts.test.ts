@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildFacts, keyPoint, renderFacts } from '../summaryFacts';
+import { buildFacts, keyPoint, leadingDay, renderFacts } from '../summaryFacts';
 import { visibleBusinessDates } from '../dayWindow';
 import { makePoint } from '../../test/factories';
 
@@ -26,6 +26,31 @@ function dayOf(businessDate: string, reserve: number, required = 2000) {
 }
 
 const BEFORE_ALL = new Date('2026-08-09T00:00:00Z');
+
+/**
+ * Past days carrying the factory's default mix, so `generationNorms` has enough
+ * samples per hour to produce a median. Without history the norm map is empty
+ * and no day can carry a cause at all — which is how the whole cause path once
+ * went untested while every assertion stayed green.
+ */
+const HISTORY_WITH_MIX = [
+  ...dayOf('2026-08-01', 5000),
+  ...dayOf('2026-08-02', 5000),
+  ...dayOf('2026-08-03', 5000),
+  ...dayOf('2026-08-04', 5000),
+];
+
+/**
+ * A day whose 20:00 is both its lowest hour and short of wind against that norm,
+ * so the hour the facts name is the hour the cause is computed for.
+ */
+function windlessDay(businessDate: string, reserve: number, evening = reserve - 500) {
+  return dayOf(businessDate, reserve).map((point) =>
+    point.hourLabel === '20:00'
+      ? { ...point, reserve: evening, wind: 400 }
+      : point
+  );
+}
 
 describe('buildFacts', () => {
   it('describes exactly the days the tabs offer, in order', () => {
@@ -254,6 +279,62 @@ describe('buildFacts', () => {
   });
 });
 
+describe('leadingDay', () => {
+  it('prefers grounds over a merely tight day', () => {
+    const facts = buildFacts(
+      [...dayOf('2026-08-10', 2100), ...dayOf('2026-08-11', 800)],
+      [],
+      BEFORE_ALL
+    );
+
+    expect(leadingDay(facts)?.businessDate).toBe('2026-08-11');
+  });
+
+  it.each([
+    ['grounds on the later day', 2100, 800],
+    ['grounds on the earlier day', 800, 2100],
+    ['a narrow margin on one of them', 8000, 2100],
+    ['nothing at all', 8000, 7000],
+  ])(
+    'never picks a different day than the headline does: %s',
+    (_label, first, second) => {
+      // The cause line hangs off leadingDay while the headline comes from
+      // keyPoint. If the two ever disagree, the card explains one day while
+      // leading with another — which no reader would be able to make sense of.
+      const facts = buildFacts(
+        [...dayOf('2026-08-10', first), ...dayOf('2026-08-11', second)],
+        [],
+        BEFORE_ALL
+      );
+
+      const naglowek = keyPoint(facts);
+      const wskazany = leadingDay(facts)?.businessDate;
+
+      if (naglowek.includes('2026-08-10') || naglowek.includes('2026-08-11')) {
+        expect(naglowek).toContain(wskazany);
+      }
+    }
+  );
+
+  it('falls back to the tightest day when nothing is happening', () => {
+    const facts = buildFacts(
+      [
+        ...dayOf('2026-08-10', 8000),
+        ...dayOf('2026-08-11', 6000),
+        ...dayOf('2026-08-12', 9000),
+      ],
+      [],
+      BEFORE_ALL
+    );
+
+    expect(leadingDay(facts)?.businessDate).toBe('2026-08-11');
+  });
+
+  it('has nothing to lead with when there are no readings', () => {
+    expect(leadingDay([])).toBeNull();
+  });
+});
+
 describe('renderFacts', () => {
   it('stays compact and free of the raw payload', () => {
     const data = [
@@ -273,17 +354,37 @@ describe('renderFacts', () => {
     expect(text.length).toBeLessThan(1200);
   });
 
-  it('names the hard hour only on a day that has one', () => {
+  it('names one hour on a calm week, not one per day', () => {
     // Every day used to carry "najniższy margines … o HH:MM", quiet days
     // included. Harmless at three days; at five it handed the model five hours
     // and the DALEJ line came back as a list of four, each copied from these
-    // lines. On a comfortable day the lowest hour is not a hard hour.
-    const spokojny = buildFacts(
-      [hourOn('2026-08-10', 19, { reserve: 6000, required: 2000 })],
+    // lines.
+    //
+    // The rule is no longer "only days that have a hard hour" — the leading day
+    // keeps its hour even on a calm week, because on such a week it is the only
+    // concrete thing there is to say. What must not come back is the LIST, so
+    // that is what this measures: five comfortable days, one hour between them.
+    const spokojnyTydzien = buildFacts(
+      [
+        ...dayOf('2026-08-10', 8000),
+        ...dayOf('2026-08-11', 8000),
+        ...dayOf('2026-08-12', 8000),
+        ...dayOf('2026-08-13', 7000),
+        ...dayOf('2026-08-14', 8000),
+      ],
       [],
       BEFORE_ALL
     );
-    expect(renderFacts(spokojny, 30)).not.toContain('o 19:00');
+    const tekst = renderFacts(spokojnyTydzien, 30);
+    const godziny = tekst.match(/ o \d\d:00/g) ?? [];
+
+    expect(godziny).toHaveLength(1);
+
+    // And it belongs to the tightest day, not merely to the first one — a
+    // single hour attached to the wrong day would pass the count above.
+    const blok = tekst.split(/^(?=\d{4}-\d{2}-\d{2} \()/m);
+    const czwartek = blok.find((part) => part.startsWith('2026-08-13'));
+    expect(czwartek).toMatch(/ o \d\d:00/);
 
     // A narrow but positive margin is worth pointing at, and keeps its hour.
     const waski = buildFacts(
@@ -300,6 +401,50 @@ describe('renderFacts', () => {
       BEFORE_ALL
     );
     expect(renderFacts(podstawy, 30)).toContain('o 19:00');
+  });
+
+  it('explains one day, however many could be explained', () => {
+    // Every day here is short of wind in the evening, so every one of them COULD
+    // carry a cause. Five causes is the list all over again, in a new slot.
+    const data = [
+      ...windlessDay('2026-08-10', 8000),
+      ...windlessDay('2026-08-11', 8000),
+      ...windlessDay('2026-08-12', 6000),
+      ...windlessDay('2026-08-13', 8000),
+      ...windlessDay('2026-08-14', 8000),
+    ];
+
+    const tekst = renderFacts(
+      buildFacts(data, HISTORY_WITH_MIX, BEFORE_ALL),
+      30
+    );
+
+    expect(tekst.match(/dlaczego akurat ta godzina/g)).toHaveLength(1);
+    // On the tightest day, which is the one the headline is about.
+    const blok = tekst.split(/^(?=\d{4}-\d{2}-\d{2} \()/m);
+    expect(blok.find((part) => part.startsWith('2026-08-12'))).toContain(
+      'wiatr wyraźnie poniżej normy'
+    );
+  });
+
+  it('offers no cause when the mix is unremarkable', () => {
+    // A line saying everything is normal is a line the model will find a way to
+    // repeat.
+    const data = [...dayOf('2026-08-10', 8000), ...dayOf('2026-08-11', 6000)];
+
+    expect(
+      renderFacts(buildFacts(data, HISTORY_WITH_MIX, BEFORE_ALL), 30)
+    ).not.toContain('dlaczego akurat ta godzina');
+  });
+
+  it('offers no cause when history came without the mix', () => {
+    // The browser fetches the narrow rows; only the summary job asks for the
+    // wide ones. Without them every lookup misses and nothing is claimed.
+    const data = [...windlessDay('2026-08-10', 6000)];
+
+    expect(renderFacts(buildFacts(data, [], BEFORE_ALL), 30)).not.toContain(
+      'dlaczego akurat ta godzina'
+    );
   });
 
   it('says so plainly when there is nothing ahead', () => {

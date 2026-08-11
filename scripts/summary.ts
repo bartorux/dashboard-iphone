@@ -11,11 +11,23 @@
  * not replace a good summary with a bad one, nor fail a scheduled run for
  * something as ordinary as the model being briefly unavailable.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { fetchPSEData, fetchPSEHistory } from '../src/utils/api';
+import {
+  HISTORY_FIELDS_WITH_MIX,
+  fetchPSEData,
+  fetchPSEHistory,
+} from '../src/utils/api';
 import { processData } from '../src/utils/dataTransform';
+import { visibleBusinessDates } from '../src/utils/dayWindow';
+import {
+  EMPTY_LOG,
+  appendEntry,
+  parseLog,
+  snapshotDays,
+} from '../src/utils/forecastLog';
+import type { PSEDataPoint } from '../src/types';
 import { assessmentKey, buildFacts, renderFacts } from '../src/utils/summaryFacts';
 import {
   PROMPT_VERSION,
@@ -31,6 +43,7 @@ const MODEL = 'gemini-3.5-flash-lite';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const target = resolve(root, 'public/summary.json');
+const logTarget = resolve(root, 'data/forecast-log.json');
 
 interface SummaryFile extends Summary {
   /** When the text was written, so the card can show its age. */
@@ -56,13 +69,59 @@ function readExisting(): SummaryFile | null {
   }
 }
 
+/**
+ * Appends what the forecast says right now, unless it repeats the last entry.
+ *
+ * Lives outside `public/` on purpose: nothing here is served to a browser, so
+ * phones never download it and the publish step stays keyed on summary.json
+ * alone — a quiet hour must not churn the service worker.
+ */
+function recordForecast(points: PSEDataPoint[], at: Date): void {
+  let stored = EMPTY_LOG;
+  try {
+    stored = parseLog(JSON.parse(readFileSync(logTarget, 'utf8')));
+  } catch {
+    // No log yet, or an unreadable one. Either way this run starts a fresh
+    // series rather than failing: the summary is the product, this is a record.
+  }
+
+  const entry = {
+    at: at.toISOString(),
+    days: snapshotDays(points, visibleBusinessDates(at)),
+  };
+
+  const next = appendEntry(stored, entry);
+  if (next === stored) {
+    console.log('Prognoza bez zmian wobec ostatniego wpisu — logu nie ruszam.');
+    return;
+  }
+
+  mkdirSync(dirname(logTarget), { recursive: true });
+  writeFileSync(logTarget, `${JSON.stringify(next, null, 2)}\n`);
+  console.log(`Zapisano migawke prognozy — wpisow w logu: ${next.entries.length}.`);
+}
+
 const [forecast, history] = await Promise.all([
   fetchPSEData(),
-  fetchPSEHistory(HISTORY_DAYS),
+  // With the mix, so the facts can say WHY an hour is tight. Only this job asks
+  // for the wider rows; the browser keeps the narrow ones.
+  fetchPSEHistory(HISTORY_DAYS, HISTORY_FIELDS_WITH_MIX),
 ]);
 
 const now = new Date();
-const facts = buildFacts(processData(forecast), processData(history), now);
+const points = processData(forecast);
+
+/*
+ * Recorded before anything else can end this run.
+ *
+ * Deliberately above the `facts.length === 0` exit and above the decideRun gate:
+ * the log has to be written every hour whether or not the model is called, or it
+ * grows holes exactly where nothing seemed to be happening — and "nothing was
+ * happening" is a claim the log is supposed to be able to settle.
+ */
+if (!dryRun) recordForecast(points, now);
+
+const facts = buildFacts(points, processData(history), now);
 
 if (facts.length === 0) {
   console.log('Brak godzin przed nami — zostawiam poprzednie podsumowanie.');

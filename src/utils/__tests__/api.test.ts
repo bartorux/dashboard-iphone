@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { fetchPSEData, fetchPSEHistory } from '../api';
+import {
+  HISTORY_FIELDS_WITH_MIX,
+  fetchPSEData,
+  fetchPSEHistory,
+} from '../api';
 
 const ok = (value: unknown[]) => ({
   ok: true,
@@ -165,5 +169,19 @@ describe('fetchPSEHistory', () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
 
     await expect(fetchPSEHistory()).resolves.toEqual([]);
+  });
+
+  it('adds the mix only when it is asked for', async () => {
+    // The summary script needs it to say why an hour is tight. Phones must not
+    // pay for that: this is the opt-in half of the guarantee asserted above.
+    const fetchMock = vi.fn().mockResolvedValue(ok([{ plan_dtime: 'x' }]));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await fetchPSEHistory(30, HISTORY_FIELDS_WITH_MIX);
+
+    const url = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
+    expect(url).toContain('fcst_wi_tot_gen');
+    expect(url).toContain('sum_unav_oper_cond');
+    expect(url).toContain('surplus_cap_avail_tso');
   });
 });

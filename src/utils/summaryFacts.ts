@@ -12,6 +12,7 @@ import { weekdayOf } from './dateHelpers';
 import { visibleBusinessDates } from './dayWindow';
 import { DEFAULT_RED_THRESHOLD } from './constants';
 import { marginDistribution, standingFor } from './history';
+import { describeDrivers, explainHour, generationNorms } from './generationNorm';
 
 export interface DayFacts {
   /** PSE's own label for the day, "YYYY-MM-DD". */
@@ -52,6 +53,15 @@ export interface DayFacts {
    * excludes, so naming one of them alongside it pointed at the wrong time.
    */
   nearestHour: string | null;
+  /**
+   * What made the day's hardest hour hard, in words — or null when nothing in
+   * the mix stands out and there is therefore nothing to explain.
+   *
+   * The clause is finished here rather than in the prompt, like every other
+   * conclusion on this path: the model is given the comparison, never the two
+   * numbers to compare.
+   */
+  drivers: string | null;
 }
 
 /**
@@ -115,6 +125,11 @@ export function buildFacts(
     marginDistribution(history).map((hour) => [hour.hourLabel, hour])
   );
 
+  // Empty unless the caller fetched history with the mix — the browser does not,
+  // and nothing here needs it to. Then every lookup misses and no day carries a
+  // cause, which is the same as before this existed.
+  const norms = generationNorms(history);
+
   return [...byDay.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .filter(([businessDate]) => days.includes(businessDate))
@@ -169,6 +184,13 @@ export function buildFacts(
                 entry.margin < tightest.margin ? entry : tightest
               ).point.hourLabel
             : null,
+        // Worked out for the hour the facts actually name, and for no other. The
+        // reason a day gets a hard hour is only interesting where there is a
+        // hard hour; computing it everywhere would put a cause under days that
+        // have no effect to explain.
+        drivers: worst
+          ? describeDrivers(explainHour(worst.point, norms.get(worst.point.hourLabel)))
+          : null,
       };
     });
 }
@@ -261,6 +283,40 @@ function stillAnnounceable(day: DayFacts): boolean {
   return day.ranges.some((range) => range.announceable);
 }
 
+/** The gravest verdict among a set of days, if any of them carries one. */
+function gravest(days: DayFacts[]): DayFacts | undefined {
+  return (
+    days.find((day) => day.risk === 'high') ??
+    days.find((day) => day.risk === 'moderate')
+  );
+}
+
+/**
+ * The one day the summary is really about.
+ *
+ * Shared with `keyPoint` so the text cannot lead with one day while the cause
+ * beneath it explains another. The order is the same: what is still open and
+ * grave, then a narrow margin, and failing both the tightest day in the window —
+ * on a calm week that last one is the only day with anything to say about it.
+ *
+ * Exactly one day is chosen, and that is the point. Handing every day its own
+ * cause is how the middle line came back four times today as a list.
+ */
+export function leadingDay(facts: DayFacts[]): DayFacts | null {
+  const risky = gravest(facts.filter(stillAnnounceable)) ?? gravest(facts);
+  if (risky) return risky;
+
+  const near = facts.find((day) => day.nearThreshold > 0);
+  if (near) return near;
+
+  const measured = facts.filter((day) => day.worstMargin !== null);
+  if (measured.length === 0) return null;
+
+  return measured.reduce((tightest, day) =>
+    (day.worstMargin as number) < (tightest.worstMargin as number) ? day : tightest
+  );
+}
+
 export function keyPoint(facts: DayFacts[]): string {
   /*
    * What can still change comes first.
@@ -276,12 +332,7 @@ export function keyPoint(facts: DayFacts[]): string {
    * disappears either way — the facts carry every day, so the model can mention
    * it regardless.
    */
-  const stillOpen = facts.filter(stillAnnounceable);
-  const gravest = (days: DayFacts[]) =>
-    days.find((day) => day.risk === 'high') ??
-    days.find((day) => day.risk === 'moderate');
-
-  const worst = gravest(stillOpen) ?? gravest(facts);
+  const worst = gravest(facts.filter(stillAnnounceable)) ?? gravest(facts);
 
   if (worst) {
     // Matched to the verdict, not simply the earliest. Ranges come back in
@@ -341,12 +392,27 @@ export function renderFacts(facts: DayFacts[], days: number): string {
   if (facts.length === 0) return 'Brak danych o pozostałych godzinach.';
 
   const lines: string[] = [keyPoint(facts), ''];
+  const lead = leadingDay(facts);
 
   for (const day of facts) {
     lines.push(
       `${day.businessDate} (${day.weekday}${day.workingDay ? ', roboczy' : ', wolny'}), ` +
         `godzin pozostało: ${day.hoursAhead}`
     );
+
+    /*
+     * Whether this day's hardest hour is worth putting in front of the model at
+     * all. Read twice below — for the hour and for its cause — so it is decided
+     * once here rather than kept in step in two places.
+     *
+     * The leading day always qualifies, even on a calm week. The rule this
+     * relaxes was written when EVERY day handed over an hour and the middle line
+     * came back as a list of four; one hour, on the one day the text is about,
+     * is not a list — and on a quiet week it is the only concrete thing there is
+     * to say.
+     */
+    const isLead = lead?.businessDate === day.businessDate;
+    const worthNaming = day.risk !== 'none' || day.nearThreshold > 0 || isLead;
 
     if (day.worstMargin !== null) {
       /*
@@ -362,8 +428,6 @@ export function renderFacts(facts: DayFacts[], days: number): string {
        * Removing the temptation rather than forbidding it, which is what worked
        * when the model kept reaching for words this prompt had shown it.
        */
-      const worthNaming = day.risk !== 'none' || day.nearThreshold > 0;
-
       lines.push(
         `  najniższy margines ${round(day.worstMargin)}` +
           (worthNaming ? ` o ${day.worstHour}` : '') +
@@ -372,6 +436,19 @@ export function renderFacts(facts: DayFacts[], days: number): string {
     }
 
     lines.push(`  stan: ${RISK_WORD[day.risk]}`);
+
+    /*
+     * The cause, for the leading day and no other.
+     *
+     * Restricted to one day on purpose. Every day's mix deviates from its own
+     * norm somehow, so offering all five would hand the model five causes and
+     * invite it to recite them — the failure this prompt has already been fixed
+     * for four times. One cause, attached to the day the text is already about,
+     * cannot become a list.
+     */
+    if (isLead && day.drivers) {
+      lines.push(`    dlaczego akurat ta godzina: ${day.drivers}`);
+    }
 
     for (const range of day.ranges) {
       lines.push(

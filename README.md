@@ -103,6 +103,32 @@ walidator i predykat `usable` w [useSummary.ts](src/hooks/useSummary.ts). Przeoc
 ostatniego zdjęło kartę z produkcji na `v3.28.0` — po stronie przeglądarki cały rekord uchodził za
 uszkodzony. Wyszło przypadkiem, przy próbie zrzutu ekranu.
 
+### Dlaczego, a nie tylko że
+
+Przez długi czas fakty nie zawierały **ani jednej liczby o generacji** — ani PV, ani wiatru, ani
+zapotrzebowania — mimo że wszystkie te pola są pobierane i rysowane na wykresie tuż niżej. Model
+dostawał werdykt i liczbę, po czym był proszony o coś ciekawego. Nie było z czego; stąd każda próba
+wyciśnięcia więcej kończyła się parafrazą werdyktu.
+
+Teraz najciaśniejsza godzina dnia wiodącego dostaje **porównanie miksu z medianą tej samej godziny
+z 30 dni** ([generationNorm.ts](src/utils/generationNorm.ts)) — i, jak wszystko na tej ścieżce,
+przychodzi do modelu jako gotowy wniosek słowami, nigdy jako dwie liczby do porównania.
+
+Czynniki są ważone **w megawatach, nie percentylem**. PV o 20:00 potrafi wypaść w 3. percentylu
+i nie ma to znaczenia przy 400 MW, gdy wiatru brakuje 800. Nazywane są najwyżej dwa pogarszające
+i **jeden trzymający margines w górze** — ten ostatni okazał się konieczny na prawdziwych danych:
+13 sierpnia o 20:00 wypadała najciaśniejsza godzina tygodnia, bo wiatru brakowało 766 MW, a mimo to
+było wygodnie, bo ubytki stały 845 MW poniżej normy. Sam pierwszy człon opisywałby wieczór, którego
+nie ma.
+
+Powód liczy się dla **jednego dnia — tego, którym prowadzi nagłówek**. Każdy dzień jakoś odbiega od
+swojej normy, więc podanie wszystkich pięciu byłoby tą samą wyliczanką w nowym miejscu. Wspólna
+funkcja `leadingDay` gwarantuje, że tekst nie tłumaczy jednego dnia, prowadząc innym.
+
+Z tego samego powodu dzień wiodący nazywa swoją godzinę **także w tygodniu spokojnym**. Reguła, którą
+to poluzowuje, powstała, gdy godzinę oddawał *każdy* dzień i wracała lista czterech; jedna godzina na
+jednym dniu nie jest listą, a w spokojny tydzień jest jedynym konkretem, jaki istnieje.
+
 **Żadna liczba w tekście nie pochodzi od modelu.** Instrukcja zakazuje cyfr poza godzinami
 `HH:MM`, a walidacja odrzuca tekst z liczbą, z godziną spoza faktów oraz z wielkością mocy zapisaną
 słownie — bo tak jeden przebieg obszedł zakaz, pisząc „granicy trzystu megawatów".
@@ -159,9 +185,36 @@ więc nie ma tam czego przemyśliwać.
 
 Zapytanie przy pięciu dobach ma około **10,4 tys. znaków** — sprawdzasz to bez klucza przez
 `npx tsx scripts/summary.ts --dry-run`. Zużycie ogranicza jednak nie długość, tylko **liczba
-wywołań: najwyżej 24 na dobę wobec 1000 w darmowym progu**, czyli 2,4%. Ograniczeniem jest
-harmonogram co godzinę, a nie treść, więc rozszerzenie okna z trzech dób na pięć nie ruszyło
-tej proporcji.
+wywołań**, a tę wyznacza harmonogram co godzinę, nie treść: rozszerzenie okna z trzech dób na pięć
+nie ruszyło jej wcale.
+
+Odczytane z konsoli 11 sierpnia: **RPM 6/15, TPM 3,59 tys./250 tys., RPD 54/500**. Ta ostatnia liczba
+jest wyższa niż 24 przebiegi harmonogramu, bo doszły ręczne uruchomienia zadania — warto o tym
+pamiętać, zanim uzna się dobę za spokojną. Wcześniej stało tu „24 na dobę wobec 1000", i obie te
+liczby brały się z rozumowania, nie z pomiaru.
+
+### Zapis prognoz
+
+`data/forecast-log.json` przechowuje, co prognoza mówiła wcześniej — trzy doby przebiegów wstecz.
+Powstał, bo aplikacja pokazywała migawkę i opisywała ją z pewnością siebie, nie mając jak zauważyć,
+że migawka się zmieniła. Zmierzone 11 sierpnia: o 11:20 najciaśniejsza środowa godzina to było 20:00
+z marginesem +139 MW, dwie godziny później ta sama godzina miała +1331 MW, a najciaśniejszy punkt
+dnia przeniósł się na poranek. Zdanie na karcie stało się nieprawdziwe i nic w systemie nie mogło
+tego wiedzieć.
+
+Agregaty liczą się po **godzinach 07:00–22:00 dnia roboczego**, nie po godzinach pozostałych. To
+jedyne miejsce, w którym ta funkcja mogłaby po cichu kłamać: zbiór godzin pozostałych kurczy się sam
+z upływem dnia, więc porównanie dwóch migawek raportowałoby ruch na prognozie, która nie drgnęła —
+i wyglądałoby to dokładnie jak prawdziwa nowina. Okno przywołania jest za to stałe przez całe życie
+doby i jest jedynym, które niesie decyzję.
+
+Migawka powstaje **przed** bramką `decideRun`, żeby szereg nie miał dziur akurat w godzinach, w
+których nic się nie działo — a to jest teza, którą ten szereg ma umieć rozstrzygnąć. Identyczna
+migawka nie jest zapisywana.
+
+Plik leży **poza `public/`**: nie trafia do bundla ani do precache service workera, a warunek
+publikacji zostaje na `summary.json`, więc godzina, w której ruszył się tylko log, commituje się bez
+przebudowy strony na telefonach.
 
 ### Strażnik świeżości
 

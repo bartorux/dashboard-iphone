@@ -3,6 +3,26 @@
 Na czym stanęliśmy 11 sierpnia 2026. README opisuje, **jak aplikacja działa**; ten plik opisuje,
 **co jest otwarte** — czego nie widać ani w kodzie, ani w historii commitów.
 
+## Warstwa AI: etap 3 czeka na dane
+
+Etapy 1 i 2 są zrobione — zapis prognoz i przyczyna ciasnej godziny. **Etap 3, ruch prognozy, nie
+został zaczęty i nie dało się go zacząć**: `data/forecast-log.json` ma na razie jeden wpis, a żeby
+powiedzieć „prognoza na czwartek pogorszyła się od rana", trzeba doby zbierania.
+
+Do zrobienia, gdy log ma głębokość:
+
+- pole w `DayFacts` z różnicą wobec migawki sprzed ~24 godzin i wobec dzisiejszego poranka,
+  przełożoną **na słowa w kodzie**, jak przyczyna
+- próg istotności w MW, żeby szum prognozy nie szedł jako nowina — punktem wyjścia 100 MW, tak jak
+  w odcisku oceny
+- rozszerzenie `hasSomethingToExplain` o ruch, tak jak zostało rozszerzone o przyczynę
+- pierwszy przypadek testowy jest już zmierzony: +139 MW → +1331 MW na środowej 20:00, między 11:20
+  a 13:20 jedenastego sierpnia
+
+Uwaga na tę samą pułapkę co w etapie 1: porównywać wolno **wyłącznie agregaty po stałym zbiorze
+godzin**. `snapshotDay` już to robi; cokolwiek nowego liczy różnice, musi brać dane stamtąd, a nie
+z `DayFacts`, które patrzą tylko przed siebie.
+
 ## Punkt odniesienia
 
 - **`v3.28.3`** na produkcji, 295 testów przechodzi, drzewo czyste
