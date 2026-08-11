@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 20;
+export const PROMPT_VERSION = 21;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -159,7 +159,11 @@ NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
 TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku — najczęściej
 dlaczego operator ma prawo nie ogłaszać przywołania i czy ogłoszenie może
 jeszcze nadejść.
-DALEJ: jedno zdanie o kolejnych dniach.
+DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
+kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
+w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
+stwierdzeniem: „w pozostałych dniach nie ma podstaw". Jeśli takiego dnia nie ma
+ani jednego, powiedz to wprost o całym okresie i na tym poprzestań.
 
 WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:
 TAK NIE PISZ: „Niedziela i wtorek nie wykażą podstaw do przywołania, mimo
@@ -167,8 +171,13 @@ wystąpienia cienkiego dodatniego marginesu w godzinach wieczornych."
 (dni niczego nie wykazują; „mimo" przeciwstawia dwie rzeczy, które sobie nie
 przeczą; „cienki margines" to kalka — margines jest wąski; „w godzinach
 wieczornych" zamiast godziny z faktów)
-TAK PISZ: „W niedzielę i we wtorek nie ma podstaw do przywołania; we wtorek
-o 20:00 margines jest najwęższy."
+TAK NIE PISZ: „We wtorek nie ma podstaw, w środę nie ma podstaw, w czwartek nie
+ma podstaw, a w piątek margines jest wąski." (wyliczanka; trzy pierwsze człony
+niosą jedną informację)
+TAK PISZ: „W piątek o 20:00 operator ma prawo nie ogłaszać przywołania;
+w pozostałych dniach nie ma podstaw."
+TAK PISZ, gdy nie dzieje się nic: „W żadnym z kolejnych dni nie ma podstaw do
+przywołania."
 
 FAKTY:
 `;

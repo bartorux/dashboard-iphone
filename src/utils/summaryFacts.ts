@@ -9,6 +9,7 @@ import {
   worstRisk,
 } from './callPeriod';
 import { weekdayOf } from './dateHelpers';
+import { visibleBusinessDates } from './dayWindow';
 import { DEFAULT_RED_THRESHOLD } from './constants';
 import { marginDistribution, standingFor } from './history';
 
@@ -92,7 +93,14 @@ export function buildFacts(
   allData: PSEDataPoint[],
   history: PSEDataPoint[],
   now: Date,
-  maxDays = 3
+  /**
+   * Which days to describe. Defaults to exactly the days the tabs offer.
+   *
+   * It used to be a count, and the first N days chronologically are not the same
+   * set: with a five-working-day strip that silently pulled in the weekend the
+   * tabs step over, so the summary would discuss a Saturday nobody could open.
+   */
+  days: string[] = visibleBusinessDates(now)
 ): DayFacts[] {
   const ahead = upcoming(allData, now);
 
@@ -109,7 +117,7 @@ export function buildFacts(
 
   return [...byDay.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
-    .slice(0, maxDays)
+    .filter(([businessDate]) => days.includes(businessDate))
     .map(([businessDate, points]) => {
       const margins = points
         .map((point) => ({ point, margin: marginOf(point) }))
