@@ -27,6 +27,11 @@ import {
   parseLog,
   snapshotDays,
 } from '../src/utils/forecastLog';
+import {
+  EMPTY_LOG as EMPTY_TEXT_LOG,
+  appendAttempt,
+  parseLog as parseTextLog,
+} from '../src/utils/summaryLog';
 import type { PSEDataPoint } from '../src/types';
 import { assessmentKey, buildFacts, renderFacts } from '../src/utils/summaryFacts';
 import {
@@ -44,6 +49,7 @@ const MODEL = 'gemini-3.5-flash-lite';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const target = resolve(root, 'public/summary.json');
 const logTarget = resolve(root, 'data/forecast-log.json');
+const textLogTarget = resolve(root, 'data/summary-log.json');
 
 interface SummaryFile extends Summary {
   /** When the text was written, so the card can show its age. */
@@ -164,6 +170,40 @@ if (!apiKey) {
  * job skipped — so a validator rejecting every single run was indistinguishable
  * from a quiet hour, and the published text sat frozen with nothing to show why.
  */
+/**
+ * Files away what the model said, accepted or not.
+ *
+ * The refused ones are the point. A rejection leaves nothing behind but a
+ * warning naming the rule, so the one that fired today told us which check
+ * caught it and nothing about how close the text had been — and "what was weak"
+ * is only answerable by reading a day of them side by side.
+ */
+function recordAttempt(
+  answer: { headline: string; body: string; outlook: string },
+  accepted: boolean,
+  reason?: string
+): void {
+  let stored = EMPTY_TEXT_LOG;
+  try {
+    stored = parseTextLog(JSON.parse(readFileSync(textLogTarget, 'utf8')));
+  } catch {
+    // First run, or an unreadable notebook. Neither may end the job.
+  }
+
+  const next = appendAttempt(stored, {
+    at: now.toISOString(),
+    prompt: PROMPT_VERSION,
+    accepted,
+    ...(reason ? { reason } : {}),
+    headline: answer.headline,
+    body: answer.body,
+    outlook: answer.outlook,
+  });
+
+  mkdirSync(dirname(textLogTarget), { recursive: true });
+  writeFileSync(textLogTarget, `${JSON.stringify(next, null, 2)}\n`);
+}
+
 function giveUp(reason: string): never {
   console.error(`${reason} — zostawiam poprzednie podsumowanie.`);
   if (process.env.GITHUB_ACTIONS) {
@@ -210,7 +250,16 @@ const text = payload.candidates?.[0]?.content?.parts?.[0]?.text;
 if (!text) giveUp('Model nie zwrocil tekstu');
 
 const summary = parseSummary(text);
-if (!summary) giveUp('Odpowiedz nie ma trzech oczekiwanych pol');
+if (!summary) {
+  // Kept raw: an answer that did not parse is exactly the kind we cannot
+  // reconstruct later, and its shape is the whole diagnosis.
+  recordAttempt(
+    { headline: text.slice(0, 400), body: '', outlook: '' },
+    false,
+    'odpowiedz nie ma oczekiwanych pol'
+  );
+  giveUp('Odpowiedz nie ma trzech oczekiwanych pol');
+}
 
 const allowedHours = new Set<string>();
 for (const day of facts) {
@@ -224,6 +273,7 @@ for (const day of facts) {
 const allowedDayNames = facts.map((day) => day.spokenName).filter(Boolean);
 
 const verdict = validateSummary(summary, allowedHours, allowedDayNames);
+recordAttempt(summary, verdict.ok, verdict.ok ? undefined : verdict.reason);
 if (!verdict.ok) giveUp(`Odrzucone: ${verdict.reason}`);
 
 const file: SummaryFile = {

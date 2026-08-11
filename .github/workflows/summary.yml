@@ -63,17 +63,19 @@ jobs:
       # deliberately triggers no further workflow, so `deploy.yml` never sees it.
       # Delivery is the job below, which runs only when this step changed something.
       #
-      # Two files, one commit, but only ONE of them publishes. The forecast log is
-      # written most hours and is read by nothing but the next run of this script;
-      # letting it trigger the deploy would rebuild the site — and churn the
-      # service worker on every phone — for a file no phone downloads.
+      # Everything under data/ rides along in the commit, but only summary.json
+      # publishes. The forecast log and the text log are written most hours and
+      # are read by nothing but the next run of this script and a person going
+      # back over a day of drafts; letting either trigger the deploy would
+      # rebuild the site — and churn the service worker on every phone — for
+      # files no phone downloads.
       - name: Zapisz, jesli sie zmienilo
         id: publish
         run: |
           # --porcelain, not `git diff`: the log is untracked on the first run
           # ever, and `git diff` says nothing about a file git has not seen.
           summary_changed=$([ -n "$(git status --porcelain -- public/summary.json)" ] && echo yes || echo no)
-          log_changed=$([ -n "$(git status --porcelain -- data/forecast-log.json)" ] && echo yes || echo no)
+          log_changed=$([ -n "$(git status --porcelain -- data)" ] && echo yes || echo no)
 
           # `changed` is written exactly once, on whichever path the step takes,
           # and never before the push. It decides whether the deploy job runs, so
@@ -87,8 +89,8 @@ jobs:
           fi
 
           if [ "$summary_changed" = no ]; then
-            echo "Ruszyl sie tylko log prognozy — commituje bez publikacji."
-            wiadomosc="Zapisz migawke prognozy"
+            echo "Ruszyly sie tylko logi — commituje bez publikacji."
+            wiadomosc="Zapisz przebieg podsumowania"
           else
             wiadomosc="Odswiez podsumowanie"
           fi
@@ -96,7 +98,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ -f public/summary.json ]; then git add public/summary.json; fi
-          if [ -f data/forecast-log.json ]; then git add data/forecast-log.json; fi
+          if [ -d data ]; then git add data; fi
           git commit -m "$wiadomosc"
           # Someone may have pushed while the model was answering.
           git pull --rebase origin "${GITHUB_REF_NAME}"
