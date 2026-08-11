@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { buildFacts, keyPoint, renderFacts } from '../summaryFacts';
+import { visibleBusinessDates } from '../dayWindow';
 import { makePoint } from '../../test/factories';
 
 const pad = (value: number) => String(value).padStart(2, '0');
@@ -27,7 +28,12 @@ function dayOf(businessDate: string, reserve: number, required = 2000) {
 const BEFORE_ALL = new Date('2026-08-09T00:00:00Z');
 
 describe('buildFacts', () => {
-  it('reports the days still ahead, in order, capped', () => {
+  it('describes exactly the days the tabs offer, in order', () => {
+    // This used to assert a count of three, and stood as proof that the summary
+    // window did not follow the day strip. It follows it now — deliberately —
+    // so the assertion became the one that matters: same days, no others. A
+    // count would not catch the failure that actually threatens this, which is
+    // the summary discussing a Saturday the tabs step over.
     const data = [
       ...dayOf('2026-08-10', 5000),
       ...dayOf('2026-08-11', 5000),
@@ -35,12 +41,25 @@ describe('buildFacts', () => {
       ...dayOf('2026-08-13', 5000),
     ];
     const facts = buildFacts(data, [], BEFORE_ALL);
+    const offered = visibleBusinessDates(BEFORE_ALL);
 
-    expect(facts.map((day) => day.businessDate)).toEqual([
-      '2026-08-10',
-      '2026-08-11',
-      '2026-08-12',
-    ]);
+    expect(facts.map((day) => day.businessDate)).toEqual(
+      ['2026-08-10', '2026-08-11', '2026-08-12', '2026-08-13'].filter((d) =>
+        offered.includes(d)
+      )
+    );
+    facts.forEach((day) => expect(offered).toContain(day.businessDate));
+  });
+
+  it('leaves out a day the tabs do not offer', () => {
+    // A weekend inside the fetched window: present in the data, absent from the
+    // strip, and therefore absent here. Reaching it would mean the summary
+    // pointing at a chart nobody can open.
+    const data = [...dayOf('2026-08-15', 5000), ...dayOf('2026-08-17', 5000)];
+    const facts = buildFacts(data, [], BEFORE_ALL);
+
+    // 15 August is a Saturday.
+    expect(facts.map((day) => day.businessDate)).not.toContain('2026-08-15');
   });
 
   it('drops a day once nothing is left of it', () => {

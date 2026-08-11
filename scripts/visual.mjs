@@ -135,10 +135,14 @@ for (const scenario of SCENARIOS) {
         body:
           'Od godziny 17:00 do 23:00 dostępna rezerwa spada poniżej wymaganej, ' +
           'najgłębiej o 19:00. Okno ogłoszenia dla części tych godzin jest już zamknięte.',
+        // One sentence naming what matters and gathering the rest, which is what
+        // the DALEJ line is asked for now that the window is five working days.
         outlook:
-          'W kolejnych dniach margines wraca powyżej typowego zakresu.',
+          'W pozostałych dniach nie ma podstaw do przywołania.',
         generatedAt: new Date(clockFor(scenario).getTime() - 30 * 60 * 1000).toISOString(),
-        dates: ['2026-08-04', '2026-08-05', '2026-08-06'],
+        // The same five working days the tabs offer from the frozen Tuesday, so
+        // the card's eyebrow on the baseline says what the app will really say.
+        dates: ['2026-08-04', '2026-08-05', '2026-08-06', '2026-08-07', '2026-08-10'],
       }),
     });
   });

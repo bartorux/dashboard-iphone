@@ -8,6 +8,8 @@
  * cannot drift, and when the text really is stale the label says so — which is
  * the honest outcome, not a bug to paper over.
  */
+import { weekdayOf } from './dateHelpers';
+
 const RELATIVE = ['dziś', 'jutro', 'pojutrze'] as const;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -39,7 +41,22 @@ function nameOf(businessDate: string, today: string): string | null {
   if (offset === null) return null;
   if (offset >= 0 && offset < RELATIVE.length) return RELATIVE[offset];
 
-  // Outside the three days the app knows about, a bare date beats a wrong word.
+  /*
+   * Ahead of today but past the words this table holds: the weekday, the same
+   * one the tabs and the summary itself use. A bare date was right while the app
+   * knew three days and reads as a stumble now that it knows five —
+   * "dziś–14.08" mixes a word with a number for no reason a reader can see.
+   *
+   * Only forwards, and only within the week. Backwards a weekday lies by
+   * omission: "sob." cannot say whether it means the Saturday just gone or the
+   * one coming, and this label exists precisely for the case of a stale file
+   * read the next morning.
+   */
+  if (offset > 0 && offset < 7) {
+    const weekday = weekdayOf(businessDate);
+    if (weekday) return weekday;
+  }
+
   const match = /^\d{4}-(\d{2})-(\d{2})$/.exec(businessDate);
   return match ? `${Number(match[2])}.${match[1]}` : null;
 }

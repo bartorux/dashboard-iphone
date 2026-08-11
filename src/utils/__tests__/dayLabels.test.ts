@@ -36,13 +36,26 @@ describe('dayRangeLabel', () => {
     ).toBe('dziś–pojutrze');
   });
 
-  it('falls back to a date beyond the three days it has words for', () => {
-    // A stale file read the next morning must not call yesterday "today" —
-    // a bare date is honest where a relative word would lie.
-    expect(dayRangeLabel(['2026-08-08', '2026-08-09'], NOW)).toBe(
-      '8.08–dziś'
-    );
-    expect(dayRangeLabel(['2026-08-15'], NOW)).toBe('15.08');
+  it('gives a bare date for a day already past', () => {
+    // A stale file read the next morning must not call yesterday "today", and a
+    // weekday would lie by omission here: "sob." cannot say whether it means the
+    // Saturday just gone or the one coming. This label exists for exactly that
+    // case, so backwards it stays a date.
+    expect(dayRangeLabel(['2026-08-08', '2026-08-09'], NOW)).toBe('8.08–dziś');
+  });
+
+  it('names a day ahead by its weekday, as the tabs and the summary do', () => {
+    // Beyond "pojutrze" the app used to print a bare date, which read as a
+    // stumble once the window reached five days: "dziś–14.08" mixes a word with
+    // a number for no reason a reader can see. Forwards inside the week a
+    // weekday is unambiguous.
+    expect(dayRangeLabel(['2026-08-15'], NOW)).toBe('sob.');
+    expect(dayRangeLabel(['2026-08-09', '2026-08-14'], NOW)).toBe('dziś–pt.');
+  });
+
+  it('still gives a date once a weekday would stop being unambiguous', () => {
+    // A week out, "niedz." could be either of two Sundays.
+    expect(dayRangeLabel(['2026-08-16'], NOW)).toBe('16.08');
   });
 
   it('gives nothing rather than a broken label', () => {

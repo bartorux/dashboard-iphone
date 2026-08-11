@@ -39,6 +39,18 @@ export function visibleDayOffsets(
   return offsets;
 }
 
+/**
+ * The same days as business-date strings, which is how PSE labels them and how
+ * the analysis groups its facts.
+ *
+ * Exists so the tabs and the summary cannot disagree about which days the app is
+ * talking about. The summary used to take the first three days chronologically,
+ * which quietly included a weekend the tabs skip.
+ */
+export function visibleBusinessDates(now: Date): string[] {
+  return visibleDayOffsets(now).map((offset) => formatDate(addDays(now, offset)));
+}
+
 /** Calendar days the window spans, which is what the API has to be asked for. */
 export function daysToFetch(now: Date): number {
   const offsets = visibleDayOffsets(now);
