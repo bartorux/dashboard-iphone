@@ -6,6 +6,7 @@ import {
   addDays,
   periodStart,
   periodEnd,
+  spokenDay,
 } from '../dateHelpers';
 
 describe('formatDateTimeApi', () => {
@@ -92,5 +93,40 @@ describe('periodStart / periodEnd', () => {
       expect(periodStart(bad)).toBeNull();
       expect(periodEnd(bad)).toBeNull();
     }
+  });
+});
+
+describe('spokenDay', () => {
+  // 2026-08-11 is a Tuesday.
+  const wtorek = new Date('2026-08-11T15:00:00+02:00');
+
+  it.each([
+    ['2026-08-11', 'dziś'],
+    ['2026-08-12', 'jutro'],
+    ['2026-08-13', 'czwartek'],
+    ['2026-08-14', 'piątek'],
+  ])('names %s inside this week as %s', (date, expected) => {
+    expect(spokenDay(date, wtorek)).toBe(expected);
+  });
+
+  it('adds the date once the day falls in another week', () => {
+    /*
+     * The defect this exists for. The window spans five WORKING days, so from
+     * midweek it reaches over the weekend — and a card published on Tuesday
+     * 11 August said "W poniedziałek o 20:00" about 17 August. The reader took
+     * it for today, which is what a bare weekday name means.
+     */
+    expect(spokenDay('2026-08-17', wtorek)).toBe('poniedziałek 17 sierpnia');
+    expect(spokenDay('2026-08-18', wtorek)).toBe('wtorek 18 sierpnia');
+  });
+
+  it('treats Sunday as belonging to the week that is ending', () => {
+    // Polish weeks start on Monday; an ISO-agnostic implementation would put
+    // Sunday in the next one and stop qualifying the days that need it.
+    expect(spokenDay('2026-08-16', wtorek)).toBe('niedziela');
+  });
+
+  it('returns nothing for a date it cannot read', () => {
+    expect(spokenDay('kiedyś', wtorek)).toBe('');
   });
 });

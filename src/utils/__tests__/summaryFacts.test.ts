@@ -226,8 +226,12 @@ describe('buildFacts', () => {
     ];
     const point = keyPoint(buildFacts(data, [], POPOLUDNIE));
 
-    expect(point).toContain('2026-08-12');
-    expect(point).not.toContain('2026-08-10');
+    // Named the way it should be spoken, not as an ISO date: this line is what
+    // the model copies, and "śr. 2026-08-12" came back as "w środę" — fine here,
+    // but the same habit turned a day six days out into a bare "w poniedziałek".
+    // The ISO date still stands in the day's own header below.
+    expect(point).toContain('środa');
+    expect(point).not.toContain('poniedziałek');
   });
 
   it('falls back to the gravest day once every window has closed', () => {
@@ -237,7 +241,8 @@ describe('buildFacts', () => {
     ];
     const point = keyPoint(buildFacts(data, [], POPOLUDNIE));
 
-    expect(point).toContain('2026-08-10');
+    // POPOLUDNIE falls on 2026-08-10 itself, so the day is named "dziś".
+    expect(point).toContain('dziś');
     expect(point).toContain('przywołanie powinno zostać ogłoszone');
   });
 
@@ -270,7 +275,9 @@ describe('buildFacts', () => {
     const point = keyPoint(buildFacts(data, [], BEFORE_ALL));
 
     expect(point).toContain('brakuje odczytów');
-    expect(point).toContain('2026-08-10');
+    // "na jutro", not "dla jutro": the day names are spoken forms now, and the
+    // preposition had to change with them or the sentence stopped being Polish.
+    expect(point).toContain('na jutro brakuje odczytów');
     expect(point).not.toContain('w żadnym z dni nie ma podstaw');
   });
 

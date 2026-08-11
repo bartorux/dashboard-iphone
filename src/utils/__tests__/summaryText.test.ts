@@ -137,7 +137,11 @@ describe('prompt bez wiersza TREŚĆ', () => {
     // the two lines beneath spent their words taking that back.
     expect(prompt).toContain('w tych dniach nie ma podstaw do przywołania');
     expect(prompt).toContain('TREŚĆ: JEDNO zdanie o godzinie');
-    expect(prompt).toContain('ZAWSZE z dniem');
+    // The day must be copied whole, not shortened to a weekday name — that
+    // shortening is what turned 17 August into a Monday the reader took for
+    // today.
+    expect(prompt).toContain('nazwij DOKŁADNIE tak,');
+    expect(prompt).toContain('nie skracaj „poniedziałek 17 sierpnia"');
     // Not the general brief, which is what let the verdict into the body.
     expect(prompt).not.toContain('TREŚĆ: DWA zdania. Każde ma nieść');
   });
