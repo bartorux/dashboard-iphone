@@ -7,6 +7,8 @@ głównego i hostowana na GitHub Pages.
 
 Produkcja: https://bartorux.github.io/dashboard-iphone/
 
+Co jest otwarte i gdzie leży niedokończona praca: [docs/stan-prac.md](docs/stan-prac.md).
+
 ## Uruchomienie
 
 Wymagany Node 24 (wersja używana też w CI).
@@ -31,10 +33,33 @@ npm run dev
 | `npx tsx scripts/summary.ts --dry-run` | to samo plus pełne zapytanie i odcisk oceny |
 | `GEMINI_API_KEY=… npx tsx scripts/summary.ts` | wygenerowanie `public/summary.json` |
 
+## Które dni widać
+
+**Pięć dni roboczych.** Jedno miejsce rozstrzyga to dla całej aplikacji —
+[dayWindow.ts](src/utils/dayWindow.ts) — i z niego biorą dane zakładki dni, okno pobierania
+oraz fakty wysyłane do modelu. Wcześniej każde z tych trzech liczyło dni po swojemu i analiza
+potrafiła mówić o sobocie, której zakładki nie pokazywały.
+
+Pięć, bo tyle wynosi horyzont, w którym układa się grafiki zmian. PSE serwuje pięćdziesiąt jeden
+dób z prawdziwą zmiennością godzinową, ale jak celna jest prognoza tak daleko, nie da się sprawdzić
+z jednej migawki — trzeba by porównywać kolejne publikacje tej samej doby. Okno wyznacza więc to,
+na co można zareagować, a nie to, co API odda.
+
+**Dni wolne wypadają.** Przywołanie ogłasza się wyłącznie w dniu roboczym między 07:00 a 22:00,
+więc sobotni wykres nie niesie niczego do działania. Wyjątkiem jest dziś — zawsze widoczne, także
+w weekend, bo inaczej w sobotę nie byłoby jak spojrzeć na bieżącą dobę. Offsety nie są zatem
+ciągłe: cokolwiek chodzi po dniach, musi iść po tej liście, a nie dodawać jedynkę.
+
+Zakładki mówią **„Dziś", potem nazwą dnia tygodnia** — tą samą, którą wymawia analiza. Wcześniej
+zakładka pokazywała „Pojutrze", a tekst pod nią „w środę": dwa sposoby nazywania jednego dnia na
+jednym ekranie. Nazwa dnia jest przy okazji węższa, i to ona sprawiła, że pięć zakładek mieści się
+tam, gdzie trzy ledwie się mieściły.
+
 ## Analiza AI
 
 Karta pod bieżącym marginesem odpowiada zdaniem na pytanie, po które sięga się najczęściej:
-**czy grozi okres przywołania** — w horyzoncie trzech dni, na tle ostatnich 30 dób.
+**czy grozi okres przywołania** — w oknie pięciu dni roboczych opisanym wyżej, na tle ostatnich
+30 dób.
 
 **Ocenę liczy kod, model wyłącznie ją opisuje.** Warunki przywołania są sformalizowane, więc
 `callPeriod.ts` rozstrzyga je arytmetyką: dzień roboczy, godziny 07:00–22:00, rezerwa poniżej
@@ -59,6 +84,24 @@ sygnalizują wcześniej i mówią, że coś może się zdarzyć, nie że cokolwi
 Model dostaje gotowy wniosek — łącznie ze wskazaniem, **który dzień jest istotny**, bo proszony
 o wybranie go samodzielnie mylił się mniej więcej co drugi raz, podając wtorkowy wieczór
 jako „dziś".
+
+Ten wskazany dzień to **najpoważniejszy z tych, w których ogłoszenie może jeszcze nadejść**, a nie
+najpoważniejszy w całym oknie. Przy pięciu dobach rozjazd stał się dotkliwy: o 15:00 najgorszą
+godziną bywa dzisiejsza 18:00, tyle że na jej ogłoszenie jest już za późno o ośmiogodzinne
+wyprzedzenie. Karta prowadziłaby więc dniem, z którym nie da się nic zrobić. Gdy żaden dzień nie
+jest już otwarty, wskazanie wraca do najgorszego z całego okna — lepszy dzień zamknięty niż żaden.
+
+**Prompt ma dwa kształty.** Gdy w żadnym dniu nie ma podstaw do przywołania, środkowego wiersza
+nie ma w instrukcji w ogóle i tekst wychodzi dwuzdaniowy. Wcześniej wiersz był
+zawsze, a instrukcja próbowała powiedzieć modelowi, czego w nim nie umieszczać — trzy podejścia pod
+rząd zawiodły i za każdym razem wracało „nie ma podstaw do przywołania" tuż obok zdania, które już
+to mówiło. Zadziałało dopiero **usunięcie miejsca**, nie kolejny zakaz. Gdy jest co wyjaśniać,
+wiersz wraca i tekst rośnie do czterech zdań.
+
+Zgoda na pusty wiersz musiała przejść przez wszystkie trzy warstwy, które go pilnują: parser,
+walidator i predykat `usable` w [useSummary.ts](src/hooks/useSummary.ts). Przeoczenie tego
+ostatniego zdjęło kartę z produkcji na `v3.28.0` — po stronie przeglądarki cały rekord uchodził za
+uszkodzony. Wyszło przypadkiem, przy próbie zrzutu ekranu.
 
 **Żadna liczba w tekście nie pochodzi od modelu.** Instrukcja zakazuje cyfr poza godzinami
 `HH:MM`, a walidacja odrzuca tekst z liczbą, z godziną spoza faktów oraz z wielkością mocy zapisaną
@@ -112,8 +155,13 @@ nic nie da — może uprawnienia tylko zawężać, nigdy rozszerzać.
 
 Model: `gemini-3.5-flash-lite`, myślenie na `minimal`. Podnoszenie go zmierzono jako szkodliwe —
 1919 tokenów myślenia, trzykrotny koszt i ucięta odpowiedź. Całe rozumowanie zrobiono w kodzie,
-więc nie ma tam czego przemyśliwać. Jedno wywołanie to ~1150 tokenów, maksymalnie 24 na dobę,
-czyli około 2,4% darmowego limitu.
+więc nie ma tam czego przemyśliwać.
+
+Zapytanie przy pięciu dobach ma około **10,4 tys. znaków** — sprawdzasz to bez klucza przez
+`npx tsx scripts/summary.ts --dry-run`. Zużycie ogranicza jednak nie długość, tylko **liczba
+wywołań: najwyżej 24 na dobę wobec 1000 w darmowym progu**, czyli 2,4%. Ograniczeniem jest
+harmonogram co godzinę, a nie treść, więc rozszerzenie okna z trzech dób na pięć nie ruszyło
+tej proporcji.
 
 ### Strażnik świeżości
 
@@ -139,8 +187,14 @@ Znika, gdy tekst ma ponad **12 godzin** — analiza wskazuje konkretne godziny, 
 inny dzień niż wykres pod nią. Brak pliku, uszkodzony JSON i brak sieci kończą się tak samo: karty
 nie ma, reszta ekranu działa bez zmian, bo wszystko poza nią pochodzi wprost z PSE.
 
-Zakres dni jest **wyliczany przy czytaniu**, nigdy zapisywany do pliku — inaczej analiza napisana
-o 23:50 i otwarta po północy nazywałaby „dziś" dzień, który już był wczoraj.
+Nadpis karty podaje już tylko **godzinę powstania tekstu**. Stał tam wcześniej zakres dni
+(„dziś–pon."), czyli dokładnie to samo, co pokazują zakładki dwa centymetry niżej — a wiedza,
+że analiza objęła poniedziałek, niczego nie zmieniała. Godzina zostaje, bo ile tekst ma lat,
+czytelnik faktycznie sprawdza.
+
+W pliku dni są zapisane jako **daty, nigdy jako gotowy napis** — analiza powstała o 23:50
+i otwarta po północy nazwałaby „dziś" dzień, który już był wczoraj. Pole zostaje mimo zniknięcia
+z ekranu: to na nim opiera się kontrola, czy rekord w ogóle opisuje sensowny okres.
 
 Kartę można zwinąć, a wybór jest **zapamiętywany na urządzeniu**; trzymany w stanie komponentu
 wracałby rozwinięty przy każdym uruchomieniu. Nagłówek zostaje widoczny również po zwinięciu, bo
@@ -191,6 +245,13 @@ od wybranego dnia (bieżący margines, analiza AI, trendy), stoi po prawej; to, 
 bardziej to, że prawa kolumna nie drga przy przełączaniu dni, niż kolejność czytania. Rozmieszczenie
 w [App.tsx](src/App.tsx) jest **jawne, a nie wynikające z kolejności w kodzie**, bo ta kolejność
 należy do telefonu i nie może się zmienić.
+
+**Nic o instalowaniu nie należy do monitora.** Powyżej 80rem przycisk instalacji nie renderuje się
+w żadnym ze swoich stanów. Pierwsze podejście chowało tylko dwa warianty instruktażowe i zostawiało
+prawdziwą zachętę do instalacji, w rozumowaniu, że przycisk, który coś robi, zasłużył na miejsce —
+i to było błędne dla ekranu, o który tu chodzi. Dashboardu stojącego otwartego cały dzień nikt nie
+instaluje, a wracająca oferta czytała się jak regres. Chrome i tak proponuje instalację z paska
+adresu, więc nic nie ubyło.
 
 ### Dlaczego nie dwie osobne strony
 
@@ -243,8 +304,27 @@ wyjaśniła; wartość jest w dymku.
 
 **Na tle 30 dni** — margines wybranego dnia (`dostępna - wymagana`) na tle
 rozstępu 10.–90. percentyla dla tej samej godziny w minionych dobach. Widok
-nazywa dzień po imieniu, bo obsługuje także Jutro i Pojutrze. Dane pobierane
+nazywa dzień po imieniu, bo obsługuje wszystkie dni z paska. Dane pobierane
 dopiero przy pierwszym wejściu w ten widok i cache'owane do północy.
+
+### Osie i linie odniesienia
+
+**Oś pionowa zaokrągla się przed dodaniem zapasu, nie po nim** ([scale.ts](src/utils/scale.ts)).
+Odwrotna kolejność dawała skalę zależną od danych: generacja na dziś i na jutro różniły się
+o 800 MW, a wykresy wyglądały, jakby różniły się o połowę — jeden ściśnięty, drugi rozciągnięty,
+przy tej samej wielkości. Zaokrąglony brzeg pokrywający się dokładnie z wartością skrajną jest
+odsuwany o jeden krok, żeby najwyższy punkt nie leżał na ramce.
+
+**Oś pozioma nie dokleja ostatniej godziny.** Doklejona wypadała nieregularnie blisko poprzedniej
+etykiety i psuła równomierny rozstaw, przez co oś czytało się jak błąd zaokrąglenia.
+
+**Pionowe kreski godzin alertowych rysują się po linii „teraz", nie przed nią.** Recharts maluje
+w kolejności zapisu, więc póki szły pierwsze, niebieska linia bieżącej godziny kładła się na nich.
+Gdy bieżąca godzina sama była alertowa, obie lądowały na tym samym `x` i czerwona kreska znikała pod
+spodem: nagłówek czerwony, panel wymieniał zakres, a wykres nie oznaczał nic w jedynej godzinie,
+o którą chodziło. Zmierzone na żywo o 08:28 — dwie linie przy `x=366`, widoczna jedna. Tam, gdzie
+się pokrywają, kreska idzie pełnym kryciem, poza tym 0,55. Scenariusz wizualny `teraz-w-alercie`
+utrwala ten przypadek na własnym zegarze 19:30, bo z żywych danych wypada rzadko.
 
 ## Analiza i trendy
 
@@ -285,10 +365,18 @@ Bez tego otwarcie appki po kilku godzinach pokazywałoby wersję kilkukrotnie ju
 zakładki pokazywałyby nową datę, a wykres wciąż wczorajszą dobę, przez maksymalnie 15 minut.
 Timer jest liczony do najbliższej północy, nie co 24h — doby DST mają 23 albo 25 godzin.
 
+**„Dane z pamięci podręcznej" znaczy: ostatnie pobranie się nie udało** — nie: „mamy zapisaną
+kopię". Przez pewien czas ostrzeżenie zaczynało się od prawdy, gdy tylko cokolwiek leżało
+w `localStorage`, czyli przy każdym przeładowaniu strony. Zmierzone na żywej stronie: widoczne
+w 51 ms, znikało w 533 ms, za każdym razem. Ostrzeżenie, które zapala się na normalnej ścieżce,
+uczy ludzi pomijać je na tej, która ma znaczenie. Osobna flaga `hasFreshData` pilnuje drugiego
+rozróżnienia: czy pobranie udało się **w tej sesji**, a nie kiedykolwiek.
+
 ## Regresje wizualne
 
-`npm run test:visual` renderuje dwanaście scenariuszy (widoki wykresu, oba motywy, ustawienia, brak
-danych, powiększony tekst systemowy, a od v3.24.0 trzy przy 1920×1080) i porównuje piksele z wzorcami w `screenshots/baseline/`. Powstało po tym, jak dwa defekty
+`npm run test:visual` renderuje trzynaście scenariuszy (widoki wykresu, oba motywy, ustawienia, brak
+danych, powiększony tekst systemowy, trzy przy 1920×1080 oraz godzina w alercie na własnym zegarze
+19:30) i porównuje piksele z wzorcami w `screenshots/baseline/`. Powstało po tym, jak dwa defekty
 wizualne trafiły na produkcję mimo zielonych testów: ucięta oś Y i wcięcia w dymku, które nigdy
 się nie zastosowały.
 
@@ -303,15 +391,21 @@ tekst jest dobrany do danych, nad którymi stoi: wzorzec przeczący własnemu wy
 pomijać dokładnie to, co te zrzuty mają łapać.
 
 **Czego ten mechanizm nie zauważy:** zmian mniejszych niż tolerancja **0,1%** strony. Dodanie
-ikony 16×16 to 0,04% i przechodzi jako „ok" na wszystkich dwunastu scenariuszach. Tolerancja jest
+ikony 16×16 to 0,04% i przechodzi jako „ok" na wszystkich trzynastu scenariuszach. Tolerancja jest
 potrzebna, żeby wygładzanie czcionek nie generowało fałszywych alarmów, ale to znaczy, że
 regresja wizualna pilnuje **układu**, a nie obecności drobnych elementów — te trzeba obejrzeć,
 wymuszając zapis wzorców.
 
-To nie jest zastrzeżenie teoretyczne. Usunięcie jednej etykiety z osi X przeszło jako `ok` we
-wszystkich dwunastu scenariuszach, a dopiero zapis wzorców pokazał, że **jedenaście z nich zmieniło
-się na dysku**. Wniosek na przyszłość: zielony przebieg mówi „układ się nie rozjechał", nie „nic się
-nie zmieniło". Jeżeli potrzebny jest ten drugi wniosek — przepisać wzorce i sprawdzić `git status`.
+To nie jest zastrzeżenie teoretyczne, i sprawdziło się **dwa razy tego samego dnia**. Usunięcie
+jednej etykiety z osi X przeszło jako `ok` we wszystkich scenariuszach, a dopiero zapis wzorców
+pokazał, że **jedenaście z nich zmieniło się na dysku**; drugim razem zielony przebieg zgłosił
+trzynaście na trzynaście, gdy w rzeczywistości zmieniło się dwanaście wzorców. Wniosek na przyszłość:
+zielony przebieg mówi „układ się nie rozjechał", nie „nic się nie zmieniło". Jeżeli potrzebny jest
+ten drugi wniosek — przepisać wzorce i sprawdzić `git status`.
+
+Warte rozważenia, gdyby ten mechanizm miał jeszcze się zmieniać: żeby `npm run test:visual` sam
+zapisywał do katalogu tymczasowego i porównywał przez `git status`, zamiast opierać werdykt na
+tolerancji 0,1%. Wtedy „bez zmian" znaczyłoby to, co czyta się w tym zdaniu.
 
 ## Gesty
 
@@ -351,6 +445,11 @@ pokazywał się jako 20:00–21:00.
 Zakres w filtrze API musi mieć pełne znaczniki czasu — filtr porównuje ciągi
 znaków, więc sama data jako górna granica wyklucza `... 00:00:00` i ucina
 ostatnią godzinę zakresu.
+
+Górna granica zapytania bierze się z `daysToFetch` — z **dni kalendarzowych**, które okno obejmuje,
+a nie z liczby dni roboczych. Pięć dni roboczych po piątku sięga następnego piątku, czyli ośmiu dób.
+Stąd `FORECAST_ROW_LIMIT` na 400 wierszy: PSE ucina po cichu, gdy limit jest za niski, więc musi
+z zapasem pokryć najszerszy przypadek, jaki `visibleDayOffsets` potrafi zwrócić.
 
 ## Aktualizacje u użytkowników
 
