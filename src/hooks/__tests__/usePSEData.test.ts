@@ -129,3 +129,57 @@ describe('usePSEData', () => {
     expect(result.current.todayData[0].businessDate).toBe('2026-08-03');
   });
 });
+
+describe('usePSEData — cache a nieudane pobranie', () => {
+  /** A cache exactly as the hook writes one — the whole point is that one exists. */
+  function seedCache() {
+    localStorage.setItem(
+      'pse-dashboard-data-cache',
+      JSON.stringify({
+        data: [
+          {
+            businessDate: '2026-08-03',
+            hourLabel: '10:00',
+            endLabel: '11:00',
+            time: new Date('2026-08-03T09:00:00Z').toISOString(),
+            timeStr: '2026-08-03 11:00:00',
+            reserve: 3000,
+            required: 2000,
+            demand: null,
+            pv: null,
+            wind: null,
+            outages: null,
+            exchange: null,
+            generation: null,
+          },
+        ],
+        timestamp: '10:15',
+        savedAt: Date.now(),
+      })
+    );
+  }
+
+  it('does not call the data stale while the first fetch is still in flight', () => {
+    // The warning used to fire on every reload that had a cache, for the half
+    // second before the network answered. Measured live: visible at 51ms, gone
+    // at 533ms. A warning on the normal path teaches people to ignore it on the
+    // path that matters.
+    //
+    // The cache has to be seeded or this proves nothing: with none present the
+    // old code started false as well, and a mutation restoring it passed.
+    seedCache();
+    const { result } = renderHook(() => usePSEData());
+
+    expect(result.current.hasData).toBe(true);
+    expect(result.current.isStale).toBe(false);
+    expect(result.current.hasFreshData).toBe(false);
+  });
+
+  it('calls it stale once a fetch has actually failed', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('brak sieci')));
+    const { result } = renderHook(() => usePSEData());
+
+    await waitFor(() => expect(result.current.isStale).toBe(true));
+    expect(result.current.hasFreshData).toBe(false);
+  });
+});
