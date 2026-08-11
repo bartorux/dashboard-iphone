@@ -89,3 +89,33 @@ export function getDayDate(offset: number): string {
     month: '2-digit',
   });
 }
+
+const weekdayFormat = new Intl.DateTimeFormat('pl-PL', {
+  weekday: 'short',
+  timeZone: 'UTC',
+});
+
+/**
+ * "2026-08-12" -> "śr."
+ *
+ * Lives here rather than beside its first caller because the day tabs and the
+ * AI analysis must name a day identically. They did not: the analysis said
+ * "w środę" while the tab said "Pojutrze", two names for one day on one screen.
+ *
+ * UTC on purpose. A business date is a calendar label, not an instant, so
+ * building it as local midnight would let a timezone west of UTC roll it back a
+ * day.
+ */
+export function weekdayOf(businessDate: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(businessDate);
+  if (!match) return '';
+  const [, year, month, day] = match;
+  return weekdayFormat.format(
+    new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)))
+  );
+}
+
+/** The same, for a day expressed as an offset from today. */
+export function weekdayForOffset(offset: number): string {
+  return weekdayOf(formatDate(addDays(new Date(), offset)));
+}

@@ -97,7 +97,12 @@ export interface Settings {
   version: number;
 }
 
-export type DayOffset = 0 | 1 | 2;
+/**
+ * Days from today. Not a union of 0|1|2 any more: the window skips days off,
+ * so the offsets it offers are not contiguous and stepping through them means
+ * walking the list from `visibleDayOffsets`, never adding one to an offset.
+ */
+export type DayOffset = number;
 
 export type InstallableState = true | 'ios' | 'manual' | false;
 

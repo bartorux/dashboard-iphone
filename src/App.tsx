@@ -31,7 +31,8 @@ import {
   hasReadings,
 } from './utils/dataTransform';
 import { DayOffset } from './types';
-import { DAY_NAMES } from './utils/constants';
+import { formatDate } from './utils/dateHelpers';
+import { dayLabel, visibleDayOffsets } from './utils/dayWindow';
 import { isEnergyDay } from './utils/energyDay';
 
 /** Re-evaluate "now" this often so the current hour rolls over on its own. */
@@ -70,11 +71,30 @@ function App() {
     await refreshData();
   }, [refreshData, refreshSummary]);
 
+  /*
+   * The days on offer, recomputed only when the calendar day turns over rather
+   * than on every clock tick. They are not contiguous — the window steps over
+   * weekends and holidays — so both the tabs and the swipe walk this list.
+   */
+  const todayKey = formatDate(now);
+  const dayOffsets = useMemo(() => visibleDayOffsets(new Date()), [todayKey]);
+
+  /** One place along the list. Adding 1 to an offset would land on a skipped day. */
+  const stepDay = useCallback(
+    (direction: 1 | -1) => {
+      const here = dayOffsets.indexOf(currentDayOffset);
+      const from = here === -1 ? 0 : here;
+      const next = dayOffsets[Math.min(dayOffsets.length - 1, Math.max(0, from + direction))];
+      if (next !== undefined) switchDay(next);
+    },
+    [dayOffsets, currentDayOffset, switchDay]
+  );
+
   const { pullDistance, isRefreshing, isPulling, isReady } = useTouchGestures({
     onRefresh: refreshAll,
     // Swiping left moves forward in time, matching the order of the day tabs
-    onSwipeLeft: () => switchDay(Math.min(2, currentDayOffset + 1) as DayOffset),
-    onSwipeRight: () => switchDay(Math.max(0, currentDayOffset - 1) as DayOffset),
+    onSwipeLeft: () => stepDay(1),
+    onSwipeRight: () => stepDay(-1),
   });
   const { installableState, isInstalled, install } = useInstallPrompt();
 
@@ -240,13 +260,14 @@ function App() {
 
           <div className="xl:col-start-1 xl:row-start-1 xl:row-span-3">
             <DayNavigation
+              offsets={dayOffsets}
               currentDay={currentDayOffset}
               onSwitchDay={handleSwitchDay}
             />
 
             <ChartSection
               dayData={dayData}
-              dayLabel={DAY_NAMES[currentDayOffset]}
+              dayLabel={dayLabel(currentDayOffset)}
               orangeThreshold={orangeThreshold}
               redThreshold={redThreshold}
               currentHourLabel={

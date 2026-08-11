@@ -27,7 +27,7 @@ const url = process.env.PREVIEW_URL ?? 'http://localhost:5173/dashboard-iphone/'
 const update = process.argv.includes('--update');
 
 const forecast = readFileSync(
-  resolve(root, 'src/utils/__fixtures__/pse-72h.json'),
+  resolve(root, 'src/utils/__fixtures__/pse-okno.json'),
   'utf8'
 );
 const history = readFileSync(
@@ -48,7 +48,9 @@ const SCENARIOS = [
   { name: 'generation-light', scheme: 'light', view: 'Generacja' },
   { name: 'history-light', scheme: 'light', view: 'Na tle 30 dni' },
   { name: 'history-dark', scheme: 'dark', view: 'Na tle 30 dni' },
-  { name: 'tomorrow-light', scheme: 'light', day: 'Jutro' },
+  // Selected by position, not by name: the labels are weekday names now, so a
+  // literal would have to be recomputed whenever the frozen clock moves.
+  { name: 'tomorrow-light', scheme: 'light', dayIndex: 1 },
   { name: 'settings-light', scheme: 'light', settings: true },
   { name: 'no-data-light', scheme: 'light', offline: true },
   // Sizes are in rem and the root is hooked to the system font, so raising the
@@ -160,8 +162,8 @@ for (const scenario of SCENARIOS) {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(1800);
 
-  if (scenario.day) {
-    await page.getByRole('tab', { name: new RegExp(scenario.day) }).click();
+  if (scenario.dayIndex !== undefined) {
+    await page.getByRole('tab').nth(scenario.dayIndex).click();
     await page.waitForTimeout(1200);
   }
   if (scenario.view) {

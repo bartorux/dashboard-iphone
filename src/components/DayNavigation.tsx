@@ -1,15 +1,14 @@
 import React from 'react';
 import { DayOffset } from '../types';
-import { DAY_NAMES } from '../utils/constants';
-import { getDayDate } from '../utils/dateHelpers';
+import { dayTab } from '../utils/dayWindow';
 import SegmentedControl from './SegmentedControl';
 
 interface DayNavigationProps {
+  /** Which days to offer, as offsets from today. Not contiguous — see dayWindow. */
+  offsets: DayOffset[];
   currentDay: DayOffset;
   onSwitchDay: (offset: DayOffset) => void;
 }
-
-const DAYS: DayOffset[] = [0, 1, 2];
 
 /**
  * On a monitor this control and the view switcher inside the chart card have to
@@ -22,8 +21,13 @@ const DAYS: DayOffset[] = [0, 1, 2];
  * than the wrapper, because padding on the wrapper is subtracted from a
  * max-width and the pair would end up the same distance apart, just at the other
  * end.
+ *
+ * The width stays at 34rem, matching the view switcher inside the card below to
+ * the pixel. Five segments divide it into 108px each against the 47px a label
+ * needs, so widening it would buy nothing and break the alignment.
  */
 const DayNavigation: React.FC<DayNavigationProps> = ({
+  offsets,
   currentDay,
   onSwitchDay,
 }) => (
@@ -32,11 +36,7 @@ const DayNavigation: React.FC<DayNavigationProps> = ({
       ariaLabel="Wybór dnia"
       value={currentDay}
       onChange={onSwitchDay}
-      segments={DAYS.map((offset) => ({
-        value: offset,
-        label: DAY_NAMES[offset],
-        sublabel: getDayDate(offset),
-      }))}
+      segments={offsets.map((offset) => ({ value: offset, ...dayTab(offset) }))}
       className="xl:w-[34rem]"
     />
   </div>
