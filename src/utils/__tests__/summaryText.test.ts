@@ -58,6 +58,63 @@ describe('buildPrompt', () => {
   });
 });
 
+describe('prompt bez wiersza TREŚĆ', () => {
+  const spokojnie = buildFacts(
+    [hourOn('2026-08-10', 19, { reserve: 6000, required: 2000 })],
+    [],
+    new Date('2026-08-09T00:00:00Z')
+  );
+  const cos = buildFacts(
+    [hourOn('2026-08-10', 19, { reserve: 800, required: 2000 })],
+    [],
+    new Date('2026-08-09T00:00:00Z')
+  );
+
+  it('drops the middle line when no day has anything to explain', () => {
+    // Three instructions tried to stop the model repeating the verdict across
+    // TREŚĆ and DALEJ; each moved it rather than removing it. A slot that exists
+    // gets filled, so on a quiet period there is no slot.
+    const prompt = buildPrompt(spokojnie, 30, new Date('2026-08-09T10:00:00Z'));
+
+    expect(prompt).toContain('Wiersza TREŚĆ tym razem NIE');
+    expect(prompt).toContain('Dokładnie DWA wiersze');
+    expect(prompt).not.toContain('TREŚĆ: DWA zdania');
+    // The three-line preamble has to go with it, or the prompt contradicts
+    // itself about how many lines it wants.
+    expect(prompt).not.toContain('Dokładnie trzy wiersze');
+  });
+
+  it('keeps it when a day carries grounds', () => {
+    const prompt = buildPrompt(cos, 30, new Date('2026-08-09T10:00:00Z'));
+
+    expect(prompt).toContain('TREŚĆ: DWA zdania');
+    expect(prompt).toContain('Dokładnie trzy wiersze');
+    expect(prompt).not.toContain('Dokładnie DWA wiersze');
+  });
+
+  it('accepts a reply that has no TREŚĆ, and still refuses one missing DALEJ', () => {
+    const bezTresci = parseSummary(
+      'NAGŁÓWEK: W środę margines jest najwęższy.\nDALEJ: W żadnym z dni nie ma podstaw do przywołania.'
+    );
+    expect(bezTresci?.body).toBe('');
+    expect(bezTresci?.outlook).toContain('nie ma podstaw');
+
+    expect(parseSummary('NAGŁÓWEK: Cokolwiek.')).toBeNull();
+  });
+
+  it('does not call an absent TREŚĆ an empty field', () => {
+    const ok = validateSummary(
+      {
+        headline: 'W środę o 19:00 margines jest najwęższy.',
+        body: '',
+        outlook: 'W żadnym z kolejnych dni nie ma podstaw do przywołania.',
+      },
+      new Set(['19:00'])
+    );
+    expect(ok).toEqual({ ok: true });
+  });
+});
+
 describe('parseSummary', () => {
   it('reads the three labelled lines', () => {
     const parsed = parseSummary(

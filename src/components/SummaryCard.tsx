@@ -1,7 +1,6 @@
 import React from 'react';
 import { Summary } from '../hooks/useSummary';
 import { usePersistentFlag } from '../hooks/usePersistentFlag';
-import { dayRangeLabel } from '../utils/dayLabels';
 import { ChevronDownIcon } from './icons';
 
 interface SummaryCardProps {
@@ -27,7 +26,6 @@ const timeFormat = new Intl.DateTimeFormat('pl-PL', {
 // carries through — see the root rule in App.css for how it is hooked up.
 const SummaryCard: React.FC<SummaryCardProps> = ({ summary, now }) => {
   const [expanded, setExpanded] = usePersistentFlag('summary-expanded', true);
-  const span = dayRangeLabel(summary.dates, now);
 
   return (
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
@@ -45,8 +43,12 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ summary, now }) => {
         className="flex w-full items-center justify-between gap-2 text-left"
       >
         <span className="min-w-0 truncate text-[0.6875rem] text-text-tertiary">
-          Analiza AI
-          {span && ` · ${span}`}
+            {/* No day range here any more. It read "dziś–pon.", the same span
+                the tabs below already show, and knowing it changed nothing —
+                this card is about what is coming, not about which dates were
+                consulted. The time stays: how old the text is, a reader does
+                check. */}
+            Analiza AI
           {` · ${timeFormat.format(new Date(summary.generatedAt))}`}
         </span>
         <ChevronDownIcon
@@ -65,7 +67,10 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ summary, now }) => {
       <div className="collapsible" data-collapsed={!expanded}>
         <div>
           <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-text-secondary">
-            {summary.body} {summary.outlook}
+            {/* Joined rather than interpolated with a space: TREŚĆ is absent
+                by design on a quiet period, and a bare space would open the
+                paragraph with one. */}
+            {[summary.body, summary.outlook].filter(Boolean).join(' ')}
           </p>
         </div>
       </div>

@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 24;
+export const PROMPT_VERSION = 25;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -159,11 +159,6 @@ NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
 TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku — najczęściej
 dlaczego operator ma prawo nie ogłaszać przywołania i czy ogłoszenie może
 jeszcze nadejść.
-GDY W ŻADNYM DNIU NIE MA PODSTAW, oba te tematy odpadają — nie ma czego
-uzasadniać ani na co czekać. Wtedy TREŚĆ to JEDNO ZDANIE, nie dwa, i mówi
-o czym innym: która godzina jest najciaśniejsza albo jak okres wypada na tle
-ostatnich dni. Werdykt o braku podstaw należy do wiersza DALEJ i pada w całym
-tekście RAZ — drugie zdanie tutaj nie ma czego powiedzieć, więc go nie ma.
 DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
@@ -186,6 +181,30 @@ przywołania."
 
 FAKTY:
 `;
+
+/** The three-line format, as the instruction states it. */
+const FORMAT_WITH_BODY = `Dokładnie trzy wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadnych
+cudzysłowów wokół pól, żadnych sekwencji ucieczki.
+
+NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
+TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku — najczęściej
+dlaczego operator ma prawo nie ogłaszać przywołania i czy ogłoszenie może
+jeszcze nadejść.`;
+
+/**
+ * The two-line format, used when no day has grounds and no margin is narrow.
+ *
+ * There is no TREŚĆ here at all. Asking for it and then telling the model what
+ * not to put in it failed three times running.
+ */
+const FORMAT_WITHOUT_BODY = `Dokładnie DWA wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadnych
+cudzysłowów wokół pól, żadnych sekwencji ucieczki. Wiersza TREŚĆ tym razem NIE
+MA — w żadnym dniu nie ma podstaw do przywołania ani wąskiego marginesu, więc
+nie ma czego rozwijać.
+
+NAGŁÓWEK: jedno zdanie o tym, co w tym okresie jest najciaśniejsze albo jak
+wypada on na tle ostatnich dni. NIE stwierdzaj tu braku podstaw — to należy
+do DALEJ.`;
 
 /**
  * A different thing to lead with each hour.
@@ -211,13 +230,42 @@ export function emphasisFor(now: Date): string {
   return EMPHASES[now.getUTCHours() % EMPHASES.length];
 }
 
+/**
+ * Whether any day carries something worth explaining in its own sentence.
+ *
+ * Grounds for a call period, or a margin narrow enough to be worth pointing at.
+ * With neither, the only fact left is that there are no grounds — and that
+ * belongs to the closing line.
+ */
+export function hasSomethingToExplain(facts: DayFacts[]): boolean {
+  return facts.some((day) => day.risk !== 'none' || day.nearThreshold > 0);
+}
+
 export function buildPrompt(
   facts: DayFacts[],
   historyDays: number,
   now: Date
 ): string {
+  /*
+   * The middle line is asked for only when there is something to put in it.
+   *
+   * Three instructions in a row tried to stop the model repeating the verdict
+   * across TREŚĆ and DALEJ, and each one moved the problem instead of solving
+   * it: forbidden in the second sentence it went to the first, and with the
+   * second sentence removed it took the first outright while the hour it should
+   * have carried migrated into the headline. That is not disobedience. When
+   * nothing is happening the verdict is the only salient fact and the format
+   * offered three slots to hold it.
+   *
+   * So the slot is gone rather than guarded. The model cannot repeat a line it
+   * was never asked to write.
+   */
+  const instruction = hasSomethingToExplain(facts)
+    ? INSTRUCTION
+    : INSTRUCTION.replace(FORMAT_WITH_BODY, FORMAT_WITHOUT_BODY);
+
   return (
-    INSTRUCTION +
+    instruction +
     renderFacts(facts, historyDays) +
     `\n\nTYM RAZEM ZACZNIJ OD: ${emphasisFor(now)}`
   );
@@ -239,7 +287,13 @@ export function parseSummary(text: string): Summary | null {
     outlook: field('DALEJ'),
   };
 
-  return summary.headline && summary.body && summary.outlook ? summary : null;
+  /*
+   * TREŚĆ may be absent by design. With no grounds and no narrow margin the
+   * prompt asks for two lines, because a slot that exists gets filled — three
+   * instructions telling the model to leave it alone each just moved the
+   * repetition somewhere else.
+   */
+  return summary.headline && summary.outlook ? summary : null;
 }
 
 /** Generous, but enough to catch a runaway answer. */
@@ -267,7 +321,16 @@ export function validateSummary(
     [keyof Summary, number]
   >) {
     const value = summary[key];
-    if (!value.trim()) return { ok: false, reason: `puste pole ${key}` };
+    /*
+     * body alone may be absent. On a period with no grounds and no narrow
+     * margin the prompt asks for two lines: a slot that exists gets filled,
+     * and three instructions telling the model to leave it alone each moved
+     * the repeated verdict somewhere else rather than removing it.
+     */
+    if (!value.trim()) {
+      if (key === 'body') continue;
+      return { ok: false, reason: `puste pole ${key}` };
+    }
     if (value.length > limit) {
       return { ok: false, reason: `pole ${key} dłuższe niż ${limit} znaków` };
     }
