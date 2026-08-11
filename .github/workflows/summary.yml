@@ -62,22 +62,51 @@ jobs:
       # stay in history. It is NOT what publishes: a push made with GITHUB_TOKEN
       # deliberately triggers no further workflow, so `deploy.yml` never sees it.
       # Delivery is the job below, which runs only when this step changed something.
+      #
+      # Two files, one commit, but only ONE of them publishes. The forecast log is
+      # written most hours and is read by nothing but the next run of this script;
+      # letting it trigger the deploy would rebuild the site — and churn the
+      # service worker on every phone — for a file no phone downloads.
       - name: Zapisz, jesli sie zmienilo
         id: publish
         run: |
-          if git diff --quiet -- public/summary.json; then
-            echo "Bez zmian — nie publikuje."
+          # --porcelain, not `git diff`: the log is untracked on the first run
+          # ever, and `git diff` says nothing about a file git has not seen.
+          summary_changed=$([ -n "$(git status --porcelain -- public/summary.json)" ] && echo yes || echo no)
+          log_changed=$([ -n "$(git status --porcelain -- data/forecast-log.json)" ] && echo yes || echo no)
+
+          # `changed` is written exactly once, on whichever path the step takes,
+          # and never before the push. It decides whether the deploy job runs, so
+          # setting it early would publish a commit that failed to leave here. If
+          # this step dies the output stays unset, which reads as false — the safe
+          # direction.
+          if [ "$summary_changed" = no ] && [ "$log_changed" = no ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Ani podsumowanie, ani log sie nie zmienily — nie commituje."
             exit 0
           fi
+
+          if [ "$summary_changed" = no ]; then
+            echo "Ruszyl sie tylko log prognozy — commituje bez publikacji."
+            wiadomosc="Zapisz migawke prognozy"
+          else
+            wiadomosc="Odswiez podsumowanie"
+          fi
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/summary.json
-          git commit -m "Odswiez podsumowanie"
+          if [ -f public/summary.json ]; then git add public/summary.json; fi
+          if [ -f data/forecast-log.json ]; then git add data/forecast-log.json; fi
+          git commit -m "$wiadomosc"
           # Someone may have pushed while the model was answering.
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
-          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+          if [ "$summary_changed" = yes ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
 
   # Publishes the site itself rather than hoping the commit above wakes the deploy
   # workflow — it cannot. Gated on an actual change, so a quiet hour costs nothing
