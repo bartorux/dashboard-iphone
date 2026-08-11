@@ -20,9 +20,21 @@ function usable(value: unknown): value is Summary {
   if (typeof value !== 'object' || value === null) return false;
   const record = value as Record<string, unknown>;
 
-  const textFields = ['headline', 'body', 'outlook', 'generatedAt'].every(
+  const textFields = ['headline', 'outlook', 'generatedAt'].every(
     (key) => typeof record[key] === 'string' && record[key] !== ''
   );
+
+  /*
+   * body is checked for type but not for content: it is empty by design when no
+   * day carries grounds, because the prompt then asks for two lines rather than
+   * three.
+   *
+   * Missing that here took the whole card off the page. The generator wrote a
+   * valid two-line summary, the file published, and this guard — written when
+   * three fields were always present — read the empty body as a broken file and
+   * refused the lot. Nothing errored; the card simply was not there.
+   */
+  const bodyPresent = typeof record.body === 'string';
 
   // A card that cannot say which days it covers is the very thing this field
   // exists to prevent, so a file without it is refused rather than shown bare.
@@ -32,7 +44,10 @@ function usable(value: unknown): value is Summary {
     record.dates.every((entry) => typeof entry === 'string' && entry !== '');
 
   return (
-    textFields && dates && !Number.isNaN(Date.parse(record.generatedAt as string))
+      textFields &&
+      bodyPresent &&
+      dates &&
+      !Number.isNaN(Date.parse(record.generatedAt as string))
   );
 }
 
