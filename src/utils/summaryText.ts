@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 21;
+export const PROMPT_VERSION = 22;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the

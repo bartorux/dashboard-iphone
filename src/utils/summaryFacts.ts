@@ -349,8 +349,24 @@ export function renderFacts(facts: DayFacts[], days: number): string {
     );
 
     if (day.worstMargin !== null) {
+      /*
+       * The hour is named only when it means something.
+       *
+       * On a day with no grounds and no narrow margin, the lowest hour is not a
+       * hard hour — at +1821 MW the whole day is comfortable and singling one
+       * out invites the reader to look at nothing. That was harmless while the
+       * summary covered three days. At five it stopped being harmless: every
+       * day handed the model an hour, and the DALEJ line came back as a list of
+       * four of them, each one copied straight from these lines.
+       *
+       * Removing the temptation rather than forbidding it, which is what worked
+       * when the model kept reaching for words this prompt had shown it.
+       */
+      const worthNaming = day.risk !== 'none' || day.nearThreshold > 0;
+
       lines.push(
-        `  najniższy margines ${round(day.worstMargin)} o ${day.worstHour}` +
+        `  najniższy margines ${round(day.worstMargin)}` +
+          (worthNaming ? ` o ${day.worstHour}` : '') +
           (day.averageMargin !== null ? `, średni margines ${round(day.averageMargin)}` : '')
       );
     }
