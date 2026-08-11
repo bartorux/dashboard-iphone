@@ -30,6 +30,8 @@ npm run dev
 | `npm run test:visual` | porównanie z wzorcami — wymaga uruchomionego `npm run dev` |
 | `npm run test:visual:update` | zapisanie nowych wzorców po świadomej zmianie wyglądu |
 | `npx tsx scripts/facts.ts` | fakty wysyłane do modelu, policzone z żywych danych — bez klucza |
+| `npx tsx scripts/teksty.ts` | doba odpowiedzi modelu naraz, z sygnałami słabości |
+| `npx tsx scripts/teksty.ts --pelne` | to samo z pełną treścią każdej |
 | `npx tsx scripts/summary.ts --dry-run` | to samo plus pełne zapytanie i odcisk oceny |
 | `GEMINI_API_KEY=… npx tsx scripts/summary.ts` | wygenerowanie `public/summary.json` |
 
@@ -215,6 +217,21 @@ migawka nie jest zapisywana.
 Plik leży **poza `public/`**: nie trafia do bundla ani do precache service workera, a warunek
 publikacji zostaje na `summary.json`, więc godzina, w której ruszył się tylko log, commituje się bez
 przebudowy strony na telefonach.
+
+### Zapis odpowiedzi modelu
+
+`data/summary-log.json` przechowuje **każdą** odpowiedź — także tę odrzuconą przez walidację, której
+nie ma nigdzie indziej. Opublikowane teksty dało się odtworzyć z historii gita, bo każde odświeżenie
+to commit; odrzucone przepadały, zostawiając wyłącznie ostrzeżenie z nazwą reguły, która zadziałała.
+
+Chodzi jednak nie o archiwum, tylko o to, żeby **zobaczyć, który przebieg był słaby** — a słaby
+przebieg widać dopiero obok pozostałych. Pojedyncze podsumowanie zawsze czyta się dobrze.
+`npx tsx scripts/teksty.ts` pokazuje dobę naraz z trzema mechanicznymi sygnałami: ile razy pada
+„przywołanie" (dwa to powtórzenie), długość w znakach i najdłuższa fraza występująca dwukrotnie.
+
+Ocena stylu zostaje przy człowieku — to tylko mówi, gdzie patrzeć. Na 57 wpisach z historii widać
+całą drogę: wersje promptu do 25 nazywały werdykt dwa razy przy 350–550 znakach, wersja 26 zeszła do
+jednego i 150 znaków, wersja 27 się cofnęła, od 28 trzyma.
 
 ### Strażnik świeżości
 
