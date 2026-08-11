@@ -50,6 +50,7 @@ function App() {
     isStale,
     lastUpdate,
     hasData,
+    hasFreshData,
   } = usePSEData();
 
   const { settings, saveSettings, resetSettings } = useSettings();
@@ -182,7 +183,14 @@ function App() {
     );
   }, [showNotification]);
 
-  const connection: ConnectionState = isLoading && !hasData
+  /*
+   * Showing cached figures while the first fetch of the session is still in
+   * flight is "loading", not "cached" and not "online". Keyed on hasFreshData
+   * rather than hasData: with a cache present hasData is true from the first
+   * frame, so the header would otherwise announce "Zaktualizowano" over figures
+   * it had not yet fetched.
+   */
+  const connection: ConnectionState = isLoading && !hasFreshData
     ? 'loading'
     : !hasData
     ? 'error'
