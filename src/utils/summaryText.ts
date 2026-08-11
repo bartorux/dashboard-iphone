@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 25;
+export const PROMPT_VERSION = 26;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -231,14 +231,20 @@ export function emphasisFor(now: Date): string {
 }
 
 /**
- * Whether any day carries something worth explaining in its own sentence.
+ * Whether any day carries something that needs a sentence of its own.
  *
- * Grounds for a call period, or a margin narrow enough to be worth pointing at.
- * With neither, the only fact left is that there are no grounds — and that
- * belongs to the closing line.
+ * Grounds for a call period, and nothing less. A narrow but positive margin was
+ * included at first and that was too generous: it is a single fact, the headline
+ * takes it, and TREŚĆ was left with the verdict again — published as "W środę
+ * o 20:00 margines jest wąski" in the headline and "W środę o 20:00 margines
+ * pozostaje dodatni" underneath, the same hour twice and the verdict twice.
+ *
+ * Grounds are different. They come with a reason the operator may refrain and
+ * with whether the notice period still holds — two things the headline cannot
+ * carry alone, which is exactly what the middle line is for.
  */
 export function hasSomethingToExplain(facts: DayFacts[]): boolean {
-  return facts.some((day) => day.risk !== 'none' || day.nearThreshold > 0);
+  return facts.some((day) => day.risk !== 'none');
 }
 
 export function buildPrompt(
