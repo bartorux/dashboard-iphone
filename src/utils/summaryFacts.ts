@@ -394,6 +394,13 @@ export function renderFacts(facts: DayFacts[], days: number): string {
   const lines: string[] = [keyPoint(facts), ''];
   const lead = leadingDay(facts);
 
+  /*
+   * Every day the same, and `keyPoint` has already said so for the whole window.
+   * Only then is the per-day verdict pure repetition; a single 'unknown' day
+   * makes each line carry something again, so the collapse is off.
+   */
+  const allClear = facts.every((day) => day.risk === 'none');
+
   for (const day of facts) {
     lines.push(
       `${day.businessDate} (${day.weekday}${day.workingDay ? ', roboczy' : ', wolny'}), ` +
@@ -435,7 +442,20 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       );
     }
 
-    lines.push(`  stan: ${RISK_WORD[day.risk]}`);
+    /*
+     * Said once for the window, or once per day — never both.
+     *
+     * On a calm week this line was identical five times over, and `keyPoint`
+     * said the same thing a sixth time at the top. Opening the middle line of
+     * the answer while that was true produced exactly what the material invited:
+     * the model wrote "nie ma podstaw do przywołania" in TREŚĆ and again in
+     * DALEJ, and never reached the one line that carried something new.
+     *
+     * Counted before removing it: the phrase reached the model seven times, the
+     * cause once. This is the same fix that worked four times today — take away
+     * what is being copied instead of forbidding the copy.
+     */
+    if (!allClear) lines.push(`  stan: ${RISK_WORD[day.risk]}`);
 
     /*
      * The cause, for the leading day and no other.
