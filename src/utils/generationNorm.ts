@@ -205,11 +205,26 @@ function wordFor(driver: Driver): string {
 export function describeDrivers(explanation: HourExplanation): string | null {
   if (explanation.worse.length === 0) return null;
 
-  const parts = explanation.worse.map(wordFor);
-  if (explanation.demandTypical) parts.push('zapotrzebowanie typowe');
+  /*
+   * One counterweight, never two.
+   *
+   * Handed "wiatr poniżej normy, zapotrzebowanie typowe; w drugą stronę ubytki
+   * poniżej normy" the model wrote it back almost verbatim, three factors in a
+   * row: "O 20:00 wiatr spada poniżej normy przy typowym zapotrzebowaniu
+   * i ubytkach poniżej normy." Correct, and it reads like a machine — because a
+   * comma-separated list is what it was given.
+   *
+   * A measured counterweight beats "demand is ordinary": it names something that
+   * actually moved, so the clause becomes a contrast rather than an inventory.
+   * Ordinary demand is still worth saying when nothing else is holding the
+   * margin up, since then it is the whole of the good news.
+   */
+  const counterweight = explanation.better
+    ? `w drugą stronę ${wordFor(explanation.better)}`
+    : explanation.demandTypical
+      ? 'zapotrzebowanie typowe'
+      : null;
 
-  const clause = parts.join(', ');
-  return explanation.better
-    ? `${clause}; w drugą stronę ${wordFor(explanation.better)}`
-    : clause;
+  const clause = explanation.worse.map(wordFor).join(', ');
+  return counterweight ? `${clause}; ${counterweight}` : clause;
 }

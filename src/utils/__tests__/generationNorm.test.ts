@@ -165,7 +165,7 @@ describe('describeDrivers', () => {
     const point = at20({ wind: 653, pv: 16, demand: 19063, outages: 2995 });
 
     expect(describeDrivers(explainHour(point, norm))).toBe(
-      'wiatr poniżej normy, ubytki powyżej normy, zapotrzebowanie typowe'
+      'wiatr poniżej normy, ubytki powyżej normy; zapotrzebowanie typowe'
     );
   });
 
@@ -174,10 +174,10 @@ describe('describeDrivers', () => {
     const far = at20({ wind: 400, pv: 427, demand: 19078, outages: 2272 });
 
     expect(describeDrivers(explainHour(near, norm))).toBe(
-      'wiatr poniżej normy, zapotrzebowanie typowe'
+      'wiatr poniżej normy; zapotrzebowanie typowe'
     );
     expect(describeDrivers(explainHour(far, norm))).toBe(
-      'wiatr wyraźnie poniżej normy, zapotrzebowanie typowe'
+      'wiatr wyraźnie poniżej normy; zapotrzebowanie typowe'
     );
   });
 
@@ -193,8 +193,11 @@ describe('describeDrivers', () => {
     // describe an evening to worry about.
     const point = at20({ wind: 682, pv: 201, demand: 18964, outages: 1427 });
 
+    // One counterweight, and the measured one wins: "demand is ordinary" is
+    // dropped in favour of the outages that actually moved. Three factors in a
+    // row is what the model transcribed back as a machine would.
     expect(describeDrivers(explainHour(point, norm))).toBe(
-      'wiatr poniżej normy, zapotrzebowanie typowe; w drugą stronę ubytki poniżej normy'
+      'wiatr poniżej normy; w drugą stronę ubytki poniżej normy'
     );
   });
 
