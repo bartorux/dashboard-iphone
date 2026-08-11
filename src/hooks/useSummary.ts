@@ -20,21 +20,28 @@ function usable(value: unknown): value is Summary {
   if (typeof value !== 'object' || value === null) return false;
   const record = value as Record<string, unknown>;
 
-  const textFields = ['headline', 'outlook', 'generatedAt'].every(
+  const textFields = ['headline', 'generatedAt'].every(
     (key) => typeof record[key] === 'string' && record[key] !== ''
   );
 
   /*
-   * body is checked for type but not for content: it is empty by design when no
-   * day carries grounds, because the prompt then asks for two lines rather than
-   * three.
+   * body and outlook are checked for type but not for content, because either
+   * one is empty by design depending on the shape the prompt asked for: a quiet
+   * period with nothing to explain drops TREŚĆ, and a quiet period WITH a cause
+   * drops DALEJ, since there the verdict belongs in the headline.
    *
-   * Missing that here took the whole card off the page. The generator wrote a
-   * valid two-line summary, the file published, and this guard — written when
-   * three fields were always present — read the empty body as a broken file and
-   * refused the lot. Nothing errored; the card simply was not there.
+   * This guard is the third and last layer to know that, after the parser and
+   * the validator, and it is the one that got missed the first time: the
+   * generator wrote a valid two-line summary, the file published, and this
+   * check — written when three fields were always present — read the empty one
+   * as a broken file and refused the lot. Nothing errored; the card simply was
+   * not there, and it was found by accident. Both fields are now typed here and
+   * required to be non-empty in pairs, never individually.
    */
-  const bodyPresent = typeof record.body === 'string';
+  const linesPresent =
+    typeof record.body === 'string' &&
+    typeof record.outlook === 'string' &&
+    (record.body !== '' || record.outlook !== '');
 
   // A card that cannot say which days it covers is the very thing this field
   // exists to prevent, so a file without it is refused rather than shown bare.
@@ -45,7 +52,7 @@ function usable(value: unknown): value is Summary {
 
   return (
       textFields &&
-      bodyPresent &&
+      linesPresent &&
       dates &&
       !Number.isNaN(Date.parse(record.generatedAt as string))
   );

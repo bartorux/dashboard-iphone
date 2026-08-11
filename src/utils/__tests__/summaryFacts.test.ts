@@ -450,6 +450,33 @@ describe('renderFacts', () => {
     expect(tekst).toContain('sama ta godzina wypada poniżej typowego zakresu');
   });
 
+  it('drops the counterweight on a day the regulation ignores', () => {
+    /*
+     * Two reassurances against one worry is what made the published text a
+     * see-saw: tightest hour of the week, but outages are low, but it is typical
+     * anyway. Where nothing is at stake the standing line beneath carries the
+     * "but" on its own; where there are grounds, the trade-off is the substance
+     * and stays.
+     */
+    const spokojny = buildFacts(
+      [...windlessDay('2026-08-10', 8000)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL
+    );
+    const zPodstawami = buildFacts(
+      [...windlessDay('2026-08-10', 1500, 800)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL
+    );
+
+    expect(spokojny[0].risk).toBe('none');
+    expect(spokojny[0].drivers).not.toContain('w drugą stronę');
+    expect(spokojny[0].drivers).not.toContain('zapotrzebowanie typowe');
+
+    expect(zPodstawami[0].risk).not.toBe('none');
+    expect(zPodstawami[0].drivers).toContain('zapotrzebowanie typowe');
+  });
+
   it('offers no cause when the mix is unremarkable', () => {
     // A line saying everything is normal is a line the model will find a way to
     // repeat.

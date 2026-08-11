@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 29;
+export const PROMPT_VERSION = 30;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -187,6 +187,25 @@ przywołania."
 FAKTY:
 `;
 
+/**
+ * Swap a fragment of the instruction, loudly.
+ *
+ * The variants below are substrings of INSTRUCTION kept in step by hand, so a
+ * reworded instruction silently stops matching and every run quietly falls back
+ * to the default shape. That exact failure — a replacement that matched nothing
+ * and reported success — cost an afternoon today in a different file. A throw
+ * here fails the scheduled job, which leaves the previous summary published and
+ * raises a warning; a silent miss would publish the wrong shape instead.
+ */
+export function swap(text: string, from: string, to: string): string {
+  if (!text.includes(from)) {
+    throw new Error(
+      'Fragment instrukcji nie pasuje — zmieniono INSTRUCTION bez aktualizacji wariantu formatu'
+    );
+  }
+  return text.replace(from, to);
+}
+
 /** The three-line format, as the instruction states it. */
 const FORMAT_WITH_BODY = `Dokładnie trzy wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadnych
 cudzysłowów wokół pól, żadnych sekwencji ucieczki.
@@ -202,34 +221,62 @@ nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
   i remonty to domysły, dopóki fakty ich nie nazywają.`;
 
 /**
- * The three-line format for a calm window that still has a cause to give.
+ * The block describing DALEJ, lifted out so the answer-first shape can drop it.
  *
- * TREŚĆ gets exactly one job here, because on such a week the verdict is the
- * only other thing it could hold — and handed a slot with nothing assigned to
- * it, the model filled it with the verdict and left the cause untouched. That is
- * what v27 published: "nie ma podstaw do przywołania" in the middle line and
- * again in the last one, with nothing said about the wind that made the evening
- * the week's tightest.
- *
- * The wording of NAGŁÓWEK is lifted from the two-line format, which has held up:
- * it already refuses to state the verdict up top and leaves that to DALEJ.
+ * Kept byte-identical to the passage inside INSTRUCTION; `swap` throws if the
+ * two ever drift apart.
  */
-const FORMAT_WITH_CAUSE = `Dokładnie trzy wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadnych
-cudzysłowów wokół pól, żadnych sekwencji ucieczki.
+const DALEJ_BLOCK = `DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
+kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
+w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
+stwierdzeniem: „w pozostałych dniach nie ma podstaw". Jeśli takiego dnia nie ma
+ani jednego, powiedz to wprost o całym okresie i na tym poprzestań.
 
-NAGŁÓWEK: jedno zdanie o tym, co w tym okresie jest najciaśniejsze albo jak
-wypada on na tle ostatnich dni. NIE stwierdzaj tu braku podstaw — to należy
-do DALEJ.
-TREŚĆ: DWA zdania o wskazanej godzinie i o niczym innym.
-- Pierwsze: DLACZEGO akurat ona jest najciaśniejsza — co obniża rezerwę i co ją
-  trzyma. Napisz to jako zależność, nie jako wyliczankę czynników.
-- Drugie: jak ta godzina wypada na tle tej samej pory z ostatnich dni.
-- ZAWSZE podaj DZIEŃ przy godzinie („w czwartek o 20:00"). Sama godzina zostanie
-  odczytana jako dzisiejsza, a zwykle nie jest.
+WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:
+TAK NIE PISZ: „Niedziela i wtorek nie wykażą podstaw do przywołania, mimo
+wystąpienia cienkiego dodatniego marginesu w godzinach wieczornych."
+(dni niczego nie wykazują; „mimo" przeciwstawia dwie rzeczy, które sobie nie
+przeczą; „cienki margines" to kalka — margines jest wąski; „w godzinach
+wieczornych" zamiast godziny z faktów)
+TAK NIE PISZ: „We wtorek nie ma podstaw, w środę nie ma podstaw, w czwartek nie
+ma podstaw, a w piątek margines jest wąski." (wyliczanka; trzy pierwsze człony
+niosą jedną informację)
+TAK PISZ: „W piątek o 20:00 operator ma prawo nie ogłaszać przywołania;
+w pozostałych dniach nie ma podstaw."
+TAK PISZ, gdy nie dzieje się nic: „W żadnym z kolejnych dni nie ma podstaw do
+przywołania."
+`;
+
+/**
+ * Answer first, detail second — the shape for a calm window that has a cause.
+ *
+ * The arrangement it replaces produced a see-saw. Forbidden from stating the
+ * calm verdict, the headline reached for "rezerwa spada najniżej w całym
+ * okresie", which reads as bad news; the body then took it back twice, once
+ * with a counterweight and once with the 30-day standing; and DALEJ closed with
+ * the verdict the headline had not been allowed to give. Two beats of worry,
+ * three of reassurance, all of equal weight — perfectly balanced and therefore
+ * saying nothing.
+ *
+ * The reader opens this app with one question. The first line answers it, and
+ * it is the line that stays visible when the card is collapsed. Everything else
+ * is detail, subordinate rather than opposed.
+ */
+const FORMAT_ANSWER_FIRST = `Dokładnie DWA wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadnych
+cudzysłowów wokół pól, żadnych sekwencji ucieczki. Wiersza DALEJ tym razem NIE MA.
+
+NAGŁÓWEK: jedno zdanie, wprost — w tych dniach nie ma podstaw do przywołania.
+To jest odpowiedź na pytanie, z którym czytelnik otwiera aplikację, i jedyne
+zdanie widoczne, gdy karta jest zwinięta. NIE zaczynaj od tego, co najciaśniejsze
+— to należy do TREŚCI.
+TREŚĆ: JEDNO zdanie o godzinie, która wypada najciaśniej: kiedy (ZAWSZE z dniem
+tygodnia), co ją zacieśnia i jak wypada na tle tej samej pory z ostatnich dni.
+Porównanie ma być członem podrzędnym — „ale i ta godzina mieści się w tym, co
+o tej porze typowe" — a nie osobnym zdaniem. Nie dokładaj żadnego dalszego
+zastrzeżenia: nagłówek już powiedział, że nic nie grozi.
 - Powód opisz SŁOWAMI z faktów („wiatr poniżej normy"), bez liczb. Nie zgaduj
-  przyczyny, której w faktach nie ma: pogoda, awarie i remonty to domysły,
-  dopóki fakty ich nie nazywają.
-- O tym, czy są podstawy do przywołania, pisze DALEJ i tylko DALEJ.`;
+  przyczyny, której w faktach nie ma — pogoda, awarie i remonty to domysły,
+  dopóki fakty ich nie nazywają.`;
 
 /**
  * The two-line format, used when no day has grounds and nothing explains the
@@ -332,10 +379,16 @@ export function buildPrompt(
    * thing.
    */
   const instruction = !hasSomethingToExplain(facts)
-    ? INSTRUCTION.replace(FORMAT_WITH_BODY, FORMAT_WITHOUT_BODY)
+    ? swap(INSTRUCTION, FORMAT_WITH_BODY, FORMAT_WITHOUT_BODY)
     : hasGrounds(facts)
       ? INSTRUCTION
-      : INSTRUCTION.replace(FORMAT_WITH_BODY, FORMAT_WITH_CAUSE);
+      : // Answer first: the format goes, and so does the DALEJ block, or the
+        // model is still being told how to write a line it must not write.
+        swap(
+          swap(INSTRUCTION, FORMAT_WITH_BODY, FORMAT_ANSWER_FIRST),
+          DALEJ_BLOCK,
+          ''
+        );
 
   return (
     instruction +
@@ -361,12 +414,17 @@ export function parseSummary(text: string): Summary | null {
   };
 
   /*
-   * TREŚĆ may be absent by design. With no grounds and no narrow margin the
-   * prompt asks for two lines, because a slot that exists gets filled — three
-   * instructions telling the model to leave it alone each just moved the
-   * repetition somewhere else.
+   * Either TREŚĆ or DALEJ may be absent, but never both.
+   *
+   * Which one goes depends on the shape asked for: a quiet period with nothing
+   * to explain drops TREŚĆ, and a quiet period WITH a cause drops DALEJ instead,
+   * because there the verdict belongs in the headline and DALEJ could only
+   * repeat it. What must always hold is a headline plus at least one line under
+   * it — a card with nothing but its own answer would be thinner than the two
+   * fields suggest.
    */
-  return summary.headline && summary.outlook ? summary : null;
+  const hasDetail = Boolean(summary.body || summary.outlook);
+  return summary.headline && hasDetail ? summary : null;
 }
 
 /** Generous, but enough to catch a runaway answer. */
@@ -395,18 +453,24 @@ export function validateSummary(
   >) {
     const value = summary[key];
     /*
-     * body alone may be absent. On a period with no grounds and no narrow
-     * margin the prompt asks for two lines: a slot that exists gets filled,
-     * and three instructions telling the model to leave it alone each moved
-     * the repeated verdict somewhere else rather than removing it.
+     * body and outlook may each be absent, depending on the shape asked for —
+     * see parseSummary for which goes when. The headline never may, and the two
+     * of them may not both be empty; that pair of rules is checked below rather
+     * than field by field.
      */
     if (!value.trim()) {
-      if (key === 'body') continue;
+      if (key !== 'headline') continue;
       return { ok: false, reason: `puste pole ${key}` };
     }
     if (value.length > limit) {
       return { ok: false, reason: `pole ${key} dłuższe niż ${limit} znaków` };
     }
+  }
+
+  // A headline on its own is not a summary. One of the two lines beneath it has
+  // to carry something, whichever shape was asked for.
+  if (!summary.body.trim() && !summary.outlook.trim()) {
+    return { ok: false, reason: 'sam nagłówek, bez treści i bez dalszej części' };
   }
 
   const whole = `${summary.headline}\n${summary.body}\n${summary.outlook}`;
