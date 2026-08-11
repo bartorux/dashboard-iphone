@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 30;
+export const PROMPT_VERSION = 31;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -164,6 +164,9 @@ nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
 - Powód opisz SŁOWAMI z faktów („wiatr poniżej normy"), bez liczb i bez
   przeliczania. Nie zgaduj przyczyny, której w faktach nie ma — pogoda, awarie
   i remonty to domysły, dopóki fakty ich nie nazywają.
+- DZIEŃ nazywaj DOKŁADNIE tak, jak nazywają go fakty. Jeśli piszą „poniedziałek
+  17 sierpnia", nie skracaj do „w poniedziałek": okno sięga za weekend, więc sama
+  nazwa dnia tygodnia opisuje wtedy dwa różne dni, a czytelnik wybierze bliższy.
 DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
@@ -218,7 +221,10 @@ więc nie zostawiaj go niewykorzystanego. Poza tym: dlaczego operator ma prawo
 nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
 - Powód opisz SŁOWAMI z faktów („wiatr poniżej normy"), bez liczb i bez
   przeliczania. Nie zgaduj przyczyny, której w faktach nie ma — pogoda, awarie
-  i remonty to domysły, dopóki fakty ich nie nazywają.`;
+  i remonty to domysły, dopóki fakty ich nie nazywają.
+- DZIEŃ nazywaj DOKŁADNIE tak, jak nazywają go fakty. Jeśli piszą „poniedziałek
+  17 sierpnia", nie skracaj do „w poniedziałek": okno sięga za weekend, więc sama
+  nazwa dnia tygodnia opisuje wtedy dwa różne dni, a czytelnik wybierze bliższy.`;
 
 /**
  * The block describing DALEJ, lifted out so the answer-first shape can drop it.
@@ -269,8 +275,10 @@ NAGŁÓWEK: jedno zdanie, wprost — w tych dniach nie ma podstaw do przywołani
 To jest odpowiedź na pytanie, z którym czytelnik otwiera aplikację, i jedyne
 zdanie widoczne, gdy karta jest zwinięta. NIE zaczynaj od tego, co najciaśniejsze
 — to należy do TREŚCI.
-TREŚĆ: JEDNO zdanie o godzinie, która wypada najciaśniej: kiedy (ZAWSZE z dniem
-tygodnia), co ją zacieśnia i jak wypada na tle tej samej pory z ostatnich dni.
+TREŚĆ: JEDNO zdanie o godzinie, która wypada najciaśniej: kiedy, co ją zacieśnia
+i jak wypada na tle tej samej pory z ostatnich dni. Dzień nazwij DOKŁADNIE tak,
+jak nazywają go fakty — nie skracaj „poniedziałek 17 sierpnia" do „w poniedziałek",
+bo okno sięga za weekend i sama nazwa dnia opisuje wtedy dwa różne dni.
 Porównanie ma być członem podrzędnym — „ale i ta godzina mieści się w tym, co
 o tej porze typowe" — a nie osobnym zdaniem. Nie dokładaj żadnego dalszego
 zastrzeżenia: nagłówek już powiedział, że nic nie grozi.

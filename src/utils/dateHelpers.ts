@@ -119,3 +119,58 @@ export function weekdayOf(businessDate: string): string {
 export function weekdayForOffset(offset: number): string {
   return weekdayOf(formatDate(addDays(new Date(), offset)));
 }
+
+const spokenFormat = new Intl.DateTimeFormat('pl-PL', {
+  weekday: 'long',
+  timeZone: 'UTC',
+});
+
+const dayMonthFormat = new Intl.DateTimeFormat('pl-PL', {
+  day: 'numeric',
+  month: 'long',
+  timeZone: 'UTC',
+});
+
+/** Monday-based week number, so "this week" means what a Polish reader means. */
+function mondayOf(date: Date): number {
+  const weekday = (date.getUTCDay() + 6) % 7;
+  return Date.UTC(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate() - weekday
+  );
+}
+
+/**
+ * How to say a date out loud without it meaning two different days.
+ *
+ * A bare weekday name is unambiguous only inside the current week. The day
+ * window spans five WORKING days, so from Wednesday on it reaches over the
+ * weekend — and then "w poniedziałek" describes both the Monday just gone and
+ * the one six days out. Published on 11 August, a Tuesday: the card led with
+ * "W poniedziałek o 20:00" about 17 August, and it was read as today.
+ *
+ * The name is settled here rather than left to the model, like every other
+ * conclusion on this path: it copies what the facts call the day.
+ */
+export function spokenDay(businessDate: string, now: Date): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(businessDate);
+  if (!match) return '';
+
+  const [, year, month, day] = match;
+  const target = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
+  const today = new Date(
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
+  );
+
+  const days = Math.round(
+    (target.getTime() - today.getTime()) / (24 * 60 * 60 * 1000)
+  );
+  if (days === 0) return 'dziś';
+  if (days === 1) return 'jutro';
+
+  const weekday = spokenFormat.format(target);
+  return mondayOf(target) === mondayOf(today)
+    ? weekday
+    : `${weekday} ${dayMonthFormat.format(target)}`;
+}

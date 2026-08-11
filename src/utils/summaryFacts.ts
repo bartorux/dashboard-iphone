@@ -8,7 +8,7 @@ import {
   upcoming,
   worstRisk,
 } from './callPeriod';
-import { weekdayOf } from './dateHelpers';
+import { spokenDay, weekdayOf } from './dateHelpers';
 import { visibleBusinessDates } from './dayWindow';
 import { DEFAULT_RED_THRESHOLD } from './constants';
 import { Standing, marginDistribution, standingFor } from './history';
@@ -19,6 +19,16 @@ export interface DayFacts {
   businessDate: string;
   /** Short Polish weekday, e.g. "pon.". */
   weekday: string;
+  /**
+   * How to say the day out loud without it meaning two others.
+   *
+   * A bare weekday name only works inside the current week, and this window
+   * spans five WORKING days — so from midweek it reaches over the weekend. The
+   * card published "W poniedziałek o 20:00" about a day six days out and it was
+   * read as today. Settled in code, so the model copies a name rather than
+   * choosing one.
+   */
+  spokenName: string;
   workingDay: boolean;
   /** Blocks still ahead on this day. Zero means the day is spent. */
   hoursAhead: number;
@@ -174,6 +184,7 @@ export function buildFacts(
       return {
         businessDate,
         weekday: weekdayOf(businessDate),
+        spokenName: spokenDay(businessDate, now),
         workingDay: isWorkingDay(businessDate),
         hoursAhead: points.length,
         worstMargin: worst?.margin ?? null,
@@ -369,7 +380,7 @@ export function keyPoint(facts: DayFacts[]): string {
       worst.ranges[0];
 
     return (
-      `NAJWAŻNIEJSZE: ${worst.weekday} ${worst.businessDate} — ${RISK_SHORT[worst.risk]}` +
+      `NAJWAŻNIEJSZE: ${worst.spokenName} — ${RISK_SHORT[worst.risk]}` +
       (range ? ` w godzinach ${range.from}-${range.to}` : '')
     );
   }
@@ -383,9 +394,12 @@ export function keyPoint(facts: DayFacts[]): string {
   const unknown = facts.filter((day) => day.risk === 'unknown');
   if (unknown.length > 0) {
     const dni = unknown
-      .map((day) => `${day.weekday} ${day.businessDate}`)
+      .map((day) => day.spokenName)
       .join(', ');
-    return `NAJWAŻNIEJSZE: dla ${dni} brakuje odczytów, więc nie wiadomo, czy są podstawy do przywołania`;
+    // "na", not "dla": the day names are now spoken forms, and "dla jutro" is
+    // not Polish. "na jutro", "na czwartek", "na poniedziałek 17 sierpnia" all
+    // take the same case and read correctly.
+    return `NAJWAŻNIEJSZE: na ${dni} brakuje odczytów, więc nie wiadomo, czy są podstawy do przywołania`;
   }
 
   const near = facts.find((day) => day.nearThreshold > 0);
@@ -395,7 +409,7 @@ export function keyPoint(facts: DayFacts[]): string {
     // named is the tightest among those it actually covers.
     return (
       `NAJWAŻNIEJSZE: w żadnym z dni nie ma podstaw do przywołania, ale ` +
-      `${near.weekday} ${near.businessDate} o ${near.nearestHour} margines ` +
+      `${near.spokenName} o ${near.nearestHour} margines ` +
       `jest wąski, choć wciąż dodatni`
     );
   }
@@ -423,7 +437,7 @@ export function renderFacts(facts: DayFacts[], days: number): string {
 
   for (const day of facts) {
     lines.push(
-      `${day.businessDate} (${day.weekday}${day.workingDay ? ', roboczy' : ', wolny'}), ` +
+      `${day.businessDate} (${day.spokenName}${day.workingDay ? ', roboczy' : ', wolny'}), ` +
         `godzin pozostało: ${day.hoursAhead}`
     );
 
