@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 31;
+export const PROMPT_VERSION = 32;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -167,6 +167,8 @@ nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
 - DZIEŃ nazywaj DOKŁADNIE tak, jak nazywają go fakty. Jeśli piszą „poniedziałek
   17 sierpnia", nie skracaj do „w poniedziałek": okno sięga za weekend, więc sama
   nazwa dnia tygodnia opisuje wtedy dwa różne dni, a czytelnik wybierze bliższy.
+- ZAWSZE w liczbie POJEDYNCZEJ, także gdy wymieniasz kilka dni: „w środę i piątek",
+  nigdy „w środy i piątki". Liczba mnoga znaczy „w każdą środę" — nawyk, nie dzień.
 DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
@@ -224,7 +226,9 @@ nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
   i remonty to domysły, dopóki fakty ich nie nazywają.
 - DZIEŃ nazywaj DOKŁADNIE tak, jak nazywają go fakty. Jeśli piszą „poniedziałek
   17 sierpnia", nie skracaj do „w poniedziałek": okno sięga za weekend, więc sama
-  nazwa dnia tygodnia opisuje wtedy dwa różne dni, a czytelnik wybierze bliższy.`;
+  nazwa dnia tygodnia opisuje wtedy dwa różne dni, a czytelnik wybierze bliższy.
+- ZAWSZE w liczbie POJEDYNCZEJ, także gdy wymieniasz kilka dni: „w środę i piątek",
+  nigdy „w środy i piątki". Liczba mnoga znaczy „w każdą środę" — nawyk, nie dzień.`;
 
 /**
  * The block describing DALEJ, lifted out so the answer-first shape can drop it.
@@ -535,6 +539,27 @@ export function validateSummary(
     /poniedział|wtor|środ|czwart|piąt|sobot|niedziel|dziś|dzisiaj|jutro/i;
   if (/\d{1,2}:\d{2}/.test(summary.body) && !DAY_WORD.test(summary.body)) {
     return { ok: false, reason: 'godzina w treści bez nazwy dnia' };
+  }
+
+  /*
+   * A weekday in the plural means a habit, not a day.
+   *
+   * Published once in sixty-one texts: "W środy, piątki i poniedziałek
+   * 17 sierpnia margines jest wąski" — which reads as every Wednesday and every
+   * Friday, while the window holds exactly one of each. The facts name days in
+   * the singular; listing several in one clause is what pulls the model into the
+   * distributive form.
+   *
+   * Anchored on the preposition on purpose. Bare "środy" and "soboty" are also
+   * the genitive singular — "do środy" is correct Polish — and only "w środy"
+   * is unambiguously the plural.
+   */
+  if (
+    /\bwe?\s+(poniedziałki|wtorki|środy|czwartki|piątki|soboty|niedziele)\b/i.test(
+      whole
+    )
+  ) {
+    return { ok: false, reason: 'dzień tygodnia w liczbie mnogiej' };
   }
 
   // A calque of "thin margin"; in Polish a margin is narrow, never thin. It
