@@ -76,6 +76,27 @@ describe('useSummary', () => {
     await waitFor(() => expect(result.current?.headline).toBe('Nowa analiza.'));
   });
 
+  it('shows a two-line summary, whose middle field is empty by design', async () => {
+    // This guard predates the two-line shape and required every text field to be
+    // non-empty. When the generator first published a summary with no TREŚĆ —
+    // correct, because no day carried grounds — the guard read it as a broken
+    // file and the card vanished from the page. Nothing errored; it simply was
+    // not there.
+    respondWith({ ...fresh, body: '' });
+    const { result } = renderHook(() => useSummary(NOW));
+
+    await waitFor(() => expect(result.current.summary).not.toBeNull());
+    expect(result.current.summary?.body).toBe('');
+    expect(result.current.summary?.outlook).toBeTruthy();
+  });
+
+  it('still refuses a file with no closing line at all', async () => {
+    respondWith({ ...fresh, outlook: '' });
+    const { result } = renderHook(() => useSummary(NOW));
+
+    await waitFor(() => expect(result.current.summary).toBeNull());
+  });
+
   it('refuses a file that cannot say which days it covers', async () => {
     // A card without its span looks merely unrefreshed when the day tabs are
     // switched and it does not follow — which is the confusion the field exists
