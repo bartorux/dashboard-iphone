@@ -101,6 +101,31 @@ describe('prompt bez wiersza TREŚĆ', () => {
     expect(prompt).toContain('Dokładnie DWA wiersze');
   });
 
+  it('keeps it on a calm week that has a cause to give', () => {
+    // This is the case the whole cause layer exists for. Nothing is happening —
+    // no grounds, no narrow margin — and the only thing worth a sentence is why
+    // the tightest hour is the tightest. Most weeks look like this, so if the
+    // middle line stayed shut here the text would go on being as dry as the
+    // complaint that started this.
+    const history = Array.from({ length: 4 }, (_, day) =>
+      hourOn(`2026-08-0${day + 1}`, 19, { reserve: 6000, required: 2000 })
+    );
+    const bezwietrznie = buildFacts(
+      [hourOn('2026-08-10', 19, { reserve: 6000, required: 2000, wind: 400 })],
+      history,
+      new Date('2026-08-09T00:00:00Z')
+    );
+
+    expect(bezwietrznie[0].risk).toBe('none');
+    expect(bezwietrznie[0].nearThreshold).toBe(0);
+    expect(bezwietrznie[0].drivers).not.toBeNull();
+
+    const prompt = buildPrompt(bezwietrznie, 30, new Date('2026-08-09T10:00:00Z'));
+
+    expect(prompt).toContain('TREŚĆ: DWA zdania');
+    expect(prompt).not.toContain('Dokładnie DWA wiersze');
+  });
+
   it('keeps it when a day carries grounds', () => {
     const prompt = buildPrompt(cos, 30, new Date('2026-08-09T10:00:00Z'));
 

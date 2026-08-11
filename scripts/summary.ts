@@ -14,7 +14,11 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { fetchPSEData, fetchPSEHistory } from '../src/utils/api';
+import {
+  HISTORY_FIELDS_WITH_MIX,
+  fetchPSEData,
+  fetchPSEHistory,
+} from '../src/utils/api';
 import { processData } from '../src/utils/dataTransform';
 import { visibleBusinessDates } from '../src/utils/dayWindow';
 import {
@@ -99,7 +103,9 @@ function recordForecast(points: PSEDataPoint[], at: Date): void {
 
 const [forecast, history] = await Promise.all([
   fetchPSEData(),
-  fetchPSEHistory(HISTORY_DAYS),
+  // With the mix, so the facts can say WHY an hour is tight. Only this job asks
+  // for the wider rows; the browser keeps the narrow ones.
+  fetchPSEHistory(HISTORY_DAYS, HISTORY_FIELDS_WITH_MIX),
 ]);
 
 const now = new Date();

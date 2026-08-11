@@ -29,13 +29,32 @@ const FORECAST_FIELDS = [
  * period are included so history flows through the same processData as live
  * data, rather than a parallel path that could drift from it.
  */
-const HISTORY_FIELDS = [
+const HISTORY_FIELD_LIST = [
   'business_date',
   'period',
   'plan_dtime',
   'plan_dtime_utc',
   'req_pow_res',
   'surplus_cap_avail_tso',
+];
+
+export const HISTORY_FIELDS = HISTORY_FIELD_LIST.join(',');
+
+/**
+ * The same rows plus the mix, for working out WHY an hour is tight.
+ *
+ * Asked for only by `scripts/summary.ts`, which runs once an hour on a GitHub
+ * runner. The browser keeps the narrow list: this is roughly twice the payload,
+ * and it would be paid by every phone on every cold start to answer a question
+ * the phone never asks — the reasoning happens before the summary is written,
+ * not while someone is reading it.
+ */
+export const HISTORY_FIELDS_WITH_MIX = [
+  ...HISTORY_FIELD_LIST,
+  'grid_demand_fcst',
+  'fcst_pv_tot_gen',
+  'fcst_wi_tot_gen',
+  'sum_unav_oper_cond',
 ].join(',');
 
 async function query(params: string): Promise<PSERawItem[] | null> {
@@ -85,7 +104,10 @@ export async function fetchPSEData(): Promise<PSERawItem[]> {
  * Past business days, for judging whether today's profile is unusual.
  * Excludes today, whose figures are still a forecast being revised.
  */
-export async function fetchPSEHistory(days = 30): Promise<PSERawItem[]> {
+export async function fetchPSEHistory(
+  days = 30,
+  fields = HISTORY_FIELDS
+): Promise<PSERawItem[]> {
   const startOfToday = getStartOfToday();
   const from = formatDateTimeApi(addDays(startOfToday, -days)).slice(0, 10);
   const to = formatDateTimeApi(addDays(startOfToday, -1)).slice(0, 10);
@@ -93,7 +115,7 @@ export async function fetchPSEHistory(days = 30): Promise<PSERawItem[]> {
   const rows = await query(
     `$filter=${encodeURIComponent(
       `business_date ge '${from}' and business_date le '${to}'`
-    )}&$select=${HISTORY_FIELDS}&$orderby=plan_dtime&$first=1000`
+    )}&$select=${fields}&$orderby=plan_dtime&$first=1000`
   );
   return rows ?? [];
 }

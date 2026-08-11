@@ -1,4 +1,4 @@
-import { DayFacts, renderFacts } from './summaryFacts';
+import { DayFacts, leadingDay, renderFacts } from './summaryFacts';
 
 export interface Summary {
   headline: string;
@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 26;
+export const PROMPT_VERSION = 27;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -156,9 +156,14 @@ Dokładnie trzy wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadn
 cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
-TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku — najczęściej
-dlaczego operator ma prawo nie ogłaszać przywołania i czy ogłoszenie może
-jeszcze nadejść.
+TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku. Jeśli fakty
+podają, DLACZEGO akurat ta godzina jest najciaśniejsza — napisz o tym: co
+obniża rezerwę i co ją trzyma. To jest jedyne miejsce, w którym pada powód,
+więc nie zostawiaj go niewykorzystanego. Poza tym: dlaczego operator ma prawo
+nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
+- Powód opisz SŁOWAMI z faktów („wiatr poniżej normy"), bez liczb i bez
+  przeliczania. Nie zgaduj przyczyny, której w faktach nie ma — pogoda, awarie
+  i remonty to domysły, dopóki fakty ich nie nazywają.
 DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
@@ -187,20 +192,31 @@ const FORMAT_WITH_BODY = `Dokładnie trzy wiersze, każdy z etykietą na począt
 cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
-TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku — najczęściej
-dlaczego operator ma prawo nie ogłaszać przywołania i czy ogłoszenie może
-jeszcze nadejść.`;
+TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku. Jeśli fakty
+podają, DLACZEGO akurat ta godzina jest najciaśniejsza — napisz o tym: co
+obniża rezerwę i co ją trzyma. To jest jedyne miejsce, w którym pada powód,
+więc nie zostawiaj go niewykorzystanego. Poza tym: dlaczego operator ma prawo
+nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
+- Powód opisz SŁOWAMI z faktów („wiatr poniżej normy"), bez liczb i bez
+  przeliczania. Nie zgaduj przyczyny, której w faktach nie ma — pogoda, awarie
+  i remonty to domysły, dopóki fakty ich nie nazywają.`;
 
 /**
- * The two-line format, used when no day has grounds and no margin is narrow.
+ * The two-line format, used when no day has grounds and nothing explains the
+ * tightest hour either.
  *
  * There is no TREŚĆ here at all. Asking for it and then telling the model what
  * not to put in it failed three times running.
+ *
+ * The justification below has to match what the switch actually tests. It used
+ * to claim there was no narrow margin either, while `hasSomethingToExplain`
+ * looked only at grounds — so on a day with a narrow but positive margin the
+ * model was handed a sentence its own facts contradicted three paragraphs later.
  */
 const FORMAT_WITHOUT_BODY = `Dokładnie DWA wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadnych
 cudzysłowów wokół pól, żadnych sekwencji ucieczki. Wiersza TREŚĆ tym razem NIE
-MA — w żadnym dniu nie ma podstaw do przywołania ani wąskiego marginesu, więc
-nie ma czego rozwijać.
+MA — w żadnym dniu nie ma podstaw do przywołania, a fakty nie podają powodu,
+dla którego któraś godzina byłaby najciaśniejsza, więc nie ma czego rozwijać.
 
 NAGŁÓWEK: jedno zdanie o tym, co w tym okresie jest najciaśniejsze albo jak
 wypada on na tle ostatnich dni. NIE stwierdzaj tu braku podstaw — to należy
@@ -242,9 +258,17 @@ export function emphasisFor(now: Date): string {
  * Grounds are different. They come with a reason the operator may refrain and
  * with whether the notice period still holds — two things the headline cannot
  * carry alone, which is exactly what the middle line is for.
+ *
+ * A cause qualifies for the same reason, and is not the narrow margin all over
+ * again. The narrow margin was one fact the headline had already taken; the mix
+ * behind the hour — what pulls the reserve down and what holds it up — is
+ * material the headline never touches, and it is the only thing there is to say
+ * on the weeks when nothing is happening at all. Those are most weeks.
  */
 export function hasSomethingToExplain(facts: DayFacts[]): boolean {
-  return facts.some((day) => day.risk !== 'none');
+  if (facts.some((day) => day.risk !== 'none')) return true;
+
+  return leadingDay(facts)?.drivers != null;
 }
 
 export function buildPrompt(
