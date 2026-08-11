@@ -122,8 +122,56 @@ describe('prompt bez wiersza TREŚĆ', () => {
 
     const prompt = buildPrompt(bezwietrznie, 30, new Date('2026-08-09T10:00:00Z'));
 
-    expect(prompt).toContain('TREŚĆ: DWA zdania');
     expect(prompt).not.toContain('Dokładnie DWA wiersze');
+    // The middle line has ONE job here. Given the general two-sentence brief
+    // instead, v27 filled it with the verdict and never mentioned the wind —
+    // published as "nie ma podstaw do przywołania" in both TREŚĆ and DALEJ.
+    expect(prompt).toContain('TREŚĆ: JEDNO zdanie, wyłącznie o tym, DLACZEGO');
+    expect(prompt).not.toContain('TREŚĆ: DWA zdania');
+  });
+
+  it('hands the verdict phrase over once, not once per day', () => {
+    // Counted on the published failure: the prompt showed the model "nie ma
+    // podstaw do przywołania" seven times and the cause once, and the model
+    // reached for what it had seen seven times. The per-day state line said the
+    // same thing five times over while keyPoint already covered the window.
+    const tydzien = buildFacts(
+      [
+        ...Array.from({ length: 5 }, (_, day) =>
+          hourOn(`2026-08-1${day}`, 19, { reserve: 6000, required: 2000 })
+        ),
+      ],
+      [],
+      new Date('2026-08-09T00:00:00Z')
+    );
+
+    // Counted inside the facts only. The instruction says the phrase twice more
+    // — once defining the term, once justifying the two-line shape — and both
+    // belong there; what mattered was the five identical lines underneath.
+    const fakty = buildPrompt(tydzien, 30, new Date('2026-08-09T10:00:00Z'))
+      .split('FAKTY:')
+      .pop() as string;
+    const wystapienia =
+      fakty.match(/nie ma podstaw do przywołania/g)?.length ?? 0;
+
+    expect(fakty).toContain('2026-08-14');
+    expect(wystapienia).toBe(1);
+  });
+
+  it('keeps the per-day verdict when the days differ', () => {
+    // The collapse is only honest while every day says the same thing.
+    const mieszany = buildFacts(
+      [
+        hourOn('2026-08-10', 19, { reserve: 800, required: 2000 }),
+        hourOn('2026-08-11', 19, { reserve: 6000, required: 2000 }),
+      ],
+      [],
+      new Date('2026-08-09T00:00:00Z')
+    );
+
+    expect(buildPrompt(mieszany, 30, new Date('2026-08-09T10:00:00Z'))).toContain(
+      '  stan:'
+    );
   });
 
   it('keeps it when a day carries grounds', () => {

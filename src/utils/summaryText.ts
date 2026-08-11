@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 27;
+export const PROMPT_VERSION = 28;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -202,6 +202,31 @@ nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
   i remonty to domysły, dopóki fakty ich nie nazywają.`;
 
 /**
+ * The three-line format for a calm window that still has a cause to give.
+ *
+ * TREŚĆ gets exactly one job here, because on such a week the verdict is the
+ * only other thing it could hold — and handed a slot with nothing assigned to
+ * it, the model filled it with the verdict and left the cause untouched. That is
+ * what v27 published: "nie ma podstaw do przywołania" in the middle line and
+ * again in the last one, with nothing said about the wind that made the evening
+ * the week's tightest.
+ *
+ * The wording of NAGŁÓWEK is lifted from the two-line format, which has held up:
+ * it already refuses to state the verdict up top and leaves that to DALEJ.
+ */
+const FORMAT_WITH_CAUSE = `Dokładnie trzy wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadnych
+cudzysłowów wokół pól, żadnych sekwencji ucieczki.
+
+NAGŁÓWEK: jedno zdanie o tym, co w tym okresie jest najciaśniejsze albo jak
+wypada on na tle ostatnich dni. NIE stwierdzaj tu braku podstaw — to należy
+do DALEJ.
+TREŚĆ: JEDNO zdanie, wyłącznie o tym, DLACZEGO wskazana godzina jest
+najciaśniejsza — co obniża rezerwę i co ją trzyma. Powód opisz SŁOWAMI z faktów
+(„wiatr poniżej normy"), bez liczb. Nie zgaduj przyczyny, której w faktach nie
+ma: pogoda, awarie i remonty to domysły, dopóki fakty ich nie nazywają.
+O tym, czy są podstawy do przywołania, pisze DALEJ i tylko DALEJ.`;
+
+/**
  * The two-line format, used when no day has grounds and nothing explains the
  * tightest hour either.
  *
@@ -265,8 +290,13 @@ export function emphasisFor(now: Date): string {
  * material the headline never touches, and it is the only thing there is to say
  * on the weeks when nothing is happening at all. Those are most weeks.
  */
+/** Any day where the regulation has something to say — the three-line case. */
+export function hasGrounds(facts: DayFacts[]): boolean {
+  return facts.some((day) => day.risk !== 'none');
+}
+
 export function hasSomethingToExplain(facts: DayFacts[]): boolean {
-  if (facts.some((day) => day.risk !== 'none')) return true;
+  if (hasGrounds(facts)) return true;
 
   return leadingDay(facts)?.drivers != null;
 }
@@ -289,10 +319,18 @@ export function buildPrompt(
    *
    * So the slot is gone rather than guarded. The model cannot repeat a line it
    * was never asked to write.
+   *
+   * Three shapes rather than two, because reopening the slot for a cause brought
+   * the repetition straight back: given a middle line and no assignment for it
+   * beyond "carry something new", the model wrote the verdict there and skipped
+   * the cause entirely. A slot with one job cannot be filled with the other
+   * thing.
    */
-  const instruction = hasSomethingToExplain(facts)
-    ? INSTRUCTION
-    : INSTRUCTION.replace(FORMAT_WITH_BODY, FORMAT_WITHOUT_BODY);
+  const instruction = !hasSomethingToExplain(facts)
+    ? INSTRUCTION.replace(FORMAT_WITH_BODY, FORMAT_WITHOUT_BODY)
+    : hasGrounds(facts)
+      ? INSTRUCTION
+      : INSTRUCTION.replace(FORMAT_WITH_BODY, FORMAT_WITH_CAUSE);
 
   return (
     instruction +
