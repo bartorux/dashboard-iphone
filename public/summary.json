@@ -1,8 +1,8 @@
 {
-  "headline": "W czwartek o 20:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW i to ona daje operatorowi prawo nie ogłaszać przywołania.",
-  "body": "Powodem spadku rezerwy jest wiatr poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do godziny 20:00 w czwartek zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie.",
-  "outlook": "W środy, piątki i poniedziałek 17 sierpnia margines jest wąski, ale w żadnym z kolejnych dni nie ma podstaw do przywołania.",
-  "generatedAt": "2026-08-11T15:34:14.266Z",
+  "headline": "W czwartek między 20:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, a margines osiągnie najniższą wartość w całym okresie.",
+  "body": "Spadek rezerwy w tej godzinie spowoduje wiatr poniżej normy, podczas gdy ubytki pozostaną poniżej normy. Nadwyżka trzyma się jednak powyżej progu 1100 MW i to daje operatorowi prawo nie ogłaszać przywołania, które może jeszcze nadejść.",
+  "outlook": "W poniedziałek 17 sierpnia o 19:00 operator ma prawo nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw.",
+  "generatedAt": "2026-08-11T16:33:14.129Z",
   "dates": [
     "2026-08-11",
     "2026-08-12",
@@ -10,6 +10,6 @@
     "2026-08-14",
     "2026-08-17"
   ],
-  "assessment": "2026-08-11|R|none|1400|17:00|0|0|6|;2026-08-12|R|none|1900|20:00|0|0|21|;2026-08-13|R|moderate|0|20:00|1|0|16|moderate:20:00-21:00;2026-08-14|R|none|1300|20:00|0|0|23|;2026-08-17|R|none|200|20:00|1|0|17|#v31",
+  "assessment": "2026-08-11|R|none|2100|19:00|0|0|6|;2026-08-12|R|none|1800|20:00|0|0|21|;2026-08-13|R|moderate|0|20:00|1|0|16|moderate:20:00-21:00;2026-08-14|R|none|1200|20:00|0|0|23|;2026-08-17|R|moderate|0|19:00|1|0|17|moderate:19:00-20:00#v31",
   "model": "gemini-3.5-flash-lite"
 }
