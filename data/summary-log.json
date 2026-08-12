@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-09T13:51:12.110Z",
-      "prompt": 0,
-      "accepted": true,
-      "headline": "W krajowej sieci elektroenergetycznej nie występują podstawy do przywołania odbiorców do ograniczenia poboru.",
-      "body": "Dostępna rezerwa mocy w analizowanym okresie stale pokrywa wymaganą wartość. Najtrudniejsze warunki pojawią się we wtorek o godzinie 20:00, kiedy margines zbliży się bardzo blisko granicy, lecz pozostanie dodatni.",
-      "outlook": "W nadchodzących dniach rezerwa mocy utrzyma się na bezpiecznym poziomie powyżej wymaganych wartości."
-    },
-    {
       "at": "2026-08-09T14:19:58.794Z",
       "prompt": 0,
       "accepted": true,
@@ -577,6 +569,14 @@
       "accepted": true,
       "headline": "W poniedziałek 17 sierpnia o 20:00 margines spadnie do najniższego poziomu w całym okresie i wyniesie ujemną wartość, ale nadwyżka przekroczy próg 1100 MW.",
       "body": "Zapotrzebowanie wzrośnie powyżej normy, a produkcja z fotowoltaiki spadnie poniżej normy. Operator ma prawo nie ogłaszać przywołania, a ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 18 sierpnia o 20:00 operator ma prawo nie ogłaszać przywołania; w pozostałych dniach nie ma podstaw."
+    },
+    {
+      "at": "2026-08-12T14:04:44.662Z",
+      "prompt": 32,
+      "accepted": true,
+      "headline": "W poniedziałek 17 sierpnia między 19:00 a 21:00 rezerwa nie pokryje wymaganego poziomu.",
+      "body": "Zapotrzebowanie wzrośnie powyżej normy, a fotowoltaika spadnie poniżej normy. Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo nie ogłaszać przywołania.",
       "outlook": "We wtorek 18 sierpnia o 20:00 operator ma prawo nie ogłaszać przywołania; w pozostałych dniach nie ma podstaw."
     }
   ]
