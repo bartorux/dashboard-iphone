@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-09T17:53:54.108Z",
-      "prompt": 0,
-      "accepted": true,
-      "headline": "W poniedziałek występuje umiarkowane ryzyko przywołania odbiorców do ograniczenia poboru, a w pozostałe dni rezerwy mieszczą się w typowym zakresie.",
-      "body": "W niedzielę i wtorek dostępne rezerwy w pełni pokrywają wymaganą wielkość, mimo wystąpienia godzin z bardzo cienkim marginesem. W poniedziałek w wyznaczonym przedziale czasowym rezerwa również pokrywa wymaganą wartość, choć margines jest ujemny i występuje ryzyko wezwania do ograniczenia poboru.",
-      "outlook": "We wtorek sytuacja wraca do normy i nie ma podstaw do przywoływania odbiorców."
-    },
-    {
       "at": "2026-08-09T18:10:05.581Z",
       "prompt": 3,
       "accepted": true,
@@ -578,6 +570,14 @@
       "headline": "W poniedziałek 17 sierpnia między 19:00 a 22:00 rezerwa nie pokryje wymaganego poziomu.",
       "body": "Zapotrzebowanie powyżej normy oraz fotowoltaika poniżej normy obniżą rezerwę w tej najtrudniejszej godzinie o 20:00 do ujemnego marginesu. Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo nie ogłaszać przywołania.",
       "outlook": "We wtorek 18 sierpnia o 20:00 operator również ma prawo nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw."
+    },
+    {
+      "at": "2026-08-12T22:23:10.084Z",
+      "prompt": 33,
+      "accepted": true,
+      "headline": "Margines o 20:00 jest niższy niż zwykle na tle ostatnich trzydziestu dni.",
+      "body": "W poniedziałek 17 sierpnia między 19:00 a 22:00 zapotrzebowanie rośnie powyżej normy, a fotowoltaika spada poniżej normy. Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo nie ogłaszać przywołania.",
+      "outlook": "We wtorek 18 sierpnia o 20:00 operator ma prawo nie ogłaszać przywołania; w pozostałych dniach nie ma podstaw."
     }
   ]
 }
