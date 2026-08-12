@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 32;
+export const PROMPT_VERSION = 33;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -537,8 +537,20 @@ export function validateSummary(
    */
   const DAY_WORD =
     /poniedział|wtor|środ|czwart|piąt|sobot|niedziel|dziś|dzisiaj|jutro/i;
-  if (/\d{1,2}:\d{2}/.test(summary.body) && !DAY_WORD.test(summary.body)) {
-    return { ok: false, reason: 'godzina w treści bez nazwy dnia' };
+  /*
+   * The headline counts. It sits directly above and is read first, so a day
+   * named there covers the hours below it.
+   *
+   * Checked against the body alone, this refused two of nineteen runs whose
+   * headline opened "W poniedziałek 17 sierpnia…" and whose body then said
+   * "Między 19:00 a 20:00…" — clear to any reader, and thrown away. Every
+   * refusal costs an hour of stale text on the card, so a rule that fires on
+   * correct writing is worse than no rule.
+   */
+  const dayNamed =
+    DAY_WORD.test(summary.headline) || DAY_WORD.test(summary.body);
+  if (/\d{1,2}:\d{2}/.test(summary.body) && !dayNamed) {
+    return { ok: false, reason: 'godzina bez nazwy dnia' };
   }
 
   /*

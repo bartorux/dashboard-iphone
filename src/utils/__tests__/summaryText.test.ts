@@ -346,6 +346,37 @@ describe('validateSummary', () => {
     });
   });
 
+  describe('godzina bez nazwy dnia', () => {
+    const godzinaWTresci = {
+      ...good,
+      headline: 'W poniedziałek 17 sierpnia margines układa się typowo.',
+      body: 'Między 19:00 a 20:00 rezerwa nie pokryje wymaganego poziomu.',
+    };
+
+    it('accepts an hour whose day is named in the headline above it', () => {
+      /*
+       * Checked against the body alone, this refused two of nineteen runs — both
+       * of them correct writing, with the day standing directly above the hour.
+       * Every refusal leaves the card an hour stale, so a rule that fires on good
+       * text is worse than no rule at all.
+       */
+      expect(
+        validateSummary(godzinaWTresci, new Set(['19:00', '20:00']), [
+          'poniedziałek 17 sierpnia',
+        ])
+      ).toEqual({ ok: true });
+    });
+
+    it('still refuses an hour with no day anywhere', () => {
+      expect(
+        validateSummary(
+          { ...godzinaWTresci, headline: 'Margines układa się typowo.' },
+          new Set(['19:00', '20:00'])
+        )
+      ).toMatchObject({ ok: false, reason: 'godzina bez nazwy dnia' });
+    });
+  });
+
   describe('dzien tygodnia w liczbie mnogiej', () => {
     it('refuses the distributive form', () => {
       /*

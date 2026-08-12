@@ -454,7 +454,13 @@ describe('renderFacts', () => {
 
     // Margin 3500 at 20:00 against a 7000 band for that hour — below. Against
     // the 3000 band the rest of the day carries, it would read as above.
-    expect(tekst).toContain('sama ta godzina wypada poniżej typowego zakresu');
+    //
+    // The hour is named in the line itself. It used to read "sama ta godzina
+    // wypada w typowym zakresie dla tej godziny…" — my own word twice over,
+    // copied faithfully — and the model then hung "sama ta godzina" on a
+    // three-hour range it had just written, which the standing does not cover.
+    expect(tekst).toContain('margines o 20:00 jest niższy niż zwykle o tej porze');
+    expect(tekst).not.toContain('sama ta godzina');
   });
 
   it('drops the counterweight on a day the regulation ignores', () => {
