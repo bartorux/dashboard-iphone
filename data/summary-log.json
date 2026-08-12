@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-09T15:40:56.852Z",
-      "prompt": 0,
-      "accepted": true,
-      "headline": "W krajowej sieci elektroenergetycznej nie występują podstawy do przywołania rezerwy mocy.",
-      "body": "Dostępna rezerwa stale pokrywa wymagany poziom, chociaż w najbliższych dniach pojawią się momenty ze znacznie mniejszym marginesem. Najbardziej napięty moment wystąpi we wtorek o godzinie 20:00, kiedy rezerwa mocno zbliży się do granicy.",
-      "outlook": "W kolejnych dniach nadal nie będzie podstaw do ograniczania poboru przez odbiorców."
-    },
-    {
       "at": "2026-08-09T16:48:43.187Z",
       "prompt": 0,
       "accepted": true,
@@ -578,6 +570,14 @@
       "headline": "W poniedziałek 17 sierpnia między 19:00 a 22:00 rezerwa nie pokryje wymaganego poziomu, choć sama ta godzina wypada w typowym zakresie dla tej godziny z ostatnich trzydziestu dni.",
       "body": "Zapotrzebowanie powyżej normy oraz fotowoltaika poniżej normy obniżą rezerwę w tym okresie. Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo nie ogłaszać przywołania, a ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 18 sierpnia o 20:00 operator ma również prawo nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw."
+    },
+    {
+      "at": "2026-08-12T19:22:35.140Z",
+      "prompt": 33,
+      "accepted": true,
+      "headline": "Podstawy do przywołania pojawią się w poniedziałek 17 sierpnia, kiedy rezerwa spadnie poniżej wymaganego poziomu.",
+      "body": "Między 19:00 a 22:00 zapotrzebowanie powyżej normy oraz fotowoltaika poniżej normy obniżą rezerwę. Nadwyżka wciąż przekracza próg 1100 MW, więc operator ma prawo nie ogłaszać przywołania, a samo ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 18 sierpnia o 20:00 operator ma prawo nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw."
     }
   ]
 }

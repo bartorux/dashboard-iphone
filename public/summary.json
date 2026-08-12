@@ -1,8 +1,8 @@
 {
-  "headline": "W poniedziałek 17 sierpnia między 19:00 a 22:00 rezerwa nie pokryje wymaganego poziomu, choć sama ta godzina wypada w typowym zakresie dla tej godziny z ostatnich trzydziestu dni.",
-  "body": "Zapotrzebowanie powyżej normy oraz fotowoltaika poniżej normy obniżą rezerwę w tym okresie. Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo nie ogłaszać przywołania, a ogłoszenie może jeszcze nadejść.",
-  "outlook": "We wtorek 18 sierpnia o 20:00 operator ma również prawo nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw.",
-  "generatedAt": "2026-08-12T17:39:04.259Z",
+  "headline": "Podstawy do przywołania pojawią się w poniedziałek 17 sierpnia, kiedy rezerwa spadnie poniżej wymaganego poziomu.",
+  "body": "Między 19:00 a 22:00 zapotrzebowanie powyżej normy oraz fotowoltaika poniżej normy obniżą rezerwę. Nadwyżka wciąż przekracza próg 1100 MW, więc operator ma prawo nie ogłaszać przywołania, a samo ogłoszenie może jeszcze nadejść.",
+  "outlook": "We wtorek 18 sierpnia o 20:00 operator ma prawo nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw.",
+  "generatedAt": "2026-08-12T19:22:35.140Z",
   "dates": [
     "2026-08-12",
     "2026-08-13",
@@ -10,6 +10,6 @@
     "2026-08-17",
     "2026-08-18"
   ],
-  "assessment": "2026-08-12|R|none|400|19:00|0|0|0|;2026-08-13|R|none|1200|21:00|0|0|19|;2026-08-14|R|none|1000|20:00|0|0|22|;2026-08-17|R|moderate|-700|20:00|1|0|14|moderate:19:00-22:00;2026-08-18|R|moderate|-300|20:00|1|0|15|moderate:20:00-21:00#v32",
+  "assessment": "2026-08-12|R|none|900|22:00|0|0|0|;2026-08-13|R|none|1000|21:00|0|0|15|;2026-08-14|R|none|1000|20:00|0|0|22|;2026-08-17|R|moderate|-700|20:00|0|0|14|moderate:19:00-22:00;2026-08-18|R|moderate|-200|20:00|1|0|15|moderate:20:00-21:00#v33",
   "model": "gemini-3.5-flash-lite"
 }
