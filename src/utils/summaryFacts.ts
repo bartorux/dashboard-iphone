@@ -503,18 +503,30 @@ export function renderFacts(facts: DayFacts[], days: number): string {
     if (isLead && day.drivers) {
       lines.push(`    dlaczego akurat ta godzina: ${day.drivers}`);
 
-      // The second thing worth saying about the same hour, and the one that
-      // stops the middle line being a transcription of the first: tightest of
-      // the week and entirely ordinary for the time of day are both true at
-      // once, and only the pair of them describes the evening honestly.
+      /*
+       * The second thing worth saying about the same hour, and the one that
+       * stops the middle line being a transcription of the first: tightest of
+       * the week and entirely ordinary for the time of day are both true at
+       * once, and only the pair of them describes the evening honestly.
+       *
+       * Anchored on the hour by name, and worded without saying "godzina" twice.
+       * The line used to read "sama ta godzina wypada w typowym zakresie dla tej
+       * godziny…" — my own repetition, duly copied — and worse, the model
+       * attached "sama ta godzina" to a three-hour range it had just named. The
+       * standing is computed for ONE hour, so the facts now say which.
+       */
       const STANDING_WORD: Record<Standing, string | null> = {
-        below: `poniżej typowego zakresu dla tej godziny z ostatnich ${days} dni`,
-        typical: `w typowym zakresie dla tej godziny z ostatnich ${days} dni`,
-        above: `powyżej typowego zakresu dla tej godziny z ostatnich ${days} dni`,
+        below: `niższy niż zwykle o tej porze`,
+        typical: `typowy jak na tę porę`,
+        above: `wyższy niż zwykle o tej porze`,
         unknown: null,
       };
       const standing = STANDING_WORD[day.worstStanding];
-      if (standing) lines.push(`    sama ta godzina wypada ${standing}`);
+      if (standing && day.worstHour) {
+        lines.push(
+          `    margines o ${day.worstHour} jest ${standing}, na tle ostatnich ${days} dni`
+        );
+      }
     }
 
     for (const range of day.ranges) {
