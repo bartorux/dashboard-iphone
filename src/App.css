@@ -48,6 +48,11 @@
   /* interactive */
   --l-accent: #007aff;          --d-accent: #0a84ff;
   --l-accent-text: #0062cc;     --d-accent-text: #64b5ff;
+  /* Background only, like the other -soft variants. Used once a year by the
+     Dzień Energetyka card, which must read as an occasion without borrowing a
+     status colour: green here means OK, and 14 August is as likely as any day
+     to carry an alarm. */
+  --l-accent-soft: #e9f2ff;     --d-accent-soft: rgba(10, 132, 255, 0.16);
 
   /* chart series */
   --l-series-reserve: #007aff;  --d-series-reserve: #0a84ff;
@@ -103,6 +108,7 @@
   --alarm-soft: var(--l-alarm-soft);
   --accent: var(--l-accent);
   --accent-text: var(--l-accent-text);
+  --accent-soft: var(--l-accent-soft);
   --series-reserve: var(--l-series-reserve);
   --series-required: var(--l-series-required);
   --band-alarm: var(--l-band-alarm);
@@ -142,6 +148,7 @@
     --alarm-soft: var(--d-alarm-soft);
     --accent: var(--d-accent);
     --accent-text: var(--d-accent-text);
+    --accent-soft: var(--d-accent-soft);
     --series-reserve: var(--d-series-reserve);
     --series-required: var(--d-series-required);
     --band-alarm: var(--d-band-alarm);
@@ -181,6 +188,7 @@
   --alarm-soft: var(--d-alarm-soft);
   --accent: var(--d-accent);
   --accent-text: var(--d-accent-text);
+  --accent-soft: var(--d-accent-soft);
   --series-reserve: var(--d-series-reserve);
   --series-required: var(--d-series-required);
   --band-alarm: var(--d-band-alarm);
@@ -224,6 +232,7 @@
 
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);
+  --color-accent-soft: var(--accent-soft);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Helvetica Neue", Arial, sans-serif;

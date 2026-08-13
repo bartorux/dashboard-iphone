@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { isEnergyDay } from '../energyDay';
+import {
+  ENERGY_DAY_GREETING,
+  ENERGY_DAY_ORIGIN,
+  isEnergyDay,
+} from '../energyDay';
 import { emphasisFor } from '../summaryText';
 
 describe('isEnergyDay', () => {
@@ -16,6 +20,30 @@ describe('isEnergyDay', () => {
 
   it('is not the first of September, which is what it used to be', () => {
     expect(isEnergyDay(new Date(2026, 8, 1))).toBe(false);
+  });
+});
+
+describe('tekst życzeń', () => {
+  it('nie wspomina o śmierci patrona', () => {
+    // Święto idzie za dniem śmierci Maksymiliana Kolbego i to jest prawda, ale
+    // nie na karcie, która składa komuś życzenia.
+    const całość = `${ENERGY_DAY_GREETING} ${ENERGY_DAY_ORIGIN}`;
+    expect(całość).not.toMatch(/śmier|zmarł|zginął/i);
+  });
+
+  it('nie powtarza daty, którą karta pisze nad tekstem', () => {
+    // Nadpis mówi „14 SIERPNIA"; powtórzenie w samym życzeniu byłoby tą samą
+    // usterką, którą przez dwa dni wycinaliśmy z tekstów modelu.
+    expect(ENERGY_DAY_GREETING).not.toMatch(/14 sierpnia|dziś/i);
+  });
+
+  it('życzy w dopełniaczu, bo tego przypadku polszczyzna używa do życzeń', () => {
+    expect(ENERGY_DAY_GREETING).toContain('Zapasu mocy');
+  });
+
+  it('mówi, czym jest ten dzień, w jednym zdaniu', () => {
+    expect(ENERGY_DAY_ORIGIN).toContain('1991');
+    expect(ENERGY_DAY_ORIGIN.split('.').filter(Boolean)).toHaveLength(1);
   });
 });
 

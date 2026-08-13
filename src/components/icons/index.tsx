@@ -72,6 +72,24 @@ export const AlertIcon: React.FC<IconProps> = ({ className }) => (
   </svg>
 );
 
+/**
+ * A bolt, for the one card that marks an occasion rather than a state.
+ *
+ * Drawn filled rather than stroked, unlike everything else here: at this size a
+ * stroked bolt reads as a scribble, and this icon carries no status meaning that
+ * the outline style is there to keep consistent.
+ */
+export const BoltIcon: React.FC<IconProps> = ({ className }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden
+    className={className ?? 'w-5 h-5'}
+  >
+    <path d="M13.5 2 4 13.2a.6.6 0 0 0 .46.99h5.2l-1.16 7.2a.6.6 0 0 0 1.07.46L20 10.65a.6.6 0 0 0-.46-.99h-5.2l1.16-7.2A.6.6 0 0 0 13.5 2Z" />
+  </svg>
+);
+
 export const CheckIcon: React.FC<IconProps> = ({ className }) => (
   <svg {...base(className)}>
     <path d="M20 6L9 17l-5-5" />
