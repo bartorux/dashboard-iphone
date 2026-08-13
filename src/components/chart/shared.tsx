@@ -12,6 +12,40 @@ export const formatMW = (value: number) =>
 export const ANIMATION_MS = 450;
 
 /**
+ * Chart animation length, nil for a reader who asked for less motion.
+ *
+ * The CSS block for `prefers-reduced-motion` cannot reach this. Recharts takes
+ * its duration as a React prop and animates in JavaScript, so a rule setting
+ * `animation-duration` to nothing sails past it — and someone who turned motion
+ * down in their system settings still got the full 450 ms on every chart, on
+ * every day switch, forever. That is the setting failing silently, which is
+ * worse than not offering it.
+ *
+ * Subscribed rather than read once: the setting can change while the app is
+ * open, and on iOS it does — Low Power Mode and the accessibility toggle both
+ * move it.
+ */
+export function useChartAnimationMs(): number {
+  const [reduced, setReduced] = React.useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
+  );
+
+  React.useEffect(() => {
+    const query = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    if (!query) return;
+
+    const update = () => setReduced(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
+
+  return reduced ? 0 : ANIMATION_MS;
+}
+
+/**
  * Axis and label sizes for the charts, in the same scalable units as the rest
  * of the app.
  *

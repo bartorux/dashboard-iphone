@@ -7,7 +7,7 @@ import { useTouchGestures } from '../useTouchGestures';
  * fields the hook reads are populated.
  */
 function fireTouch(
-  type: 'touchstart' | 'touchmove' | 'touchend',
+  type: 'touchstart' | 'touchmove' | 'touchend' | 'touchcancel',
   x: number,
   y: number,
   target: Element = document.body
@@ -143,5 +143,65 @@ describe('useTouchGestures', () => {
 
     expect(result.current.pullDistance).toBeGreaterThan(0);
     expect(onSwipeLeft).not.toHaveBeenCalled();
+  });
+});
+
+
+describe('gest przerwany przez system', () => {
+  beforeEach(() => {
+    window.scrollY = 0;
+    document.body.innerHTML = '';
+  });
+
+  it('sprząta po touchcancel', async () => {
+    /*
+     * Połączenie przychodzące, roleta powiadomień, arkusz systemowy — przeglądarka
+     * odbiera gest i mówi o tym przez `touchcancel`. Bez obsługi wskaźnik zostawał
+     * na ekranie, a dotyku, który mógłby go dokończyć, już nie było: jedynym
+     * wyjściem było przeładowanie strony.
+     */
+    const { result } = setup();
+
+    fireTouch('touchstart', 100, 100);
+    fireTouch('touchmove', 100, 180);
+    expect(result.current.isPulling).toBe(true);
+
+    fireTouch('touchcancel', 100, 180);
+
+    expect(result.current.isPulling).toBe(false);
+    expect(result.current.pullDistance).toBe(0);
+    expect(result.current.isRefreshing).toBe(false);
+  });
+});
+
+describe('czas widoczności kręciołka', () => {
+  beforeEach(() => {
+    window.scrollY = 0;
+    document.body.innerHTML = '';
+    vi.useFakeTimers();
+  });
+  afterEach(() => vi.useRealTimers());
+
+  it('nie każe czekać sekundy po tym, jak dane już przyszły', async () => {
+    /*
+     * Poprzednio: pełna sekunda odmierzana OD ZAKOŃCZENIA pobierania, więc
+     * odświeżenie trwające 80 ms kosztowało czytelnika 1080. Teraz jest to próg
+     * na czas widoczności, liczony od startu — kręciołek nie mignie, ale nikt na
+     * niego nie czeka dłużej, niż trzeba.
+     */
+    const { result, onRefresh } = setup();
+
+    fireTouch('touchstart', 100, 100);
+    fireTouch('touchmove', 100, 200);
+    fireTouch('touchend', 100, 200);
+
+    expect(onRefresh).toHaveBeenCalled();
+
+    await act(async () => {
+      await Promise.resolve();
+      vi.advanceTimersByTime(400);
+    });
+
+    expect(result.current.isRefreshing).toBe(false);
   });
 });

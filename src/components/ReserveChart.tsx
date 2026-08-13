@@ -17,7 +17,7 @@ import { useChartColors } from '../hooks/useChartColors';
 import { STATUS_LABEL, STATUS_TEXT } from '../utils/status';
 import { CALL_PERIOD_EXEMPTION_MW } from '../utils/constants';
 import {
-  ANIMATION_MS,
+  useChartAnimationMs,
   AXIS_FONT_SIZE,
   LABEL_FONT_SIZE,
   AreaSwatch,
@@ -115,6 +115,8 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
   redThreshold,
   currentHourLabel,
 }) => {
+  const animationMs = useChartAnimationMs();
+
   const colors = useChartColors();
   const { ref, handlers, tooltipActive } = useDismissibleTooltip();
 
@@ -244,7 +246,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               stroke="none"
               fill={colors.bandAlarm}
               fillOpacity={1}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
             />
@@ -254,7 +256,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               stroke="none"
               fill={colors.bandWarn}
               fillOpacity={1}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
             />
@@ -268,7 +270,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               strokeWidth={1}
               dot={false}
               connectNulls={false}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
             />
             <Line
@@ -278,7 +280,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               strokeWidth={1}
               dot={false}
               connectNulls={false}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
             />
 
@@ -358,7 +360,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               strokeDasharray="4 4"
               dot={false}
               connectNulls={false}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
             />
 
@@ -372,7 +374,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               strokeWidth={2.75}
               dot={false}
               connectNulls={false}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               /* Cleared with the tooltip: `active={false}` hides the box but
                  the dot is series state, so it lingered and pointed at an hour
                  the user had already dismissed. */

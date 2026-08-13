@@ -16,7 +16,7 @@ import { marginDistribution, standingFor } from '../utils/history';
 import { useChartColors } from '../hooks/useChartColors';
 import { HistoryState } from '../hooks/useHistory';
 import {
-  ANIMATION_MS,
+  useChartAnimationMs,
   AXIS_FONT_SIZE,
   LABEL_FONT_SIZE,
   AreaSwatch,
@@ -132,6 +132,8 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
   days,
   onRetry,
 }) => {
+  const animationMs = useChartAnimationMs();
+
   const colors = useChartColors();
   const { ref, handlers, tooltipActive } = useDismissibleTooltip();
 
@@ -304,7 +306,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
               stroke="none"
               fill={colors.bandHistory}
               fillOpacity={1}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
             />
@@ -331,7 +333,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
               strokeDasharray="4 4"
               dot={false}
               connectNulls={false}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
             />
 
@@ -342,7 +344,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
               strokeWidth={2.75}
               dot={false}
               connectNulls={false}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               /* Cleared with the tooltip: `active={false}` hides the box but
                  the dot is series state, so it lingered and pointed at an hour
                  the user had already dismissed. */
