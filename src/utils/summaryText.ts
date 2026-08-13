@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 33;
+export const PROMPT_VERSION = 34;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -94,16 +94,12 @@ TAK NIE PISZ (asekuracko, bez konkretu):
 „W poniedziałek w wyznaczonym przedziale czasowym rezerwa nie pokrywa w pełni
 wymaganej wielkości, w związku z czym występuje ryzyko ogłoszenia przywołania."
 
-TAK PISZ (wprost, z godzinami, czasownikami):
-„W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganego poziomu.
-Nadwyżka wciąż przekracza próg 1100 MW, więc operator ma prawo nie ogłaszać
-przywołania."
-
-TAK TEŻ PISZ — ta sama zależność, inny rytm. Miej oba pod ręką, bo dwa zdania
-z rzędu na jednym „więc" brzmią mechanicznie:
-„W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganego poziomu.
-Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo
-nie ogłaszać przywołania."
+TAK PISZ — to jest UKŁAD, nie zdanie do przepisania. Wypełnij go od nowa:
+  PIERWSZE ZDANIE: kiedy (dzień z faktów i konkretne godziny) oraz co stanie się
+    z rezerwą, powiedziane czasownikiem — „spadnie", nie „nastąpi spadek".
+  DRUGIE ZDANIE: co z tego wynika dla uprawnienia operatora.
+Dwa zdania z rzędu nie mogą wisieć na tym samym spójniku, więc nie zaczynaj
+drugiego od „więc", jeśli pierwsze już na nim stało.
 
 === CZEGO NIE ROBISZ ===
 
@@ -184,10 +180,9 @@ wieczornych" zamiast godziny z faktów)
 TAK NIE PISZ: „We wtorek nie ma podstaw, w środę nie ma podstaw, w czwartek nie
 ma podstaw, a w piątek margines jest wąski." (wyliczanka; trzy pierwsze człony
 niosą jedną informację)
-TAK PISZ: „W piątek o 20:00 operator ma prawo nie ogłaszać przywołania;
-w pozostałych dniach nie ma podstaw."
-TAK PISZ, gdy nie dzieje się nic: „W żadnym z kolejnych dni nie ma podstaw do
-przywołania."
+TAK PISZ — układ: nazwij dzień i godziny, w których coś jest, a resztę zbierz
+jednym stwierdzeniem. Gdy nie dzieje się nic w żadnym dniu, powiedz to o całym
+okresie i na tym poprzestań. Za każdym razem własnymi słowami.
 
 FAKTY:
 `;
@@ -251,10 +246,9 @@ wieczornych" zamiast godziny z faktów)
 TAK NIE PISZ: „We wtorek nie ma podstaw, w środę nie ma podstaw, w czwartek nie
 ma podstaw, a w piątek margines jest wąski." (wyliczanka; trzy pierwsze człony
 niosą jedną informację)
-TAK PISZ: „W piątek o 20:00 operator ma prawo nie ogłaszać przywołania;
-w pozostałych dniach nie ma podstaw."
-TAK PISZ, gdy nie dzieje się nic: „W żadnym z kolejnych dni nie ma podstaw do
-przywołania."
+TAK PISZ — układ: nazwij dzień i godziny, w których coś jest, a resztę zbierz
+jednym stwierdzeniem. Gdy nie dzieje się nic w żadnym dniu, powiedz to o całym
+okresie i na tym poprzestań. Za każdym razem własnymi słowami.
 `;
 
 /**
@@ -572,6 +566,22 @@ export function validateSummary(
     )
   ) {
     return { ok: false, reason: 'dzień tygodnia w liczbie mnogiej' };
+  }
+
+  /*
+   * "Dodatkowy" is "extra"; the word wanted is "dodatni", positive.
+   *
+   * Published once in seventy-two texts: "margines jest wąski, ale dodatkowy".
+   * The next run said "dodatni" and got it right, so it is a slip rather than a
+   * habit — but it corrupts the one distinction this whole card rests on, and a
+   * reader who knows the domain reads it as a different quantity entirely.
+   *
+   * Notable as the first fault in this series traced to the model rather than to
+   * our own wording: the prompt says "dodatni" six times and "dodatkow" never.
+   * The vocabulary here is fixed and this word has no place in it.
+   */
+  if (/dodatkow/i.test(whole)) {
+    return { ok: false, reason: '„dodatkowy" zamiast „dodatni"' };
   }
 
   // A calque of "thin margin"; in Polish a margin is narrow, never thin. It
