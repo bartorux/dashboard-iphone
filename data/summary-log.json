@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-09T18:15:37.879Z",
-      "prompt": 4,
-      "accepted": true,
-      "headline": "W poniedziałek między 18:00 a 19:00 rezerwa nie pokryje wymaganej, ale operator może przywołania nie ogłaszać.",
-      "body": "W poniedziałek pojawią się dwie godziny z bardzo cienkim marginesem. Rezerwa wciąż pozostaje dodatnia, więc pokrywa wymaganą wartość. Nadwyżka trzyma się powyżej progu, więc ogłoszenie może jeszcze paść.",
-      "outlook": "W niedzielę i we wtorek nie ma podstaw do przywołania."
-    },
-    {
       "at": "2026-08-09T18:20:06.152Z",
       "prompt": 5,
       "accepted": true,
@@ -578,6 +570,15 @@
       "headline": "W poniedziałek 17 sierpnia między 19:00 a 22:00 rezerwa nie pokryje wymaganego poziomu.",
       "body": "Zapotrzebowanie rośnie ponad normę przy jednoczesnym spadku produkcji z fotowoltaiki poniżej typowych wielkości. Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo nie ogłaszać przywołania.",
       "outlook": "We wtorek 18 sierpnia margines będzie wąski, ale dodatni, a w pozostałych dniach nie ma podstaw do przywołania."
+    },
+    {
+      "at": "2026-08-13T00:42:18.110Z",
+      "prompt": 33,
+      "accepted": false,
+      "reason": "tekst zawiera liczbę spoza godzin",
+      "headline": "Dziś i jutro w krajowej sieci rezerwa w pełni pokrywa wymagany poziom i nie ma podstaw do przywołania.",
+      "body": "W poniedziałek 17 sierpnia między 19:00 a 22:00 rezerwa nie pokryje wymaganego poziomu z powodu zapotrzebowania powyżej normy oraz ubytków poniżej normy. Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo nie ogłaszać przywołania.",
+      "outlook": "We wtorek 18 sierpnia o 20:00 margines jest wąski, ale rezerwa pokrywa wymagany poziom, natomiast w środę 19 sierpnia i pozostałych dniach nie ma podstaw do przywołania."
     }
   ]
 }
