@@ -88,8 +88,12 @@ export interface LegendItem {
   /**
    * Shown only after the reader asks for it. A permanent paragraph above the
    * chart pushed the chart itself off the first screen.
+   *
+   * An array becomes separate paragraphs. One entry needed to explain what a
+   * view is FOR and how to read it, not merely what a colour means, and three
+   * short blocks carry that where one long sentence did not.
    */
-  info?: string;
+  info?: string | string[];
 }
 
 export const ChartLegend: React.FC<{ items: LegendItem[] }> = ({ items }) => {
@@ -123,9 +127,11 @@ export const ChartLegend: React.FC<{ items: LegendItem[] }> = ({ items }) => {
       </ul>
 
       {open?.info && (
-        <p className="mt-1.5 rounded-lg bg-surface-2 px-2 py-1.5 text-[0.6875rem] leading-relaxed text-text-secondary">
-          {open.info}
-        </p>
+        <div className="mt-1.5 space-y-1.5 rounded-lg bg-surface-2 px-2 py-1.5 text-[0.6875rem] leading-relaxed text-text-secondary">
+          {(Array.isArray(open.info) ? open.info : [open.info]).map((part) => (
+            <p key={part}>{part}</p>
+          ))}
+        </div>
       )}
     </>
   );
