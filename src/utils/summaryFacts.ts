@@ -83,6 +83,16 @@ export interface DayFacts {
    * not by itself make it unusual.
    */
   worstStanding: Standing;
+  /**
+   * Which way this day's forecast has been moving, in words — or null when it
+   * has not really moved, or when the log is too shallow to say.
+   *
+   * The earliest warning the app can give. A call period is declared eight hours
+   * ahead, so a forecast sliding the wrong way precedes it by more than a day —
+   * and the margin on the card only ever says where the forecast stands, never
+   * which way it is going.
+   */
+  movement: string | null;
 }
 
 /**
@@ -131,7 +141,15 @@ export function buildFacts(
    * set: with a five-working-day strip that silently pulled in the weekend the
    * tabs step over, so the summary would discuss a Saturday nobody could open.
    */
-  days: string[] = visibleBusinessDates(now)
+  days: string[] = visibleBusinessDates(now),
+  /**
+   * How each day's forecast has been moving, already phrased.
+   *
+   * Passed in rather than read here: the log lives on disk beside the scheduled
+   * job, and nothing in the browser has it or needs it. An empty map is the
+   * normal state everywhere except that job.
+   */
+  movements: Map<string, string> = new Map()
 ): DayFacts[] {
   const ahead = upcoming(allData, now);
 
@@ -255,6 +273,7 @@ export function buildFacts(
         worstStanding: worst
           ? standingFor(worst.margin, distribution.get(worst.point.hourLabel))
           : 'unknown',
+        movement: movements.get(businessDate) ?? null,
       };
     });
 }
@@ -353,7 +372,9 @@ export function assessmentKey(facts: DayFacts[]): string {
    * stays as still as it was.
    */
   const lead = leadingDay(facts);
-  const cause = lead ? `${lead.drivers ?? '-'}/${lead.worstStanding}` : '-';
+  const cause = lead
+    ? `${lead.drivers ?? '-'}/${lead.worstStanding}/${lead.movement ?? '-'}`
+    : '-';
 
   return `${days}#${cause}`;
 }
@@ -584,7 +605,22 @@ export function renderFacts(facts: DayFacts[], days: number): string {
           `    margines o ${day.worstHour} jest ${standing}, na tle ostatnich ${days} dni`
         );
       }
+
     }
+
+    /*
+     * Which way it is heading, for the leading day and no other.
+     *
+     * Same discipline as the cause: one day, one line. Several days' worth of
+     * movement would be a list, and a list is what the middle line of the answer
+     * came back as, four times, whenever one was offered.
+     *
+     * Outside the cause block, not inside it. Nested there — where it started —
+     * a leading day with a sliding forecast but an unremarkable mix would have
+     * said nothing about the slide, and that is the case this whole layer exists
+     * for. A mutation caught it; the fixture happened to carry both.
+     */
+    if (isLead && day.movement) lines.push(`    ${day.movement}`);
 
     for (const range of day.ranges) {
       lines.push(

@@ -6,6 +6,8 @@ import {
   sameDays,
   snapshotDay,
   snapshotDays,
+  describeMovement,
+  movementFor,
   type DaySnapshot,
 } from '../forecastLog';
 import { makePoint } from '../../test/factories';
@@ -230,5 +232,72 @@ describe('parseLog', () => {
     };
 
     expect(parseLog(raw).entries).toHaveLength(1);
+  });
+});
+
+describe('movementFor', () => {
+  /** A log of one day whose worst margin walks through the given values. */
+  const logZ = (wartosci: number[]) => ({
+    entries: wartosci.map((m, i) => ({
+      at: new Date(Date.UTC(2026, 7, 11, i)).toISOString(),
+      days: [
+        { businessDate: WEDNESDAY, worstMargin: m, averageMargin: m, worstHour: '20:00' },
+      ],
+    })),
+  });
+
+  it('compares medians of windows, not the first and last reading', () => {
+    /*
+     * The measurement this rule exists for. On 12 August the day drifted about
+     * 1000 MW across 31 hours while a single hour-to-hour step reached 1339 —
+     * so a difference between two readings can exceed the whole day's movement
+     * and would report a slide that reverses an hour later.
+     *
+     * Here the last reading spikes upward; the windowed median ignores it.
+     */
+    const ruch = movementFor(
+      logZ([1000, 1000, 1000, 1000, 1000, 1000, 200, 200, 200, 200, 200, 5000]),
+      WEDNESDAY
+    );
+
+    expect(ruch!.shift).toBeLessThan(0);
+  });
+
+  it('reports nothing until there are enough snapshots', () => {
+    expect(movementFor(logZ([1000, 500, 200]), WEDNESDAY)).toBeNull();
+  });
+
+  it('never reports a jumpiness of zero', () => {
+    // A flat day would otherwise make every later comparison divide by nothing.
+    expect(movementFor(logZ(Array(14).fill(1000)), WEDNESDAY)!.jumpiness).toBe(1);
+  });
+});
+
+describe('describeMovement', () => {
+  it('stays silent below the attention threshold', () => {
+    // 400 MW cannot move any hour across the level at which this app starts
+    // calling a margin worth watching.
+    expect(describeMovement({ shift: -400, jumpiness: 10 })).toBeNull();
+  });
+
+  it('stays silent when the day is simply that jumpy', () => {
+    // Same shift, but on a day that wobbles by 400 MW between snapshots anyway.
+    expect(describeMovement({ shift: -900, jumpiness: 400 })).toBeNull();
+    expect(describeMovement({ shift: -900, jumpiness: 20 })).not.toBeNull();
+  });
+
+  it('names the direction and nothing else', () => {
+    const gorzej = describeMovement({ shift: -1863, jumpiness: 22 });
+    const lepiej = describeMovement({ shift: 900, jumpiness: 20 });
+
+    expect(gorzej).toBe('prognoza tej doby pogarsza się');
+    expect(lepiej).toBe('prognoza tej doby poprawia się');
+    // No figure and no span: the model may not print digits outside an hour, so
+    // a fact carrying either would hand it what the validator then refuses.
+    expect(gorzej).not.toMatch(/\d/);
+  });
+
+  it('says nothing when there is no measurement at all', () => {
+    expect(describeMovement(null)).toBeNull();
   });
 });

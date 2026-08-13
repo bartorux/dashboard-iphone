@@ -24,6 +24,8 @@ import { visibleBusinessDates } from '../src/utils/dayWindow';
 import {
   EMPTY_LOG,
   appendEntry,
+  describeMovement,
+  movementFor,
   parseLog,
   snapshotDays,
 } from '../src/utils/forecastLog';
@@ -127,7 +129,30 @@ const points = processData(forecast);
  */
 if (!dryRun) recordForecast(points, now);
 
-const facts = buildFacts(points, processData(history), now);
+/*
+ * How each day has been moving, read back from the log this job has been
+ * writing. Empty on the first runs, and empty forever in the browser — nothing
+ * there has the file, and nothing there needs it.
+ */
+const ruch = new Map<string, string>();
+try {
+  const zapisane = parseLog(JSON.parse(readFileSync(logTarget, 'utf8')));
+  for (const businessDate of visibleBusinessDates(now)) {
+    const slowa = describeMovement(movementFor(zapisane, businessDate));
+    if (slowa) ruch.set(businessDate, slowa);
+  }
+} catch {
+  // No log yet, or an unreadable one. The summary is the product; this is
+  // context, and context missing must never end the run.
+}
+
+const facts = buildFacts(
+  points,
+  processData(history),
+  now,
+  visibleBusinessDates(now),
+  ruch
+);
 
 if (facts.length === 0) {
   console.log('Brak godzin przed nami — zostawiam poprzednie podsumowanie.');
