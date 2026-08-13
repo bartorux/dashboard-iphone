@@ -1,5 +1,6 @@
 import type { PSEDataPoint } from '../types';
 import { isEligibleHour } from './callPeriod';
+import { DEFAULT_ORANGE_THRESHOLD } from './constants';
 
 /**
  * A record of what the forecast said, so we can later say what changed.
@@ -161,4 +162,108 @@ export function parseLog(raw: unknown): ForecastLog {
   });
 
   return { entries: clean };
+}
+
+/**
+ * How far a day's forecast has moved, and how much it usually wobbles.
+ *
+ * The reason the log exists. A call period is declared eight hours ahead, so a
+ * forecast sliding the wrong way is the earliest warning there is — earlier than
+ * any margin the card can show, because the margin only tells you where the
+ * forecast stands, never which way it is going.
+ */
+export interface Movement {
+  /** Signed megawatts. Negative means the day got worse. */
+  shift: number;
+  /** Typical hour-to-hour step for this day, as its own noise floor. */
+  jumpiness: number;
+}
+
+/**
+ * Below this a shift cannot change how any hour reads.
+ *
+ * The app's own attention threshold, reused rather than invented: 500 MW is
+ * where a margin stops being comfortable in this tool's own settings, so a shift
+ * that size is exactly the size that can move a day across it.
+ */
+export const MOVEMENT_FLOOR_MW = DEFAULT_ORANGE_THRESHOLD;
+
+/**
+ * And how far past its own noise a day has to move.
+ *
+ * Measured across seven business dates: the median hour-to-hour step runs from
+ * 1 to 122 MW, so on a settled day even a small drift clears the floor while on
+ * a wild one it means nothing. This is the same mistake the cause layer already
+ * paid for with a fixed 300 MW threshold — one number cannot serve quantities
+ * that vary on different scales.
+ */
+export const MOVEMENT_NOISE_MULTIPLE = 3;
+
+/** Fewer than this and the windows overlap into meaninglessness. */
+export const MOVEMENT_MIN_SNAPSHOTS = 12;
+
+function median(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  return sorted[Math.floor(sorted.length / 2)];
+}
+
+/**
+ * Compares the median of the earliest snapshots with the median of the latest.
+ *
+ * Medians of windows, never two snapshots. Measured on 12 August: the day moved
+ * 1032 MW across 31 hours while a single hour-to-hour step reached 1339 MW — so
+ * a difference taken between two readings can be larger than the entire day's
+ * drift, and would report movement that reverses an hour later. That is the same
+ * failure as text that changes every hour: it stops being read.
+ */
+export function movementFor(
+  log: ForecastLog,
+  businessDate: string,
+  minSnapshots = MOVEMENT_MIN_SNAPSHOTS
+): Movement | null {
+  const series = log.entries
+    .map((entry) => entry.days.find((day) => day.businessDate === businessDate))
+    .filter((day): day is DaySnapshot => day?.worstMargin != null)
+    .map((day) => day.worstMargin as number);
+
+  if (series.length < minSnapshots) return null;
+
+  const steps: number[] = [];
+  for (let index = 1; index < series.length; index++) {
+    steps.push(Math.abs(series[index] - series[index - 1]));
+  }
+
+  const window = Math.max(3, Math.floor(series.length / 4));
+
+  return {
+    shift: median(series.slice(-window)) - median(series.slice(0, window)),
+    // Never zero: a day whose forecast has not moved at all would otherwise make
+    // every later comparison divide by nothing.
+    jumpiness: Math.max(median(steps), 1),
+  };
+}
+
+/**
+ * The finding in words, or null when the day has not really moved.
+ *
+ * Deliberately without a figure and without a span. The model may not print
+ * digits outside an hour, so a fact carrying "1863 MW" or "przez 30 godzin"
+ * would hand it exactly what the validator then refuses — the deadlock this
+ * codebase has already hit twice, once over the 1100 MW threshold and once over
+ * a date in a day name.
+ *
+ * No second grade either. "Wyraźnie" was removed from the cause layer for
+ * putting a fixed megawatt cut across quantities of different scales, and the
+ * same objection applies here.
+ */
+export function describeMovement(movement: Movement | null): string | null {
+  if (!movement) return null;
+
+  const { shift, jumpiness } = movement;
+  if (Math.abs(shift) < MOVEMENT_FLOOR_MW) return null;
+  if (Math.abs(shift) < MOVEMENT_NOISE_MULTIPLE * jumpiness) return null;
+
+  return shift < 0
+    ? 'prognoza tej doby pogarsza się'
+    : 'prognoza tej doby poprawia się';
 }

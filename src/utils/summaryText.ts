@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 35;
+export const PROMPT_VERSION = 36;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -165,6 +165,9 @@ nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
   nazwa dnia tygodnia opisuje wtedy dwa różne dni, a czytelnik wybierze bliższy.
 - ZAWSZE w liczbie POJEDYNCZEJ, także gdy wymieniasz kilka dni: „w środę i piątek",
   nigdy „w środy i piątki". Liczba mnoga znaczy „w każdą środę" — nawyk, nie dzień.
+- RUCH PROGNOZY. Jeśli fakty mówią, że prognoza danej doby się pogarsza albo
+  poprawia, napisz o tym — to jedyna rzecz na tej karcie, która wyprzedza samo
+  ogłoszenie. Margines mówi, gdzie prognoza stoi; to mówi, w którą stronę idzie.
 DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
@@ -223,7 +226,10 @@ nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
   17 sierpnia", nie skracaj do „w poniedziałek": okno sięga za weekend, więc sama
   nazwa dnia tygodnia opisuje wtedy dwa różne dni, a czytelnik wybierze bliższy.
 - ZAWSZE w liczbie POJEDYNCZEJ, także gdy wymieniasz kilka dni: „w środę i piątek",
-  nigdy „w środy i piątki". Liczba mnoga znaczy „w każdą środę" — nawyk, nie dzień.`;
+  nigdy „w środy i piątki". Liczba mnoga znaczy „w każdą środę" — nawyk, nie dzień.
+- RUCH PROGNOZY. Jeśli fakty mówią, że prognoza danej doby się pogarsza albo
+  poprawia, napisz o tym — to jedyna rzecz na tej karcie, która wyprzedza samo
+  ogłoszenie. Margines mówi, gdzie prognoza stoi; to mówi, w którą stronę idzie.`;
 
 /**
  * The block describing DALEJ, lifted out so the answer-first shape can drop it.
@@ -274,7 +280,9 @@ To jest odpowiedź na pytanie, z którym czytelnik otwiera aplikację, i jedyne
 zdanie widoczne, gdy karta jest zwinięta. NIE zaczynaj od tego, co najciaśniejsze
 — to należy do TREŚCI.
 TREŚĆ: JEDNO zdanie o godzinie, która wypada najciaśniej: kiedy, co ją zacieśnia
-i jak wypada na tle tej samej pory z ostatnich dni. Dzień nazwij DOKŁADNIE tak,
+i jak wypada na tle tej samej pory z ostatnich dni. Jeśli fakty podają, że
+prognoza tej doby się pogarsza albo poprawia, to ma pierwszeństwo przed
+porównaniem — wyprzedza ogłoszenie, a porównanie tylko opisuje stan. Dzień nazwij DOKŁADNIE tak,
 jak nazywają go fakty — nie skracaj „poniedziałek 17 sierpnia" do „w poniedziałek",
 bo okno sięga za weekend i sama nazwa dnia opisuje wtedy dwa różne dni.
 Porównanie ma być członem podrzędnym — „ale i ta godzina mieści się w tym, co
@@ -356,7 +364,11 @@ export function hasGrounds(facts: DayFacts[]): boolean {
 export function hasSomethingToExplain(facts: DayFacts[]): boolean {
   if (hasGrounds(facts)) return true;
 
-  return leadingDay(facts)?.drivers != null;
+  const lead = leadingDay(facts);
+  // Movement counts for the same reason a cause does, and rather more: a calm
+  // day whose forecast is sliding is the one case where the card can say
+  // something before the margin itself has anything to show.
+  return lead?.drivers != null || lead?.movement != null;
 }
 
 export function buildPrompt(

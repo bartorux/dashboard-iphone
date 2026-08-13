@@ -388,6 +388,27 @@ describe('assessmentKey', () => {
         : point
     );
 
+  it('changes when only the movement changes', () => {
+    /*
+     * Movement reaches the text, so it has to reach the fingerprint — otherwise
+     * a forecast that started sliding while the margin held would leave the card
+     * saying nothing had moved. The same gap that let a corrected cause sit
+     * unpublished until the margin happened to drift.
+     */
+    const bez = buildFacts([...doba(2000)], HISTORY_WITH_MIX, BEFORE_ALL);
+    const zRuchem = buildFacts(
+      [...doba(2000)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      undefined,
+      new Map([['2026-08-10', 'prognoza tej doby pogarsza się']])
+    );
+
+    expect(zRuchem[0].movement).toBe('prognoza tej doby pogarsza się');
+    expect(bez[0].movement).toBeNull();
+    expect(assessmentKey(zRuchem)).not.toBe(assessmentKey(bez));
+  });
+
   it('changes when only the cause changes', () => {
     /*
      * The failure this closes. Everything else in the fingerprint describes what
@@ -629,6 +650,58 @@ describe('renderFacts', () => {
     // three-hour range it had just written, which the standing does not cover.
     expect(tekst).toContain('margines o 20:00 jest niższy niż zwykle o tej porze');
     expect(tekst).not.toContain('sama ta godzina');
+  });
+
+  it('reports the slide even when the mix is unremarkable', () => {
+    /*
+     * The case the whole layer exists for: a day whose forecast is sliding while
+     * nothing in the mix stands out. Nested inside the cause block — where this
+     * line started — such a day would have said nothing about the slide at all.
+     */
+    const facts = buildFacts(
+      [...dayOf('2026-08-10', 6000)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      undefined,
+      new Map([['2026-08-10', 'prognoza tej doby pogarsza się']])
+    );
+
+    expect(facts[0].drivers).toContain('nic nie odstaje');
+    expect(renderFacts(facts, 30)).toContain('prognoza tej doby pogarsza się');
+  });
+
+  it('writes no line when the day has not moved', () => {
+    // Guarded on the value, not only on the day: without it a leading day with
+    // nothing to report would print the word "null" into the facts.
+    const facts = buildFacts([...dayOf('2026-08-10', 6000)], HISTORY_WITH_MIX, BEFORE_ALL);
+    const tekst = renderFacts(facts, 30);
+
+    expect(facts[0].movement).toBeNull();
+    expect(tekst).not.toContain('null');
+    expect(tekst).not.toContain('prognoza tej doby');
+  });
+
+  it('names the movement for the leading day and no other', () => {
+    // One day, one line — the discipline the cause already follows. Several
+    // days' worth would be a list, and a list is what the middle line came back
+    // as every time one was offered.
+    const facts = buildFacts(
+      [...dayOf('2026-08-10', 8000), ...dayOf('2026-08-11', 6000)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      undefined,
+      new Map([
+        ['2026-08-10', 'prognoza tej doby poprawia się'],
+        ['2026-08-11', 'prognoza tej doby pogarsza się'],
+      ])
+    );
+
+    const tekst = renderFacts(facts, 30);
+    const wystapienia = tekst.match(/prognoza tej doby/g) ?? [];
+
+    expect(wystapienia).toHaveLength(1);
+    // 2026-08-11 is the tighter of the two, so it leads.
+    expect(tekst).toContain('prognoza tej doby pogarsza się');
   });
 
   it('drops the counterweight on a day the regulation ignores', () => {
