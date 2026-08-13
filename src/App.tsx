@@ -261,9 +261,18 @@ function App() {
               isStale={isStale && hasData}
             />
 
-            {summary && <SummaryCard summary={summary} now={now} />}
-
+            {/*
+              Above the analysis, below the margin.
+              *
+              * The margin stays first because it is the answer to the question
+              * this app is opened with. But once a year the greeting outranks
+              * the analysis: the analysis is what this screen says every hour of
+              * every day, and the greeting is the only thing on it that will not
+              * be there tomorrow.
+              */}
             {isEnergyDay(now) && <EnergyDayCard />}
+
+            {summary && <SummaryCard summary={summary} now={now} />}
           </div>
 
           <div className="xl:col-start-1 xl:row-start-1 xl:row-span-3">
