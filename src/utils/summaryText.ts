@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 36;
+export const PROMPT_VERSION = 37;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -152,11 +152,13 @@ Dokładnie trzy wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadn
 cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
-TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku. Jeśli fakty
-podają, DLACZEGO akurat ta godzina jest najciaśniejsza — napisz o tym: co
-obniża rezerwę i co ją trzyma. To jest jedyne miejsce, w którym pada powód,
-więc nie zostawiaj go niewykorzystanego. Poza tym: dlaczego operator ma prawo
-nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
+TREŚĆ: DWA zdania, każde z osobnym zadaniem.
+  PIERWSZE — jeśli fakty mówią, że prognoza tej doby SIĘ POGARSZA albo POPRAWIA,
+    to jest treść tego zdania i nic innego. Dopiero gdy tego nie mówią, napisz
+    zamiast tego, DLACZEGO akurat ta godzina jest najciaśniejsza.
+  DRUGIE — czy ogłoszenie może jeszcze nadejść.
+NIE powtarzaj tu stanu prawnego: nagłówek już powiedział, czy operator ma prawo
+nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie wnosi.
 - Powód opisz SŁOWAMI z faktów („wiatr poniżej normy"), bez liczb i bez
   przeliczania. Nie zgaduj przyczyny, której w faktach nie ma — pogoda, awarie
   i remonty to domysły, dopóki fakty ich nie nazywają.
@@ -165,9 +167,6 @@ nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
   nazwa dnia tygodnia opisuje wtedy dwa różne dni, a czytelnik wybierze bliższy.
 - ZAWSZE w liczbie POJEDYNCZEJ, także gdy wymieniasz kilka dni: „w środę i piątek",
   nigdy „w środy i piątki". Liczba mnoga znaczy „w każdą środę" — nawyk, nie dzień.
-- RUCH PROGNOZY. Jeśli fakty mówią, że prognoza danej doby się pogarsza albo
-  poprawia, napisz o tym — to jedyna rzecz na tej karcie, która wyprzedza samo
-  ogłoszenie. Margines mówi, gdzie prognoza stoi; to mówi, w którą stronę idzie.
 DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
@@ -214,11 +213,13 @@ const FORMAT_WITH_BODY = `Dokładnie trzy wiersze, każdy z etykietą na począt
 cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
-TREŚĆ: DWA zdania. Każde ma nieść coś, czego nie ma w nagłówku. Jeśli fakty
-podają, DLACZEGO akurat ta godzina jest najciaśniejsza — napisz o tym: co
-obniża rezerwę i co ją trzyma. To jest jedyne miejsce, w którym pada powód,
-więc nie zostawiaj go niewykorzystanego. Poza tym: dlaczego operator ma prawo
-nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
+TREŚĆ: DWA zdania, każde z osobnym zadaniem.
+  PIERWSZE — jeśli fakty mówią, że prognoza tej doby SIĘ POGARSZA albo POPRAWIA,
+    to jest treść tego zdania i nic innego. Dopiero gdy tego nie mówią, napisz
+    zamiast tego, DLACZEGO akurat ta godzina jest najciaśniejsza.
+  DRUGIE — czy ogłoszenie może jeszcze nadejść.
+NIE powtarzaj tu stanu prawnego: nagłówek już powiedział, czy operator ma prawo
+nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie wnosi.
 - Powód opisz SŁOWAMI z faktów („wiatr poniżej normy"), bez liczb i bez
   przeliczania. Nie zgaduj przyczyny, której w faktach nie ma — pogoda, awarie
   i remonty to domysły, dopóki fakty ich nie nazywają.
@@ -226,10 +227,7 @@ nie ogłaszać przywołania i czy ogłoszenie może jeszcze nadejść.
   17 sierpnia", nie skracaj do „w poniedziałek": okno sięga za weekend, więc sama
   nazwa dnia tygodnia opisuje wtedy dwa różne dni, a czytelnik wybierze bliższy.
 - ZAWSZE w liczbie POJEDYNCZEJ, także gdy wymieniasz kilka dni: „w środę i piątek",
-  nigdy „w środy i piątki". Liczba mnoga znaczy „w każdą środę" — nawyk, nie dzień.
-- RUCH PROGNOZY. Jeśli fakty mówią, że prognoza danej doby się pogarsza albo
-  poprawia, napisz o tym — to jedyna rzecz na tej karcie, która wyprzedza samo
-  ogłoszenie. Margines mówi, gdzie prognoza stoi; to mówi, w którą stronę idzie.`;
+  nigdy „w środy i piątki". Liczba mnoga znaczy „w każdą środę" — nawyk, nie dzień.`;
 
 /**
  * The block describing DALEJ, lifted out so the answer-first shape can drop it.

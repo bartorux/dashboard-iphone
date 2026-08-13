@@ -199,6 +199,32 @@ describe('prompt bez wiersza TREŚĆ', () => {
     expect(prompt).not.toContain('DALEJ: jedno zdanie o kolejnych dniach');
   });
 
+  it('gives the middle line one job per sentence, movement first', () => {
+    /*
+     * Published on v36, with the movement available in the facts and ignored:
+     * the model wrote the cause and the legal state and said nothing about the
+     * forecast sliding 1863 MW. Not disobedience — the brief named four things
+     * for two sentences (cause, why the operator may refrain, whether the
+     * announcement may still come, and movement) and left the choice open, so it
+     * took the two that were named inside the TREŚĆ line itself.
+     *
+     * Movement now owns the first sentence outright, and the legal state is
+     * struck from the brief because the headline already carries it.
+     */
+    const zPodstawami = buildFacts(
+      [hourOn('2026-08-10', 19, { reserve: 800, required: 2000 })],
+      [],
+      new Date('2026-08-09T00:00:00Z')
+    );
+
+    const prompt = buildPrompt(zPodstawami, 30, new Date('2026-08-09T10:00:00Z'));
+
+    expect(prompt).toContain('PIERWSZE — jeśli fakty mówią, że prognoza tej doby');
+    expect(prompt).toContain('NIE powtarzaj tu stanu prawnego');
+    // The open-ended brief that let the model choose is gone.
+    expect(prompt).not.toContain('Poza tym: dlaczego operator ma prawo');
+  });
+
   it('throws rather than quietly leaving the instruction unchanged', () => {
     // The failure this exists for: a replacement that matches nothing used to
     // report success, and the run would publish the default shape while looking
