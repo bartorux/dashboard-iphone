@@ -315,7 +315,7 @@ const round = (value: number) => `${value > 0 ? '+' : ''}${Math.round(value)} MW
  * collide the way a hash can, where a collision would silently skip an update.
  */
 export function assessmentKey(facts: DayFacts[]): string {
-  return facts
+  const days = facts
     .map((day) =>
       [
         day.businessDate,
@@ -332,6 +332,30 @@ export function assessmentKey(facts: DayFacts[]): string {
       ].join('|')
     )
     .join(';');
+
+  /*
+   * The cause travels with the fingerprint, or a corrected cause never reaches
+   * the card.
+   *
+   * Everything above describes what the facts were before the cause layer
+   * existed: margin, hour, verdict, ranges, band counts. So when only the reason
+   * changed — because the mix shifted while the margin held, or because we
+   * corrected how it is computed — the stored text stayed, and the card went on
+   * publishing an explanation the code no longer produced. That is not
+   * hypothetical: after the 30-day audit the card still read "zapotrzebowanie
+   * wzrośnie wyraźnie powyżej normy" while the facts had come to say
+   * "zapotrzebowanie typowe", a word the code can no longer even emit.
+   *
+   * Only the leading day's, and only once. The other days' causes never reach
+   * the text, so fingerprinting them would rewrite the summary over sentences
+   * nobody would have read. Against its own band a driver stands out in about
+   * one hour in four, so most runs carry "nic nie odstaje" here and the key
+   * stays as still as it was.
+   */
+  const lead = leadingDay(facts);
+  const cause = lead ? `${lead.drivers ?? '-'}/${lead.worstStanding}` : '-';
+
+  return `${days}#${cause}`;
 }
 
 /**
