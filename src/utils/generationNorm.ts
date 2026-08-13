@@ -51,31 +51,36 @@ function valueOf(point: PSEDataPoint, driver: DriverName): number | null {
   }
 }
 
-/**
- * Worth a word at all. Below this a driver is not what made the hour tight — the
- * margins in question are measured in thousands.
- */
-export const NOTABLE_MW = 300;
-
-/**
- * Worth a stronger word. Anchored on 1100 MW, the surplus at which the operator
- * stops being allowed to refrain from declaring: a driver off by about that much
- * is off by enough to change what the regulation permits.
- */
-export const STRONG_MW = 1000;
+/** Median plus the band a driver usually stays inside, for one hour of the day. */
+export interface DriverBand {
+  p10: number;
+  p50: number;
+  p90: number;
+}
 
 export interface HourNorm {
   hourLabel: string;
-  /** Median for the same hour across the history window. */
-  medians: Record<DriverName, number | null>;
+  bands: Record<DriverName, DriverBand | null>;
   samples: number;
 }
 
 /**
- * Median mix per hour of the day, built the same way the margin band is.
+ * What each driver usually does at this hour, as a band rather than a point.
  *
- * Median rather than mean: a single windy day would drag an average enough to
- * make an ordinary evening look calm.
+ * A single figure was not enough, and the fixed 300 MW threshold that went with
+ * it was the mistake. These quantities do not vary on remotely the same scale:
+ * measured over 22 working days at 20:00, demand runs 18 785–20 046 MW — a
+ * 10th-to-90th spread of 7% of its median — while wind runs 475–2 548, a spread
+ * of 134%. Three hundred megawatts is a real event for demand and pure routine
+ * for wind.
+ *
+ * The consequence was measurable: under the fixed threshold a driver was named
+ * as "odbiegający" in 77% of hours, which is another way of saying the word
+ * meant nothing. Against its own band it is 23%, and that 23% is by
+ * construction the genuinely unusual part.
+ *
+ * Median rather than mean throughout: one windy day would drag an average far
+ * enough to make an ordinary evening look calm.
  */
 export function generationNorms(
   history: PSEDataPoint[],
@@ -94,18 +99,24 @@ export function generationNorms(
   for (const [hourLabel, points] of byHour) {
     if (points.length < minSamples) continue;
 
-    const medians = {} as Record<DriverName, number | null>;
+    const bands = {} as Record<DriverName, DriverBand | null>;
     for (const driver of DRIVERS) {
       const values = points
         .map((point) => valueOf(point, driver))
         .filter((value): value is number => value !== null && Number.isFinite(value))
         .sort((a, b) => a - b);
 
-      medians[driver] =
-        values.length >= minSamples ? percentile(values, 0.5) : null;
+      bands[driver] =
+        values.length >= minSamples
+          ? {
+              p10: percentile(values, 0.1),
+              p50: percentile(values, 0.5),
+              p90: percentile(values, 0.9),
+            }
+          : null;
     }
 
-    norms.set(hourLabel, { hourLabel, medians, samples: points.length });
+    norms.set(hourLabel, { hourLabel, bands, samples: points.length });
   }
 
   return norms;
@@ -140,28 +151,49 @@ export interface HourExplanation {
    * evening peak is ordinary knows to look at the weather instead.
    */
   demandTypical: boolean;
+  /**
+   * The norm was known and nothing left its own band.
+   *
+   * Distinct from "no norm at all", which is silence for want of data. This is a
+   * finding: the hour is the tightest of the week and yet nothing unusual is
+   * behind it — just the ordinary evening peak. Said plainly it is worth as much
+   * as naming a culprit, and it is true far more often.
+   */
+  nothingStandsOut: boolean;
 }
 
 export function explainHour(
   point: PSEDataPoint,
-  norm: HourNorm | undefined,
-  notable = NOTABLE_MW
+  norm: HourNorm | undefined
 ): HourExplanation {
-  const empty: HourExplanation = { worse: [], better: null, demandTypical: false };
+  const empty: HourExplanation = {
+    worse: [],
+    better: null,
+    demandTypical: false,
+    nothingStandsOut: false,
+  };
   if (!norm) return empty;
 
   const drivers: Driver[] = [];
   let demandTypical = false;
+  let known = 0;
 
   for (const name of DRIVERS) {
     const actual = valueOf(point, name);
-    const median = norm.medians[name];
-    if (actual === null || median === null) continue;
+    const band = norm.bands[name];
+    if (actual === null || band === null) continue;
 
-    const delta = actual - median;
+    known += 1;
+    const delta = actual - band.p50;
     const impact = HELPS_WHEN_HIGHER[name] ? -delta : delta;
 
-    if (Math.abs(delta) < notable) {
+    /*
+     * Measured against the driver's OWN band, not a fixed number of megawatts.
+     * The threshold that used to sit here treated a windless evening and an
+     * unusually heavy load as the same size of event, and named one or the other
+     * in 77% of hours — which left the word "odbiegający" meaning nothing.
+     */
+    if (actual >= band.p10 && actual <= band.p90) {
       if (name === 'zapotrzebowanie') demandTypical = true;
       continue;
     }
@@ -187,13 +219,25 @@ export function explainHour(
     // would explain why a comfortable hour is comfortable, which is filler.
     better: worse.length > 0 ? (helping[0] ?? null) : null,
     demandTypical,
+    nothingStandsOut: known > 0 && drivers.length === 0,
   };
 }
 
+/**
+ * No second grade of unusual.
+ *
+ * "Wyraźnie" used to be added past a fixed 1000 MW, which is the same mistake as
+ * the threshold it accompanied: against demand's narrow band almost everything
+ * outside it clears 1000 MW, and against wind's wide one almost nothing does. So
+ * the word fired constantly for one driver and never for another, which is not
+ * what it meant to say.
+ *
+ * Twenty-two samples cannot support a second, rarer cut either. Leaving the band
+ * to speak for itself: outside it is unusual, inside it is not, and that is the
+ * whole of what the data can carry.
+ */
 function wordFor(driver: Driver): string {
-  const direction = driver.delta > 0 ? 'powyżej normy' : 'poniżej normy';
-  const strength = Math.abs(driver.delta) >= STRONG_MW ? 'wyraźnie ' : '';
-  return `${driver.name} ${strength}${direction}`;
+  return `${driver.name} ${driver.delta > 0 ? 'powyżej normy' : 'poniżej normy'}`;
 }
 
 /**
@@ -215,22 +259,22 @@ export function describeDrivers(
    */
   includeCounterweight = true
 ): string | null {
+  /*
+   * "Nothing stands out" is an answer, not a shrug.
+   *
+   * Against each driver's own band the mix is unremarkable about three quarters
+   * of the time, so a line that only ever spoke about culprits would fall silent
+   * on most days — and the card would go back to the terseness that started this
+   * whole thread. That an hour is the tightest of the week WITHOUT anything
+   * unusual behind it is worth a sentence: it means the ordinary evening peak,
+   * nothing more.
+   */
+  if (explanation.nothingStandsOut) {
+    return 'nic nie odstaje od normy dla tej pory — zwykły przebieg doby';
+  }
+
   if (explanation.worse.length === 0) return null;
 
-  /*
-   * One counterweight, never two.
-   *
-   * Handed "wiatr poniżej normy, zapotrzebowanie typowe; w drugą stronę ubytki
-   * poniżej normy" the model wrote it back almost verbatim, three factors in a
-   * row: "O 20:00 wiatr spada poniżej normy przy typowym zapotrzebowaniu
-   * i ubytkach poniżej normy." Correct, and it reads like a machine — because a
-   * comma-separated list is what it was given.
-   *
-   * A measured counterweight beats "demand is ordinary": it names something that
-   * actually moved, so the clause becomes a contrast rather than an inventory.
-   * Ordinary demand is still worth saying when nothing else is holding the
-   * margin up, since then it is the whole of the good news.
-   */
   const counterweight = !includeCounterweight
     ? null
     : explanation.better
@@ -242,3 +286,4 @@ export function describeDrivers(
   const clause = explanation.worse.map(wordFor).join(', ');
   return counterweight ? `${clause}; ${counterweight}` : clause;
 }
+

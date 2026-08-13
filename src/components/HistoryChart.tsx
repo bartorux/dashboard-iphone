@@ -265,12 +265,27 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
             swatch: (
               <AreaSwatch fill={colors.bandHistory} border={colors.history} />
             ),
-            // The band is the one entry that means nothing without explaining;
-            // 'Dziś' and 'Mediana' speak for themselves.
+            /*
+             * The band is the one entry that means nothing without explaining;
+             * 'Dziś' and 'Mediana' speak for themselves.
+             *
+             * Rewritten after the question it failed to answer: "are those all
+             * the Mondays?". It said "80% z ostatnich 30 dni" and left three
+             * things unsaid — which days, which hour, and whether these are
+             * outturn or forecast. All three matter, and the middle one is the
+             * whole basis of the comparison.
+             *
+             * Two sentences rather than one: what a margin is, and what the band
+             * is, are separate questions and were run together.
+             */
             info:
-              'Wykres pokazuje margines, czyli dostępną rezerwę minus wymaganą — ' +
-              'poniżej zera rezerwa nie pokrywa wymagań. Pasmo to zakres typowy ' +
-              `dla danej godziny: mieściło się w nim 80% z ostatnich ${days} dni.`,
+              'Margines to dostępna rezerwa minus wymagana — poniżej zera ' +
+              'rezerwa nie pokrywa wymagań. ' +
+              'Pasmo pokazuje, co dla TEJ SAMEJ GODZINY doby było zwyczajne ' +
+              `przez ostatnie ${days} dni: mieściło się w nim 80% z nich, ` +
+              'a dni robocze i wolne liczone są osobno, bo w weekend ' +
+              'zapotrzebowanie jest wyraźnie niższe. To prognozy PSE, ' +
+              'nie wykonanie.',
           },
         ]}
       />

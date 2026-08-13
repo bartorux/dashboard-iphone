@@ -33,11 +33,18 @@ const BEFORE_ALL = new Date('2026-08-09T00:00:00Z');
  * and no day can carry a cause at all — which is how the whole cause path once
  * went untested while every assertion stayed green.
  */
+/*
+ * Four WORKING days. 1 and 2 August are a Saturday and a Sunday, and the bands
+ * are built per day type now — a day off is compared with days off, a working
+ * day with working days — so a history leaning on the weekend leaves a working
+ * day with two samples and no band at all. Production has 22; a fixture has to
+ * clear the same bar.
+ */
 const HISTORY_WITH_MIX = [
-  ...dayOf('2026-08-01', 5000),
-  ...dayOf('2026-08-02', 5000),
   ...dayOf('2026-08-03', 5000),
   ...dayOf('2026-08-04', 5000),
+  ...dayOf('2026-08-05', 5000),
+  ...dayOf('2026-08-06', 5000),
 ];
 
 /**
@@ -145,6 +152,86 @@ describe('buildFacts', () => {
     expect(low[0].aboveTypical).toBe(0);
     expect(high[0].aboveTypical).toBe(1);
     expect(high[0].belowTypical).toBe(0);
+  });
+
+  it('judges a working day against working days, not against the weekend', () => {
+    /*
+     * The band used to be built from all thirty days at once, grouped by hour of
+     * day alone. Here the weekend sits far above the working days, so a mixed
+     * band swallows the subject whole and calls it ordinary.
+     *
+     * 9 August is a Sunday, 1, 2 and 8 August are the weekend; 3 to 6 are
+     * working days.
+     */
+    const history = [
+      ...['2026-08-03', '2026-08-04', '2026-08-05', '2026-08-06'].map((date) =>
+        hourOn(date, 19, { reserve: 5000, required: 2000 })
+      ),
+      ...['2026-08-01', '2026-08-02', '2026-08-08'].map((date) =>
+        hourOn(date, 19, { reserve: 11000, required: 2000 })
+      ),
+    ];
+
+    const roboczy = buildFacts(
+      [hourOn('2026-08-10', 19, { reserve: 5200, required: 2000 })],
+      history,
+      BEFORE_ALL
+    );
+
+    // 3200 against a working-day band sitting flat at 3000 — above it. Against
+    // the mixed band, which the weekend stretches to 9000, it would vanish into
+    // the middle and read as entirely typical.
+    expect(roboczy[0].workingDay).toBe(true);
+    expect(roboczy[0].aboveTypical).toBe(1);
+
+    const wolny = buildFacts(
+      [hourOn('2026-08-09', 19, { reserve: 11200, required: 2000 })],
+      history,
+      BEFORE_ALL
+    );
+
+    // And the reverse: a Sunday is measured against Sundays, so 9200 stands out
+    // where the mixed band would have called it ordinary too.
+    expect(wolny[0].workingDay).toBe(false);
+    expect(wolny[0].aboveTypical).toBe(1);
+  });
+
+  it('does not let the quiet weekend make ordinary weekday demand look high', () => {
+    /*
+     * The consequence that reached the card. Weekend mornings draw far less
+     * power, so a norm built from all thirty days sits below any working day —
+     * measured live at 08:00, 657 MW below, against a significance threshold of
+     * 300. An ordinary Tuesday came out as "zapotrzebowanie powyżej normy" and
+     * the card blamed demand for an hour where demand was doing nothing.
+     */
+    const wieczor = (date: string, demand: number, wind: number) =>
+      dayOf(date, 5000).map((point) =>
+        point.hourLabel === '20:00'
+          ? { ...point, reserve: 4500, demand, wind }
+          : { ...point, demand, wind }
+      );
+
+    // History keeps ordinary wind; only the subject is short of it, so the cause
+    // line has something to name that is NOT demand.
+    const history = [
+      ...['2026-08-03', '2026-08-04', '2026-08-05', '2026-08-06'].flatMap((d) =>
+        wieczor(d, 19000, 2000)
+      ),
+      ...['2026-08-01', '2026-08-02', '2026-08-08'].flatMap((d) =>
+        wieczor(d, 12000, 2000)
+      ),
+    ];
+
+    const facts = buildFacts(
+      [...wieczor('2026-08-10', 19000, 400)],
+      history,
+      BEFORE_ALL
+    );
+
+    // Demand exactly at the working-day norm, so it must not be named at all.
+    // Against the mixed norm the weekend drags down, it lands 3500 MW "above".
+    expect(facts[0].drivers).toContain('wiatr');
+    expect(facts[0].drivers).not.toContain('zapotrzebowanie powyżej normy');
   });
 
   it('flags a thin but positive margin, which the call-period rule alone would call fine', () => {
@@ -430,7 +517,7 @@ describe('renderFacts', () => {
     // On the tightest day, which is the one the headline is about.
     const blok = tekst.split(/^(?=\d{4}-\d{2}-\d{2} \()/m);
     expect(blok.find((part) => part.startsWith('2026-08-12'))).toContain(
-      'wiatr wyraźnie poniżej normy'
+      'wiatr poniżej normy'
     );
   });
 
@@ -441,7 +528,7 @@ describe('renderFacts', () => {
      * flat history every hour shares one band and looking up the wrong one would
      * give the same answer — which is how this went untested at first.
      */
-    const history = ['2026-08-01', '2026-08-02', '2026-08-03', '2026-08-04']
+    const history = ['2026-08-03', '2026-08-04', '2026-08-05', '2026-08-06']
       .flatMap((date) => dayOf(date, 5000))
       .map((point) =>
         point.hourLabel === '20:00' ? { ...point, reserve: 9000 } : point
@@ -490,14 +577,26 @@ describe('renderFacts', () => {
     expect(zPodstawami[0].drivers).toContain('zapotrzebowanie typowe');
   });
 
-  it('offers no cause when the mix is unremarkable', () => {
-    // A line saying everything is normal is a line the model will find a way to
-    // repeat.
-    const data = [...dayOf('2026-08-10', 8000), ...dayOf('2026-08-11', 6000)];
+  it('says the mix is unremarkable rather than falling silent', () => {
+    /*
+     * Measured against each driver's own band, the mix is ordinary in about
+     * three hours out of four. A cause line that only ever named culprits would
+     * therefore vanish on most days and take the card back to two dry sentences
+     * — the complaint this whole layer answers.
+     *
+     * That an hour is the tightest of the week with nothing unusual behind it is
+     * itself worth saying: it means the ordinary evening peak and no more.
+     */
+    const zwyczajny = buildFacts(
+      [...dayOf('2026-08-10', 6000)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL
+    );
 
-    expect(
-      renderFacts(buildFacts(data, HISTORY_WITH_MIX, BEFORE_ALL), 30)
-    ).not.toContain('dlaczego akurat ta godzina');
+    const tekst = renderFacts(zwyczajny, 30);
+
+    expect(tekst).toContain('dlaczego akurat ta godzina');
+    expect(tekst).toContain('nic nie odstaje od normy');
   });
 
   it('offers no cause when history came without the mix', () => {

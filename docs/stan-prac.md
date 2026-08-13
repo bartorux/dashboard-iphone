@@ -42,6 +42,17 @@ Oba czekają na dobę w logach — nie na pomysł, tylko na pomiar.
 
 ## Zapisane, nienaprawiane
 
+- **Prognoza dryfuje w dół, a pasmo zbudowane jest z wartości osiadłych.** Z logu prognoz, pięć
+  dób: −635, −159, −392, −2204, −899 MW między pierwszą a ostatnią migawką. **Wszystkie pięć w tę
+  samą stronę**, średnio 858 MW — 40% szerokości pasma typowego. Porównujemy więc prognozę świeżą,
+  jeszcze optymistyczną, z historią prognoz już zweryfikowanych przez czas. Pięć dób to za mało,
+  żeby korygować, i za dużo, żeby zignorować. Kierunki na potem: budować pasmo z prognoz o tym
+  samym wyprzedzeniu (log właśnie zaczyna to umożliwiać) albo nie porównywać dób odległych w ogóle.
+- **Pojedynczy skok godzinowy bywa większy niż cały dobowy dryf.** Zmierzone: doba 12.08 przesunęła
+  się o 1032 MW przez 31 godzin, przy największym skoku między dwiema kolejnymi migawkami równym
+  1339 MW. Dlatego etap 3 nie może porównywać dwóch migawek — musi porównywać mediany z okien
+  i odzywać się dopiero, gdy przesunięcie przerasta zmierzoną skoczność danej doby.
+
 - **„W tych dniach nie ma podstaw"** — „tych" nie wskazuje na nic, co czytelnik widzi. Wziąłem to
   dosłownie ze swojej instrukcji, więc model przepisał moje sformułowanie. Jedno słowo do zmiany,
   najlepiej przy okazji etapu 3, bo instrukcję i tak trzeba będzie wtedy tknąć.

@@ -142,14 +142,43 @@ export function buildFacts(
     else byDay.set(point.businessDate, [point]);
   }
 
-  const distribution = new Map(
-    marginDistribution(history).map((hour) => [hour.hourLabel, hour])
-  );
+  /*
+   * Like compared with like: a working day against working days, a day off
+   * against days off.
+   *
+   * Both bands used to be built from all thirty days at once, grouped by hour of
+   * day alone. Measured on live data, that drags the 08:00 demand norm down by
+   * 657 MW — weekend mornings are far quieter than weekday ones — against a
+   * significance threshold of 300 MW. An ordinary Tuesday morning therefore came
+   * out as "zapotrzebowanie powyżej normy", and the card blamed demand for an
+   * hour where demand was doing nothing unusual.
+   *
+   * The margin band is less distorted, because the required reserve falls at the
+   * weekend too and the subtraction cancels most of it — but still enough to
+   * move 7.6% of the typical/below/above verdicts.
+   *
+   * Not narrowed to the same weekday: thirty days hold about four Mondays, and
+   * four samples cannot carry a 10th and 90th percentile. Working days leave 22.
+   */
+  const byType = (working: boolean) =>
+    history.filter((point) => isWorkingDay(point.businessDate) === working);
+
+  const distributions = {
+    true: new Map(
+      marginDistribution(byType(true)).map((hour) => [hour.hourLabel, hour])
+    ),
+    false: new Map(
+      marginDistribution(byType(false)).map((hour) => [hour.hourLabel, hour])
+    ),
+  };
 
   // Empty unless the caller fetched history with the mix — the browser does not,
   // and nothing here needs it to. Then every lookup misses and no day carries a
   // cause, which is the same as before this existed.
-  const norms = generationNorms(history);
+  const normsByType = {
+    true: generationNorms(byType(true)),
+    false: generationNorms(byType(false)),
+  };
 
   return [...byDay.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
@@ -171,6 +200,10 @@ export function buildFacts(
       const ranges = callPeriodRanges(points, now);
       const risk = worstRisk(ranges, points, now);
 
+      const workingDay = isWorkingDay(businessDate);
+      const distribution = distributions[`${workingDay}`];
+      const norms = normsByType[`${workingDay}`];
+
       // Hours that keep a positive margin but only just — and only those the
       // rules could apply to, so a night hour never turns up in a sentence
       // about working-day risk.
@@ -185,7 +218,7 @@ export function buildFacts(
         businessDate,
         weekday: weekdayOf(businessDate),
         spokenName: spokenDay(businessDate, now),
-        workingDay: isWorkingDay(businessDate),
+        workingDay,
         hoursAhead: points.length,
         worstMargin: worst?.margin ?? null,
         worstHour: worst?.point.hourLabel ?? null,
