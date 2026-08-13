@@ -1,8 +1,8 @@
 {
-  "headline": "W poniedziałek 17 sierpnia między 17:00 a 22:00 operator ma prawo nie ogłaszać przywołania.",
-  "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść.",
-  "outlook": "We wtorek 18 sierpnia między 20:00 a 21:00 operator ma również prawo nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw do przywołania.",
-  "generatedAt": "2026-08-13T18:29:10.434Z",
+  "headline": "W poniedziałek 17 sierpnia przywołanie powinno zostać ogłoszone między 20:00 a 21:00.",
+  "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, bo do godziny krytycznej zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie.",
+  "outlook": "We wtorek 18 sierpnia o godzinie 20:00 rezerwa spadnie poniżej wymaganego poziomu, lecz przepis pozwala operatorowi nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw do przywołania.",
+  "generatedAt": "2026-08-13T19:32:01.393Z",
   "dates": [
     "2026-08-13",
     "2026-08-14",
@@ -10,6 +10,6 @@
     "2026-08-18",
     "2026-08-19"
   ],
-  "assessment": "2026-08-13|R|none|400|21:00|0|0|0|;2026-08-14|R|none|1500|00:00|0|0|19|;2026-08-17|R|moderate|-1700|20:00|2|6|11|moderate:17:00-22:00;2026-08-18|R|moderate|-100|20:00|0|0|20|moderate:20:00-21:00;2026-08-19|R|none|1500|20:00|0|0|24|#-/below/prognoza tej doby pogarsza się#v38",
+  "assessment": "2026-08-13|R|none|300|21:00|1|0|0|;2026-08-14|R|none|1500|00:00|0|0|19|;2026-08-17|R|high|-1900|20:00|2|6|11|moderate:17:00-20:00,high:20:00-21:00,moderate:21:00-22:00;2026-08-18|R|moderate|-300|20:00|0|0|20|moderate:20:00-21:00;2026-08-19|R|none|1500|20:00|0|0|24|#-/below/prognoza tej doby pogarsza się#v38",
   "model": "gemini-3.5-flash-lite"
 }
