@@ -219,10 +219,18 @@ describe('prompt bez wiersza TREŚĆ', () => {
 
     const prompt = buildPrompt(zPodstawami, 30, new Date('2026-08-09T10:00:00Z'));
 
-    expect(prompt).toContain('PIERWSZE — jeśli fakty mówią, że prognoza tej doby');
+    expect(prompt).toContain('PIERWSZE — to, co fakty podają o wskazanej godzinie');
     expect(prompt).toContain('NIE powtarzaj tu stanu prawnego');
     // The open-ended brief that let the model choose is gone.
     expect(prompt).not.toContain('Poza tym: dlaczego operator ma prawo');
+    /*
+     * And the brief now describes what the facts actually hand over. It used to
+     * say "movement, or failing that the cause" while the facts printed both —
+     * so the model welded them: "prognoza pogarsza się Z POWODU fotowoltaiki
+     * poniżej normy", a causal claim the data cannot support. The facts give one
+     * or the other now, and the instruction says so.
+     */
+    expect(prompt).toContain('JEDNO z dwóch, nigdy oba naraz');
   });
 
   it('throws rather than quietly leaving the instruction unchanged', () => {

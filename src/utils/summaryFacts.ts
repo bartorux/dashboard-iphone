@@ -371,9 +371,18 @@ export function assessmentKey(facts: DayFacts[]): string {
    * one hour in four, so most runs carry "nic nie odstaje" here and the key
    * stays as still as it was.
    */
+  /*
+   * Fingerprints what the model actually receives, not everything computed.
+   *
+   * The cause is suppressed on a day that is moving — see renderFacts — so
+   * including it here regardless would call the model again over a line it never
+   * sees, and get back the same text. The fingerprint exists to skip exactly
+   * that.
+   */
   const lead = leadingDay(facts);
+  const widocznaPrzyczyna = lead && !lead.movement ? lead.drivers : null;
   const cause = lead
-    ? `${lead.drivers ?? '-'}/${lead.worstStanding}/${lead.movement ?? '-'}`
+    ? `${widocznaPrzyczyna ?? '-'}/${lead.worstStanding}/${lead.movement ?? '-'}`
     : '-';
 
   return `${days}#${cause}`;
@@ -578,7 +587,23 @@ export function renderFacts(facts: DayFacts[], days: number): string {
      * for four times. One cause, attached to the day the text is already about,
      * cannot become a list.
      */
-    if (isLead && day.drivers) {
+    /*
+     * The cause steps aside when the day is moving.
+     *
+     * Both lines standing together got welded into one claim: "prognoza tej doby
+     * pogarsza się Z POWODU fotowoltaiki poniżej normy". That is not true and
+     * the data cannot support it — the movement is a drift between successive
+     * forecasts over a day and a half, while the cause is a level in the current
+     * one measured against a 30-day band for that hour. A change and a level.
+     *
+     * The instruction already forbids joining facts that merely stand next to
+     * each other, and the ban did not hold. It never does: five times over two
+     * days the answer was to take the material away rather than to forbid what
+     * the model does with it. Movement wins because it is the only thing on this
+     * card that precedes the announcement; the cause only ever describes where
+     * things stand.
+     */
+    if (isLead && day.drivers && !day.movement) {
       lines.push(`    dlaczego akurat ta godzina: ${day.drivers}`);
 
       /*
