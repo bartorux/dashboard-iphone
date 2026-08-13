@@ -171,41 +171,6 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
 
   const ticks = useMemo(() => hourTicks(rows.map((row) => row.key)), [rows]);
 
-  /**
-   * Plain-language answer to "is today unusual, and when?".
-   * Counts both directions: an hour above the band is also atypical, and
-   * reporting only the downside would call such a day entirely ordinary.
-   */
-  /*
-   * Counts the whole day, and says so. The analysis card counts the same
-   * hours against the same band but only among those still ahead, so
-   * without naming the window the two cards read as contradicting each
-   * other every afternoon.
-   */
-  const summary = useMemo(() => {
-    const compared = rows.filter((row) => row.today !== null && row.band);
-    if (compared.length === 0) return null;
-
-    const below = compared.filter((row) => row.today! < row.band![0]);
-    const above = compared.filter((row) => row.today! > row.band![1]);
-
-    if (below.length > 0) {
-      const worst = below.reduce((a, b) =>
-        a.today! - a.band![0] <= b.today! - b.band![0] ? a : b
-      );
-      // Phrased to sidestep Polish numeral agreement, which differs for
-      // 1 / 2-4 / 5+ and would need a table to get right for one sentence.
-      const rest =
-        above.length > 0 ? `, a przez ${above.length} godz. powyżej` : '';
-      return `${dayLabel}, cała doba: przez ${below.length} godz. margines poniżej typowego zakresu${rest}. Najciaśniej o ${worst.key}.`;
-    }
-
-    if (above.length > 0) {
-      return `${dayLabel}, cała doba: margines nigdzie nie schodzi poniżej normy, a przez ${above.length} godz. zapas jest większy niż zwykle.`;
-    }
-
-    return `${dayLabel}, cała doba: każda godzina mieści się w typowym zakresie.`;
-  }, [rows, dayLabel]);
 
   if (state === 'loading' || state === 'idle') {
     return (
@@ -252,9 +217,6 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
 
   return (
     <>
-      {summary && (
-        <p className="mb-2 px-1 text-[0.8125rem] font-medium text-text">{summary}</p>
-      )}
 
       <ChartLegend
         items={[
@@ -278,14 +240,30 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
              * Two sentences rather than one: what a margin is, and what the band
              * is, are separate questions and were run together.
              */
-            info:
-              'Margines to dostępna rezerwa minus wymagana — poniżej zera ' +
-              'rezerwa nie pokrywa wymagań. ' +
-              'Pasmo pokazuje, co dla TEJ SAMEJ GODZINY doby było zwyczajne ' +
-              `przez ostatnie ${days} dni: mieściło się w nim 80% z nich, ` +
-              'a dni robocze i wolne liczone są osobno, bo w weekend ' +
-              'zapotrzebowanie jest wyraźnie niższe. To prognozy PSE, ' +
-              'nie wykonanie.',
+            /*
+             * A description of the instrument, not of today's weather.
+             *
+             * The first attempt explained what the colours meant and left the
+             * reader none the wiser about what the view is for. The second
+             * explained the purpose but in the register of a conversation —
+             * headline capitals and "bywa, że wieczór wygląda groźnie" — which
+             * is not how anything else in this app speaks.
+             *
+             * Three sentences of specification: what is compared with what, what
+             * the band is and what leaving it does and does not mean, and what
+             * the figures underneath actually are.
+             */
+            info: [
+              'Porównuje margines wybranego dnia — dostępną rezerwę minus ' +
+                'wymaganą — z tym, co o tej samej godzinie było przez ostatnie ' +
+                `${days} dni.`,
+              'Pasmo to zakres, w którym mieściło się 80% tych dni. Linia poza ' +
+                'pasmem znaczy, że godzina jest nietypowa dla tej pory.',
+              'Czy rezerwa wystarcza, to osobna sprawa — widać ją po tym, czy ' +
+                'linia jest powyżej zera.',
+              'Dni robocze i wolne mają osobne pasma, bo w weekend ' +
+                'zapotrzebowanie jest dużo niższe.',
+            ],
           },
         ]}
       />
