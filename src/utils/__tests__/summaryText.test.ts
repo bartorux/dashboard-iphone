@@ -143,8 +143,11 @@ describe('prompt bez wiersza TREŚĆ', () => {
     // the tightest hour is the tightest. Most weeks look like this, so if the
     // middle line stayed shut here the text would go on being as dry as the
     // complaint that started this.
+    // Working days only: 1 and 2 August fall at the weekend, and the bands are
+    // per day type now, so a weekend-leaning history leaves the working day
+    // under the minimum sample count and with no cause at all.
     const history = Array.from({ length: 4 }, (_, day) =>
-      hourOn(`2026-08-0${day + 1}`, 19, { reserve: 6000, required: 2000 })
+      hourOn(`2026-08-0${day + 3}`, 19, { reserve: 6000, required: 2000 })
     );
     const bezwietrznie = buildFacts(
       [hourOn('2026-08-10', 19, { reserve: 6000, required: 2000, wind: 400 })],
@@ -177,8 +180,11 @@ describe('prompt bez wiersza TREŚĆ', () => {
     // Left in, the instruction went on explaining at length how to write a line
     // it had just said not to write — and the examples there carry the very
     // phrase the headline is now meant to own.
+    // Working days only: 1 and 2 August fall at the weekend, and the bands are
+    // per day type now, so a weekend-leaning history leaves the working day
+    // under the minimum sample count and with no cause at all.
     const history = Array.from({ length: 4 }, (_, day) =>
-      hourOn(`2026-08-0${day + 1}`, 19, { reserve: 6000, required: 2000 })
+      hourOn(`2026-08-0${day + 3}`, 19, { reserve: 6000, required: 2000 })
     );
     const bezwietrznie = buildFacts(
       [hourOn('2026-08-10', 19, { reserve: 6000, required: 2000, wind: 400 })],
