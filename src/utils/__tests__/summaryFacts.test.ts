@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { buildFacts, keyPoint, leadingDay, renderFacts } from '../summaryFacts';
+import {
+  assessmentKey,
+  buildFacts,
+  keyPoint,
+  leadingDay,
+  renderFacts,
+} from '../summaryFacts';
 import { visibleBusinessDates } from '../dayWindow';
 import { makePoint } from '../../test/factories';
 
@@ -370,6 +376,81 @@ describe('buildFacts', () => {
 
   it('copes with no data at all', () => {
     expect(buildFacts([], [], BEFORE_ALL)).toEqual([]);
+  });
+});
+
+describe('assessmentKey', () => {
+  /** Same reserves throughout, so margins and band counts cannot differ. */
+  const doba = (wind: number) =>
+    dayOf('2026-08-10', 6000).map((point) =>
+      point.hourLabel === '20:00'
+        ? { ...point, reserve: 5500, wind }
+        : point
+    );
+
+  it('changes when only the cause changes', () => {
+    /*
+     * The failure this closes. Everything else in the fingerprint describes what
+     * the facts were before the cause layer existed, so a corrected or shifted
+     * reason left the stored text in place — and after the 30-day audit the card
+     * went on reading "zapotrzebowanie wyraźnie powyżej normy" while the facts
+     * had come to say "typowe". The margin had not moved, so nothing asked for a
+     * rewrite.
+     */
+    const zwyczajny = buildFacts([...doba(2000)], HISTORY_WITH_MIX, BEFORE_ALL);
+    const bezwietrzny = buildFacts([...doba(400)], HISTORY_WITH_MIX, BEFORE_ALL);
+
+    // The margin is untouched: only the mix differs.
+    expect(bezwietrzny[0].worstMargin).toBe(zwyczajny[0].worstMargin);
+    expect(bezwietrzny[0].belowTypical).toBe(zwyczajny[0].belowTypical);
+    expect(bezwietrzny[0].drivers).not.toBe(zwyczajny[0].drivers);
+
+    expect(assessmentKey(bezwietrzny)).not.toBe(assessmentKey(zwyczajny));
+  });
+
+  it('changes when only the hour\u2019s standing against the band changes', () => {
+    /*
+     * Harder to isolate than the cause, because the standing of the worst hour
+     * usually moves together with the day's below/above counts — so the key
+     * would change anyway. It does not have to: here two hours swap roles, the
+     * counts stay at one below and none above, the worst hour stays the same and
+     * its margin rounds to the same hundred. Only the standing of that hour
+     * differs, and the sentence in the facts differs with it.
+     */
+    const dzien = (o19: number, o20: number) => [
+      hourOn('2026-08-10', 19, { reserve: o19, required: 2000 }),
+      hourOn('2026-08-10', 20, { reserve: o20, required: 2000 }),
+    ];
+    // History: 19:00 usually sits at a margin of 1000, 20:00 at 5000.
+    const historia = ['2026-08-03', '2026-08-04', '2026-08-05', '2026-08-06']
+      .flatMap((d) => [
+        hourOn(d, 19, { reserve: 3000, required: 2000 }),
+        hourOn(d, 20, { reserve: 7000, required: 2000 }),
+      ]);
+
+    // 19:00 below its own band, 20:00 ordinary.
+    const a = buildFacts(dzien(2950, 7000), historia, BEFORE_ALL);
+    // 19:00 ordinary, 20:00 below its own — same counts, same worst hour.
+    const b = buildFacts(dzien(3000, 6950), historia, BEFORE_ALL);
+
+    expect(a[0].worstHour).toBe(b[0].worstHour);
+    expect(a[0].belowTypical).toBe(b[0].belowTypical);
+    expect(a[0].aboveTypical).toBe(b[0].aboveTypical);
+    expect(Math.round(a[0].worstMargin! / 100)).toBe(
+      Math.round(b[0].worstMargin! / 100)
+    );
+    expect(a[0].worstStanding).not.toBe(b[0].worstStanding);
+
+    expect(assessmentKey(a)).not.toBe(assessmentKey(b));
+  });
+
+  it('stays still when nothing at all has changed', () => {
+    // The other half of the contract: the model is called only when there is
+    // something new to say, so an unchanged forecast must give an equal key.
+    const a = buildFacts([...doba(2000)], HISTORY_WITH_MIX, BEFORE_ALL);
+    const b = buildFacts([...doba(2000)], HISTORY_WITH_MIX, BEFORE_ALL);
+
+    expect(assessmentKey(a)).toBe(assessmentKey(b));
   });
 });
 
