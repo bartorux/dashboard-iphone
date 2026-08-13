@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-10T09:01:11.395Z",
-      "prompt": 16,
-      "accepted": true,
-      "headline": "W poniedziałek między 18:00 a 20:00 rezerwa nie pokryje wymaganego poziomu.",
-      "body": "Nadwyżka przekracza próg 1100 MW, więc operator ma prawo nie ogłaszać przywołania. Na to ogłoszenie jest już za późno, bo zostało mniej czasu niż wymagane ośmiogodzinne wyprzedzenie.",
-      "outlook": "We wtorek nie ma podstaw do przywołania, a w środę między 20:00 a 22:00 operator zyska prawo do takiego kroku."
-    },
-    {
       "at": "2026-08-10T10:46:29.648Z",
       "prompt": 16,
       "accepted": true,
@@ -580,6 +572,15 @@
       "headline": "W poniedziałek 17 sierpnia między 20:00 a 21:00 przywołanie powinno zostać ogłoszone, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie.",
       "outlook": "We wtorek 18 sierpnia o 20:00 rezerwa nie pokrywa wymaganego poziomu, lecz przepis pozwala operatorowi nie ogłaszać przywołania, natomiast w pozostałych dniach nie ma podstaw do przywołania."
+    },
+    {
+      "at": "2026-08-13T22:23:06.334Z",
+      "prompt": 38,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 200 znaków",
+      "headline": "W poniedziałek 17 sierpnia prognoza tej doby pogarsza się, a między 20:00 a 21:00 przywołanie powinno zostać ogłoszone, bo nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Między 17:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka przekracza próg 1100 MW, więc przepis pozwala operatorowi nie ogłaszać przywołania. Ogłoszenie może jeszcze nadejść, ponieważ do wybranej godziny pozostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie.",
+      "outlook": "We wtorek 18 sierpnia między 20:00 a 21:00 margines spada poniżej wymaganego poziomu, lecz operator ma prawo nie ogłaszać przywołania, bo nadwyżka trzyma się powyżej progu 1100 MW, natomiast w pozostałych dniach nie ma podstaw do przywołania."
     }
   ]
 }
