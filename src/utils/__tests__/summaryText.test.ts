@@ -65,6 +65,33 @@ describe('buildPrompt', () => {
     // „wzywa" in the opening definition is the verb and stays; this is the noun.
     expect(prompt).not.toMatch(/wezwan/i);
   });
+
+  it('shows no finished sentence the model could simply copy', () => {
+    /*
+     * Measured over seventy-two published texts: fifty-nine reproduced an
+     * eight-word run from this instruction, and the three most-copied strings
+     * were the tails of its own worked examples — "…więc operator ma prawo nie
+     * ogłaszać przywołania" twenty-three times among them. The examples were
+     * written to demonstrate good style; the model read them as text to reuse,
+     * and the card came to sound like a filled-in form.
+     *
+     * Worse, the second example had been added precisely because one example
+     * produced a mechanical rhythm. Two templates is still templates.
+     *
+     * The examples are skeletons now. This guards against a finished sentence
+     * creeping back in, which is the only way the copying returns.
+     */
+    const zdania = [
+      'Nadwyżka wciąż przekracza próg 1100 MW, więc operator ma prawo',
+      'i to ona daje operatorowi prawo nie ogłaszać',
+      'W żadnym z kolejnych dni nie ma podstaw do',
+      'W piątek o 20:00 operator ma prawo nie ogłaszać',
+    ];
+
+    for (const zdanie of zdania) {
+      expect(INSTRUCTION.split('\n').join(' ')).not.toContain(zdanie);
+    }
+  });
 });
 
 describe('prompt bez wiersza TREŚĆ', () => {
@@ -375,6 +402,28 @@ describe('validateSummary', () => {
         )
       ).toMatchObject({ ok: false, reason: 'godzina bez nazwy dnia' });
     });
+  });
+
+  it('refuses „dodatkowy" where „dodatni" was meant', () => {
+    // One text in seventy-two: "margines jest wąski, ale dodatkowy". The word
+    // means "extra", and positive-versus-negative margin is the distinction the
+    // entire card rests on. The prompt says "dodatni" six times and never
+    // supplies this one — the first fault here that is the model's own.
+    expect(
+      validateSummary(
+        { ...good, outlook: 'We wtorek margines jest wąski, ale dodatkowy.' },
+        HOURS
+      )
+    ).toMatchObject({ ok: false, reason: '„dodatkowy" zamiast „dodatni"' });
+  });
+
+  it('leaves „dodatni" alone', () => {
+    expect(
+      validateSummary(
+        { ...good, outlook: 'We wtorek margines jest wąski, ale dodatni.' },
+        HOURS
+      )
+    ).toEqual({ ok: true });
   });
 
   describe('dzien tygodnia w liczbie mnogiej', () => {
