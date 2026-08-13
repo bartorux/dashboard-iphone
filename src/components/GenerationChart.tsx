@@ -14,7 +14,7 @@ import { PSEDataPoint } from '../types';
 import { niceScaleRange } from '../utils/scale';
 import { useChartColors } from '../hooks/useChartColors';
 import {
-  ANIMATION_MS,
+  useChartAnimationMs,
   AXIS_FONT_SIZE,
   LABEL_FONT_SIZE,
   AreaSwatch,
@@ -150,6 +150,8 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
   data,
   currentHourLabel,
 }) => {
+  const animationMs = useChartAnimationMs();
+
   const colors = useChartColors();
   const { ref, handlers, tooltipActive } = useDismissibleTooltip();
 
@@ -265,7 +267,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               stroke="none"
               fill={colors.pv}
               fillOpacity={0.55}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
             />
@@ -276,7 +278,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               stroke="none"
               fill={colors.wind}
               fillOpacity={0.55}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
             />
@@ -287,7 +289,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               stroke="none"
               fill={colors.other}
               fillOpacity={0.55}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
             />
@@ -324,7 +326,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               strokeDasharray="4 4"
               dot={false}
               connectNulls={false}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               activeDot={false}
             />
 
@@ -335,7 +337,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               strokeWidth={2.75}
               dot={false}
               connectNulls={false}
-              animationDuration={ANIMATION_MS}
+              animationDuration={animationMs}
               /* Cleared with the tooltip: `active={false}` hides the box but
                  the dot is series state, so it lingered and pointed at an hour
                  the user had already dismissed. */

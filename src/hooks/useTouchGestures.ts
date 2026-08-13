@@ -7,6 +7,14 @@ const AXIS_LOCK_PX = 10;
 const SWIPE_THRESHOLD_PX = 60;
 /** A swipe must be clearly sideways, not a diagonal drift while scrolling. */
 const SWIPE_RATIO = 1.6;
+/**
+ * How long the spinner stays up at the very least.
+ *
+ * Long enough that a fast refresh reads as one rather than as a flicker, short
+ * enough that nobody waits for it. Measured against the alternative it replaces:
+ * a flat second added after the data had already landed.
+ */
+const MIN_SPINNER_MS = 400;
 
 interface Options {
   onRefresh: () => Promise<void>;
@@ -44,6 +52,16 @@ export function useTouchGestures({
   const draggingRef = useRef(false);
   const swipeAllowedRef = useRef(true);
   const isRefreshingRef = useRef(false);
+  /*
+   * The pull distance mirrored into a ref.
+   *
+   * `handleTouchEnd` needs the latest value, and taking it from state put
+   * `pullDistance` in the callback's dependencies — which changes on every
+   * touchmove frame, so the effect below tore down all three document listeners
+   * and re-attached them dozens of times during a single pull. The ref keeps the
+   * value fresh while the callbacks stay stable for the whole gesture.
+   */
+  const pullDistanceRef = useRef(0);
 
   // Callbacks change every render; refs keep the listeners stable so the
   // effect below does not re-subscribe mid-gesture.
@@ -51,6 +69,15 @@ export function useTouchGestures({
   handlersRef.current = { onRefresh, onSwipeLeft, onSwipeRight };
 
   const isReady = pullDistance >= PULL_THRESHOLD_PX;
+
+  /** Everything back to rest. Shared by a finished pull and a cancelled one. */
+  const reset = useCallback(() => {
+    pullDistanceRef.current = 0;
+    setPullDistance(0);
+    setIsPulling(false);
+    setIsRefreshing(false);
+    isRefreshingRef.current = false;
+  }, []);
 
   const handleTouchStart = useCallback((event: TouchEvent) => {
     if (isRefreshingRef.current) return;
@@ -86,6 +113,7 @@ export function useTouchGestures({
 
     draggingRef.current = true;
     event.preventDefault();
+    pullDistanceRef.current = dy;
     setPullDistance(dy);
     setIsPulling(true);
   }, []);
@@ -109,21 +137,26 @@ export function useTouchGestures({
       }
 
       if (draggingRef.current) {
-        if (pullDistance >= PULL_THRESHOLD_PX) {
+        if (pullDistanceRef.current >= PULL_THRESHOLD_PX) {
           isRefreshingRef.current = true;
           setIsRefreshing(true);
 
+          /*
+           * A floor on how long the spinner is visible, not a delay after it.
+           *
+           * This used to wait a flat second AFTER the data had already arrived,
+           * so a refresh that took 80 ms still cost the reader 1080. The reason
+           * for having anything here at all is real — a spinner that appears and
+           * vanishes within a frame reads as a glitch, not as a refresh — but
+           * the fix is a minimum total, measured from the start.
+           */
+          const startedAt = Date.now();
           handlersRef.current.onRefresh().finally(() => {
-            setTimeout(() => {
-              setPullDistance(0);
-              setIsPulling(false);
-              setIsRefreshing(false);
-              isRefreshingRef.current = false;
-            }, 1000);
+            const left = Math.max(0, MIN_SPINNER_MS - (Date.now() - startedAt));
+            setTimeout(reset, left);
           });
         } else {
-          setPullDistance(0);
-          setIsPulling(false);
+          reset();
         }
       }
 
@@ -132,20 +165,36 @@ export function useTouchGestures({
       axisRef.current = null;
       draggingRef.current = false;
     },
-    [pullDistance]
+    [reset]
   );
+
+  /*
+   * The browser can take the gesture away mid-pull, and says so with
+   * `touchcancel`: an incoming call, the notification shade, a system sheet.
+   * Without this the indicator stayed on screen with no touch left to finish it,
+   * and the only way out was to reload.
+   */
+  const handleTouchCancel = useCallback(() => {
+    startXRef.current = 0;
+    startYRef.current = 0;
+    axisRef.current = null;
+    draggingRef.current = false;
+    reset();
+  }, [reset]);
 
   useEffect(() => {
     document.addEventListener('touchstart', handleTouchStart, { passive: true });
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
     document.addEventListener('touchend', handleTouchEnd, { passive: true });
+    document.addEventListener('touchcancel', handleTouchCancel, { passive: true });
 
     return () => {
       document.removeEventListener('touchstart', handleTouchStart);
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener('touchcancel', handleTouchCancel);
     };
-  }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd, handleTouchCancel]);
 
   return { pullDistance, isRefreshing, isPulling, isReady };
 }
