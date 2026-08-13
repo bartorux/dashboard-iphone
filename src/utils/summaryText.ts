@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 37;
+export const PROMPT_VERSION = 38;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -153,9 +153,9 @@ cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
 TREŚĆ: DWA zdania, każde z osobnym zadaniem.
-  PIERWSZE — jeśli fakty mówią, że prognoza tej doby SIĘ POGARSZA albo POPRAWIA,
-    to jest treść tego zdania i nic innego. Dopiero gdy tego nie mówią, napisz
-    zamiast tego, DLACZEGO akurat ta godzina jest najciaśniejsza.
+  PIERWSZE — to, co fakty podają o wskazanej godzinie: albo że prognoza tej doby
+    się pogarsza lub poprawia, albo dlaczego akurat ta godzina jest
+    najciaśniejsza. Fakty podadzą JEDNO z dwóch, nigdy oba naraz.
   DRUGIE — czy ogłoszenie może jeszcze nadejść.
 NIE powtarzaj tu stanu prawnego: nagłówek już powiedział, czy operator ma prawo
 nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie wnosi.
@@ -214,9 +214,9 @@ cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
 TREŚĆ: DWA zdania, każde z osobnym zadaniem.
-  PIERWSZE — jeśli fakty mówią, że prognoza tej doby SIĘ POGARSZA albo POPRAWIA,
-    to jest treść tego zdania i nic innego. Dopiero gdy tego nie mówią, napisz
-    zamiast tego, DLACZEGO akurat ta godzina jest najciaśniejsza.
+  PIERWSZE — to, co fakty podają o wskazanej godzinie: albo że prognoza tej doby
+    się pogarsza lub poprawia, albo dlaczego akurat ta godzina jest
+    najciaśniejsza. Fakty podadzą JEDNO z dwóch, nigdy oba naraz.
   DRUGIE — czy ogłoszenie może jeszcze nadejść.
 NIE powtarzaj tu stanu prawnego: nagłówek już powiedział, czy operator ma prawo
 nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie wnosi.

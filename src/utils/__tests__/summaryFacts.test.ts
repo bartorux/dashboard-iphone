@@ -409,6 +409,24 @@ describe('assessmentKey', () => {
     expect(assessmentKey(zRuchem)).not.toBe(assessmentKey(bez));
   });
 
+  it('ignores a cause the model never sees', () => {
+    /*
+     * On a moving day the cause is withheld from the facts, so a change in it
+     * cannot change the text. Fingerprinting it anyway would call the model
+     * again and get the same paragraph back — the exact waste this key exists to
+     * prevent.
+     */
+    // Only the wind differs, so margins, hours and band counts stay identical
+    // and the cause is the single thing that moved.
+    const ruch = new Map([['2026-08-10', 'prognoza tej doby pogarsza się']]);
+    const bezwietrznie = buildFacts([...doba(400)], HISTORY_WITH_MIX, BEFORE_ALL, undefined, ruch);
+    const zwyczajnie = buildFacts([...doba(2000)], HISTORY_WITH_MIX, BEFORE_ALL, undefined, ruch);
+
+    expect(bezwietrznie[0].drivers).not.toBe(zwyczajnie[0].drivers);
+    expect(bezwietrznie[0].worstMargin).toBe(zwyczajnie[0].worstMargin);
+    expect(assessmentKey(bezwietrznie)).toBe(assessmentKey(zwyczajnie));
+  });
+
   it('changes when only the cause changes', () => {
     /*
      * The failure this closes. Everything else in the fingerprint describes what
@@ -650,6 +668,43 @@ describe('renderFacts', () => {
     // three-hour range it had just written, which the standing does not cover.
     expect(tekst).toContain('margines o 20:00 jest niższy niż zwykle o tej porze');
     expect(tekst).not.toContain('sama ta godzina');
+  });
+
+  it('drops the cause on a day that is moving', () => {
+    /*
+     * Published on v37: "Prognoza tej doby pogarsza się Z POWODU fotowoltaiki
+     * poniżej normy". Untrue, and the data cannot support it — movement is a
+     * drift between successive forecasts across a day and a half, the cause is a
+     * level in the current one against a 30-day band for that hour. A change and
+     * a level, welded by the model because both lines stood together.
+     *
+     * The instruction already forbids joining facts that merely sit side by
+     * side. It did not hold; it never does. So the material goes instead.
+     */
+    const facts = buildFacts(
+      [...windlessDay('2026-08-10', 6000)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      undefined,
+      new Map([['2026-08-10', 'prognoza tej doby pogarsza się']])
+    );
+
+    // The cause is still computed — it just does not reach the model.
+    expect(facts[0].drivers).not.toBeNull();
+
+    const tekst = renderFacts(facts, 30);
+    expect(tekst).toContain('prognoza tej doby pogarsza się');
+    expect(tekst).not.toContain('dlaczego akurat ta godzina');
+  });
+
+  it('keeps the cause on a day that is not moving', () => {
+    const facts = buildFacts(
+      [...windlessDay('2026-08-10', 6000)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL
+    );
+
+    expect(renderFacts(facts, 30)).toContain('dlaczego akurat ta godzina');
   });
 
   it('reports the slide even when the mix is unremarkable', () => {
