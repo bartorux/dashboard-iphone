@@ -84,7 +84,7 @@ describe('buildPrompt', () => {
     const zdania = [
       'Nadwyżka wciąż przekracza próg 1100 MW, więc operator ma prawo',
       'i to ona daje operatorowi prawo nie ogłaszać',
-      'W żadnym z kolejnych dni nie ma podstaw do',
+      'W żadnym z kolejnych dni nic nie zapowiada przywołania',
       'W piątek o 20:00 operator ma prawo nie ogłaszać',
     ];
 
@@ -165,7 +165,7 @@ describe('prompt bez wiersza TREŚĆ', () => {
     // cause follows as detail. The arrangement this replaced forbade the
     // headline from saying it, so it reached for "rezerwa spada najniżej" and
     // the two lines beneath spent their words taking that back.
-    expect(prompt).toContain('w tych dniach nie ma podstaw do przywołania');
+    expect(prompt).toContain('w tych dniach nic nie zapowiada przywołania');
     expect(prompt).toContain('TREŚĆ: JEDNO zdanie o godzinie');
     // The day must be copied whole, not shortened to a weekday name — that
     // shortening is what turned 17 August into a Monday the reader took for
@@ -251,8 +251,8 @@ describe('prompt bez wiersza TREŚĆ', () => {
   });
 
   it('hands the verdict phrase over once, not once per day', () => {
-    // Counted on the published failure: the prompt showed the model "nie ma
-    // podstaw do przywołania" seven times and the cause once, and the model
+    // Counted on the published failure: the prompt showed the model the calm
+    // state seven times and the cause once, and the model
     // reached for what it had seen seven times. The per-day state line said the
     // same thing five times over while keyPoint already covered the window.
     const tydzien = buildFacts(
@@ -272,7 +272,7 @@ describe('prompt bez wiersza TREŚĆ', () => {
       .split('FAKTY:')
       .pop() as string;
     const wystapienia =
-      fakty.match(/nie ma podstaw do przywołania/g)?.length ?? 0;
+      fakty.match(/nic nie zapowiada przywołania/g)?.length ?? 0;
 
     expect(fakty).toContain('2026-08-14');
     expect(wystapienia).toBe(1);
@@ -354,6 +354,38 @@ describe('parseSummary', () => {
 });
 
 describe('validateSummary', () => {
+  it('refuses a magnitude the facts never state', () => {
+    // The drivers layer says only that a factor fell outside its own 10-90 band,
+    // and the movement layer only that a day is sliding. Neither says by how
+    // much, so an adverb of degree is the model's own invention — measured in 12
+    // of 63 accepted texts, every one of them a claim nothing supports.
+    for (const outlook of [
+      'W środę zapotrzebowanie wyraźnie przewyższa normę.',
+      'W środę produkcja spada znacznie poniżej normy.',
+      'Prognoza tej doby wyraźnie się pogarsza.',
+    ]) {
+      expect(
+        validateSummary({ headline: 'W środę o 19:00 margines jest wąski.', body: '', outlook }, new Set(['19:00']))
+      ).toEqual({ ok: false, reason: 'stopniuje to, czego fakty nie stopniują' });
+    }
+  });
+
+  it('leaves alone a magnitude the numbers do carry', () => {
+    // The thirty-day band is a range of actual megawatts, so how far outside it a
+    // day sits is a fact, not a grade. Refusing this too would have binned a text
+    // for saying something true.
+    expect(
+      validateSummary(
+        {
+          headline: 'W środę o 19:00 margines jest wąski.',
+          body: '',
+          outlook: 'Rezerwa znacznie przewyższa typowy zakres z ostatnich dni.',
+        },
+        new Set(['19:00'])
+      )
+    ).toEqual({ ok: true });
+  });
+
   it('accepts prose whose only digits are hours we computed', () => {
     expect(validateSummary(good, HOURS)).toEqual({ ok: true });
   });
