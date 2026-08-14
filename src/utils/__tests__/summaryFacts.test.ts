@@ -292,6 +292,34 @@ describe('buildFacts', () => {
     expect(point).not.toContain('08:00');
   });
 
+  it('says the calm state without reaching for legal grounds either', () => {
+    // The third state went unnoticed while the other two were rewritten, and it
+    // is the one that appears most: all 63 accepted texts carried "nie ma
+    // podstaw", because the facts handed it over every single time. "Podstawy"
+    // is the same legal frame as the exemption this card just dropped.
+    // A MIXED week, deliberately. On an all-clear week the per-day state line is
+    // collapsed, so the calm state never renders and a test built on one proves
+    // nothing — the first version of this test passed with the old wording
+    // restored. It takes one day with grounds for the other days to say their
+    // state out loud.
+    const mieszane = buildFacts(
+      [
+        ...dayOf('2026-08-10', 8000),
+        ...dayOf('2026-08-11', 8000),
+        hourOn('2026-08-12', 19, { reserve: 800, required: 2000 }),
+      ],
+      [],
+      BEFORE_ALL
+    );
+    const tekst = renderFacts(mieszane, 30);
+
+    expect(tekst).toContain('nic nie zapowiada przywołania');
+    // And it still must not promise: the day is quiet on the forecast, which is
+    // not a guarantee about what the operator does.
+    expect(tekst).not.toMatch(/przywołania nie będzie|nie zostanie ogłoszone/i);
+    expect(tekst).not.toMatch(/podstaw|odstępstw/i);
+  });
+
   it('describes both states in words a plant electrician reads, not the regulation\'s', () => {
     // The long descriptions are what the model actually reads; until now only the
     // one-line form was pinned, so a mutation of these passed every test. They

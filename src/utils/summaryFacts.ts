@@ -340,16 +340,16 @@ const RISK_WORD: Record<CallPeriodRisk, string> = {
     'OPERATOR MOŻE OGŁOSIĆ PRZYWOŁANIE, ale nie musi — nadwyżka w systemie ' +
     'trzyma się powyżej 1100 MW i to ona daje mu wybór. Rezerwa nie pokrywa ' +
     'wymaganego poziomu. Co operator zrobi, nie wiadomo',
-  none: 'nie ma podstaw do przywołania',
-  unknown: 'nie wiadomo, czy są podstawy do przywołania',
+  none: 'nic nie zapowiada przywołania',
+  unknown: 'brakuje odczytów, żeby to ocenić',
 };
 
 /** The same states in a few words, for places where the full clause will not fit. */
 const RISK_SHORT: Record<CallPeriodRisk, string> = {
   high: 'operator może ogłosić przywołanie, a nadwyżka spadła poniżej 1100 MW',
   moderate: 'operator może ogłosić przywołanie, ale nie musi',
-  none: 'nie ma podstaw do przywołania',
-  unknown: 'nie wiadomo, czy są podstawy do przywołania',
+  none: 'nic nie zapowiada przywołania',
+  unknown: 'brakuje odczytów, żeby to ocenić',
 };
 
 const round = (value: number) => `${value > 0 ? '+' : ''}${Math.round(value)} MW`;
@@ -520,7 +520,7 @@ export function keyPoint(facts: DayFacts[]): string {
     // "na", not "dla": the day names are now spoken forms, and "dla jutro" is
     // not Polish. "na jutro", "na czwartek", "na poniedziałek 17 sierpnia" all
     // take the same case and read correctly.
-    return `NAJWAŻNIEJSZE: na ${dni} brakuje odczytów, więc nie wiadomo, czy są podstawy do przywołania`;
+    return `NAJWAŻNIEJSZE: na ${dni} brakuje odczytów, więc nie wiadomo, czy przywołanie wchodzi w grę`;
   }
 
   const near = facts.find((day) => day.nearThreshold > 0);
@@ -529,13 +529,13 @@ export function keyPoint(facts: DayFacts[]): string {
     // or carry a deficit — neither of which this sentence is about. The hour
     // named is the tightest among those it actually covers.
     return (
-      `NAJWAŻNIEJSZE: w żadnym z dni nie ma podstaw do przywołania, ale ` +
+      `NAJWAŻNIEJSZE: w żadnym z dni nic nie zapowiada przywołania, ale ` +
       `${near.spokenName} o ${near.nearestHour} margines ` +
       `jest wąski, choć wciąż dodatni`
     );
   }
 
-  return 'NAJWAŻNIEJSZE: w żadnym z dni nie ma podstaw do przywołania';
+  return 'NAJWAŻNIEJSZE: w żadnym z dni nic nie zapowiada przywołania';
 }
 
 /**
@@ -710,7 +710,7 @@ export function renderFacts(facts: DayFacts[], days: number): string {
       lines.push(
         `    OSOBNO — poza powyższym zakresem tego dnia jest ` +
           `${day.nearThreshold} godz. z wąskim, ale DODATNIM marginesem: ` +
-          `rezerwa pokrywa wymagany poziom i nie ma tam podstaw do przywołania`
+          `rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania`
       );
     }
 

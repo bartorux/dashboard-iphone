@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 42;
+export const PROMPT_VERSION = 43;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -70,7 +70,7 @@ prawnych. Nadwyżka i próg 1100 MW to liczby, nie instytucje prawne.
   bywały doby poniżej progu bez żadnego ogłoszenia, a decyzji operatora nikt tu
   nie zna. Nie pisz też, że przepis „nie pozwala pominąć" — to znaczyłoby, że
   nakazuje ogłosić, a nie nakazuje.
-- „nie ma podstaw do przywołania" — rezerwa pokrywa wymagany poziom albo godzina
+- „nic nie zapowiada przywołania" — rezerwa pokrywa wymagany poziom albo godzina
   przypada poza dniem roboczym lub poza godzinami 07:00-22:00.
 
 === JAK PISZESZ ===
@@ -142,13 +142,17 @@ FAŁSZYWE ZWIĄZKI:
 - To, czy ogłoszenie może jeszcze nadejść, zależy wyłącznie od tego, czy zostało
   wymagane ośmiogodzinne wyprzedzenie. Nie wiąż tego z wysokością nadwyżki.
 - „choć" i „mimo" tylko wtedy, gdy druga część naprawdę osłabia pierwszą.
-  „Nie ma podstaw, MIMO że margines dodatni" odwraca zależność — dodatni margines
-  jest właśnie powodem braku podstaw.
+  „Nic nie zapowiada przywołania, MIMO że margines dodatni" odwraca zależność —
+  dodatni margines jest właśnie powodem, że nic go nie zapowiada.
 
 TREŚĆ:
 - Nie wymyślaj faktów. Pisz wyłącznie o tym, co jest poniżej.
+- Nie stopniuj tego, czego fakty nie stopniują. O czynniku wiadomo tylko, czy
+  wypadł poza swoje typowe pasmo, a o prognozie — czy się przesuwa. NIE o ile.
+  Napisz, że coś jest poniżej albo powyżej normy, bez określania jak bardzo.
 - Nie pisz o teście ani o testowym okresie przywołania — tych danych nie ma.
-- Nie przypisuj operatorowi zamiarów. Nie wiadomo, co zrobi; pisz o PODSTAWACH.
+- Nie przypisuj operatorowi zamiarów. Nie wiadomo, co zrobi; pisz o TYM, CO
+  POKAZUJĄ LICZBY.
 - Nie zapowiadaj przywołania, dopóki fakty tego nie mówią. Ale też nie pocieszaj
   na siłę: jeśli rezerwa nie pokrywa wymaganego poziomu, napisz to wprost
   i spokojnie. To jest informacja, nie ostrzeżenie.
@@ -176,18 +180,18 @@ nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie 
   nigdy „w środy i piątki". Liczba mnoga znaczy „w każdą środę" — nawyk, nie dzień.
 DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
-w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
-stwierdzeniem: „w pozostałych dniach nie ma podstaw". Jeśli takiego dnia nie ma
+w których przywołanie WCHODZI W GRĘ albo margines jest wąski, a resztę zbierz
+jednym stwierdzeniem: „w pozostałych dniach nic go nie zapowiada". Jeśli takiego dnia nie ma
 ani jednego, powiedz to wprost o całym okresie i na tym poprzestań.
 
 WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:
-TAK NIE PISZ: „Niedziela i wtorek nie wykażą podstaw do przywołania, mimo
+TAK NIE PISZ: „Niedziela i wtorek nie wykażą przywołania, mimo
 wystąpienia cienkiego dodatniego marginesu w godzinach wieczornych."
 (dni niczego nie wykazują; „mimo" przeciwstawia dwie rzeczy, które sobie nie
 przeczą; „cienki margines" to kalka — margines jest wąski; „w godzinach
 wieczornych" zamiast godziny z faktów)
-TAK NIE PISZ: „We wtorek nie ma podstaw, w środę nie ma podstaw, w czwartek nie
-ma podstaw, a w piątek margines jest wąski." (wyliczanka; trzy pierwsze człony
+TAK NIE PISZ: „We wtorek nic nie zapowiada przywołania, w środę nic nie
+zapowiada przywołania, w czwartek też nie, a w piątek margines jest wąski." (wyliczanka; trzy pierwsze człony
 niosą jedną informację)
 TAK PISZ — układ: nazwij dzień i godziny, w których coś jest, a resztę zbierz
 jednym stwierdzeniem. Gdy nie dzieje się nic w żadnym dniu, powiedz to o całym
@@ -244,18 +248,18 @@ nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie 
  */
 const DALEJ_BLOCK = `DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
-w których SĄ PODSTAWY albo margines jest wąski, a resztę zbierz jednym
-stwierdzeniem: „w pozostałych dniach nie ma podstaw". Jeśli takiego dnia nie ma
+w których przywołanie WCHODZI W GRĘ albo margines jest wąski, a resztę zbierz
+jednym stwierdzeniem: „w pozostałych dniach nic go nie zapowiada". Jeśli takiego dnia nie ma
 ani jednego, powiedz to wprost o całym okresie i na tym poprzestań.
 
 WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:
-TAK NIE PISZ: „Niedziela i wtorek nie wykażą podstaw do przywołania, mimo
+TAK NIE PISZ: „Niedziela i wtorek nie wykażą przywołania, mimo
 wystąpienia cienkiego dodatniego marginesu w godzinach wieczornych."
 (dni niczego nie wykazują; „mimo" przeciwstawia dwie rzeczy, które sobie nie
 przeczą; „cienki margines" to kalka — margines jest wąski; „w godzinach
 wieczornych" zamiast godziny z faktów)
-TAK NIE PISZ: „We wtorek nie ma podstaw, w środę nie ma podstaw, w czwartek nie
-ma podstaw, a w piątek margines jest wąski." (wyliczanka; trzy pierwsze człony
+TAK NIE PISZ: „We wtorek nic nie zapowiada przywołania, w środę nic nie
+zapowiada przywołania, w czwartek też nie, a w piątek margines jest wąski." (wyliczanka; trzy pierwsze człony
 niosą jedną informację)
 TAK PISZ — układ: nazwij dzień i godziny, w których coś jest, a resztę zbierz
 jednym stwierdzeniem. Gdy nie dzieje się nic w żadnym dniu, powiedz to o całym
@@ -280,7 +284,7 @@ okresie i na tym poprzestań. Za każdym razem własnymi słowami.
 const FORMAT_ANSWER_FIRST = `Dokładnie DWA wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadnych
 cudzysłowów wokół pól, żadnych sekwencji ucieczki. Wiersza DALEJ tym razem NIE MA.
 
-NAGŁÓWEK: jedno zdanie, wprost — w tych dniach nie ma podstaw do przywołania.
+NAGŁÓWEK: jedno zdanie, wprost — w tych dniach nic nie zapowiada przywołania.
 To jest odpowiedź na pytanie, z którym czytelnik otwiera aplikację, i jedyne
 zdanie widoczne, gdy karta jest zwinięta. NIE zaczynaj od tego, co najciaśniejsze
 — to należy do TREŚCI.
@@ -311,11 +315,11 @@ zastrzeżenia: nagłówek już powiedział, że nic nie grozi.
  */
 const FORMAT_WITHOUT_BODY = `Dokładnie DWA wiersze, każdy z etykietą na początku. Żadnego JSON-a, żadnych
 cudzysłowów wokół pól, żadnych sekwencji ucieczki. Wiersza TREŚĆ tym razem NIE
-MA — w żadnym dniu nie ma podstaw do przywołania, a fakty nie podają powodu,
+MA — w żadnym dniu nic nie zapowiada przywołania, a fakty nie podają powodu,
 dla którego któraś godzina byłaby najciaśniejsza, więc nie ma czego rozwijać.
 
 NAGŁÓWEK: jedno zdanie o tym, co w tym okresie jest najciaśniejsze albo jak
-wypada on na tle ostatnich dni. NIE stwierdzaj tu braku podstaw — to należy
+wypada on na tle ostatnich dni. NIE powtarzaj tu, że nic nie zapowiada — to należy
 do DALEJ.`;
 
 /**
@@ -335,7 +339,7 @@ const EMPHASES = [
   'Zacznij od najtrudniejszej godziny ze wszystkich dni.',
   'Zacznij od tego, czy sytuacja jest typowa na tle ostatnich dni.',
   'Zacznij od dnia, który wymaga najwięcej uwagi, choćby był ostatni.',
-  'Zacznij od tego, czy w ogóle są podstawy do przywołania.',
+  'Zacznij od tego, czy przywołanie w ogóle wchodzi w grę.',
 ] as const;
 
 export function emphasisFor(now: Date): string {
@@ -648,6 +652,16 @@ export function validateSummary(
   // of a plant, not the capacity market.
   if (/odstępstw|przepisow\w*\s+podstaw/i.test(whole)) {
     return { ok: false, reason: 'urzędowy żargon rynku mocy' };
+  }
+
+  const STOPIEN = 'wyraźnie|znacznie|istotnie|mocno|gwałtownie|drastycznie|zdecydowanie';
+  const stopniowanie = new RegExp(
+    `\\b(${STOPIEN})\\b[^.]{0,40}norm|norm\\w*[^.]{0,40}\\b(${STOPIEN})\\b|` +
+      `\\b(${STOPIEN})\\b[^.]{0,15}(pogarsza|poprawia)`,
+    'i'
+  );
+  if (stopniowanie.test(whole)) {
+    return { ok: false, reason: 'stopniuje to, czego fakty nie stopniują' };
   }
 
   // A calque of "thin margin"; in Polish a margin is narrow, never thin. It
