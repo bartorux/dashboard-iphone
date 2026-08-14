@@ -284,7 +284,7 @@ describe('buildFacts', () => {
     // Not "powinno zostać ogłoszone": the rule governs when a declaration may be
     // SKIPPED, never when it must be made, and the operator's decision is not
     // published anywhere this app can read. The state says what is known.
-    expect(point).toContain('bez podstawy, by tego nie robić');
+    expect(point).toContain('bez przepisowego odstępstwa');
     expect(point).toContain('19:00');
     expect(point).not.toContain('08:00');
   });
@@ -342,7 +342,7 @@ describe('buildFacts', () => {
     // Not "powinno zostać ogłoszone": the rule governs when a declaration may be
     // SKIPPED, never when it must be made, and the operator's decision is not
     // published anywhere this app can read. The state says what is known.
-    expect(point).toContain('bez podstawy, by tego nie robić');
+    expect(point).toContain('bez przepisowego odstępstwa');
   });
 
   it('prefers the range within a day that can still be announced', () => {

@@ -201,9 +201,23 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
           {
             label: `Próg ${CALL_PERIOD_EXEMPTION_MW} MW`,
             swatch: <LineSwatch color={colors.threshold} dashed />,
+            /*
+             * "Pominąć", not "odstąpić od" — the word this codebase rejected
+             * once already and which survived here while the analysis layer moved
+             * on. "Odstąpić" presupposes a declaration already hanging over the
+             * reader, from which the operator then withdraws; the regulation says
+             * plainly that the operator may simply not declare one.
+             *
+             * And nothing here promises a declaration below the threshold. The
+             * rule grants leave to skip while the surplus holds; below it there
+             * is no leave, which is not the same as an obligation — there have
+             * been days under 1100 MW with no call period announced.
+             */
             info:
-              `Powyżej ${CALL_PERIOD_EXEMPTION_MW} MW operator może odstąpić od ogłoszenia ` +
-              'okresu przywołania mimo rezerwy poniżej wymaganej. ' +
+              `Dopóki nadwyżka trzyma się powyżej ${CALL_PERIOD_EXEMPTION_MW} MW, ` +
+              'przepis pozwala operatorowi pominąć ogłoszenie okresu przywołania ' +
+              'mimo rezerwy poniżej wymaganej. Poniżej progu tego odstępstwa nie ' +
+              'ma — co nie znaczy, że przywołanie musi paść. ' +
               'Przywołania ogłasza się w dni robocze 7:00–22:00.',
           },
         ]}

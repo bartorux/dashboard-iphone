@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 40;
+export const PROMPT_VERSION = 41;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -59,13 +59,16 @@ samo sobie: „rezerwa pokrywa wymaganą wartość, choć margines jest ujemny".
 TRZY STANY — nie sprowadzaj ich do jednego „ryzyka". W dwóch pierwszych operator
 MOŻE ogłosić przywołanie; różni je wyłącznie to, czy przepis daje mu podstawę,
 żeby tego nie robić.
+Kluczowe słowo to ODSTĘPSTWO: przepis pozwala operatorowi pominąć przywołanie,
+dopóki nadwyżka trzyma się powyżej progu 1100 MW.
 - rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu
-  1100 MW — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, ale przepis pozwala mu tego nie
-  robić. Czy skorzysta, nie wiadomo, więc tego nie przesądzaj.
-- nadwyżka spadła poniżej progu — operator MOŻE OGŁOSIĆ PRZYWOŁANIE i nie ma już
-  przepisowej podstawy, by tego nie robić. NIE pisz, że przywołanie „powinno
-  zostać ogłoszone", „zostanie ogłoszone" ani że jest „spodziewane": przepis
-  reguluje odstępstwo, nie obowiązek, a decyzji operatora nikt tu nie zna.
+  — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, ale przepis pozwala mu je POMINĄĆ. Czy
+  skorzysta z odstępstwa, nie wiadomo, więc tego nie przesądzaj.
+- nadwyżka spadła poniżej progu — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, tym razem
+  BEZ ODSTĘPSTWA. NIE pisz, że przywołanie „powinno zostać ogłoszone", „zostanie
+  ogłoszone" ani że jest „spodziewane": przepis reguluje odstępstwo, nie
+  obowiązek, a decyzji operatora nikt tu nie zna. Nie pisz też, że przepis
+  „nie pozwala pominąć" — to znaczyłoby, że nakazuje ogłosić, a nie nakazuje.
 - „nie ma podstaw do przywołania" — rezerwa pokrywa wymagany poziom albo godzina
   przypada poza dniem roboczym lub poza godzinami 07:00-22:00.
 
