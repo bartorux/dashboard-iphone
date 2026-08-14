@@ -281,7 +281,10 @@ describe('buildFacts', () => {
     ];
     const point = keyPoint(buildFacts(data, [], BEFORE_ALL));
 
-    expect(point).toContain('przywołanie powinno zostać ogłoszone');
+    // Not "powinno zostać ogłoszone": the rule governs when a declaration may be
+    // SKIPPED, never when it must be made, and the operator's decision is not
+    // published anywhere this app can read. The state says what is known.
+    expect(point).toContain('bez podstawy, by tego nie robić');
     expect(point).toContain('19:00');
     expect(point).not.toContain('08:00');
   });
@@ -336,7 +339,10 @@ describe('buildFacts', () => {
 
     // POPOLUDNIE falls on 2026-08-10 itself, so the day is named "dziś".
     expect(point).toContain('dziś');
-    expect(point).toContain('przywołanie powinno zostać ogłoszone');
+    // Not "powinno zostać ogłoszone": the rule governs when a declaration may be
+    // SKIPPED, never when it must be made, and the operator's decision is not
+    // published anywhere this app can read. The state says what is known.
+    expect(point).toContain('bez podstawy, by tego nie robić');
   });
 
   it('prefers the range within a day that can still be announced', () => {
@@ -560,7 +566,12 @@ describe('renderFacts', () => {
     expect(text).toContain('2026-08-10');
     expect(text).toContain('stan:');
     // Names the state the regulation provides for, not a level of alarm of ours.
-    expect(text).toContain('PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE');
+    // Names what the regulation actually provides for. It used to read
+    // "PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE" — a forecast of somebody else's
+    // decision, and one this app can never check, since PSE publishes no
+    // announcements through any machine interface.
+    expect(text).toContain('OPERATOR MOŻE OGŁOSIĆ PRZYWOŁANIE');
+    expect(text).not.toContain('POWINNO ZOSTAĆ OGŁOSZONE');
     // "Refrain from declaring", not "withdraw from": the second presupposes a
     // declaration already hanging over the reader, which is not what is meant.
     expect(text).not.toContain('ODSTĄPIĆ');

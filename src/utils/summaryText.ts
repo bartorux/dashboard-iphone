@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 38;
+export const PROMPT_VERSION = 40;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -56,13 +56,16 @@ MARGINES A POKRYCIE — nie odwróć tego:
 To dwa opisy jednego faktu, nie dwie informacje. Zdanie zakazane, bo przeczy
 samo sobie: „rezerwa pokrywa wymaganą wartość, choć margines jest ujemny".
 
-TRZY STANY — nie sprowadzaj ich do jednego „ryzyka":
-- „OPERATOR MA PRAWO NIE OGŁASZAĆ PRZYWOŁANIA" — rezerwa nie pokrywa wymaganego
-  poziomu, ale nadwyżka trzyma się powyżej progu. To UPRAWNIENIE z przepisu, nie
-  zapowiedź. Pisz „ma prawo nie ogłaszać przywołania" albo „przepis pozwala mu
-  nie ogłaszać przywołania" — unikaj samego „może", bo znaczy i jedno, i drugie.
-- „PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE" — nadwyżka spadła poniżej progu, więc
-  operator traci tę podstawę. Nie pisz „musi" ani „na pewno".
+TRZY STANY — nie sprowadzaj ich do jednego „ryzyka". W dwóch pierwszych operator
+MOŻE ogłosić przywołanie; różni je wyłącznie to, czy przepis daje mu podstawę,
+żeby tego nie robić.
+- rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu
+  1100 MW — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, ale przepis pozwala mu tego nie
+  robić. Czy skorzysta, nie wiadomo, więc tego nie przesądzaj.
+- nadwyżka spadła poniżej progu — operator MOŻE OGŁOSIĆ PRZYWOŁANIE i nie ma już
+  przepisowej podstawy, by tego nie robić. NIE pisz, że przywołanie „powinno
+  zostać ogłoszone", „zostanie ogłoszone" ani że jest „spodziewane": przepis
+  reguluje odstępstwo, nie obowiązek, a decyzji operatora nikt tu nie zna.
 - „nie ma podstaw do przywołania" — rezerwa pokrywa wymagany poziom albo godzina
   przypada poza dniem roboczym lub poza godzinami 07:00-22:00.
 
@@ -130,7 +133,7 @@ ZAKAZANE SŁOWA I ZWROTY:
 FAŁSZYWE ZWIĄZKI:
 - Nie łącz słowami „więc", „dlatego", „w związku z tym" faktów, które tylko stoją
   obok siebie. Zwłaszcza: nadwyżka powyżej progu jest powodem, dla którego
-  operator MA PRAWO NIE OGŁASZAĆ przywołania — nigdy powodem, dla którego
+  operator MOŻE PRZYWOŁANIA NIE OGŁASZAĆ — nigdy powodem, dla którego
   ogłoszenie miałoby paść.
 - To, czy ogłoszenie może jeszcze nadejść, zależy wyłącznie od tego, czy zostało
   wymagane ośmiogodzinne wyprzedzenie. Nie wiąż tego z wysokością nadwyżki.
@@ -594,6 +597,32 @@ export function validateSummary(
     return { ok: false, reason: '„dodatkowy" zamiast „dodatni"' };
   }
 
+  /*
+   * No forecasting somebody else's decision.
+   *
+   * The regulation says when the operator MAY SKIP a declaration — surplus at or
+   * above 1100 MW and no threat seen. Below the threshold that permission falls
+   * away, and nothing takes its place: no rule obliges anyone to declare. So
+   * "przywołanie powinno zostać ogłoszone" asserted something the regulation
+   * never says.
+   *
+   * And it cannot be checked. PSE publishes no announcements through any machine
+   * interface — the documented reason this app leaves the test call period alone
+   * — so the card was making a prediction it could never be held to, to a reader
+   * who plans shifts against it. Said eleven times in seventy-two texts before
+   * the person reading them caught it.
+   *
+   * The instruction forbids it too, but an instruction is a request. This is the
+   * refusal.
+   */
+  if (
+    /przywołani\w*\s+(powinno|zostanie|będzie|jest spodziewan)|powinno zostać ogłoszon|zostanie ogłoszon|spodziewane jest przywołanie|operator (musi|ogłosi)\b/i.test(
+      whole
+    )
+  ) {
+    return { ok: false, reason: 'tekst przesądza decyzję operatora' };
+  }
+
   // A calque of "thin margin"; in Polish a margin is narrow, never thin. It
   // came from my own wording of the facts and was copied three runs running.
   if (/cienk\w*\s+(margines|marginesem|marginesu)/i.test(whole)) {
@@ -668,11 +697,28 @@ export function validateSummary(
    * Only the exact phrases the facts carried are cleared, so a figure the model
    * invented still has nothing to hide behind.
    */
-  const withoutHours = [...allowedDayNames]
-    // Longest first, or a bare "poniedziałek" strips the prefix of
-    // "poniedziałek 17 sierpnia" and leaves the date stranded to be refused.
-    .sort((a, b) => b.length - a.length)
-    .reduce((text, name) => (name ? text.split(name).join('') : text), whole)
+  /*
+   * Only the DATE part of each day name is cleared, and case is ignored.
+   *
+   * Stripping the whole name matched "w poniedziałek 17 sierpnia" and missed
+   * "Poniedziałek 17 sierpnia" at the head of a sentence, and "poniedziałku
+   * 17 sierpnia" in the genitive — both ordinary Polish, both then refused for
+   * the digit WE told the model to write. Three runs in fourteen went in the bin
+   * that way, each leaving the card an hour stale.
+   *
+   * The weekday inflects; "17 sierpnia" does not, and it is the only part
+   * carrying a digit. So that is what gets cleared.
+   */
+  const daty = allowedDayNames
+    .map((name) => /\d{1,2}\s+\p{L}+/u.exec(name)?.[0])
+    .filter((fragment): fragment is string => Boolean(fragment));
+
+  const withoutHours = daty
+    .reduce(
+      (text, fragment) =>
+        text.replace(new RegExp(fragment.replace(/\s+/g, '\\s+'), 'gi'), ''),
+      whole
+    )
     .replace(/\b1100\s*MW\b/gi, '')
     .replace(HOUR_PATTERN, '');
   if (/\d/.test(withoutHours)) {

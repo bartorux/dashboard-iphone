@@ -292,28 +292,52 @@ export function buildFacts(
  * The user's own alert thresholds are a separate, earlier layer — they say
  * something might be coming, not that anything is owed.
  */
+/*
+ * Both states open the same way, because the possibility IS the same.
+ *
+ * "PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE" said something the regulation never
+ * says. The rule governs when the operator MAY SKIP a declaration — surplus at
+ * or above 1100 MW and no threat seen — and below the threshold that permission
+ * simply falls away. Nothing obliges anyone to declare. So the card was
+ * forecasting somebody else's decision, and worse, a decision it can never check:
+ * PSE publishes no announcements through any machine interface, which is the
+ * documented reason this app leaves the test call period alone entirely.
+ *
+ * For a reader who plans shifts against this, an unverifiable prediction is the
+ * worst kind of claim. Said eleven times in seventy-two texts before it was
+ * caught by the person reading them.
+ *
+ * "Ma prawo nie ogłaszać" went too, for a different fault: a double negative
+ * that has to be read twice to be understood once, and that sounds reassuring
+ * about an hour where the reserve does not in fact cover what is required.
+ *
+ * What is left states only what the numbers and the regulation give: the
+ * operator may declare — true in both — and whether the rule still offers a
+ * basis for skipping it. The difference sits in the second clause and is named
+ * outright.
+ */
 const RISK_WORD: Record<CallPeriodRisk, string> = {
   high:
-    'PRZYWOŁANIE POWINNO ZOSTAĆ OGŁOSZONE — nadwyżka spadła poniżej progu ' +
-    '1100 MW. Dopóki go przekraczała, przepis pozwalał operatorowi nie ' +
-    'ogłaszać przywołania; teraz operator traci tę podstawę',
+    'OPERATOR MOŻE OGŁOSIĆ PRZYWOŁANIE i nie ma już przepisowej podstawy, ' +
+    'by tego nie robić — nadwyżka spadła poniżej progu 1100 MW. Dopóki go ' +
+    'przekraczała, przepis pozwalał przywołania nie ogłaszać',
   // Named by what it does, not by a label. Handed "wartość regulacyjna", the
   // model coined "próg regulacyjny" — a term the regulation does not use and
   // which a reader can easily take for the required reserve, the one
   // distinction this whole card rests on.
   moderate:
-    'OPERATOR MA PRAWO NIE OGŁASZAĆ PRZYWOŁANIA — rezerwa nie pokrywa ' +
-    'wymaganego poziomu, ale nadwyżka wciąż przekracza próg 1100 MW. ' +
-    'To UPRAWNIENIE z przepisu, nie prognoza — nie wiadomo, czy operator ' +
-    'z niego skorzysta',
+    'OPERATOR MOŻE OGŁOSIĆ PRZYWOŁANIE, ale przepis pozwala mu tego nie ' +
+    'robić, dopóki nadwyżka trzyma się powyżej progu 1100 MW — a rezerwa ' +
+    'nie pokrywa wymaganego poziomu. Czy operator skorzysta z tej możliwości, ' +
+    'nie wiadomo',
   none: 'nie ma podstaw do przywołania',
   unknown: 'nie wiadomo, czy są podstawy do przywołania',
 };
 
 /** The same states in a few words, for places where the full clause will not fit. */
 const RISK_SHORT: Record<CallPeriodRisk, string> = {
-  high: 'przywołanie powinno zostać ogłoszone',
-  moderate: 'operator ma prawo nie ogłaszać przywołania',
+  high: 'operator może ogłosić przywołanie, bez podstawy, by tego nie robić',
+  moderate: 'operator może ogłosić przywołanie, ale przepis pozwala mu tego nie robić',
   none: 'nie ma podstaw do przywołania',
   unknown: 'nie wiadomo, czy są podstawy do przywołania',
 };
