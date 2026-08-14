@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 41;
+export const PROMPT_VERSION = 42;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -57,18 +57,19 @@ To dwa opisy jednego faktu, nie dwie informacje. Zdanie zakazane, bo przeczy
 samo sobie: „rezerwa pokrywa wymaganą wartość, choć margines jest ujemny".
 
 TRZY STANY — nie sprowadzaj ich do jednego „ryzyka". W dwóch pierwszych operator
-MOŻE ogłosić przywołanie; różni je wyłącznie to, czy przepis daje mu podstawę,
-żeby tego nie robić.
-Kluczowe słowo to ODSTĘPSTWO: przepis pozwala operatorowi pominąć przywołanie,
-dopóki nadwyżka trzyma się powyżej progu 1100 MW.
-- rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu
-  — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, ale przepis pozwala mu je POMINĄĆ. Czy
-  skorzysta z odstępstwa, nie wiadomo, więc tego nie przesądzaj.
-- nadwyżka spadła poniżej progu — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, tym razem
-  BEZ ODSTĘPSTWA. NIE pisz, że przywołanie „powinno zostać ogłoszone", „zostanie
-  ogłoszone" ani że jest „spodziewane": przepis reguluje odstępstwo, nie
-  obowiązek, a decyzji operatora nikt tu nie zna. Nie pisz też, że przepis
-  „nie pozwala pominąć" — to znaczyłoby, że nakazuje ogłosić, a nie nakazuje.
+MOŻE ogłosić przywołanie; różni je wyłącznie to, czy ma wybór, czy już go stracił.
+Czytają to energetycy zakładowi, nie specjaliści od rynku mocy. Pisz o tym, co
+ich dotyczy — czy w danej dobie może dojść do przywołania — a nie o podstawach
+prawnych. Nadwyżka i próg 1100 MW to liczby, nie instytucje prawne.
+- rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej
+  1100 MW — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, ALE NIE MUSI. Co zrobi, nie
+  wiadomo, więc tego nie przesądzaj.
+- nadwyżka spadła poniżej 1100 MW — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, a spadła
+  poniżej poziomu, który pozwalał mu je pominąć. NIE pisz, że przywołanie
+  „powinno zostać ogłoszone", „zostanie ogłoszone" ani że jest „spodziewane":
+  bywały doby poniżej progu bez żadnego ogłoszenia, a decyzji operatora nikt tu
+  nie zna. Nie pisz też, że przepis „nie pozwala pominąć" — to znaczyłoby, że
+  nakazuje ogłosić, a nie nakazuje.
 - „nie ma podstaw do przywołania" — rezerwa pokrywa wymagany poziom albo godzina
   przypada poza dniem roboczym lub poza godzinami 07:00-22:00.
 
@@ -638,6 +639,15 @@ export function validateSummary(
     )
   ) {
     return { ok: false, reason: 'tekst przesądza decyzję operatora' };
+  }
+
+  // Officialese. "Z zachowaniem odstępstwa" was the model's own coinage, minted
+  // out of a phrase the facts used to hand it; the facts no longer say it, and
+  // the prompt deliberately does not name it either — naming a word to forbid it
+  // is how it got copied in the first place. Readers here run the electrical side
+  // of a plant, not the capacity market.
+  if (/odstępstw|przepisow\w*\s+podstaw/i.test(whole)) {
+    return { ok: false, reason: 'urzędowy żargon rynku mocy' };
   }
 
   // A calque of "thin margin"; in Polish a margin is narrow, never thin. It

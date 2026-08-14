@@ -284,9 +284,38 @@ describe('buildFacts', () => {
     // Not "powinno zostać ogłoszone": the rule governs when a declaration may be
     // SKIPPED, never when it must be made, and the operator's decision is not
     // published anywhere this app can read. The state says what is known.
-    expect(point).toContain('bez przepisowego odstępstwa');
+    // Plain words, not the language of the capacity market: the people who read
+    // this run the electrical side of a plant and want to know whether they can
+    // be told to cut load.
+    expect(point).toContain('nadwyżka spadła poniżej 1100 MW');
     expect(point).toContain('19:00');
     expect(point).not.toContain('08:00');
+  });
+
+  it('describes both states in words a plant electrician reads, not the regulation\'s', () => {
+    // The long descriptions are what the model actually reads; until now only the
+    // one-line form was pinned, so a mutation of these passed every test. They
+    // carry two obligations at once. Neither may forecast the operator's decision
+    // — days have gone by below the threshold with no declaration — and neither
+    // may reach for the capacity market's vocabulary, because the readers run the
+    // electrical side of a plant and are not specialists in it.
+    const data = [
+      // Morning: deficit, surplus still above the threshold — the operator has a choice.
+      hourOn('2026-08-10', 8, { reserve: 1500, required: 2000 }),
+      hourOn('2026-08-10', 12, { reserve: 5000, required: 2000 }),
+      // Evening: surplus below it — that choice is gone.
+      hourOn('2026-08-10', 19, { reserve: 800, required: 2000 }),
+    ];
+    const whole = renderFacts(buildFacts(data, [], BEFORE_ALL), 30);
+
+    expect(whole).toContain('MOŻE OGŁOSIĆ PRZYWOŁANIE, ale nie musi');
+    expect(whole).toContain('trzyma się powyżej 1100 MW');
+    expect(whole).toContain('spadła poniżej 1100 MW');
+    expect(whole).toContain('pozwalał operatorowi przywołanie pominąć');
+    // Jargon the reader would have to already know the rules to decode.
+    expect(whole).not.toMatch(/odstępstw|przepis|regulamin/i);
+    // And no state may promise the declaration will happen.
+    expect(whole).not.toMatch(/powinno zostać ogłoszone|zostanie ogłoszone/i);
   });
 
   it('names an hour the sentence about narrow margins actually covers', () => {
@@ -342,7 +371,10 @@ describe('buildFacts', () => {
     // Not "powinno zostać ogłoszone": the rule governs when a declaration may be
     // SKIPPED, never when it must be made, and the operator's decision is not
     // published anywhere this app can read. The state says what is known.
-    expect(point).toContain('bez przepisowego odstępstwa');
+    // Plain words, not the language of the capacity market: the people who read
+    // this run the electrical side of a plant and want to know whether they can
+    // be told to cut load.
+    expect(point).toContain('nadwyżka spadła poniżej 1100 MW');
   });
 
   it('prefers the range within a day that can still be announced', () => {
