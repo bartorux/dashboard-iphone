@@ -393,6 +393,27 @@ describe('validateSummary', () => {
       ).toEqual({ ok: true });
     });
 
+    it.each([
+      ['na początku zdania', 'Poniedziałek 17 sierpnia przynosi wąski margines o 20:00.'],
+      ['w odmianie', 'Poniedziałku 17 sierpnia dotyczy ta uwaga o 20:00.'],
+      // The month capitalised is not Polish, but it costs nothing to survive it
+      // — and without this the case-insensitive flag would be untested code.
+      ['z miesiącem wielką literą', 'W poniedziałek 17 Sierpnia jest wąsko o 20:00.'],
+    ])('accepts the day name %s', (_label, body) => {
+      /*
+       * Three runs in fourteen were binned this way. Stripping the whole name
+       * matched "w poniedziałek 17 sierpnia" and missed both the capitalised
+       * form at the head of a sentence and the genitive — ordinary Polish, and
+       * refused for the digit we ourselves told the model to write. Each refusal
+       * leaves the card an hour stale.
+       */
+      expect(
+        validateSummary({ ...good, body }, new Set(['20:00']), [
+          'poniedziałek 17 sierpnia',
+        ])
+      ).toEqual({ ok: true });
+    });
+
     it('clears the long name before the short one that is its prefix', () => {
       // Strip "poniedziałek" first and " 17 sierpnia" is left stranded, so a
       // correct answer would be refused for the digit we ourselves supplied.
@@ -464,6 +485,41 @@ describe('validateSummary', () => {
         HOURS
       )
     ).toEqual({ ok: true });
+  });
+
+  describe('przesadzanie decyzji operatora', () => {
+    /*
+     * The regulation says when a declaration may be SKIPPED — surplus at or
+     * above 1100 MW and no threat seen — and below the threshold that permission
+     * simply falls away. Nothing obliges anyone to declare. And nothing here can
+     * check the outcome: PSE publishes no announcements through any machine
+     * interface, so a card that predicts one can never be held to it, while its
+     * reader plans shifts against it.
+     *
+     * Said eleven times in seventy-two texts before a person reading them caught
+     * it. The instruction forbids it as well, but an instruction is a request.
+     */
+    it.each([
+      ['powinno zostać ogłoszone', 'W poniedziałek przywołanie powinno zostać ogłoszone o 20:00.'],
+      ['zostanie ogłoszone', 'W poniedziałek przywołanie zostanie ogłoszone o 20:00.'],
+      ['operator musi', 'W poniedziałek operator musi ogłosić przywołanie o 20:00.'],
+    ])('refuses „%s"', (_label, body) => {
+      expect(validateSummary({ ...good, body }, new Set(['20:00']))).toMatchObject({
+        ok: false,
+        reason: 'tekst przesądza decyzję operatora',
+      });
+    });
+
+    it.each([
+      ['może ogłosić', 'W poniedziałek operator może ogłosić przywołanie o 20:00.'],
+      ['może nadejść', 'Ogłoszenie może jeszcze nadejść, bo zostało dość czasu.'],
+      ['brak podstaw', 'W poniedziałek nie ma podstaw do przywołania o 20:00.'],
+    ])('leaves „%s" alone', (_label, body) => {
+      // What is left has to still be sayable, or the generator deadlocks.
+      expect(validateSummary({ ...good, body }, new Set(['20:00']))).toEqual({
+        ok: true,
+      });
+    });
   });
 
   describe('dzien tygodnia w liczbie mnogiej', () => {
