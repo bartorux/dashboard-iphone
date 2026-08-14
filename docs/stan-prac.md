@@ -40,6 +40,19 @@ Oba czekają na dobę w logach — nie na pomysł, tylko na pomiar.
   ale po przeczytaniu wygląda to na uzasadnione: ten sam stan prawny dotyczy dwóch różnych dni,
   a model sam zaznacza to słowem „również". Do obejrzenia, gdy takich dni uzbiera się kilka.
 
+## Wiedza, której aplikacja nie zdobędzie sama
+
+**Bywały doby z nadwyżką poniżej progu 1100 MW, w których przywołania nie ogłoszono.**
+Obserwacja użytkownika, nie pomiar — i to jedyne dostępne źródło, bo PSE nie publikuje ogłoszeń
+żadnym interfejsem maszynowym. Ta sama luka jest powodem, dla którego aplikacja w ogóle nie tyka
+testowego okresu przywołania.
+
+Wynika z niej rzecz, którą karta mówiła przez 11 z 72 tekstów, zanim ktoś to zauważył: **„przywołanie
+powinno zostać ogłoszone" było po prostu nieprawdą.** Przepis reguluje odstępstwo — pozwala pominąć
+ogłoszenie, dopóki nadwyżka trzyma próg — a poniżej progu odstępstwa nie ma. To nie to samo co
+obowiązek. Stąd obecne brzmienie oparte na jednym rzeczowniku: *odstępstwo* / *bez odstępstwa*,
+w obu stanach otwarte słowami „operator może ogłosić przywołanie".
+
 ## Zapisane, nienaprawiane
 
 - **Prognoza dryfuje w dół, a pasmo zbudowane jest z wartości osiadłych.** Z logu prognoz, pięć
