@@ -214,11 +214,11 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
              * been days under 1100 MW with no call period announced.
              */
             info:
-              `Dopóki nadwyżka trzyma się powyżej ${CALL_PERIOD_EXEMPTION_MW} MW, ` +
-              'przepis pozwala operatorowi pominąć ogłoszenie okresu przywołania ' +
-              'mimo rezerwy poniżej wymaganej. Poniżej progu tego odstępstwa nie ' +
-              'ma — co nie znaczy, że przywołanie musi paść. ' +
-              'Przywołania ogłasza się w dni robocze 7:00–22:00.',
+              `Dopóki nadwyżka w systemie trzyma się powyżej ${CALL_PERIOD_EXEMPTION_MW} MW, ` +
+              'operator może pominąć ogłoszenie okresu przywołania, nawet jeśli ' +
+              'rezerwa nie pokrywa wymaganego poziomu. Poniżej tej granicy takiej ' +
+              'możliwości już nie ma — co nie znaczy, że przywołanie zostanie ' +
+              'ogłoszone. Przywołania ogłasza się w dni robocze 7:00–22:00.',
           },
         ]}
       />

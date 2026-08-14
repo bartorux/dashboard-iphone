@@ -311,39 +311,43 @@ export function buildFacts(
  * that has to be read twice to be understood once, and that sounds reassuring
  * about an hour where the reserve does not in fact cover what is required.
  *
- * What is left turns on one noun. The regulation grants an ODSTĘPSTWO — leave to
- * skip the declaration — for as long as the surplus holds above 1100 MW. Below
- * it there is no odstępstwo. Both states open the same way because the operator
- * may declare in either; the difference is whether that leave still exists, and
- * it is named in one word rather than unpicked from a double negative.
+ * Said the way the people who read this speak. They run the electrical side of a
+ * plant; they are not capacity-market specialists, and the question they open the
+ * app with is whether they can be told to cut load.
  *
- * "Nie ma podstawy, by tego nie robić" was the first attempt and read as badly
- * as it sounds. And it could not become "przepis nie pozwala pominąć", which
- * would mean the rule FORBIDS skipping — that is, obliges declaring, which is
- * exactly the claim being removed.
+ * So the difference is put in ordinary words — the operator may declare, and
+ * whether he has a choice about it — with the threshold as a figure rather than
+ * as a legal basis. "Bez przepisowego odstępstwa" was precise and told the reader
+ * nothing; the model then coined "z zachowaniem odstępstwa" out of it, which is
+ * the officialese this instruction forbids everywhere else.
+ *
+ * Two earlier attempts and why they failed. "Przywołanie powinno zostać
+ * ogłoszone" forecast a decision nobody here can see, on days that have gone by
+ * without one. "Nie ma podstawy, by tego nie robić" read as badly as it sounds —
+ * and could not become "przepis nie pozwala pominąć", which would mean the rule
+ * FORBIDS skipping, that is, obliges declaring. It does not.
  */
 const RISK_WORD: Record<CallPeriodRisk, string> = {
   high:
-    'OPERATOR MOŻE OGŁOSIĆ PRZYWOŁANIE — bez przepisowego odstępstwa, które ' +
-    'miał powyżej progu. Nadwyżka spadła poniżej 1100 MW, a to ona dawała ' +
-    'odstępstwo',
+    'OPERATOR MOŻE OGŁOSIĆ PRZYWOŁANIE. Nadwyżka w systemie spadła poniżej ' +
+    '1100 MW — poniżej poziomu, który pozwalał operatorowi przywołanie ' +
+    'pominąć',
   // Named by what it does, not by a label. Handed "wartość regulacyjna", the
   // model coined "próg regulacyjny" — a term the regulation does not use and
   // which a reader can easily take for the required reserve, the one
   // distinction this whole card rests on.
   moderate:
-    'OPERATOR MOŻE OGŁOSIĆ PRZYWOŁANIE, ale przepis pozwala mu je pominąć, ' +
-    'dopóki nadwyżka trzyma się powyżej progu 1100 MW — a rezerwa nie ' +
-    'pokrywa wymaganego poziomu. Czy operator z odstępstwa skorzysta, ' +
-    'nie wiadomo',
+    'OPERATOR MOŻE OGŁOSIĆ PRZYWOŁANIE, ale nie musi — nadwyżka w systemie ' +
+    'trzyma się powyżej 1100 MW i to ona daje mu wybór. Rezerwa nie pokrywa ' +
+    'wymaganego poziomu. Co operator zrobi, nie wiadomo',
   none: 'nie ma podstaw do przywołania',
   unknown: 'nie wiadomo, czy są podstawy do przywołania',
 };
 
 /** The same states in a few words, for places where the full clause will not fit. */
 const RISK_SHORT: Record<CallPeriodRisk, string> = {
-  high: 'operator może ogłosić przywołanie, bez przepisowego odstępstwa',
-  moderate: 'operator może ogłosić przywołanie, ale przepis pozwala mu je pominąć',
+  high: 'operator może ogłosić przywołanie, a nadwyżka spadła poniżej 1100 MW',
+  moderate: 'operator może ogłosić przywołanie, ale nie musi',
   none: 'nie ma podstaw do przywołania',
   unknown: 'nie wiadomo, czy są podstawy do przywołania',
 };
