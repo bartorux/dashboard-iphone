@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-10T12:29:05.963Z",
-      "prompt": 16,
-      "accepted": true,
-      "headline": "W poniedziałek między 18:00 a 20:00 rezerwa nie pokryje wymaganego poziomu.",
-      "body": "Nadwyżka przekracza próg 1100 MW, więc operator ma prawo nie ogłaszać przywołania. Na dzisiejsze ogłoszenie jest już za późno, bo zostało mniej czasu niż wymagane wyprzedzenie.",
-      "outlook": "We wtorek nie ma podstaw do przywołania, a w środę między 20:00 a 22:00 operator znowu ma prawo nie ogłaszać przywołania i ogłoszenie może jeszcze nadejść."
-    },
-    {
       "at": "2026-08-10T14:03:32.137Z",
       "prompt": 16,
       "accepted": true,
@@ -582,6 +574,14 @@
       "headline": "W poniedziałek 17 sierpnia między 17:00 a 22:00 operator ma prawo nie ogłaszać przywołania.",
       "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek 14 sierpnia, we wtorek 18 sierpnia i w środę 19 sierpnia nie ma podstaw do przywołania."
+    },
+    {
+      "at": "2026-08-14T00:41:52.891Z",
+      "prompt": 38,
+      "accepted": true,
+      "headline": "W najbliższych godzinach nie ma podstaw do przywołania.",
+      "body": "Prognoza na poniedziałek 17 sierpnia pogarsza się, a najniższy margines spadnie do wartości ujemnej o 20:00. Ogłoszenie może jeszcze nadejść, ponieważ zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie.",
+      "outlook": "We wtorek 18 sierpnia margines osiągnie najniższy punkt o 20:00, a w pozostałych dniach nie ma podstaw do przywołania."
     }
   ]
 }
