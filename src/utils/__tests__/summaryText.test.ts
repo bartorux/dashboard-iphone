@@ -487,6 +487,33 @@ describe('validateSummary', () => {
     ).toEqual({ ok: true });
   });
 
+  it('does not bin an ordinary sentence for one character', () => {
+    /*
+     * A published answer was refused at 201 characters against a limit of 200 —
+     * one over, and the card kept the previous text for an hour. Measured across
+     * seventy texts, DALEJ reaches 242 while body is capped at 500 against a max
+     * of 311: the limit was binding on ordinary sentences rather than on
+     * runaways, which is not what it is for.
+     */
+    const dlugi =
+      'We wtorek 18 sierpnia w godzinach 19:00-21:00 operator może ogłosić ' +
+      'przywołanie, ale przepis pozwala je pominąć, dopóki nadwyżka trzyma się ' +
+      'powyżej progu 1100 MW, a w pozostałych dniach nie ma podstaw.';
+
+    expect(dlugi.length).toBeGreaterThan(200);
+    expect(
+      validateSummary({ ...good, outlook: dlugi }, new Set([...HOURS, '21:00']), [
+        'wtorek 18 sierpnia',
+      ])
+    ).toEqual({ ok: true });
+  });
+
+  it('still refuses an answer that has genuinely run away', () => {
+    expect(
+      validateSummary({ ...good, outlook: 'a'.repeat(400) }, HOURS)
+    ).toMatchObject({ ok: false });
+  });
+
   describe('przesadzanie decyzji operatora', () => {
     /*
      * The regulation says when a declaration may be SKIPPED — surplus at or

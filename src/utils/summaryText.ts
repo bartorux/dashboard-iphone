@@ -449,11 +449,25 @@ export function parseSummary(text: string): Summary | null {
   return summary.headline && hasDetail ? summary : null;
 }
 
-/** Generous, but enough to catch a runaway answer. */
+/**
+ * Generous, but enough to catch a runaway answer.
+ *
+ * Measured across seventy texts: headline runs to 179 characters at most against
+ * a limit of 200, body to 311 against 500 — and outlook to 242 against 200. Only
+ * one of the three was ever actually binding, and it was binding on ordinary
+ * sentences rather than on runaways: a published answer was refused at 201
+ * characters, one over, and the card sat an hour with the previous text.
+ *
+ * The state names grew when they stopped predicting the operator's decision, and
+ * DALEJ quotes them for every day it lists, so a sentence naming two days now
+ * clears 200 without being wrong or wordy. Three hundred keeps the headroom the
+ * other two fields have and still catches an answer that has genuinely run away,
+ * which is a matter of several hundred characters, not one.
+ */
 const LIMITS: Record<keyof Summary, number> = {
   headline: 200,
   body: 500,
-  outlook: 200,
+  outlook: 300,
 };
 
 const HOUR_PATTERN = /\b\d{1,2}:\d{2}\b/g;
