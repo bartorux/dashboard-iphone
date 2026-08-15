@@ -292,6 +292,35 @@ describe('buildFacts', () => {
     expect(point).not.toContain('08:00');
   });
 
+  it('spells each state out once a day, however many ranges carry it', () => {
+    // The v27 mechanism, back by my own hand: the range lines used to repeat the
+    // whole state clause, and rewriting that clause into plain Polish grew it
+    // from six words to 150 characters. One prompt then handed the same sentence
+    // five times, and 28 of 63 accepted texts copied it verbatim.
+    // A whole day, not just the tight hours: with the covered hours missing
+    // instead of comfortable, the two ranges bridge into one and the test stops
+    // measuring what it is for.
+    const data = dayOf('2026-08-10', 5000).map((point, hour) =>
+      [7, 8, 17, 18].includes(hour)
+        ? hourOn('2026-08-10', hour, { reserve: 1500, required: 2000 })
+        : point
+    );
+    const tekst = renderFacts(buildFacts(data, [], BEFORE_ALL), 30);
+    const ile = (fragment: string) => tekst.split(fragment).length - 1;
+
+    // Two ranges, both in the same state — explained once.
+    expect(ile('07:00-09:00 (2 godz.)')).toBe(1);
+    expect(ile('17:00-19:00 (2 godz.)')).toBe(1);
+    // Counted on a fragment the one-line keyPoint does not share, or the count
+    // is 2 for a reason that has nothing to do with the ranges.
+    expect(ile('i to ona daje mu wybór')).toBe(1);
+    // And the eight-hour window, which every range used to repeat.
+    expect(ile('ogłoszenie może jeszcze nadejść')).toBe(1);
+    // What the ranges do carry is which condition applies, so a day holding both
+    // states is still readable hour by hour.
+    expect(ile('nadwyżka powyżej 1100 MW, operator ma wybór')).toBe(2);
+  });
+
   it('says the calm state without reaching for legal grounds either', () => {
     // The third state went unnoticed while the other two were rewritten, and it
     // is the one that appears most: all 63 accepted texts carried "nie ma
