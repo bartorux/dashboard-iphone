@@ -352,6 +352,26 @@ const RISK_SHORT: Record<CallPeriodRisk, string> = {
   unknown: 'brakuje odczytów, żeby to ocenić',
 };
 
+/*
+ * The bare condition, for the hour ranges.
+ *
+ * A day carries up to five ranges and each used to repeat the whole state
+ * clause, so one prompt handed the same 150-character sentence five times over
+ * — the v27 mechanism exactly, and reintroduced by my own rewrite: the clause
+ * these ranges repeat used to be six words, and lengthening it into plain
+ * Polish made the repetition expensive without anyone noticing.
+ *
+ * Measured on 63 accepted texts before this: the model copied the range clause
+ * verbatim 28 times. The full sentence now appears once per state per day, up
+ * with the day, and the ranges say only which of the two applies.
+ */
+const RISK_TAG: Record<CallPeriodRisk, string> = {
+  high: 'nadwyżka poniżej 1100 MW',
+  moderate: 'nadwyżka powyżej 1100 MW, operator ma wybór',
+  none: 'nic nie zapowiada przywołania',
+  unknown: 'brakuje odczytów',
+};
+
 const round = (value: number) => `${value > 0 ? '+' : ''}${Math.round(value)} MW`;
 
 /**
@@ -610,7 +630,17 @@ export function renderFacts(facts: DayFacts[], days: number): string {
      * cause once. This is the same fix that worked four times today — take away
      * what is being copied instead of forbidding the copy.
      */
-    if (!allClear) lines.push(`  stan: ${RISK_WORD[day.risk]}`);
+    if (!allClear) {
+      lines.push(`  stan: ${RISK_WORD[day.risk]}`);
+      // A day whose ranges are not all in the day's own state needs the other
+      // state spelled out too — but once, not once per range. Without this the
+      // milder state would reach the model only as a tag, with nothing saying
+      // what it means.
+      const inne = [...new Set(day.ranges.map((range) => range.risk))].filter(
+        (risk) => risk !== day.risk
+      );
+      for (const risk of inne) lines.push(`  w części godzin: ${RISK_WORD[risk]}`);
+    }
 
     /*
      * The cause, for the leading day and no other.
@@ -681,23 +711,34 @@ export function renderFacts(facts: DayFacts[], days: number): string {
      */
     if (isLead && day.movement) lines.push(`    ${day.movement}`);
 
+    // On its own line, and labelled. Sharing a line with the state clause, the
+    // model read the two as cause and effect and wrote that the surplus holding
+    // above the threshold was why a declaration might still come — exactly
+    // backwards, since that is the reason one might not.
+    //
+    // Said plainly, without the "window" figure of speech this used to carry:
+    // the model shortened it to "the window stays open" and dropped the only
+    // part that explained what the window was.
+    const WINDOW_WORD = {
+      true: 'ogłoszenie może jeszcze nadejść — zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie',
+      false:
+        'na ogłoszenie jest już za późno — zostało mniej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie',
+    } as const;
+    // Once for the day when every range agrees, which is the usual case — five
+    // identical copies of this line was the second thing the prompt handed over
+    // five times. Only a day split across the eight-hour mark still says it per
+    // range, because there the ranges genuinely differ.
+    const okna = new Set(day.ranges.map((range) => range.announceable));
+    const jednolite = okna.size === 1;
+
     for (const range of day.ranges) {
       lines.push(
-        `    ${range.from}-${range.to} (${range.hours} godz.): ${RISK_WORD[range.risk]}`
+        `    ${range.from}-${range.to} (${range.hours} godz.): ${RISK_TAG[range.risk]}`
       );
-      // On its own line, and labelled. Sharing a line with the state clause, the
-      // model read the two as cause and effect and wrote that the surplus
-      // holding above the threshold was why a declaration might still come —
-      // exactly backwards, since that is the reason one might not.
-      //
-      // Said plainly, without the "window" figure of speech this used to carry:
-      // the model shortened it to "the window stays open" and dropped the only
-      // part that explained what the window was.
-      lines.push(
-        range.announceable
-          ? '      ogłoszenie może jeszcze nadejść — zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie'
-          : '      na ogłoszenie jest już za późno — zostało mniej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie'
-      );
+      if (!jednolite) lines.push(`      ${WINDOW_WORD[`${range.announceable}`]}`);
+    }
+    if (jednolite && day.ranges.length > 0) {
+      lines.push(`    ${WINDOW_WORD[`${day.ranges[0].announceable}`]}`);
     }
 
     if (day.nearThreshold > 0) {
