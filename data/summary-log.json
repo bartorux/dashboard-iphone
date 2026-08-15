@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-11T19:42:55.505Z",
-      "prompt": 32,
-      "accepted": true,
-      "headline": "W czwartek i w poniedziałek 17 sierpnia pojawią się godziny, w których operator ma prawo nie ogłaszać przywołania.",
-      "body": "W czwartek o 20:00 rezerwa nie pokryje wymaganego poziomu, a spadek rezerwy spowoduje wiatr poniżej normy. Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo nie ogłaszać przywołania, a samo ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek i poniedziałek 17 sierpnia operator ma prawo nie ogłaszać przywołania; w pozostałych dniach nie ma podstaw."
-    },
-    {
       "at": "2026-08-11T21:27:06.981Z",
       "prompt": 32,
       "accepted": true,
@@ -586,6 +578,14 @@
       "headline": "W poniedziałek 17 sierpnia nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00, co oznacza, że operator stracił możliwość pominięcia przywołania.",
       "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść w każdym z przedziałów.",
       "outlook": "We wtorek 18 sierpnia oraz w czwartek 20 sierpnia operator może ogłosić przywołanie w godzinach wieczornych, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-08-15T14:56:30.100Z",
+      "prompt": 43,
+      "accepted": true,
+      "headline": "W poniedziałek 17 sierpnia nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie.",
+      "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ zostało więcej czasu niż wymagane ośmiogodzinne wyprzedzenie.",
+      "outlook": "We wtorek 18 sierpnia i czwartek 20 sierpnia przywołanie wchodzi w grę, a w pozostałych dniach nic go nie zapowiada."
     }
   ]
 }
