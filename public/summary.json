@@ -1,8 +1,8 @@
 {
-  "headline": "W najbliższych godzinach nic nie zapowiada przywołania, a nadwyżka w systemie trzyma się powyżej progu 1100 MW.",
-  "body": "W poniedziałek 17 sierpnia między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, a prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ zostało więcej czasu niż wymagane ośmiogodzinne wyprzedzenie.",
-  "outlook": "We wtorek 18 sierpnia między 19:00 a 22:00 oraz w czwartek 20 sierpnia między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-08-15T15:53:50.292Z",
+  "headline": "W poniedziałek 17 sierpnia między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie bez pomijania tej ścieżki.",
+  "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść.",
+  "outlook": "W poniedziałek 17 sierpnia, we wtorek 18 sierpnia i w czwartek 20 sierpnia rezerwa spada poniżej wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-08-15T16:56:39.374Z",
   "dates": [
     "2026-08-15",
     "2026-08-17",
@@ -11,6 +11,6 @@
     "2026-08-20",
     "2026-08-21"
   ],
-  "assessment": "2026-08-15|W|none|2100|17:00|0|0|6|;2026-08-17|R|high|-1900|20:00|1|6|9|moderate:08:00-09:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00;2026-08-18|R|moderate|-900|20:00|0|1|19|moderate:19:00-22:00;2026-08-19|R|none|1500|20:00|0|0|23|;2026-08-20|R|moderate|-100|20:00|0|0|19|moderate:20:00-21:00;2026-08-21|R|none|100|20:00|1|0|17|#-/below/prognoza tej doby pogarsza się#v43",
+  "assessment": "2026-08-15|W|none|1100|19:00|0|0|1|;2026-08-17|R|high|-2000|20:00|0|6|9|moderate:07:00-09:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00;2026-08-18|R|moderate|-900|20:00|1|1|19|moderate:20:00-22:00;2026-08-19|R|none|1500|20:00|0|0|22|;2026-08-20|R|moderate|0|20:00|0|0|19|moderate:20:00-21:00;2026-08-21|R|none|100|20:00|1|0|17|#-/below/prognoza tej doby pogarsza się#v43",
   "model": "gemini-3.5-flash-lite"
 }
