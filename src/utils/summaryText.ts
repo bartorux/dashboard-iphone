@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 45;
+export const PROMPT_VERSION = 46;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -127,7 +127,9 @@ ZAKAZANE SŁOWA I ZWROTY:
 - kolokwializmy: „zrobi się ciasno", „na styk"
 - straszenie: „zagrożenie", „krytyczny", „alarmujący", „niebezpieczny"
 - pora dnia zamiast godziny — ani jej nazwa, ani opis przedziału. Skoro fakty
-  podają godzinę, podaj godzinę; dotyczy to zwłaszcza nagłówka.
+  podają godzinę, podaj godzinę; dotyczy to zwłaszcza nagłówka. Gdy jednak
+  w jednym zdaniu nazywasz WIĘCEJ NIŻ JEDEN dzień, nie dokładaj im godzin
+  w ogóle — same dni wystarczą, a godziny czytelnik ma na wykresie.
 - metafora okna: „okno", „okno ogłoszenia", „okno pozostaje otwarte" — czytelnik
   nie wie, co to okno. Pisz „ogłoszenie może jeszcze nadejść" albo „na ogłoszenie
   jest już za późno".
@@ -181,7 +183,9 @@ nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie 
 DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których przywołanie WCHODZI W GRĘ albo margines jest wąski, a resztę zbierz
-jednym stwierdzeniem: „w pozostałych dniach nic go nie zapowiada". Jeśli takiego dnia nie ma
+jednym stwierdzeniem: „w pozostałych dniach nic go nie zapowiada". Przy jednym
+nazwanym dniu podaj jego godziny; przy dwóch albo więcej NIE podawaj godzin
+żadnemu — inaczej zabraknie miejsca i wyjdzie zbiorcza pora zamiast konkretu. Jeśli takiego dnia nie ma
 ani jednego, powiedz to wprost o całym okresie i na tym poprzestań.
 
 WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:
@@ -249,7 +253,9 @@ nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie 
 const DALEJ_BLOCK = `DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których przywołanie WCHODZI W GRĘ albo margines jest wąski, a resztę zbierz
-jednym stwierdzeniem: „w pozostałych dniach nic go nie zapowiada". Jeśli takiego dnia nie ma
+jednym stwierdzeniem: „w pozostałych dniach nic go nie zapowiada". Przy jednym
+nazwanym dniu podaj jego godziny; przy dwóch albo więcej NIE podawaj godzin
+żadnemu — inaczej zabraknie miejsca i wyjdzie zbiorcza pora zamiast konkretu. Jeśli takiego dnia nie ma
 ani jednego, powiedz to wprost o całym okresie i na tym poprzestań.
 
 WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:
