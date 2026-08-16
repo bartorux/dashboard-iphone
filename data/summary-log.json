@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-12T22:23:10.084Z",
-      "prompt": 33,
-      "accepted": true,
-      "headline": "Margines o 20:00 jest niższy niż zwykle na tle ostatnich trzydziestu dni.",
-      "body": "W poniedziałek 17 sierpnia między 19:00 a 22:00 zapotrzebowanie rośnie powyżej normy, a fotowoltaika spada poniżej normy. Nadwyżka trzyma się jednak powyżej progu 1100 MW i to ona daje operatorowi prawo nie ogłaszać przywołania.",
-      "outlook": "We wtorek 18 sierpnia o 20:00 operator ma prawo nie ogłaszać przywołania; w pozostałych dniach nie ma podstaw."
-    },
-    {
       "at": "2026-08-12T23:20:51.988Z",
       "prompt": 33,
       "accepted": true,
@@ -591,6 +583,14 @@
       "headline": "W poniedziałek 17 sierpnia nadwyżka spadła poniżej progu 1100 MW między 18:00 a 22:00, co pozwala operatorowi ogłosić przywołanie bez pomijania tej możliwości.",
       "body": "Najniższy margines wystąpi o 19:00, ponieważ PV spada poniżej normy przy typowym zapotrzebowaniu. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 18 sierpnia i czwartek 20 sierpnia margines spada poniżej wymaganego poziomu między 20:00 a 21:00, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-16T09:01:11.945Z",
+      "prompt": 44,
+      "accepted": true,
+      "headline": "W poniedziałek nadwyżka spadła poniżej progu 1100 MW, więc operator utracił wybór, który dotąd pozwalał mu pominąć przywołanie.",
+      "body": "W poniedziałek o 19:00 margines spadnie najniżej, ponieważ PV utrzymuje się poniżej normy, a zapotrzebowanie pozostaje typowe. Ogłoszenie może jeszcze nadejść, bo minęło mniej czasu niż wynosi wymagane ośmiogodzinne wyprzedzenie.",
+      "outlook": "We wtorek 18 sierpnia oraz w czwartek 20 sierpnia przywołanie wchodzi w grę, natomiast w pozostałych dniach nic go nie zapowiada."
     }
   ]
 }
