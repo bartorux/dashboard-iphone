@@ -355,6 +355,55 @@ describe('parseSummary', () => {
 });
 
 describe('validateSummary', () => {
+  it('refuses one span stretched over several days, but not a range per day', () => {
+    // Published on 16 August with the three days running 20:00-22:00,
+    // 19:00-22:00 and 19:00-21:00. The envelope is true of the set and false of
+    // every member but one — on Tuesday nothing happens at 19:00.
+    const dni = ['wtorek 18 sierpnia', 'czwartek 20 sierpnia', 'piątek 21 sierpnia'];
+    const godziny = new Set(['19:00', '20:00', '21:00', '22:00']);
+    expect(
+      validateSummary(
+        {
+          headline: 'We wtorek 18 sierpnia o 20:00 margines jest najwęższy.',
+          body: '',
+          outlook:
+            'We wtorek 18 sierpnia, w czwartek 20 sierpnia i w piątek 21 sierpnia rezerwa spada poniżej wymaganego poziomu między 19:00 a 22:00.',
+        },
+        godziny,
+        dni
+      )
+    ).toEqual({ ok: false, reason: 'jeden zakres godzin rozciągnięty na kilka dni' });
+
+    // A range for each day is precise, useful, and stays.
+    expect(
+      validateSummary(
+        {
+          headline: 'We wtorek 18 sierpnia o 20:00 margines jest najwęższy.',
+          body: '',
+          outlook:
+            'We wtorek 18 sierpnia między 20:00 a 22:00 oraz w czwartek 20 sierpnia między 19:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu.',
+        },
+        godziny,
+        dni
+      )
+    ).toEqual({ ok: true });
+
+    // And naming several days with no hours at all — the way out the instruction
+    // now permits — is untouched.
+    expect(
+      validateSummary(
+        {
+          headline: 'We wtorek 18 sierpnia o 20:00 margines jest najwęższy.',
+          body: '',
+          outlook:
+            'We wtorek 18 sierpnia, w czwartek 20 sierpnia i w piątek 21 sierpnia rezerwa nie pokrywa wymaganego poziomu.',
+        },
+        godziny,
+        dni
+      )
+    ).toEqual({ ok: true });
+  });
+
   it('lets a multi-day DALEJ drop the hours instead of blurring them', () => {
     // Measured across 72 attempts: with one day named in DALEJ the vague time
     // never appeared (0/37), with two it appeared twice (2/27), with three it
