@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { decideRun, MAX_STALE_MS } from '../summaryRun';
+import { askWithRetry, decideRun, MAX_STALE_MS } from '../summaryRun';
 
 const KLUCZ = '2026-08-10|R|moderate|-200|18:00|1|2|11|moderate:17:00-20:00#v16';
 const TERAZ = new Date('2026-08-10T12:00:00Z');
@@ -102,5 +102,83 @@ describe('decideRun', () => {
     });
 
     expect(d.reason).toMatch(/\d+ godz/);
+  });
+});
+
+/**
+ * The retry exists because a refusal used to end the run and leave the card
+ * standing with the previous text for an hour — seven in a row on the night of
+ * 17 August held it for six. Every gate we add makes that more likely, so the
+ * loop is what stops a gate from costing the reader anything.
+ */
+describe('askWithRetry', () => {
+  /** A judge that accepts anything but the word "zle". */
+  const oceniaj = (tekst: string) =>
+    tekst === 'zle'
+      ? { ok: false, summary: null, reason: 'odrzucone' }
+      : { ok: true, summary: { tekst } };
+
+  /** Records what was asked and what was written down. */
+  function stanowisko(odpowiedzi: Array<string | null>) {
+    const zapisane: Array<{ ok: boolean; reason?: string }> = [];
+    let pytan = 0;
+    return {
+      zapisane,
+      pytan: () => pytan,
+      ask: async () => odpowiedzi[pytan++] ?? null,
+      record: (proba: { ok: boolean; reason?: string }) =>
+        zapisane.push({ ok: proba.ok, reason: proba.reason }),
+    };
+  }
+
+  it('asks again when the first answer is refused', async () => {
+    const s = stanowisko(['zle', 'dobrze']);
+    const wynik = await askWithRetry(s.ask, oceniaj, s.record);
+
+    expect(wynik.ok).toBe(true);
+    expect(wynik.summary).toEqual({ tekst: 'dobrze' });
+    // Both attempts written down, the refused one included: logging only the
+    // last would hide how often the first misses, and that rate is the only
+    // signal for whether the gates are set right.
+    expect(s.zapisane).toEqual([
+      { ok: false, reason: 'odrzucone' },
+      { ok: true, reason: undefined },
+    ]);
+  });
+
+  it('asks exactly once when the first answer stands', async () => {
+    const s = stanowisko(['dobrze', 'dobrze']);
+    const wynik = await askWithRetry(s.ask, oceniaj, s.record);
+
+    expect(wynik.ok).toBe(true);
+    // The assertion that catches a loop retrying unconditionally — which would
+    // double the bill for nothing and go unnoticed, since the result is right.
+    expect(s.pytan()).toBe(1);
+    expect(s.zapisane).toHaveLength(1);
+  });
+
+  it('gives up after the last attempt, carrying that attempt\'s reason', async () => {
+    const s = stanowisko(['zle', 'zle']);
+    const wynik = await askWithRetry(s.ask, oceniaj, s.record);
+
+    expect(wynik).toMatchObject({ ok: false, reason: 'odrzucone' });
+    expect(s.pytan()).toBe(2);
+    expect(s.zapisane).toHaveLength(2);
+  });
+
+  it('counts an empty answer as a failed attempt, not a crash', async () => {
+    // The model occasionally returns a candidate with no text at all, and that
+    // is exactly the case a second ask tends to resolve.
+    const s = stanowisko([null, 'dobrze']);
+    const wynik = await askWithRetry(s.ask, oceniaj, s.record);
+
+    expect(wynik.ok).toBe(true);
+    expect(s.zapisane[0]).toEqual({ ok: false, reason: 'Model nie zwrocil tekstu' });
+  });
+
+  it('still asks once when told to make no attempts at all', async () => {
+    const s = stanowisko(['dobrze']);
+    await askWithRetry(s.ask, oceniaj, s.record, 0);
+    expect(s.pytan()).toBe(1);
   });
 });
