@@ -17,7 +17,7 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 44;
+export const PROMPT_VERSION = 45;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -98,8 +98,9 @@ bez urzędowego żargonu. Odbiorcy pracują w energetyce.
 - Poprawna polszczyzna, z polskimi znakami.
 
 TAK NIE PISZ (asekuracko, bez konkretu):
-„W poniedziałek w wyznaczonym przedziale czasowym rezerwa nie pokrywa w pełni
-wymaganej wielkości, w związku z czym występuje ryzyko ogłoszenia przywołania."
+„W poniedziałek rezerwa nie pokrywa w pełni wymaganej wielkości, w związku
+z czym występuje ryzyko ogłoszenia przywołania." (żadnej godziny, choć fakty ją
+podają; „ryzyko" tam, gdzie wiadomo, co jest, a co nie)
 
 TAK PISZ — to jest UKŁAD, nie zdanie do przepisania. Wypełnij go od nowa:
   PIERWSZE ZDANIE: kiedy (dzień z faktów i konkretne godziny) oraz co stanie się
@@ -125,9 +126,8 @@ ZAKAZANE SŁOWA I ZWROTY:
   „ciągłość pracy", „profil generacji"
 - kolokwializmy: „zrobi się ciasno", „na styk"
 - straszenie: „zagrożenie", „krytyczny", „alarmujący", „niebezpieczny"
-- mgliste pory: „w godzinach wieczornych", „w wyznaczonym przedziale czasowym",
-  a także same przysłówki — „wieczorem", „rano", „po południu", „nocą". Skoro
-  fakty podają godzinę, podaj godzinę; dotyczy to zwłaszcza nagłówka.
+- pora dnia zamiast godziny — ani jej nazwa, ani opis przedziału. Skoro fakty
+  podają godzinę, podaj godzinę; dotyczy to zwłaszcza nagłówka.
 - metafora okna: „okno", „okno ogłoszenia", „okno pozostaje otwarte" — czytelnik
   nie wie, co to okno. Pisz „ogłoszenie może jeszcze nadejść" albo „na ogłoszenie
   jest już za późno".
@@ -186,10 +186,10 @@ ani jednego, powiedz to wprost o całym okresie i na tym poprzestań.
 
 WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:
 TAK NIE PISZ: „Niedziela i wtorek nie wykażą przywołania, mimo
-wystąpienia cienkiego dodatniego marginesu w godzinach wieczornych."
+wystąpienia cienkiego dodatniego marginesu."
 (dni niczego nie wykazują; „mimo" przeciwstawia dwie rzeczy, które sobie nie
-przeczą; „cienki margines" to kalka — margines jest wąski; „w godzinach
-wieczornych" zamiast godziny z faktów)
+przeczą; „cienki margines" to kalka — margines jest wąski; brakuje też godziny,
+którą fakty podają)
 TAK NIE PISZ: „We wtorek nic nie zapowiada przywołania, w środę nic nie
 zapowiada przywołania, w czwartek też nie, a w piątek margines jest wąski." (wyliczanka; trzy pierwsze człony
 niosą jedną informację)
@@ -254,10 +254,10 @@ ani jednego, powiedz to wprost o całym okresie i na tym poprzestań.
 
 WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:
 TAK NIE PISZ: „Niedziela i wtorek nie wykażą przywołania, mimo
-wystąpienia cienkiego dodatniego marginesu w godzinach wieczornych."
+wystąpienia cienkiego dodatniego marginesu."
 (dni niczego nie wykazują; „mimo" przeciwstawia dwie rzeczy, które sobie nie
-przeczą; „cienki margines" to kalka — margines jest wąski; „w godzinach
-wieczornych" zamiast godziny z faktów)
+przeczą; „cienki margines" to kalka — margines jest wąski; brakuje też godziny,
+którą fakty podają)
 TAK NIE PISZ: „We wtorek nic nie zapowiada przywołania, w środę nic nie
 zapowiada przywołania, w czwartek też nie, a w piątek margines jest wąski." (wyliczanka; trzy pierwsze człony
 niosą jedną informację)
@@ -546,7 +546,7 @@ export function validateSummary(
    * request.
    */
   if (
-    /w godzinach (wieczorn|porann|popo|nocn)\w*|w wyznaczonym przedziale|w godzinach szczytu/i.test(
+    /w godzinach (wieczorn|porann|popo|nocn)\w*|w wyznaczonym przedziale|w godzinach szczytu|w (wyznaczonych|określonych|podanych|wskazanych) godzinach/i.test(
       whole
     )
   ) {

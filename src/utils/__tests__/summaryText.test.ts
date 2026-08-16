@@ -355,6 +355,26 @@ describe('parseSummary', () => {
 });
 
 describe('validateSummary', () => {
+  it('never shows the model the vague times it goes on to refuse', () => {
+    // Three runs refused for "w godzinach wieczornych" — a phrase the prompt was
+    // handing over three times, every one of them inside a prohibition. Naming a
+    // phrase to forbid it is how it spreads; this is the fourth time on this
+    // card, so the material goes and the rule stays.
+    const jedna = INSTRUCTION.split('\n').join(' ');
+    expect(jedna).not.toMatch(/w godzinach (wieczorn|porann|popo|nocn)/i);
+    expect(jedna).not.toMatch(/w wyznaczonym przedziale|w (wyznaczonych|określonych) godzinach/i);
+
+    // And the refusal still stands, including the form that used to slip past.
+    for (const outlook of [
+      'We wtorek margines spada w godzinach wieczornych.',
+      'We wtorek przywołanie wchodzi w grę w wyznaczonych godzinach.',
+    ]) {
+      expect(
+        validateSummary({ headline: 'Jutro o 19:00 margines jest wąski.', body: '', outlook }, new Set(['19:00']))
+      ).toEqual({ ok: false, reason: 'mgliste określenie pory zamiast godziny' });
+    }
+  });
+
   it('accepts the date of a day we happen to call by another name', () => {
     // Measured on the night of 17 August: seven consecutive runs refused, and the
     // card stood unchanged for six hours. Nothing had changed in the prompt — at
