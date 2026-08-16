@@ -1,0 +1,20 @@
+/*
+ * The generator scripts, which the browser config never covered.
+ *
+ * `tsconfig.json` includes only `src`, so everything under `scripts/` went
+ * unchecked — and `npm run typecheck` reported success over it. That gap let a
+ * plain ReferenceError reach production on 16 August: a variable was moved into
+ * a function while a line further down still read it, the typecheck passed, and
+ * the job died only on the runs where the answer was accepted.
+ *
+ * Separate from the browser config rather than merged into it, because these
+ * files need Node's globals and the app must never be compiled with them in
+ * scope.
+ */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["scripts", "src"]
+}

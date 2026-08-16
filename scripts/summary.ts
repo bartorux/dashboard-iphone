@@ -256,6 +256,14 @@ const allowedDayNames = facts
 
 const prompt = buildPrompt(facts, HISTORY_DAYS, now);
 
+// Narrowed once, here: inside `ask` the guard above no longer applies and the
+// key is `string | undefined` again — which the browser-only typecheck could
+// not have told us, because it never looked at this file.
+const klucz: string = apiKey;
+
+/** Reported at the end of a successful run, so the quota stays visible. */
+let tokenow: number | undefined;
+
 /**
  * One ask. Network and HTTP failures still end the job on the spot: those are
  * an outage or a rate limit, and asking again straight away neither fixes the
@@ -266,7 +274,7 @@ async function ask(): Promise<string | null> {
     `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
     {
       method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
+      headers: { 'content-type': 'application/json', 'x-goog-api-key': klucz },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: {
@@ -297,6 +305,7 @@ async function ask(): Promise<string | null> {
     usageMetadata?: { totalTokenCount?: number };
   };
 
+  tokenow = payload.usageMetadata?.totalTokenCount;
   return payload.candidates?.[0]?.content?.parts?.[0]?.text ?? null;
 }
 
@@ -344,7 +353,7 @@ const file: SummaryFile = {
 writeFileSync(target, `${JSON.stringify(file, null, 2)}\n`, 'utf8');
 
 console.log('Zapisano public/summary.json');
-console.log(`tokenow: ${payload.usageMetadata?.totalTokenCount ?? '?'}`);
+console.log(`tokenow: ${tokenow ?? '?'}`);
 console.log(renderFacts(facts, HISTORY_DAYS));
 console.log('----');
 console.log(summary.headline);
