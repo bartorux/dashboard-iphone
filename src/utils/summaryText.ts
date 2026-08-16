@@ -660,6 +660,41 @@ export function validateSummary(
     return { ok: false, reason: 'urzędowy żargon rynku mocy' };
   }
 
+  /*
+   * One span stretched over several days.
+   *
+   * Published on 16 August: "we wtorek 18, w czwartek 20 i w piątek 21 rezerwa
+   * spada poniżej wymaganego poziomu między 19:00 a 22:00" — while the three
+   * days ran 20:00-22:00, 19:00-22:00 and 19:00-21:00. The envelope is true of
+   * the set and false of every member but one; on Tuesday nothing happens at
+   * 19:00, and an hour is not a rounding error to anyone deciding whether to be
+   * on shift.
+   *
+   * Deliberately not "no hours beside two days". A sentence that gives EACH day
+   * its own range is precise and useful — "w poniedziałek między 17:00 a 22:00
+   * oraz we wtorek między 20:00 a 22:00" is exactly right, and three such texts
+   * were accepted. What is refused is fewer ranges than days, which is the shape
+   * that cannot be true.
+   */
+  for (const pole of [summary.headline, summary.body, summary.outlook]) {
+    for (const zdanie of pole.split(/(?<=[.!?])\s+/)) {
+      const dni = new Set(
+        (
+          zdanie.match(
+            /\b(?:poniedział|wtor|środ|czwart|piąt|sobot|niedziel)\w*|\b(?:dziś|dzisiaj|jutro)\b/gi
+          ) ?? []
+        ).map((nazwa) => nazwa.toLowerCase().slice(0, 5))
+      );
+      const czasy =
+        zdanie.match(
+          /\d{1,2}:\d{2}\s*(?:-|–|a)\s*\d{1,2}:\d{2}|(?<!\d[:.])\bo\s+\d{1,2}:\d{2}\b/gi
+        ) ?? [];
+      if (dni.size >= 2 && czasy.length > 0 && czasy.length < dni.size) {
+        return { ok: false, reason: 'jeden zakres godzin rozciągnięty na kilka dni' };
+      }
+    }
+  }
+
   const STOPIEN = 'wyraźnie|znacznie|istotnie|mocno|gwałtownie|drastycznie|zdecydowanie';
   // Tied to the comparison itself, not merely to a sentence that mentions a
   // norm somewhere. The first cut allowed 40 characters of anything in between
