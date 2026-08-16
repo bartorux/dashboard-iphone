@@ -43,7 +43,8 @@ import {
   validateSummary,
 } from '../src/utils/summaryText';
 import { dayMonth } from '../src/utils/dateHelpers';
-import { decideRun } from '../src/utils/summaryRun';
+import { askWithRetry, decideRun } from '../src/utils/summaryRun';
+import type { Proba } from '../src/utils/summaryRun';
 import type { Summary } from '../src/utils/summaryText';
 
 const HISTORY_DAYS = 30;
@@ -238,55 +239,6 @@ function giveUp(reason: string): never {
   process.exit(0);
 }
 
-const response = await fetch(
-  `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-  {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: buildPrompt(facts, HISTORY_DAYS, now) }] }],
-      generationConfig: {
-        // Raised from 0.2 for the sake of variety: the verdict rarely moves,
-        // so at the old setting an hourly rewrite produced the same paragraph
-        // and the card stopped being read. The facts are fixed and validation
-        // still refuses any figure, so what varies is wording, never substance.
-        temperature: 0.7,
-        maxOutputTokens: 800,
-        // Already minimal by default on this model, and set explicitly because
-        // raising it measured three times the tokens and truncated the answer:
-        // the reasoning is done in code, so there is nothing here to think about.
-        thinkingConfig: { thinkingLevel: 'minimal' },
-      },
-    }),
-  }
-).catch((error: unknown) => {
-  giveUp(`Blad sieci: ${String(error)}`);
-});
-
-if (!response.ok) {
-  giveUp(`Model odpowiedzial HTTP ${response.status}`);
-}
-
-const payload = (await response.json()) as {
-  candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
-  usageMetadata?: { totalTokenCount?: number };
-};
-
-const text = payload.candidates?.[0]?.content?.parts?.[0]?.text;
-if (!text) giveUp('Model nie zwrocil tekstu');
-
-const summary = parseSummary(text);
-if (!summary) {
-  // Kept raw: an answer that did not parse is exactly the kind we cannot
-  // reconstruct later, and its shape is the whole diagnosis.
-  recordAttempt(
-    { headline: text.slice(0, 400), body: '', outlook: '' },
-    false,
-    'odpowiedz nie ma oczekiwanych pol'
-  );
-  giveUp('Odpowiedz nie ma trzech oczekiwanych pol');
-}
-
 const allowedHours = new Set<string>();
 for (const day of facts) {
   if (day.worstHour) allowedHours.add(day.worstHour);
@@ -302,9 +254,84 @@ const allowedDayNames = facts
   .flatMap((day) => [day.spokenName, dayMonth(day.businessDate)])
   .filter(Boolean);
 
-const verdict = validateSummary(summary, allowedHours, allowedDayNames);
-recordAttempt(summary, verdict.ok, verdict.ok ? undefined : verdict.reason);
-if (!verdict.ok) giveUp(`Odrzucone: ${verdict.reason}`);
+const prompt = buildPrompt(facts, HISTORY_DAYS, now);
+
+/**
+ * One ask. Network and HTTP failures still end the job on the spot: those are
+ * an outage or a rate limit, and asking again straight away neither fixes the
+ * first nor is allowed by the second.
+ */
+async function ask(): Promise<string | null> {
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          // Raised from 0.2 for the sake of variety: the verdict rarely moves,
+          // so at the old setting an hourly rewrite produced the same paragraph
+          // and the card stopped being read. The facts are fixed and validation
+          // still refuses any figure, so what varies is wording, never substance.
+          // It is also what makes a second ask worth anything at all.
+          temperature: 0.7,
+          maxOutputTokens: 800,
+          // Already minimal by default on this model, and set explicitly because
+          // raising it measured three times the tokens and truncated the answer:
+          // the reasoning is done in code, so there is nothing here to think about.
+          thinkingConfig: { thinkingLevel: 'minimal' },
+        },
+      }),
+    }
+  ).catch((error: unknown) => {
+    giveUp(`Blad sieci: ${String(error)}`);
+  });
+
+  if (!response.ok) {
+    giveUp(`Model odpowiedzial HTTP ${response.status}`);
+  }
+
+  const payload = (await response.json()) as {
+    candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+    usageMetadata?: { totalTokenCount?: number };
+  };
+
+  return payload.candidates?.[0]?.content?.parts?.[0]?.text ?? null;
+}
+
+function judge(text: string): Proba<Summary> {
+  const parsed = parseSummary(text);
+  if (!parsed) {
+    // Kept raw: an answer that did not parse is exactly the kind we cannot
+    // reconstruct later, and its shape is the whole diagnosis.
+    return {
+      ok: false,
+      summary: null,
+      reason: 'odpowiedz nie ma oczekiwanych pol',
+      raw: text.slice(0, 400),
+    };
+  }
+
+  const verdict = validateSummary(parsed, allowedHours, allowedDayNames);
+  return verdict.ok
+    ? { ok: true, summary: parsed }
+    : { ok: false, summary: parsed, reason: verdict.reason };
+}
+
+const wynik = await askWithRetry<Summary>(
+  ask,
+  judge,
+  (proba) =>
+    recordAttempt(
+      proba.summary ?? { headline: proba.raw ?? '', body: '', outlook: '' },
+      proba.ok,
+      proba.ok ? undefined : proba.reason
+    )
+);
+
+if (!wynik.ok || !wynik.summary) giveUp(`Odrzucone: ${wynik.reason}`);
+const summary = wynik.summary;
 
 const file: SummaryFile = {
   ...summary,
