@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-13T16:52:20.620Z",
-      "prompt": 34,
-      "accepted": true,
-      "headline": "W poniedziałek 17 sierpnia między 17:00 a 22:00 margines spadnie poniżej zera, lecz przepis pozwala operatorowi nie ogłaszać przywołania.",
-      "body": "Zapotrzebowanie wzrośnie wyraźnie powyżej normy, a fotowoltaika spadnie poniżej normy. Ponieważ do tych godzin zostało więcej niż osiem godzin, ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 18 sierpnia margines spadnie poniżej wymaganego poziomu między 20:00 a 21:00, a w pozostałych dniach nie ma podstaw do przywołania."
-    },
-    {
       "at": "2026-08-13T17:39:51.835Z",
       "prompt": 35,
       "accepted": true,
@@ -595,6 +587,14 @@
       "headline": "We wtorek 18 sierpnia między 20:00 a 22:00 operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, bo minęło mniej czasu, niż wynosi wymagany okres wyprzedzenia.",
       "outlook": "We wtorek 18 sierpnia, czwartek 20 sierpnia i piątek 21 sierpnia rezerwa spada poniżej wymaganego poziomu w godzinach wieczornych, a w pozostałych dniach nic jej nie zapowiada."
+    },
+    {
+      "at": "2026-08-16T16:57:23.512Z",
+      "prompt": 46,
+      "accepted": true,
+      "headline": "We wtorek 18 sierpnia między 20:00 a 22:00 rezerwa spadnie poniżej wymaganego poziomu, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza tej doby systematycznie się pogarsza. Do wyznaczonej godziny zostało więcej czasu, niż wynosi wymagane wyprzedzenie, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 18 sierpnia, czwartek 20 sierpnia i piątek 21 sierpnia margines w niektórych godzinach nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
