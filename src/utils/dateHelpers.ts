@@ -153,6 +153,25 @@ function mondayOf(date: Date): number {
  * The name is settled here rather than left to the model, like every other
  * conclusion on this path: it copies what the facts call the day.
  */
+/**
+ * The day written as a date, whatever we happen to call it out loud.
+ *
+ * `spokenDay` drops the date for today, tomorrow and the current week, which is
+ * right for reading but wrong as a rule about what the model may write: the ISO
+ * date heads every day block in the facts, so the date is something it READ, not
+ * something it invented. On 17 August at midnight Monday turned from
+ * "poniedziałek 17 sierpnia" into "jutro" and half the runs that night were
+ * refused for "a number outside the hours" — the number being 17.
+ */
+export function dayMonth(businessDate: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(businessDate);
+  if (!match) return '';
+  const [, year, month, day] = match;
+  return dayMonthFormat.format(
+    new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)))
+  );
+}
+
 export function spokenDay(businessDate: string, now: Date): string {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(businessDate);
   if (!match) return '';
