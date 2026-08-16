@@ -17,7 +17,17 @@ export interface Summary {
  *
  * Raising this forces exactly one regeneration and nothing more.
  */
-export const PROMPT_VERSION = 46;
+/*
+ * Bumped for a change in the GATE as well as in the prompt.
+ *
+ * Twice this was left alone on the reasoning that the prompt had not changed —
+ * and the second time it kept a false sentence on the card. The key decides
+ * whether the text needs rewriting; a text that the current rules would refuse
+ * needs rewriting by definition, so a new rule has to move the key. Otherwise
+ * the last answer written under the old rules stays published until the data
+ * happens to move, which may be hours.
+ */
+export const PROMPT_VERSION = 47;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
