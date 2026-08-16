@@ -655,8 +655,15 @@ export function validateSummary(
   }
 
   const STOPIEN = 'wyraźnie|znacznie|istotnie|mocno|gwałtownie|drastycznie|zdecydowanie';
+  // Tied to the comparison itself, not merely to a sentence that mentions a
+  // norm somewhere. The first cut allowed 40 characters of anything in between
+  // and refused "rezerwa mocno spadnie przez ubytki i PV poniżej normy" twice in
+  // one morning — there the adverb grades the reserve, whose megawatts the facts
+  // do state, and only the trailing "normy" pulled it in. Two runs lost to that,
+  // and with no retry a lost run means an hour of a stale card.
   const stopniowanie = new RegExp(
-    `\\b(${STOPIEN})\\b[^.]{0,40}norm|norm\\w*[^.]{0,40}\\b(${STOPIEN})\\b|` +
+    `\\b(${STOPIEN})\\b\\s+\\w*\\s*(poniżej|powyżej|przewyższa|przekracza|odbiega)\\s+\\w*\\s*norm|` +
+      `norm\\w*\\s+\\w{0,12}\\s*\\b(${STOPIEN})\\b|` +
       `\\b(${STOPIEN})\\b[^.]{0,15}(pogarsza|poprawia)`,
     'i'
   );

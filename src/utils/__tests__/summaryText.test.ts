@@ -400,6 +400,24 @@ describe('validateSummary', () => {
     }
   });
 
+  it('leaves the adverb alone when it grades something the facts do measure', () => {
+    // The refusal this test exists to prevent: "rezerwa mocno spadnie przez
+    // ubytki i PV poniżej normy" was binned twice in one morning by a rule that
+    // allowed 40 characters of anything between the adverb and the word "norma".
+    // Here the adverb grades the reserve, whose megawatts the facts state — only
+    // the trailing "normy" pulled it in.
+    expect(
+      validateSummary(
+        {
+          headline: 'W środę o 19:00 margines jest wąski.',
+          body: '',
+          outlook: 'O 19:00 rezerwa mocno spadnie przez ubytki i PV poniżej normy.',
+        },
+        new Set(['19:00'])
+      )
+    ).toEqual({ ok: true });
+  });
+
   it('leaves alone a magnitude the numbers do carry', () => {
     // The thirty-day band is a range of actual megawatts, so how far outside it a
     // day sits is a fact, not a grade. Refusing this too would have binned a text
