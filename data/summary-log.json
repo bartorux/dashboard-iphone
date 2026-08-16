@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-13T18:23:27.612Z",
-      "prompt": 37,
-      "accepted": true,
-      "headline": "W poniedziałek 17 sierpnia między 17:00 a 22:00 operator ma prawo nie ogłaszać przywołania.",
-      "body": "Prognoza tej doby pogarsza się z powodu fotowoltaiki poniżej normy przy typowym zapotrzebowaniu, a ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 18 sierpnia między 20:00 a 21:00 operator ma prawo nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw."
-    },
-    {
       "at": "2026-08-13T18:29:10.434Z",
       "prompt": 38,
       "accepted": true,
@@ -595,6 +587,14 @@
       "headline": "W poniedziałek 17 sierpnia między 18:00 a 19:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza tej doby poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 18 sierpnia, czwartek 20 sierpnia i piątek 21 sierpnia przywołanie wchodzi w grę, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-08-16T17:53:08.224Z",
+      "prompt": 47,
+      "accepted": true,
+      "headline": "Sytuacja odbiega od ostatnich dni, bo rezerwa miejscami nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "W poniedziałek 17 sierpnia między 18:00 a 19:00 rezerwa spadnie poniżej wymaganego poziomu, a prognoza tej doby poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 18 sierpnia, czwartek 20 sierpnia i piątek 21 sierpnia margines spada poniżej wymaganego poziomu, natomiast w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
