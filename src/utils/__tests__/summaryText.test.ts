@@ -355,6 +355,18 @@ describe('parseSummary', () => {
 });
 
 describe('validateSummary', () => {
+  it('lets a multi-day DALEJ drop the hours instead of blurring them', () => {
+    // Measured across 72 attempts: with one day named in DALEJ the vague time
+    // never appeared (0/37), with two it appeared twice (2/27), with three it
+    // appeared in half (4/8). The cause is structural — three days, each with
+    // its own ranges, in one sentence — so removing the phrase from the prompt
+    // was necessary and not sufficient. The way out has to be permitted, not
+    // only the shortcut forbidden.
+    const jedna = INSTRUCTION.split('\n').join(' ');
+    expect(jedna).toMatch(/WIĘCEJ NIŻ JEDEN dzień, nie dokładaj im godzin/);
+    expect(jedna).toMatch(/przy dwóch albo więcej NIE podawaj godzin/);
+  });
+
   it('never shows the model the vague times it goes on to refuse', () => {
     // Three runs refused for "w godzinach wieczornych" — a phrase the prompt was
     // handing over three times, every one of them inside a prohibition. Naming a
