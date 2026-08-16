@@ -42,6 +42,7 @@ import {
   parseSummary,
   validateSummary,
 } from '../src/utils/summaryText';
+import { dayMonth } from '../src/utils/dateHelpers';
 import { decideRun } from '../src/utils/summaryRun';
 import type { Summary } from '../src/utils/summaryText';
 
@@ -295,7 +296,11 @@ for (const day of facts) {
   }
 }
 
-const allowedDayNames = facts.map((day) => day.spokenName).filter(Boolean);
+// The spoken name AND the plain date of every visible day. A day the facts
+// contain is never an invented number, however we choose to speak of it.
+const allowedDayNames = facts
+  .flatMap((day) => [day.spokenName, dayMonth(day.businessDate)])
+  .filter(Boolean);
 
 const verdict = validateSummary(summary, allowedHours, allowedDayNames);
 recordAttempt(summary, verdict.ok, verdict.ok ? undefined : verdict.reason);

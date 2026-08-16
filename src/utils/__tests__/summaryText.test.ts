@@ -7,6 +7,7 @@ import {
   validateSummary,
 } from '../summaryText';
 import { assessmentKey, buildFacts } from '../summaryFacts';
+import { dayMonth } from '../dateHelpers';
 import { makePoint } from '../../test/factories';
 
 const pad = (value: number) => String(value).padStart(2, '0');
@@ -354,6 +355,35 @@ describe('parseSummary', () => {
 });
 
 describe('validateSummary', () => {
+  it('accepts the date of a day we happen to call by another name', () => {
+    // Measured on the night of 17 August: seven consecutive runs refused, and the
+    // card stood unchanged for six hours. Nothing had changed in the prompt — at
+    // midnight Monday's spoken name turned from "poniedziałek 17 sierpnia" into
+    // "jutro", so the date stopped being an allowed fragment while the ISO date
+    // at the head of the day block went on handing it over.
+    const dni = ['dziś', 'jutro', 'wtorek 18 sierpnia', dayMonth('2026-08-17')];
+    expect(
+      validateSummary(
+        {
+          headline: 'W poniedziałek 17 sierpnia nadwyżka spadła poniżej 1100 MW o 19:00.',
+          body: '',
+          outlook: 'We wtorek 18 sierpnia nic nie zapowiada przywołania.',
+        },
+        new Set(['19:00']),
+        dni
+      )
+    ).toEqual({ ok: true });
+
+    // And a figure that is genuinely invented still goes.
+    expect(
+      validateSummary(
+        { headline: 'Jutro o 19:00 rezerwa wyniesie 2500 MW.', body: '', outlook: '' },
+        new Set(['19:00']),
+        dni
+      ).ok
+    ).toBe(false);
+  });
+
   it('refuses a magnitude the facts never state', () => {
     // The drivers layer says only that a factor fell outside its own 10-90 band,
     // and the movement layer only that a day is sliding. Neither says by how
