@@ -27,7 +27,7 @@ export interface Summary {
  * the last answer written under the old rules stays published until the data
  * happens to move, which may be hours.
  */
-export const PROMPT_VERSION = 47;
+export const PROMPT_VERSION = 48;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -177,8 +177,11 @@ cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
 TREŚĆ: DWA zdania, każde z osobnym zadaniem.
   PIERWSZE — to, co fakty podają o wskazanej godzinie: albo że prognoza tej doby
-    się pogarsza lub poprawia, albo dlaczego akurat ta godzina jest
-    najciaśniejsza. Fakty podadzą JEDNO z dwóch, nigdy oba naraz.
+    JESZCZE SIĘ USTALA, albo że się pogarsza lub poprawia, albo dlaczego akurat
+    ta godzina jest najciaśniejsza. Fakty podadzą JEDNO z trzech, nigdy dwa
+    naraz. Jeśli podadzą, że doba się jeszcze ustala, NIE POMIJAJ tego — to
+    znaczy, że prognoza raz pokrywa wymagany poziom, raz nie, więc czytelnik
+    z samego stanu nie wie, czy się szykować, czy sprawdzić później.
   DRUGIE — czy ogłoszenie może jeszcze nadejść.
 NIE powtarzaj tu stanu prawnego: nagłówek już powiedział, czy operator ma prawo
 nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie wnosi.
@@ -240,8 +243,11 @@ cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
 TREŚĆ: DWA zdania, każde z osobnym zadaniem.
   PIERWSZE — to, co fakty podają o wskazanej godzinie: albo że prognoza tej doby
-    się pogarsza lub poprawia, albo dlaczego akurat ta godzina jest
-    najciaśniejsza. Fakty podadzą JEDNO z dwóch, nigdy oba naraz.
+    JESZCZE SIĘ USTALA, albo że się pogarsza lub poprawia, albo dlaczego akurat
+    ta godzina jest najciaśniejsza. Fakty podadzą JEDNO z trzech, nigdy dwa
+    naraz. Jeśli podadzą, że doba się jeszcze ustala, NIE POMIJAJ tego — to
+    znaczy, że prognoza raz pokrywa wymagany poziom, raz nie, więc czytelnik
+    z samego stanu nie wie, czy się szykować, czy sprawdzić później.
   DRUGIE — czy ogłoszenie może jeszcze nadejść.
 NIE powtarzaj tu stanu prawnego: nagłówek już powiedział, czy operator ma prawo
 nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie wnosi.
@@ -393,7 +399,7 @@ export function hasSomethingToExplain(facts: DayFacts[]): boolean {
   // Movement counts for the same reason a cause does, and rather more: a calm
   // day whose forecast is sliding is the one case where the card can say
   // something before the margin itself has anything to show.
-  return lead?.drivers != null || lead?.movement != null;
+  return lead?.drivers != null || lead?.forecastNote != null;
 }
 
 export function buildPrompt(

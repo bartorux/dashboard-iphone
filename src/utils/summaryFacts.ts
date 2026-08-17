@@ -91,8 +91,13 @@ export interface DayFacts {
    * ahead, so a forecast sliding the wrong way precedes it by more than a day —
    * and the margin on the card only ever says where the forecast stands, never
    * which way it is going.
+   *
+   * Carries one of TWO findings, never both: which way the day is drifting, or
+   * that it has not settled at all. Named for the note rather than for movement
+   * because a day crossing back and forth is precisely the case where drift is
+   * the wrong thing to report — a median of windows would call it a calm slide.
    */
-  movement: string | null;
+  forecastNote: string | null;
 }
 
 /**
@@ -149,7 +154,7 @@ export function buildFacts(
    * job, and nothing in the browser has it or needs it. An empty map is the
    * normal state everywhere except that job.
    */
-  movements: Map<string, string> = new Map()
+  forecastNotes: Map<string, string> = new Map()
 ): DayFacts[] {
   const ahead = upcoming(allData, now);
 
@@ -273,7 +278,7 @@ export function buildFacts(
         worstStanding: worst
           ? standingFor(worst.margin, distribution.get(worst.point.hourLabel))
           : 'unknown',
-        movement: movements.get(businessDate) ?? null,
+        forecastNote: forecastNotes.get(businessDate) ?? null,
       };
     });
 }
@@ -434,9 +439,9 @@ export function assessmentKey(facts: DayFacts[]): string {
    * that.
    */
   const lead = leadingDay(facts);
-  const widocznaPrzyczyna = lead && !lead.movement ? lead.drivers : null;
+  const widocznaPrzyczyna = lead && !lead.forecastNote ? lead.drivers : null;
   const cause = lead
-    ? `${widocznaPrzyczyna ?? '-'}/${lead.worstStanding}/${lead.movement ?? '-'}`
+    ? `${widocznaPrzyczyna ?? '-'}/${lead.worstStanding}/${lead.forecastNote ?? '-'}`
     : '-';
 
   return `${days}#${cause}`;
@@ -667,7 +672,7 @@ export function renderFacts(facts: DayFacts[], days: number): string {
      * card that precedes the announcement; the cause only ever describes where
      * things stand.
      */
-    if (isLead && day.drivers && !day.movement) {
+    if (isLead && day.drivers && !day.forecastNote) {
       lines.push(`    dlaczego akurat ta godzina: ${day.drivers}`);
 
       /*
@@ -709,7 +714,7 @@ export function renderFacts(facts: DayFacts[], days: number): string {
      * said nothing about the slide, and that is the case this whole layer exists
      * for. A mutation caught it; the fixture happened to carry both.
      */
-    if (isLead && day.movement) lines.push(`    ${day.movement}`);
+    if (isLead && day.forecastNote) lines.push(`    ${day.forecastNote}`);
 
     // On its own line, and labelled. Sharing a line with the state clause, the
     // model read the two as cause and effect and wrote that the surplus holding

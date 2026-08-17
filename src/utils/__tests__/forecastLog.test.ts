@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   EMPTY_LOG,
+  crossingsFor,
+  describeSettling,
   appendEntry,
   parseLog,
   sameDays,
@@ -232,6 +234,61 @@ describe('parseLog', () => {
     };
 
     expect(parseLog(raw).entries).toHaveLength(1);
+  });
+});
+
+describe('crossingsFor i describeSettling', () => {
+  /** A log of one day whose worst margin walks through the given values. */
+  const logZ = (wartosci: number[]) => ({
+    entries: wartosci.map((m, i) => ({
+      at: new Date(Date.UTC(2026, 7, 11, i)).toISOString(),
+      days: [
+        { businessDate: WEDNESDAY, worstMargin: m, averageMargin: m, worstHour: '20:00' },
+      ],
+    })),
+  });
+
+  // Written out rather than generated. The first version of this fixture used a
+  // formula and produced three crossings where it claimed one — the test failed
+  // for a reason that had nothing to do with the code under it.
+  const DWA_PRZEJSCIA = [-300, -300, -300, -300, -300, -300, -300, -300, -300, 300, 300, -300];
+  const JEDNO_PRZEJSCIE = [-300, -300, -300, -300, -300, -300, -300, -300, -300, -300, -300, 300];
+
+  it('speaks up once a day has changed its mind twice', () => {
+    /*
+     * The case this exists for. On 16 August the forecast for the next day went
+     * from -1935 MW to +406 MW between 10:55 and 11:53 — the day changed state
+     * inside one hour, and the card said only that it was sliding.
+     */
+    expect(crossingsFor(logZ(DWA_PRZEJSCIA), WEDNESDAY)).toBe(2);
+    expect(describeSettling(crossingsFor(logZ(DWA_PRZEJSCIA), WEDNESDAY))).toContain(
+      'jeszcze się ustala'
+    );
+
+    expect(crossingsFor(logZ(JEDNO_PRZEJSCIE), WEDNESDAY)).toBe(1);
+    expect(describeSettling(crossingsFor(logZ(JEDNO_PRZEJSCIE), WEDNESDAY))).toBeNull();
+  });
+
+  it('ignores a day that swings wildly without changing state', () => {
+    // -2000 to -100 is a bigger move than anything above, and means nothing
+    // here: the reserve fails to cover the required level throughout, so the
+    // reader's answer never changes.
+    const dzikie = [-2000, -100, -1900, -200, -1800, -150, -2000, -120, -1700, -300, -1950, -180];
+    expect(crossingsFor(logZ(dzikie), WEDNESDAY)).toBe(0);
+    expect(describeSettling(crossingsFor(logZ(dzikie), WEDNESDAY))).toBeNull();
+  });
+
+  it('counts only the recent window, not the whole series', () => {
+    // A day that thrashed yesterday and has held steady since HAS settled.
+    // Without this the warning would outlive the thing it warns about — the
+    // assertion catches a window taken from the start of the series.
+    const dawno = [300, -300, 300, -300, 300, -300, ...Array(12).fill(-500)];
+    expect(crossingsFor(logZ(dawno), WEDNESDAY)).toBe(0);
+  });
+
+  it('says nothing until there are enough readings', () => {
+    expect(crossingsFor(logZ([300, -300, 300, -300]), WEDNESDAY)).toBeNull();
+    expect(describeSettling(null)).toBeNull();
   });
 });
 

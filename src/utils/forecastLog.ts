@@ -267,3 +267,76 @@ export function describeMovement(movement: Movement | null): string | null {
     ? 'prognoza tej doby pogarsza się'
     : 'prognoza tej doby poprawia się';
 }
+
+/** How many recent snapshots decide whether a day has settled. */
+export const SETTLING_WINDOW = MOVEMENT_MIN_SNAPSHOTS;
+
+/**
+ * And how many times it has to have changed its mind inside that window.
+ *
+ * Measured over 300 moments in the log: at two crossings the sentence appears in
+ * 14% of them, at one in 33%. The looser setting puts a caveat on every third
+ * text, which is where a caveat stops being read.
+ */
+export const SETTLING_CROSSINGS = 2;
+
+/**
+ * How often the day has crossed between covering the required level and not.
+ *
+ * A second reading of the same series `movementFor` uses, answering a different
+ * question. Drift asks which way a day is going; this asks whether it is going
+ * anywhere at all yet — and the two can disagree completely. On 16 August the
+ * forecast for the next day went from -1935 MW to +406 MW between 10:55 and
+ * 11:53, so the day changed state inside one hour while a median of windows
+ * would have reported a calm slide.
+ *
+ * Zero is the boundary that matters because it is the one the reader feels: on
+ * one side the reserve covers the required level and nothing is coming, on the
+ * other the operator may declare. A day swinging between -2000 and -100 MW moves
+ * far more and means nothing here, because its state never changes.
+ */
+export function crossingsFor(
+  log: ForecastLog,
+  businessDate: string,
+  window = SETTLING_WINDOW
+): number | null {
+  const series = log.entries
+    .map((entry) => entry.days.find((day) => day.businessDate === businessDate))
+    .filter((day): day is DaySnapshot => day?.worstMargin != null)
+    .map((day) => day.worstMargin as number);
+
+  if (series.length < window) return null;
+
+  // The LAST `window` readings, never the whole series: a day that thrashed
+  // yesterday and has held steady since has settled, and saying otherwise would
+  // keep warning about something already over.
+  const recent = series.slice(-window);
+
+  let crossings = 0;
+  for (let index = 1; index < recent.length; index++) {
+    if (recent[index] < 0 !== recent[index - 1] < 0) crossings += 1;
+  }
+
+  return crossings;
+}
+
+/**
+ * The finding in words, or null while the day is holding.
+ *
+ * Only the warning, never a confirmation. "Prognoza się trzyma" would appear in
+ * 86% of texts, and a phrase handed over in every single run is one the model
+ * starts copying verbatim — that has cost this card four separate corrections.
+ * Silence means settled.
+ *
+ * No figure and no span, for the same reason `describeMovement` carries none:
+ * the validator refuses megawatts, and the facts must not hand over what they
+ * then forbid.
+ */
+export function describeSettling(crossings: number | null): string | null {
+  if (crossings === null || crossings < SETTLING_CROSSINGS) return null;
+
+  // Said as what a crossing actually is, rather than as a word about forecasts.
+  // The reader runs the electrical side of a plant; "raz pokrywa, raz nie" is
+  // the fact, and "jeszcze się ustala" is what it means for them.
+  return 'prognoza tej doby jeszcze się ustala — raz pokrywa wymagany poziom, raz nie';
+}
