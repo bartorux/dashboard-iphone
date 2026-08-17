@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-14T14:00:29.872Z",
-      "prompt": 38,
-      "accepted": false,
-      "reason": "tekst zawiera liczbę spoza godzin",
-      "headline": "Poniedziałek 17 sierpnia przynosi podstawy do przywołania, ponieważ nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do godziny 19:00 zostało więcej czasu niż wymagane ośmiogodzinne wyprzedzenie.",
-      "outlook": "We wtorek 18 sierpnia między 19:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale przepis pozwala operatorowi nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw."
-    },
-    {
-      "at": "2026-08-14T15:27:20.104Z",
-      "prompt": 38,
-      "accepted": true,
-      "headline": "W poniedziałek 17 sierpnia przywołanie powinno zostać ogłoszone w godzinach 19:00-22:00.",
-      "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie.",
-      "outlook": "We wtorek 18 sierpnia między 19:00 a 21:00 operator ma prawo nie ogłaszać przywołania, a w pozostałych dniach nie ma podstaw."
-    },
-    {
       "at": "2026-08-14T16:10:31.219Z",
       "prompt": 41,
       "accepted": false,
@@ -596,6 +579,24 @@
       "headline": "W czwartek 20 sierpnia operator może ogłosić przywołanie, ale nie musi, bo nadwyżka w systemie trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, bo do godziny krytycznej zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie.",
       "outlook": "W czwartek 20 sierpnia między 19:00 a 21:00 oraz w piątek 21 sierpnia o 20:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-08-17T04:23:40.667Z",
+      "prompt": 47,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "Operator może ogłosić przywołanie we wtorek, czwartek i piątek, choć zachowuje pełną swobodę decyzji.",
+      "body": "We wtorek o 20:00 PV spadnie poniżej normy, podczas gdy zapotrzebowanie utrzyma typowy poziom. Na ogłoszenie wciąż pozostaje wystarczająco dużo czasu.",
+      "outlook": "We wtorek, czwartek i piątek przywołanie wchodzi w grę między 19:00 a 22:00, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-08-17T04:23:40.667Z",
+      "prompt": 47,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W najbliższych dniach w określonych godzinach operator może ogłosić przywołanie, ale nie musi.",
+      "body": "We wtorek o 20:00 PV spada poniżej normy, a zapotrzebowanie pozostaje typowe. Ogłoszenie może jeszcze nadejść, ponieważ upłynęło mniej czasu niż wymaga przepis.",
+      "outlook": "Wtorek, czwartek i piątek przynoszą godziny, w których przywołanie wchodzi w grę, a w pozostałych dniach nic go nie zapowiada."
     }
   ]
 }
