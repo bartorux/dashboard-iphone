@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-14T16:10:31.219Z",
-      "prompt": 41,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 200 znaków",
-      "headline": "W poniedziałek 17 sierpnia o 20:00 operator może ogłosić przywołanie bez przepisowego odstępstwa, bo nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, bo zostało więcej czasu niż wymagane ośmiogodzinne wyprzedzenie.",
-      "outlook": "We wtorek 18 sierpnia w godzinach 19:00-21:00 operator może ogłosić przywołanie, ale przepis pozwala je pominąć, dopóki nadwyżka trzyma się powyżej progu 1100 MW, a w pozostałych dniach nie ma podstaw."
-    },
-    {
       "at": "2026-08-14T16:14:06.879Z",
       "prompt": 41,
       "accepted": true,
@@ -597,6 +588,14 @@
       "headline": "W najbliższych dniach w określonych godzinach operator może ogłosić przywołanie, ale nie musi.",
       "body": "We wtorek o 20:00 PV spada poniżej normy, a zapotrzebowanie pozostaje typowe. Ogłoszenie może jeszcze nadejść, ponieważ upłynęło mniej czasu niż wymaga przepis.",
       "outlook": "Wtorek, czwartek i piątek przynoszą godziny, w których przywołanie wchodzi w grę, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-08-17T05:19:31.895Z",
+      "prompt": 47,
+      "accepted": true,
+      "headline": "Między 18:00 a 19:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW. Operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza tej doby poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek i czwartek oraz w piątek przywołanie wchodzi w grę, a w pozostałych dniach nic go nie zapowiada."
     }
   ]
 }
