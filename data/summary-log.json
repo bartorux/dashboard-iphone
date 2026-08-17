@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-15T13:16:15.564Z",
-      "prompt": 43,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 17 sierpnia nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00, więc operator może ogłosić przywołanie bez zachowania dawnego wyboru.",
-      "body": "Prognoza tej doby systematycznie się pogarsza. Ogłoszenie może jeszcze nadejść w każdej chwili.",
-      "outlook": "W poniedziałek 17 sierpnia, we wtorek 18 sierpnia oraz w czwartek 20 sierpnia margines spada poniżej zera w godzinach wieczornych, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-08-15T13:56:38.734Z",
-      "prompt": 43,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 17 sierpnia nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00, co oznacza, że operator stracił możliwość pominięcia przywołania.",
-      "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść w każdym z przedziałów.",
-      "outlook": "We wtorek 18 sierpnia oraz w czwartek 20 sierpnia operator może ogłosić przywołanie w godzinach wieczornych, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
       "at": "2026-08-15T14:56:30.100Z",
       "prompt": 43,
       "accepted": true,
@@ -605,6 +587,23 @@
       "headline": "W czwartek 20 sierpnia między 19:00 a 21:00 operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, bo minęło mniej czasu, niż wymaga przepis.",
       "outlook": "W piątek 21 sierpnia między 18:00 a 22:00 margines też spada, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-17T19:14:49.161Z",
+      "prompt": 48,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W najbliższych dniach operator ma wybór, czy ogłosić przywołanie w wyznaczonych godzinach.",
+      "body": "We wtorek prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do wyznaczonych godzin pozostało dość czasu.",
+      "outlook": "We wtorek, czwartek i piątek operator może ogłosić przywołanie między 16:00 a 22:00, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-08-17T19:14:49.161Z",
+      "prompt": 48,
+      "accepted": true,
+      "headline": "Operator może ogłosić przywołanie, ale nie musi, we wtorek, czwartek i piątek.",
+      "body": "Prognoza jutrzejszej doby jeszcze się ustala, bo raz rezerwa pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść w każdym z tych dni.",
+      "outlook": "We wtorek, czwartek i piątek przywołanie wchodzi w grę, a w pozostałych dniach nic go nie zapowiada."
     }
   ]
 }
