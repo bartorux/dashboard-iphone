@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-15T09:55:49.616Z",
-      "prompt": 43,
-      "accepted": true,
-      "headline": "W poniedziałek 17 sierpnia nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00, więc operator może ogłosić przywołanie bez zachowania tego ograniczenia.",
-      "body": "Prognoza poniedziałkowej doby pogarsza się. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało więcej czasu niż osiem godzin.",
-      "outlook": "We wtorek 18 sierpnia między 20:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-08-15T10:55:27.522Z",
-      "prompt": 43,
-      "accepted": true,
-      "headline": "W poniedziałek 17 sierpnia nadwyżka spadnie poniżej progu 1100 MW między 19:00 a 21:00.",
-      "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 17 sierpnia oraz we wtorek 18 sierpnia margines spada poniżej wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-15T11:53:33.034Z",
       "prompt": 43,
       "accepted": true,
@@ -604,6 +588,23 @@
       "headline": "W czwartek i piątek prognoza odbiega od normy, a operator ma wybór, czy ogłosić przywołanie.",
       "body": "W czwartek prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek między 19:00 a 21:00 oraz w piątek między 18:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-08-17T17:38:51.026Z",
+      "prompt": 48,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W czwartek i piątek marginesy miejscami mocno odbiegają od typowych wartości z ostatnich trzydziestu dni.",
+      "body": "W czwartek prognoza tej doby pogarsza się, a rezerwa nie pokrywa wymaganego poziomu między 19:00 a 21:00. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało więcej czasu niż wymaga przepis.",
+      "outlook": "W czwartek i piątek w godzinach wieczornych operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-08-17T17:38:51.026Z",
+      "prompt": 48,
+      "accepted": true,
+      "headline": "W czwartek i piątek margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "W czwartek prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało więcej czasu niż wymaga przepis.",
+      "outlook": "W czwartek między 19:00 a 21:00 i w piątek między 18:00 a 22:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
     }
   ]
 }
