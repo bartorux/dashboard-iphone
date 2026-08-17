@@ -680,26 +680,48 @@ export function validateSummary(
    * 19:00, and an hour is not a rounding error to anyone deciding whether to be
    * on shift.
    *
-   * Deliberately not "no hours beside two days". A sentence that gives EACH day
-   * its own range is precise and useful — "w poniedziałek między 17:00 a 22:00
-   * oraz we wtorek między 20:00 a 22:00" is exactly right, and three such texts
-   * were accepted. What is refused is fewer ranges than days, which is the shape
-   * that cannot be true.
+   * Aimed at ONE shape, after the first cut proved far too eager. That version
+   * counted every day name in the sentence and demanded a time apiece, which is
+   * wrong twice over: the days in the closing "w pozostałych dniach" clause
+   * carry no claim and need no hour, and the time pattern missed both "od 20:00
+   * do 21:00" and bare hours in a list. Measured over a day of runs, it refused
+   * eight texts of which five said nothing false, and cost three runs outright.
+   *
+   * What remains is the shape that cannot be true: a LIST of days joined by
+   * nothing but commas and conjunctions, followed by a SINGLE range, with no
+   * other clock time in the sentence. "We wtorek, czwartek i piątek między 19:00
+   * a 22:00" claims one span of three days that ran 20:00-22:00, 19:00-21:00 and
+   * 19:00-22:00.
+   *
+   * A day given its own range stays — "w poniedziałek między 17:00 a 22:00 oraz
+   * we wtorek między 20:00 a 22:00" is precise and useful. So does a range that
+   * belongs to one day while others are merely named: "w piątek między 20:00
+   * a 21:00 …, natomiast w poniedziałek, wtorek i środę nic nie zapowiada".
+   *
+   * Checked against the whole log: three texts refused, every one of them
+   * stating a span for days that did not share it.
    */
+  const DZIEN =
+    '(?:poniedział\\w*|wtor\\w*|środ\\w*|czwart\\w*|piąt\\w*|sobot\\w*|niedziel\\w*|dziś|dzisiaj|jutro)';
+  // The date may ride along with the day name in either form the model reaches
+  // for, and must not break the list apart.
+  const DATA = '(?:\\s+\\d{1,2}\\s+\\p{L}+|\\s+\\d{4}-\\d{2}-\\d{2})?';
+  // Nothing on the clock may stand between the list and the range. That is what
+  // separates a shared span from days being told apart: "odpowiednio o 18:00,
+  // 20:00 oraz między 19:00 a 22:00" gives each day its own time and the gap
+  // shows it. Counting clock times across the whole sentence was the first
+  // attempt at this and was strictly worse — it also let a genuine shared span
+  // through whenever some other day's hour appeared later in the sentence.
+  const ODSTEP = '(?:(?!\\d{1,2}:\\d{2})[^.]){0,60}?';
+  const wspolnyZakres = new RegExp(
+    `${DZIEN}${DATA}(?:\\s*(?:,|i|oraz)\\s*(?:we\\s+|w\\s+)?${DZIEN}${DATA})+` +
+      `${ODSTEP}(?:między|od)\\s+\\d{1,2}:\\d{2}\\s+(?:a|do)\\s+\\d{1,2}:\\d{2}`,
+    'iu'
+  );
+
   for (const pole of [summary.headline, summary.body, summary.outlook]) {
     for (const zdanie of pole.split(/(?<=[.!?])\s+/)) {
-      const dni = new Set(
-        (
-          zdanie.match(
-            /\b(?:poniedział|wtor|środ|czwart|piąt|sobot|niedziel)\w*|\b(?:dziś|dzisiaj|jutro)\b/gi
-          ) ?? []
-        ).map((nazwa) => nazwa.toLowerCase().slice(0, 5))
-      );
-      const czasy =
-        zdanie.match(
-          /\d{1,2}:\d{2}\s*(?:-|–|a)\s*\d{1,2}:\d{2}|(?<!\d[:.])\bo\s+\d{1,2}:\d{2}\b/gi
-        ) ?? [];
-      if (dni.size >= 2 && czasy.length > 0 && czasy.length < dni.size) {
+      if (wspolnyZakres.test(zdanie)) {
         return { ok: false, reason: 'jeden zakres godzin rozciągnięty na kilka dni' };
       }
     }

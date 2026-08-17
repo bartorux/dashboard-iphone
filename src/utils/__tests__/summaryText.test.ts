@@ -359,8 +359,14 @@ describe('validateSummary', () => {
     // Published on 16 August with the three days running 20:00-22:00,
     // 19:00-22:00 and 19:00-21:00. The envelope is true of the set and false of
     // every member but one — on Tuesday nothing happens at 19:00.
-    const dni = ['wtorek 18 sierpnia', 'czwartek 20 sierpnia', 'piątek 21 sierpnia'];
-    const godziny = new Set(['19:00', '20:00', '21:00', '22:00']);
+    const dni = [
+      'poniedziałek 17 sierpnia',
+      'wtorek 18 sierpnia',
+      'środa 19 sierpnia',
+      'czwartek 20 sierpnia',
+      'piątek 21 sierpnia',
+    ];
+    const godziny = new Set(['18:00', '19:00', '20:00', '21:00', '22:00']);
     expect(
       validateSummary(
         {
@@ -368,6 +374,38 @@ describe('validateSummary', () => {
           body: '',
           outlook:
             'We wtorek 18 sierpnia, w czwartek 20 sierpnia i w piątek 21 sierpnia rezerwa spada poniżej wymaganego poziomu między 19:00 a 22:00.',
+        },
+        godziny,
+        dni
+      )
+    ).toEqual({ ok: false, reason: 'jeden zakres godzin rozciągnięty na kilka dni' });
+
+    // The same shape written the other way round. "od 19:00 do 21:00" is a range
+    // as much as "między 19:00 a 21:00", and the first cut of this rule knew only
+    // the second — which is how one correct text was refused for a form the
+    // pattern could not see.
+    expect(
+      validateSummary(
+        {
+          headline: 'We wtorek 18 sierpnia o 20:00 margines jest najwęższy.',
+          body: '',
+          outlook: 'We wtorek 18 sierpnia i w czwartek 20 sierpnia od 19:00 do 21:00 operator ma wybór.',
+        },
+        godziny,
+        dni
+      )
+    ).toEqual({ ok: false, reason: 'jeden zakres godzin rozciągnięty na kilka dni' });
+
+    // The first cut counted clock times across the whole sentence and so let
+    // this one through: the span really is shared by two days, and the third
+    // day's hour further along says nothing about that.
+    expect(
+      validateSummary(
+        {
+          headline: 'We wtorek 18 sierpnia o 20:00 margines jest najwęższy.',
+          body: '',
+          outlook:
+            'We wtorek 18 sierpnia i w czwartek 20 sierpnia między 19:00 a 21:00 operator ma wybór, a w piątek 21 sierpnia o 22:00 margines jest wąski.',
         },
         godziny,
         dni
@@ -402,6 +440,35 @@ describe('validateSummary', () => {
         dni
       )
     ).toEqual({ ok: true });
+
+    // Every shape below was refused by the first cut of this rule over one day
+    // of runs — eight refusals, five of them saying nothing false, three runs
+    // lost outright. They are the reason the rule now aims at one shape only.
+    const przechodzi = [
+      // "od X do Y" is a range too; the first pattern only knew "między X a Y".
+      'W czwartek 20 sierpnia między 19:00 a 21:00 oraz w piątek 21 sierpnia od 20:00 do 21:00 operator ma wybór.',
+      // The hour belongs to Friday alone; the days after it carry no claim and
+      // need no hour of their own.
+      'W piątek 21 sierpnia między 20:00 a 21:00 operator ma wybór, natomiast w poniedziałek 17 sierpnia, we wtorek 18 sierpnia i w środę 19 sierpnia nic nie zapowiada przywołania.',
+      // Three days, three times, told apart by "odpowiednio".
+      'W poniedziałek 17 sierpnia, we wtorek 18 sierpnia i w piątek 21 sierpnia operator może ogłosić przywołanie odpowiednio o 18:00, 20:00 oraz między 19:00 a 22:00.',
+      // A day named without an hour is an omission, never a false claim.
+      'W czwartek 20 sierpnia między 19:00 a 21:00 oraz w piątek 21 sierpnia operator ma wybór.',
+    ];
+    // Told apart by the times themselves: nothing on the clock may stand between
+    // the day list and the range for the sentence to read as one shared span.
+    przechodzi.push(
+      'W poniedziałek 17 sierpnia i we wtorek 18 sierpnia odpowiednio o 18:00 oraz między 19:00 a 22:00 operator ma wybór.'
+    );
+    for (const outlook of przechodzi) {
+      expect(
+        validateSummary(
+          { headline: 'We wtorek 18 sierpnia o 20:00 margines jest najwęższy.', body: '', outlook },
+          godziny,
+          dni
+        )
+      ).toEqual({ ok: true });
+    }
   });
 
   it('lets a multi-day DALEJ drop the hours instead of blurring them', () => {
