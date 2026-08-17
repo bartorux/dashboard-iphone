@@ -24,7 +24,9 @@ import { visibleBusinessDates } from '../src/utils/dayWindow';
 import {
   EMPTY_LOG,
   appendEntry,
+  crossingsFor,
   describeMovement,
+  describeSettling,
   movementFor,
   parseLog,
   snapshotDays,
@@ -132,15 +134,24 @@ const points = processData(forecast);
 if (!dryRun) recordForecast(points, now);
 
 /*
- * How each day has been moving, read back from the log this job has been
+ * What the log says about each day, read back from the file this job has been
  * writing. Empty on the first runs, and empty forever in the browser — nothing
  * there has the file, and nothing there needs it.
+ *
+ * A day that has NOT SETTLED wins over the direction it is drifting, and that
+ * ordering is the point rather than a preference. Drift is a median of windows,
+ * so on a day crossing back and forth it reports a calm slide: on 16 August the
+ * forecast for the next day went from -1935 MW to +406 MW between 10:55 and
+ * 11:53, and "prognoza pogarsza się" would have been the reassuring falsehood.
+ * Where the answer itself keeps changing, that is the thing worth saying.
  */
 const ruch = new Map<string, string>();
 try {
   const zapisane = parseLog(JSON.parse(readFileSync(logTarget, 'utf8')));
   for (const businessDate of visibleBusinessDates(now)) {
-    const slowa = describeMovement(movementFor(zapisane, businessDate));
+    const slowa =
+      describeSettling(crossingsFor(zapisane, businessDate)) ??
+      describeMovement(movementFor(zapisane, businessDate));
     if (slowa) ruch.set(businessDate, slowa);
   }
 } catch {

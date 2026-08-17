@@ -229,9 +229,12 @@ describe('prompt bez wiersza TREŚĆ', () => {
      * say "movement, or failing that the cause" while the facts printed both —
      * so the model welded them: "prognoza pogarsza się Z POWODU fotowoltaiki
      * poniżej normy", a causal claim the data cannot support. The facts give one
-     * or the other now, and the instruction says so.
+     * or the other now, and the instruction says so. Three alternatives since
+     * the log gained a reading for a day that has not settled at all — still
+     * exactly one of them per run.
      */
-    expect(prompt).toContain('JEDNO z dwóch, nigdy oba naraz');
+    expect(prompt).toContain('JEDNO z trzech, nigdy dwa');
+    expect(prompt).toContain('JESZCZE SIĘ USTALA');
   });
 
   it('throws rather than quietly leaving the instruction unchanged', () => {

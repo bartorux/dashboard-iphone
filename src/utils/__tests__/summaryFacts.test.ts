@@ -499,9 +499,38 @@ describe('assessmentKey', () => {
       new Map([['2026-08-10', 'prognoza tej doby pogarsza się']])
     );
 
-    expect(zRuchem[0].movement).toBe('prognoza tej doby pogarsza się');
-    expect(bez[0].movement).toBeNull();
+    expect(zRuchem[0].forecastNote).toBe('prognoza tej doby pogarsza się');
+    expect(bez[0].forecastNote).toBeNull();
     expect(assessmentKey(zRuchem)).not.toBe(assessmentKey(bez));
+  });
+
+  it('lets an unsettled day take the slot the drift would have had', () => {
+    /*
+     * A day crossing back and forth is exactly where drift lies: a median of
+     * windows smooths the swing and reports a calm slide. On 16 August the
+     * forecast for the next day went from -1935 MW to +406 MW inside one hour.
+     *
+     * The note travels the same channel as the drift, so everything downstream
+     * already holds: the cause steps aside rather than welding itself to a
+     * forecast that has not settled, and the fingerprint moves with it so the
+     * card cannot keep publishing yesterday's conclusion.
+     */
+    const USTALA = 'prognoza tej doby jeszcze się ustala — raz pokrywa wymagany poziom, raz nie';
+    const nieustalona = buildFacts(
+      [...doba(2000)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      undefined,
+      new Map([['2026-08-10', USTALA]])
+    );
+    const bezNiej = buildFacts([...doba(2000)], HISTORY_WITH_MIX, BEFORE_ALL);
+
+    const tekst = renderFacts(nieustalona, 30);
+    expect(tekst).toContain('jeszcze się ustala');
+    // The cause would otherwise be printed for the leading day; it is withheld
+    // while the forecast is still moving, in either sense of moving.
+    expect(tekst).not.toMatch(/poniżej normy|powyżej normy/);
+    expect(assessmentKey(nieustalona)).not.toBe(assessmentKey(bezNiej));
   });
 
   it('ignores a cause the model never sees', () => {
@@ -831,7 +860,7 @@ describe('renderFacts', () => {
     const facts = buildFacts([...dayOf('2026-08-10', 6000)], HISTORY_WITH_MIX, BEFORE_ALL);
     const tekst = renderFacts(facts, 30);
 
-    expect(facts[0].movement).toBeNull();
+    expect(facts[0].forecastNote).toBeNull();
     expect(tekst).not.toContain('null');
     expect(tekst).not.toContain('prognoza tej doby');
   });
