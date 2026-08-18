@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-16T13:57:19.204Z",
-      "prompt": 44,
-      "accepted": true,
-      "headline": "We wtorek 18 sierpnia i czwartek 20 sierpnia operator zachowuje wybór co do ogłoszenia przywołania między 20:00 a 22:00 oraz 19:00 a 21:00.",
-      "body": "Prognoza wtorkowej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ upłynęło mniej niż osiem godzin do wyznaczonego przedziału.",
-      "outlook": "We wtorek 18 sierpnia i czwartek 20 sierpnia rezerwa spada poniżej wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-08-16T14:56:31.866Z",
-      "prompt": 44,
-      "accepted": true,
-      "headline": "We wtorek 18 sierpnia operator może ogłosić przywołanie, ale nie musi w godzinach 20:00-22:00.",
-      "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, bo minęło mniej czasu, niż wymaga przepis.",
-      "outlook": "We wtorek 18 sierpnia i czwartek 20 sierpnia margines spada, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-16T15:54:38.422Z",
       "prompt": 44,
       "accepted": true,
@@ -605,6 +589,24 @@
       "headline": "Dziś między 15:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Margines spada poniżej typowego pasma przez siedem godzin. Na ogłoszenie jest już za późno, bo zostało mniej czasu niż wymagane ośmiogodzinne wyprzedzenie.",
       "outlook": "W czwartek 20 sierpnia i w piątek 21 sierpnia między 19:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-18T11:57:34.155Z",
+      "prompt": 48,
+      "accepted": false,
+      "reason": "tekst zawiera liczbę spoza godzin",
+      "headline": "W czwartek 2026-08-20 o godzinie 20:00 margines spadnie najniżej i wyniesie najwięcej na minusie, a nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Prognoza czwartkowej doby pogarsza się. Na ogłoszenie w dzisiejszych godzinach jest już za późno.",
+      "outlook": "W czwartek 2026-08-20 między 19:00 a 21:00 oraz w piątek 2026-08-21 między 19:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, natomiast w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-18T11:57:34.155Z",
+      "prompt": 48,
+      "accepted": false,
+      "reason": "tekst podaje wielkość mocy",
+      "headline": "W czwartek 2026-08-20 o 20:00 margines spadnie najniżej i wyniesie ponad dwa tysiące megawatów poniżej wymaganego poziomu, a nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "W czwartek 2026-08-20 prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo zostało więcej czasu, niż wynosi wymagane wyprzedzenie.",
+      "outlook": "W czwartek 2026-08-20 i piątek 2026-08-21 operator może ogłosić przywołanie między 19:00 a 21:00 oraz 19:00 a 22:00, a w pozostałych dniach nic go nie zapowiada."
     }
   ]
 }
