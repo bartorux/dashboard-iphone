@@ -1,8 +1,8 @@
 {
-  "headline": "Dzisiaj między 15:00 a 19:00 operator może ogłosić przywołanie, bo rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW.",
-  "body": "Margines spada poniżej typowego zakresu przez siedem godzin. Na ogłoszenie jest już za późno, bo minął czas potrzebny na wyprzedzenie.",
-  "outlook": "W czwartek 20 sierpnia między 19:00 a 21:00 oraz w piątek 21 sierpnia między 19:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-08-18T09:07:04.123Z",
+  "headline": "W czwartek 20 sierpnia i piątek 21 sierpnia nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
+  "body": "Prognoza czwartek 20 sierpnia pogarsza się. Ogłoszenie może jeszcze nadejść.",
+  "outlook": "W czwartek 20 sierpnia między 19:00 a 21:00 oraz w piątek 21 sierpnia w tych samych godzinach nadwyżka spadnie poniżej progu 1100 MW, natomiast w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-08-18T10:02:03.504Z",
   "dates": [
     "2026-08-18",
     "2026-08-19",
@@ -10,6 +10,6 @@
     "2026-08-21",
     "2026-08-24"
   ],
-  "assessment": "2026-08-18|R|moderate|-600|16:00|4|7|0|moderate:15:00-19:00;2026-08-19|R|none|0|19:00|3|0|3|;2026-08-20|R|high|-2200|20:00|0|5|13|moderate:07:00-09:00,moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00;2026-08-21|R|high|-2300|20:00|1|5|14|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00;2026-08-24|R|none|1400|20:00|0|0|24|#-/below/prognoza tej doby pogarsza się#v48",
+  "assessment": "2026-08-18|R|moderate|-300|18:00|1|7|0|moderate:16:00-19:00;2026-08-19|R|none|0|19:00|3|0|3|;2026-08-20|R|high|-2200|20:00|0|5|13|moderate:07:00-09:00,moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00;2026-08-21|R|high|-2300|20:00|1|5|14|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00;2026-08-24|R|none|1400|20:00|0|0|24|#-/below/prognoza tej doby pogarsza się#v48",
   "model": "gemini-3.5-flash-lite"
 }

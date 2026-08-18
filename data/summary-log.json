@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-16T10:55:49.198Z",
-      "prompt": 44,
-      "accepted": false,
-      "reason": "stopniuje to, czego fakty nie stopniują",
-      "headline": "W poniedziałek 17 sierpnia nadwyżka spadła poniżej progu 1100 MW między 18:00 a 22:00, więc operator może ogłosić przywołanie, a w pozostałych godzinach tego dnia zachowuje wybór.",
-      "body": "O 19:00 rezerwa mocno spadnie przez ubytki i PV poniżej normy. Ogłoszenie może jeszcze nadejść, bo minęło mniej niż osiem godzin do tego momentu.",
-      "outlook": "We wtorek 18 sierpnia i czwartek 20 sierpnia margines spadnie poniżej wymaganego poziomu między 20:00 a 22:00 oraz 19:00 a 21:00, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-16T11:53:41.075Z",
       "prompt": 44,
       "accepted": true,
@@ -604,6 +595,14 @@
       "headline": "Dzisiaj między 15:00 a 19:00 operator może ogłosić przywołanie, bo rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Margines spada poniżej typowego zakresu przez siedem godzin. Na ogłoszenie jest już za późno, bo minął czas potrzebny na wyprzedzenie.",
       "outlook": "W czwartek 20 sierpnia między 19:00 a 21:00 oraz w piątek 21 sierpnia między 19:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-18T10:02:03.504Z",
+      "prompt": 48,
+      "accepted": true,
+      "headline": "W czwartek 20 sierpnia i piątek 21 sierpnia nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Prognoza czwartek 20 sierpnia pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek 20 sierpnia między 19:00 a 21:00 oraz w piątek 21 sierpnia w tych samych godzinach nadwyżka spadnie poniżej progu 1100 MW, natomiast w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
