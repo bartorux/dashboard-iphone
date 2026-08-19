@@ -1,8 +1,8 @@
 {
-  "headline": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez siedem godzin dzisiaj, cztererszy godziny jutro i sześć godzin w piątek.",
-  "body": "Prognoza jutrzejszej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do godziny dziewiętnastej pozostaje więcej czasu niż wynosi wymagane wyprzedzenie.",
-  "outlook": "We wtorek dwudziestego piątego sierpnia nic nie zapowiada przywołania, a w pozostałych dniach margines pozostaje wąski.",
-  "generatedAt": "2026-08-19T07:23:42.766Z",
+  "headline": "Dziś operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 20:00 a 21:00.",
+  "body": "Prognoza dzisiejszej doby pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach 20:00-22:00.",
+  "outlook": "Przywołanie wchodzi w grę także we środę 20 sierpnia i w piątek 21 sierpnia, a w pozostałych dniach nic go nie zapowiada.",
+  "generatedAt": "2026-08-19T09:08:28.939Z",
   "dates": [
     "2026-08-19",
     "2026-08-20",
@@ -10,6 +10,6 @@
     "2026-08-24",
     "2026-08-25"
   ],
-  "assessment": "2026-08-19|R|moderate|-600|18:00|2|7|0|moderate:18:00-22:00;2026-08-20|R|high|-2100|20:00|0|4|14|moderate:07:00-08:00,moderate:18:00-19:00,high:19:00-22:00;2026-08-21|R|high|-2700|20:00|1|6|12|moderate:17:00-19:00,high:19:00-22:00;2026-08-24|R|none|1000|20:00|0|0|23|;2026-08-25|R|none|2900|20:00|0|0|24|#-/below/prognoza tej doby pogarsza się#v48",
+  "assessment": "2026-08-19|R|high|-900|20:00|1|7|0|moderate:18:00-20:00,high:20:00-21:00,moderate:21:00-22:00;2026-08-20|R|high|-2300|20:00|0|4|14|moderate:07:00-08:00,moderate:18:00-19:00,high:19:00-22:00;2026-08-21|R|high|-2700|20:00|0|6|12|moderate:07:00-08:00,moderate:17:00-19:00,high:19:00-22:00;2026-08-24|R|none|600|20:00|0|0|22|;2026-08-25|R|none|3100|20:00|0|0|24|#-/below/prognoza tej doby pogarsza się#v48",
   "model": "gemini-3.5-flash-lite"
 }

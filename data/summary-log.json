@@ -4,15 +4,6 @@
       "at": "2026-08-17T07:37:07.698Z",
       "prompt": 47,
       "accepted": false,
-      "reason": "godzina bez nazwy dnia",
-      "headline": "Dzisiejsza prognoza przewyższa typowy zakres z ostatnich trzydziestu dni, choć między 18:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka utrzymuje się powyżej progu 1100 MW.",
-      "body": "Prognoza tej doby poprawia się, a najniższy margines przypada na godzinę 18:00. Ogłoszenie może jeszcze nadejść, ponieważ do tej pory upłynęło mniej czasu, niż wynosi wymagane wyprzedzenie.",
-      "outlook": "W poniedziałek 2026-08-17 i czwartek 2026-08-20 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
-      "at": "2026-08-17T07:37:07.698Z",
-      "prompt": 47,
-      "accepted": false,
       "reason": "pole headline dłuższe niż 200 znaków",
       "headline": "Dzisiejsza prognoza przewyższa typowy zakres z ostatnich trzydziestu dni, choć między 18:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza tej doby poprawia się. Ogłoszenie może jeszcze nadejść, ponieważ zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie.",
@@ -608,6 +599,14 @@
       "headline": "W środę 21 sierpnia między 19:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W środy i piątki oraz we wtorek 19 sierpnia i środę 20 sierpnia margines spadnie w godzinach wieczornych, a w poniedziałek 24 sierpnia i wtorek 25 sierpnia nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-19T09:08:28.939Z",
+      "prompt": 48,
+      "accepted": true,
+      "headline": "Dziś operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 20:00 a 21:00.",
+      "body": "Prognoza dzisiejszej doby pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach 20:00-22:00.",
+      "outlook": "Przywołanie wchodzi w grę także we środę 20 sierpnia i w piątek 21 sierpnia, a w pozostałych dniach nic go nie zapowiada."
     }
   ]
 }
