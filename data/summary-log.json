@@ -4,15 +4,6 @@
       "at": "2026-08-17T04:23:40.667Z",
       "prompt": 47,
       "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Operator może ogłosić przywołanie we wtorek, czwartek i piątek, choć zachowuje pełną swobodę decyzji.",
-      "body": "We wtorek o 20:00 PV spadnie poniżej normy, podczas gdy zapotrzebowanie utrzyma typowy poziom. Na ogłoszenie wciąż pozostaje wystarczająco dużo czasu.",
-      "outlook": "We wtorek, czwartek i piątek przywołanie wchodzi w grę między 19:00 a 22:00, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
-      "at": "2026-08-17T04:23:40.667Z",
-      "prompt": 47,
-      "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
       "headline": "W najbliższych dniach w określonych godzinach operator może ogłosić przywołanie, ale nie musi.",
       "body": "We wtorek o 20:00 PV spada poniżej normy, a zapotrzebowanie pozostaje typowe. Ogłoszenie może jeszcze nadejść, ponieważ upłynęło mniej czasu niż wymaga przepis.",
@@ -609,6 +600,14 @@
       "headline": "W środę 20 sierpnia nadwyżka spadnie poniżej progu 1100 MW w godzinach 19:00-21:00, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
       "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ upłynie wymagane ośmiogodzinne wyprzedzenie.",
       "outlook": "We wtorek 19 sierpnia oraz w piątek 21 sierpnia przywołanie również wchodzi w grę, natomiast w poniedziałek 24 sierpnia i we wtorek 25 sierpnia nic go nie zapowiada."
+    },
+    {
+      "at": "2026-08-19T05:07:07.127Z",
+      "prompt": 48,
+      "accepted": true,
+      "headline": "Dziś między 18:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale operator może przywołanie ogłosić, lecz nie musi.",
+      "body": "W środę prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek, piątek, poniedziałek 24 sierpnia i wtorek 25 sierpnia w wybranych godzinach operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
     }
   ]
 }
