@@ -4,15 +4,6 @@
       "at": "2026-08-18T11:57:34.155Z",
       "prompt": 48,
       "accepted": false,
-      "reason": "tekst zawiera liczbę spoza godzin",
-      "headline": "W czwartek 2026-08-20 o godzinie 20:00 margines spadnie najniżej i wyniesie najwięcej na minusie, a nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Prognoza czwartkowej doby pogarsza się. Na ogłoszenie w dzisiejszych godzinach jest już za późno.",
-      "outlook": "W czwartek 2026-08-20 między 19:00 a 21:00 oraz w piątek 2026-08-21 między 19:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-08-18T11:57:34.155Z",
-      "prompt": 48,
-      "accepted": false,
       "reason": "tekst podaje wielkość mocy",
       "headline": "W czwartek 2026-08-20 o 20:00 margines spadnie najniżej i wyniesie ponad dwa tysiące megawatów poniżej wymaganego poziomu, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "W czwartek 2026-08-20 prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo zostało więcej czasu, niż wynosi wymagane wyprzedzenie.",
@@ -600,6 +591,14 @@
       "headline": "W poniedziałek 24 sierpnia między 20:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, ale dzięki temu, że nadwyżka przekracza próg 1100 MW, operator może ogłosić przywołanie, lecz nie musi.",
       "body": "Prognoza tej doby pogarsza się. Na ogłoszenie pozostaje jeszcze wystarczająco dużo czasu.",
       "outlook": "W poniedziałek 24 sierpnia między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-20T21:58:42.581Z",
+      "prompt": 48,
+      "accepted": true,
+      "headline": "W poniedziałek 24 sierpnia między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW.",
+      "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 24 sierpnia przywołanie wchodzi w grę między 20:00 a 21:00, a w pozostałych dniach nic go nie zapowiada."
     }
   ]
 }
