@@ -1,8 +1,8 @@
 {
-  "headline": "W poniedziałek 24 sierpnia między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka przekracza próg 1100 MW, co pozwala operatorowi na dobrowolne ogłoszenie przywołania.",
-  "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ upłynęło mniej niż wymagane ośmiogodzinne wyprzedzenie.",
-  "outlook": "W środę 26 sierpnia margines jest wysoki, natomiast w poniedziałek 24 sierpnia, wtorek 25 sierpnia oraz w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-08-20T18:00:14.547Z",
+  "headline": "Operator może ogłosić przywołanie w poniedziałek 24 sierpnia między 20:00 a 21:00, ale nie musi.",
+  "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść.",
+  "outlook": "W poniedziałek 24 sierpnia margines bywa wąski, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-08-20T19:17:32.292Z",
   "dates": [
     "2026-08-20",
     "2026-08-21",
@@ -10,6 +10,6 @@
     "2026-08-25",
     "2026-08-26"
   ],
-  "assessment": "2026-08-20|R|moderate|-100|20:00|1|0|0|moderate:20:00-21:00;2026-08-21|R|none|400|07:00|0|5|1|;2026-08-24|R|moderate|-900|20:00|2|0|18|moderate:20:00-21:00;2026-08-25|R|none|500|20:00|0|0|21|;2026-08-26|R|none|3000|20:00|0|0|24|#-/typical/prognoza tej doby pogarsza się#v48",
+  "assessment": "2026-08-20|R|moderate|0|21:00|0|0|0|moderate:21:00-22:00;2026-08-21|R|none|400|07:00|0|5|0|;2026-08-24|R|moderate|-900|20:00|2|0|19|moderate:20:00-21:00;2026-08-25|R|none|400|20:00|0|0|21|;2026-08-26|R|none|2900|20:00|0|0|24|#-/typical/prognoza tej doby pogarsza się#v48",
   "model": "gemini-3.5-flash-lite"
 }
