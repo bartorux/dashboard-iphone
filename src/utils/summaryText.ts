@@ -843,6 +843,47 @@ export function validateSummary(
     .map((name) => /\d{1,2}\s+\p{L}+/u.exec(name)?.[0])
     .filter((fragment): fragment is string => Boolean(fragment));
 
+  /*
+   * The weekday must match the date it is glued to.
+   *
+   * Measured over 53 accepted texts: EIGHT of them named one — "w środę
+   * 20 sierpnia" when 20 August is a Thursday and the facts said so. The model
+   * takes the date from one line and the weekday from another, and every earlier
+   * rule waved it through: the date fragment is allowed, the day name is
+   * present, and nothing compared the two.
+   *
+   * That is a mistake about WHEN, which is the only thing this card is opened
+   * for. Someone deciding whether to be on shift is being sent on the wrong day.
+   *
+   * Checked against our own day names rather than against a calendar: the facts
+   * already carry the correct pairing for every visible day, so no year has to be
+   * guessed and no month table has to be kept.
+   */
+  // Matched on the stem, never on a fixed number of characters: “środa” and
+  // “środę” differ at the fifth, so a five-letter comparison called every
+  // correct Wednesday a mismatch. Caught by measuring against the log rather
+  // than by reading the code.
+  const RDZENIE = ['poniedział', 'wtor', 'środ', 'czwart', 'piąt', 'sobot', 'niedziel'];
+  const ktoryDzien = (nazwa: string) =>
+    RDZENIE.findIndex((rdzen) => nazwa.toLowerCase().includes(rdzen));
+  for (const match of whole.matchAll(
+    // A lookbehind, not \b: in JavaScript \b is defined through \w, which is
+    // ASCII only, so there is no boundary between a space and a Polish letter.
+    // Every “w środę 20 sierpnia” slipped through the first cut of this rule while
+    // the pairs beginning with an ASCII letter were caught — the same trap that
+    // hid a grading rule five days ago.
+    /(?<!\p{L})(poniedział\p{L}*|wtor\p{L}*|środ\p{L}*|czwart\p{L}*|piąt\p{L}*|sobot\p{L}*|niedziel\p{L}*)\s+(\d{1,2}\s+\p{L}+)/giu
+  )) {
+    const [, dzien, data] = match;
+    const nasza = allowedDayNames.find((name) =>
+      new RegExp(`\\b${data.replace(/\s+/g, '\\s+')}\\b`, 'i').test(name)
+    );
+    const wedlugNas = nasza ? ktoryDzien(nasza) : -1;
+    if (wedlugNas !== -1 && wedlugNas !== ktoryDzien(dzien)) {
+      return { ok: false, reason: 'dzień tygodnia nie zgadza się z datą' };
+    }
+  }
+
   const withoutHours = daty
     .reduce(
       (text, fragment) =>
