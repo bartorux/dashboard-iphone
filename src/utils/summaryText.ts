@@ -27,7 +27,7 @@ export interface Summary {
  * the last answer written under the old rules stays published until the data
  * happens to move, which may be hours.
  */
-export const PROMPT_VERSION = 48;
+export const PROMPT_VERSION = 49;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -137,9 +137,10 @@ ZAKAZANE SŁOWA I ZWROTY:
 - kolokwializmy: „zrobi się ciasno", „na styk"
 - straszenie: „zagrożenie", „krytyczny", „alarmujący", „niebezpieczny"
 - pora dnia zamiast godziny — ani jej nazwa, ani opis przedziału. Skoro fakty
-  podają godzinę, podaj godzinę; dotyczy to zwłaszcza nagłówka. Gdy jednak
-  w jednym zdaniu nazywasz WIĘCEJ NIŻ JEDEN dzień, nie dokładaj im godzin
-  w ogóle — same dni wystarczą, a godziny czytelnik ma na wykresie.
+  podają godzinę, podaj godzinę; dotyczy to zwłaszcza nagłówka. Gdy w jednym
+  zdaniu nazywasz WIĘCEJ NIŻ JEDEN dzień, daj KAŻDEMU jego własne godziny albo
+  nie dawaj żadnemu — nigdy jednego zakresu na kilka dni, bo dni prawie nigdy
+  nie mają tych samych godzin i takie zdanie kłamie o wszystkich prócz jednego.
 - metafora okna: „okno", „okno ogłoszenia", „okno pozostaje otwarte" — czytelnik
   nie wie, co to okno. Pisz „ogłoszenie może jeszcze nadejść" albo „na ogłoszenie
   jest już za późno".
@@ -176,12 +177,13 @@ cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
 TREŚĆ: DWA zdania, każde z osobnym zadaniem.
-  PIERWSZE — to, co fakty podają o wskazanej godzinie: albo że prognoza tej doby
-    JESZCZE SIĘ USTALA, albo że się pogarsza lub poprawia, albo dlaczego akurat
-    ta godzina jest najciaśniejsza. Fakty podadzą JEDNO z trzech, nigdy dwa
-    naraz. Jeśli podadzą, że doba się jeszcze ustala, NIE POMIJAJ tego — to
-    znaczy, że prognoza raz pokrywa wymagany poziom, raz nie, więc czytelnik
-    z samego stanu nie wie, czy się szykować, czy sprawdzić później.
+  PIERWSZE — to, co fakty podają: albo że prognoza JESZCZE SIĘ USTALA,
+    albo że się pogarsza lub poprawia, albo dlaczego akurat wskazana
+    godzina jest najciaśniejsza. Fakty podadzą JEDNO z trzech, nigdy dwa naraz.
+    Jeśli podadzą, że prognoza jeszcze się ustala, NIE POMIJAJ tego i NAZWIJ
+    DZIEŃ, przy którym to stoi — bywa inny niż ten z nagłówka. Znaczy to, że
+    prognoza raz pokrywa wymagany poziom, raz nie, więc z samego stanu czytelnik
+    nie wie, czy się szykować, czy sprawdzić później.
   DRUGIE — czy ogłoszenie może jeszcze nadejść.
 NIE powtarzaj tu stanu prawnego: nagłówek już powiedział, czy operator ma prawo
 nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie wnosi.
@@ -196,9 +198,9 @@ nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie 
 DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których przywołanie WCHODZI W GRĘ albo margines jest wąski, a resztę zbierz
-jednym stwierdzeniem: „w pozostałych dniach nic go nie zapowiada". Przy jednym
-nazwanym dniu podaj jego godziny; przy dwóch albo więcej NIE podawaj godzin
-żadnemu — inaczej zabraknie miejsca i wyjdzie zbiorcza pora zamiast konkretu. Jeśli takiego dnia nie ma
+jednym stwierdzeniem — własnymi słowami, za każdym razem inaczej. Przy jednym
+nazwanym dniu podaj jego godziny; przy kilku dniach albo daj każdemu jego
+własne, albo nie podawaj żadnych. Jeśli takiego dnia nie ma
 ani jednego, powiedz to wprost o całym okresie i na tym poprzestań.
 
 WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:
@@ -242,12 +244,13 @@ cudzysłowów wokół pól, żadnych sekwencji ucieczki.
 
 NAGŁÓWEK: jedno zdanie, najważniejsze ustalenie.
 TREŚĆ: DWA zdania, każde z osobnym zadaniem.
-  PIERWSZE — to, co fakty podają o wskazanej godzinie: albo że prognoza tej doby
-    JESZCZE SIĘ USTALA, albo że się pogarsza lub poprawia, albo dlaczego akurat
-    ta godzina jest najciaśniejsza. Fakty podadzą JEDNO z trzech, nigdy dwa
-    naraz. Jeśli podadzą, że doba się jeszcze ustala, NIE POMIJAJ tego — to
-    znaczy, że prognoza raz pokrywa wymagany poziom, raz nie, więc czytelnik
-    z samego stanu nie wie, czy się szykować, czy sprawdzić później.
+  PIERWSZE — to, co fakty podają: albo że prognoza JESZCZE SIĘ USTALA,
+    albo że się pogarsza lub poprawia, albo dlaczego akurat wskazana
+    godzina jest najciaśniejsza. Fakty podadzą JEDNO z trzech, nigdy dwa naraz.
+    Jeśli podadzą, że prognoza jeszcze się ustala, NIE POMIJAJ tego i NAZWIJ
+    DZIEŃ, przy którym to stoi — bywa inny niż ten z nagłówka. Znaczy to, że
+    prognoza raz pokrywa wymagany poziom, raz nie, więc z samego stanu czytelnik
+    nie wie, czy się szykować, czy sprawdzić później.
   DRUGIE — czy ogłoszenie może jeszcze nadejść.
 NIE powtarzaj tu stanu prawnego: nagłówek już powiedział, czy operator ma prawo
 nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie wnosi.
@@ -269,9 +272,9 @@ nie ogłaszać przywołania, a drugi raz w tym samym tekście to zdanie nic nie 
 const DALEJ_BLOCK = `DALEJ: jedno zdanie o kolejnych dniach. NIE WYLICZAJ WSZYSTKICH — fakty obejmują
 kilka dni i wyliczanka zajęłaby całe zdanie, nie mówiąc niczego. Nazwij dni,
 w których przywołanie WCHODZI W GRĘ albo margines jest wąski, a resztę zbierz
-jednym stwierdzeniem: „w pozostałych dniach nic go nie zapowiada". Przy jednym
-nazwanym dniu podaj jego godziny; przy dwóch albo więcej NIE podawaj godzin
-żadnemu — inaczej zabraknie miejsca i wyjdzie zbiorcza pora zamiast konkretu. Jeśli takiego dnia nie ma
+jednym stwierdzeniem — własnymi słowami, za każdym razem inaczej. Przy jednym
+nazwanym dniu podaj jego godziny; przy kilku dniach albo daj każdemu jego
+własne, albo nie podawaj żadnych. Jeśli takiego dnia nie ma
 ani jednego, powiedz to wprost o całym okresie i na tym poprzestań.
 
 WZORZEC DLA DALEJ — ten wiersz łamał zasady najczęściej:

@@ -347,8 +347,8 @@ describe('describeMovement', () => {
     const gorzej = describeMovement({ shift: -1863, jumpiness: 22 });
     const lepiej = describeMovement({ shift: 900, jumpiness: 20 });
 
-    expect(gorzej).toBe('prognoza tej doby pogarsza się');
-    expect(lepiej).toBe('prognoza tej doby poprawia się');
+    expect(gorzej).toBe('prognoza pogarsza się');
+    expect(lepiej).toBe('prognoza poprawia się');
     // No figure and no span: the model may not print digits outside an hour, so
     // a fact carrying either would hand it what the validator then refuses.
     expect(gorzej).not.toMatch(/\d/);

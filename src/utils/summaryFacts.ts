@@ -14,6 +14,23 @@ import { DEFAULT_RED_THRESHOLD } from './constants';
 import { Standing, marginDistribution, standingFor } from './history';
 import { describeDrivers, explainHour, generationNorms } from './generationNorm';
 
+/**
+ * What the forecast log has to say about one day.
+ *
+ * The two findings are kept apart because they belong to different days. Drift
+ * describes the day the text is already about; NOT SETTLED describes a day
+ * hovering at the boundary — and a day that keeps crossing zero is by
+ * definition close to it, which is exactly the day that is never the gravest.
+ * Measured over four days of runs: in all 32 moments where a day had not
+ * settled, it was the gravest day in NONE of them, so a note printed only for
+ * the leading day could never appear at all. It never did.
+ */
+export interface ForecastNote {
+  text: string;
+  /** True for "has not settled", false for a direction of drift. */
+  unsettled: boolean;
+}
+
 export interface DayFacts {
   /** PSE's own label for the day, "YYYY-MM-DD". */
   businessDate: string;
@@ -154,7 +171,7 @@ export function buildFacts(
    * job, and nothing in the browser has it or needs it. An empty map is the
    * normal state everywhere except that job.
    */
-  forecastNotes: Map<string, string> = new Map()
+  forecastNotes: Map<string, ForecastNote> = new Map()
 ): DayFacts[] {
   const ahead = upcoming(allData, now);
 
@@ -203,7 +220,7 @@ export function buildFacts(
     false: generationNorms(byType(false)),
   };
 
-  return [...byDay.entries()]
+  const built = [...byDay.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .filter(([businessDate]) => days.includes(businessDate))
     .map(([businessDate, points]) => {
@@ -278,9 +295,29 @@ export function buildFacts(
         worstStanding: worst
           ? standingFor(worst.margin, distribution.get(worst.point.hourLabel))
           : 'unknown',
-        forecastNote: forecastNotes.get(businessDate) ?? null,
+        forecastNote: forecastNotes.get(businessDate)?.text ?? null,
       };
     });
+
+  /*
+   * At most ONE day keeps its note, and which one is the whole fix.
+   *
+   * A day that has not settled wins outright, wherever it falls: it is the day
+   * where the answer is genuinely open, while the gravest day is merely bad and
+   * already plain. Failing that, the drift note belongs to the day the text is
+   * about, as before — the render used to enforce that by printing only the
+   * leading day's, which silently discarded every note about any other day.
+   */
+  const nieustalona = built.find(
+    (day) => forecastNotes.get(day.businessDate)?.unsettled
+  );
+  const zNotatka = nieustalona ?? leadingDay(built);
+
+  for (const day of built) {
+    if (day !== zNotatka) day.forecastNote = null;
+  }
+
+  return built;
 }
 
 /**
@@ -439,9 +476,10 @@ export function assessmentKey(facts: DayFacts[]): string {
    * that.
    */
   const lead = leadingDay(facts);
-  const widocznaPrzyczyna = lead && !lead.forecastNote ? lead.drivers : null;
+  const notatka = facts.find((day) => day.forecastNote)?.forecastNote ?? null;
+  const widocznaPrzyczyna = lead && !notatka ? lead.drivers : null;
   const cause = lead
-    ? `${widocznaPrzyczyna ?? '-'}/${lead.worstStanding}/${lead.forecastNote ?? '-'}`
+    ? `${widocznaPrzyczyna ?? '-'}/${lead.worstStanding}/${notatka ?? '-'}`
     : '-';
 
   return `${days}#${cause}`;
@@ -582,8 +620,19 @@ export function renderFacts(facts: DayFacts[], days: number): string {
   const allClear = facts.every((day) => day.risk === 'none');
 
   for (const day of facts) {
+    /*
+     * The spoken name alone. The ISO date used to head every block for our own
+     * convenience, and the model copied it into the answer — "W środę 2026-08-20
+     * nadwyżka spadła poniżej progu" — where the rule against invented figures
+     * refused it. Over four days that was ELEVEN of nineteen refusals, the single
+     * largest cause, and the first two occurrences four days earlier had looked
+     * like a curiosity.
+     *
+     * Nothing here needed it: the spoken name already identifies the day, and it
+     * is the form the reader should see anyway.
+     */
     lines.push(
-      `${day.businessDate} (${day.spokenName}${day.workingDay ? ', roboczy' : ', wolny'}), ` +
+      `${day.spokenName} (${day.workingDay ? 'roboczy' : 'wolny'}), ` +
         `godzin pozostało: ${day.hoursAhead}`
     );
 
@@ -672,7 +721,10 @@ export function renderFacts(facts: DayFacts[], days: number): string {
      * card that precedes the announcement; the cause only ever describes where
      * things stand.
      */
-    if (isLead && day.drivers && !day.forecastNote) {
+    // Withheld whenever ANY day carries a note, not merely when this one does.
+    // The middle line has one job, and a cause standing beside a day that has
+    // not settled would give it two.
+    if (isLead && day.drivers && !facts.some((other) => other.forecastNote)) {
       lines.push(`    dlaczego akurat ta godzina: ${day.drivers}`);
 
       /*
@@ -714,7 +766,11 @@ export function renderFacts(facts: DayFacts[], days: number): string {
      * said nothing about the slide, and that is the case this whole layer exists
      * for. A mutation caught it; the fixture happened to carry both.
      */
-    if (isLead && day.forecastNote) lines.push(`    ${day.forecastNote}`);
+    // Not gated on the leading day any more. Exactly one day carries a note by
+    // construction, and restricting the print to the gravest day discarded every
+    // note about any other — which, for a day that has not settled, is every
+    // note there is.
+    if (day.forecastNote) lines.push(`    ${day.forecastNote}`);
 
     // On its own line, and labelled. Sharing a line with the state clause, the
     // model read the two as cause and effect and wrote that the surplus holding

@@ -7,7 +7,7 @@ import {
   validateSummary,
 } from '../summaryText';
 import { assessmentKey, buildFacts } from '../summaryFacts';
-import { dayMonth } from '../dateHelpers';
+import { dayMonth, spokenDay } from '../dateHelpers';
 import { makePoint } from '../../test/factories';
 
 const pad = (value: number) => String(value).padStart(2, '0');
@@ -220,7 +220,7 @@ describe('prompt bez wiersza TREŚĆ', () => {
 
     const prompt = buildPrompt(zPodstawami, 30, new Date('2026-08-09T10:00:00Z'));
 
-    expect(prompt).toContain('PIERWSZE — to, co fakty podają o wskazanej godzinie');
+    expect(prompt).toContain('PIERWSZE — to, co fakty podają');
     expect(prompt).toContain('NIE powtarzaj tu stanu prawnego');
     // The open-ended brief that let the model choose is gone.
     expect(prompt).not.toContain('Poza tym: dlaczego operator ma prawo');
@@ -278,7 +278,10 @@ describe('prompt bez wiersza TREŚĆ', () => {
     const wystapienia =
       fakty.match(/nic nie zapowiada przywołania/g)?.length ?? 0;
 
-    expect(fakty).toContain('2026-08-14');
+    // The day is named the way it is spoken, not by its ISO date — that used to
+    // head every block and the model copied it straight into the answer.
+    expect(fakty).toContain(spokenDay('2026-08-14', new Date('2026-08-09T10:00:00Z')));
+    expect(fakty).not.toMatch(/\d{4}-\d{2}-\d{2}/);
     expect(wystapienia).toBe(1);
   });
 
@@ -482,8 +485,12 @@ describe('validateSummary', () => {
     // was necessary and not sufficient. The way out has to be permitted, not
     // only the shortcut forbidden.
     const jedna = INSTRUCTION.split('\n').join(' ');
-    expect(jedna).toMatch(/WIĘCEJ NIŻ JEDEN dzień, nie dokładaj im godzin/);
-    expect(jedna).toMatch(/przy dwóch albo więcej NIE podawaj godzin/);
+    // Rewritten after the rule contradicted the best text it ever produced: the
+    // published DALEJ gave each of two days its own range, which is precise and
+    // true, while the rule told the model not to. Forbidding the good shape is
+    // what pushed it toward one span for several days — the shape that lies.
+    expect(jedna).toMatch(/daj KAŻDEMU jego własne godziny/);
+    expect(jedna).toMatch(/nigdy jednego zakresu na kilka dni/);
   });
 
   it('never shows the model the vague times it goes on to refuse', () => {

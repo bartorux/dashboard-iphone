@@ -7,6 +7,7 @@ import {
   renderFacts,
 } from '../summaryFacts';
 import { visibleBusinessDates } from '../dayWindow';
+import { spokenDay } from '../dateHelpers';
 import { makePoint } from '../../test/factories';
 
 const pad = (value: number) => String(value).padStart(2, '0');
@@ -496,7 +497,7 @@ describe('assessmentKey', () => {
       HISTORY_WITH_MIX,
       BEFORE_ALL,
       undefined,
-      new Map([['2026-08-10', 'prognoza tej doby pogarsza się']])
+      new Map([['2026-08-10', { text: 'prognoza tej doby pogarsza się', unsettled: false }]])
     );
 
     expect(zRuchem[0].forecastNote).toBe('prognoza tej doby pogarsza się');
@@ -515,13 +516,13 @@ describe('assessmentKey', () => {
      * forecast that has not settled, and the fingerprint moves with it so the
      * card cannot keep publishing yesterday's conclusion.
      */
-    const USTALA = 'prognoza tej doby jeszcze się ustala — raz pokrywa wymagany poziom, raz nie';
+    const USTALA = 'prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie';
     const nieustalona = buildFacts(
       [...doba(2000)],
       HISTORY_WITH_MIX,
       BEFORE_ALL,
       undefined,
-      new Map([['2026-08-10', USTALA]])
+      new Map([['2026-08-10', { text: USTALA, unsettled: true }]])
     );
     const bezNiej = buildFacts([...doba(2000)], HISTORY_WITH_MIX, BEFORE_ALL);
 
@@ -533,6 +534,55 @@ describe('assessmentKey', () => {
     expect(assessmentKey(nieustalona)).not.toBe(assessmentKey(bezNiej));
   });
 
+  it('prints the unsettled note on a day that is not the gravest', () => {
+    /*
+     * The case the first version could not produce, and the reason it published
+     * nothing for four days: the note was printed only for the leading day,
+     * while a day crossing zero repeatedly is by definition hovering AT zero —
+     * so it is never the gravest. Measured over 32 qualifying moments in the
+     * log, the unsettled day was the gravest in none of them.
+     *
+     * Here 11 August is far worse and leads; 10 August is the one that has not
+     * settled. The note must survive.
+     */
+    const USTALA = 'prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie';
+    const facts = buildFacts(
+      [...dayOf('2026-08-10', 1900), ...dayOf('2026-08-11', 200)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      undefined,
+      new Map([['2026-08-10', { text: USTALA, unsettled: true }]])
+    );
+
+    const lider = leadingDay(facts);
+    expect(lider?.businessDate).toBe('2026-08-11');
+    expect(facts.find((d) => d.businessDate === '2026-08-10')?.forecastNote).toBe(USTALA);
+    expect(renderFacts(facts, 30)).toContain('jeszcze się ustala');
+    // And it reaches the fingerprint, or the card would keep publishing a text
+    // written before the day started swinging.
+    expect(assessmentKey(facts)).toContain('jeszcze się ustala');
+  });
+
+  it('keeps a drift note on the leading day and nowhere else', () => {
+    // The other half of the invariant: exactly one day carries a note. Drift
+    // belongs to the day the text is about, so a note offered for a quieter day
+    // is dropped rather than printed beside it.
+    const facts = buildFacts(
+      [...dayOf('2026-08-10', 1900), ...dayOf('2026-08-11', 200)],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      undefined,
+      new Map([
+        ['2026-08-10', { text: 'prognoza tej doby poprawia się', unsettled: false }],
+        ['2026-08-11', { text: 'prognoza tej doby pogarsza się', unsettled: false }],
+      ])
+    );
+
+    const zNotatka = facts.filter((d) => d.forecastNote);
+    expect(zNotatka).toHaveLength(1);
+    expect(zNotatka[0].businessDate).toBe('2026-08-11');
+  });
+
   it('ignores a cause the model never sees', () => {
     /*
      * On a moving day the cause is withheld from the facts, so a change in it
@@ -542,7 +592,7 @@ describe('assessmentKey', () => {
      */
     // Only the wind differs, so margins, hours and band counts stay identical
     // and the cause is the single thing that moved.
-    const ruch = new Map([['2026-08-10', 'prognoza tej doby pogarsza się']]);
+    const ruch = new Map([['2026-08-10', { text: 'prognoza tej doby pogarsza się', unsettled: false }]]);
     const bezwietrznie = buildFacts([...doba(400)], HISTORY_WITH_MIX, BEFORE_ALL, undefined, ruch);
     const zwyczajnie = buildFacts([...doba(2000)], HISTORY_WITH_MIX, BEFORE_ALL, undefined, ruch);
 
@@ -681,7 +731,11 @@ describe('renderFacts', () => {
     ];
     const text = renderFacts(buildFacts(data, [], BEFORE_ALL), 30);
 
-    expect(text).toContain('2026-08-10');
+    // The spoken name, not the ISO date. The date used to head every block and
+    // the model copied it into the answer, where the rule against invented
+    // figures refused it — eleven of nineteen refusals over four days.
+    expect(text).toContain('jutro (roboczy)');
+    expect(text).not.toContain('2026-08-10');
     expect(text).toContain('stan:');
     // Names the state the regulation provides for, not a level of alarm of ours.
     // Names what the regulation actually provides for. It used to read
@@ -725,8 +779,8 @@ describe('renderFacts', () => {
 
     // And it belongs to the tightest day, not merely to the first one — a
     // single hour attached to the wrong day would pass the count above.
-    const blok = tekst.split(/^(?=\d{4}-\d{2}-\d{2} \()/m);
-    const czwartek = blok.find((part) => part.startsWith('2026-08-13'));
+    const blok = tekst.split(/^(?=\S.*\((?:roboczy|wolny)\))/m);
+    const czwartek = blok.find((part) => part.startsWith(spokenDay('2026-08-13', BEFORE_ALL)));
     expect(czwartek).toMatch(/ o \d\d:00/);
 
     // A narrow but positive margin is worth pointing at, and keeps its hour.
@@ -764,8 +818,8 @@ describe('renderFacts', () => {
 
     expect(tekst.match(/dlaczego akurat ta godzina/g)).toHaveLength(1);
     // On the tightest day, which is the one the headline is about.
-    const blok = tekst.split(/^(?=\d{4}-\d{2}-\d{2} \()/m);
-    expect(blok.find((part) => part.startsWith('2026-08-12'))).toContain(
+    const blok = tekst.split(/^(?=\S.*\((?:roboczy|wolny)\))/m);
+    expect(blok.find((part) => part.startsWith(spokenDay('2026-08-12', BEFORE_ALL)))).toContain(
       'wiatr poniżej normy'
     );
   });
@@ -815,7 +869,7 @@ describe('renderFacts', () => {
       HISTORY_WITH_MIX,
       BEFORE_ALL,
       undefined,
-      new Map([['2026-08-10', 'prognoza tej doby pogarsza się']])
+      new Map([['2026-08-10', { text: 'prognoza tej doby pogarsza się', unsettled: false }]])
     );
 
     // The cause is still computed — it just does not reach the model.
@@ -847,7 +901,7 @@ describe('renderFacts', () => {
       HISTORY_WITH_MIX,
       BEFORE_ALL,
       undefined,
-      new Map([['2026-08-10', 'prognoza tej doby pogarsza się']])
+      new Map([['2026-08-10', { text: 'prognoza tej doby pogarsza się', unsettled: false }]])
     );
 
     expect(facts[0].drivers).toContain('nic nie odstaje');
@@ -875,8 +929,8 @@ describe('renderFacts', () => {
       BEFORE_ALL,
       undefined,
       new Map([
-        ['2026-08-10', 'prognoza tej doby poprawia się'],
-        ['2026-08-11', 'prognoza tej doby pogarsza się'],
+        ['2026-08-10', { text: 'prognoza tej doby poprawia się', unsettled: false }],
+        ['2026-08-11', { text: 'prognoza tej doby pogarsza się', unsettled: false }],
       ])
     );
 

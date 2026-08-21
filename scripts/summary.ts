@@ -38,6 +38,7 @@ import {
 } from '../src/utils/summaryLog';
 import type { PSEDataPoint } from '../src/types';
 import { assessmentKey, buildFacts, renderFacts } from '../src/utils/summaryFacts';
+import type { ForecastNote } from '../src/utils/summaryFacts';
 import {
   PROMPT_VERSION,
   buildPrompt,
@@ -145,14 +146,18 @@ if (!dryRun) recordForecast(points, now);
  * 11:53, and "prognoza pogarsza się" would have been the reassuring falsehood.
  * Where the answer itself keeps changing, that is the thing worth saying.
  */
-const ruch = new Map<string, string>();
+const ruch = new Map<string, ForecastNote>();
 try {
   const zapisane = parseLog(JSON.parse(readFileSync(logTarget, 'utf8')));
   for (const businessDate of visibleBusinessDates(now)) {
-    const slowa =
-      describeSettling(crossingsFor(zapisane, businessDate)) ??
-      describeMovement(movementFor(zapisane, businessDate));
-    if (slowa) ruch.set(businessDate, slowa);
+    const nieustalona = describeSettling(crossingsFor(zapisane, businessDate));
+    if (nieustalona) {
+      ruch.set(businessDate, { text: nieustalona, unsettled: true });
+      continue;
+    }
+
+    const dryf = describeMovement(movementFor(zapisane, businessDate));
+    if (dryf) ruch.set(businessDate, { text: dryf, unsettled: false });
   }
 } catch {
   // No log yet, or an unreadable one. The summary is the product; this is
