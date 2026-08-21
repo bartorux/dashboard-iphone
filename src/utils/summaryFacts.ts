@@ -780,10 +780,21 @@ export function renderFacts(facts: DayFacts[], days: number): string {
     // Said plainly, without the "window" figure of speech this used to carry:
     // the model shortened it to "the window stays open" and dropped the only
     // part that explained what the window was.
+    /*
+     * Said as a plain quantity, because the comparative form kept coming back
+     * inverted. "Zostało więcej czasu, niż wynosi wymagane ośmiogodzinne
+     * wyprzedzenie" was rendered as "upłynęło wystarczająco dużo czasu" — the
+     * exact opposite, since elapsed time is what CLOSES the window — or as
+     * "upłynęło mniej czasu niż wymagane wyprzedzenie", which has no reference
+     * point and means nothing. Eleven of the twenty-four texts carrying this
+     * sentence got it backwards or emptied it.
+     *
+     * The hours are spelled out, which the instruction has always allowed for
+     * counts of hours and the validator does not refuse.
+     */
     const WINDOW_WORD = {
-      true: 'ogłoszenie może jeszcze nadejść — zostało więcej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie',
-      false:
-        'na ogłoszenie jest już za późno — zostało mniej czasu, niż wynosi wymagane ośmiogodzinne wyprzedzenie',
+      true: 'ogłoszenie może jeszcze nadejść — do tych godzin zostało jeszcze ponad osiem godzin',
+      false: 'na ogłoszenie jest już za późno — do tych godzin zostało mniej niż osiem godzin',
     } as const;
     // Once for the day when every range agrees, which is the usual case — five
     // identical copies of this line was the second thing the prompt handed over

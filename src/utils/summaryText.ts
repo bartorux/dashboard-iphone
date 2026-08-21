@@ -27,7 +27,7 @@ export interface Summary {
  * the last answer written under the old rules stays published until the data
  * happens to move, which may be hours.
  */
-export const PROMPT_VERSION = 49;
+export const PROMPT_VERSION = 50;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -881,6 +881,25 @@ export function validateSummary(
     const wedlugNas = nasza ? ktoryDzien(nasza) : -1;
     if (wedlugNas !== -1 && wedlugNas !== ktoryDzien(dzien)) {
       return { ok: false, reason: 'dzień tygodnia nie zgadza się z datą' };
+    }
+  }
+
+  /*
+   * The eight-hour window, said backwards.
+   *
+   * Elapsed time is what CLOSES this window, so "ogłoszenie może jeszcze
+   * nadejść, ponieważ upłynęło wystarczająco dużo czasu" states the opposite of
+   * the fact it came from, and "upłynęło mniej czasu niż wymagane wyprzedzenie"
+   * has no reference point at all. Measured over the log: eleven of the
+   * twenty-four texts carrying this sentence did one or the other.
+   *
+   * The facts now state a plain quantity rather than a comparative, which is the
+   * material half of the fix; this is the backstop.
+   */
+  for (const zdanie of whole.split(/(?<=[.!?])\s+/)) {
+    if (!/nadejść|za późno/i.test(zdanie)) continue;
+    if (/\b(upłynęł\p{L}*|minęł\p{L}*)\b/giu.test(zdanie)) {
+      return { ok: false, reason: 'okno ośmiu godzin opisane odwrotnie' };
     }
   }
 
