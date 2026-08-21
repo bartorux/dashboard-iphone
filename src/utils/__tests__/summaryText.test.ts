@@ -361,6 +361,31 @@ describe('parseSummary', () => {
 });
 
 describe('validateSummary', () => {
+  it('refuses the eight-hour window said backwards', () => {
+    /*
+     * Elapsed time is what CLOSES this window, so "ogłoszenie może jeszcze
+     * nadejść, ponieważ upłynęło wystarczająco dużo czasu" says the opposite of
+     * the fact it came from. Eleven of the twenty-four texts carrying this
+     * sentence were inverted or emptied of meaning.
+     */
+    const sprawdz = (outlook: string) =>
+      validateSummary(
+        { headline: 'Jutro o 19:00 margines jest wąski.', body: '', outlook },
+        new Set(['19:00'])
+      );
+
+    expect(sprawdz('Ogłoszenie może jeszcze nadejść, ponieważ upłynęło wystarczająco dużo czasu.')).toEqual({
+      ok: false,
+      reason: 'okno ośmiu godzin opisane odwrotnie',
+    });
+    expect(sprawdz('Ogłoszenie może jeszcze nadejść, bo minęło mniej czasu niż wymagane wyprzedzenie.').ok).toBe(false);
+
+    // Said forwards, it stays — and so does elapsed time in a sentence that is
+    // not about the window at all.
+    expect(sprawdz('Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.')).toEqual({ ok: true });
+    expect(sprawdz('Od rana minęło sporo czasu, a margines wciąż jest wąski.')).toEqual({ ok: true });
+  });
+
   it('refuses a weekday glued to the wrong date', () => {
     /*
      * Six of 72 logged answers named one: "w środę 20 sierpnia" while the facts
