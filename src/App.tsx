@@ -251,7 +251,26 @@ function App() {
           order is the phone's and must not change: every child keeps the
           position it has today, and only above 80rem is it sent to a column.
         */}
-        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_28rem] xl:grid-rows-[auto_auto_1fr] xl:items-start xl:gap-4">
+        {/*
+          The chart column is as wide as the chart is tall, times 1.6.
+
+          Not a fixed width, and that is the point. Measured across three
+          screens, the chart came out at almost the same proportion everywhere —
+          1.77, 1.91, 1.77 — so capping the PAGE only ever made a 24-inch monitor
+          match a laptop that was already too wide. The complaint is the shape,
+          not the screen.
+
+          Deriving the width from `52vh`, which is the chart's own height at this
+          breakpoint, holds the proportion at 1.5 on every size and lets it scale
+          by itself: 618px wide at 1280x800, 701 at 1440x900, 851 at 1920x1080.
+          A fixed cap cannot do that — 46rem read well on a laptop and left a
+          24-inch monitor with a narrow, tall chart and empty glass beside it.
+
+          The whole column narrows, not just the chart: the day tabs and the
+          alerts sit in it too, and a chart narrower than the panel beneath it
+          would read as a mistake.
+        */}
+        <div className="xl:grid xl:grid-cols-[minmax(0,calc(52vh*1.6))_28rem] xl:grid-rows-[auto_auto_1fr] xl:items-start xl:justify-center xl:gap-4">
           <div className="xl:col-start-2 xl:row-start-1">
             {/* The figure people open the app for comes first; the prose explains
                 it afterwards. Both stay above the day tabs. */}
