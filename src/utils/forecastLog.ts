@@ -263,9 +263,10 @@ export function describeMovement(movement: Movement | null): string | null {
   if (Math.abs(shift) < MOVEMENT_FLOOR_MW) return null;
   if (Math.abs(shift) < MOVEMENT_NOISE_MULTIPLE * jumpiness) return null;
 
-  return shift < 0
-    ? 'prognoza tej doby pogarsza się'
-    : 'prognoza tej doby poprawia się';
+  // Without the pronoun: the line already stands under a named day, so "prognoza
+  // TEJ DOBY pogarsza się" came back as "W czwartek prognoza tej doby pogarsza
+  // się" in 28 of 53 texts.
+  return shift < 0 ? 'prognoza pogarsza się' : 'prognoza poprawia się';
 }
 
 /** How many recent snapshots decide whether a day has settled. */
@@ -338,5 +339,8 @@ export function describeSettling(crossings: number | null): string | null {
   // Said as what a crossing actually is, rather than as a word about forecasts.
   // The reader runs the electrical side of a plant; "raz pokrywa, raz nie" is
   // the fact, and "jeszcze się ustala" is what it means for them.
-  return 'prognoza tej doby jeszcze się ustala — raz pokrywa wymagany poziom, raz nie';
+  // Without the pronoun, like the drift line: this note stands under a named day
+  // and, unlike drift, that day may not be the one the text is otherwise about —
+  // so the model has to name it, and "tej doby" would not have named it either.
+  return 'prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie';
 }
