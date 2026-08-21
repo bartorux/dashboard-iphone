@@ -5,15 +5,6 @@
       "prompt": 48,
       "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W czwartek o 23:00 margines spadnie najniżej w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "W czwartek prognoza tej doby pogarsza się. Między 19:00 a 21:00 ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek, czwartek i piątek przywołanie wchodzi w grę w wyznaczonych godzinach, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
-      "at": "2026-08-18T21:54:59.053Z",
-      "prompt": 48,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
       "headline": "W czwartek o 23:00 margines spadnie najniżej, a nadwyżka spadnie poniżej progu 1100 MW, przez co operator może ogłosić przywołanie bez możliwości pominięcia.",
       "body": "We wtorek rezerwa nie pokryje wymaganego poziomu, a prognoza na czwartek pogorszy się. Ogłoszenie może jeszcze nadejść w godzinach popołudniowych i wieczornych, bo do wyznaczonego czasu zostało więcej niż osiem godzin.",
       "outlook": "W czwartek i piątek nadwyżka spadnie poniżej progu 1100 MW między 19:00 a 21:00, a w pozostałych dniach nic nie zapowiada przywołania."
@@ -596,6 +587,14 @@
       "headline": "W poniedziałek 24 sierpnia między 19:00 a 22:00 margines spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW.",
       "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ upłynie więcej czasu niż wymagane wyprzedzenie.",
       "outlook": "We wtorek 25 sierpnia między 20:00 a 21:00 rezerwa ponownie nie pokryje wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-21T11:58:05.214Z",
+      "prompt": 48,
+      "accepted": true,
+      "headline": "W poniedziałek 24 sierpnia między 19:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka przekracza próg 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ zostało więcej czasu niż wymagane ośmiogodzinne wyprzedzenie.",
+      "outlook": "We wtorek 25 sierpnia między 19:00 a 21:00 operator również ma wybór, a w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
