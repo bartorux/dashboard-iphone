@@ -252,7 +252,7 @@
  * whatsoever, so the phone cannot be affected by anything written here. That is
  * a stronger guarantee than comparing screenshots afterwards.
  *
- * 48rem is where a single column stops being a stretched phone; 110rem is where
+ * 48rem is where a single column stops being a stretched phone; 96rem is where
  * a very wide screen stops being usable and starts being a long walk for the
  * eye. Between them the layout fills what it is given.
  */
@@ -272,12 +272,29 @@
 
 @media (min-width: 80rem) {
   .content-width {
-    max-width: 110rem;
     /*
-     * Between 80rem and 110rem the column is as wide as the window, so the only
+     * 96rem, down from 110rem, because a chart carrying 24 hourly points does not
+     * gain anything from a 24-inch monitor — it only thins out the shape of the
+     * evening, which is the thing being read. Measured at 1920px: the left column
+     * holding the day tabs, the chart and the alerts goes from 1264px to 1040px,
+     * and the chart from 2.4:1 to 2:1 against its own height.
+     *
+     * 96rem is 1536px, and that is the whole reason for this number rather than a
+     * smaller one: a 1440px laptop and everything narrower sees no change at all.
+     * Only screens wider than 1536px are touched, which is exactly the case being
+     * fixed.
+     *
+     * Height was the first attempt at the same complaint and is already spent —
+     * see CHART_BOX in chart/shared.tsx, where the chart was made taller on xl
+     * for precisely this reason. Widening it further would push the alerts under
+     * the fold.
+     */
+    max-width: 96rem;
+    /*
+     * Between 80rem and 96rem the column is as wide as the window, so the only
      * thing between a card and the edge of the screen is the 12px gutter every
      * card carries. On a 1440px laptop that reads as content about to fall off.
-     * Past 110rem the centring supplies a margin of its own and this simply adds
+     * Past 96rem the centring supplies a margin of its own and this simply adds
      * to it.
      */
     padding-inline: 1rem;
