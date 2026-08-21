@@ -361,6 +361,39 @@ describe('parseSummary', () => {
 });
 
 describe('validateSummary', () => {
+  it('refuses a weekday glued to the wrong date', () => {
+    /*
+     * Six of 72 logged answers named one: "w środę 20 sierpnia" while the facts
+     * said czwartek, and every earlier rule waved it through — the date fragment
+     * is allowed, a day name is present, and nothing compared the two. It is a
+     * mistake about WHEN, which is the only thing this card is opened for.
+     */
+    const dni = ['środa 19 sierpnia', 'czwartek 20 sierpnia', 'piątek 21 sierpnia'];
+    const godziny = new Set(['19:00', '20:00']);
+    const sprawdz = (outlook: string) =>
+      validateSummary({ headline: 'Jutro o 19:00 margines jest wąski.', body: '', outlook }, godziny, dni);
+
+    expect(sprawdz('W środę 20 sierpnia margines jest wąski.')).toEqual({
+      ok: false,
+      reason: 'dzień tygodnia nie zgadza się z datą',
+    });
+    // Beginning with an ASCII letter, which is the only half the first cut caught.
+    expect(sprawdz('We wtorek 20 sierpnia margines jest wąski.').ok).toBe(false);
+
+    // Correct pairs stay, inflection and all. "Środa" and "środę" differ at the
+    // fifth character, and comparing five characters called every correct
+    // Wednesday a mismatch.
+    expect(sprawdz('We środę 19 sierpnia margines jest wąski.')).toEqual({ ok: true });
+    expect(sprawdz('W piątek 21 sierpnia margines jest wąski.')).toEqual({ ok: true });
+
+    // A date we never handed over gets no opinion: this rule compares against our
+    // own day names, and about a day outside them it knows nothing.
+    const obca = sprawdz('W środę 30 sierpnia margines jest wąski.');
+    expect(obca.ok ? undefined : obca.reason).not.toBe(
+      'dzień tygodnia nie zgadza się z datą'
+    );
+  });
+
   it('refuses one span stretched over several days, but not a range per day', () => {
     // Published on 16 August with the three days running 20:00-22:00,
     // 19:00-22:00 and 19:00-21:00. The envelope is true of the set and false of
