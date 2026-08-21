@@ -1,8 +1,8 @@
 {
-  "headline": "W poniedziałek 24 sierpnia i we wtorek 25 sierpnia operator może ogłosić przywołanie, ale nie musi.",
-  "body": "W poniedziałek 24 sierpnia prognoza tej doby pogarsza się między 20:00 a 21:00. Ogłoszenie może jeszcze nadejść, ponieważ upłynęło mniej czasu, niż wynosi wymagany okres.",
-  "outlook": "W poniedziałek 24 sierpnia oraz we wtorek 25 sierpnia przywołanie wchodzi w grę w godzinach 20:00-21:00, a w pozostałych dniach nic go nie zapowiada.",
-  "generatedAt": "2026-08-21T04:21:58.295Z",
+  "headline": "W najbliższych godzinach rezerwa nie pokrywa wymaganego poziomu, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Margines spada poniżej typowego zakresu. Na ogłoszenie jest już za późno.",
+  "outlook": "W poniedziałek 24 sierpnia prognoza pogarsza się i między 20:00 a 21:00 operator ma wybór, natomiast w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-08-21T05:08:29.295Z",
   "dates": [
     "2026-08-21",
     "2026-08-24",
@@ -10,6 +10,6 @@
     "2026-08-26",
     "2026-08-27"
   ],
-  "assessment": "2026-08-21|R|none|100|07:00|1|5|1|;2026-08-24|R|moderate|-800|20:00|2|0|19|moderate:20:00-21:00;2026-08-25|R|moderate|-200|20:00|0|0|19|moderate:20:00-21:00;2026-08-26|R|none|2600|20:00|0|0|24|;2026-08-27|R|none|3800|20:00|0|0|24|#-/typical/prognoza tej doby pogarsza się#v48",
+  "assessment": "2026-08-21|R|moderate|-200|07:00|0|5|2|moderate:07:00-08:00;2026-08-24|R|moderate|-700|20:00|2|0|20|moderate:20:00-21:00;2026-08-25|R|none|0|20:00|1|0|20|;2026-08-26|R|none|2600|20:00|0|0|24|;2026-08-27|R|none|3800|20:00|0|0|24|#-/typical/prognoza tej doby pogarsza się#v48",
   "model": "gemini-3.5-flash-lite"
 }
