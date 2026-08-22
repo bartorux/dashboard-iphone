@@ -5,15 +5,6 @@
       "prompt": 48,
       "accepted": false,
       "reason": "tekst zawiera liczbę spoza godzin",
-      "headline": "Dziś między 18:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W poniedziałek 17 sierpnia margines spada poniżej typowego zakresu. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 18 sierpnia, w środę 19 sierpnia oraz w poniedziałek 24 sierpnia przywołanie wchodzi w grę, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
-      "at": "2026-08-19T10:59:31.833Z",
-      "prompt": 48,
-      "accepted": false,
-      "reason": "tekst zawiera liczbę spoza godzin",
       "headline": "Dziś między 18:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, więc operator może ogłosić przywołanie, ale zachowuje wybór, bo nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "W środę 2026-08-20 prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek 2026-08-21 przywołanie wchodzi w grę między 07:00 a 08:00, 17:00 a 22:00 oraz w poniedziałek 24 sierpnia, a w pozostałych dniach nic go nie zapowiada."
@@ -588,6 +579,14 @@
       "headline": "W poniedziałek 24 sierpnia nadwyżka w systemie spadła poniżej progu 1100 MW między 20:00 a 21:00, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "We wtorek 25 sierpnia między 20:00 a 21:00 operator ma wybór, a w środę oraz czwartek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-22T02:04:02.034Z",
+      "prompt": 50,
+      "accepted": true,
+      "headline": "W poniedziałek nadwyżka spadła poniżej progu 1100 MW w godzinach 20:00-21:00, więc operator może ogłosić przywołanie.",
+      "body": "Prognoza pogarsza się w poniedziałek 24 sierpnia. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 25 sierpnia operator może ogłosić przywołanie między 20:00 a 21:00, a przez resztę tygodnia nic nie zapowiada przywołania."
     }
   ]
 }
