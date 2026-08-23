@@ -1,8 +1,8 @@
 {
-  "headline": "W najbliższych dniach operator może ogłosić przywołanie, ponieważ nadwyżka spadła poniżej progu 1100 MW.",
-  "body": "Prognoza na jutro pogarsza się. Do wskazanych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "We wtorek 25 sierpnia o godzinie 20:00 margines nie pokryje wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-08-23T09:57:07.734Z",
+  "headline": "Jutro między 19:00 a 22:00 operator może ogłosić przywołanie, gdyż nadwyżka spadła poniżej progu 1100 MW.",
+  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+  "outlook": "We wtorek 25 sierpnia między 20:00 a 21:00 margines pozostaje ujemny przy nadwyżce powyżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-08-23T10:56:50.986Z",
   "dates": [
     "2026-08-23",
     "2026-08-24",
@@ -11,6 +11,6 @@
     "2026-08-27",
     "2026-08-28"
   ],
-  "assessment": "2026-08-23|W|none|0|12:00|0|4|6|;2026-08-24|R|high|-2100|20:00|0|3|16|high:19:00-22:00;2026-08-25|R|moderate|0|20:00|0|0|16|moderate:20:00-21:00;2026-08-26|R|none|1100|20:00|0|0|23|;2026-08-27|R|none|3400|20:00|0|0|24|;2026-08-28|R|none|3300|20:00|0|0|24|#-/below/prognoza pogarsza się#v50",
+  "assessment": "2026-08-23|W|none|100|12:00|0|4|6|;2026-08-24|R|high|-2200|20:00|1|3|16|high:19:00-22:00;2026-08-25|R|moderate|-100|20:00|0|0|16|moderate:20:00-21:00;2026-08-26|R|none|1200|20:00|0|0|24|;2026-08-27|R|none|3300|19:00|0|0|24|;2026-08-28|R|none|3900|20:00|0|0|24|#-/below/prognoza pogarsza się#v50",
   "model": "gemini-3.5-flash-lite"
 }
