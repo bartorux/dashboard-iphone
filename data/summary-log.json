@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-21T04:21:58.295Z",
-      "prompt": 48,
-      "accepted": true,
-      "headline": "W poniedziałek 24 sierpnia i we wtorek 25 sierpnia operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W poniedziałek 24 sierpnia prognoza tej doby pogarsza się między 20:00 a 21:00. Ogłoszenie może jeszcze nadejść, ponieważ upłynęło mniej czasu, niż wynosi wymagany okres.",
-      "outlook": "W poniedziałek 24 sierpnia oraz we wtorek 25 sierpnia przywołanie wchodzi w grę w godzinach 20:00-21:00, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
-      "at": "2026-08-21T05:08:29.295Z",
-      "prompt": 48,
-      "accepted": true,
-      "headline": "W najbliższych godzinach rezerwa nie pokrywa wymaganego poziomu, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Margines spada poniżej typowego zakresu. Na ogłoszenie jest już za późno.",
-      "outlook": "W poniedziałek 24 sierpnia prognoza pogarsza się i między 20:00 a 21:00 operator ma wybór, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-21T06:02:30.321Z",
       "prompt": 48,
       "accepted": true,
@@ -576,6 +560,24 @@
       "accepted": true,
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "Jutro o 01:00 rezerwa spadnie najniżej, bo prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-08-24T02:11:00.890Z",
+      "prompt": 50,
+      "accepted": false,
+      "reason": "tekst podaje wielkość mocy",
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "Margines mieści się powyżej typowego zakresu z ostatnich trzydziestu dni, a o godzinie 20:00 wyniesie plus sześćset pięć megawatów, choć prognoza poprawia się.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-08-24T02:11:00.890Z",
+      "prompt": 50,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "Margines wypada powyżej typowego zakresu z ostatnich trzydziestu dni, a o godzinie 20:00 rezerwa spadnie do najniższego poziomu, choć prognoza poprawia się.",
       "outlook": ""
     }
   ]
