@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-21T13:29:49.326Z",
-      "prompt": 48,
-      "accepted": true,
-      "headline": "W poniedziałek 24 sierpnia operator może ogłosić przywołanie w godzinach 19:00-22:00.",
-      "body": "Prognoza tej doby pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 24 sierpnia ogłoszenie może jeszcze nadejść, we wtorek 25 sierpnia również, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
       "at": "2026-08-21T14:17:11.863Z",
       "prompt": 48,
       "accepted": true,
@@ -579,6 +571,14 @@
       "headline": "W środę o godzinie 20:00 margines spadnie poniżej zera, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do godzin 19:00-21:00 zostało ponad osiem godzin.",
       "outlook": "W czwartek i piątek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-24T11:58:52.616Z",
+      "prompt": 50,
+      "accepted": true,
+      "headline": "W środę o 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "W środę między 19:00 a 21:00 margines spada poniżej wymaganego poziomu. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek, piątek, dzisiaj i jutro nic nie zapowiada przywołania, przy czym jutro prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie."
     }
   ]
 }
