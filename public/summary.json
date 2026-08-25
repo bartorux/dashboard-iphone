@@ -1,8 +1,8 @@
 {
-  "headline": "Jutro o 20:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-  "outlook": "W środę, czwartek, piątek i w poniedziałek 31 sierpnia nic nie zapowiada przywołania, a w dzisiejszych godzinach rezerwa w pełni pokrywa wymagany poziom.",
-  "generatedAt": "2026-08-25T11:03:07.812Z",
+  "headline": "W tych dniach nic nie zapowiada przywołania.",
+  "body": "Margines mieści się w typowym zakresie z ostatnich trzydziestu dni, a najniższą wartość zanotuje dziś o 21:00.",
+  "outlook": "",
+  "generatedAt": "2026-08-25T12:00:06.283Z",
   "dates": [
     "2026-08-25",
     "2026-08-26",
@@ -10,6 +10,6 @@
     "2026-08-28",
     "2026-08-31"
   ],
-  "assessment": "2026-08-25|R|none|400|21:00|0|0|2|;2026-08-26|R|moderate|-400|20:00|0|0|17|moderate:19:00-21:00;2026-08-27|R|none|800|20:00|0|0|22|;2026-08-28|R|none|2700|20:00|0|0|24|;2026-08-31|R|none|3100|20:00|0|0|24|#-/typical/prognoza pogarsza się#v50",
+  "assessment": "2026-08-25|R|none|300|21:00|0|0|1|;2026-08-26|R|none|2000|20:00|0|0|22|;2026-08-27|R|none|800|20:00|0|0|22|;2026-08-28|R|none|2700|20:00|0|0|24|;2026-08-31|R|none|3200|20:00|0|0|24|#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v50",
   "model": "gemini-3.5-flash-lite"
 }
