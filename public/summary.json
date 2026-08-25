@@ -1,8 +1,8 @@
 {
-  "headline": "W tych dniach nic nie zapowiada przywołania, choć jutro rezerwa mocno spadnie.",
-  "body": "Jutro o 20:00 rezerwa mocno spadnie, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-  "outlook": "",
-  "generatedAt": "2026-08-25T07:28:45.146Z",
+  "headline": "Jutro między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie, dlatego ostateczny stan wciąż się zmienia. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "W pozostałych dniach oraz dzisiaj nic nie zapowiada przywołania.",
+  "generatedAt": "2026-08-25T08:21:27.119Z",
   "dates": [
     "2026-08-25",
     "2026-08-26",
@@ -10,6 +10,6 @@
     "2026-08-28",
     "2026-08-31"
   ],
-  "assessment": "2026-08-25|R|none|300|17:00|0|0|1|;2026-08-26|R|none|100|20:00|1|0|21|;2026-08-27|R|none|1200|20:00|0|0|24|;2026-08-28|R|none|3000|20:00|0|0|24|;2026-08-31|R|none|3100|20:00|0|0|24|#-/typical/prognoza pogarsza się#v50",
+  "assessment": "2026-08-25|R|none|300|17:00|0|0|1|;2026-08-26|R|moderate|-100|20:00|1|0|18|moderate:20:00-21:00;2026-08-27|R|none|1000|20:00|0|0|22|;2026-08-28|R|none|2800|20:00|0|0|24|;2026-08-31|R|none|3100|20:00|0|0|24|#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v50",
   "model": "gemini-3.5-flash-lite"
 }
