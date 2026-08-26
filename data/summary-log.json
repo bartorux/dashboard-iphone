@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-23T05:05:30.955Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "Jutro między 20:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "Prognoza pogarsza się. Do tych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 25 sierpnia między 20:00 a 21:00 operator ma wybór, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-23T05:59:38.374Z",
       "prompt": 50,
       "accepted": true,
@@ -581,6 +573,14 @@
       "reason": "godzina bez nazwy dnia",
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "Margines o 09:00 spada niżej niż zwykle o tej porze na tle ostatnich 30 dni, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-08-26T08:22:37.586Z",
+      "prompt": 50,
+      "accepted": true,
+      "headline": "W najbliższych dniach nic nie zapowiada przywołania.",
+      "body": "Dziś o 20:00 margines spadnie do najniższego poziomu z powodu PV poniżej normy, ale ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
