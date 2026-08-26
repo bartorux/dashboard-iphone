@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-23T13:57:16.704Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "Operator może ogłosić przywołanie między 20:00 a 21:00.",
-      "body": "Prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 25 sierpnia sytuacja powtórzy się między 20:00 a 21:00, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-08-23T14:57:05.658Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "We wtorek 25 sierpnia operator może ogłosić przywołanie, ale nie musi między 20:00 a 21:00.",
-      "body": "Prognoza na jutro jeszcze się ustala, ponieważ raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W pozostałe dni rezerwa w pełni pokrywa wymagany poziom i nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-23T15:55:32.767Z",
       "prompt": 50,
       "accepted": true,
@@ -586,6 +570,23 @@
       "headline": "Dziś między 18:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka powyżej progu 1100 MW daje operatorowi wybór.",
       "body": "Margines spada do wartości ujemnej o 18:00. Na ogłoszenie przywołania w tych godzinach jest już za późno.",
       "outlook": "We wtorek 1 września prognoza jeszcze się ustala, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-26T18:21:37.278Z",
+      "prompt": 50,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: W tych dniach nic nie zapowiada przywołania.\nTREŚCI: We wtorek 1 września o 20:00 rezerwa spada poniżej wymaganego poziomu, ale nadwyżka trzyma się powyżej progi 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-08-26T18:21:37.278Z",
+      "prompt": 50,
+      "accepted": true,
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "We wtorek 1 września o 20:00 rezerwa raz pokrywa wymagany poziom, a raz nie, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
     }
   ]
 }
