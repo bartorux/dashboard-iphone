@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-23T07:59:18.396Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "W środę margines wyraźnie przewyższa typowe wartości z ostatnich trzydziestu dni, choć w innych dniach bywa odmiennie.",
-      "body": "Prognoza na jutro pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 25 sierpnia między 20:00 a 21:00 nadwyżka utrzymuje się powyżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-08-23T09:01:18.551Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "Operator może ogłosić przywołanie jutro między 19:00 a 22:00, bo nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza na jutro pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 25 sierpnia między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-23T09:57:07.734Z",
       "prompt": 50,
       "accepted": true,
@@ -582,6 +566,24 @@
       "accepted": false,
       "reason": "odpowiedz nie ma oczekiwanych pol",
       "headline": "NAGŁÓWEK: W tych dniach nic nie zapowiada przywołania.\nTREŚCI: Dziś o 20:00 margines spadnie przez PV poniżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-08-26T10:16:52.341Z",
+      "prompt": 50,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: W tych dniach nic nie zapowiada przywołania.\nTREŚC: We wtorek 1 września o 20:00 margines spadnie do najniższego poziomu przez PV poniżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-08-26T10:16:52.341Z",
+      "prompt": 50,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: W tych dniach nic nie zapowiada przywołania.\nTREŚC: We wtorek 1 września o 20:00 margines spadnie z powodu PV poniżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "body": "",
       "outlook": ""
     }
