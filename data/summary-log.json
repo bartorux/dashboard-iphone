@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-23T03:33:22.235Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "Jutro między 20:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, co odejmie operatorowi wybór w sprawie przywołania.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "We wtorek 25 sierpnia między 20:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, dając operatorowi wybór, a w pozostałe dni okresu nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-08-23T04:21:05.763Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "Operator może ogłosić przywołanie jutro i we wtorek 25 sierpnia.",
-      "body": "Prognoza pogarsza się jutro między 19:00 a 22:00. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-23T05:05:30.955Z",
       "prompt": 50,
       "accepted": true,
@@ -579,6 +563,24 @@
       "accepted": true,
       "headline": "W najbliższych dniach nic nie zapowiada przywołania.",
       "body": "Dziś o 08:00 rezerwa osiąga najniższy margines, ale ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-08-26T07:29:59.822Z",
+      "prompt": 50,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "W żadnym z dni nic nie zapowiada przywołania.",
+      "body": "Margines spadnie o 09:00, ale ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-08-26T07:29:59.822Z",
+      "prompt": 50,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "Margines o 09:00 spada niżej niż zwykle o tej porze na tle ostatnich 30 dni, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
