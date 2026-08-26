@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-23T05:59:38.374Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "Jutro między 20:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 25 sierpnia między 20:00 a 21:00 operator może ogłosić przywołanie, a w pozostałe dni okresu nic go nie zapowiada."
-    },
-    {
-      "at": "2026-08-23T07:19:06.115Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "Marginesy trzymają się dziś powyżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się jutro między 19:00 a 22:00. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 25 sierpnia między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-23T07:59:18.396Z",
       "prompt": 50,
       "accepted": true,
@@ -581,6 +565,24 @@
       "accepted": true,
       "headline": "W najbliższych dniach nic nie zapowiada przywołania.",
       "body": "Dziś o 20:00 margines spadnie do najniższego poziomu z powodu PV poniżej normy, ale ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-08-26T09:23:19.099Z",
+      "prompt": 50,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: W tych dniach nic nie zapowiada przywołania.\nTREŚCI: W środę o 20:00 margines spadnie przez PV poniżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-08-26T09:23:19.099Z",
+      "prompt": 50,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: W tych dniach nic nie zapowiada przywołania.\nTREŚCI: Dziś o 20:00 margines spadnie przez PV poniżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "body": "",
       "outlook": ""
     }
   ]
