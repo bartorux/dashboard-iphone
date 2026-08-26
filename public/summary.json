@@ -1,8 +1,8 @@
 {
-  "headline": "W tych dniach nic nie zapowiada przywołania.",
-  "body": "We wtorek 1 września o 20:00 margines spadnie z powodu PV poniżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-  "outlook": "",
-  "generatedAt": "2026-08-26T11:05:40.315Z",
+  "headline": "Wtorkowy margines na tle ostatnich trzydziestu dni mieści się w typowym zakresie, choć we wtorek 1 września między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu.",
+  "body": "Spadek rezerwy powoduje fotowoltaika pracująca poniżej normy. Do tych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "Przez pozostałe dni okresu nic nie zapowiada przywołania.",
+  "generatedAt": "2026-08-26T12:00:57.832Z",
   "dates": [
     "2026-08-26",
     "2026-08-27",
@@ -10,6 +10,6 @@
     "2026-08-31",
     "2026-09-01"
   ],
-  "assessment": "2026-08-26|R|none|800|17:00|0|0|6|;2026-08-27|R|none|800|20:00|0|0|22|;2026-08-28|R|none|2900|20:00|0|0|24|;2026-08-31|R|none|3700|20:00|0|0|24|;2026-09-01|R|none|100|20:00|1|0|21|#PV poniżej normy/typical/-#v50",
+  "assessment": "2026-08-26|R|none|600|17:00|0|0|3|;2026-08-27|R|none|1800|18:00|0|0|22|;2026-08-28|R|none|2500|20:00|0|0|24|;2026-08-31|R|none|3700|20:00|0|0|24|;2026-09-01|R|moderate|-300|20:00|0|0|21|moderate:20:00-21:00#PV poniżej normy; w drugą stronę ubytki poniżej normy/typical/-#v50",
   "model": "gemini-3.5-flash-lite"
 }
