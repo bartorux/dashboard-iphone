@@ -27,7 +27,10 @@ export interface Summary {
  * the last answer written under the old rules stays published until the data
  * happens to move, which may be hours.
  */
-export const PROMPT_VERSION = 50;
+// 51: the facts gained a Kompas Energetyczny PSE line and the instruction the
+// block that tells the model what it is — a change in the WORDING of the facts,
+// which the assessment key alone would never have carried.
+export const PROMPT_VERSION = 51;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -82,6 +85,23 @@ prawnych. Nadwyżka i próg 1100 MW to liczby, nie instytucje prawne.
   nakazuje ogłosić, a nie nakazuje.
 - „nic nie zapowiada przywołania" — rezerwa pokrywa wymagany poziom albo godzina
   przypada poza dniem roboczym lub poza godzinami 07:00-22:00.
+
+KOMPAS ENERGETYCZNY PSE — druga, całkiem osobna rzecz. Fakty podają go tylko dla
+doby, w której operator coś sygnalizuje. Gdy takiego wiersza nie ma, nie wspominaj
+o Kompasie ani słowem.
+- Nazywaj go ZAWSZE pełną nazwą: „Kompas Energetyczny PSE". Nie skracaj do
+  „kompasu" i nie zastępuj własnym opisem.
+- To oficjalny sygnał operatora skierowany do odbiorców na daną dobę. Stopień
+  nazywaj słowami, których używają fakty — „zalecane oszczędzanie" albo
+  „wymagane ograniczenie poboru" — i podaj godziny, przy których stoi.
+- KOMPAS I PRZYWOŁANIE TO DWIE NIEZALEŻNE RZECZY, choć ogłasza je ten sam
+  operator. Sygnał Kompasu nie jest przywołaniem, nie zapowiada przywołania
+  i nie jest jego podstawą. NIE ŁĄCZ ich słowami „więc", „dlatego", „co oznacza"
+  ani żadnym innym wynikaniem — także wtedy, gdy dotyczą tej samej doby lub tych
+  samych godzin. Doba, w której nic nie zapowiada przywołania, może nieść sygnał
+  Kompasu; to nie jest sprzeczność i nie ma czego prostować.
+- Czytelnik prowadzi ruch elektryczny w zakładzie. Napisz, czego sygnał od niego
+  wymaga i kiedy. Nie tłumacz, skąd Kompas się bierze ani jak operator go wyznacza.
 
 === JAK PISZESZ ===
 
@@ -397,6 +417,21 @@ export function hasGrounds(facts: DayFacts[]): boolean {
 
 export function hasSomethingToExplain(facts: DayFacts[]): boolean {
   if (hasGrounds(facts)) return true;
+
+  /*
+   * A Kompas flag on ANY day, not merely on the leading one.
+   *
+   * It is a signal the operator has actually published, addressed to the person
+   * reading this — the only fact on the card that asks him to do something —
+   * and it needs a line of its own to say what and when. Without this a calm
+   * week carrying a flag chose the shape with no slot to put it in, and the one
+   * genuinely actionable thing in the facts went unsaid.
+   *
+   * Not restricted to the leading day like the cause and the movement are: those
+   * are computed for every day and would become a list, while a flag is rare and
+   * the day that carries one is not usually the day the reserve makes tightest.
+   */
+  if (facts.some((day) => day.compass.length > 0)) return true;
 
   const lead = leadingDay(facts);
   // Movement counts for the same reason a cause does, and rather more: a calm

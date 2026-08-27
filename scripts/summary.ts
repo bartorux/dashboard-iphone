@@ -16,6 +16,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   HISTORY_FIELDS_WITH_MIX,
+  fetchCompass,
   fetchPSEData,
   fetchPSEHistory,
 } from '../src/utils/api';
@@ -37,8 +38,15 @@ import {
   parseLog as parseTextLog,
 } from '../src/utils/summaryLog';
 import type { PSEDataPoint } from '../src/types';
-import { assessmentKey, buildFacts, renderFacts } from '../src/utils/summaryFacts';
+import {
+  allowedHoursFor,
+  assessmentKey,
+  buildFacts,
+  renderFacts,
+} from '../src/utils/summaryFacts';
 import type { ForecastNote } from '../src/utils/summaryFacts';
+import { parseCompass } from '../src/utils/compass';
+import type { CompassHour } from '../src/utils/compass';
 import {
   PROMPT_VERSION,
   buildPrompt,
@@ -164,12 +172,41 @@ try {
   // context, and context missing must never end the run.
 }
 
+/*
+ * PSE's own signal to consumers, fetched here and nowhere else.
+ *
+ * Asked for across the whole visible window even though only today and — from
+ * about 16:35 — tomorrow are ever published. The absent days come back as no
+ * rows, which is the endpoint's normal state rather than a fault, so there is
+ * nothing to special-case and no date arithmetic to keep in step with the tabs.
+ *
+ * Wrapped like the forecast log above, and for the same reason: the summary is
+ * the product, this is context, and context missing must never end the run. A
+ * second guard on top of `fetchCompass` already mapping every failure to an
+ * empty list — this endpoint is new to the job, and a throw from anywhere
+ * inside the parse would otherwise take the whole hourly run down with it.
+ */
+const kompas = new Map<string, CompassHour[]>();
+try {
+  const dni = visibleBusinessDates(now);
+  const surowe = await fetchCompass(dni[0], dni[dni.length - 1]);
+  for (const hour of parseCompass(surowe)) {
+    const bucket = kompas.get(hour.businessDate);
+    if (bucket) bucket.push(hour);
+    else kompas.set(hour.businessDate, [hour]);
+  }
+} catch {
+  // No compass this run. The card simply says nothing about it, which is what
+  // it says on the great majority of days anyway.
+}
+
 const facts = buildFacts(
   points,
   processData(history),
   now,
   visibleBusinessDates(now),
-  ruch
+  ruch,
+  kompas
 );
 
 if (facts.length === 0) {
@@ -255,14 +292,10 @@ function giveUp(reason: string): never {
   process.exit(0);
 }
 
-const allowedHours = new Set<string>();
-for (const day of facts) {
-  if (day.worstHour) allowedHours.add(day.worstHour);
-  for (const range of day.ranges) {
-    allowedHours.add(range.from);
-    allowedHours.add(range.to);
-  }
-}
+// Every clock time the facts state, the Kompas ranges included. Moved into
+// summaryFacts so a new kind of hour cannot reach the prompt without also
+// reaching the validator — the deadlock that costs an hour of stale card.
+const allowedHours = allowedHoursFor(facts);
 
 // The spoken name AND the plain date of every visible day. A day the facts
 // contain is never an invented number, however we choose to speak of it.

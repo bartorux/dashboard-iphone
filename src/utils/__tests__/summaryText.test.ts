@@ -2,11 +2,13 @@ import { describe, it, expect } from 'vitest';
 import {
   INSTRUCTION,
   buildPrompt,
+  hasSomethingToExplain,
   parseSummary,
   swap,
   validateSummary,
 } from '../summaryText';
-import { assessmentKey, buildFacts } from '../summaryFacts';
+import { allowedHoursFor, assessmentKey, buildFacts } from '../summaryFacts';
+import type { CompassHour, CompassLevel } from '../compass';
 import { dayMonth, spokenDay } from '../dateHelpers';
 import { makePoint } from '../../test/factories';
 
@@ -1138,5 +1140,191 @@ describe('assessmentKey', () => {
     const after = assessmentKey(buildFacts(day(3000), [], new Date('2026-08-09T00:00:00Z')));
 
     expect(before).not.toBe(after);
+  });
+});
+
+describe('Kompas Energetyczny w instrukcji', () => {
+  function kompasNa(
+    businessDate: string,
+    ...hours: Array<[number, CompassLevel]>
+  ): Map<string, CompassHour[]> {
+    return new Map([
+      [
+        businessDate,
+        hours.map(([hour, level]) => ({
+          businessDate,
+          startUtc: new Date(`${businessDate}T${pad(hour)}:00:00Z`),
+          hourLabel: `${pad(hour)}:00`,
+          level,
+        })),
+      ],
+    ]);
+  }
+
+  /** A day nothing is happening on: no grounds, and a comfortable margin. */
+  const spokojna = Array.from({ length: 24 }, (_, hour) =>
+    hourOn('2026-08-10', hour, { reserve: 6000, required: 2000 })
+  );
+
+  const fakty = (kompas: Map<string, CompassHour[]> = new Map()) =>
+    buildFacts(
+      spokojna,
+      [],
+      new Date('2026-08-09T00:00:00Z'),
+      ['2026-08-10'],
+      new Map(),
+      kompas
+    );
+
+  it('gives the answer a slot for a signal on an otherwise quiet week', () => {
+    /*
+     * Without this a calm week carrying a flag chose the shape with no middle
+     * line at all — the shape written for a period where there is genuinely
+     * nothing to say — and the one thing in the facts that actually asks the
+     * reader to do something never reached the card.
+     */
+    expect(hasSomethingToExplain(fakty())).toBe(false);
+    expect(hasSomethingToExplain(fakty(kompasNa('2026-08-10', [19, 2])))).toBe(
+      true
+    );
+  });
+
+  it('explains the signal in every shape the prompt can take', () => {
+    /*
+     * The block sits outside both fragments `swap` replaces, so all three shapes
+     * carry it. That is not incidental: a flag turns up on calm days and busy
+     * ones alike, and a shape that dropped the explanation would hand the model
+     * a fact it had never been told the meaning of — which is how "Kompas" would
+     * get written up as a call period.
+     *
+     * `swap` throws rather than silently missing, so a future rewrite that moved
+     * the block inside a swapped fragment fails here loudly.
+     */
+    const ksztalty = [
+      // Nothing to explain: the two-line shape.
+      fakty(),
+      // A flag and nothing else: answer-first, no DALEJ.
+      fakty(kompasNa('2026-08-10', [19, 2])),
+      // Grounds for a call period: the full three-line shape.
+      buildFacts(
+        [hourOn('2026-08-10', 19, { reserve: 800, required: 2000 })],
+        [],
+        new Date('2026-08-09T00:00:00Z'),
+        ['2026-08-10'],
+        new Map(),
+        kompasNa('2026-08-10', [19, 3])
+      ),
+    ];
+
+    for (const facts of ksztalty) {
+      const prompt = buildPrompt(facts, 30, new Date('2026-08-09T05:00:00Z'));
+      expect(prompt).toContain('KOMPAS ENERGETYCZNY PSE');
+      expect(prompt).toMatch(/NIE ŁĄCZ ich słowami/);
+    }
+  });
+
+  it('shows the model no finished sentence about the signal either', () => {
+    // Measured at 59 of 72 texts on this card: the model reproduces an
+    // eight-word run from the instruction whenever the instruction contains one.
+    // The block is directives addressed to the writer, never prose he could lift.
+    const jedna = INSTRUCTION.split('\n').join(' ');
+
+    for (const zdanie of [
+      'Kompas Energetyczny PSE zaleca oszczędzanie',
+      'Kompas Energetyczny PSE wymaga ograniczenia poboru',
+      'operator zaleca oszczędzanie w godzinach',
+    ]) {
+      expect(jedna).not.toContain(zdanie);
+    }
+  });
+
+  it('shows the model no word the validator goes on to reject', () => {
+    /*
+     * Scoped to the Kompas block rather than to the whole instruction, and
+     * deliberately so. The DALEJ section quotes "cienki margines" inside a
+     * worked TAK NIE PISZ example, naming the calque in order to refuse it —
+     * that predates this layer and is its own decision. What this asserts is
+     * that the NEW material adds no fresh instance of the pattern, which is the
+     * rule this card has been bitten by four times: naming a phrase is how it
+     * spreads.
+     */
+    const blok = INSTRUCTION.slice(
+      INSTRUCTION.indexOf('KOMPAS ENERGETYCZNY PSE'),
+      INSTRUCTION.indexOf('=== JAK PISZESZ ===')
+    )
+      .split('\n')
+      .join(' ');
+
+    expect(blok).toContain('Kompas Energetyczny PSE');
+    for (const wzorzec of [
+      /odstępstw/i,
+      /dodatkow/i,
+      /cienk\w*\s+margines/i,
+      /\bhoryzon/i,
+      /wezwan/i,
+      /\bokn[oaie]\w*\b/i,
+      /w godzinach (wieczorn|porann|popo|nocn)/i,
+      // No megawatts and no clock times: an hour shown here is an hour the model
+      // will copy into an answer, and the validator only accepts the ones the
+      // facts actually stated for the day in hand.
+      /\bMW\b/,
+      /\d{1,2}:\d{2}/,
+    ]) {
+      expect(blok).not.toMatch(wzorzec);
+    }
+  });
+
+  it('accepts a sentence naming an hour the Kompas put in the facts', () => {
+    /*
+     * The end-to-end shape of the deadlock guard: the hours reaching the prompt
+     * and the hours the validator will accept come from the same function, so a
+     * text naming a Kompas hour stands.
+     */
+    const facts = fakty(kompasNa('2026-08-10', [16, 2], [17, 2]));
+    const hours = allowedHoursFor(facts);
+
+    expect(
+      validateSummary(
+        {
+          headline: 'Jutro nic nie zapowiada przywołania.',
+          body: 'Kompas Energetyczny PSE zaleca jutro oszczędzanie od 16:00 do 18:00.',
+          outlook: '',
+        },
+        hours,
+        ['jutro']
+      )
+    ).toEqual({ ok: true });
+  });
+
+  it('refuses an hour the Kompas never stated', () => {
+    const facts = fakty(kompasNa('2026-08-10', [16, 2], [17, 2]));
+
+    expect(
+      validateSummary(
+        {
+          headline: 'Jutro nic nie zapowiada przywołania.',
+          body: 'Kompas Energetyczny PSE zaleca jutro oszczędzanie od 21:00 do 22:00.',
+          outlook: '',
+        },
+        allowedHoursFor(facts),
+        ['jutro']
+      )
+    ).toEqual({ ok: false, reason: 'godzina 21:00 spoza faktów' });
+  });
+
+  it('lets the proper name through the ban on numbers', () => {
+    // "Kompas Energetyczny PSE" carries no digit, so nothing about the name
+    // itself can trip the rule that refuses any figure we did not supply.
+    expect(
+      validateSummary(
+        {
+          headline: 'Kompas Energetyczny PSE zaleca jutro oszczędzanie o 16:00.',
+          body: '',
+          outlook: 'W pozostałych dobach operator nic nie sygnalizuje.',
+        },
+        new Set(['16:00']),
+        ['jutro']
+      )
+    ).toEqual({ ok: true });
   });
 });
