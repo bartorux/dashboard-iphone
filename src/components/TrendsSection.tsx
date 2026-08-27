@@ -147,8 +147,10 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
         className="flex w-full items-center justify-between gap-2 text-left"
       >
         <h2 className="text-[0.9375rem] font-semibold text-text">Analiza i trendy</h2>
+        {/* Same curve as .collapsible in App.css, so the chevron and the
+            section it points at settle into place together. */}
         <ChevronDownIcon
-          className={`h-5 w-5 text-text-tertiary transition-transform duration-300 ${
+          className={`h-5 w-5 text-text-tertiary transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
             expanded ? '' : '-rotate-90'
           }`}
         />

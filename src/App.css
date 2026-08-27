@@ -330,7 +330,26 @@ body {
   /* No safe-area padding here: the sticky header handles its own inset, so it
      can extend its background under the notch while keeping content clear. */
   overscroll-behavior-y: contain;
-  transition: background-color 250ms ease, color 250ms ease;
+}
+
+/* Theme toggle recolours every surface, not just the page background. Without
+   this the body faded smoothly while cards - which cover most of the screen -
+   snapped straight to the new colour, an abrupt brightness jump right where
+   the eye is looking. border-color rides along so card outlines fade with
+   their fills instead of changing a beat apart.
+
+   Wrapped in @layer base: Tailwind (v4) puts every utility class in
+   @layer utilities, declared after base, and per the Cascade Layers spec a
+   named layer always loses to unlayered CSS regardless of specificity. Left
+   unlayered, this blanket rule would have outranked components' own explicit
+   transition utilities - Header's transition-colors duration-500 among them -
+   forcing every one of them down to this 250ms regardless of what they ask
+   for. Inside @layer base it only applies where nothing more specific opts
+   in, which is the point: a quiet default, not a floor nothing can rise above. */
+@layer base {
+  *, *::before, *::after {
+    transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease;
+  }
 }
 
 * {
@@ -357,7 +376,7 @@ body {
 .collapsible {
   display: grid;
   grid-template-rows: 1fr;
-  transition: grid-template-rows 300ms ease;
+  transition: grid-template-rows 300ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .collapsible[data-collapsed="true"] {

@@ -51,8 +51,10 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ summary, now }) => {
             Analiza AI
           {` · ${timeFormat.format(new Date(summary.generatedAt))}`}
         </span>
+        {/* Same curve as .collapsible in App.css, so the chevron and the
+            section it points at settle into place together. */}
         <ChevronDownIcon
-          className={`h-4 w-4 shrink-0 text-text-tertiary transition-transform duration-300 ${
+          className={`h-4 w-4 shrink-0 text-text-tertiary transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
             expanded ? '' : '-rotate-90'
           }`}
         />

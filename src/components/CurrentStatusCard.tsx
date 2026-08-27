@@ -24,6 +24,10 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
     point != null && point.reserve !== null && point.required !== null;
   const margin = hasValues ? point!.reserve! - point!.required! : null;
 
+  // The status badge and the margin figure both recolour off the same
+  // `status` value that drives Header's own transition-colors duration-500 —
+  // one state change, one way of signalling it, so all three land in step
+  // instead of the header settling into its new colour while these two lag.
   return (
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
@@ -36,7 +40,7 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
           </div>
         </div>
         <span
-          className={`shrink-0 rounded-full px-2.5 py-1 text-[0.6875rem] font-semibold ${STATUS_SOFT_BG[status]} ${STATUS_TEXT[status]}`}
+          className={`shrink-0 rounded-full px-2.5 py-1 text-[0.6875rem] font-semibold transition-colors duration-500 ${STATUS_SOFT_BG[status]} ${STATUS_TEXT[status]}`}
         >
           {STATUS_LABEL[status]}
         </span>
@@ -49,7 +53,7 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
       ) : (
         <>
           <div
-            className={`tnum mt-2 text-5xl font-semibold leading-none tracking-tight ${STATUS_TEXT[status]}`}
+            className={`tnum mt-2 text-5xl font-semibold leading-none tracking-tight transition-colors duration-500 ${STATUS_TEXT[status]}`}
           >
             {margin > 0 ? '+' : ''}
             {formatMW(margin)}

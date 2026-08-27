@@ -43,8 +43,13 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
         </>
       ) : (
         <>
+          {/* The gesture above is tracked 1:1 with the finger (offset/opacity
+              carry no transition, deliberately). A 300ms flip here lagged
+              visibly behind that; 160ms with an ease-in-then-out curve keeps
+              the arrow's turn close to where the thumb actually crosses the
+              ready threshold. */}
           <ArrowDownIcon
-            className={`h-4 w-4 transition-transform duration-300 ${
+            className={`h-4 w-4 transition-transform duration-[160ms] ease-[cubic-bezier(0.77,0,0.175,1)] ${
               isReady ? 'rotate-180' : ''
             }`}
           />
