@@ -34,6 +34,12 @@ const history = readFileSync(
   resolve(root, 'src/utils/__fixtures__/pse-30d.json'),
   'utf8'
 );
+// Curtailment for the frozen "today" (2026-08-04): a PV dip to about -1500 MW
+// around midday, wind untouched — reshaped from a live poze-redoze response.
+const redispatch = readFileSync(
+  resolve(root, 'src/utils/__fixtures__/pse-redoze.json'),
+  'utf8'
+);
 
 /**
  * Antialiasing and font rendering wobble by a pixel between runs. This tolerance
@@ -150,10 +156,19 @@ for (const scenario of SCENARIOS) {
   await context.route('**/api.raporty.pse.pl/**', (route) => {
     if (scenario.offline) return route.abort('failed');
     const requested = decodeURIComponent(route.request().url());
+    // poze-redoze also filters with business_date, but with `eq` rather than
+    // history's `ge` — checked first, or it would fall through to the `ge`
+    // branch below and never match, then to the forecast fixture, which
+    // carries none of the redispatch fields and would silently draw nothing.
+    const body = requested.includes('poze-redoze')
+      ? redispatch
+      : requested.includes('business_date ge')
+        ? history
+        : forecast;
     return route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: requested.includes('business_date ge') ? history : forecast,
+      body,
     });
   });
 

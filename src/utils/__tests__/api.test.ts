@@ -3,6 +3,7 @@ import {
   HISTORY_FIELDS_WITH_MIX,
   fetchPSEData,
   fetchPSEHistory,
+  fetchRedispatch,
 } from '../api';
 
 const ok = (value: unknown[]) => ({
@@ -183,5 +184,33 @@ describe('fetchPSEHistory', () => {
     expect(url).toContain('fcst_wi_tot_gen');
     expect(url).toContain('sum_unav_oper_cond');
     expect(url).toContain('surplus_cap_avail_tso');
+  });
+});
+
+describe('fetchRedispatch', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('hits the poze-redoze endpoint, not pk5l-wp — this is the only test that would ever notice `query` silently using API_URL for every caller', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok([{ dtime: 'x' }]));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await fetchRedispatch('2026-08-04');
+
+    const url = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
+    expect(url).toContain('/poze-redoze?');
+    expect(url).toContain("business_date eq '2026-08-04'");
+  });
+
+  it('treats an empty result as a normal, curtailment-free day rather than an error', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok([]));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(fetchRedispatch('2026-08-04')).resolves.toEqual([]);
+  });
+
+  it('returns an empty array rather than throwing when the request fails', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
+
+    await expect(fetchRedispatch('2026-08-04')).resolves.toEqual([]);
   });
 });

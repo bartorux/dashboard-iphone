@@ -74,4 +74,18 @@ describe('ChartSection', () => {
       'business_date ge'
     );
   });
+
+  it('does not fetch redispatch until the generation view is opened', async () => {
+    renderSection();
+
+    expect(fetch).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole('tab', { name: 'Generacja' }));
+
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    const url = decodeURIComponent(String(vi.mocked(fetch).mock.calls[0][0]));
+    expect(url).toContain('/poze-redoze?');
+    // dayData[0].businessDate from the shared factory
+    expect(url).toContain("business_date eq '2026-08-03'");
+  });
 });

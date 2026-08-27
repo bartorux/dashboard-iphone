@@ -11,7 +11,9 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { PSEDataPoint } from '../types';
+import { HOUR_MS } from '../utils/constants';
 import { niceScaleRange } from '../utils/scale';
+import { hasCurtailment, RedispatchHour } from '../utils/redispatch';
 import { useChartColors } from '../hooks/useChartColors';
 import {
   useChartAnimationMs,
@@ -34,6 +36,13 @@ import {
 interface GenerationChartProps {
   data: PSEDataPoint[];
   currentHourLabel: string | null;
+  /**
+   * Non-market curtailment of PV/wind, keyed by the UTC epoch ms the hourly
+   * block STARTS at. Optional and presentational: this component only reads
+   * it, `useRedispatch` does the fetching. Omitted or empty, the chart renders
+   * exactly as it did before this existed.
+   */
+  redispatch?: Map<number, RedispatchHour>;
 }
 
 interface Row {
@@ -54,6 +63,32 @@ interface Row {
    * instead of the stack quietly swallowing the discrepancy.
    */
   otherRaw: number | null;
+  /**
+   * MW curtailed this hour by PSE order, <= 0. Null means the day's
+   * redispatch data has not loaded (or does not exist yet) — nothing is
+   * drawn. Zero means it loaded and there was nothing curtailed that hour.
+   */
+  pvRed: number | null;
+  windRed: number | null;
+}
+
+/**
+ * The redispatch bucket for one row, keyed on the hour the block STARTS —
+ * `point.time` carries its END (see the field comment on `PSEDataPoint`), so
+ * joining on `point.time` directly would attribute an hour's curtailment to
+ * the row after it. Exported so this one line of arithmetic — easy to get
+ * backwards, and wrong in a way no screenshot would catch — has its own test
+ * independent of rendering.
+ */
+export function redispatchForPoint(
+  point: PSEDataPoint,
+  redispatch: Map<number, RedispatchHour> | undefined
+): { pvRed: number | null; windRed: number | null } {
+  const bucket = redispatch?.get(point.time.getTime() - HOUR_MS);
+  return {
+    pvRed: bucket ? bucket.pvRed : null,
+    windRed: bucket ? bucket.windRed : null,
+  };
 }
 
 /** Splits total generation into the part that is not PV or wind. */
@@ -95,6 +130,9 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
   const exchange = row.exchange ?? 0;
   // Negative in the rare hours where the PV forecast exceeds total generation
   const inconsistent = row.otherRaw !== null && row.otherRaw < 0;
+  const pvRed = row.pvRed ?? 0;
+  const windRed = row.windRed ?? 0;
+  const showRedispatch = pvRed !== 0 || windRed !== 0;
 
   return (
     <ChartTooltipBox>
@@ -126,6 +164,17 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
           )} MW`}
         />
         <TooltipRow label="Ubytki mocy" value={`${formatMW(row.outages ?? 0)} MW`} />
+        {showRedispatch && (
+          <>
+            <TooltipRow
+              label="Redysponowanie OZE"
+              value={`${formatMW(pvRed + windRed)} MW`}
+              divider
+            />
+            <TooltipRow indent label="fotowoltaika" value={`${formatMW(pvRed)} MW`} />
+            <TooltipRow indent label="wiatr" value={`${formatMW(windRed)} MW`} />
+          </>
+        )}
         {inconsistent && (
           <div className="mt-1 border-t border-separator pt-1 text-[0.6875rem] text-warn-text">
             Prognoza OZE przekracza generację łączną o{' '}
@@ -149,6 +198,7 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
 const GenerationChart: React.FC<GenerationChartProps> = ({
   data,
   currentHourLabel,
+  redispatch,
 }) => {
   const animationMs = useChartAnimationMs();
 
@@ -167,9 +217,16 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         exchange: point.exchange,
         generation: point.generation,
         ...remainder(point.generation, point.pv, point.wind),
+        ...redispatchForPoint(point, redispatch),
       })),
-    [data]
+    [data, redispatch]
   );
+
+  const curtailmentHours = useMemo(
+    () => Array.from(redispatch?.values() ?? []),
+    [redispatch]
+  );
+  const showCurtailment = hasCurtailment(curtailmentHours);
 
   const scale = useMemo(() => {
     const values = rows.flatMap((row) => [
@@ -179,6 +236,9 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
       // clipped those hours away entirely, leaving the line flat against the
       // axis exactly when it carried the most information.
       row.exchange,
+      // Same idea for curtailment: 0 on every hour without it, so the axis
+      // only dips below zero for this reason on a day that actually has some.
+      (row.pvRed ?? 0) + (row.windRed ?? 0),
     ]);
     const valid = values.filter(
       (v): v is number => v !== null && Number.isFinite(v)
@@ -223,6 +283,23 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
             label: 'Wymiana',
             swatch: <LineSwatch color={colors.exchange} dashed />,
           },
+          ...(showCurtailment
+            ? [
+                {
+                  label: 'Redysponowanie OZE',
+                  swatch: (
+                    <span className="flex items-center gap-0.5">
+                      <AreaSwatch fill={colors.pv} border={colors.pv} />
+                      <AreaSwatch fill={colors.wind} border={colors.wind} />
+                    </span>
+                  ),
+                  info: [
+                    'PSE poleciło elektrowniom słonecznym i wiatrowym ograniczyć produkcję — bo w danym momencie w sieci było za dużo energii albo sieć nie miała jak jej odebrać.',
+                    'Warstwa pod osią pokazuje, o ile średnio w danej godzinie ograniczono produkcję.',
+                  ],
+                },
+              ]
+            : []),
         ]}
       />
 
@@ -289,6 +366,44 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               stroke="none"
               fill={colors.other}
               fillOpacity={0.55}
+              animationDuration={animationMs}
+              activeDot={false}
+              connectNulls={false}
+            />
+
+            {/* Non-market curtailment, drawn below zero in the colour of the
+                series it curtails. A separate stackId from "mix" above: these
+                two never share a baseline with generation, they sit under it.
+                Verified in isolation that Recharts 3.7 stacks negative-valued
+                Areas downward from zero (each series extending the stack
+                further down, not overlapping) for both "monotone" and "step"
+                curves, so there was no need to fall back to <Bar>. */}
+            {/* Opacity 0.5 with a stroke, up from a strokeless 0.3: at monitor
+                scale (a 25 GW axis) the band was nearly invisible, and its
+                baseline diff sat at 0.057% — BELOW the 0.1% visual-regression
+                threshold, meaning the layer could silently disappear and every
+                screenshot test would stay green. Strong enough to read from a
+                desk away is also strong enough for the regression to guard. */}
+            <Area
+              type="monotone"
+              dataKey="pvRed"
+              stackId="redispatch"
+              stroke={colors.pv}
+              strokeWidth={1}
+              fill={colors.pv}
+              fillOpacity={0.5}
+              animationDuration={animationMs}
+              activeDot={false}
+              connectNulls={false}
+            />
+            <Area
+              type="monotone"
+              dataKey="windRed"
+              stackId="redispatch"
+              stroke={colors.wind}
+              strokeWidth={1}
+              fill={colors.wind}
+              fillOpacity={0.5}
               animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
