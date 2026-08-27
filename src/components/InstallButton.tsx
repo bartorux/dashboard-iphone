@@ -47,7 +47,7 @@ const InstallButton: React.FC<InstallButtonProps> = ({
     <button
       type="button"
       onClick={handleClick}
-      className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface-2 px-4 text-[0.9375rem] font-medium text-accent-text active:opacity-70 xl:hidden"
+      className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface-2 px-4 text-[0.9375rem] font-medium text-accent-text active:scale-[0.97] active:opacity-70 transition-transform duration-100 xl:hidden"
     >
       <DownloadIcon className="h-4 w-4" />
       {LABELS[String(installableState)] ?? 'Zainstaluj aplikację'}

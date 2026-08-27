@@ -123,14 +123,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             <button
               type="button"
               onClick={handleSave}
-              className="min-h-11 flex-1 rounded-xl bg-accent px-4 text-[0.9375rem] font-semibold text-white active:opacity-80"
+              className="min-h-11 flex-1 rounded-xl bg-accent px-4 text-[0.9375rem] font-semibold text-white active:scale-[0.97] active:opacity-80 transition-transform duration-100"
             >
               Zapisz
             </button>
             <button
               type="button"
               onClick={handleReset}
-              className="min-h-11 flex-1 rounded-xl bg-surface-3 px-4 text-[0.9375rem] font-medium text-text active:opacity-80"
+              className="min-h-11 flex-1 rounded-xl bg-surface-3 px-4 text-[0.9375rem] font-medium text-text active:scale-[0.97] active:opacity-80 transition-transform duration-100"
             >
               Reset
             </button>
