@@ -391,6 +391,39 @@ describe('parseSummary', () => {
 });
 
 describe('validateSummary', () => {
+  it('refuses the Kompas signal welded to a call period', () => {
+    /*
+     * Measured before this gate existed: "Kompas zaleca oszczędzanie, więc
+     * operator szykuje przywołanie" passed every rule — only a prediction of
+     * the operator's decision was caught, never the causal weld. The two are
+     * independent signals from the same operator, and the instruction's ban
+     * alone is what this card's history says it is: a request.
+     */
+    const sprawdz = (outlook: string) =>
+      validateSummary(
+        { headline: 'Jutro o 19:00 margines jest wąski.', body: '', outlook },
+        new Set(['16:00', '17:00', '19:00']),
+        ['dziś', 'jutro']
+      );
+
+    for (const zle of [
+      'Kompas Energetyczny PSE zaleca oszczędzanie 16:00-17:00, więc operator szykuje przywołanie.',
+      'Kompas Energetyczny PSE zaleca oszczędzanie, dlatego przywołanie wchodzi w grę.',
+      'Kompas Energetyczny PSE zapowiada przywołanie 16:00-17:00.',
+    ]) {
+      expect(sprawdz(zle)).toEqual({ ok: false, reason: 'Kompas zespawany z przywołaniem' });
+    }
+
+    // Mentioning both without a causal join is legitimate — including the calm
+    // state's own negated "nic nie zapowiada" sharing a sentence in DALEJ.
+    expect(
+      sprawdz('Kompas Energetyczny PSE zaleca oszczędzanie 16:00-17:00; to osobny sygnał od przywołania.')
+    ).toEqual({ ok: true });
+    expect(
+      sprawdz('Kompas Energetyczny PSE zaleca jutro oszczędzanie 16:00-17:00, a nic nie zapowiada przywołania.')
+    ).toEqual({ ok: true });
+  });
+
   it('refuses the eight-hour window said backwards', () => {
     /*
      * Elapsed time is what CLOSES this window, so "ogłoszenie może jeszcze

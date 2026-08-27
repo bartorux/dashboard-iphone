@@ -735,6 +735,33 @@ export function validateSummary(
   }
 
   /*
+   * The Kompas signal welded to a call period.
+   *
+   * Measured before this gate existed: "Kompas zaleca oszczędzanie, więc
+   * operator szykuje przywołanie" passed every rule — only a PREDICTION of the
+   * operator's decision was caught, never the causal weld itself. The
+   * instruction forbids the join, and the history of this card is unambiguous
+   * about what instructions alone are worth: the model does it anyway, and a
+   * reader is told that PSE's savings appeal announces a call period, which is
+   * false — the two are independent signals from the same operator.
+   *
+   * Narrow on purpose. Both words in ONE sentence plus a causal connector; a
+   * sentence that merely mentions both ("to osobny sygnał od przywołania") is
+   * legitimate and passes. "Zapowiada" only counts unnegated — "nic nie
+   * zapowiada przywołania" is the calm state's own phrasing and may share a
+   * sentence with the Kompas clause in DALEJ.
+   */
+  for (const zdanie of whole.split(/(?<=[.!?])\s+/)) {
+    if (!/kompas/i.test(zdanie) || !/przywoła\p{L}*/iu.test(zdanie)) continue;
+    if (
+      /\b(więc|dlatego|zatem|co oznacza|oznacza to|w związku z tym|szykuje|zwiastuje)\b/iu.test(zdanie) ||
+      /(?<!\bnie\s)\bzapowiada\b/iu.test(zdanie)
+    ) {
+      return { ok: false, reason: 'Kompas zespawany z przywołaniem' };
+    }
+  }
+
+  /*
    * One span stretched over several days.
    *
    * Published on 16 August: "we wtorek 18, w czwartek 20 i w piątek 21 rezerwa
