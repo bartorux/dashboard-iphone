@@ -378,13 +378,20 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
                 Areas downward from zero (each series extending the stack
                 further down, not overlapping) for both "monotone" and "step"
                 curves, so there was no need to fall back to <Bar>. */}
+            {/* Opacity 0.5 with a stroke, up from a strokeless 0.3: at monitor
+                scale (a 25 GW axis) the band was nearly invisible, and its
+                baseline diff sat at 0.057% — BELOW the 0.1% visual-regression
+                threshold, meaning the layer could silently disappear and every
+                screenshot test would stay green. Strong enough to read from a
+                desk away is also strong enough for the regression to guard. */}
             <Area
               type="monotone"
               dataKey="pvRed"
               stackId="redispatch"
-              stroke="none"
+              stroke={colors.pv}
+              strokeWidth={1}
               fill={colors.pv}
-              fillOpacity={0.3}
+              fillOpacity={0.5}
               animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
@@ -393,9 +400,10 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               type="monotone"
               dataKey="windRed"
               stackId="redispatch"
-              stroke="none"
+              stroke={colors.wind}
+              strokeWidth={1}
               fill={colors.wind}
-              fillOpacity={0.3}
+              fillOpacity={0.5}
               animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
