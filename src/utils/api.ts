@@ -1,4 +1,4 @@
-import { PSERawItem, PSERedispatchRawItem } from '../types';
+import { PSECompassRawItem, PSERawItem, PSERedispatchRawItem } from '../types';
 import { API_BASE, API_URL, FORECAST_ROW_LIMIT } from './constants';
 import { daysToFetch } from './dayWindow';
 import { addDays, formatDateTimeApi, getStartOfToday } from './dateHelpers';
@@ -151,6 +151,34 @@ export async function fetchRedispatch(
   const rows = await query<PSERedispatchRawItem>(
     `${API_BASE}/poze-redoze`,
     `$filter=${encodeURIComponent(`business_date eq '${businessDate}'`)}&$first=100`
+  );
+  return rows ?? [];
+}
+
+/**
+ * PSE's Kompas Energetyczny (pdgsz) across a span of business days: the hourly
+ * signal the operator publishes to consumers, telling them when saving is
+ * recommended or a limitation required.
+ *
+ * Only PUBLISHED days come back. Today is always there; tomorrow appears around
+ * 16:35, and days beyond that are simply absent — that is the endpoint's normal
+ * state, not a failure, so like `fetchRedispatch` an empty result maps to `[]`.
+ * The caller decides what silence means, and here it means "no signal to report"
+ * rather than "something went wrong".
+ *
+ * `is_active` is asked for in the filter because pdgsz versions its records: a
+ * republished period keeps the superseded row alongside the current one, and
+ * without this the same hour arrives twice with two different levels.
+ */
+export async function fetchCompass(
+  from: string,
+  to: string
+): Promise<PSECompassRawItem[]> {
+  const rows = await query<PSECompassRawItem>(
+    `${API_BASE}/pdgsz`,
+    `$filter=${encodeURIComponent(
+      `business_date ge '${from}' and business_date le '${to}' and is_active eq true`
+    )}&$first=200`
   );
   return rows ?? [];
 }
