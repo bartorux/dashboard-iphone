@@ -1,4 +1,5 @@
-export const API_URL = 'https://api.raporty.pse.pl/api/pk5l-wp';
+export const API_BASE = 'https://api.raporty.pse.pl/api';
+export const API_URL = `${API_BASE}/pk5l-wp`;
 
 export const DEFAULT_ORANGE_THRESHOLD = 500;
 export const DEFAULT_RED_THRESHOLD = 300;

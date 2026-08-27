@@ -57,14 +57,25 @@ export const HISTORY_FIELDS_WITH_MIX = [
   'sum_unav_oper_cond',
 ].join(',');
 
-async function query(params: string): Promise<PSERawItem[] | null> {
+/**
+ * Generic over the endpoint because pk5l-wp is not the only PSE dataset this
+ * app talks to: Kompas (pdgsz) and non-market redispatch (poze-redoze) live
+ * under other paths of the same API and share this same fetch/parse shape.
+ *
+ * An empty `value` array maps to null same as a network/HTTP failure, so the
+ * two are indistinguishable here. That is intentional — for pk5l-wp empty is
+ * always wrong, but a future caller (poze-redoze with no redispatch that day)
+ * may see empty as a perfectly valid state. It is up to the caller to decide
+ * whether null means "error" or "nothing happened".
+ */
+async function query<T>(endpoint: string, params: string): Promise<T[] | null> {
   try {
-    const response = await fetch(`${API_URL}?${params}`);
+    const response = await fetch(`${endpoint}?${params}`);
     if (!response.ok) return null;
 
     const data = await response.json();
     return Array.isArray(data?.value) && data.value.length > 0
-      ? (data.value as PSERawItem[])
+      ? (data.value as T[])
       : null;
   } catch {
     return null;
@@ -82,7 +93,8 @@ export async function fetchPSEData(): Promise<PSERawItem[]> {
 
   const start = from.replace(' 00:00:00', ' 01:00:00');
 
-  const filtered = await query(
+  const filtered = await query<PSERawItem>(
+    API_URL,
     `$filter=${encodeURIComponent(
       `plan_dtime ge '${start}' and plan_dtime le '${to}'`
     )}&$select=${FORECAST_FIELDS}&$orderby=plan_dtime&$first=${FORECAST_ROW_LIMIT}`
@@ -92,7 +104,8 @@ export async function fetchPSEData(): Promise<PSERawItem[]> {
   // Fallback: newest rows first. Without $orderby the API serves its oldest
   // records (June 2024), which all fall outside the window and render as an
   // empty chart.
-  const latest = await query(
+  const latest = await query<PSERawItem>(
+    API_URL,
     `$select=${FORECAST_FIELDS}&$orderby=${encodeURIComponent(
       'plan_dtime desc'
     )}&$first=200`
@@ -112,7 +125,8 @@ export async function fetchPSEHistory(
   const from = formatDateTimeApi(addDays(startOfToday, -days)).slice(0, 10);
   const to = formatDateTimeApi(addDays(startOfToday, -1)).slice(0, 10);
 
-  const rows = await query(
+  const rows = await query<PSERawItem>(
+    API_URL,
     `$filter=${encodeURIComponent(
       `business_date ge '${from}' and business_date le '${to}'`
     )}&$select=${fields}&$orderby=plan_dtime&$first=1000`

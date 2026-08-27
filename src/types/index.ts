@@ -27,6 +27,38 @@ export interface PSERawItem {
   fcst_gen_unit_stor_non_prov?: string | number | null;
 }
 
+/**
+ * A row from pdgsz, PSE's Kompas Energetyczny (Energy Compass). usage_fcst is
+ * the recommended-usage level for the period: 0 recommended use, 1 normal,
+ * 2 recommended saving, 3 required limitation. Records are versioned —
+ * is_active=true marks the current version of a given period.
+ */
+export interface PSECompassRawItem {
+  business_date: string;
+  dtime: string;
+  dtime_utc: string;
+  usage_fcst: number | string;
+  is_active: boolean;
+  publication_ts_utc?: string;
+  total_power_demand?: string | number | null;
+}
+
+/**
+ * A row from poze-redoze, non-market redispatch of renewables (PV/wind).
+ * Values are in MW and NEGATIVE, or null when no redispatch applies to that
+ * period. 96 fifteen-minute records per business day.
+ */
+export interface PSERedispatchRawItem {
+  business_date: string;
+  dtime: string;
+  dtime_utc: string;
+  period?: string;
+  pv_red_network?: string | number | null;
+  pv_red_balance?: string | number | null;
+  wi_red_network?: string | number | null;
+  wi_red_balance?: string | number | null;
+}
+
 export interface PSEDataPoint {
   /** Canonical instant, derived from plan_dtime_utc. */
   time: Date;
