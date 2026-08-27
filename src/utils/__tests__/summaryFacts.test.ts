@@ -1,11 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import {
+  allowedHoursFor,
   assessmentKey,
   buildFacts,
   keyPoint,
   leadingDay,
   renderFacts,
 } from '../summaryFacts';
+import type { CompassHour, CompassLevel } from '../compass';
 import { visibleBusinessDates } from '../dayWindow';
 import { spokenDay } from '../dateHelpers';
 import { makePoint } from '../../test/factories';
@@ -1003,5 +1005,201 @@ describe('renderFacts', () => {
 
   it('says so plainly when there is nothing ahead', () => {
     expect(renderFacts([], 30)).toMatch(/Brak danych/);
+  });
+});
+
+/**
+ * Kompas hours for one day, built directly rather than parsed from raw rows —
+ * `compass.test.ts` covers the parse, and this file is about what the facts do
+ * with the result.
+ *
+ * The instants follow the same fiction as `hourOn` above: the label is the UTC
+ * hour, so a fixture reads the way it is written.
+ */
+function kompasGodzina(
+  businessDate: string,
+  startHour: number,
+  level: CompassLevel
+): CompassHour {
+  return {
+    businessDate,
+    startUtc: new Date(`${businessDate}T${pad(startHour)}:00:00Z`),
+    hourLabel: `${pad(startHour)}:00`,
+    level,
+  };
+}
+
+function kompasNa(
+  businessDate: string,
+  ...hours: Array<[number, CompassLevel]>
+): Map<string, CompassHour[]> {
+  return new Map([
+    [
+      businessDate,
+      hours.map(([hour, level]) => kompasGodzina(businessDate, hour, level)),
+    ],
+  ]);
+}
+
+/** A comfortable day: no grounds anywhere, so `renderFacts` collapses the state. */
+const SPOKOJNA_DOBA = dayOf('2026-08-10', 5000);
+const TYLKO_DZIESIATY = ['2026-08-10'];
+
+function faktyZKompasem(kompas: Map<string, CompassHour[]> = new Map()) {
+  return buildFacts(
+    SPOKOJNA_DOBA,
+    HISTORY_WITH_MIX,
+    BEFORE_ALL,
+    TYLKO_DZIESIATY,
+    new Map(),
+    kompas
+  );
+}
+
+describe('Kompas Energetyczny w faktach', () => {
+  it('carries the operator signal for the day it belongs to', () => {
+    const facts = faktyZKompasem(kompasNa('2026-08-10', [19, 2], [20, 2]));
+
+    expect(facts[0].compass).toEqual([
+      { level: 2, from: '19:00', to: '21:00', hours: 2 },
+    ]);
+  });
+
+  it('leaves every day without a signal when nobody passes one', () => {
+    /*
+     * The default parameter is what keeps the browser untouched. Nothing there
+     * calls pdgsz and nothing there needs to, so every caller that predates this
+     * layer must go on producing exactly the facts it produced before — which is
+     * also why the 505 tests written before this one still pass unchanged.
+     */
+    const facts = buildFacts(SPOKOJNA_DOBA, HISTORY_WITH_MIX, BEFORE_ALL);
+
+    expect(facts.every((day) => day.compass.length === 0)).toBe(true);
+  });
+
+  it('prints the signal on a day where nothing else is happening', () => {
+    /*
+     * The case this layer exists for, and the one an obvious implementation gets
+     * wrong. `renderFacts` collapses the per-day verdict when every day is calm,
+     * because five identical "nic nie zapowiada przywołania" lines were being
+     * copied straight into the answer. A flag is the opposite: on a calm day it
+     * is the ONLY news there is, so it must be printed outside that collapse.
+     */
+    const text = renderFacts(
+      faktyZKompasem(kompasNa('2026-08-10', [19, 2], [20, 2])),
+      30
+    );
+
+    // The day really is collapsed — otherwise this proves nothing.
+    expect(text).not.toContain('stan:');
+    expect(text).toContain(
+      'Kompas Energetyczny PSE na tę dobę: zalecane oszczędzanie 19:00-21:00'
+    );
+  });
+
+  it('names the two levels apart, in one line', () => {
+    const text = renderFacts(
+      faktyZKompasem(kompasNa('2026-08-10', [17, 2], [19, 3], [20, 3])),
+      30
+    );
+
+    expect(text).toContain(
+      'Kompas Energetyczny PSE na tę dobę: zalecane oszczędzanie 17:00-18:00, ' +
+        'wymagane ograniczenie poboru 19:00-21:00'
+    );
+  });
+
+  it('says nothing at all about a day the operator flagged nothing on', () => {
+    // No "Kompas: normalne" line, ever. An hour at level 1 is the operator
+    // asking nothing of anybody, and a line reporting that is news about
+    // nothing — on the great majority of days it would be the whole signal.
+    expect(renderFacts(faktyZKompasem(), 30)).not.toMatch(/Kompas/);
+    expect(
+      renderFacts(faktyZKompasem(kompasNa('2026-08-10', [19, 1], [20, 0])), 30)
+    ).not.toMatch(/Kompas/);
+  });
+
+  it('moves the fingerprint when the signal is the only thing that changed', () => {
+    /*
+     * The member of the assessment key this whole layer stands on.
+     *
+     * PSE publishes tomorrow's compass around 16:35, hours after the forecast
+     * for that day has settled — so a flag routinely appears while every figure
+     * the key measures stays put. Without the K member the stored text is
+     * "unchanged" and the card publishes a conclusion written before the signal
+     * existed. That omission has already been caught twice on this card, for the
+     * cause layer and for the gate.
+     */
+    const bez = assessmentKey(faktyZKompasem());
+    const zFlaga = assessmentKey(
+      faktyZKompasem(kompasNa('2026-08-10', [19, 2], [20, 2]))
+    );
+
+    expect(zFlaga).not.toBe(bez);
+  });
+
+  it('moves the fingerprint when only the level of the signal changed', () => {
+    // "Zalecane oszczędzanie" and "wymagane ograniczenie poboru" ask different
+    // things of the reader over identical hours, so the hours alone cannot be
+    // what the key carries.
+    expect(
+      assessmentKey(faktyZKompasem(kompasNa('2026-08-10', [19, 3])))
+    ).not.toBe(assessmentKey(faktyZKompasem(kompasNa('2026-08-10', [19, 2]))));
+  });
+
+  it('moves the fingerprint when only the hours of the signal changed', () => {
+    expect(
+      assessmentKey(faktyZKompasem(kompasNa('2026-08-10', [20, 2])))
+    ).not.toBe(assessmentKey(faktyZKompasem(kompasNa('2026-08-10', [19, 2]))));
+  });
+
+  it('holds the fingerprint still while the signal holds still', () => {
+    // The other half of the rule. A key that moved on its own would call the
+    // model every hour over a summary that did not need rewriting, which is the
+    // cost this whole mechanism exists to avoid.
+    const kompas = kompasNa('2026-08-10', [19, 2], [20, 2]);
+
+    expect(assessmentKey(faktyZKompasem(kompas))).toBe(
+      assessmentKey(faktyZKompasem(kompas))
+    );
+  });
+});
+
+describe('allowedHoursFor', () => {
+  it('offers the hours of the call-period ranges and the worst hour', () => {
+    const facts = buildFacts(
+      [
+        ...dayOf('2026-08-10', 5000),
+        hourOn('2026-08-10', 19, { reserve: 800, required: 2000 }),
+      ],
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      TYLKO_DZIESIATY
+    );
+
+    const hours = allowedHoursFor(facts);
+    expect(hours.has('19:00')).toBe(true);
+    expect(hours.has('20:00')).toBe(true);
+  });
+
+  it('offers the hours of the Kompas ranges as well', () => {
+    /*
+     * Without this the card deadlocks. The facts hand the model an hour, the
+     * instruction tells it to name that hour, and the validator then refuses
+     * every answer that does — "godzina 16:00 spoza faktów" — so the run ends
+     * with a warning and the text sits frozen for an hour with nothing on the
+     * card explaining why. The Kompas hours come from a different endpoint and
+     * need never coincide with a call-period range; on a calm day they are the
+     * only hours in the facts at all.
+     */
+    const facts = faktyZKompasem(kompasNa('2026-08-10', [16, 2], [17, 2]));
+    const hours = allowedHoursFor(facts);
+
+    expect(hours.has('16:00')).toBe(true);
+    expect(hours.has('18:00')).toBe(true);
+  });
+
+  it('offers nothing at all when the facts are empty', () => {
+    expect(allowedHoursFor([])).toEqual(new Set());
   });
 });

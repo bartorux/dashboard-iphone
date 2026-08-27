@@ -8,6 +8,12 @@ import {
   upcoming,
   worstRisk,
 } from './callPeriod';
+import {
+  COMPASS_WORD,
+  CompassHour,
+  CompassRange,
+  compassRanges,
+} from './compass';
 import { spokenDay, weekdayOf } from './dateHelpers';
 import { visibleBusinessDates } from './dayWindow';
 import { DEFAULT_RED_THRESHOLD } from './constants';
@@ -115,6 +121,21 @@ export interface DayFacts {
    * the wrong thing to report — a median of windows would call it a calm slide.
    */
   forecastNote: string | null;
+  /**
+   * The official Kompas Energetyczny PSE signal for this day, as ranges of the
+   * flagged levels only.
+   *
+   * Empty means one of two things and deliberately does not distinguish them:
+   * the day carries no flag, or PSE has not published the day at all (only
+   * today and — after about 16:35 — tomorrow are ever published). Both are the
+   * absence of a signal, and neither is something to report.
+   *
+   * Entirely separate from `risk` and `ranges`. Those say whether a call period
+   * may be declared; this is the operator asking consumers to hold back. Same
+   * operator, two independent things — see the instruction, which forbids
+   * joining them.
+   */
+  compass: CompassRange[];
 }
 
 /**
@@ -171,7 +192,16 @@ export function buildFacts(
    * job, and nothing in the browser has it or needs it. An empty map is the
    * normal state everywhere except that job.
    */
-  forecastNotes: Map<string, ForecastNote> = new Map()
+  forecastNotes: Map<string, ForecastNote> = new Map(),
+  /**
+   * The Kompas Energetyczny hours PSE published, keyed by business date.
+   *
+   * Passed in for the same reason as the notes above: this comes from a second
+   * endpoint the browser has no reason to call, so an empty map is the normal
+   * state everywhere except the scheduled job. Every day then reports no signal,
+   * which is exactly what it reported before this layer existed.
+   */
+  compass: Map<string, CompassHour[]> = new Map()
 ): DayFacts[] {
   const ahead = upcoming(allData, now);
 
@@ -296,6 +326,10 @@ export function buildFacts(
           ? standingFor(worst.margin, distribution.get(worst.point.hourLabel))
           : 'unknown',
         forecastNote: forecastNotes.get(businessDate)?.text ?? null,
+        // Cut to the hours still ahead by `compassRanges` itself, on the same
+        // philosophy as `upcoming`: a flag on an hour that has passed is not
+        // something anyone can still act on.
+        compass: compassRanges(compass.get(businessDate) ?? [], now),
       };
     });
 
@@ -444,6 +478,19 @@ export function assessmentKey(facts: DayFacts[]): string {
         day.ranges
           .map((range) => `${range.risk}:${range.from}-${range.to}`)
           .join(','),
+        /*
+         * The Kompas signal travels with the fingerprint, or the card publishes
+         * a conclusion the facts no longer support.
+         *
+         * Everything else in this line describes the reserve. A flag can appear,
+         * move or lapse while the margin does not shift a megawatt — PSE
+         * publishes tomorrow's compass around 16:35, hours after the forecast
+         * settles — and without this member the stored text would stand
+         * unchanged with the signal missing from it, or still in it after it had
+         * gone. This exact omission has been caught twice on this card for other
+         * layers (the cause, and the gate); it is not a hypothetical.
+         */
+        day.compass.map((range) => `K${range.level}:${range.from}-${range.to}`).join(','),
       ].join('|')
     )
     .join(';');
@@ -837,7 +884,69 @@ export function renderFacts(facts: DayFacts[], days: number): string {
         `  margines powyżej typowego zakresu z ostatnich ${days} dni: ${day.aboveTypical} godz.`
       );
     }
+
+    /*
+     * The operator's own signal to consumers, printed LAST and outside the
+     * `allClear` collapse.
+     *
+     * Outside it because the collapse exists to stop one repeated verdict being
+     * handed over five times, and this is the opposite case: a flag on an
+     * otherwise quiet day is the only news there is, and suppressing it there
+     * would silence it exactly when it carries the most. The two are unrelated
+     * anyway — the collapse is about the call period, this is not.
+     *
+     * Last in the block so it does not sit against the state clause. Lines that
+     * merely stand next to each other get welded into cause and effect — the
+     * lesson of the drivers line, and of the surplus clause before it — and the
+     * one welding this layer must never suffer is a flag read as a call period
+     * being announced.
+     *
+     * A label and its hours, never a finished sentence: handed a phrasing, the
+     * model copies it, measured at 59 of 72 texts on this card. And no line at
+     * all for levels 0 and 1 — "the compass says normal" is news about nothing.
+     */
+    if (day.compass.length > 0) {
+      const sygnaly = day.compass
+        .map((range) => `${COMPASS_WORD[range.level]} ${range.from}-${range.to}`)
+        .join(', ');
+      lines.push(`  Kompas Energetyczny PSE na tę dobę: ${sygnaly}`);
+    }
   }
 
   return lines.join('\n');
+}
+
+/**
+ * Every hour the facts actually state, and therefore every hour the model is
+ * allowed to write back.
+ *
+ * Lifted out of `scripts/summary.ts`, where it was an inline loop over the
+ * worst hour and the call-period ranges, so that a new kind of hour cannot be
+ * added to the facts without this being the place it is added to. That is not
+ * tidiness: the validator refuses any clock time it has not been given, so a
+ * fact printing an hour this set omits deadlocks the card outright — the prompt
+ * hands over an hour, the instruction asks for it by name, and every answer
+ * naming it is then thrown away. The text freezes with a warning and nothing on
+ * the card explains why.
+ *
+ * The Kompas ranges are here for exactly that reason. Their hours come from a
+ * different endpoint and need never coincide with a call-period range; on a
+ * calm day they are the only hours in the facts at all.
+ */
+export function allowedHoursFor(facts: DayFacts[]): Set<string> {
+  const hours = new Set<string>();
+
+  for (const day of facts) {
+    if (day.worstHour) hours.add(day.worstHour);
+    for (const range of day.ranges) {
+      hours.add(range.from);
+      hours.add(range.to);
+    }
+    for (const range of day.compass) {
+      hours.add(range.from);
+      hours.add(range.to);
+    }
+  }
+
+  return hours;
 }
