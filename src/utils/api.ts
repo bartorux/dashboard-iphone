@@ -1,5 +1,5 @@
-import { PSERawItem } from '../types';
-import { API_URL, FORECAST_ROW_LIMIT } from './constants';
+import { PSERawItem, PSERedispatchRawItem } from '../types';
+import { API_BASE, API_URL, FORECAST_ROW_LIMIT } from './constants';
 import { daysToFetch } from './dayWindow';
 import { addDays, formatDateTimeApi, getStartOfToday } from './dateHelpers';
 
@@ -130,6 +130,27 @@ export async function fetchPSEHistory(
     `$filter=${encodeURIComponent(
       `business_date ge '${from}' and business_date le '${to}'`
     )}&$select=${fields}&$orderby=plan_dtime&$first=1000`
+  );
+  return rows ?? [];
+}
+
+/**
+ * Non-market redispatch of renewables (poze-redoze) for one business day: PSE
+ * ordering PV/wind plants to curtail output, for reasons other than the
+ * market clearing them off. 96 rows of 15-minute data when the day carries
+ * any curtailment at all.
+ *
+ * Unlike pk5l-wp, an empty result here is the normal case — most days see no
+ * redispatch whatsoever — so a null from `query` (no rows, or the request
+ * failing outright) maps to `[]` rather than being treated as an error the
+ * caller must react to.
+ */
+export async function fetchRedispatch(
+  businessDate: string
+): Promise<PSERedispatchRawItem[]> {
+  const rows = await query<PSERedispatchRawItem>(
+    `${API_BASE}/poze-redoze`,
+    `$filter=${encodeURIComponent(`business_date eq '${businessDate}'`)}&$first=100`
   );
   return rows ?? [];
 }

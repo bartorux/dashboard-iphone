@@ -5,6 +5,7 @@ import GenerationChart from './GenerationChart';
 import HistoryChart from './HistoryChart';
 import SegmentedControl from './SegmentedControl';
 import { useHistory } from '../hooks/useHistory';
+import { useRedispatch } from '../hooks/useRedispatch';
 import { CHART_BOX } from './chart/shared';
 
 type ChartView = 'reserve' | 'generation' | 'history';
@@ -44,6 +45,11 @@ const ChartSection: React.FC<ChartSectionProps> = ({
 
   // Fetched only once the comparison is actually opened
   const history = useHistory(view === 'history', HISTORY_DAYS);
+  // Same idea: only once the generation view is on screen, for the day it shows
+  const redispatch = useRedispatch(
+    view === 'generation',
+    dayData[0]?.businessDate ?? null
+  );
 
   const active = VIEWS.find((entry) => entry.value === view) ?? VIEWS[0];
 
@@ -81,7 +87,11 @@ const ChartSection: React.FC<ChartSectionProps> = ({
 
     if (view === 'generation') {
       return (
-        <GenerationChart data={dayData} currentHourLabel={currentHourLabel} />
+        <GenerationChart
+          data={dayData}
+          currentHourLabel={currentHourLabel}
+          redispatch={redispatch.byHour}
+        />
       );
     }
 
