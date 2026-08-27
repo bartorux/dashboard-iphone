@@ -333,6 +333,34 @@ describe('prompt bez wiersza TREŚĆ', () => {
 });
 
 describe('parseSummary', () => {
+  it('accepts a label the model mistyped, because the label is not content', () => {
+    /*
+     * Seven of thirteen refusals over five days — the largest cause by far —
+     * were answers where the model wrote "TREŚCI:" or "TREŚC:" instead of
+     * "TREŚĆ:". The text underneath was good every time, and being strict about
+     * a word no reader ever sees threw all seven away. The trailing ć is the one
+     * character in these labels a model writing Polish reaches past.
+     */
+    for (const etykieta of ['TREŚĆ', 'TREŚCI', 'TREŚC', 'TRESC', 'TREŚ']) {
+      const parsed = parseSummary(
+        `NAGŁÓWEK: W tych dniach nic nie zapowiada przywołania.\n${etykieta}: Dziś o 20:00 margines jest najwęższy.`
+      );
+      expect(parsed?.body).toBe('Dziś o 20:00 margines jest najwęższy.');
+    }
+
+    // The headline label too, which is exposed to the same slip.
+    expect(parseSummary('NAGLOWEK: Nic nie zapowiada.\nDALEJ: Spokojnie.')?.headline).toBe(
+      'Nic nie zapowiada.'
+    );
+  });
+
+  it('still needs a headline and something under it', () => {
+    // Loosening the labels must not loosen the shape: an answer that is only a
+    // headline is thinner than the card promises.
+    expect(parseSummary('NAGŁÓWEK: Nic nie zapowiada przywołania.')).toBeNull();
+    expect(parseSummary('TREŚĆ: Coś tam.')).toBeNull();
+  });
+
   it('reads the three labelled lines', () => {
     const parsed = parseSummary(
       'NAGŁÓWEK: Pierwsze zdanie.\nTREŚĆ: Drugie zdanie.\nDALEJ: Trzecie zdanie.'

@@ -453,6 +453,26 @@ export function buildPrompt(
  * Labelled lines rather than JSON. Forced to emit JSON the model hand-wrote its
  * own escape sequences and got them wrong; plain text has nothing to escape.
  */
+/*
+ * The labels, written loosely on purpose.
+ *
+ * They are protocol, not content — nothing a reader ever sees — so being strict
+ * about them only ever throws away a good answer. Measured over five days: SEVEN
+ * of thirteen refusals, the largest cause by far, were answers where the model
+ * had typed "TREŚCI:" or "TREŚC:" instead of "TREŚĆ:". The text underneath was
+ * fine every time.
+ *
+ * The trailing ć is the whole problem: it is the one character in these three
+ * words that a model writing Polish reaches past. So the ending is optional and
+ * the diacritics are, where they can be dropped without the pattern matching
+ * anything a sentence would begin with.
+ */
+const LABELS = {
+  headline: 'NAG[ŁL][ÓO]WEK',
+  body: 'TRE[ŚS][ĆC]?I?',
+  outlook: 'DALEJ',
+} as const;
+
 export function parseSummary(text: string): Summary | null {
   const field = (label: string) => {
     const match = new RegExp(`^${label}:\\s*(.+)$`, 'mi').exec(text);
@@ -460,9 +480,9 @@ export function parseSummary(text: string): Summary | null {
   };
 
   const summary = {
-    headline: field('NAGŁÓWEK'),
-    body: field('TREŚĆ'),
-    outlook: field('DALEJ'),
+    headline: field(LABELS.headline),
+    body: field(LABELS.body),
+    outlook: field(LABELS.outlook),
   };
 
   /*
