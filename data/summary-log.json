@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-23T17:53:27.800Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "Wtorek 25 sierpnia przynosi godziny, w których rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka pozostaje powyżej progu 1100 MW.",
-      "body": "Wtorkowa prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Poza wtorkiem przez pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-08-23T19:01:21.579Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "We wtorek 25 sierpnia w godzinach 20:00-21:00 operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "W poniedziałek prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie. Do wskazanych wtorkowych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W pozostałych dniach rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-23T19:52:55.048Z",
       "prompt": 50,
       "accepted": true,
@@ -587,6 +571,23 @@
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "We wtorek 1 września o 07:00 margines spadnie do najniższego poziomu w całym okresie i nie pokryje wymaganego wartości, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
+    },
+    {
+      "at": "2026-08-27T12:00:17.150Z",
+      "prompt": 50,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Wtorek 1 września przynosi margines powyżej typowego zakresu przez większość doby, lecz między 19:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka utrzymuje się powyżej progu 1100 MW, co daje operatorowi prawo wyboru.",
+      "body": "Prognoza na wtorek 1 września jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin pozostało ponad osiem godzin.",
+      "outlook": "W pozostałe dni okresu nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-27T12:00:17.150Z",
+      "prompt": 50,
+      "accepted": true,
+      "headline": "Wtorkowy margines przez większość doby utrzymuje się powyżej typowego zakresu z ostatnich trzydziestu dni, choć we wtorek 1 września między 19:00 a 21:00 rezerwa spada poniżej wymaganego poziomu.",
+      "body": "Prognoza na wtorek 1 września jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W pozostałe dni w całym okresie nic nie zapowiada przywołania."
     }
   ]
 }
