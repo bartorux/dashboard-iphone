@@ -71,10 +71,20 @@
   --d-band-warn-edge: rgba(255, 159, 10, 0.6);
 
   /* Generation view. Demand is the reference the rest is read against, so it
-     takes the highest-contrast colour; PV and wind sit under it as areas. */
+     takes the highest-contrast colour; PV and wind sit under it as areas.
+     Light PV and wind were re-stepped from #ffb020/#32ade6. PV's OKLCH L was
+     0.813, above the light-mode band's 0.77 ceiling; wind's L of 0.707 was
+     inside the band but its 1.5px area edge still read below the 3:1 floor
+     on white — 1.83:1 for PV, 2.54:1 for wind. #1789bf was tried as the
+     wind replacement and rejected: it pulls the normal-vision Delta E to
+     --l-series-other down to 14.2, under the 15 floor a full-colour reader
+     needs to tell the wind edge from the grid-generation line it crosses.
+     The shipped pair clears both — 3.31:1 / 3.33:1 on white, Delta E 22.8
+     (PV) and 17.3 (wind) to --l-series-other. Dark keeps its original
+     values; only light needed the re-step. */
   --l-series-demand: #1c1c1e;   --d-series-demand: #e5e5ea;
-  --l-series-pv: #ffb020;       --d-series-pv: #ffcc55;
-  --l-series-wind: #32ade6;     --d-series-wind: #64d2ff;
+  --l-series-pv: #cc7a00;       --d-series-pv: #ffcc55;
+  --l-series-wind: #2296cc;     --d-series-wind: #64d2ff;
   --l-series-exchange: #af52de; --d-series-exchange: #bf5af2;
   /* Grid generation. Re-stepped away from the wind blue it sits on top of:
      the dataviz palette validator scored the old pair #7d8590 <-> #32ade6 at
@@ -83,14 +93,20 @@
      slate below scores 23.2 against the purple exchange line and stays far
      clear of the demand ink, so the three lines separate by colour as well as
      by stroke. Dark was raised for the same reason: #6e7681 cleared the
-     surface but sank into every fill it crossed.
+     surface but sank into every fill it crossed. Re-validated against the
+     current --l-series-pv/--l-series-wind (Delta E 22.8 / 17.3 — see comment
+     above); this slate did not need to move again.
      Used by GenerationChart only — no other view moves with it. */
   --l-series-other: #5b6470;    --d-series-other: #8b95a1;
-  /* How far an area fill is washed down. Dark is NOT the light value: the same
-     18% of a bright hue that barely tints white reads as a solid slab on a
-     near-black surface, because the fill is lighter than what it sits on
-     instead of darker. Chosen per theme rather than flipped. */
-  --l-series-fill-opacity: 0.18; --d-series-fill-opacity: 0.1;
+  /* How far an area fill is washed down. Light was raised from 0.18 to 0.22
+     because the darker re-stepped PV/wind hues (see comment above) washed
+     down to less saturation than before at the old opacity — 0.22 restores
+     the fill's presence without going back to a solid block. Dark is NOT
+     the light value: the same fraction of a bright hue that barely tints
+     white reads as a solid slab on a near-black surface, because the fill
+     is lighter than what it sits on instead of darker. Chosen per theme
+     rather than flipped. */
+  --l-series-fill-opacity: 0.22; --d-series-fill-opacity: 0.1;
   --l-series-threshold: #5856d6; --d-series-threshold: #a78bfa;
   --l-series-history: #8e8e93;  --d-series-history: #98989d;
   --l-band-history: rgba(142, 142, 147, 0.18);
