@@ -11,7 +11,7 @@
  * not replace a good summary with a bad one, nor fail a scheduled run for
  * something as ordinary as the model being briefly unavailable.
  */
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -48,6 +48,13 @@ import type { ForecastNote } from '../src/utils/summaryFacts';
 import { parseCompass } from '../src/utils/compass';
 import type { CompassHour } from '../src/utils/compass';
 import {
+  archivePartition,
+  newArchiveLines,
+  parseArchiveLines,
+  previousPartition,
+} from '../src/utils/pk5lArchive';
+import type { PSERawItem } from '../src/types';
+import {
   PROMPT_VERSION,
   buildPrompt,
   parseSummary,
@@ -65,6 +72,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const target = resolve(root, 'public/summary.json');
 const logTarget = resolve(root, 'data/forecast-log.json');
 const textLogTarget = resolve(root, 'data/summary-log.json');
+const archiveDir = resolve(root, 'data/pk5l-archiwum');
 
 interface SummaryFile extends Summary {
   /** When the text was written, so the card can show its age. */
@@ -122,6 +130,63 @@ function recordForecast(points: PSEDataPoint[], at: Date): void {
   console.log(`Zapisano migawke prognozy — wpisow w logu: ${next.entries.length}.`);
 }
 
+/**
+ * Appends this run's raw pk5l-wp readings to the monthly JSONL archive —
+ * append-only, and on purpose the opposite cost shape of the logs above:
+ * those rewrite a whole file every hour because they hold aggregates that
+ * change; this one only ever grows, because every line is a fact about a
+ * specific past moment that no later run can revise.
+ *
+ * pk5l-wp itself does not version — PSE was found to revise the same
+ * (business_date, hour) block by thousands of megawatts with no trace left
+ * of the earlier figure — so this is the only place the tool's own history
+ * of what it actually said is kept, and the only way months from now to
+ * measure its real hit rate against what happened.
+ *
+ * On RAW rows, before `processData` folds them into chart points, and read
+ * from BOTH this partition and the previous one: near the start of a month a
+ * business date up to ~5 days out can already have snapshots filed under last
+ * month's partition, and without them a value that has not actually changed
+ * would be re-archived as if it had.
+ *
+ * Wrapped whole, like `recordForecast`: a failure here is a lost data point,
+ * never a reason to end the run that writes the actual product.
+ */
+function archivePk5l(rows: PSERawItem[], at: Date): void {
+  try {
+    const partition = archivePartition(at);
+    const partitionPath = resolve(archiveDir, `${partition}.jsonl`);
+    const previousPath = resolve(archiveDir, `${previousPartition(partition)}.jsonl`);
+
+    const readPartition = (path: string): string => {
+      try {
+        return readFileSync(path, 'utf8');
+      } catch {
+        return '';
+      }
+    };
+
+    // Current partition spread last, so its entries win any duplicate key —
+    // they are always the more recent of the two on a boundary.
+    const lastByKey = new Map([
+      ...parseArchiveLines(readPartition(previousPath)),
+      ...parseArchiveLines(readPartition(partitionPath)),
+    ]);
+
+    const lines = newArchiveLines(rows, lastByKey, at.toISOString());
+    if (lines.length === 0) {
+      console.log('Archiwum pk5l-wp: bez zmian wobec ostatnich odczytow — nic nie dopisuje.');
+      return;
+    }
+
+    mkdirSync(archiveDir, { recursive: true });
+    appendFileSync(partitionPath, `${lines.join('\n')}\n`);
+    console.log(`Archiwum pk5l-wp: dopisano ${lines.length} wierszy do ${partition}.jsonl.`);
+  } catch (error) {
+    console.warn(`Archiwum pk5l-wp pominiete w tym przebiegu: ${String(error)}`);
+  }
+}
+
 const [forecast, history] = await Promise.all([
   fetchPSEData(),
   // With the mix, so the facts can say WHY an hour is tight. Only this job asks
@@ -141,6 +206,11 @@ const points = processData(forecast);
  * happening" is a claim the log is supposed to be able to settle.
  */
 if (!dryRun) recordForecast(points, now);
+
+// Same moment, same reason: grows every hour whether or not the model is
+// asked anything, and `dryRun` means "show me the prompt", not "read PSE
+// live and pretend the run never happened".
+if (!dryRun) archivePk5l(forecast, now);
 
 /*
  * What the log says about each day, read back from the file this job has been
