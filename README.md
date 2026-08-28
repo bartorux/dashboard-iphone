@@ -233,6 +233,36 @@ Ocena stylu zostaje przy człowieku — to tylko mówi, gdzie patrzeć. Na 57 wp
 całą drogę: wersje promptu do 25 nazywały werdykt dwa razy przy 350–550 znakach, wersja 26 zeszła do
 jednego i 150 znaków, wersja 27 się cofnęła, od 28 trzyma.
 
+### Archiwum odczytów pk5l-wp
+
+`data/pk5l-archiwum/YYYY-MM.jsonl` przechowuje, co pk5l-wp **faktycznie mówiło** o rezerwie w
+momencie każdego przebiegu — bo walidacja wsteczna wykazała, że sam endpoint **nie wersjonuje**:
+ta sama godzina bywa po fakcie zrewidowana o tysiące MW (zaobserwowane 1192 → 4942 MW) bez śladu
+po wcześniejszej wartości gdziekolwiek, co PSE publikuje. Bez własnego zapisu nie da się więc nigdy
+policzyć rzeczywistej trafności narzędzia ani odsetka fałszywych alarmów z historii samego PSE — po
+kilku miesiącach ten plik ma to umożliwić.
+
+Format to jeden odczyt na linię, zwarta tablica bez spacji:
+
+```
+["2026-08-29",18,2101,1964,"2026-08-28T16:42:11Z","2026-08-28T17:37:02Z"]
+```
+
+= `[businessDate, godzina startu bloku (0–23), surplus_cap_avail_tso, req_pow_res,
+publication_ts_utc z PSE, znacznik naszego odczytu ISO]`. Godzina liczona ze stringa `period`
+("17 - 18" → 17), nigdy z `Date#getHours()` — to samo źródło, którym posługuje się `dataTransform`.
+
+Plik jest **wyłącznie dopisywany** — miesięczna partycja z kalendarza UTC, nigdy nie przepisywana w
+całości jak logi wyżej. Wiersz trafia do pliku tylko wtedy, gdy para `(surplus, required)` dla danej
+godziny **różni się** od ostatnio zarchiwizowanej wartości: rewizja PSE, która nie rusza liczb, nie
+zapisuje nic. Stan „ostatnio zarchiwizowane" odtwarza się czytając bieżącą partycję i — na przełomie
+miesiąca — poprzednią, bo doba widoczna nawet ~5 dni naprzód mogła mieć pierwsze odczyty zapisane
+jeszcze w poprzednim miesiącu.
+
+Zapisywany w tym samym miejscu i z tego samego powodu co log prognoz: zaraz po nim, przed każdą
+bramką, na surowych wierszach z `fetchPSEData()` — więc rośnie co godzinę niezależnie od tego, czy
+model w ogóle zostanie zapytany. Awaria zapisu nie kończy przebiegu.
+
 ### Strażnik świeżości
 
 `.github/workflows/analiza-zywa.yml` sprawdza raz dziennie, czy **opublikowana** analiza nie jest
