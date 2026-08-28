@@ -213,7 +213,7 @@ for (const scenario of SCENARIOS) {
   const shot = await page.screenshot({ fullPage: true });
   const baselinePath = resolve(baselineDir, `${scenario.name}.png`);
 
-  if (update || !existsSync(baselinePath)) {
+  if (!existsSync(baselinePath)) {
     writeFileSync(baselinePath, shot);
     written++;
     console.log(`${scenario.name}: baseline written`);
@@ -223,8 +223,37 @@ for (const scenario of SCENARIOS) {
 
   const expected = PNG.sync.read(readFileSync(baselinePath));
   const actual = PNG.sync.read(shot);
+  const sameSize = expected.width === actual.width && expected.height === actual.height;
 
-  if (expected.width !== actual.width || expected.height !== actual.height) {
+  if (update) {
+    // Chromium's screenshot encoder is not byte-stable between two runs of the
+    // same scene: comparing two identical-looking captures of monitor-light
+    // chunk-by-chunk showed the same IHDR and chunk layout, but a handful of
+    // IDAT chunks with different CRCs, decoding to a few pixels off by 1-3 in
+    // a channel — real antialiasing jitter, not stray metadata (there is no
+    // pHYs/tEXt/tIME chunk to begin with). It is invisible and stays under
+    // PIXEL_THRESHOLD, yet a plain byte compare treated it as a changed file
+    // on every `--update`, however nothing had actually changed. Writing only
+    // when pixelmatch finds a real difference keeps `--update` a no-op in
+    // that case, whatever produced the byte wobble.
+    const changed = sameSize
+      ? pixelmatch(expected.data, actual.data, null, expected.width, expected.height, {
+          threshold: PIXEL_THRESHOLD,
+        })
+      : Infinity;
+
+    if (sameSize && changed === 0) {
+      console.log(`${scenario.name}: unchanged, baseline kept`);
+    } else {
+      writeFileSync(baselinePath, shot);
+      written++;
+      console.log(`${scenario.name}: baseline written`);
+    }
+    await context.close();
+    continue;
+  }
+
+  if (!sameSize) {
     failures++;
     console.error(
       `${scenario.name}: size changed ${expected.width}x${expected.height} -> ${actual.width}x${actual.height}`
