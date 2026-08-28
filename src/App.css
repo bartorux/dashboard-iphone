@@ -405,6 +405,59 @@ body {
   min-height: 0;
 }
 
+/* Offline indicator: slides up from behind the bottom edge on the way in.
+   Exit stays instant - the bar is removed from the DOM the moment the
+   connection returns, and that moment is not worth choreographing.
+
+   @starting-style needs no mount flag in React: a browser that does not
+   support it just paints the settled state straight away, so there is no JS
+   fallback to write.
+
+   Unlayered on purpose, like .collapsible above - and for the same reason
+   the theme-toggle rule near the top of this file explains: unlayered CSS
+   always outranks Tailwind's utilities layer, so this rule fully replaces
+   whatever `transition` the cascade would otherwise hand this element. Left
+   at just opacity and transform, that would have silently dropped the
+   250ms colour crossfade the `@layer base` default gives every element on
+   a theme switch - the same failure the Header comment warns about, just
+   arrived at unlayered instead of through a layer conflict. Restating the
+   three colour properties here keeps that crossfade, alongside the new
+   entrance motion. */
+.offline-indicator {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 250ms ease-out,
+    transform 250ms ease-out,
+    background-color 250ms ease,
+    color 250ms ease,
+    border-color 250ms ease;
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+/* Segmented-control option: the text colour crossfades between the selected
+   and unselected state, and now a press-scale rides alongside it at its own,
+   faster timing.
+
+   Written as one rule rather than the usual transition-colors +
+   transition-transform utility pair for the same reason as above:
+   transition-property is a longhand the cascade replaces wholesale rather
+   than merges, so the second class would not have added the press-scale, it
+   would have silently deleted the colour crossfade. Durations keep both
+   halves at what each already used - Tailwind's own default for the colour
+   (var(--default-transition-duration), unchanged from before this file
+   touched it) and the 100ms button-feedback speed for the scale. */
+.segment-button {
+  transition:
+    color var(--default-transition-duration, 150ms)
+      var(--default-transition-timing-function, ease),
+    scale 100ms var(--default-transition-timing-function, ease);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

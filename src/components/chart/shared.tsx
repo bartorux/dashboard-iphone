@@ -181,13 +181,23 @@ export const ChartLegend: React.FC<{
         ))}
       </ul>
 
-      {open?.info && (
-        <div className="mt-1.5 space-y-1.5 rounded-lg bg-surface-2 px-2 py-1.5 text-[0.6875rem] leading-relaxed text-text-secondary">
-          {(Array.isArray(open.info) ? open.info : [open.info]).map((part) => (
-            <p key={part}>{part}</p>
-          ))}
+      {/* Same mechanism as SummaryCard's body (see .collapsible in App.css):
+          always mounted, so grid-template-rows has something to animate
+          between 0fr and 1fr. A bare `{open?.info && ...}` unmounts the panel
+          outright on close, which leaves nothing for a transition to play -
+          it is just gone, the same jump-cut every other collapsing section in
+          this app has already moved away from. */}
+      <div className="collapsible" data-collapsed={!open?.info}>
+        <div>
+          {open?.info && (
+            <div className="mt-1.5 space-y-1.5 rounded-lg bg-surface-2 px-2 py-1.5 text-[0.6875rem] leading-relaxed text-text-secondary">
+              {(Array.isArray(open.info) ? open.info : [open.info]).map((part) => (
+                <p key={part}>{part}</p>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </>
   );
 };

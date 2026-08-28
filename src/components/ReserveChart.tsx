@@ -226,11 +226,16 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
-            <CartesianGrid
-              vertical={false}
-              stroke={colors.grid}
-              strokeDasharray="3 3"
-            />
+            {/* Solid, not dashed - the same move the generation view already
+                made. This plot draws two SIGNIFICANT dashed lines of its own,
+                the required-reserve curve and the regulatory threshold at
+                CALL_PERIOD_EXEMPTION_MW; a dashed grid behind them read as a
+                third dash pattern competing for the same attention, when its
+                only job is to sit quietly a step off the surface. Same
+                colour token as before (colors.grid, --separator) so the grid
+                stays exactly as quiet as it was - only the texture reading as
+                "significant" is gone. */}
+            <CartesianGrid vertical={false} stroke={colors.grid} />
 
             <XAxis
               dataKey="key"
