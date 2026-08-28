@@ -45,7 +45,7 @@ export function SegmentedControl<T extends string | number>({
     >
       <div
         aria-hidden
-        className="absolute inset-y-1 rounded-[10px] bg-surface shadow-sm transition-transform duration-300 ease-out"
+        className="absolute inset-y-1 rounded-[10px] bg-surface shadow-sm transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)]"
         style={{
           width: `calc((100% - 0.5rem) / ${segments.length})`,
           transform: `translateX(calc(${activeIndex} * 100%))`,
@@ -64,7 +64,13 @@ export function SegmentedControl<T extends string | number>({
               ? { 'aria-selected': active }
               : { 'aria-checked': active })}
             onClick={() => onChange(segment.value)}
-            className={`relative z-10 min-h-9 flex-1 rounded-[10px] px-1 text-center transition-colors ${
+            // .segment-button, not the transition-colors/transition-transform
+            // utility pair: transition-property is a longhand, so a second
+            // transition-* class does not add to the first, it replaces it
+            // outright - the colour crossfade would have gone silently dead
+            // the moment the press-scale's own transition utility landed
+            // beside it. See the rule in App.css for the combined value.
+            className={`segment-button relative z-10 min-h-9 flex-1 rounded-[10px] px-1 text-center active:scale-[0.97] ${
               active ? 'text-text' : 'text-text-secondary'
             }`}
           >
