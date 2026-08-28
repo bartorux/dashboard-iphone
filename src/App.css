@@ -86,6 +86,24 @@
   --l-series-pv: #cc7a00;       --d-series-pv: #ffcc55;
   --l-series-wind: #2296cc;     --d-series-wind: #64d2ff;
   --l-series-exchange: #af52de; --d-series-exchange: #bf5af2;
+  /* RenewableMixCard's ring + day strip. Borrows the wind slot rather than
+     the app-wide --accent: this app reserves accent for things you can act
+     on and the "teraz" marker in charts (see EnergyDayCard's comment above
+     its own colour choice), while this card is pure data that sits in the
+     same column as the accent-coloured "Odśwież" button on wide screens —
+     same hue for a click target and a reading would read as one thing.
+     Not PV's orange either: PV sits at a normal-vision contrast of only
+     1.50 (light) / 1.37 (dark) against --warn, i.e. close to
+     indistinguishable from this app's own warning colour — wrong signal on
+     a card with no status to report. Wind clears the mark floor validated
+     above (3.33:1 light / 9.89:1 dark vs surface) and reads as a plain,
+     non-status blue. */
+  --l-oze: var(--l-series-wind);      --d-oze: var(--d-series-wind);
+  /* Ring track: a light tint of the same hue (blue-on-blue) rather than a
+     generic grey, so the meter reads as one ramp end to end. Same ~1:6
+     tint recipe as --accent-soft, computed from --l/--d-oze's own RGB. */
+  --l-oze-soft: rgba(34, 150, 204, 0.16);
+  --d-oze-soft: rgba(100, 210, 255, 0.2);
   /* Grid generation. Re-stepped away from the wind blue it sits on top of:
      the dataviz palette validator scored the old pair #7d8590 <-> #32ade6 at
      a normal-vision Delta E of 14.8, under the floor of 15 — a full-colour
@@ -154,6 +172,8 @@
   --series-threshold: var(--l-series-threshold);
   --series-history: var(--l-series-history);
   --band-history: var(--l-band-history);
+  --oze: var(--l-oze);
+  --oze-soft: var(--l-oze-soft);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -195,6 +215,8 @@
     --series-threshold: var(--d-series-threshold);
     --series-history: var(--d-series-history);
     --band-history: var(--d-band-history);
+    --oze: var(--d-oze);
+    --oze-soft: var(--d-oze-soft);
   }
 }
 
@@ -236,6 +258,8 @@
   --series-threshold: var(--d-series-threshold);
   --series-history: var(--d-series-history);
   --band-history: var(--d-band-history);
+  --oze: var(--d-oze);
+  --oze-soft: var(--d-oze-soft);
 }
 
 @theme inline {
@@ -266,6 +290,10 @@
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);
   --color-accent-soft: var(--accent-soft);
+
+  /* RenewableMixCard only — see the --l-oze/--d-oze comment above. */
+  --color-oze: var(--oze);
+  --color-oze-soft: var(--oze-soft);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Helvetica Neue", Arial, sans-serif;

@@ -98,6 +98,13 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
             in JS to avoid for Recharts. A class compiles to an actual CSS
             rule, where var() resolves and repaints itself on a theme switch
             with no JS involved.
+
+            --oze, not --accent: this ring is data (this hour's renewable
+            share), and --accent is reserved elsewhere in this app for things
+            you can act on and the "teraz" marker in charts — the same hue as
+            the "Odśwież" button sitting in this same column on wide screens.
+            See the --l-oze comment in App.css for the contrast numbers and
+            why PV's orange was rejected (too close to --warn).
           */}
           <svg viewBox="0 0 120 120" className="h-24 w-24 -rotate-90" aria-hidden="true">
             <circle
@@ -105,11 +112,11 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
               cy={60}
               r={RING_RADIUS}
               fill="none"
-              className="stroke-accent-soft"
+              className="stroke-oze-soft"
               strokeWidth={12}
             />
             <circle
-              className="oze-ring-fill stroke-accent"
+              className="oze-ring-fill stroke-oze"
               cx={60}
               cy={60}
               r={RING_RADIUS}
@@ -147,8 +154,18 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
                 <div
                   title={`${slot.hourLabel} · ${slot.share}%`}
                   style={{ height: `${Math.max(slot.share, 3)}%` }}
-                  className={`w-full rounded-t-sm ${
-                    slot.hour === currentHour ? 'bg-accent' : 'bg-accent opacity-60'
+                  className={`w-full rounded-t-sm bg-oze ${
+                    // Opacity alone can't carry the "this is now" distinction
+                    // accessibly: a full-strength bar next to the same hue at
+                    // 60% opacity measures under 2:1, nowhere near the 3:1
+                    // mark floor. A neutral inset ring is the alternative the
+                    // dataviz skill allows in exactly this case — it doesn't
+                    // ride on hue at all, so it reads in both themes and
+                    // doesn't wash out the rest of the day strip by forcing
+                    // every other bar pale enough to hit the same floor.
+                    slot.hour === currentHour
+                      ? 'ring-1 ring-inset ring-text-secondary'
+                      : 'opacity-60'
                   }`}
                 />
               )}
