@@ -64,11 +64,15 @@ describe('frames of reference', () => {
     expect(container.textContent).toContain('Generacja (sieć)');
     expect(container.textContent).toContain('Zapotrzebowanie (sieć)');
     expect(container.textContent).toContain('Fotowoltaika (całk.)');
-    // The honest percentage: total OZE over COUNTRY demand (19950), never over
-    // grid figures. 11619+4931 over 19950 is 83%; over grid generation it
-    // would read 93% and over grid demand 126% — the mutation that swaps the
-    // denominator must move this number.
-    expect(container.textContent).toContain('83% zapotrzebowania kraju');
+    // The honest share of the MIX, not of raw demand: total OZE over country
+    // demand adjusted for exchange (19950 − (−4640) = 24590, exchange
+    // negative on export so subtracting it grows the denominator). 11619+4931
+    // over 24590 is 67%; over kseDemand alone it would read 83%, which is the
+    // "attribution" framing this replaced — the mutation that drops the
+    // exchange term must move this number.
+    expect(container.textContent).toContain('OZE w krajowym miksie');
+    expect(container.textContent).toContain('67%');
+    expect(container.textContent).not.toContain('zapotrzebowania kraju');
     expect(container.textContent).not.toContain('Pozostałe');
   });
 
@@ -82,6 +86,22 @@ describe('frames of reference', () => {
       <GenerationTooltip active payload={[{ payload: row } as never]} label="12:00" />
     );
     expect(container.textContent).not.toContain('%');
+  });
+
+  it('omits the percentage line when exchange is unpublished', () => {
+    // kseDemand alone is not enough: the denominator needs exchange too, and
+    // a silent fallback to exchange ?? 0 would print a line built on a made-up
+    // number instead of just not showing one.
+    const row = {
+      key: '12:00', endLabel: '13:00', demand: 13186, pv: 11619, wind: 4931,
+      outages: 3000, exchange: null, generation: 17826, pvRed: 0, windRed: 0,
+      kseDemand: 19950,
+    };
+    const { container } = render(
+      <GenerationTooltip active payload={[{ payload: row } as never]} label="12:00" />
+    );
+    expect(container.textContent).not.toContain('%');
+    expect(container.textContent).not.toContain('OZE w krajowym miksie');
   });
 
 

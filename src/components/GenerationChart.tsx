@@ -145,6 +145,31 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
   const windRed = row.windRed ?? 0;
   const showRedispatch = pvRed !== 0 || windRed !== 0;
 
+  /**
+   * Denominator for "OZE w krajowym miksie": country demand adjusted by
+   * cross-border exchange, i.e. the generation actually consumed inside
+   * Poland this hour — not just what left the plants. Exchange is negative
+   * on export, so SUBTRACTING it INCREASES the denominator (those exported
+   * electrons never reached a Polish socket): measured live 28.08.2026 noon,
+   * 19 950 − (−4 640) = 24 590 MW. On import exchange is positive, and
+   * subtracting it correctly shrinks the denominator instead — the imported
+   * MW are already inside kseDemand, not on top of it.
+   *
+   * The previous version divided by kseDemand alone and read 83% at this
+   * same hour — arithmetically fine, but it reads as "how much of the
+   * COUNTRY's consumption runs on renewables," which overstates it whenever
+   * Poland is exporting: those MW left before anyone consumed them. Against
+   * the mix actually available to consume domestically, the honest share at
+   * this same hour is 67%.
+   *
+   * Both inputs are published for the current day only, so a null on either
+   * one means no line — never a silent fallback to kseDemand alone.
+   */
+  const mixDenominator =
+    row.kseDemand !== null && row.exchange !== null
+      ? row.kseDemand - row.exchange
+      : null;
+
   return (
     <ChartTooltipBox>
       <div className="mb-1 font-semibold text-text">
@@ -163,16 +188,17 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
             only said "these are different", not how. */}
         <TooltipRow label="Fotowoltaika (całk.)" value={`${formatMW(pv)} MW`} />
         <TooltipRow label="Wiatr (całk.)" value={`${formatMW(wind)} MW`} />
-        {/* The easy figure, back with an honest denominator. The percentage
-            this chart used to print divided total OZE by GRID generation and
-            reached 93% on an ordinary noon; kse_pow_dem is demand of the whole
-            country, prosumers included — it contains everything the numerator
-            does. Published for the current day only, so the line appears on
-            "Dziś" and honestly disappears on future days. */}
-        {row.kseDemand !== null && row.kseDemand > 0 && (
+        {/* The easy figure, with an honest denominator on both counts: total
+            OZE (never GRID generation — see the frame-of-reference comment
+            below), over demand adjusted for exchange rather than demand
+            alone (see mixDenominator above). Both kseDemand and exchange are
+            published for the current day only, so the line appears on "Dziś"
+            and honestly disappears — never a silent fallback — wherever
+            either is missing. */}
+        {mixDenominator !== null && mixDenominator > 0 && (
           <TooltipRow
-            label="OZE pokrywa"
-            value={`${Math.round(((pv + wind) / row.kseDemand) * 100)}% zapotrzebowania kraju`}
+            label="OZE w krajowym miksie"
+            value={`${Math.round(((pv + wind) / mixDenominator) * 100)}%`}
           />
         )}
         <TooltipRow
@@ -333,7 +359,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
             info: [
               'Suma jednostek wytwórczych i magazynów widzianych przez operatora w sieci — bilansuje się z zapotrzebowaniem sieciowym i wymianą.',
               'Słońce i wiatr są tu podane jako wartości całkowite dla kraju, łącznie z mikroinstalacjami prosumenckimi. Te mikroinstalacje nie wchodzą w linię generacji sieciowej: ich produkcja obniża zapotrzebowanie sieciowe, zamiast być liczona po stronie generacji.',
-              'Dlatego słońce i wiatr potrafią być wyższe niż ta linia. Procent w dymku liczony jest względem zapotrzebowania całego kraju (z prosumentami), więc ma uczciwy mianownik — PSE publikuje tę wielkość tylko dla bieżącej doby, stąd na kolejnych dniach procentu nie ma.',
+              'Dlatego słońce i wiatr potrafią być wyższe niż ta linia. Procent w dymku pokazuje udział OZE w krajowym miksie — zapotrzebowaniu kraju skorygowanym o wymianę transgraniczną, czyli w energii faktycznie zostającej w kraju do zużycia, a nie w tym, co elektrownie wyprodukowały. PSE publikuje obie wielkości (zapotrzebowanie i wymianę) tylko dla bieżącej doby, więc gdy którejś brakuje, linii procentu po prostu nie ma — bez zastępczego wyliczenia.',
             ],
           },
           {
