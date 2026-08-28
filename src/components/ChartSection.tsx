@@ -6,7 +6,6 @@ import HistoryChart from './HistoryChart';
 import SegmentedControl from './SegmentedControl';
 import { useHistory } from '../hooks/useHistory';
 import { useRedispatch } from '../hooks/useRedispatch';
-import { useKseDemand } from '../hooks/useKseDemand';
 import { CHART_BOX } from './chart/shared';
 
 type ChartView = 'reserve' | 'generation' | 'history';
@@ -27,6 +26,15 @@ interface ChartSectionProps {
   redThreshold: number;
   currentHourLabel: string | null;
   isLoading: boolean;
+  /**
+   * Country-wide demand per hour, keyed by hour start (UTC epoch ms) — the
+   * honest denominator behind GenerationChart's "OZE w krajowym miksie"
+   * tooltip line. Fetched once in App, not here: RenewableMixCard needs this
+   * same map whether or not the generation view is ever opened, so App is now
+   * the one place that calls `useKseDemand` — a second call here would fetch
+   * pdgobpkd twice for the same business day.
+   */
+  kseDemand: Map<number, number>;
 }
 
 /**
@@ -41,6 +49,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   redThreshold,
   currentHourLabel,
   isLoading,
+  kseDemand,
 }) => {
   const [view, setView] = useState<ChartView>('reserve');
 
@@ -48,10 +57,6 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   const history = useHistory(view === 'history', HISTORY_DAYS);
   // Same idea: only once the generation view is on screen, for the day it shows
   const redispatch = useRedispatch(
-    view === 'generation',
-    dayData[0]?.businessDate ?? null
-  );
-  const kseDemand = useKseDemand(
     view === 'generation',
     dayData[0]?.businessDate ?? null
   );
@@ -96,7 +101,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
           data={dayData}
           currentHourLabel={currentHourLabel}
           redispatch={redispatch.byHour}
-          kseDemand={kseDemand.byHour}
+          kseDemand={kseDemand}
         />
       );
     }

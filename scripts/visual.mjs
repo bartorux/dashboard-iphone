@@ -40,6 +40,18 @@ const redispatch = readFileSync(
   resolve(root, 'src/utils/__fixtures__/pse-redoze.json'),
   'utf8'
 );
+// Country-wide demand for the same frozen "today", behind RenewableMixCard's
+// ring and day strip and the generation tooltip's OZE percentage. 96 quarters
+// derived from pse-okno.json's own pv/wind/exchange/grid-demand for
+// 2026-08-04 (kseDemand = grid_demand_fcst + ~30% of fcst_pv_tot_gen, a
+// stand-in for the prosumer self-consumption grid_demand_fcst nets out) —
+// 9-17% overnight, rising to 68% at noon, the same shape the honest share
+// actually takes. Without this, both cards would be invisible in every
+// baseline and nothing would guard their layout.
+const kseDemand = readFileSync(
+  resolve(root, 'src/utils/__fixtures__/pse-pdgobpkd.json'),
+  'utf8'
+);
 
 /**
  * Antialiasing and font rendering wobble by a pixel between runs. This tolerance
@@ -163,11 +175,7 @@ for (const scenario of SCENARIOS) {
     const body = requested.includes('poze-redoze')
       ? redispatch
       : requested.includes('pdgobpkd')
-        // Country-wide demand behind the tooltip's OZE percentage. Empty on
-        // purpose: the tooltip never appears in these screenshots (no hover),
-        // and an empty map is the endpoint's own normal state for any day but
-        // the current one — determinism over fidelity here.
-        ? '{"value":[]}'
+        ? kseDemand
         : requested.includes('business_date ge')
           ? history
           : forecast;
