@@ -36,6 +36,20 @@ function flatKseDemand(): Map<number, number> {
 const NOW = new Date(Date.UTC(2026, 7, 3, 10, 30));
 
 describe('RenewableMixCard', () => {
+  it('marks the current hour bar with the neutral inset ring', () => {
+    /*
+     * The colour pass found the original emphasis (opacity alone) at 1.75:1
+     * between bars — invisible in practice — and replaced it with a
+     * hue-independent inset ring. Nothing pinned that mechanism, so a
+     * refactor could drop it and every test would stay green; this one makes
+     * the current-hour marker load-bearing.
+     */
+    render(<RenewableMixCard points={points} kseDemand={flatKseDemand()} now={NOW} />);
+    // NOW is 10:30, so the running block is 10:00-11:00.
+    const biezacy = screen.getByTitle(/^10:00/);
+    expect(biezacy.className).toContain('ring-inset');
+  });
+
   it('renders the current hour\'s share in the ring and its aria-label', () => {
     render(<RenewableMixCard points={points} kseDemand={flatKseDemand()} now={NOW} />);
 
