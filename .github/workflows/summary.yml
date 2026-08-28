@@ -24,6 +24,14 @@ on:
     # stall at 15 hours.
     - cron: '37 * * * *'
   workflow_dispatch:
+  # The external heartbeat. GitHub's own scheduler delivered this cron 5 times
+  # in 2 days instead of 48 (measured 26-28.08.2026: gaps of 10-11 hours), and
+  # the card went stale for longer than its own 12-hour display cutoff. An
+  # external cron (cron-job.org) POSTs to /repos/.../dispatches hourly with a
+  # fine-grained PAT that lives only there; the schedule above stays as a free
+  # second chance, and decideRun already makes redundant runs cost nothing.
+  repository_dispatch:
+    types: [odswiez-podsumowanie]
 
 permissions:
   contents: write
