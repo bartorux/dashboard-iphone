@@ -1,4 +1,4 @@
-import { PSECompassRawItem, PSERawItem, PSERedispatchRawItem } from '../types';
+import { PSECompassRawItem, PSEKseDemandRawItem, PSERawItem, PSERedispatchRawItem } from '../types';
 import { API_BASE, API_URL, FORECAST_ROW_LIMIT } from './constants';
 import { daysToFetch } from './dayWindow';
 import { addDays, formatDateTimeApi, getStartOfToday } from './dateHelpers';
@@ -151,6 +151,22 @@ export async function fetchRedispatch(
   const rows = await query<PSERedispatchRawItem>(
     `${API_BASE}/poze-redoze`,
     `$filter=${encodeURIComponent(`business_date eq '${businessDate}'`)}&$first=100`
+  );
+  return rows ?? [];
+}
+
+/**
+ * Country-wide demand (kse_pow_dem) from the current day's coordination plan.
+ * Selected down to the one field the chart needs; published for the current
+ * business date only, so future days return [] and that is the normal state.
+ */
+export async function fetchKseDemand(
+  businessDate: string
+): Promise<PSEKseDemandRawItem[]> {
+  const rows = await query<PSEKseDemandRawItem>(
+    `${API_BASE}/pdgobpkd`,
+    `$filter=${encodeURIComponent(`business_date eq '${businessDate}'`)}` +
+      `&$select=business_date,dtime_utc,kse_pow_dem&$first=100`
   );
   return rows ?? [];
 }

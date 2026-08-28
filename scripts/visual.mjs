@@ -162,9 +162,15 @@ for (const scenario of SCENARIOS) {
     // carries none of the redispatch fields and would silently draw nothing.
     const body = requested.includes('poze-redoze')
       ? redispatch
-      : requested.includes('business_date ge')
-        ? history
-        : forecast;
+      : requested.includes('pdgobpkd')
+        // Country-wide demand behind the tooltip's OZE percentage. Empty on
+        // purpose: the tooltip never appears in these screenshots (no hover),
+        // and an empty map is the endpoint's own normal state for any day but
+        // the current one — determinism over fidelity here.
+        ? '{"value":[]}'
+        : requested.includes('business_date ge')
+          ? history
+          : forecast;
     return route.fulfill({
       status: 200,
       contentType: 'application/json',

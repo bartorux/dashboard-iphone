@@ -82,10 +82,17 @@ describe('ChartSection', () => {
 
     fireEvent.click(screen.getByRole('tab', { name: 'Generacja' }));
 
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-    const url = decodeURIComponent(String(vi.mocked(fetch).mock.calls[0][0]));
-    expect(url).toContain('/poze-redoze?');
-    // dayData[0].businessDate from the shared factory
-    expect(url).toContain("business_date eq '2026-08-03'");
+    // Two lazy fetches belong to this view now: curtailment and the
+    // country-wide demand behind the honest OZE percentage.
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    const urls = vi
+      .mocked(fetch)
+      .mock.calls.map((call) => decodeURIComponent(String(call[0])));
+    expect(urls.some((u) => u.includes('/poze-redoze?'))).toBe(true);
+    expect(urls.some((u) => u.includes('/pdgobpkd?'))).toBe(true);
+    for (const url of urls) {
+      // dayData[0].businessDate from the shared factory
+      expect(url).toContain("business_date eq '2026-08-03'");
+    }
   });
 });

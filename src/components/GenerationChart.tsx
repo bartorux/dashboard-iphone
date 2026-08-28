@@ -43,6 +43,11 @@ interface GenerationChartProps {
    * exactly as it did before this existed.
    */
   redispatch?: Map<number, RedispatchHour>;
+  /** Country-wide demand per hour start — the honest denominator for the OZE
+   *  share. Present for the current day only (pdgobpkd publishes no future
+   *  days), so the tooltip line appears on "Dziś" and honestly vanishes
+   *  elsewhere. */
+  kseDemand?: Map<number, number>;
 }
 
 interface Row {
@@ -75,6 +80,8 @@ interface Row {
    */
   pvRed: number | null;
   windRed: number | null;
+  /** Country-wide demand for this hour, or null when not published. */
+  kseDemand: number | null;
 }
 
 /**
@@ -95,6 +102,19 @@ export function redispatchForPoint(
     windRed: bucket ? bucket.windRed : null,
   };
 }
+
+/**
+ * Widths for the two grid-frame lines, and the surface halo painted under
+ * each. They are constants because the relationship between the three numbers
+ * is the design — demand heavier than generation, and the casing wide enough
+ * to clear both by about a pixel on each side.
+ */
+const DEMAND_WIDTH = 2.75;
+const GENERATION_WIDTH = 1.75;
+const CASING = 3;
+
+/** Long enough to read as a deliberate dash at phone width, not as a texture. */
+const GENERATION_DASH = '6 4';
 
 interface TooltipProps {
   active?: boolean;
@@ -134,16 +154,34 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
         {/* Totals and grid figures kept apart, no percentage across them: PV
             and wind include micro-installations, grid generation does not, and
             a share computed across those two frames is how a 93% OZE figure
-            reached the screen. */}
+            reached the screen.
+
+            "(całk.)" and "(sieć)" are now a matched pair of qualifiers rather
+            than one abbreviation and one adjective. The frame is the thing a
+            reader has to notice before comparing any two of these rows, and a
+            parallel marker is what makes it noticeable — the divider alone
+            only said "these are different", not how. */}
         <TooltipRow label="Fotowoltaika (całk.)" value={`${formatMW(pv)} MW`} />
         <TooltipRow label="Wiatr (całk.)" value={`${formatMW(wind)} MW`} />
+        {/* The easy figure, back with an honest denominator. The percentage
+            this chart used to print divided total OZE by GRID generation and
+            reached 93% on an ordinary noon; kse_pow_dem is demand of the whole
+            country, prosumers included — it contains everything the numerator
+            does. Published for the current day only, so the line appears on
+            "Dziś" and honestly disappears on future days. */}
+        {row.kseDemand !== null && row.kseDemand > 0 && (
+          <TooltipRow
+            label="OZE pokrywa"
+            value={`${Math.round(((pv + wind) / row.kseDemand) * 100)}% zapotrzebowania kraju`}
+          />
+        )}
         <TooltipRow
-          label="Generacja sieciowa"
+          label="Generacja (sieć)"
           value={generation === null ? 'brak' : `${formatMW(generation)} MW`}
           divider
         />
         <TooltipRow
-          label="Zapotrzebowanie sieciowe"
+          label="Zapotrzebowanie (sieć)"
           value={`${formatMW(row.demand)} MW`}
         />
         <TooltipRow
@@ -182,11 +220,24 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
   data,
   currentHourLabel,
   redispatch,
+  kseDemand,
 }) => {
   const animationMs = useChartAnimationMs();
 
   const colors = useChartColors();
   const { ref, handlers, tooltipActive } = useDismissibleTooltip();
+
+  /**
+   * Area fills on this view are a wash, not a block.
+   *
+   * The stack used to be filled at 0.55 in both hues, and at that weight two
+   * saturated slabs covering half the plot outweighed every line drawn over
+   * them. A fill's job here is to say "this region is solar" and let the eye
+   * carry on; what gets measured is the boundary, and that now carries the
+   * ink. The value comes from a token because the two themes need different
+   * numbers — see the comment on --l-series-fill-opacity.
+   */
+  const fillWash = Number(colors.fillOpacity);
 
   const rows = useMemo<Row[]>(
     () =>
@@ -200,8 +251,10 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         exchange: point.exchange,
         generation: point.generation,
         ...redispatchForPoint(point, redispatch),
+        kseDemand:
+          kseDemand?.get(point.time.getTime() - HOUR_MS) ?? null,
       })),
-    [data, redispatch]
+    [data, redispatch, kseDemand]
   );
 
   const curtailmentHours = useMemo(
@@ -246,42 +299,59 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
 
   return (
     <>
+      {/*
+        Order follows the hierarchy the chart is read in, not the order the
+        series are drawn. Demand is the reference; grid generation is the
+        context measured against it, so the two sit side by side — a reader
+        comparing the solid key with the dashed one directly below their own
+        two lines gets the answer without parsing the whole row.
+
+        Four "?" buttons became one. The frames-of-reference story was told
+        three times, once per popover, each time a fragment; it is one story
+        and it lives on the line whose frame is the surprising one. That drops
+        two buttons and the two longest labels shed a word each, which is what
+        pulls the legend back off its third line on a phone.
+      */}
       <ChartLegend
+        dense
         items={[
           {
-            label: 'Zapotrzebowanie sieciowe',
+            /* No "(sieć)" here, and one on the entry below. The marker's job
+               is to stop a reader measuring a grid figure against a country
+               total, and only one of these two lines is ever mistaken for the
+               OZE stack it is drawn on top of. Demand is the axis everything
+               is read against, not a source competing with them. The tooltip,
+               where the numbers are actually compared side by side, keeps both
+               markers — and dropping this one is what buys the legend its
+               second row back on a phone. */
+            label: 'Zapotrzebowanie',
             swatch: <LineSwatch color={colors.demand} />,
+          },
+          {
+            label: 'Generacja (sieć)',
+            swatch: <LineSwatch color={colors.other} dashed />,
+            info: [
+              'Suma jednostek wytwórczych i magazynów widzianych przez operatora w sieci — bilansuje się z zapotrzebowaniem sieciowym i wymianą.',
+              'Słońce i wiatr są tu podane jako wartości całkowite dla kraju, łącznie z mikroinstalacjami prosumenckimi. Te mikroinstalacje nie wchodzą w linię generacji sieciowej: ich produkcja obniża zapotrzebowanie sieciowe, zamiast być liczona po stronie generacji.',
+              'Dlatego słońce i wiatr potrafią być wyższe niż ta linia. Procent w dymku liczony jest względem zapotrzebowania całego kraju (z prosumentami), więc ma uczciwy mianownik — PSE publikuje tę wielkość tylko dla bieżącej doby, stąd na kolejnych dniach procentu nie ma.',
+            ],
           },
           {
             label: 'Fotowoltaika',
             swatch: <AreaSwatch fill={colors.pv} border={colors.pv} />,
-            info: [
-              'Całkowita generacja słoneczna w kraju, łącznie z mikroinstalacjami prosumenckimi.',
-            ],
           },
           {
             label: 'Wiatr',
             swatch: <AreaSwatch fill={colors.wind} border={colors.wind} />,
-            info: [
-              'Całkowita generacja wiatrowa w kraju, łącznie z małymi instalacjami.',
-            ],
           },
-          {
-            label: 'Generacja sieciowa',
-            swatch: <LineSwatch color={colors.other} />,
-            info: [
-              'Suma jednostek wytwórczych i magazynów widzianych przez operatora w sieci — bilansuje się z zapotrzebowaniem sieciowym i wymianą.',
-              'Mikroinstalacje prosumenckie nie wchodzą w tę linię: ich produkcja obniża zapotrzebowanie sieciowe, zamiast być liczona po stronie generacji. Dlatego słońce i wiatr (wartości całkowite) potrafią być wyższe niż ta linia i dlatego wykres nie podaje procentowego udziału OZE — te dwie miary mają różne układy odniesienia.',
-            ],
-          },
-          {
-            label: 'Wymiana',
-            swatch: <LineSwatch color={colors.exchange} dashed />,
-          },
+          /* Curtailment directly after the two sources it curtails, and only
+             then exchange. Its swatch IS those two sources' colours, so the
+             pairing is what the entry is; "OZE" then no longer has to be said
+             in words, which is the word the phone row could not afford. */
           ...(showCurtailment
             ? [
                 {
-                  label: 'Redysponowanie OZE',
+                  label: 'Redysponowanie',
                   swatch: (
                     <span className="flex items-center gap-0.5">
                       <AreaSwatch fill={colors.pv} border={colors.pv} />
@@ -295,17 +365,22 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
                 },
               ]
             : []),
+          {
+            label: 'Wymiana',
+            swatch: <LineSwatch color={colors.exchange} dotted />,
+          },
         ]}
       />
 
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
-            <CartesianGrid
-              vertical={false}
-              stroke={colors.grid}
-              strokeDasharray="3 3"
-            />
+            {/* Solid, not dashed. Three of the four things drawn on this plot
+                now carry a stroke pattern that means something — solid demand,
+                dashed generation, dotted exchange — and a dashed grid behind
+                them competes with every one of them. A hairline one step off
+                the surface is the recessive form. */}
+            <CartesianGrid vertical={false} stroke={colors.grid} />
 
             <XAxis
               dataKey="key"
@@ -331,14 +406,24 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
             {/* OZE stacked: the height of the stack is the country's total
                 solar plus wind, micro-installations included. Deliberately NOT
                 topped up to grid generation — that difference lives in another
-                frame of reference (see Row.generation). */}
+                frame of reference (see Row.generation).
+
+                A wash with a drawn edge, where this used to be a 0.55 block.
+                Two saturated slabs filling half the plot outweighed every line
+                on it, which is the "thick saturated blocks" failure outright:
+                area fill belongs at roughly a tenth of the hue, and what the
+                reader actually measures — the top of the solar band, the top
+                of the stack — is the boundary, so the boundary gets the ink
+                instead. Same move the reserve view already makes with its
+                band edges. */}
             <Area
               type="monotone"
               dataKey="pv"
               stackId="mix"
-              stroke="none"
+              stroke={colors.pv}
+              strokeWidth={1.5}
               fill={colors.pv}
-              fillOpacity={0.55}
+              fillOpacity={fillWash}
               animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
@@ -347,27 +432,13 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               type="monotone"
               dataKey="wind"
               stackId="mix"
-              stroke="none"
+              stroke={colors.wind}
+              strokeWidth={1.5}
               fill={colors.wind}
-              fillOpacity={0.55}
+              fillOpacity={fillWash}
               animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
-            />
-            {/* Grid generation as its own line rather than a "Pozostałe" band:
-                the band used to be generation − PV − wind, a subtraction across
-                two frames of reference (grid units vs country totals) that
-                erased ~7 GW of conventional sources at noon. See the comment on
-                Row.generation. */}
-            <Line
-              type="monotone"
-              dataKey="generation"
-              stroke={colors.other}
-              strokeWidth={2}
-              dot={false}
-              connectNulls={false}
-              animationDuration={animationMs}
-              activeDot={false}
             />
 
             {/* Non-market curtailment, drawn below zero in the colour of the
@@ -377,20 +448,26 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
                 Areas downward from zero (each series extending the stack
                 further down, not overlapping) for both "monotone" and "step"
                 curves, so there was no need to fall back to <Bar>. */}
-            {/* Opacity 0.5 with a stroke, up from a strokeless 0.3: at monitor
-                scale (a 25 GW axis) the band was nearly invisible, and its
-                baseline diff sat at 0.057% — BELOW the 0.1% visual-regression
-                threshold, meaning the layer could silently disappear and every
-                screenshot test would stay green. Strong enough to read from a
-                desk away is also strong enough for the regression to guard. */}
+            {/* The layer used to carry a strokeless 0.3 fill, which at monitor
+                scale (a 25 GW axis) was nearly invisible and moved only 0.057%
+                of pixels — BELOW the 0.1% visual-regression threshold, so it
+                could silently disappear with every screenshot test green. It
+                was then raised to a 0.5 fill with a hairline stroke.
+
+                Now the ink moves from the fill to the edge, the same way the
+                OZE stack above did: at 0.5 this band was nearly three times
+                the weight of the day's main story sitting right above it, and
+                a footnote drawn louder than the text is a hierarchy inverted.
+                A 1.5px full-strength edge reads from a desk away and gives the
+                regression far more than 0.1% to hold on to. */}
             <Area
               type="monotone"
               dataKey="pvRed"
               stackId="redispatch"
               stroke={colors.pv}
-              strokeWidth={1}
+              strokeWidth={1.5}
               fill={colors.pv}
-              fillOpacity={0.5}
+              fillOpacity={0.28}
               animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
@@ -400,9 +477,9 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               dataKey="windRed"
               stackId="redispatch"
               stroke={colors.wind}
-              strokeWidth={1}
+              strokeWidth={1.5}
               fill={colors.wind}
-              fillOpacity={0.5}
+              fillOpacity={0.28}
               animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
@@ -415,8 +492,73 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
             />
 
             {/* Crossing this line means the system flipped from exporting to
-                importing — a signal in its own right. */}
-            <ReferenceLine y={0} stroke={colors.axis} strokeOpacity={0.5} />
+                importing — a signal in its own right. Stronger than it was,
+                because the gridlines around it stopped being dashed: at 0.5 it
+                had become indistinguishable from the ordinary tick rule
+                sitting on the same y, and a reference that reads as chrome
+                stops being a reference. */}
+            <ReferenceLine y={0} stroke={colors.axis} strokeOpacity={0.85} />
+
+            {/* Dotted, and thinner than either grid line. Exchange answers a
+                question nobody comes to this view with; it earns its place by
+                being available, not by being seen. Dotted also frees the dash
+                pattern to mean exactly one thing — grid generation. */}
+            <Line
+              type="monotone"
+              dataKey="exchange"
+              stroke={colors.exchange}
+              strokeWidth={1.75}
+              strokeDasharray="1 4"
+              strokeLinecap="round"
+              dot={false}
+              connectNulls={false}
+              animationDuration={animationMs}
+              activeDot={false}
+            />
+
+            {/*
+              Grid generation, and below it its casing.
+
+              Two things had to change at once. It is a LINE rather than a
+              "Pozostałe" band because that band was generation − PV − wind, a
+              subtraction across two frames of reference that erased ~7 GW of
+              conventional sources at noon (see Row.generation) — that stays.
+              But as drawn it was a 2px solid grey against a 2.75px solid ink
+              demand line: same character, similar weight, crossing each other
+              five times a day. Nothing but the legend told them apart, and a
+              legend is not something you consult mid-glance.
+
+              So generation takes the dash and the thinner stroke, demand keeps
+              solid and heavy, and the reader gets the answer from the stroke
+              itself. The casing — a wider line in the surface colour, painted
+              underneath with the same dash so it never becomes a solid ribbon
+              — is the surface ring the mark specs ask for on overlapping
+              marks: it carries the line intact across the OZE fills and across
+              the demand line without either having to be lightened.
+            */}
+            <Line
+              type="monotone"
+              dataKey="generation"
+              stroke={colors.surface}
+              strokeWidth={GENERATION_WIDTH + CASING}
+              strokeDasharray={GENERATION_DASH}
+              dot={false}
+              connectNulls={false}
+              animationDuration={animationMs}
+              activeDot={false}
+              legendType="none"
+            />
+            <Line
+              type="monotone"
+              dataKey="generation"
+              stroke={colors.other}
+              strokeWidth={GENERATION_WIDTH}
+              strokeDasharray={GENERATION_DASH}
+              dot={false}
+              connectNulls={false}
+              animationDuration={animationMs}
+              activeDot={false}
+            />
 
             {currentHourLabel && (
               <ReferenceLine
@@ -432,23 +574,26 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               />
             )}
 
+            {/* Demand last, so it is the one thing nothing is drawn over. It
+                is the reference every other series on this view is read
+                against, and the paint order is the only place that ranking is
+                actually enforced. */}
             <Line
               type="monotone"
-              dataKey="exchange"
-              stroke={colors.exchange}
-              strokeWidth={1.5}
-              strokeDasharray="4 4"
+              dataKey="demand"
+              stroke={colors.surface}
+              strokeWidth={DEMAND_WIDTH + CASING}
               dot={false}
               connectNulls={false}
               animationDuration={animationMs}
               activeDot={false}
+              legendType="none"
             />
-
             <Line
               type="monotone"
               dataKey="demand"
               stroke={colors.demand}
-              strokeWidth={2.75}
+              strokeWidth={DEMAND_WIDTH}
               dot={false}
               connectNulls={false}
               animationDuration={animationMs}

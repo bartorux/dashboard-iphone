@@ -52,14 +52,36 @@ describe('frames of reference', () => {
     const row = {
       key: '12:00', endLabel: '13:00', demand: 13186, pv: 11619, wind: 4931,
       outages: 3000, exchange: -4640, generation: 17826, pvRed: 0, windRed: 0,
+      kseDemand: 19950,
     };
     const { container } = render(
       <GenerationTooltip active payload={[{ payload: row } as never]} label="12:00" />
     );
-    expect(container.textContent).toContain('Generacja sieciowa');
+    // "(sieć)" and "(całk.)" name the two frames of reference as a matched
+    // pair — the wording moved, the guarantee did not: grid figures and
+    // country totals stay labelled apart, and no percentage is computed
+    // across them.
+    expect(container.textContent).toContain('Generacja (sieć)');
+    expect(container.textContent).toContain('Zapotrzebowanie (sieć)');
     expect(container.textContent).toContain('Fotowoltaika (całk.)');
-    expect(container.textContent).not.toContain('%');
+    // The honest percentage: total OZE over COUNTRY demand (19950), never over
+    // grid figures. 11619+4931 over 19950 is 83%; over grid generation it
+    // would read 93% and over grid demand 126% — the mutation that swaps the
+    // denominator must move this number.
+    expect(container.textContent).toContain('83% zapotrzebowania kraju');
     expect(container.textContent).not.toContain('Pozostałe');
+  });
+
+  it('omits the percentage line when country demand is unpublished', () => {
+    const row = {
+      key: '12:00', endLabel: '13:00', demand: 13186, pv: 11619, wind: 4931,
+      outages: 3000, exchange: -4640, generation: 17826, pvRed: 0, windRed: 0,
+      kseDemand: null,
+    };
+    const { container } = render(
+      <GenerationTooltip active payload={[{ payload: row } as never]} label="12:00" />
+    );
+    expect(container.textContent).not.toContain('%');
   });
 
 
@@ -73,8 +95,11 @@ describe('frames of reference', () => {
    */
   it('shows grid generation as a line and never a Pozostałe band', () => {
     render(<GenerationChart data={day} currentHourLabel="12:00" />);
-    expect(screen.getByText('Generacja sieciowa')).toBeInTheDocument();
-    expect(screen.getByText('Zapotrzebowanie sieciowe')).toBeInTheDocument();
+    // The legend marks the frame on the line that gets confused with the OZE
+    // stack; the tooltip above marks both. Either way grid figures stay
+    // labelled apart from country totals.
+    expect(screen.getByText('Generacja (sieć)')).toBeInTheDocument();
+    expect(screen.getByText('Zapotrzebowanie')).toBeInTheDocument();
     expect(screen.queryByText('Pozostałe')).toBeNull();
   });
 
@@ -88,7 +113,7 @@ describe('GenerationChart — redispatch legend', () => {
   it('renders without the redispatch prop exactly as before: no curtailment legend entry', () => {
     render(<GenerationChart data={day} currentHourLabel="12:00" />);
 
-    expect(screen.queryByText('Redysponowanie OZE')).not.toBeInTheDocument();
+    expect(screen.queryByText('Redysponowanie')).not.toBeInTheDocument();
   });
 
   it('leaves the legend untouched when every hour of the map is zero', () => {
@@ -100,7 +125,7 @@ describe('GenerationChart — redispatch legend', () => {
       />
     );
 
-    expect(screen.queryByText('Redysponowanie OZE')).not.toBeInTheDocument();
+    expect(screen.queryByText('Redysponowanie')).not.toBeInTheDocument();
   });
 
   it('adds the legend entry once any hour carries real curtailment', () => {
@@ -112,7 +137,10 @@ describe('GenerationChart — redispatch legend', () => {
       />
     );
 
-    expect(screen.getByText('Redysponowanie OZE')).toBeInTheDocument();
+    // Shortened from "Redysponowanie OZE": the entry's own swatch is the PV
+    // and wind pair, so the legend does not have to repeat in words what it
+    // shows in colour. The tooltip row still spells it out in full.
+    expect(screen.getByText('Redysponowanie')).toBeInTheDocument();
   });
 
 });

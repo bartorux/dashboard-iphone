@@ -130,15 +130,34 @@ export interface LegendItem {
   info?: string | string[];
 }
 
-export const ChartLegend: React.FC<{ items: LegendItem[] }> = ({ items }) => {
+export const ChartLegend: React.FC<{
+  items: LegendItem[];
+  /**
+   * Tightens the gaps and the info button for a legend that has more entries
+   * than a phone row can hold.
+   *
+   * Opt-in rather than the default on purpose: every pixel taken out here is a
+   * pixel of separation between two keys, so it is worth spending only where
+   * the alternative is an extra wrapped row — and a wrapped row costs 20px of
+   * the chart itself. A view that already fits keeps the roomier spacing.
+   */
+  dense?: boolean;
+}> = ({ items, dense }) => {
   const [openLabel, setOpenLabel] = React.useState<string | null>(null);
   const open = items.find((item) => item.label === openLabel);
 
   return (
     <>
-      <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.6875rem] text-text-secondary">
+      <ul
+        className={`flex flex-wrap items-center gap-y-1 text-[0.6875rem] text-text-secondary ${
+          dense ? 'gap-x-2' : 'gap-x-3'
+        }`}
+      >
         {items.map((item) => (
-          <li key={item.label} className="flex items-center gap-1.5">
+          <li
+            key={item.label}
+            className={`flex items-center ${dense ? 'gap-1' : 'gap-1.5'}`}
+          >
             {item.swatch}
             {item.label}
             {item.info && (
@@ -151,7 +170,9 @@ export const ChartLegend: React.FC<{ items: LegendItem[] }> = ({ items }) => {
                     current === item.label ? null : item.label
                   )
                 }
-                className="grid h-4 w-4 place-items-center rounded-full bg-surface-3 text-[0.5625rem] font-semibold text-text-secondary"
+                className={`grid place-items-center rounded-full bg-surface-3 text-[0.5625rem] font-semibold text-text-secondary ${
+                  dense ? 'h-3.5 w-3.5' : 'h-4 w-4'
+                }`}
               >
                 ?
               </button>
@@ -171,13 +192,20 @@ export const ChartLegend: React.FC<{ items: LegendItem[] }> = ({ items }) => {
   );
 };
 
-export const LineSwatch: React.FC<{ color: string; dashed?: boolean }> = ({
-  color,
-  dashed,
-}) =>
-  dashed ? (
+/**
+ * A key for one line series. The stroke pattern is part of the identity, not
+ * decoration: where two lines cross repeatedly, a reader tells them apart by
+ * the character of the stroke long before they look up a colour. So the swatch
+ * has to carry the same pattern the chart draws — solid, dashed or dotted.
+ */
+export const LineSwatch: React.FC<{
+  color: string;
+  dashed?: boolean;
+  dotted?: boolean;
+}> = ({ color, dashed, dotted }) =>
+  dashed || dotted ? (
     <span
-      className="h-0 w-4 border-t-2 border-dashed"
+      className={`h-0 w-4 border-t-2 ${dotted ? 'border-dotted' : 'border-dashed'}`}
       style={{ borderColor: color }}
     />
   ) : (

@@ -25,6 +25,15 @@ const TOKENS = {
   wind: '--series-wind',
   exchange: '--series-exchange',
   other: '--series-other',
+  /**
+   * Not a colour — the opacity an area fill is washed to. It rides along here
+   * because it has to be chosen per theme and this hook is already the one
+   * place that reads a token, watches `data-theme` and the system setting, and
+   * hands the result to Recharts as a prop. A separate hook would duplicate
+   * that subscription to answer a question of the same kind: "what does this
+   * token say right now". Read it with Number().
+   */
+  fillOpacity: '--series-fill-opacity',
   threshold: '--series-threshold',
   history: '--series-history',
   bandHistory: '--band-history',
@@ -52,7 +61,8 @@ const FALLBACK: ChartColors = {
   pv: '#ffb020',
   wind: '#32ade6',
   exchange: '#af52de',
-  other: '#7d8590',
+  other: '#5b6470',
+  fillOpacity: '0.18',
   threshold: '#5856d6',
   history: '#8e8e93',
   bandHistory: 'rgba(142,142,147,0.18)',

@@ -76,7 +76,21 @@
   --l-series-pv: #ffb020;       --d-series-pv: #ffcc55;
   --l-series-wind: #32ade6;     --d-series-wind: #64d2ff;
   --l-series-exchange: #af52de; --d-series-exchange: #bf5af2;
-  --l-series-other: #7d8590;    --d-series-other: #6e7681;
+  /* Grid generation. Re-stepped away from the wind blue it sits on top of:
+     the dataviz palette validator scored the old pair #7d8590 <-> #32ade6 at
+     a normal-vision Delta E of 14.8, under the floor of 15 — a full-colour
+     reader could not reliably tell the line from the area it crossed. The
+     slate below scores 23.2 against the purple exchange line and stays far
+     clear of the demand ink, so the three lines separate by colour as well as
+     by stroke. Dark was raised for the same reason: #6e7681 cleared the
+     surface but sank into every fill it crossed.
+     Used by GenerationChart only — no other view moves with it. */
+  --l-series-other: #5b6470;    --d-series-other: #8b95a1;
+  /* How far an area fill is washed down. Dark is NOT the light value: the same
+     18% of a bright hue that barely tints white reads as a solid slab on a
+     near-black surface, because the fill is lighter than what it sits on
+     instead of darker. Chosen per theme rather than flipped. */
+  --l-series-fill-opacity: 0.18; --d-series-fill-opacity: 0.1;
   --l-series-threshold: #5856d6; --d-series-threshold: #a78bfa;
   --l-series-history: #8e8e93;  --d-series-history: #98989d;
   --l-band-history: rgba(142, 142, 147, 0.18);
@@ -120,6 +134,7 @@
   --series-wind: var(--l-series-wind);
   --series-exchange: var(--l-series-exchange);
   --series-other: var(--l-series-other);
+  --series-fill-opacity: var(--l-series-fill-opacity);
   --series-threshold: var(--l-series-threshold);
   --series-history: var(--l-series-history);
   --band-history: var(--l-band-history);
@@ -160,6 +175,7 @@
     --series-wind: var(--d-series-wind);
     --series-exchange: var(--d-series-exchange);
     --series-other: var(--d-series-other);
+    --series-fill-opacity: var(--d-series-fill-opacity);
     --series-threshold: var(--d-series-threshold);
     --series-history: var(--d-series-history);
     --band-history: var(--d-band-history);
@@ -200,6 +216,7 @@
   --series-wind: var(--d-series-wind);
   --series-exchange: var(--d-series-exchange);
   --series-other: var(--d-series-other);
+  --series-fill-opacity: var(--d-series-fill-opacity);
   --series-threshold: var(--d-series-threshold);
   --series-history: var(--d-series-history);
   --band-history: var(--d-band-history);
