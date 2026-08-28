@@ -15,6 +15,7 @@ import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  FORECAST_FIELDS,
   HISTORY_FIELDS_WITH_MIX,
   fetchCompass,
   fetchPSEData,
@@ -49,8 +50,8 @@ import { parseCompass } from '../src/utils/compass';
 import type { CompassHour } from '../src/utils/compass';
 import {
   archivePartition,
+  lastValuesFrom,
   newArchiveLines,
-  parseArchiveLines,
   previousPartition,
 } from '../src/utils/pk5lArchive';
 import type { PSERawItem } from '../src/types';
@@ -166,11 +167,12 @@ function archivePk5l(rows: PSERawItem[], at: Date): void {
       }
     };
 
-    // Current partition spread last, so its entries win any duplicate key —
-    // they are always the more recent of the two on a boundary.
-    const lastByKey = new Map([
-      ...parseArchiveLines(readPartition(previousPath)),
-      ...parseArchiveLines(readPartition(partitionPath)),
+    // Current partition last, so its entries win any duplicate key — they are
+    // always the more recent of the two on a boundary. The fold lives in the
+    // module (lastValuesFrom) so a test guards the previous-partition read.
+    const lastByKey = lastValuesFrom([
+      readPartition(previousPath),
+      readPartition(partitionPath),
     ]);
 
     const lines = newArchiveLines(rows, lastByKey, at.toISOString());
@@ -188,7 +190,11 @@ function archivePk5l(rows: PSERawItem[], at: Date): void {
 }
 
 const [forecast, history] = await Promise.all([
-  fetchPSEData(),
+  fetchPSEData(
+    // The archive stamps every reading with the PSE revision it came from;
+    // without this column the stamp would be forever empty (see pk5lArchive).
+    `${FORECAST_FIELDS},publication_ts_utc`
+  ),
   // With the mix, so the facts can say WHY an hour is tight. Only this job asks
   // for the wider rows; the browser keeps the narrow ones.
   fetchPSEHistory(HISTORY_DAYS, HISTORY_FIELDS_WITH_MIX),

@@ -7,7 +7,7 @@ import { addDays, formatDateTimeApi, getStartOfToday } from './dateHelpers';
  * Fields the app actually reads. The endpoint serves 16 per row; asking for
  * these cuts the response from ~55 KB to ~24 KB before compression.
  */
-const FORECAST_FIELDS = [
+export const FORECAST_FIELDS = [
   'business_date',
   'period',
   'plan_dtime',
@@ -82,7 +82,16 @@ async function query<T>(endpoint: string, params: string): Promise<T[] | null> {
   }
 }
 
-export async function fetchPSEData(): Promise<PSERawItem[]> {
+/**
+ * `fields` mirrors fetchPSEHistory's parameter and exists for the same reason:
+ * the generator job wants one more column than any phone should pay for.
+ * data/pk5l-archiwum records which PSE revision each reading came from, and
+ * publication_ts_utc is that revision stamp — meaningful only where the archive
+ * is written (scripts/summary.ts). Browsers keep the default list.
+ */
+export async function fetchPSEData(
+  fields: string = FORECAST_FIELDS
+): Promise<PSERawItem[]> {
   const startOfToday = getStartOfToday();
 
   // A PSE business day runs 01:00 -> 00:00 the next day. Both bounds need a full
@@ -97,7 +106,7 @@ export async function fetchPSEData(): Promise<PSERawItem[]> {
     API_URL,
     `$filter=${encodeURIComponent(
       `plan_dtime ge '${start}' and plan_dtime le '${to}'`
-    )}&$select=${FORECAST_FIELDS}&$orderby=plan_dtime&$first=${FORECAST_ROW_LIMIT}`
+    )}&$select=${fields}&$orderby=plan_dtime&$first=${FORECAST_ROW_LIMIT}`
   );
   if (filtered) return filtered;
 
@@ -106,7 +115,7 @@ export async function fetchPSEData(): Promise<PSERawItem[]> {
   // empty chart.
   const latest = await query<PSERawItem>(
     API_URL,
-    `$select=${FORECAST_FIELDS}&$orderby=${encodeURIComponent(
+    `$select=${fields}&$orderby=${encodeURIComponent(
       'plan_dtime desc'
     )}&$first=200`
   );

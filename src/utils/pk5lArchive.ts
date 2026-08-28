@@ -214,3 +214,21 @@ export function newArchiveLines(
 
   return lines;
 }
+
+/**
+ * Folds any number of partition files into one last-value map, LATER TEXTS
+ * WINNING duplicate keys. Exists so the two-partition month-boundary read is a
+ * module concern with a test on it, not a spread expression inside the script:
+ * a coordinator's spot mutation dropped the previous-partition read there and
+ * every test stayed green — the failure it causes (re-archiving one unchanged
+ * snapshot on the first runs of a month) is benign but silent.
+ */
+export function lastValuesFrom(texts: string[]): Map<ArchiveKey, ArchivedValue> {
+  const folded = new Map<ArchiveKey, ArchivedValue>();
+  for (const text of texts) {
+    for (const [key, value] of parseArchiveLines(text)) {
+      folded.set(key, value);
+    }
+  }
+  return folded;
+}

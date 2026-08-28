@@ -4,6 +4,7 @@ import {
   newArchiveLines,
   parseArchiveLines,
   previousPartition,
+  lastValuesFrom,
 } from '../pk5lArchive';
 import type { PSERawItem } from '../../types';
 
@@ -263,5 +264,29 @@ describe('reconstructing lastByKey across a month boundary', () => {
     expect(merged.get('2026-09-03#18')).toEqual([1990, 1964]);
     // Untouched since August: still there, read from the older partition.
     expect(merged.get('2026-09-04#9')).toEqual([1500, 1400]);
+  });
+});
+
+describe('lastValuesFrom', () => {
+  const linia = (d: string, h: number, sur: number, req: number) =>
+    JSON.stringify([d, h, sur, req, '', '2026-08-28T10:00:00Z']);
+
+  it('folds partitions in order, later text winning duplicate keys', () => {
+    // The month-boundary read: a visible business date can have its last
+    // archived value in the PREVIOUS partition. Dropping that read is silent —
+    // this test is what makes it loud.
+    const poprzednia = [linia('2026-09-02', 18, 2000, 1900)].join('\n');
+    const biezaca = [linia('2026-09-02', 18, 2500, 1900)].join('\n');
+
+    const zObu = lastValuesFrom([poprzednia, biezaca]);
+    expect(zObu.get('2026-09-02#18')).toEqual([2500, 1900]);
+
+    const tylkoBiezaca = lastValuesFrom(['', biezaca]);
+    const bezPoprzedniej = lastValuesFrom([biezaca]);
+    expect(tylkoBiezaca).toEqual(bezPoprzedniej);
+
+    // And a key living ONLY in the previous partition must survive the fold.
+    const osobny = lastValuesFrom([linia('2026-08-31', 20, 1500, 1800), biezaca]);
+    expect(osobny.get('2026-08-31#20')).toEqual([1500, 1800]);
   });
 });
