@@ -7,6 +7,7 @@ import EnergyDayCard from './components/EnergyDayCard';
 import DayNavigation from './components/DayNavigation';
 import ChartSection from './components/ChartSection';
 import TrendsSection from './components/TrendsSection';
+import RenewableMixCard from './components/RenewableMixCard';
 import AlertsPanel from './components/AlertsPanel';
 import SettingsPanel from './components/SettingsPanel';
 import PullToRefresh from './components/PullToRefresh';
@@ -15,6 +16,7 @@ import OfflineIndicator from './components/OfflineIndicator';
 import InstallButton from './components/InstallButton';
 import { RefreshIcon } from './components/icons';
 import { usePSEData } from './hooks/usePSEData';
+import { useKseDemand } from './hooks/useKseDemand';
 import { useSettings } from './hooks/useSettings';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { useTouchGestures } from './hooks/useTouchGestures';
@@ -52,6 +54,18 @@ function App() {
     hasData,
     hasFreshData,
   } = usePSEData();
+
+  /*
+   * Fetched here rather than inside ChartSection, and unconditionally rather
+   * than only once the Generacja view opens: RenewableMixCard needs this same
+   * map for the ring it shows regardless of which chart tab is on screen, and
+   * a second `useKseDemand` call scoped to the chart would fetch pdgobpkd
+   * twice for the same business date. One hook, one fetch, two consumers —
+   * ChartSection (which forwards it to GenerationChart) and the card below.
+   * `enabled` is always true: this is one small response a day, and the
+   * service worker already caches the GET for an hour.
+   */
+  const { byHour: kseDemand } = useKseDemand(true, todayData[0]?.businessDate ?? null);
 
   const { settings, saveSettings, resetSettings } = useSettings();
   const { preference: themePreference, setTheme } = useTheme();
@@ -310,6 +324,7 @@ function App() {
                 currentDayOffset === 0 ? currentPoint?.hourLabel ?? null : null
               }
               isLoading={isLoading}
+              kseDemand={kseDemand}
             />
 
             <AlertsPanel
@@ -324,6 +339,16 @@ function App() {
               small, and on a monitor they fill the space under the analysis that
               would otherwise sit empty beside a tall chart. */}
           <div className="xl:col-start-2 xl:row-start-2">
+            {/*
+              Today only, always — never the selected day. pdgobpkd (the
+              source behind kseDemand) is published for the current business
+              date alone, and this card's whole premise is "right now", so it
+              reads `todayData`/`now` directly rather than `dayData`, unlike
+              everything else in this column. It renders nothing of its own
+              accord once either input is missing — see the component.
+            */}
+            <RenewableMixCard points={todayData} kseDemand={kseDemand} now={now} />
+
             <TrendsSection
               dayData={dayData}
               todayData={todayData}

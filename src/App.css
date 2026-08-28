@@ -474,6 +474,30 @@ body {
     scale 100ms var(--default-transition-timing-function, ease);
 }
 
+/* RenewableMixCard's ring: fills in once on mount, never loops. A single
+   deliberate entrance earns its place (the card appears once per page load,
+   nowhere near the "seen 100+ times a day" territory that rules motion out
+   entirely) — everything after that first paint is a static ring.
+
+   @starting-style needs no mount flag in React: a browser without support
+   just paints the settled dashoffset straight away, so there is no JS
+   fallback to write. The circumference below is 2*pi*50 for the fixed r=50
+   circle in RenewableMixCard.tsx — always the fully-unfilled starting point,
+   whatever the current share animates to.
+
+   The @media block after this one zeroes transition-duration on every
+   element via `*`, universal selectors reach SVG the same as HTML, and the
+   `!important` there overrides only the duration this shorthand sets — so a
+   reader who asked for less motion gets the ring painted at its settled
+   value on first frame, same as everywhere else in this file. */
+.oze-ring-fill {
+  transition: stroke-dashoffset 600ms cubic-bezier(0.23, 1, 0.32, 1);
+
+  @starting-style {
+    stroke-dashoffset: 314.159;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

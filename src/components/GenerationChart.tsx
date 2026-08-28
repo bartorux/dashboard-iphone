@@ -14,6 +14,7 @@ import { PSEDataPoint } from '../types';
 import { HOUR_MS } from '../utils/constants';
 import { niceScaleRange } from '../utils/scale';
 import { hasCurtailment, RedispatchHour } from '../utils/redispatch';
+import { renewableMixShare } from '../utils/renewableShare';
 import { useChartColors } from '../hooks/useChartColors';
 import {
   useChartAnimationMs,
@@ -146,14 +147,9 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
   const showRedispatch = pvRed !== 0 || windRed !== 0;
 
   /**
-   * Denominator for "OZE w krajowym miksie": country demand adjusted by
-   * cross-border exchange, i.e. the generation actually consumed inside
-   * Poland this hour — not just what left the plants. Exchange is negative
-   * on export, so SUBTRACTING it INCREASES the denominator (those exported
-   * electrons never reached a Polish socket): measured live 28.08.2026 noon,
-   * 19 950 − (−4 640) = 24 590 MW. On import exchange is positive, and
-   * subtracting it correctly shrinks the denominator instead — the imported
-   * MW are already inside kseDemand, not on top of it.
+   * "OZE w krajowym miksie", computed by the one shared formula (see
+   * renewableShare.ts) rather than inline here — RenewableMixCard needs the
+   * exact same arithmetic and a second copy is how the two would drift.
    *
    * The previous version divided by kseDemand alone and read 83% at this
    * same hour — arithmetically fine, but it reads as "how much of the
@@ -162,13 +158,11 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
    * the mix actually available to consume domestically, the honest share at
    * this same hour is 67%.
    *
-   * Both inputs are published for the current day only, so a null on either
-   * one means no line — never a silent fallback to kseDemand alone.
+   * All four inputs are required — pv/wind and kseDemand/exchange (the
+   * latter pair published for the current day only) — so a null on any one
+   * means no line, never a silent fallback.
    */
-  const mixDenominator =
-    row.kseDemand !== null && row.exchange !== null
-      ? row.kseDemand - row.exchange
-      : null;
+  const mixShare = renewableMixShare(row.pv, row.wind, row.kseDemand, row.exchange);
 
   return (
     <ChartTooltipBox>
@@ -191,15 +185,12 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
         {/* The easy figure, with an honest denominator on both counts: total
             OZE (never GRID generation — see the frame-of-reference comment
             below), over demand adjusted for exchange rather than demand
-            alone (see mixDenominator above). Both kseDemand and exchange are
-            published for the current day only, so the line appears on "Dziś"
-            and honestly disappears — never a silent fallback — wherever
-            either is missing. */}
-        {mixDenominator !== null && mixDenominator > 0 && (
-          <TooltipRow
-            label="OZE w krajowym miksie"
-            value={`${Math.round(((pv + wind) / mixDenominator) * 100)}%`}
-          />
+            alone (see renewableMixShare above). Both kseDemand and exchange
+            are published for the current day only, so the line appears on
+            "Dziś" and honestly disappears — never a silent fallback —
+            wherever either is missing. */}
+        {mixShare !== null && (
+          <TooltipRow label="OZE w krajowym miksie" value={`${mixShare}%`} />
         )}
         <TooltipRow
           label="Generacja (sieć)"
