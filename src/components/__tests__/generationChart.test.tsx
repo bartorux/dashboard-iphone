@@ -15,7 +15,7 @@ vi.mock('recharts', async () => {
   };
 });
 import React from 'react';
-import GenerationChart, { redispatchForPoint } from '../GenerationChart';
+import GenerationChart, { GenerationTooltip, redispatchForPoint } from '../GenerationChart';
 import { makePoint } from '../../test/factories';
 import { RedispatchHour } from '../../utils/redispatch';
 import { HOUR_MS } from '../../utils/constants';
@@ -43,6 +43,46 @@ function curtailedMap(hour: number, pvRed: number, windRed = 0): Map<number, Red
     ],
   ]);
 }
+
+describe('frames of reference', () => {
+  it('tooltip keeps the frames apart and carries no percentage', () => {
+    // Rendered directly: the tooltip only exists on hover, so a chart-level
+    // textContent check can never see what it prints — the first version of
+    // this suite proved that by letting a reintroduced percentage through.
+    const row = {
+      key: '12:00', endLabel: '13:00', demand: 13186, pv: 11619, wind: 4931,
+      outages: 3000, exchange: -4640, generation: 17826, pvRed: 0, windRed: 0,
+    };
+    const { container } = render(
+      <GenerationTooltip active payload={[{ payload: row } as never]} label="12:00" />
+    );
+    expect(container.textContent).toContain('Generacja sieciowa');
+    expect(container.textContent).toContain('Fotowoltaika (całk.)');
+    expect(container.textContent).not.toContain('%');
+    expect(container.textContent).not.toContain('Pozostałe');
+  });
+
+
+  /*
+   * PV and wind arrive as COUNTRY TOTALS (micro-installations included) while
+   * `generation` is grid units only — the two never subtract cleanly. The old
+   * "Pozostałe" band did subtract them, erasing ~7 GW of conventional sources
+   * at noon and putting a 93% OZE share on screen (measured 28.08.2026, 12:00:
+   * PV 11 619 + wind 4 931 vs grid generation 17 826 → band of 1 276 MW where
+   * thermal units alone ran 6 666 MW).
+   */
+  it('shows grid generation as a line and never a Pozostałe band', () => {
+    render(<GenerationChart data={day} currentHourLabel="12:00" />);
+    expect(screen.getByText('Generacja sieciowa')).toBeInTheDocument();
+    expect(screen.getByText('Zapotrzebowanie sieciowe')).toBeInTheDocument();
+    expect(screen.queryByText('Pozostałe')).toBeNull();
+  });
+
+  it('never prints an OZE share computed across the two frames', () => {
+    const { container } = render(<GenerationChart data={day} currentHourLabel="12:00" />);
+    expect(container.textContent).not.toContain('Udział OZE');
+  });
+});
 
 describe('GenerationChart — redispatch legend', () => {
   it('renders without the redispatch prop exactly as before: no curtailment legend entry', () => {

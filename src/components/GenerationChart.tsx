@@ -53,16 +53,21 @@ interface Row {
   wind: number | null;
   outages: number | null;
   exchange: number | null;
-  /** Everything the system generates, renewables included. */
-  generation: number | null;
-  /** Conventional and everything else, i.e. generation minus PV and wind. */
-  other: number | null;
   /**
-   * The unclamped remainder. Negative in 4 hours out of 792 measured, where the
-   * PV forecast exceeds total generation — kept so the tooltip can admit it
-   * instead of the stack quietly swallowing the discrepancy.
+   * Generation of GRID units only (fcst_gen_unit_stor_prov + non_prov) — it
+   * balances grid demand plus exchange to the megawatt. PV and wind above are
+   * TOTALS, micro-installations included, and those never appear here: a
+   * prosumer's panel shows up as lowered grid demand instead. Measured on
+   * 27.08.2026 noon: total KSE demand 20.2 GW vs grid demand 13.2 GW — a ~7 GW
+   * gap of behind-the-meter PV.
+   *
+   * This is why there is no "Pozostałe" band any more. It was computed as
+   * generation − PV − wind across those two incompatible frames, which
+   * understated conventional sources by the whole prosumer volume and put a
+   * 93% OZE share on screen. The negative remainder the old code clamped in 4
+   * of 792 hours was this bug showing itself.
    */
-  otherRaw: number | null;
+  generation: number | null;
   /**
    * MW curtailed this hour by PSE order, <= 0. Null means the day's
    * redispatch data has not loaded (or does not exist yet) — nothing is
@@ -91,26 +96,15 @@ export function redispatchForPoint(
   };
 }
 
-/** Splits total generation into the part that is not PV or wind. */
-function remainder(
-  generation: number | null,
-  pv: number | null,
-  wind: number | null
-): { other: number | null; otherRaw: number | null } {
-  if (generation === null || pv === null || wind === null) {
-    return { other: null, otherRaw: null };
-  }
-  const raw = generation - pv - wind;
-  return { other: Math.max(0, raw), otherRaw: raw };
-}
-
 interface TooltipProps {
   active?: boolean;
   label?: string | number;
   payload?: Array<{ payload: Row }>;
 }
 
-const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
+/** Exported for the test that renders it directly — on hover-only UI a
+ * chart-level assertion can never see what the tooltip prints. */
+export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   const row = payload[0].payload;
 
@@ -126,10 +120,7 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
   const pv = row.pv ?? 0;
   const wind = row.wind ?? 0;
   const generation = row.generation;
-  const share = generation && generation > 0 ? ((pv + wind) / generation) * 100 : 0;
   const exchange = row.exchange ?? 0;
-  // Negative in the rare hours where the PV forecast exceeds total generation
-  const inconsistent = row.otherRaw !== null && row.otherRaw < 0;
   const pvRed = row.pvRed ?? 0;
   const windRed = row.windRed ?? 0;
   const showRedispatch = pvRed !== 0 || windRed !== 0;
@@ -140,22 +131,20 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
         {String(label)}&ndash;{row.endLabel}
       </div>
       <dl className="space-y-0.5">
+        {/* Totals and grid figures kept apart, no percentage across them: PV
+            and wind include micro-installations, grid generation does not, and
+            a share computed across those two frames is how a 93% OZE figure
+            reached the screen. */}
+        <TooltipRow label="Fotowoltaika (całk.)" value={`${formatMW(pv)} MW`} />
+        <TooltipRow label="Wiatr (całk.)" value={`${formatMW(wind)} MW`} />
         <TooltipRow
-          label="Generacja"
+          label="Generacja sieciowa"
           value={generation === null ? 'brak' : `${formatMW(generation)} MW`}
-        />
-        <TooltipRow indent label="fotowoltaika" value={`${formatMW(pv)} MW`} />
-        <TooltipRow indent label="wiatr" value={`${formatMW(wind)} MW`} />
-        <TooltipRow
-          indent
-          label="pozostałe"
-          value={row.other === null ? 'brak' : `${formatMW(row.other)} MW`}
-        />
-        <TooltipRow label="Udział OZE" value={`${share.toFixed(0)} %`} />
-        <TooltipRow
-          label="Zapotrzebowanie"
-          value={`${formatMW(row.demand)} MW`}
           divider
+        />
+        <TooltipRow
+          label="Zapotrzebowanie sieciowe"
+          value={`${formatMW(row.demand)} MW`}
         />
         <TooltipRow
           label="Wymiana"
@@ -174,12 +163,6 @@ const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, label }) =
             <TooltipRow indent label="fotowoltaika" value={`${formatMW(pvRed)} MW`} />
             <TooltipRow indent label="wiatr" value={`${formatMW(windRed)} MW`} />
           </>
-        )}
-        {inconsistent && (
-          <div className="mt-1 border-t border-separator pt-1 text-[0.6875rem] text-warn-text">
-            Prognoza OZE przekracza generację łączną o{' '}
-            {formatMW(Math.abs(row.otherRaw!))} MW — tak podaje PSE.
-          </div>
         )}
       </dl>
     </ChartTooltipBox>
@@ -216,7 +199,6 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         outages: point.outages,
         exchange: point.exchange,
         generation: point.generation,
-        ...remainder(point.generation, point.pv, point.wind),
         ...redispatchForPoint(point, redispatch),
       })),
     [data, redispatch]
@@ -232,6 +214,9 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
     const values = rows.flatMap((row) => [
       row.demand,
       row.generation,
+      // The OZE stack's top. Usually below grid generation, but totals include
+      // prosumer PV, so around noon the stack can top every grid figure.
+      (row.pv ?? 0) + (row.wind ?? 0),
       // Exchange goes negative when Poland exports. A domain anchored at zero
       // clipped those hours away entirely, leaving the line flat against the
       // axis exactly when it carried the most information.
@@ -264,20 +249,30 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
       <ChartLegend
         items={[
           {
-            label: 'Zapotrzebowanie',
+            label: 'Zapotrzebowanie sieciowe',
             swatch: <LineSwatch color={colors.demand} />,
           },
           {
             label: 'Fotowoltaika',
             swatch: <AreaSwatch fill={colors.pv} border={colors.pv} />,
+            info: [
+              'Całkowita generacja słoneczna w kraju, łącznie z mikroinstalacjami prosumenckimi.',
+            ],
           },
           {
             label: 'Wiatr',
             swatch: <AreaSwatch fill={colors.wind} border={colors.wind} />,
+            info: [
+              'Całkowita generacja wiatrowa w kraju, łącznie z małymi instalacjami.',
+            ],
           },
           {
-            label: 'Pozostałe',
-            swatch: <AreaSwatch fill={colors.other} border={colors.other} />,
+            label: 'Generacja sieciowa',
+            swatch: <LineSwatch color={colors.other} />,
+            info: [
+              'Suma jednostek wytwórczych i magazynów widzianych przez operatora w sieci — bilansuje się z zapotrzebowaniem sieciowym i wymianą.',
+              'Mikroinstalacje prosumenckie nie wchodzą w tę linię: ich produkcja obniża zapotrzebowanie sieciowe, zamiast być liczona po stronie generacji. Dlatego słońce i wiatr (wartości całkowite) potrafią być wyższe niż ta linia i dlatego wykres nie podaje procentowego udziału OZE — te dwie miary mają różne układy odniesienia.',
+            ],
           },
           {
             label: 'Wymiana',
@@ -333,10 +328,10 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               width={axisWidthFor(scale.ticks)}
             />
 
-            {/* The mix, stacked: the height of the stack is total generation
-                and each band is one fraction of it. `other` is clamped at zero
-                for the 0.5% of hours where the PV forecast exceeds generation;
-                the tooltip says so rather than letting the stack absorb it. */}
+            {/* OZE stacked: the height of the stack is the country's total
+                solar plus wind, micro-installations included. Deliberately NOT
+                topped up to grid generation — that difference lives in another
+                frame of reference (see Row.generation). */}
             <Area
               type="monotone"
               dataKey="pv"
@@ -359,16 +354,20 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               activeDot={false}
               connectNulls={false}
             />
-            <Area
+            {/* Grid generation as its own line rather than a "Pozostałe" band:
+                the band used to be generation − PV − wind, a subtraction across
+                two frames of reference (grid units vs country totals) that
+                erased ~7 GW of conventional sources at noon. See the comment on
+                Row.generation. */}
+            <Line
               type="monotone"
-              dataKey="other"
-              stackId="mix"
-              stroke="none"
-              fill={colors.other}
-              fillOpacity={0.55}
+              dataKey="generation"
+              stroke={colors.other}
+              strokeWidth={2}
+              dot={false}
+              connectNulls={false}
               animationDuration={animationMs}
               activeDot={false}
-              connectNulls={false}
             />
 
             {/* Non-market curtailment, drawn below zero in the colour of the
