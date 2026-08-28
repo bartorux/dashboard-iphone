@@ -43,6 +43,11 @@ interface GenerationChartProps {
    * exactly as it did before this existed.
    */
   redispatch?: Map<number, RedispatchHour>;
+  /** Country-wide demand per hour start — the honest denominator for the OZE
+   *  share. Present for the current day only (pdgobpkd publishes no future
+   *  days), so the tooltip line appears on "Dziś" and honestly vanishes
+   *  elsewhere. */
+  kseDemand?: Map<number, number>;
 }
 
 interface Row {
@@ -75,6 +80,8 @@ interface Row {
    */
   pvRed: number | null;
   windRed: number | null;
+  /** Country-wide demand for this hour, or null when not published. */
+  kseDemand: number | null;
 }
 
 /**
@@ -156,6 +163,18 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
             only said "these are different", not how. */}
         <TooltipRow label="Fotowoltaika (całk.)" value={`${formatMW(pv)} MW`} />
         <TooltipRow label="Wiatr (całk.)" value={`${formatMW(wind)} MW`} />
+        {/* The easy figure, back with an honest denominator. The percentage
+            this chart used to print divided total OZE by GRID generation and
+            reached 93% on an ordinary noon; kse_pow_dem is demand of the whole
+            country, prosumers included — it contains everything the numerator
+            does. Published for the current day only, so the line appears on
+            "Dziś" and honestly disappears on future days. */}
+        {row.kseDemand !== null && row.kseDemand > 0 && (
+          <TooltipRow
+            label="OZE pokrywa"
+            value={`${Math.round(((pv + wind) / row.kseDemand) * 100)}% zapotrzebowania kraju`}
+          />
+        )}
         <TooltipRow
           label="Generacja (sieć)"
           value={generation === null ? 'brak' : `${formatMW(generation)} MW`}
@@ -201,6 +220,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
   data,
   currentHourLabel,
   redispatch,
+  kseDemand,
 }) => {
   const animationMs = useChartAnimationMs();
 
@@ -231,8 +251,10 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         exchange: point.exchange,
         generation: point.generation,
         ...redispatchForPoint(point, redispatch),
+        kseDemand:
+          kseDemand?.get(point.time.getTime() - HOUR_MS) ?? null,
       })),
-    [data, redispatch]
+    [data, redispatch, kseDemand]
   );
 
   const curtailmentHours = useMemo(
@@ -311,7 +333,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
             info: [
               'Suma jednostek wytwórczych i magazynów widzianych przez operatora w sieci — bilansuje się z zapotrzebowaniem sieciowym i wymianą.',
               'Słońce i wiatr są tu podane jako wartości całkowite dla kraju, łącznie z mikroinstalacjami prosumenckimi. Te mikroinstalacje nie wchodzą w linię generacji sieciowej: ich produkcja obniża zapotrzebowanie sieciowe, zamiast być liczona po stronie generacji.',
-              'Dlatego słońce i wiatr potrafią być wyższe niż ta linia i dlatego wykres nie podaje procentowego udziału OZE — te dwie miary mają różne układy odniesienia.',
+              'Dlatego słońce i wiatr potrafią być wyższe niż ta linia. Procent w dymku liczony jest względem zapotrzebowania całego kraju (z prosumentami), więc ma uczciwy mianownik — PSE publikuje tę wielkość tylko dla bieżącej doby, stąd na kolejnych dniach procentu nie ma.',
             ],
           },
           {

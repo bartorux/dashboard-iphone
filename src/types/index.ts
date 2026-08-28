@@ -48,6 +48,19 @@ export interface PSECompassRawItem {
  * Values are in MW and NEGATIVE, or null when no redispatch applies to that
  * period. 96 fifteen-minute records per business day.
  */
+/**
+ * pdgobpkd — the CURRENT day's coordination plan. The one forecast field this
+ * app reads from it is kse_pow_dem: demand of the WHOLE country, prosumer
+ * self-consumption included — the honest denominator for an OZE share, unlike
+ * grid_demand_fcst on pk5l-wp. Published for the current business date only;
+ * future days return no rows, which is normal.
+ */
+export interface PSEKseDemandRawItem {
+  business_date: string;
+  dtime_utc: string;
+  kse_pow_dem?: string | number | null;
+}
+
 export interface PSERedispatchRawItem {
   business_date: string;
   dtime: string;

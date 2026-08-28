@@ -49,7 +49,7 @@ function parseRedispatchInstant(dtimeUtc: string | null | undefined): Date | nul
  * treats the timestamp as the exclusive end of the block it closes, which is
  * what it is.
  */
-function hourBucketOf(instantMs: number): number {
+export function hourBucketOf(instantMs: number): number {
   return Math.floor((instantMs - 1) / HOUR_MS) * HOUR_MS;
 }
 

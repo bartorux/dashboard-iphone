@@ -6,6 +6,7 @@ import HistoryChart from './HistoryChart';
 import SegmentedControl from './SegmentedControl';
 import { useHistory } from '../hooks/useHistory';
 import { useRedispatch } from '../hooks/useRedispatch';
+import { useKseDemand } from '../hooks/useKseDemand';
 import { CHART_BOX } from './chart/shared';
 
 type ChartView = 'reserve' | 'generation' | 'history';
@@ -50,6 +51,10 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     view === 'generation',
     dayData[0]?.businessDate ?? null
   );
+  const kseDemand = useKseDemand(
+    view === 'generation',
+    dayData[0]?.businessDate ?? null
+  );
 
   const active = VIEWS.find((entry) => entry.value === view) ?? VIEWS[0];
 
@@ -91,6 +96,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
           data={dayData}
           currentHourLabel={currentHourLabel}
           redispatch={redispatch.byHour}
+          kseDemand={kseDemand.byHour}
         />
       );
     }

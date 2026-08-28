@@ -52,6 +52,7 @@ describe('frames of reference', () => {
     const row = {
       key: '12:00', endLabel: '13:00', demand: 13186, pv: 11619, wind: 4931,
       outages: 3000, exchange: -4640, generation: 17826, pvRed: 0, windRed: 0,
+      kseDemand: 19950,
     };
     const { container } = render(
       <GenerationTooltip active payload={[{ payload: row } as never]} label="12:00" />
@@ -63,8 +64,24 @@ describe('frames of reference', () => {
     expect(container.textContent).toContain('Generacja (sieć)');
     expect(container.textContent).toContain('Zapotrzebowanie (sieć)');
     expect(container.textContent).toContain('Fotowoltaika (całk.)');
-    expect(container.textContent).not.toContain('%');
+    // The honest percentage: total OZE over COUNTRY demand (19950), never over
+    // grid figures. 11619+4931 over 19950 is 83%; over grid generation it
+    // would read 93% and over grid demand 126% — the mutation that swaps the
+    // denominator must move this number.
+    expect(container.textContent).toContain('83% zapotrzebowania kraju');
     expect(container.textContent).not.toContain('Pozostałe');
+  });
+
+  it('omits the percentage line when country demand is unpublished', () => {
+    const row = {
+      key: '12:00', endLabel: '13:00', demand: 13186, pv: 11619, wind: 4931,
+      outages: 3000, exchange: -4640, generation: 17826, pvRed: 0, windRed: 0,
+      kseDemand: null,
+    };
+    const { container } = render(
+      <GenerationTooltip active payload={[{ payload: row } as never]} label="12:00" />
+    );
+    expect(container.textContent).not.toContain('%');
   });
 
 
