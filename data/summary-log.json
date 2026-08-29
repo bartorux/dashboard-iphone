@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-24T11:58:52.616Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "W środę o 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W środę między 19:00 a 21:00 margines spada poniżej wymaganego poziomu. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek, piątek, dzisiaj i jutro nic nie zapowiada przywołania, przy czym jutro prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie."
-    },
-    {
       "at": "2026-08-24T13:34:20.074Z",
       "prompt": 50,
       "accepted": true,
@@ -589,6 +581,14 @@
       "headline": "W poniedziałek 31 sierpnia między 19:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza dla poniedziałku 31 sierpnia jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę 2 września między 19:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu przy zachowaniu progu 1100 MW, natomiast w pozostałe dni okresu nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-29T21:55:54.610Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "W poniedziałek 31 sierpnia między 19:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza w poniedziałek 31 sierpnia jeszcze się ustala, bo raz pokrywa wymagane wartości, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W środa 2 września między 19:00 a 21:00 margines również spada poniżej wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
