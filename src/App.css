@@ -72,25 +72,27 @@
 
   /* Generation view. Demand is the reference the rest is read against, so it
      takes the highest-contrast colour; PV and wind sit under it as areas.
-     Light PV and wind were re-stepped from #ffb020/#32ade6. PV's OKLCH L was
-     0.813, above the light-mode band's 0.77 ceiling; wind's L of 0.707 was
-     inside the band but its 1.5px area edge still read below the 3:1 floor
-     on white — 1.83:1 for PV, 2.54:1 for wind. #1789bf was tried as the
-     wind replacement and rejected: it pulls the normal-vision Delta E to
-     --l-series-other down to 14.2, under the 15 floor a full-colour reader
-     needs to tell the wind edge from the grid-generation line it crosses.
-     The shipped pair clears both — 3.31:1 / 3.33:1 on white, Delta E 22.8
-     (PV) and 17.3 (wind) to --l-series-other. Dark keeps its original
-     values; only light needed the re-step. */
+     Light PV and wind were re-stepped twice. First from #ffb020/#32ade6,
+     whose 1.5px area edges read below the 3:1 floor on white (1.83:1 /
+     2.54:1). The second step rotated wind toward cyan, because the floors
+     over-constrain a true blue: nothing with an OKLCH hue above 221° clears,
+     at the same time, 3:1 on white, Delta E 15 to --l-series-other, Delta E
+     15 to the #007aff "teraz" marker drawn across the area, and a CVD-safe
+     distance to the exchange purple — #2296cc sat at 235° and failed the
+     last two. The shipped pair clears the set: 3.20:1 / 3.15:1 on white,
+     Delta E 24.5 (PV) and 17.8 (wind) to --l-series-other, wind 15.8 to the
+     teraz marker. Dark keeps its original values; only light moved. */
   --l-series-demand: #1c1c1e;   --d-series-demand: #e5e5ea;
-  --l-series-pv: #cc7a00;       --d-series-pv: #ffcc55;
-  --l-series-wind: #2296cc;     --d-series-wind: #64d2ff;
+  --l-series-pv: #da7600;       --d-series-pv: #ffcc55;
+  --l-series-wind: #009fbb;     --d-series-wind: #64d2ff;
   /* Fill split from stroke: the edge must clear 3:1 against the surface, the
      wash underneath does not — and washing the DEEP edge colour is exactly what
-     read as muddy in light mode. Defaults equal the stroke tokens, so themes
-     that do not care keep one hue. */
-  --l-series-pv-fill: var(--l-series-pv);     --d-series-pv-fill: var(--d-series-pv);
-  --l-series-wind-fill: var(--l-series-wind); --d-series-wind-fill: var(--d-series-wind);
+     read as muddy in light mode (the W2 wash of #cc7a00 landed at 1.17:1 to
+     white with its hue drifted 17° off its own edge: chalk, not colour). Light
+     fills are the vivid siblings of their edges — same hue, the chroma the
+     edge cannot afford under its 3:1 duty. Dark keeps one hue per series. */
+  --l-series-pv-fill: #ff8a00;                --d-series-pv-fill: var(--d-series-pv);
+  --l-series-wind-fill: #00c9ee;              --d-series-wind-fill: var(--d-series-wind);
   --l-series-exchange: #af52de; --d-series-exchange: #bf5af2;
   /* RenewableMixCard's ring + day strip. Borrows the wind slot rather than
      the app-wide --accent: this app reserves accent for things you can act
@@ -102,13 +104,13 @@
      1.50 (light) / 1.37 (dark) against --warn, i.e. close to
      indistinguishable from this app's own warning colour — wrong signal on
      a card with no status to report. Wind clears the mark floor validated
-     above (3.33:1 light / 9.89:1 dark vs surface) and reads as a plain,
+     above (3.15:1 light / 9.89:1 dark vs surface) and reads as a plain,
      non-status blue. */
   --l-oze: var(--l-series-wind);      --d-oze: var(--d-series-wind);
   /* Ring track: a light tint of the same hue (blue-on-blue) rather than a
      generic grey, so the meter reads as one ramp end to end. Same ~1:6
      tint recipe as --accent-soft, computed from --l/--d-oze's own RGB. */
-  --l-oze-soft: rgba(34, 150, 204, 0.16);
+  --l-oze-soft: rgba(0, 159, 187, 0.16);
   --d-oze-soft: rgba(100, 210, 255, 0.2);
   /* Grid generation. Re-stepped away from the wind blue it sits on top of:
      the dataviz palette validator scored the old pair #7d8590 <-> #32ade6 at
@@ -118,19 +120,20 @@
      clear of the demand ink, so the three lines separate by colour as well as
      by stroke. Dark was raised for the same reason: #6e7681 cleared the
      surface but sank into every fill it crossed. Re-validated against the
-     current --l-series-pv/--l-series-wind (Delta E 22.8 / 17.3 — see comment
+     current --l-series-pv/--l-series-wind (Delta E 24.5 / 17.8 — see comment
      above); this slate did not need to move again.
      Used by GenerationChart only — no other view moves with it. */
   --l-series-other: #5b6470;    --d-series-other: #8b95a1;
-  /* How far an area fill is washed down. Light was raised from 0.18 to 0.22
-     because the darker re-stepped PV/wind hues (see comment above) washed
-     down to less saturation than before at the old opacity — 0.22 restores
-     the fill's presence without going back to a solid block. Dark is NOT
-     the light value: the same fraction of a bright hue that barely tints
-     white reads as a solid slab on a near-black surface, because the fill
-     is lighter than what it sits on instead of darker. Chosen per theme
-     rather than flipped. */
-  --l-series-fill-opacity: 0.22; --d-series-fill-opacity: 0.1;
+  /* How far an area fill is washed down. Light sits at 0.30 with the split
+     fill tokens: the vivid fills need it to read as colour rather than
+     chalk, and 0.30 is the ceiling before the bands outweigh the lines
+     crossing them — 0.38 was tried and rejected for drowning the dotted
+     exchange line, the same failure the old 0.55 solid fills had. Dark is
+     NOT the light value: the same fraction of a bright hue that barely
+     tints white reads as a solid slab on a near-black surface, because the
+     fill is lighter than what it sits on instead of darker. Chosen per
+     theme rather than flipped. */
+  --l-series-fill-opacity: 0.30; --d-series-fill-opacity: 0.1;
   --l-series-threshold: #5856d6; --d-series-threshold: #a78bfa;
   --l-series-history: #8e8e93;  --d-series-history: #98989d;
   --l-band-history: rgba(142, 142, 147, 0.18);
