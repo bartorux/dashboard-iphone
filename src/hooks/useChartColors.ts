@@ -23,6 +23,8 @@ const TOKENS = {
   demand: '--series-demand',
   pv: '--series-pv',
   wind: '--series-wind',
+  pvFill: '--series-pv-fill',
+  windFill: '--series-wind-fill',
   exchange: '--series-exchange',
   other: '--series-other',
   /**
@@ -59,6 +61,8 @@ const FALLBACK: ChartColors = {
   bandWarnEdge: 'rgba(255,149,0,0.5)',
   demand: '#1c1c1e',
   pv: '#ffb020',
+  pvFill: '#ffb020',
+  windFill: '#32ade6',
   wind: '#32ade6',
   exchange: '#af52de',
   other: '#5b6470',
