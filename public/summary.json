@@ -1,8 +1,8 @@
 {
-  "headline": "W środę 2 września operator ma wybór i może ogłosić przywołanie między 19:00 a 21:00.",
-  "body": "W poniedziałek 31 sierpnia prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin w środę 2 września zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "W poniedziałek 31 sierpnia między 19:00 rezerwa spada do wąskiego, ale dodatniego marginesu, natomiast w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-08-29T14:41:03.157Z",
+  "headline": "W poniedziałek 31 sierpnia między 19:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Prognoza w poniedziałek 31 sierpnia jeszcze się ustala, ponieważ raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "Przywołanie może pojawić się także w środę 2 września między 19:00 a 21:00, natomiast w pozostałe dni tygodnia nic nie zapowiada przywołania.",
+  "generatedAt": "2026-08-29T18:50:00.373Z",
   "dates": [
     "2026-08-29",
     "2026-08-31",
@@ -11,6 +11,6 @@
     "2026-09-03",
     "2026-09-04"
   ],
-  "assessment": "2026-08-29|W|none|1700|17:00|0|0|5||;2026-08-31|R|none|100|19:00|2|0|17||;2026-09-01|R|none|600|20:00|0|0|23||;2026-09-02|R|moderate|-100|19:00|0|0|21|moderate:19:00-21:00|;2026-09-03|R|none|2500|07:00|0|0|24||;2026-09-04|R|none|2200|19:00|0|0|24||#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
+  "assessment": "2026-08-29|W|none|-100|20:00|0|0|0||;2026-08-31|R|moderate|-100|19:00|0|0|17|moderate:19:00-21:00|;2026-09-01|R|none|600|20:00|0|0|23||;2026-09-02|R|moderate|-200|20:00|0|0|21|moderate:19:00-21:00|;2026-09-03|R|none|2500|19:00|0|0|24||;2026-09-04|R|none|2300|19:00|0|0|24||#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
   "model": "gemini-3.5-flash-lite"
 }
