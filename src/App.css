@@ -85,6 +85,12 @@
   --l-series-demand: #1c1c1e;   --d-series-demand: #e5e5ea;
   --l-series-pv: #cc7a00;       --d-series-pv: #ffcc55;
   --l-series-wind: #2296cc;     --d-series-wind: #64d2ff;
+  /* Fill split from stroke: the edge must clear 3:1 against the surface, the
+     wash underneath does not — and washing the DEEP edge colour is exactly what
+     read as muddy in light mode. Defaults equal the stroke tokens, so themes
+     that do not care keep one hue. */
+  --l-series-pv-fill: var(--l-series-pv);     --d-series-pv-fill: var(--d-series-pv);
+  --l-series-wind-fill: var(--l-series-wind); --d-series-wind-fill: var(--d-series-wind);
   --l-series-exchange: #af52de; --d-series-exchange: #bf5af2;
   /* RenewableMixCard's ring + day strip. Borrows the wind slot rather than
      the app-wide --accent: this app reserves accent for things you can act
@@ -165,6 +171,8 @@
   --band-warn-edge: var(--l-band-warn-edge);
   --series-demand: var(--l-series-demand);
   --series-pv: var(--l-series-pv);
+  --series-pv-fill: var(--l-series-pv-fill);
+  --series-wind-fill: var(--l-series-wind-fill);
   --series-wind: var(--l-series-wind);
   --series-exchange: var(--l-series-exchange);
   --series-other: var(--l-series-other);
@@ -208,6 +216,8 @@
     --band-warn-edge: var(--d-band-warn-edge);
     --series-demand: var(--d-series-demand);
     --series-pv: var(--d-series-pv);
+    --series-pv-fill: var(--d-series-pv-fill);
+    --series-wind-fill: var(--d-series-wind-fill);
     --series-wind: var(--d-series-wind);
     --series-exchange: var(--d-series-exchange);
     --series-other: var(--d-series-other);
@@ -251,6 +261,8 @@
   --band-warn-edge: var(--d-band-warn-edge);
   --series-demand: var(--d-series-demand);
   --series-pv: var(--d-series-pv);
+    --series-pv-fill: var(--d-series-pv-fill);
+    --series-wind-fill: var(--d-series-wind-fill);
   --series-wind: var(--d-series-wind);
   --series-exchange: var(--d-series-exchange);
   --series-other: var(--d-series-other);
