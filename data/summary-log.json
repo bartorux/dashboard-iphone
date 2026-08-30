@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-24T18:02:29.493Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "W środę operator może ogłosić przywołanie między 19:00 a 21:00.",
-      "body": "Prognoza w środę pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek i piątek nic nie zapowiada przywołania, a w pozostałe dni doby margines dodatni pokrywa wymagany poziom."
-    },
-    {
       "at": "2026-08-24T19:16:07.317Z",
       "prompt": 50,
       "accepted": true,
@@ -589,6 +581,14 @@
       "headline": "W środę 2 września margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "W środę 2 września rezerwa nie pokrywa wymaganego poziomu między 19:00 a 21:00. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-30T03:07:29.000Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "W środę 2 września operator może ogłosić przywołanie, ale nie musi, między 19:00 a 21:00.",
+      "body": "W tym samym dniu prognoza jeszcze się ustala, ponieważ raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W pozostałych dniach tygodnia nic nie zapowiada przywołania."
     }
   ]
 }
