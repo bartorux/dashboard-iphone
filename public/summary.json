@@ -1,8 +1,8 @@
 {
-  "headline": "W środę 2 września między 19:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka pozostaje powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "W środę 2 września najniższy margines wypada o 20:00, ponieważ moc źródeł PV spada poniżej normy. Na ogłoszenie przywołania pozostaje jeszcze ponad osiem godzin.",
-  "outlook": "Przez pozostałą część okresu nic nie zapowiada przywołania.",
-  "generatedAt": "2026-08-30T06:07:23.556Z",
+  "headline": "W środę 2 września operator może ogłosić przywołanie między 19:00 a 21:00, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+  "body": "W środę 2 września margines o 20:00 spada poniżej wymaganego poziomu, a najniższa wartość wynika z tego, że PV wypada poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+  "outlook": "W pozostałych dniach tygodnia nic nie zapowiada przywołania.",
+  "generatedAt": "2026-08-30T07:07:28.445Z",
   "dates": [
     "2026-08-30",
     "2026-08-31",
@@ -11,6 +11,6 @@
     "2026-09-03",
     "2026-09-04"
   ],
-  "assessment": "2026-08-30|W|none|2200|20:00|0|0|14||;2026-08-31|R|none|400|19:00|0|0|21||;2026-09-01|R|none|600|20:00|0|0|23||;2026-09-02|R|moderate|-400|20:00|0|1|20|moderate:19:00-21:00|;2026-09-03|R|none|3400|20:00|0|0|24||;2026-09-04|R|none|3100|19:00|0|0|24||#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
+  "assessment": "2026-08-30|W|none|2200|20:00|0|0|13||;2026-08-31|R|none|200|19:00|2|0|18||;2026-09-01|R|none|600|20:00|0|0|23||;2026-09-02|R|moderate|-400|20:00|0|1|20|moderate:19:00-21:00|;2026-09-03|R|none|3300|19:00|0|0|24||;2026-09-04|R|none|3100|19:00|0|0|24||#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
   "model": "gemini-3.5-flash-lite"
 }
