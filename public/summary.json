@@ -1,8 +1,8 @@
 {
-  "headline": "W środę między 19:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Prognoza jeszcze się ustala, bo raz pokrywa wymagane wartości, a raz nie. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "W pozostałych dniach nic nie zapowiada przywołania, a rezerwa w większości godzin przewyższa typowy zakres z ostatnich trzydziestu dni.",
-  "generatedAt": "2026-08-31T03:07:27.957Z",
+  "headline": "W środę operator może ogłosić przywołanie, bo nadwyżka utrzymuje się powyżej progu 1100 MW, choć rezerwa nie pokrywa wymaganego poziomu.",
+  "body": "Prognoza jeszcze się ustala, dlatego w środę raz pokrywa wymagane wartości, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do godzin 19:00-21:00 zostało ponad osiem godzin.",
+  "outlook": "W czwartek i piątek nic nie zapowiada przywołania, a w najbliższych dniach rezerwa pozostaje bezpieczna.",
+  "generatedAt": "2026-08-31T04:07:26.924Z",
   "dates": [
     "2026-08-31",
     "2026-09-01",
@@ -10,6 +10,6 @@
     "2026-09-03",
     "2026-09-04"
   ],
-  "assessment": "2026-08-31|R|none|0|07:00|4|1|4||;2026-09-01|R|none|1900|20:00|0|0|24||;2026-09-02|R|moderate|-300|19:00|0|0|21|moderate:19:00-21:00|;2026-09-03|R|none|3200|07:00|0|0|24||;2026-09-04|R|none|3700|07:00|0|0|24||#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
+  "assessment": "2026-08-31|R|moderate|-100|06:00|3|2|1|moderate:07:00-08:00|;2026-09-01|R|none|1800|20:00|0|0|24||;2026-09-02|R|moderate|-300|19:00|0|0|21|moderate:19:00-21:00|;2026-09-03|R|none|3200|07:00|0|0|24||;2026-09-04|R|none|3400|19:00|0|0|24||#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
   "model": "gemini-3.5-flash-lite"
 }
