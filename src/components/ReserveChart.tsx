@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useId, useMemo } from 'react';
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -53,6 +53,8 @@ interface Row {
   /** Upper edge of each band, stroked so the boundary is a crisp line. */
   alarmTop: number | null;
   warnTop: number | null;
+  /** Set on hours that breach a threshold — marked with a dot on the curve. */
+  alert: 'alarm' | 'warn' | null;
 }
 
 interface TooltipProps {
@@ -109,6 +111,63 @@ const ReserveTooltip: React.FC<TooltipProps> = ({
   );
 };
 
+interface AlertDotProps {
+  cx?: number;
+  cy?: number;
+  index?: number;
+  payload?: Row;
+}
+
+/**
+ * The mark for an hour that breaches a threshold.
+ *
+ * It replaces a full-height dashed rule per alert hour. Those rules carried the
+ * right information in the wrong form: a day with six thin hours drew six lines
+ * from the top of the plot to the axis, and the plot stopped being a picture of
+ * a curve over terrain — it became a picket fence. Each rule was also drawn at
+ * strokeOpacity 0.55, i.e. simultaneously too faint to state anything and too
+ * numerous to stay out of the way.
+ *
+ * A dot on the curve says the same thing in the place the reader is already
+ * looking, and says one thing more: how deep the hour went. Severity is
+ * double-encoded — colour, and the band the dot lands in — so it survives
+ * colour-vision deficiency. The 2px surface ring keeps it legible where it
+ * crosses the blue line and the band tints (marks-and-anatomy: markers >= 8px,
+ * ring in the surface colour, never a border for separation).
+ *
+ * It also dissolves the paint-order bug the vertical rules had, where an alert
+ * hour that was also the current hour lost its mark under the blue "teraz" line
+ * and the chart went quiet at the one hour that mattered. Recharts 3 puts a
+ * line's dots in a layer of their own, drawn after every series and every
+ * reference line: measured on this chart, the dots sit at document index 86 and
+ * the two rules at 47 and 53, and moving the "teraz" rule to the end of the
+ * chart's children leaves the dots exactly where they were. So the old
+ * compensation — full strength on that one hour, 0.55 on the rest, which is
+ * half of why the marks were too faint to read — is simply gone.
+ */
+const alertDot =
+  (colors: ReturnType<typeof useChartColors>) =>
+  ({ cx, cy, index, payload }: AlertDotProps) => {
+    const key = `alert-dot-${index}`;
+    if (!payload?.alert || cx === undefined || cy === undefined) {
+      return <g key={key} />;
+    }
+    return (
+      <circle
+        key={key}
+        cx={cx}
+        cy={cy}
+        r={3.5}
+        fill={
+          payload.alert === 'alarm' ? colors.bandAlarmEdge : colors.bandWarnEdge
+        }
+        stroke={colors.surface}
+        strokeWidth={2}
+        data-alert={payload.alert}
+      />
+    );
+  };
+
 const ReserveChart: React.FC<ReserveChartProps> = ({
   data,
   orangeThreshold,
@@ -124,11 +183,16 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
     () =>
       data.map((point) => {
         const { reserve, required } = point;
+        const status =
+          reserve === null || required === null
+            ? null
+            : classifyMargin(reserve - required, orangeThreshold, redThreshold);
         return {
           key: point.hourLabel,
           endLabel: point.endLabel,
           reserve,
           required,
+          alert: status === 'alarm' || status === 'warn' ? status : null,
           // Bands follow the required curve, because the alert thresholds are
           // margins above it — a flat horizontal band would misrepresent them.
           zoneAlarm: required === null ? null : [0, required + redThreshold],
@@ -155,27 +219,16 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
 
   const ticks = useMemo(() => hourTicks(rows.map((row) => row.key)), [rows]);
 
-  /** Hours breaching a threshold, marked with a vertical rule on the chart. */
-  const alertHours = useMemo(
-    () =>
-      rows
-        .map((row) => {
-          if (row.reserve === null || row.required === null) return null;
-          const status = classifyMargin(
-            row.reserve - row.required,
-            orangeThreshold,
-            redThreshold
-          );
-          return status === 'alarm' || status === 'warn'
-            ? { key: row.key, status }
-            : null;
-        })
-        .filter(
-          (entry): entry is { key: string; status: 'alarm' | 'warn' } =>
-            entry !== null
-        ),
-    [rows, orangeThreshold, redThreshold]
-  );
+  /*
+   * An SVG gradient is addressed by a document-wide id, and a hard-coded one is
+   * a collision waiting for the day a second chart mounts beside this one —
+   * `url(#…)` resolves to whichever definition the document happens to hold, and
+   * the wrong band would be painted with no error anywhere. Today the tab strip
+   * shows one chart at a time; useId costs nothing and makes that a layout
+   * choice rather than a load-bearing one. The colons React puts in the id are
+   * legal in an XML name but not in every url(#…) parser, so they come out.
+   */
+  const gradientId = `reserve-alarm-${useId().replace(/:/g, '')}`;
 
   return (
     <>
@@ -258,17 +311,62 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               width={axisWidthFor(scale.ticks)}
             />
 
+            {/*
+              The alarm zone is the only region on this plot with no bottom: it
+              runs from its boundary all the way to zero, so a flat tint paints
+              half the canvas one colour. That was the real difference from the
+              generation view, which the owner kept comparing this one against —
+              not the hues. Generation draws bounded organic shapes on white;
+              reserve drew a wall. Three rounds of re-tinting the wall could not
+              fix a wall, and a saturated fill over a block that large is the
+              "thick saturated blocks" anti-pattern by area rather than by alpha.
+
+              So the alarm zone gets depth instead of a uniform coat: full
+              strength at the boundary, decaying to a whisper at the axis. The
+              ink lands where the reading happens — the reserve curve lives near
+              that boundary, and crossing it is the event — and the bottom of the
+              plot goes back to being surface, which is where the 1100 MW rule
+              and its label have to stay readable.
+
+              It never reaches zero alpha. The faint tail still says "this is the
+              alarm side"; it just stops shouting it 2000 MW below the line.
+            */}
+            <defs>
+              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={colors.bandAlarm} />
+                <stop
+                  offset="9%"
+                  stopColor={colors.bandAlarm}
+                  stopOpacity={0.86}
+                />
+                <stop
+                  offset="30%"
+                  stopColor={colors.bandAlarm}
+                  stopOpacity={0.44}
+                />
+                <stop
+                  offset="62%"
+                  stopColor={colors.bandAlarm}
+                  stopOpacity={0.16}
+                />
+                <stop offset="100%" stopColor={colors.bandAlarmFade} />
+              </linearGradient>
+            </defs>
+
             {/* Threshold bands, drawn behind the series */}
             <Area
               type="monotone"
               dataKey="zoneAlarm"
               stroke="none"
-              fill={colors.bandAlarm}
+              fill={`url(#${gradientId})`}
               fillOpacity={1}
               animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
             />
+            {/* The warn band is bounded on both sides — it already has a shape,
+                so it keeps a flat wash. The gradient above exists to solve the
+                unbounded floor, not as decoration to be repeated. */}
             <Area
               type="monotone"
               dataKey="zoneWarn"
@@ -281,12 +379,16 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
             />
 
             {/* Band edges. A flat tint alone reads as a smudge; the boundary is
-                the thing you actually measure the curve against. */}
+                the thing you actually measure the curve against — and with the
+                fill now fading away from it, the edge is what holds the shape.
+                1.5px is the generation view's area-edge weight; these two bands
+                are the same kind of mark and join the same family. A hairline
+                was a hair, not a boundary. */}
             <Line
               type="monotone"
               dataKey="alarmTop"
               stroke={colors.bandAlarmEdge}
-              strokeWidth={1}
+              strokeWidth={1.5}
               dot={false}
               connectNulls={false}
               animationDuration={animationMs}
@@ -296,7 +398,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               type="monotone"
               dataKey="warnTop"
               stroke={colors.bandWarnEdge}
-              strokeWidth={1}
+              strokeWidth={1.5}
               dot={false}
               connectNulls={false}
               animationDuration={animationMs}
@@ -343,34 +445,6 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               />
             )}
 
-            {/*
-              Vertical rule on every hour that breaches a threshold — drawn after
-              the "teraz" line on purpose.
-
-              Recharts paints in source order, so while these came first the blue
-              line sat on top of them. Whenever the current hour was itself an
-              alert hour the two landed on the same x and the red dash vanished
-              underneath: the header went red, the panel listed the range, and the
-              chart showed no marking at the one hour it mattered most. Measured
-              live at 08:28 — two rules at x=366, only the blue one visible.
-
-              The "teraz" label sits above the plot area, so it stays legible even
-              where the dash now wins.
-            */}
-            {alertHours.map(({ key, status }) => (
-              <ReferenceLine
-                key={`alert-${key}`}
-                x={key}
-                stroke={status === 'alarm' ? colors.alarm : colors.warn}
-                strokeWidth={status === 'alarm' ? 1.5 : 1}
-                strokeDasharray="4 4"
-                /* Full strength where it lands on the "teraz" line, or the dash
-                   reads as a tint of the blue underneath rather than a mark of
-                   its own — and this is the one alert hour already happening. */
-                strokeOpacity={key === currentHourLabel ? 1 : 0.55}
-              />
-            ))}
-
             <Line
               type="monotone"
               dataKey="required"
@@ -391,7 +465,8 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               dataKey="reserve"
               stroke={colors.reserve}
               strokeWidth={2.75}
-              dot={false}
+              /* Alert hours ride the curve itself — see alertDot. */
+              dot={alertDot(colors)}
               connectNulls={false}
               animationDuration={animationMs}
               /* Cleared with the tooltip: `active={false}` hides the box but

@@ -21,80 +21,156 @@ import React from 'react';
 import ReserveChart from '../ReserveChart';
 import { makePoint } from '../../test/factories';
 
-/**
- * The alert marking and the "teraz" line can land on the same hour, and when
- * they did the blue line was painted over the red dash — so the header went red,
- * the panel listed the range, and the chart showed nothing at the one hour
- * already happening. Measured live: two rules at the same x, one visible.
- */
 const pad = (h: number) => String(h).padStart(2, '0');
 
+/**
+ * 08:00 breaches the red threshold, 09:00 only the orange one; every other hour
+ * is comfortable. One of each severity, so the marks can be told apart.
+ */
 const day = Array.from({ length: 24 }, (_, hour) =>
   makePoint({
     businessDate: '2026-08-11',
     hourLabel: `${pad(hour)}:00`,
     endLabel: `${pad((hour + 1) % 24)}:00`,
-    // 08:00 is the only hour thin enough to alert.
-    reserve: hour === 8 ? 2135 : 5000,
+    reserve: hour === 8 ? 2135 : hour === 9 ? 2260 : 5000,
     required: 1900,
   })
 );
 
-const lines = (container: HTMLElement) =>
-  [...container.querySelectorAll('.recharts-reference-line line')];
+const chart = (currentHourLabel: string | null) =>
+  render(
+    <ReserveChart
+      data={day}
+      orangeThreshold={500}
+      redThreshold={300}
+      currentHourLabel={currentHourLabel}
+    />
+  ).container;
 
-describe('ReserveChart — alert pod linią "teraz"', () => {
-  it('draws the alert mark after the now line, so it cannot be painted over', () => {
-    const { container } = render(
-      <ReserveChart
-        data={day}
-        orangeThreshold={500}
-        redThreshold={300}
-        currentHourLabel="08:00"
-      />
-    );
+const alertDots = (container: HTMLElement) => [
+  ...container.querySelectorAll('circle[data-alert]'),
+];
 
-    const wszystkie = lines(container);
-    const teraz = wszystkie.findIndex(
-      (l) => l.getAttribute('stroke-dasharray') === null
-    );
-    const alarm = wszystkie.findIndex(
-      (l) => l.getAttribute('stroke-dasharray') === '4 4'
-    );
+const referenceLines = (container: HTMLElement) => [
+  ...container.querySelectorAll('.recharts-reference-line line'),
+];
 
-    expect(teraz).toBeGreaterThanOrEqual(0);
-    expect(alarm).toBeGreaterThan(teraz);
+/** Effective alpha of a gradient stop: the token's own alpha × stop-opacity. */
+const stopAlpha = (stop: Element) => {
+  const colour = stop.getAttribute('stop-color') ?? '';
+  const alpha = Number(/rgba\([^)]*,\s*([\d.]+)\s*\)/.exec(colour)?.[1] ?? 1);
+  return alpha * Number(stop.getAttribute('stop-opacity') ?? 1);
+};
+
+describe('ReserveChart — jak zaznacza godziny alertowe', () => {
+  /*
+   * These hours used to be drawn as one dashed rule per hour, from the top of
+   * the plot to the axis. On a day with a long thin evening that is a dozen
+   * full-height lines across the picture — too faint at strokeOpacity 0.55 to
+   * state anything, too many to stay out of the way. The information moved onto
+   * the curve, where the reader is already looking and where the mark also says
+   * how deep the hour went.
+   */
+  it('marks an alert hour with a dot on the curve, not a rule across the plot', () => {
+    const container = chart('12:00');
+
+    expect(alertDots(container).map((d) => d.getAttribute('data-alert'))).toEqual(
+      ['alarm', 'warn']
+    );
+    // Only the regulatory threshold and "teraz" still cross the whole plot.
+    expect(referenceLines(container)).toHaveLength(2);
   });
 
-  it('gives that one mark full strength, since a tint reads as the line beneath', () => {
-    const { container } = render(
-      <ReserveChart
-        data={day}
-        orangeThreshold={500}
-        redThreshold={300}
-        currentHourLabel="08:00"
-      />
-    );
+  it('separates the two severities by colour', () => {
+    const container = chart('12:00');
+    const [alarm, warn] = alertDots(container);
 
-    const alarm = lines(container).find(
-      (l) => l.getAttribute('stroke-dasharray') === '4 4'
-    );
-    expect(alarm?.getAttribute('stroke-opacity')).toBe('1');
+    expect(alarm.getAttribute('fill')).not.toBe(warn.getAttribute('fill'));
   });
 
-  it('leaves alert hours elsewhere muted, as they were', () => {
-    const { container } = render(
-      <ReserveChart
-        data={day}
-        orangeThreshold={500}
-        redThreshold={300}
-        currentHourLabel="12:00"
-      />
-    );
+  /*
+   * The failure this file was written for: the alert rule and the "teraz" line
+   * landed on the same x, and the blue line painted over the red dash — the
+   * header went red, the panel listed the range, and the chart showed nothing at
+   * the one hour already happening. The old fix was a special case, full
+   * strokeOpacity on that one hour and 0.55 everywhere else, which is why the
+   * marks were too faint to begin with.
+   *
+   * A dot needs no such compensation: Recharts puts a line's dots in a layer of
+   * their own, drawn after the series and after every reference line (measured
+   * — moving the "teraz" rule to the end of the chart's children does not move
+   * the dots). So the mark on the current hour is the same mark as any other,
+   * and the day this stops being true the chart is compensating again.
+   */
+  it('marks the current hour exactly as it marks any other', () => {
+    const onNow = alertDots(chart('08:00'))[0];
+    const elsewhere = alertDots(chart('12:00'))[0];
 
-    const alarm = lines(container).find(
-      (l) => l.getAttribute('stroke-dasharray') === '4 4'
-    );
-    expect(alarm?.getAttribute('stroke-opacity')).toBe('0.55');
+    const shape = (dot: Element) =>
+      ['fill', 'r', 'stroke', 'stroke-width', 'stroke-opacity', 'opacity'].map(
+        (attr) => dot.getAttribute(attr)
+      );
+
+    expect(shape(onNow)).toEqual(shape(elsewhere));
+  });
+
+  it('rings the dot in the surface colour, so it reads on the line it sits on', () => {
+    const container = chart('12:00');
+    const dot = alertDots(container)[0];
+
+    expect(dot.getAttribute('stroke')).toBe('#ffffff');
+    expect(dot.getAttribute('stroke-width')).toBe('2');
+  });
+});
+
+describe('ReserveChart — teren', () => {
+  /*
+   * The alarm zone is the only region here with no bottom: it runs from its
+   * boundary to zero. A flat tint therefore paints half the canvas one colour —
+   * a wall, where the generation view next door draws bounded shapes on white.
+   * The fill carries its weight at the boundary and gives the surface back
+   * further down, without ever reaching zero: the tail still says which side of
+   * the line is the bad one.
+   */
+  it('fades the alarm zone toward the axis instead of painting a flat wall', () => {
+    const container = chart('12:00');
+    const zone = container.querySelector('.recharts-area-area');
+    const gradientId = /url\(#(.+)\)/.exec(zone?.getAttribute('fill') ?? '')?.[1];
+
+    expect(gradientId).toBeTruthy();
+
+    const stops = [
+      ...container.querySelectorAll(`#${gradientId} stop`),
+    ];
+    const first = stopAlpha(stops[0]);
+    const last = stopAlpha(stops[stops.length - 1]);
+
+    expect(last).toBeLessThan(first / 4);
+    expect(last).toBeGreaterThan(0);
+  });
+
+  /*
+   * With the fill fading away from it, the edge is what holds the band's shape,
+   * and a 1px hairline was a hair rather than a boundary. 1.5px is the weight
+   * the generation view already gives its area edges — the same kind of mark,
+   * so the same weight.
+   */
+  it('draws both band edges at the generation view’s weight, not a hairline', () => {
+    const container = chart('12:00');
+    // Source order: alarmTop, warnTop, required, reserve.
+    const [alarmEdge, warnEdge] = [
+      ...container.querySelectorAll('.recharts-line-curve'),
+    ];
+
+    expect(alarmEdge.getAttribute('stroke-width')).toBe('1.5');
+    expect(warnEdge.getAttribute('stroke-width')).toBe('1.5');
+
+    // …and those really are the two band edges: each alert dot wears the colour
+    // of the boundary it belongs to, which is what lets the dot's colour mean
+    // "alarm" rather than merely "not the other one".
+    expect(alertDots(container).map((dot) => dot.getAttribute('fill'))).toEqual([
+      alarmEdge.getAttribute('stroke'),
+      warnEdge.getAttribute('stroke'),
+    ]);
   });
 });

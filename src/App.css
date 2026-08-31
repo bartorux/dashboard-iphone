@@ -60,15 +60,43 @@
 
   /* Threshold bands. Declared as finished rgba values rather than a colour plus
      an opacity prop, because a tint that reads correctly on white is far too
-     faint on #1c1c1e - dark mode needs roughly double. */
-  --l-band-alarm: rgba(255, 59, 48, 0.10);
-  --d-band-alarm: rgba(255, 69, 58, 0.20);
-  --l-band-warn: rgba(255, 149, 0, 0.12);
-  --d-band-warn: rgba(255, 159, 10, 0.20);
-  --l-band-alarm-edge: rgba(255, 59, 48, 0.5);
-  --d-band-alarm-edge: rgba(255, 69, 58, 0.6);
-  --l-band-warn-edge: rgba(255, 149, 0, 0.5);
-  --d-band-warn-edge: rgba(255, 159, 10, 0.6);
+     faint on #1c1c1e - dark mode needs roughly double.
+
+     --band-alarm is the DEEP end of the alarm zone's gradient, at the boundary;
+     --band-alarm-fade is the far end of it, down at the axis. The alarm zone has
+     no bottom - it runs from its edge to zero - so a single flat value paints
+     half the plot one colour, which is what made this chart read as a wall next
+     to the generation view's bounded shapes. The pair lets the fill carry the
+     weight where it is read and give the surface back where it is not. The warn
+     band is bounded above and below, so it keeps one flat value.
+
+     Fills are the vivid siblings of their edges, the same split the generation
+     series already makes: the edge pays a 3:1 duty against the surface and
+     cannot afford the chroma, the wash underneath can. Edges validated as a
+     pair on white - CVD deltaE 12.5 (deutan), 16.5 (tritan), normal-vision
+     19.8, contrast 6.51:1 / 3.54:1 - and on #1c1c1e: CVD 22.2, tritan 30.0,
+     normal 31.5, 4.99:1 / 12.05:1.
+
+     The gold is as red as the red lets it be: every warmer step tested against
+     #b3271c fell through the CVD floor (#a8720a scored 4.5, #d0301f/#a8720a
+     2.5). A deuteranopic reader separates these two by 12.5 only because the
+     gold gave up its orange.
+
+     The dark pair sits above the validator's dark lightness band, deliberately
+     and in company: --d-series-pv (0.869) and --d-series-wind (0.817) do too.
+     This app's dark grammar is a bright hue laid on a near-black surface at low
+     alpha, not a mid-lightness step; forcing the band would mean status
+     colours that are no longer the system's red and yellow. */
+  --l-band-alarm: rgba(255, 74, 54, 0.36);
+  --d-band-alarm: rgba(255, 106, 74, 0.15);
+  --l-band-alarm-fade: rgba(255, 74, 54, 0.035);
+  --d-band-alarm-fade: rgba(255, 106, 74, 0.025);
+  --l-band-warn: rgba(255, 196, 0, 0.34);
+  --d-band-warn: rgba(255, 209, 102, 0.11);
+  --l-band-alarm-edge: #b3271c;
+  --d-band-alarm-edge: #ff453a;
+  --l-band-warn-edge: #ab8200;
+  --d-band-warn-edge: #ffd60a;
 
   /* Generation view. Demand is the reference the rest is read against, so it
      takes the highest-contrast colour; PV and wind sit under it as areas.
@@ -169,6 +197,7 @@
   --series-reserve: var(--l-series-reserve);
   --series-required: var(--l-series-required);
   --band-alarm: var(--l-band-alarm);
+  --band-alarm-fade: var(--l-band-alarm-fade);
   --band-warn: var(--l-band-warn);
   --band-alarm-edge: var(--l-band-alarm-edge);
   --band-warn-edge: var(--l-band-warn-edge);
@@ -214,6 +243,7 @@
     --series-reserve: var(--d-series-reserve);
     --series-required: var(--d-series-required);
     --band-alarm: var(--d-band-alarm);
+    --band-alarm-fade: var(--d-band-alarm-fade);
     --band-warn: var(--d-band-warn);
     --band-alarm-edge: var(--d-band-alarm-edge);
     --band-warn-edge: var(--d-band-warn-edge);
@@ -259,6 +289,7 @@
   --series-reserve: var(--d-series-reserve);
   --series-required: var(--d-series-required);
   --band-alarm: var(--d-band-alarm);
+  --band-alarm-fade: var(--d-band-alarm-fade);
   --band-warn: var(--d-band-warn);
   --band-alarm-edge: var(--d-band-alarm-edge);
   --band-warn-edge: var(--d-band-warn-edge);
