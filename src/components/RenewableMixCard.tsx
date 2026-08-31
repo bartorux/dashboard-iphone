@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { PSEDataPoint } from '../types';
 import { HOUR_MS } from '../utils/constants';
 import { renewableMixShare } from '../utils/renewableShare';
@@ -77,12 +77,39 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
     }));
   }, [points, kseDemand]);
 
-  // The hour under the pointer/finger while scrubbing the day strip, or null
-  // at rest. Index into `slots` directly (hour === slots[hour].hour by
-  // construction) rather than searching — cheap and always in range because
-  // hourFromClientX below clamps to 0-23.
+  // The hour under the pointer/finger while a gesture is actively in
+  // progress (mouse hover anywhere on the strip, or a touch/pen currently
+  // down), or null when nothing is being touched right now. Index into
+  // `slots` directly (hour === slots[hour].hour by construction) rather than
+  // searching — cheap and always in range because hourFromClientX below
+  // clamps to 0-23.
   const [scrubHour, setScrubHour] = useState<number | null>(null);
+  // Touch/pen only: the hour a tap or drag left pinned after release, showing
+  // until it's explicitly cleared (see the three release paths below). Mouse
+  // never sets this — a mouse can always re-hover, so there is nothing for it
+  // to hold onto.
+  const [latchedHour, setLatchedHour] = useState<number | null>(null);
   const stripRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Unlatch path (b): a tap anywhere outside the strip. Scoped to only run
+   * while something is actually latched — with nothing latched there is
+   * nothing to listen for, and the listener attaches/detaches itself as
+   * latchedHour changes rather than living for the component's whole life.
+   * Capture phase, so an ancestor's stopPropagation elsewhere on the page
+   * can't hide the tap from us.
+   */
+  useEffect(() => {
+    if (latchedHour === null) return;
+    const handleOutsidePointerDown = (event: PointerEvent) => {
+      const strip = stripRef.current;
+      if (strip && !strip.contains(event.target as Node)) {
+        setLatchedHour(null);
+      }
+    };
+    document.addEventListener('pointerdown', handleOutsidePointerDown, true);
+    return () => document.removeEventListener('pointerdown', handleOutsidePointerDown, true);
+  }, [latchedHour]);
 
   // No placeholder: PSE not having published kseDemand yet (or at all, for
   // any day but today) is the endpoint's normal state, not an error to explain.
@@ -121,15 +148,49 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
     handlePointerMove(event);
   };
 
-  // Release, cancel, or sliding off the strip all mean the same thing: stop
-  // showing someone else's hour and snap back to now, in the same frame —
-  // no easing, no delay (apple-design's Response principle).
-  const endScrub = () => setScrubHour(null);
+  const isTouchLike = (pointerType: string) => pointerType === 'touch' || pointerType === 'pen';
 
-  const scrubSlot = scrubHour === null ? undefined : slots[scrubHour];
-  const headlineShare = scrubSlot ? scrubSlot.share : currentShare;
-  const headlineHourLabel = scrubSlot ? scrubSlot.hourLabel : currentPoint.hourLabel;
-  const headlineEndLabel = scrubSlot ? scrubSlot.endLabel : currentPoint.endLabel;
+  /**
+   * Release. A mouse can always come back and re-hover, so it just snaps back
+   * to now (unchanged from before this feedback round). Touch/pen is
+   * different: on a phone the reading would flash and vanish before it could
+   * be read (the reported bug), and the finger itself is sitting over the bar
+   * it just picked, blocking the view — so a tap or a drag-then-release
+   * instead PINS the reading on the hour it landed on. Tapping that same
+   * pinned hour again is the natural "undo" gesture, so it releases the pin;
+   * tapping or dragging-to elsewhere just moves the pin there directly,
+   * without requiring an unlatch step first.
+   */
+  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!isTouchLike(event.pointerType)) {
+      setScrubHour(null);
+      return;
+    }
+    if (scrubHour !== null) {
+      setLatchedHour((prev) => (scrubHour === prev ? null : scrubHour));
+    }
+    setScrubHour(null);
+  };
+
+  // Sliding off the strip: mouse-hover semantics only. A captured touch does
+  // not fire this mid-gesture (capture keeps it targeted at the strip until
+  // release/cancel), so this path is effectively mouse-only in practice —
+  // it deliberately never touches latchedHour.
+  const endHover = () => setScrubHour(null);
+
+  // Unlatch path (c): the page's own scroll stealing the touch (touch-action:
+  // pan-y below) fires this instead of pointerup — a full revert, the same
+  // as if nothing had ever been touched, so any existing latch goes too.
+  const handlePointerCancel = () => {
+    setScrubHour(null);
+    setLatchedHour(null);
+  };
+
+  const activeHour = scrubHour ?? latchedHour;
+  const activeSlot = activeHour === null ? undefined : slots[activeHour];
+  const headlineShare = activeSlot ? activeSlot.share : currentShare;
+  const headlineHourLabel = activeSlot ? activeSlot.hourLabel : currentPoint.hourLabel;
+  const headlineEndLabel = activeSlot ? activeSlot.endLabel : currentPoint.endLabel;
   // An hour with no data gets an honest dash, not a fabricated percentage —
   // consistent with the empty slots the strip already renders for gaps, and
   // with why this whole card returns null rather than guess at a number.
@@ -197,9 +258,10 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
       <div className="mt-4">
         {/*
           touch-pan-y: lets a mostly-vertical touch drag fall through to the
-          page's own scroll (pointercancel fires here, which endScrub already
-          treats as "stop scrubbing") while a horizontal drag stays JS's to
-          handle — the same split the chart's own gestures rely on elsewhere.
+          page's own scroll (pointercancel fires here, which handlePointerCancel
+          already treats as "stop scrubbing, drop any latch too") while a
+          horizontal drag stays JS's to handle — the same split the chart's
+          own gestures rely on elsewhere.
         */}
         <div
           ref={stripRef}
@@ -207,12 +269,16 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
           className="flex h-16 touch-pan-y items-end gap-[2px]"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
-          onPointerUp={endScrub}
-          onPointerCancel={endScrub}
-          onPointerLeave={endScrub}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerCancel}
+          onPointerLeave={endHover}
         >
           {slots.map((slot) => {
-            const isScrubbed = slot.hour === scrubHour;
+            // Covers both an in-progress gesture and a touch's post-release
+            // latch — the bar being read stays marked either way, since a
+            // latched reading with no visible mark would leave nothing on
+            // screen pointing at what the header is now showing.
+            const isSelected = slot.hour === activeHour;
             // "HH:00 · NN%" (or "· —" for a gap) is the one honest accessible
             // name for a bar that has no visible label of its own — a plain
             // aria-label rather than a listbox/slider role/pattern, because
@@ -233,7 +299,7 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
                   <div
                     aria-label={ariaLabel}
                     className={`h-0.5 w-full rounded-full ${
-                      isScrubbed ? 'bg-text-secondary' : 'bg-separator'
+                      isSelected ? 'bg-text-secondary' : 'bg-separator'
                     }`}
                   />
                 ) : (
@@ -252,7 +318,7 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
                       // made, and it stays clear of --accent, which this
                       // card's own colour comment above reserves for actual
                       // click targets like "Odśwież", not a read-only reading.
-                      isScrubbed
+                      isSelected
                         ? 'ring-2 ring-inset ring-text'
                         : slot.hour === currentHour
                           ? 'ring-1 ring-inset ring-text-secondary'

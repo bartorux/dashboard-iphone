@@ -131,32 +131,113 @@ describe('RenewableMixCard hour scrubbing', () => {
     expect(screen.queryByText('50%')).not.toBeInTheDocument();
   });
 
-  it('releasing the pointer snaps back to the current hour immediately', () => {
+  it('releasing a MOUSE pointer snaps back to the current hour immediately', () => {
+    // Mouse semantics are unchanged by the touch-latch feedback round: a
+    // mouse can always come back and re-hover, so release still just drops
+    // back to "now" — no pinning. pointerType is explicit here because the
+    // release behaviour now genuinely branches on it.
     render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
     const strip = screen.getByTestId('oze-hour-strip');
     mockStripRect(strip);
 
-    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1 });
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1, pointerType: 'mouse' });
     expect(screen.getByText('100%')).toBeInTheDocument();
 
-    fireEvent.pointerUp(strip, { clientX: 1450, pointerId: 1 });
+    fireEvent.pointerUp(strip, { clientX: 1450, pointerId: 1, pointerType: 'mouse' });
 
     expect(screen.getByText('50%')).toBeInTheDocument();
     expect(screen.getByText('10:00–11:00')).toBeInTheDocument();
   });
 
-  it('a cancelled pointer (vertical scroll stealing the touch) snaps back too', () => {
-    // On a phone, touch-action: pan-y hands a vertical drag to the page scroll
-    // and the browser fires pointercancel, never pointerup — without this path
-    // the scrub would stick on whatever hour the finger last crossed.
+  it('a touch release LATCHES the reading on the touched hour instead of snapping back', () => {
+    // The owner's live-iPhone feedback: a tap is a down+up in a fraction of a
+    // second, so a reading that only shows while the finger is still down
+    // flashes and vanishes before it can be read — and the finger is sitting
+    // right on top of the bar the whole time anyway. So on touch/pen,
+    // pointerup pins the reading instead of clearing it.
     render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
     const strip = screen.getByTestId('oze-hour-strip');
     mockStripRect(strip);
 
-    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1 });
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+    fireEvent.pointerUp(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+
+    expect(screen.getByText('100%')).toBeInTheDocument();
+    expect(screen.getByText('14:00–15:00')).toBeInTheDocument();
+    expect(screen.queryByText('50%')).not.toBeInTheDocument();
+  });
+
+  it('a new drag overrides an existing latch live, not only after release', () => {
+    // The live gesture must win over the pinned reading: with the precedence
+    // flipped (latch over gesture) a finger dragging across the strip would
+    // read the OLD pinned hour until release — invisible to every other test.
+    render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+    fireEvent.pointerUp(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+    expect(screen.getByText('14:00–15:00')).toBeInTheDocument();
+
+    fireEvent.pointerDown(strip, { clientX: 850, pointerId: 2, pointerType: 'touch' });
+
+    expect(screen.getByText('08:00–09:00')).toBeInTheDocument();
+    expect(screen.queryByText('14:00–15:00')).not.toBeInTheDocument();
+  });
+
+  it('a second tap on the already-latched bar releases it back to the current hour', () => {
+    render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+
+    // First tap latches onto hour 14.
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+    fireEvent.pointerUp(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+    expect(screen.getByText('100%')).toBeInTheDocument(); // confirms it actually latched first
+
+    // Second tap on the SAME bar is the "undo" gesture.
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 2, pointerType: 'touch' });
+    fireEvent.pointerUp(strip, { clientX: 1450, pointerId: 2, pointerType: 'touch' });
+
+    expect(screen.getByText('50%')).toBeInTheDocument();
+    expect(screen.getByText('10:00–11:00')).toBeInTheDocument();
+  });
+
+  it('a pointerdown outside the strip releases an active latch', () => {
+    render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+    fireEvent.pointerUp(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
     expect(screen.getByText('100%')).toBeInTheDocument();
 
-    fireEvent.pointerCancel(strip, { pointerId: 1 });
+    // Anywhere outside the strip — the document-level listener the component
+    // installs while latched, not a handler on the strip itself.
+    fireEvent.pointerDown(document.body, { pointerType: 'touch' });
+
+    expect(screen.getByText('50%')).toBeInTheDocument();
+    expect(screen.getByText('10:00–11:00')).toBeInTheDocument();
+  });
+
+  it('a cancelled pointer (vertical scroll stealing the touch) snaps back, even from a latched state', () => {
+    // On a phone, touch-action: pan-y hands a vertical drag to the page scroll
+    // and the browser fires pointercancel, never pointerup — without this path
+    // the scrub would stick on whatever hour the finger last crossed. Checked
+    // here starting from an existing latch too: a cancelled gesture is a full
+    // revert, not just "stop updating", so it must drop a prior pin as well.
+    render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+
+    // Latch onto hour 14 with an ordinary tap first.
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+    fireEvent.pointerUp(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+    expect(screen.getByText('100%')).toBeInTheDocument();
+
+    // A new touch starts dragging elsewhere, then the page scroll steals it.
+    fireEvent.pointerDown(strip, { clientX: 50, pointerId: 2, pointerType: 'touch' });
+    fireEvent.pointerCancel(strip, { pointerId: 2, pointerType: 'touch' });
 
     expect(screen.getByText('50%')).toBeInTheDocument();
     expect(screen.getByText('10:00–11:00')).toBeInTheDocument();
