@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import RenewableMixCard from '../RenewableMixCard';
 import { makePoint } from '../../test/factories';
 
@@ -46,7 +46,7 @@ describe('RenewableMixCard', () => {
      */
     render(<RenewableMixCard points={points} kseDemand={flatKseDemand()} now={NOW} />);
     // NOW is 10:30, so the running block is 10:00-11:00.
-    const biezacy = screen.getByTitle(/^10:00/);
+    const biezacy = screen.getByLabelText(/^10:00/);
     expect(biezacy.className).toContain('ring-inset');
   });
 
@@ -73,10 +73,10 @@ describe('RenewableMixCard', () => {
     expect(screen.getAllByTestId('oze-hour-slot')).toHaveLength(24);
   });
 
-  it('titles each bar "HH:00 · NN%"', () => {
+  it('labels each bar with an accessible name "HH:00 · NN%"', () => {
     render(<RenewableMixCard points={points} kseDemand={flatKseDemand()} now={NOW} />);
 
-    expect(screen.getByTitle('12:00 · 50%')).toBeInTheDocument();
+    expect(screen.getByLabelText('12:00 · 50%')).toBeInTheDocument();
   });
 
   it('renders an empty slot, not a fabricated bar, for an hour with no data', () => {
@@ -84,6 +84,122 @@ describe('RenewableMixCard', () => {
     render(<RenewableMixCard points={gappy} kseDemand={flatKseDemand()} now={NOW} />);
 
     expect(screen.getAllByTestId('oze-hour-slot')).toHaveLength(24);
-    expect(screen.queryByTitle(/^18:00/)).not.toBeInTheDocument();
+    // The gap gets an honest dash, not a silently-missing bar or a guessed number.
+    expect(screen.getByLabelText('18:00 · —')).toBeInTheDocument();
+    expect(screen.queryByLabelText(/^18:00 · \d/)).not.toBeInTheDocument();
+  });
+});
+
+/**
+ * jsdom's getBoundingClientRect always answers all-zero — the component
+ * treats a zero-width rect as "no strip to scrub" (see hourFromClientX's own
+ * guard against that), so a scrub test needs a real box or every pointer
+ * event is silently ignored. 2400px / 24 bars = a clean 100px per hour.
+ */
+function mockStripRect(strip: HTMLElement) {
+  vi.spyOn(strip, 'getBoundingClientRect').mockReturnValue({
+    left: 0,
+    right: 2400,
+    width: 2400,
+    top: 0,
+    bottom: 64,
+    height: 64,
+    x: 0,
+    y: 0,
+    toJSON() {},
+  } as DOMRect);
+}
+
+// Hour 14 carries its own distinct share (100%, vs. the fixture's flat 50%
+// everywhere else) so a header swap during scrub is provable rather than
+// coincidentally identical to the resting 10:00 reading.
+const scrubPoints = points.map((point) =>
+  point.hourLabel === '14:00' ? { ...point, pv: 2000, wind: 2000 } : point
+);
+
+describe('RenewableMixCard hour scrubbing', () => {
+  it('touching/hovering a bar swaps the ring percent and hour caption to that hour', () => {
+    render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1 }); // inside hour 14's 1400-1500 span
+
+    expect(screen.getByText('100%')).toBeInTheDocument();
+    expect(screen.getByText('14:00–15:00')).toBeInTheDocument();
+    // The resting 10:00/50% reading is replaced, not merely joined.
+    expect(screen.queryByText('50%')).not.toBeInTheDocument();
+  });
+
+  it('releasing the pointer snaps back to the current hour immediately', () => {
+    render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1 });
+    expect(screen.getByText('100%')).toBeInTheDocument();
+
+    fireEvent.pointerUp(strip, { clientX: 1450, pointerId: 1 });
+
+    expect(screen.getByText('50%')).toBeInTheDocument();
+    expect(screen.getByText('10:00–11:00')).toBeInTheDocument();
+  });
+
+  it('a cancelled pointer (vertical scroll stealing the touch) snaps back too', () => {
+    // On a phone, touch-action: pan-y hands a vertical drag to the page scroll
+    // and the browser fires pointercancel, never pointerup — without this path
+    // the scrub would stick on whatever hour the finger last crossed.
+    render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1 });
+    expect(screen.getByText('100%')).toBeInTheDocument();
+
+    fireEvent.pointerCancel(strip, { pointerId: 1 });
+
+    expect(screen.getByText('50%')).toBeInTheDocument();
+    expect(screen.getByText('10:00–11:00')).toBeInTheDocument();
+  });
+
+  it('sliding off the strip also snaps back to the current hour', () => {
+    render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1 });
+    expect(screen.getByText('100%')).toBeInTheDocument();
+
+    fireEvent.pointerLeave(strip, { clientX: 1450, pointerId: 1 });
+
+    expect(screen.getByText('50%')).toBeInTheDocument();
+  });
+
+  it('marks the scrubbed bar with its own ring, distinct from the current-hour ring', () => {
+    render(<RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />);
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1 }); // hour 14
+
+    const scrubbed = screen.getByLabelText('14:00 · 100%');
+    expect(scrubbed.className).toContain('ring-2');
+    // Untouched by the scrub: the current-hour bar keeps its own, thinner ring.
+    const biezacy = screen.getByLabelText(/^10:00/);
+    expect(biezacy.className).toContain('ring-1');
+    expect(biezacy.className).not.toContain('ring-2');
+  });
+
+  it('scrubbing an hour with no data shows a dash, not a fabricated percent', () => {
+    const gappy = scrubPoints.filter((point) => point.hourLabel !== '18:00');
+    render(<RenewableMixCard points={gappy} kseDemand={flatKseDemand()} now={NOW} />);
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+
+    fireEvent.pointerDown(strip, { clientX: 1850, pointerId: 1 }); // inside hour 18's 1800-1900 span
+
+    expect(screen.getByText('—')).toBeInTheDocument();
+    expect(screen.getByText('18:00–19:00')).toBeInTheDocument();
+    expect(screen.queryByText('50%')).not.toBeInTheDocument();
   });
 });
