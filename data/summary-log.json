@@ -5,15 +5,6 @@
       "prompt": 50,
       "accepted": false,
       "reason": "godzina bez nazwy dnia",
-      "headline": "W żadnym z dni nic nie zapowiada przywołania.",
-      "body": "Margines spadnie o 09:00, ale ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
-      "at": "2026-08-26T07:29:59.822Z",
-      "prompt": 50,
-      "accepted": false,
-      "reason": "godzina bez nazwy dnia",
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "Margines o 09:00 spada niżej niż zwykle o tej porze na tle ostatnich 30 dni, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
@@ -588,6 +579,14 @@
       "headline": "W środę o 19:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "W środę margines spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "Poza tą środową godziną w całym okresie nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-31T07:07:26.794Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "W środę margines bywa poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "W środę prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin między 19:00 a 21:00 zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę między 19:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, natomiast w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
