@@ -5,15 +5,6 @@
       "prompt": 50,
       "accepted": false,
       "reason": "odpowiedz nie ma oczekiwanych pol",
-      "headline": "NAGŁÓWEK: W tych dniach nic nie zapowiada przywołania.\nTREŚC: We wtorek 1 września o 20:00 margines spadnie do najniższego poziomu przez PV poniżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "body": "",
-      "outlook": ""
-    },
-    {
-      "at": "2026-08-26T10:16:52.341Z",
-      "prompt": 50,
-      "accepted": false,
-      "reason": "odpowiedz nie ma oczekiwanych pol",
       "headline": "NAGŁÓWEK: W tych dniach nic nie zapowiada przywołania.\nTREŚC: We wtorek 1 września o 20:00 margines spadnie z powodu PV poniżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "body": "",
       "outlook": ""
@@ -584,6 +575,14 @@
       "headline": "W środę między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a z nim upłynął też czas na ruch.",
       "body": "Dziś prognoza wciąż się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
       "outlook": "W środę między 21:00 a 22:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-31T12:07:30.169Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "W środę prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, do tych godzin zostało bowiem ponad osiem godzin.",
+      "outlook": "We wtorek, czwartek i piątek nic nie zapowiada przywołania, a w pozostałych dniach margines trzyma bezpieczny poziom."
     }
   ]
 }
