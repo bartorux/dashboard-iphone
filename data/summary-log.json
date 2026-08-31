@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-26T18:21:37.278Z",
-      "prompt": 50,
-      "accepted": false,
-      "reason": "odpowiedz nie ma oczekiwanych pol",
-      "headline": "NAGŁÓWEK: W tych dniach nic nie zapowiada przywołania.\nTREŚCI: We wtorek 1 września o 20:00 rezerwa spada poniżej wymaganego poziomu, ale nadwyżka trzyma się powyżej progi 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "",
-      "outlook": ""
-    },
-    {
-      "at": "2026-08-26T18:21:37.278Z",
-      "prompt": 50,
-      "accepted": true,
-      "headline": "W tych dniach nic nie zapowiada przywołania.",
-      "body": "We wtorek 1 września o 20:00 rezerwa raz pokrywa wymagany poziom, a raz nie, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
       "at": "2026-08-26T21:11:44.956Z",
       "prompt": 50,
       "accepted": true,
@@ -582,6 +565,23 @@
       "headline": "W środę między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW.",
       "body": "W środę prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek między 18:00 a 21:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-08-31T17:07:26.498Z",
+      "prompt": 51,
+      "accepted": false,
+      "reason": "„dodatkowy\" zamiast „dodatni\"",
+      "headline": "Dziś przez cztery godziny margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "W środę prognoza pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek, czwartek i piątek nic nie zapowiada przywołania, a w środę dodatkowy margines pojawia się w innej godzinie."
+    },
+    {
+      "at": "2026-08-31T17:07:26.498Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni przez cztery godziny dzisiaj i trzy godziny w środę.",
+      "body": "W środę prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Poza dzisiejszym dniem i środą nic nie zapowiada przywołania."
     }
   ]
 }
