@@ -1,8 +1,8 @@
 {
-  "headline": "W poniedziałek 7 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej 1100 MW w godzinach 19:00-20:00.",
-  "body": "Margines o 19:00 wypada niżej niż zwykle przez PV poniżej normy. Na ogłoszenie pozostaje jeszcze ponad osiem godzin.",
-  "outlook": "W czwartek i piątek nic nie zapowiada przywołania, a w pozostałe dni wchodzi ono w grę.",
-  "generatedAt": "2026-09-01T19:07:33.212Z",
+  "headline": "W godzinach 07:00-08:00 operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka utrzymuje się powyżej progu 1100 MW.",
+  "body": "Prognoza na jutro pogarsza się. Do wskazanych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "W poniedziałek 7 września między 19:00 a 21:00 nadwyżka również przekracza próg 1100 MW dając operatorowi wybór, a w pozostałe dni okresu nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-01T20:07:28.659Z",
   "dates": [
     "2026-09-01",
     "2026-09-02",
@@ -10,6 +10,6 @@
     "2026-09-04",
     "2026-09-07"
   ],
-  "assessment": "2026-09-01|R|moderate|-700|21:00|0|1|0|moderate:21:00-22:00|K2:21:00-22:00;2026-09-02|R|moderate|-800|20:00|2|2|8|moderate:18:00-21:00|K2:19:00-21:00;2026-09-03|R|none|1000|20:00|0|0|21||;2026-09-04|R|none|1400|19:00|0|0|21||;2026-09-07|R|high|-1900|19:00|1|1|20|high:19:00-20:00,moderate:20:00-21:00|#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
+  "assessment": "2026-09-01|R|none|-300|22:00|0|0|0||;2026-09-02|R|moderate|-800|20:00|2|2|6|moderate:07:00-08:00,moderate:19:00-21:00|K2:19:00-21:00;2026-09-03|R|none|1000|20:00|0|0|21||;2026-09-04|R|none|1600|19:00|0|0|22||;2026-09-07|R|moderate|-1800|19:00|1|1|20|moderate:19:00-21:00|#-/typical/prognoza pogarsza się#v51",
   "model": "gemini-3.5-flash-lite"
 }
