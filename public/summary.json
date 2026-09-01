@@ -1,8 +1,8 @@
 {
-  "headline": "Najniższy margines w poniedziałek 7 września o 19:00 spada do wartości ujemnej, przy której rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka trzyma się powyżej progu 1100 MW.",
-  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin między 19:00 a 21:00 zostało ponad osiem godzin, a Kompas Energetyczny PSE na tę dobę przewiduje zalecane oszczędzanie.",
-  "outlook": "Operator może ogłosić przywołanie także dzisiaj między 19:00 a 22:00, lecz do tych godzin zostało mniej niż osiem godzin, podczas gdy w czwartek i piątek nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-01T16:07:26.456Z",
+  "headline": "W poniedziałek 7 września między 18:00 a 19:00 margines spadnie do najniższego poziomu w całym okresie, a operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+  "outlook": "W środę nic nie zapowiada przywołania, a w czwartek i piątek rezerwa pokrywa wymagany poziom.",
+  "generatedAt": "2026-09-01T16:53:54.547Z",
   "dates": [
     "2026-09-01",
     "2026-09-02",
@@ -10,6 +10,6 @@
     "2026-09-04",
     "2026-09-07"
   ],
-  "assessment": "2026-09-01|R|moderate|-200|21:00|1|0|0|moderate:19:00-22:00|;2026-09-02|R|moderate|-600|20:00|0|0|12|moderate:19:00-21:00|K2:19:00-21:00;2026-09-03|R|none|1200|20:00|0|0|23||;2026-09-04|R|none|1700|19:00|0|0|22||;2026-09-07|R|moderate|-1800|19:00|1|1|20|moderate:19:00-21:00|#-/typical/prognoza pogarsza się#v51",
+  "assessment": "2026-09-01|R|moderate|-900|19:00|0|2|0|moderate:18:00-22:00|K2:19:00-21:00;2026-09-02|R|moderate|-500|20:00|1|0|12|moderate:19:00-21:00|K2:19:00-20:00;2026-09-03|R|none|1100|19:00|0|0|22||;2026-09-04|R|none|1600|19:00|0|0|22||;2026-09-07|R|moderate|-1800|19:00|1|1|20|moderate:19:00-21:00|#-/typical/prognoza pogarsza się#v51",
   "model": "gemini-3.5-flash-lite"
 }
