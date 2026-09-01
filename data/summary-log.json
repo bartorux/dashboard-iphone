@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-29T19:17:08.572Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "W poniedziałek 31 sierpnia między 19:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "W poniedziałek 31 sierpnia prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę 2 września między 19:00 a 21:00 przywołanie również wchodzi w grę, a w pozostałe dni okresu nic go nie zapowiada."
-    },
-    {
-      "at": "2026-08-29T20:07:22.026Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "W poniedziałek 31 sierpnia między 19:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W poniedziałek 31 sierpnia prognoza jeszcze się ustala, bo raz pokrywa wymagane wartości, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W środę 2 września między 19:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, natomiast w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-29T21:07:24.885Z",
       "prompt": 51,
       "accepted": true,
@@ -580,6 +564,23 @@
       "headline": "W godzinach 19:00-21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
       "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 7 września rezerwa również nie pokrywa wymaganego poziomu między 18:00 a 21:00, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-01T07:07:24.583Z",
+      "prompt": 51,
+      "accepted": false,
+      "reason": "stopniuje to, czego fakty nie stopniują",
+      "headline": "W najbliższych dniach margines miejscami wyraźnie odbiega od normy z ostatnich trzydziestu dni, spadając w niektórych godzinach poniżej typowego zakresu.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 7 września między 18:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałe dni okresu nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-01T07:07:24.583Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "Margines bywa zarówno powyżej, jak i poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza pogarsza się jutro. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W czwartek i piątek nic nie zapowiada przywołania, a w poniedziałek 7 września operator może je ogłosić między 18:00 a 21:00."
     }
   ]
 }
