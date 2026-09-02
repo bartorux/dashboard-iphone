@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-08-31T01:07:21.163Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "W środę o 19:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W środę prognoza poprawia się. Do godzin 19:00-21:00 zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W pozostałe dni rezerwa w pełni pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
-    },
-    {
       "at": "2026-08-31T02:07:22.074Z",
       "prompt": 51,
       "accepted": true,
@@ -589,6 +581,14 @@
       "headline": "W najbliższych godzinach rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Między 18:00 a 19:00 PV spada poniżej normy. Na ogłoszenie jest już za późno.",
       "outlook": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spada poniżej progu 1100 MW, a we wtorek 8 września między 18:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu przy zachowaniu wyboru operatora, natomiast w pozostałe dni i godziny nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-02T11:41:54.405Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "We wtorek 8 września między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 7 września między 19:00 a 20:00 oraz dzisiaj między 18:00 a 21:00 operator ma wybór, a w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
