@@ -3,15 +3,6 @@
     {
       "at": "2026-08-31T06:05:42.493Z",
       "prompt": 51,
-      "accepted": false,
-      "reason": "godzina 22:00 spoza faktów",
-      "headline": "W środę między 19:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza na środę jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Poza tą środową sytuacją i trzema godzinami z wąskim marginesem między 07:00 a 22:00 w dniu dzisiejszym, w pozostałych dniach i godzinach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-08-31T06:05:42.493Z",
-      "prompt": 51,
       "accepted": true,
       "headline": "W środę o 19:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "W środę margines spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
@@ -590,6 +581,14 @@
       "headline": "W poniedziałek rezerwa nie pokrywa wymaganego poziomu, a nadwyżka w systemie trzyma się powyżej progu 1100 MW między 18:00 a 21:00, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 21:00. Na ogłoszenie jest już za późno.",
       "outlook": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW, we wtorek 8 września taka sama sytuacja powtórzy się między 19:00 a 20:00, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-02T16:07:29.378Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW, przez co operator może ogłosić przywołanie.",
+      "body": "W poniedziałek 7 września PV wypada poniżej normy, co obniża margines o 19:00 poniżej poziomu z ostatnich trzydziestu dni. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek i wtorek w godzinach 18:00-19:00 oraz 20:00-21:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka trzyma się powyżej progu 1100 MW, a w pozostałych dniach okresu nic nie zapowiada przywołania."
     }
   ]
 }
