@@ -1,8 +1,8 @@
 {
-  "headline": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
-  "body": "W poniedziałek 7 września margines jest niższy niż zwykle o tej porze, bo PV wypada poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
-  "outlook": "Wtorek 8 września niesie podobne godziny między 19:00 a 20:00 z możliwością ogłoszenia, natomiast w pozostałe dni okresu nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-02T16:50:47.794Z",
+  "headline": "Margines wypada poniżej typowego zakresu w poniedziałek 7 września i we wtorek 8 września, kiedy operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW między 19:00 a 20:00.",
+  "body": "W poniedziałek 7 września PV spada poniżej normy. Ogłoszenie może jeszcze nadejść.",
+  "outlook": "Wtorek 8 września niesie podobne zwężenia między 18:00 a 21:00, podczas gdy w pozostałe dni okresu nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-02T17:07:26.437Z",
   "dates": [
     "2026-09-02",
     "2026-09-03",
@@ -10,6 +10,6 @@
     "2026-09-07",
     "2026-09-08"
   ],
-  "assessment": "2026-09-02|R|moderate|-800|20:00|1|0|0|moderate:19:00-21:00|K2:19:00-21:00;2026-09-03|R|none|100|07:00|2|0|13||;2026-09-04|R|none|2400|07:00|0|0|24||;2026-09-07|R|high|-2200|19:00|0|2|20|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-21:00|;2026-09-08|R|high|-2000|19:00|0|1|19|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-21:00|#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
+  "assessment": "2026-09-02|R|moderate|-800|20:00|1|1|0|moderate:19:00-21:00|K2:19:00-21:00;2026-09-03|R|none|100|07:00|2|0|13||;2026-09-04|R|none|2400|07:00|0|0|24||;2026-09-07|R|high|-2200|19:00|0|2|20|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-21:00|;2026-09-08|R|high|-2000|19:00|0|1|19|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-21:00|#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
   "model": "gemini-3.5-flash-lite"
 }
