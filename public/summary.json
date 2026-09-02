@@ -1,15 +1,14 @@
 {
-  "headline": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie i minął próg, który pozwalał mu je pominąć.",
-  "body": "W poniedziałek 7 września o 19:00 PV wypada poniżej normy. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "We wtorek 8 września nadwyżka spada poniżej progu 1100 MW między 19:00 a 21:00, jutro operator ma wybór między 07:00 a 08:00, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-02T21:07:24.300Z",
+  "headline": "W poniedziałek 7 września margines jest poniżej typowego zakresu z ostatnich trzydziestu dni.",
+  "body": "Prognoza dla poniedziałku 7 września jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "We wtorek 8 września między 18:00 a 22:00 rezerwa również nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-02T22:07:23.598Z",
   "dates": [
-    "2026-09-02",
     "2026-09-03",
     "2026-09-04",
     "2026-09-07",
     "2026-09-08"
   ],
-  "assessment": "2026-09-02|R|none|600|23:00|0|0|0||;2026-09-03|R|moderate|0|07:00|2|0|10|moderate:07:00-08:00|;2026-09-04|R|none|2200|19:00|0|0|23||;2026-09-07|R|high|-2700|19:00|0|3|16|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-21:00|;2026-09-08|R|high|-2500|19:00|0|4|18|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00|#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
+  "assessment": "2026-09-03|R|none|100|07:00|3|0|9||;2026-09-04|R|none|2100|19:00|0|0|23||;2026-09-07|R|high|-2700|19:00|0|3|16|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-21:00|;2026-09-08|R|high|-2500|19:00|0|4|18|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00|#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
   "model": "gemini-3.5-flash-lite"
 }
