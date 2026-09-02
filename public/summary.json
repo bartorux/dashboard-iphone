@@ -1,8 +1,8 @@
 {
-  "headline": "W poniedziałek 7 września o 19:00 rezerwa spadnie najgłębiej w całym okresie.",
-  "body": "PV spadnie poniżej normy, podczas gdy zapotrzebowanie utrzyma typowy poziom. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "Dziś między 18:00 a 22:00 oraz we wtorek 8 września między 19:00 a 20:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada.",
-  "generatedAt": "2026-09-02T01:07:26.165Z",
+  "headline": "W poniedziałek 7 września operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-20:00.",
+  "body": "Margines o 19:00 jest niższy niż zwykle na tle ostatnich trzydziestu dni, ponieważ PV spada poniżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+  "outlook": "Dzisiaj margines nie pokrywa wymaganego poziomu między 18:00 a 22:00, a we wtorek 8 września taka sytuacja wypada od 19:00 do 20:00, natomiast w pozostałe dni rezerwa pokrywa wymagany poziom.",
+  "generatedAt": "2026-09-02T03:07:22.993Z",
   "dates": [
     "2026-09-02",
     "2026-09-03",
@@ -10,6 +10,6 @@
     "2026-09-07",
     "2026-09-08"
   ],
-  "assessment": "2026-09-02|R|moderate|-700|19:00|0|1|4|moderate:07:00-08:00,moderate:18:00-22:00|K2:19:00-21:00;2026-09-03|R|none|1800|20:00|0|0|23||;2026-09-04|R|none|2400|07:00|0|0|24||;2026-09-07|R|moderate|-1800|19:00|1|1|20|moderate:19:00-21:00|;2026-09-08|R|moderate|-900|19:00|0|1|20|moderate:19:00-20:00|#PV poniżej normy; zapotrzebowanie typowe/typical/-#v51",
+  "assessment": "2026-09-02|R|moderate|-600|20:00|0|1|4|moderate:07:00-08:00,moderate:18:00-22:00|K2:19:00-21:00;2026-09-03|R|none|1800|20:00|0|0|23||;2026-09-04|R|none|2400|07:00|0|0|24||;2026-09-07|R|high|-1900|19:00|0|1|20|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-21:00|;2026-09-08|R|moderate|-900|19:00|0|1|20|moderate:19:00-20:00|#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
   "model": "gemini-3.5-flash-lite"
 }
