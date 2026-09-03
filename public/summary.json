@@ -1,8 +1,8 @@
 {
-  "headline": "Przywołanie wchodzi w grę w poniedziałek 7 września oraz we wtorek 8 września, podczas gdy w pozostałe dni nic go nie zapowiada.",
-  "body": "W poniedziałek 7 września margines spada najniżej o 19:00 z powodu fotowoltaiki poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
-  "outlook": "We wtorek 8 września margines spada poniżej wymaganego poziomu między 19:00 a 21:00, a w pozostałych okresach rezerwa pokrywa wymagane wielkości bez żadnych sygnałów.",
-  "generatedAt": "2026-09-03T19:07:32.958Z",
+  "headline": "W poniedziałek 7 września między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
+  "body": "W środę 9 września prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+  "outlook": "We wtorek 8 września między 19:00 a 21:00 margines jest ujemny, a w pozostałe dni i godziny nic nie zapowiada przywołania, choć jutro w godzinach 07:00-08:00 obowiązuje Kompas Energetyczny PSE ze wskazanym zalecanym oszczędzaniem.",
+  "generatedAt": "2026-09-03T20:07:05.991Z",
   "dates": [
     "2026-09-03",
     "2026-09-04",
@@ -10,6 +10,6 @@
     "2026-09-08",
     "2026-09-09"
   ],
-  "assessment": "2026-09-03|R|none|700|21:00|0|0|1||;2026-09-04|R|none|1300|07:00|0|0|20||;2026-09-07|R|high|-2000|19:00|0|3|16|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00|;2026-09-08|R|moderate|-700|20:00|0|0|19|moderate:19:00-21:00|;2026-09-09|R|none|200|19:00|1|0|14||#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
+  "assessment": "2026-09-03|R|none|1900|22:00|0|0|1||;2026-09-04|R|none|1300|07:00|0|0|20||K2:07:00-08:00;2026-09-07|R|high|-2000|20:00|0|3|16|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00|;2026-09-08|R|moderate|-600|19:00|0|0|19|moderate:19:00-21:00|;2026-09-09|R|moderate|0|19:00|2|0|14|moderate:19:00-20:00|#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
   "model": "gemini-3.5-flash-lite"
 }
