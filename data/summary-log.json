@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-01T16:07:26.456Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "Najniższy margines w poniedziałek 7 września o 19:00 spada do wartości ujemnej, przy której rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin między 19:00 a 21:00 zostało ponad osiem godzin, a Kompas Energetyczny PSE na tę dobę przewiduje zalecane oszczędzanie.",
-      "outlook": "Operator może ogłosić przywołanie także dzisiaj między 19:00 a 22:00, lecz do tych godzin zostało mniej niż osiem godzin, podczas gdy w czwartek i piątek nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-01T16:53:54.547Z",
-      "prompt": 51,
-      "accepted": false,
-      "reason": "tekst zawiera liczbę spoza godzin",
-      "headline": "Jutro między 19:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 17 sierpnia między 18:00 a 22:00 też wchodzi w grę przywołanie, a w pozostałe dni nic go nie zapowiada."
-    },
-    {
       "at": "2026-09-01T16:53:54.547Z",
       "prompt": 51,
       "accepted": true,
@@ -592,6 +575,23 @@
       "headline": "W poniedziałek 7 września między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
       "body": "W środę 9 września prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "We wtorek 8 września między 19:00 a 21:00 margines jest ujemny, a w pozostałe dni i godziny nic nie zapowiada przywołania, choć jutro w godzinach 07:00-08:00 obowiązuje Kompas Energetyczny PSE ze wskazanym zalecanym oszczędzaniem."
+    },
+    {
+      "at": "2026-09-03T21:07:23.977Z",
+      "prompt": 51,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "W poniedziałek 7 września między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Margines w tym dniu spadnie poniżej wymaganego poziomu najmocniej ze wszystkich dni. Do wskazanych godzin dzieli nas jeszcze ponad osiem godzin.",
+      "outlook": "Wtorek 8 września i środa 9 września przyniosą godziny z ujemnym marginesem między 19:00 a 21:00, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-03T21:07:23.977Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "W poniedziałek 7 września między 19:00 a 21:00 nadwyżka w systemie spadła poniżej progu 1100 MW.",
+      "body": "Margines osiągnął najniższą wartość o 20:00. Do tych godzin ogłoszenie może jeszcze nadejść, bo do wyznaczonego czasu zostało ponad osiem godzin.",
+      "outlook": "We wtorek 8 września i środę 9 września rezerwa miejscami nie pokrywa wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
