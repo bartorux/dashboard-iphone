@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-01T12:07:32.180Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "Margines bywa dziś niższy niż zwykle o tej porze na tle ostatnich trzydziestu dni.",
-      "body": "W poniedziałek 7 września o godzinie 19:00 PV spada poniżej normy. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałe dni okresu nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-01T13:07:25.795Z",
       "prompt": 51,
       "accepted": true,
@@ -591,6 +583,14 @@
       "headline": "W poniedziałek 7 września między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
       "body": "W godzinach 18:00 i 19:00 margines spadł poniżej typowego poziomu z ostatnich trzydziestu dni, bo produkcja fotowoltaiki spadła poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "We wtorek 8 września między 19:00 a 21:00 operator ma wybór i może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-03T19:07:32.958Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "Przywołanie wchodzi w grę w poniedziałek 7 września oraz we wtorek 8 września, podczas gdy w pozostałe dni nic go nie zapowiada.",
+      "body": "W poniedziałek 7 września margines spada najniżej o 19:00 z powodu fotowoltaiki poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "We wtorek 8 września margines spada poniżej wymaganego poziomu między 19:00 a 21:00, a w pozostałych okresach rezerwa pokrywa wymagane wielkości bez żadnych sygnałów."
     }
   ]
 }
