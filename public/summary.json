@@ -1,8 +1,8 @@
 {
-  "headline": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW.",
-  "body": "W poniedziałek 7 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "We wtorek 8 września i środę 9 września nadwyżka trzyma się powyżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-03T00:07:23.541Z",
+  "headline": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie i stracił możliwość jego pominięcia.",
+  "body": "Dziś prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "Wtorek 8 września przyniesie podobne godziny z uprawnieniem do przywołania, w środę 9 września operator zachowa wybór między 18:00 a 21:00, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-03T01:07:24.807Z",
   "dates": [
     "2026-09-03",
     "2026-09-04",
@@ -10,6 +10,6 @@
     "2026-09-08",
     "2026-09-09"
   ],
-  "assessment": "2026-09-03|R|none|200|07:00|2|0|8||;2026-09-04|R|none|3100|07:00|0|0|24||;2026-09-07|R|high|-2500|19:00|0|3|17|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-21:00|;2026-09-08|R|high|-2200|19:00|0|3|18|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-22:00|;2026-09-09|R|moderate|-500|19:00|0|0|15|moderate:18:00-21:00|#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
+  "assessment": "2026-09-03|R|none|100|20:00|3|0|7||;2026-09-04|R|none|3200|07:00|0|0|24||;2026-09-07|R|high|-2600|19:00|0|3|17|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-21:00|;2026-09-08|R|high|-2100|19:00|0|2|18|moderate:18:00-19:00,high:19:00-20:00,moderate:20:00-22:00|;2026-09-09|R|moderate|-400|19:00|0|0|15|moderate:18:00-21:00|#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
   "model": "gemini-3.5-flash-lite"
 }
