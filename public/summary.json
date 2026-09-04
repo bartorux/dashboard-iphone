@@ -1,8 +1,8 @@
 {
-  "headline": "W poniedziałek 7 września między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW.",
-  "body": "W poniedziałek 7 września margines jest poniżej typowego zakresu z ostatnich trzydziestu dni. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "We wtorek 8 września i środę 9 września nadwyżka trzyma się powyżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-04T06:34:39.004Z",
+  "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia go.",
+  "body": "W poniedziałek 7 września margines spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin zostało ponad osiem godzin.",
+  "outlook": "Wtorek 8 września i czwartek 10 września przynoszą godziny z nadwyżką powyżej progu 1100 MW, w środę 9 września prognoza wciąż się ustala, a pozostały czas w całym okresie nie zapowiada przywołania.",
+  "generatedAt": "2026-09-04T07:11:13.087Z",
   "dates": [
     "2026-09-04",
     "2026-09-07",
@@ -10,6 +10,6 @@
     "2026-09-09",
     "2026-09-10"
   ],
-  "assessment": "2026-09-04|R|none|2200|08:00|0|0|16||;2026-09-07|R|high|-2000|19:00|1|3|16|moderate:18:00-19:00,high:19:00-21:00|;2026-09-08|R|moderate|-1600|20:00|0|2|17|moderate:18:00-22:00|;2026-09-09|R|moderate|-200|18:00|5|0|13|moderate:18:00-19:00|;2026-09-10|R|none|200|20:00|1|0|21||#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
+  "assessment": "2026-09-04|R|none|3100|20:00|0|0|15||;2026-09-07|R|high|-2000|19:00|1|3|16|moderate:18:00-19:00,high:19:00-21:00|;2026-09-08|R|moderate|-1400|20:00|2|2|18|moderate:19:00-21:00|;2026-09-09|R|moderate|-300|18:00|1|1|13|moderate:07:00-09:00,moderate:18:00-21:00|;2026-09-10|R|moderate|-800|20:00|0|1|16|moderate:19:00-21:00|#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
   "model": "gemini-3.5-flash-lite"
 }
