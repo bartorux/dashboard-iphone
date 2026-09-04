@@ -1,14 +1,15 @@
 {
-  "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00.",
-  "body": "W poniedziałek 7 września rezerwa nie pokryje wymaganego poziomu, a nadwyżka spadnie. Do tych godzin operator zachowuje uprawnienie do ogłoszenia przywołania.",
-  "outlook": "We wtorek 8 września i w środę 9 września margines miejscami spadnie poniżej wymaganego poziomu, a jutro rezerwa w pełni pokryje zapotrzebowanie.",
-  "generatedAt": "2026-09-03T23:07:40.295Z",
+  "headline": "W poniedziałek 7 września między 19:00 a 21:00 nadwyżka w systemie spadła poniżej progu 1100 MW.",
+  "body": "W środę 9 września prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "We wtorek 8 września między 19:00 a 21:00 oraz w czwartek 10 września między 19:00 a 21:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada.",
+  "generatedAt": "2026-09-04T00:11:57.017Z",
   "dates": [
     "2026-09-04",
     "2026-09-07",
     "2026-09-08",
-    "2026-09-09"
+    "2026-09-09",
+    "2026-09-10"
   ],
-  "assessment": "2026-09-04|R|none|1700|07:00|0|0|23||;2026-09-07|R|high|-2100|20:00|0|3|15|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00|;2026-09-08|R|moderate|-1200|20:00|1|2|19|moderate:19:00-21:00|;2026-09-09|R|moderate|0|19:00|4|0|13|moderate:19:00-20:00|#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
+  "assessment": "2026-09-04|R|none|1700|07:00|0|0|22||;2026-09-07|R|high|-2100|20:00|0|3|16|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00|;2026-09-08|R|moderate|-1200|20:00|1|2|19|moderate:19:00-21:00|;2026-09-09|R|moderate|0|19:00|4|0|13|moderate:19:00-20:00|;2026-09-10|R|moderate|-600|20:00|0|0|18|moderate:19:00-21:00|#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
   "model": "gemini-3.5-flash-lite"
 }
