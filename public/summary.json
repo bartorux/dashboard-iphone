@@ -1,15 +1,14 @@
 {
-  "headline": "W poniedziałek 7 września między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW.",
-  "body": "Najniższy margines wypada we wtorek 8 września o 20:00, ponieważ fotowoltaika spada poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-  "outlook": "We wtorek 8 września między 19:00 a 22:00 oraz w środę 9 września między 18:00 a 20:00 nadwyżka również spadła poniżej progu 1100 MW, w czwartek 10 września między 19:00 a 21:00 operator ma wybór, a w pozostałe dni i godziny nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-04T21:47:01.086Z",
+  "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00, więc operator może ogłosić przywołanie bez możliwości pominięcia tego kroku.",
+  "body": "W poniedziałek 7 września margines spadnie najniżej o 19:00, bo produkcja z fotowoltaiki znajdzie się poniżej normy. Do tych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "We wtorek 8 września nadwyżka również spadnie poniżej progu 1100 MW między 19:00 a 21:00, natomiast w środę 9 września i czwartek 10 września operator zachowuje wybór, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-04T23:07:25.674Z",
   "dates": [
-    "2026-09-04",
     "2026-09-07",
     "2026-09-08",
     "2026-09-09",
     "2026-09-10"
   ],
-  "assessment": "2026-09-04|R|none|2800|23:00|0|0|1||;2026-09-07|R|high|-2500|19:00|0|6|14|moderate:07:00-08:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00|;2026-09-08|R|high|-3300|20:00|0|5|16|moderate:17:00-19:00,high:19:00-22:00|;2026-09-09|R|high|-2200|18:00|1|10|9|moderate:07:00-10:00,moderate:16:00-18:00,high:18:00-20:00,moderate:20:00-22:00|;2026-09-10|R|moderate|-300|20:00|0|0|16|moderate:19:00-21:00|#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
+  "assessment": "2026-09-07|R|high|-2400|19:00|0|6|14|moderate:07:00-08:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00|;2026-09-08|R|high|-2500|20:00|0|4|16|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00|;2026-09-09|R|moderate|-1700|18:00|1|9|9|moderate:07:00-09:00,moderate:16:00-22:00|;2026-09-10|R|moderate|-900|20:00|2|1|15|moderate:19:00-21:00|#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
   "model": "gemini-3.5-flash-lite"
 }
