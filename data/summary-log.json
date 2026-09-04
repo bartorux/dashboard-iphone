@@ -4,15 +4,6 @@
       "at": "2026-09-02T02:07:28.329Z",
       "prompt": 51,
       "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dzisiejszy margines wypada w części godzin poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Między 18:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 7 września i we wtorek 8 września margines również spada w wyznaczonych godzinach poniżej wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-02T02:07:28.329Z",
-      "prompt": 51,
-      "accepted": false,
       "reason": "godzina bez nazwy dnia",
       "headline": "Dzisiejszy margines wypada w części godzin poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Między 18:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi. Ogłoszenie może jeszcze nadejść.",
@@ -596,6 +587,14 @@
       "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00, co oznacza, że operator może ogłosić przywołanie.",
       "body": "W poniedziałek 7 września rezerwa nie pokrywa wymaganego poziomu. Do wyznaczonych godzin pozostało wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Wtorek 8 września i czwartek 10 września przynoszą godziny z nadwyżką powyżej progu 1100 MW, w środę 9 września prognoza jeszcze się ustala, a w pozostałym okresie nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-04T06:07:27.958Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "W poniedziałek 7 września między 18:00 a 21:00 rezerwa spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW.",
+      "body": "W poniedziałek 7 września margines spadnie do najniższego poziomu w całym okresie między 18:00 a 19:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 8 września między 19:00 a 21:00 oraz w czwartek 10 września między 19:00 a 21:00 operator zachowuje wybór, a w pozostałe dni okresu nic nie zapowiada przywołania."
     }
   ]
 }
