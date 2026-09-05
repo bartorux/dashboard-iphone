@@ -1,6 +1,7 @@
 import React from 'react';
 import { AlertRange } from '../types';
 import { dayLabel } from '../utils/dayWindow';
+import { formatMW, signedMW } from '../utils/format';
 import { AlertIcon, CheckIcon } from './icons';
 
 interface AlertsPanelProps {
@@ -9,9 +10,6 @@ interface AlertsPanelProps {
   /** False when the day has no readings at all — distinct from "no alerts". */
   hasData: boolean;
 }
-
-const formatMW = (value: number) =>
-  new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
 
 const SEVERITY_STYLE = {
   red: {
@@ -89,8 +87,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
                   <p className="tnum mt-0.5 text-[0.75rem] text-text-secondary">
                     Najniższy margines{' '}
                     <span className={`font-semibold ${style.text}`}>
-                      {range.worstDifference > 0 ? '+' : ''}
-                      {formatMW(range.worstDifference)} MW
+                      {signedMW(range.worstDifference)}
                     </span>{' '}
                     o {range.worstHour} · rezerwa {formatMW(range.reserve)} /
                     wymagana {formatMW(range.required)} MW

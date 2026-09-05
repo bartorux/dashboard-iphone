@@ -5,6 +5,7 @@ import { dayLabel } from '../utils/dayWindow';
 import { getValidMargins, safeAvg, classifyMargin } from '../utils/dataTransform';
 import { STATUS_TEXT } from '../utils/status';
 import { usePersistentFlag } from '../hooks/usePersistentFlag';
+import { signedMW, formatPercent } from '../utils/format';
 import { ChevronDownIcon } from './icons';
 
 interface TrendsSectionProps {
@@ -15,11 +16,6 @@ interface TrendsSectionProps {
   orangeThreshold: number;
   redThreshold: number;
 }
-
-const formatMW = (value: number) =>
-  new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
-
-const signed = (value: number) => `${value > 0 ? '+' : ''}${formatMW(value)} MW`;
 
 const Tile: React.FC<{
   label: string;
@@ -165,13 +161,13 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
           <div className="grid grid-cols-2 gap-2 pt-3">
             <Tile
               label="Średni margines"
-              value={avgMargin !== null ? signed(avgMargin) : '—'}
+              value={avgMargin !== null ? signedMW(avgMargin) : '—'}
               hint={dayName.toLowerCase()}
               tone={toneFor(avgMargin)}
             />
             <Tile
               label="Względem dziś"
-              value={trend.value !== null ? signed(trend.value) : '—'}
+              value={trend.value !== null ? signedMW(trend.value) : '—'}
               hint={currentDayOffset === 0 ? 'wybrany dzień to dziś' : 'różnica średnich'}
               tone={trend.tone}
             />
@@ -187,13 +183,13 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
             */}
             <Tile
               label="Najniższy margines"
-              value={minMargin !== null ? signed(minMargin) : '—'}
+              value={minMargin !== null ? signedMW(minMargin) : '—'}
               hint="najtrudniejsza godzina doby"
               tone={toneFor(minMargin)}
             />
             <Tile
               label="Najwyższy margines"
-              value={maxMargin !== null ? signed(maxMargin) : '—'}
+              value={maxMargin !== null ? signedMW(maxMargin) : '—'}
               hint="największy zapas doby"
               tone={toneFor(maxMargin)}
             />
@@ -210,7 +206,7 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
                   <div>
                     <div className="text-[0.6875rem] text-text-secondary">Dziś</div>
                     <div className="tnum text-[0.9375rem] font-semibold text-text">
-                      {signed(comparison.today)}
+                      {signedMW(comparison.today)}
                     </div>
                   </div>
                   <div className="text-center">
@@ -219,19 +215,18 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
                         comparison.diff >= 0 ? 'text-ok-text' : 'text-alarm-text'
                       }`}
                     >
-                      {signed(comparison.diff)}
+                      {signedMW(comparison.diff)}
                     </div>
                     {comparison.pct !== null && (
                       <div className="tnum text-[0.625rem] text-text-tertiary">
-                        {comparison.pct >= 0 ? '+' : ''}
-                        {comparison.pct.toFixed(1)}%
+                        {formatPercent(comparison.pct, 1)}
                       </div>
                     )}
                   </div>
                   <div className="text-right">
                     <div className="text-[0.6875rem] text-text-secondary">{dayName}</div>
                     <div className="tnum text-[0.9375rem] font-semibold text-text">
-                      {signed(comparison.selected)}
+                      {signedMW(comparison.selected)}
                     </div>
                   </div>
                 </div>

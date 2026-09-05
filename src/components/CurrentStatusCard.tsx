@@ -1,15 +1,13 @@
 import React from 'react';
 import { PSEDataPoint, SystemStatus } from '../types';
 import { STATUS_LABEL, STATUS_SOFT_BG, STATUS_TEXT } from '../utils/status';
+import { formatMW } from '../utils/format';
 
 interface CurrentStatusCardProps {
   point: PSEDataPoint | undefined;
   status: SystemStatus;
   isStale: boolean;
 }
-
-const formatMW = (value: number) =>
-  new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
 
 /**
  * The headline figure. Previously this lived as one of six equal tiles inside a

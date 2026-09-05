@@ -1,12 +1,19 @@
 import React from 'react';
+import { formatMW } from '../../utils/format';
 
 /**
  * Pieces every chart view shares. Kept together so the three views cannot drift
  * apart in spacing, number formatting or empty-state wording.
  */
 
-export const formatMW = (value: number) =>
-  new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
+/**
+ * Re-exported rather than imported directly by the three chart views below:
+ * their own `import { formatMW } from './shared'` stays exactly as it was, so
+ * moving the one true implementation to utils/format.ts (shared with
+ * AlertsPanel, CurrentStatusCard and TrendsSection) touches no import lines
+ * in this file's own consumers.
+ */
+export { formatMW };
 
 /** Curves redraw rather than jump when the selected day changes. */
 export const ANIMATION_MS = 450;
