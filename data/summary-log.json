@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-03T22:48:28.531Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "W poniedziałek 7 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00.",
-      "body": "W środę 9 września prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 8 września między 18:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałe dni okresu nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-03T23:07:40.295Z",
-      "prompt": 51,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00.",
-      "body": "W poniedziałek 7 września rezerwa nie pokrywa wymaganego poziomu między 18:00 a 22:00, więc operator może ogłosić przywołanie, a w godzinach 19:00-21:00 stracił możliwość jego pominięcia. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 8 września i w środę 9 września rezerwa również nie pokrywa wymaganego poziomu w wyznaczonych godzinach wieczornych, natomiast jutro nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-03T23:07:40.295Z",
       "prompt": 51,
       "accepted": true,
@@ -612,6 +595,23 @@
       "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00.",
       "body": "Zapotrzebowanie przekracza normę, a ubytki pozostają poniżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 7 września i we wtorek 8 września nadwyżka spada poniżej progu 1100 MW w godzinach 19:00-21:00, natomiast w pozostałych dniach tygodnia rezerwa utrzymuje się powyżej tego progu."
+    },
+    {
+      "at": "2026-09-05T21:07:20.960Z",
+      "prompt": 51,
+      "accepted": false,
+      "reason": "tekst zawiera liczbę spoza godzin",
+      "headline": "We wtorek 8 września o 20:00 margines spadnie najniżej ze wszystkich dni, a nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "W poniedziałek 7 września zapotrzebowanie wzrośnie powyżej normy, podczas gdy ubytki spadną poniżej typowego poziomu. Do wymienionych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę 9, czwartek 10 i piątek 11 września operator zachowa wybór co do ogłoszenia, natomiast w pozostałe dni weryfikowane godziny nie przyniosą żadnych utrudnień."
+    },
+    {
+      "at": "2026-09-05T21:07:20.960Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "We wtorek 8 września o 20:00 margines spadnie najniżej ze wszystkich dni, a nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "W poniedziałek 7 września zapotrzebowanie wzrośnie powyżej normy, podczas gdy ubytki spadną poniżej typowego poziomu. Do wymienionych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 7 września, we wtorek 8 września, w środę 9 września, w czwartek 10 września oraz w piątek 11 września operator zachowuje wybór w poszczególnych godzinach, a w pozostałym okresie rezerwa pokrywa wymagany poziom."
     }
   ]
 }
