@@ -32,6 +32,7 @@ import {
   shortHour,
   useDismissibleTooltip,
 } from './chart/shared';
+import HourTable, { HourColumn } from './chart/HourTable';
 
 interface HistoryChartProps {
   /** Name of the day being compared — the chart also serves Jutro and Pojutrze. */
@@ -71,7 +72,10 @@ interface TooltipProps {
   payload?: Array<{ payload: Row }>;
 }
 
-const HistoryTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
+/** Exported for the cross-check test against HourTable, and for the same
+ * reason GenerationTooltip is: on hover-only UI a chart-level assertion can
+ * never see what the tooltip prints. */
+export const HistoryTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   const row = payload[0].payload;
 
@@ -124,6 +128,26 @@ const HistoryTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
  * question a single day's curve cannot: is this evening unusual, or is it simply
  * what evenings look like?
  */
+/**
+ * The figures behind the 30-day comparison.
+ *
+ * The band is printed as its two edges rather than as a span, because that is
+ * how a reader checks whether the day's own figure fell outside it — the
+ * comparison the whole view exists to make, and the one a rendered "1200–2400"
+ * string makes harder rather than easier.
+ */
+const HISTORY_COLUMNS: HourColumn<Row>[] = [
+  { header: 'Godz.', value: (row) => row.key },
+  {
+    header: 'Margines',
+    value: (row) =>
+      row.today === null ? '—' : `${row.today > 0 ? '+' : ''}${formatMW(row.today)}`,
+  },
+  { header: 'Mediana', value: (row) => (row.median === null ? '—' : formatMW(row.median)) },
+  { header: 'Typowo od', value: (row) => (row.band ? formatMW(row.band[0]) : '—') },
+  { header: 'Typowo do', value: (row) => (row.band ? formatMW(row.band[1]) : '—') },
+];
+
 const HistoryChart: React.FC<HistoryChartProps> = ({
   dayLabel,
   dayData,
@@ -270,6 +294,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
         ]}
       />
 
+      <figure className="m-0">
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
@@ -379,6 +404,19 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
           </ComposedChart>
         </ResponsiveContainer>
       </div>
+        <figcaption className="sr-only">
+          Margines wybranego dnia w kolejnych godzinach na tle mediany i pasma,
+          w którym mieściło się 80% ostatnich dni; te same wartości godzina po
+          godzinie znajdują się w tabeli pod wykresem.
+        </figcaption>
+      </figure>
+
+      <HourTable
+        rows={rows}
+        rowKey={(row) => row.key}
+        storageKey="hours-history"
+        columns={HISTORY_COLUMNS}
+      />
     </>
   );
 };

@@ -33,6 +33,7 @@ import {
   shortHour,
   useDismissibleTooltip,
 } from './chart/shared';
+import HourTable, { HourColumn } from './chart/HourTable';
 
 interface GenerationChartProps {
   data: PSEDataPoint[];
@@ -245,6 +246,34 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
  * alarm and calm hours, so drawing them would add a line that explains nothing.
  * They stay in the tooltip.
  */
+/**
+ * The figures behind the generation view.
+ *
+ * Five columns, and no more: demand, the two renewable series the stack is
+ * made of, grid generation and exchange. Curtailment and outages stay in the
+ * tooltip — they are a footnote on the plot and would be a footnote here too,
+ * at the cost of two more columns to scroll past on a phone.
+ *
+ * No tone on any column. Nothing on this view is a threshold: these are
+ * quantities, not judgements, and colouring them would invent a status the
+ * chart itself does not claim.
+ */
+const GENERATION_COLUMNS: HourColumn<Row>[] = [
+  { header: 'Godz.', value: (row) => `${row.key}–${row.endLabel}` },
+  { header: 'Zapotrz.', value: (row) => (row.demand === null ? '—' : formatMW(row.demand)) },
+  { header: 'PV', value: (row) => (row.pv === null ? '—' : formatMW(row.pv)) },
+  { header: 'Wiatr', value: (row) => (row.wind === null ? '—' : formatMW(row.wind)) },
+  {
+    header: 'Generacja',
+    value: (row) => (row.generation === null ? '—' : formatMW(row.generation)),
+  },
+  {
+    header: 'Wymiana',
+    value: (row) =>
+      row.exchange === null ? '—' : `${row.exchange > 0 ? '+' : ''}${formatMW(row.exchange)}`,
+  },
+];
+
 const GenerationChart: React.FC<GenerationChartProps> = ({
   data,
   currentHourLabel,
@@ -406,6 +435,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         ]}
       />
 
+      <figure className="m-0">
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
@@ -721,6 +751,19 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
           </ComposedChart>
         </ResponsiveContainer>
       </div>
+        <figcaption className="sr-only">
+          Krajowe zapotrzebowanie na tle generacji z wiatru i fotowoltaiki w
+          kolejnych godzinach doby; te same wartości godzina po godzinie
+          znajdują się w tabeli pod wykresem.
+        </figcaption>
+      </figure>
+
+      <HourTable
+        rows={rows}
+        rowKey={(row) => row.key}
+        storageKey="hours-generation"
+        columns={GENERATION_COLUMNS}
+      />
     </>
   );
 };

@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 
 // Same workaround as reserveChart.test.tsx and generationChart.test.tsx:
 // ResponsiveContainer measures its parent, which jsdom always reports as zero
@@ -16,9 +16,10 @@ vi.mock('recharts', async () => {
   };
 });
 import React from 'react';
-import HistoryChart from '../HistoryChart';
+import HistoryChart, { HistoryTooltip } from '../HistoryChart';
 import { makePoint } from '../../test/factories';
 import { PSEDataPoint } from '../../types';
+import { formatMW } from '../../utils/format';
 
 const pad = (h: number) => String(h).padStart(2, '0');
 
@@ -130,6 +131,62 @@ describe('HistoryChart — siatka i linia zera', () => {
       />
     );
 
-    expect(screen.getByText('Mediana')).toBeInTheDocument();
+    // getAllByText: the hour table beneath the chart carries its own "Mediana"
+    // column header now (HourTable), so the legend's label is no longer unique
+    // on the page — both are expected to exist.
+    expect(screen.getAllByText('Mediana').length).toBeGreaterThan(0);
+  });
+});
+
+describe('HistoryChart — tabela godzinowa zgadza się z dymkiem', () => {
+  beforeEach(() => localStorage.clear());
+
+  /*
+   * Cross-check, not a copy — see the same test in reserveChart.test.tsx for
+   * the full rationale. Median and the two band edges are used rather than
+   * "Margines": that one field carries a "+" sign in the table but not in the
+   * tooltip (an intentional, pre-existing asymmetry, same as GenerationChart's
+   * "Wymiana" column), so it cannot supply one expected string usable against
+   * both renderings. Median and the band edges have no such sign and format
+   * identically in both places, in `thirtyDayHistory` all three days carry the
+   * same reserve for a given hour, so p10 = p50 = p90 — one plain figure, easy
+   * to check against both renderings without computing a percentile by hand.
+   */
+  it('shows the same median and band edges for an hour in the table as the tooltip prints', () => {
+    const targetHourLabel = '05:00';
+    const historyMargin = 3000 + 5 * 10 - 2000; // reserve − required at hour 05, all 3 days alike
+    const expectedMedian = formatMW(historyMargin);
+    const expectedBandLow = formatMW(historyMargin);
+    const expectedBandHigh = formatMW(historyMargin);
+
+    const tooltipRow = {
+      key: targetHourLabel,
+      band: [historyMargin, historyMargin] as [number, number],
+      median: historyMargin,
+      today: 1500,
+      samples: 3,
+    };
+    const { container: tooltipContainer } = render(
+      <HistoryTooltip active payload={[{ payload: tooltipRow } as never]} label={targetHourLabel} />
+    );
+    expect(tooltipContainer.textContent).toContain(expectedMedian);
+
+    const { getByRole, container } = render(
+      <HistoryChart
+        dayData={todayData}
+        dayLabel="Dziś"
+        days={30}
+        history={thirtyDayHistory}
+        state="ready"
+        onRetry={vi.fn()}
+      />
+    );
+    fireEvent.click(getByRole('button', { name: 'Tabela godzinowa' }));
+    const table = container.querySelector('table')!;
+    const row = within(table).getByText(targetHourLabel).closest('tr')!;
+
+    expect(row.textContent).toContain(expectedMedian);
+    expect(row.textContent).toContain(expectedBandLow);
+    expect(row.textContent).toContain(expectedBandHigh);
   });
 });

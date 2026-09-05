@@ -94,6 +94,13 @@ const SCENARIOS = [
   // other scenario's fetch resolves before the first paint anyone would look
   // at, so without a deliberately slow response this state is never captured.
   { name: 'pierwsze-ladowanie', scheme: 'light', slowFetch: true, waitAfterLoad: 500 },
+  // HourTable (chart/HourTable.tsx): collapsed by default everywhere else, so
+  // without a scenario that opens it the five-column table never appears in
+  // any baseline. Monitor width, not phone: on a 393px viewport the table
+  // already scrolls inside its own box (by design — see the component's own
+  // comment on why it never shrinks its type to fit), so a phone capture would
+  // show the same three columns regardless of how many the view actually has.
+  { name: 'tabela-godzin-monitor', scheme: 'light', monitor: true, expandTable: true },
 ];
 
 /**
@@ -237,6 +244,10 @@ for (const scenario of SCENARIOS) {
   }
   if (scenario.settings) {
     await page.getByRole('button', { name: 'Ustawienia' }).click();
+    await page.waitForTimeout(300);
+  }
+  if (scenario.expandTable) {
+    await page.getByRole('button', { name: 'Tabela godzinowa' }).click();
     await page.waitForTimeout(300);
   }
 
