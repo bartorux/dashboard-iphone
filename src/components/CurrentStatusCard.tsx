@@ -5,6 +5,8 @@ import { formatMW } from '../utils/format';
 import { marginSeries } from '../utils/dataTransform';
 import Skeleton from './Skeleton';
 import Sparkline from './Sparkline';
+import { CompassIcon } from './icons';
+import { COMPASS_WORD, CompassRange } from '../utils/compass';
 
 interface CurrentStatusCardProps {
   point: PSEDataPoint | undefined;
@@ -18,6 +20,15 @@ interface CurrentStatusCardProps {
   isLoading?: boolean;
   /** Today's 24 blocks, for the trace under the figure. */
   todayData?: PSEDataPoint[];
+  /**
+   * The Kompas range covering the hour this card is about — and only that one.
+   *
+   * The card answers "right now", and an operator's request that is running
+   * right now is a fact about right now. A flag on some other hour of the day
+   * is not: it belongs to the alerts card, which is about the whole day, and
+   * repeating it here would turn a card with one job into a second alert list.
+   */
+  compassNow?: CompassRange | null;
 }
 
 /**
@@ -30,6 +41,7 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
   isStale,
   isLoading = false,
   todayData = [],
+  compassNow = null,
 }) => {
   const hasValues =
     point != null && point.reserve !== null && point.required !== null;
@@ -140,6 +152,22 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
             </div>
           )}
         </>
+      )}
+
+      {/*
+        One line, and only while the request actually covers this hour. Named
+        in full and with the operator's own wording, so the reader can match it
+        against what PSE publishes — and deliberately NOT coloured like a
+        status: this is not "how bad is the margin", it is a different axis of
+        meaning that happens to share the clock.
+      */}
+      {compassNow && (
+        <p className="mt-3 flex items-center gap-1.5 text-[0.6875rem] text-compass">
+          <CompassIcon className="h-3.5 w-3.5 shrink-0" />
+          <span>
+            Kompas Energetyczny PSE: {COMPASS_WORD[compassNow.level]} do {compassNow.to}
+          </span>
+        </p>
       )}
 
       {isStale && (

@@ -81,7 +81,7 @@ z gestem nie mają nic wspólnego: brak obsługi `touchcancel`, nasłuchy zdejmo
 sekunda kręciołka, i wyciszenie ruchu niesięgające wykresów. Wyjęcie: cofnąć `App.tsx`
 i `gestureMath.ts`, zostawić `useTouchGestures.ts`, `PullToRefresh.tsx` i `chart/shared.tsx`.
 
-Gałąź **`proto/alerty`** (commit `fda68b7`, wypchnięta na origin) trzyma **oś doby w bloku alertów** —
+**(Nieaktualne od 05.09.2026 — patrz sprostowanie pod tym akapitem.)** Gałąź **`proto/alerty`** (commit `fda68b7`, wypchnięta na origin) trzyma **oś doby w bloku alertów** —
 pasek 24 godzin z oknami alertowymi na swoich miejscach, pod nim najostrzejsze okno w pełni, niżej
 pozostałe jednowierszowo. Właściciel obejrzał ją 05.09.2026 i powiedział „kozacko to wygląda"; do
 wdrożenia nie weszła tylko dlatego, że **nad kartą alertów stoi wykres rezerwy z własną osią doby,
@@ -99,6 +99,45 @@ kanałem obok barwy (alarm wypełnia pasek na pełną wysokość, uwaga siedzi n
 W tej samej gałęzi leżą jeszcze dwie formy odrzucone świadomie: **tabela** (`w3` — najczystsza na
 monitorze, ale gubi miękkie tło w tonie ciężkości, więc zła doba czyta się spokojniej niż jest)
 i **stan sprzed zmiany** (`w1`). Wszystkie cztery przełącza atrybut `data-alerty` na `<html>`.
+
+**Sprostowanie do akapitu wyżej (05.09.2026).** Tego samego dnia, kilka commitów po zapisaniu tamtej
+notatki, blok alertów przebudowano na wariant **w4** („lista dociśnięta": godziny i margines w jednej
+linii, wyrównane w kolumny; `6eebb4d`, tag `v3.65.0`), a mechanizm przełączania wariantów
+`data-alerty` **usunięto z kodu produkcyjnego**. Oś doby (`w2`) i tabela (`w3`) żyją wyłącznie na
+gałęzi `proto/alerty` i pozostają pracą odłożoną z warunkiem wyjęcia opisanym wyżej. Notatka opisuje
+więc stan, którego aplikacja już nie ma — zostawiona dla historii decyzji, nie jako opis kodu.
+
+## Kompas Energetyczny PSE w interfejsie (05.09.2026, v3.66.0–v3.68.0)
+
+Sygnał `pdgsz` był pobierany i parsowany od dawna, ale **wyłącznie po stronie generatora tekstu** —
+docierał do czytelnika tylko wtedy, gdy model napisał o nim zdanie. Teraz ma własne miejsce.
+
+**Gdzie:** blok w karcie alertów pod listą (nagłówek pełną nazwą, stałe zdanie „Prośba operatora do
+odbiorców — to nie jest przywołanie", wiersz `godziny · słowo operatora · stopień N`), pas pod
+wykresem rezerwy na tej samej osi czasu, oraz jedna linia w karcie stanu **tylko wtedy, gdy flaga
+obejmuje bieżącą godzinę**.
+
+**Barwa: magenta** `#b5179e` / `#ff70c0` (kontrast 5,86:1 i 6,75:1). Wybrana, bo jest jedynym
+odcieniem, który nie jest statusem, błękitem danych, indygo progu ani szarością — i nie ma
+wyuczonego znaczenia sygnalizacji świetlnej, więc zmusza do przeczytania etykiety. Trzy kanały
+niebarwne: pozycja (nad osią megawaty, pod osią prośba operatora), kształt (alert to kropka, Kompas
+to pasek) i tekstura (stopień 3 pełny, stopień 2 kreskowany — poziom przeżywa druk i ślepotę barw).
+
+**Czego Kompas nie dotyka, pilnowane testami** (`src/__tests__/compassIsolation.test.ts`): koloru
+paska nagłówka, liczby na odznace aplikacji, `STATUS_THEME_COLOR`. To dyscyplina jednego pytania.
+
+**Dwie pułapki, które kosztowałyby ciszę zamiast błędu:**
+1. `scripts/visual.mjs` nie miał gałęzi dla `pdgsz`, a filtr Kompasu zawiera podciąg
+   `business_date ge` — zapytanie wpadłoby w fiksturę prognozy, Kompas byłby niewidoczny na
+   **wszystkich** wzorcach, a testy świeciłyby na zielono. Gałąź musi stać przed tamtą, tak jak
+   `poze-redoze`.
+2. Aplikacja podawała zakresy do panelu alertów, ale **nie do sekcji wykresu**, więc blok pokazywał
+   flagę, a pas obok był pusty. Nic tego nie łapało, bo nic nie przechodziło przez granicę
+   komponentów. Wykryte tylko dlatego, że po dodaniu widocznego elementu **żaden wzorzec się nie
+   zmienił** — a to jest niemożliwe. Ogniwo pilnuje teraz test w `chartSection.test.tsx`.
+
+**Zasada operacyjna stąd:** odtworzenie wzorców, które nie zmienia ani jednego pliku po dodaniu
+czegoś widocznego, jest sygnałem błędu, nie sukcesu.
 
 ## Czego dzień nauczył
 

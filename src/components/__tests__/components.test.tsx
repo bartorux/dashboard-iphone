@@ -440,3 +440,33 @@ describe('SettingsPanel — thresholds', () => {
     expect(field).toHaveValue(null);
   });
 });
+
+
+describe('CurrentStatusCard — linia Kompasu', () => {
+  const point = makePoint({ hourLabel: '20:00', endLabel: '21:00', reserve: 3000, required: 2000 });
+
+  it('names the operator request in full while it covers this very hour', () => {
+    render(
+      <CurrentStatusCard
+        point={point}
+        status="ok"
+        isStale={false}
+        compassNow={{ level: 3, from: '19:00', to: '21:00', hours: 2 }}
+      />
+    );
+    expect(screen.getByText(/Kompas Energetyczny PSE/)).toBeInTheDocument();
+    // The operator's own wording, not a paraphrase — the reader has to be able
+    // to match this against what PSE publishes.
+    expect(screen.getByText(/wymagane ograniczenie poboru do 21:00/)).toBeInTheDocument();
+  });
+
+  it('says nothing when no request covers this hour', () => {
+    /*
+     * The card answers "right now". A flag on some other hour belongs to the
+     * alerts card, which is about the whole day; repeating it here would turn
+     * a card with one job into a second alert list.
+     */
+    render(<CurrentStatusCard point={point} status="ok" isStale={false} compassNow={null} />);
+    expect(screen.queryByText(/Kompas/)).not.toBeInTheDocument();
+  });
+});

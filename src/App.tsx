@@ -156,6 +156,17 @@ function App() {
   // a reader looking at tomorrow's tab must see tomorrow's compass, not
   // today's. Independent of dayAlerts/alertRanges above by design — see the
   // AlertsPanel comment on why the two are never merged.
+  /*
+   * Today's ranges, separate from the selected day's: the status card is about
+   * "now" regardless of which tab is open, so it must not read a flag from a
+   * day the reader merely happens to be looking at.
+   */
+  const todayCompassRanges = useMemo(
+    () => compassRanges(compassHoursFor(todayData[0]?.businessDate ?? null), now),
+    [compassHoursFor, todayData, now]
+  );
+
+
   const dayCompassRanges = useMemo(
     () => compassRanges(compassHoursFor(dayData[0]?.businessDate ?? null), now),
     [compassHoursFor, dayData, now]
@@ -174,6 +185,25 @@ function App() {
     () => findCurrentPoint(allData),
     [allData, clockTick]
   );
+
+  /*
+   * Walked from `from` for `hours` blocks, not from `from` to `to`: `to` is the
+   * label AFTER the last flagged hour, so a range ending at 21:00 does not
+   * cover 21:00 itself.
+   */
+  const compassNow = useMemo(() => {
+    const hour = currentPoint?.hourLabel;
+    if (!hour) return null;
+    const keys = todayData.map((point) => point.hourLabel);
+    for (const range of todayCompassRanges) {
+      const start = keys.indexOf(range.from);
+      if (start < 0) continue;
+      for (let step = 0; step < range.hours; step++) {
+        if (keys[start + step] === hour) return range;
+      }
+    }
+    return null;
+  }, [todayCompassRanges, currentPoint, todayData]);
 
   const currentStatus = useMemo(
     () =>
@@ -357,6 +387,7 @@ function App() {
               isStale={isStale && hasData}
               isLoading={firstLoad}
               todayData={todayData}
+              compassNow={compassNow}
             />
 
             {/*
