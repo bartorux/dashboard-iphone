@@ -113,8 +113,14 @@ export const shortHour = (value: string) => value.slice(0, -3);
  * into a horizontal smear. The phone keeps 45vh capped at 22rem exactly as
  * before; both larger sizes only ever apply above a breakpoint it cannot reach.
  */
+/*
+ * Height lives in the .chart-box-h class (App.css), not in this Tailwind
+ * chain, so it can be expressed in dvh as well as vh — see that rule's own
+ * comment for why: vh on iOS Safari holds the address bar's height even after
+ * it collapses on scroll, so the chart visibly grew every time the bar hid.
+ */
 export const CHART_BOX =
-  'h-[45vh] max-h-[22rem] min-h-[15rem] w-full md:max-h-[26rem] xl:h-[52vh] xl:max-h-[36rem]';
+  'chart-box-h max-h-[22rem] min-h-[15rem] w-full md:max-h-[26rem] xl:max-h-[36rem]';
 
 export interface LegendItem {
   label: string;

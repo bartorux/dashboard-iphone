@@ -130,6 +130,12 @@ for (const scenario of SCENARIOS) {
     colorScheme: scenario.scheme,
     locale: 'pl-PL',
     timezoneId: 'Europe/Warsaw',
+    // The app already honours this at both layers (the blanket rule in
+    // App.css, and useChartAnimationMs for Recharts), so a capture no longer
+    // depends on catching an element mid-transition or mid-draw. Without it,
+    // the waitForTimeout values below would have to outlast the slowest
+    // animation on the page rather than just the slowest fetch.
+    reducedMotion: 'reduce',
   });
 
   /**
@@ -203,19 +209,22 @@ for (const scenario of SCENARIOS) {
   }
 
   await page.goto(url, { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(1800);
+  // These waits are for the fetch and the render, not for any animation —
+  // reducedMotion above turns those off, so what is left to wait for is data
+  // landing and React committing it.
+  await page.waitForTimeout(700);
 
   if (scenario.dayIndex !== undefined) {
     await page.getByRole('tab').nth(scenario.dayIndex).click();
-    await page.waitForTimeout(1200);
+    await page.waitForTimeout(300);
   }
   if (scenario.view) {
     await page.getByRole('tab', { name: scenario.view }).click();
-    await page.waitForTimeout(scenario.view.includes('30') ? 2600 : 1400);
+    await page.waitForTimeout(scenario.view.includes('30') ? 900 : 300);
   }
   if (scenario.settings) {
     await page.getByRole('button', { name: 'Ustawienia' }).click();
-    await page.waitForTimeout(900);
+    await page.waitForTimeout(300);
   }
 
   const shot = await page.screenshot({ fullPage: true });

@@ -283,6 +283,16 @@ function App() {
           The whole column narrows, not just the chart: the day tabs and the
           alerts sit in it too, and a chart narrower than the panel beneath it
           would read as a mistake.
+
+          `calc(52vh*1.6)` below is deliberately vh, not dvh, unlike
+          .chart-box-h in App.css which the 52vh figure is copied from. This is
+          a Tailwind arbitrary value compiled at build time, and dvh inside
+          `grid-template-columns` is not the risk it would be for a plain
+          height — the risk is a TYPO or an unsupported unit here, which
+          invalidates the whole `grid-template-columns` declaration (not just
+          this one value) and collapses the layout to a single column with no
+          visible error. Leave this expression alone; keep it in lockstep with
+          .chart-box-h by eye if that value ever changes again.
         */}
         <div className="xl:grid xl:grid-cols-[minmax(0,calc(52vh*1.6))_28rem] xl:grid-rows-[auto_auto_1fr] xl:items-start xl:justify-center xl:gap-4">
           <div className="xl:col-start-2 xl:row-start-1">

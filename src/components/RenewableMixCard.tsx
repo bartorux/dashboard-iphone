@@ -230,8 +230,21 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
               className="stroke-oze-soft"
               strokeWidth={12}
             />
+            {/*
+              data-scrub says whether a finger or pointer is on the strip
+              RIGHT NOW, and the CSS rule it drives (App.css, .oze-ring-fill)
+              zeroes the transition duration while it is true.
+
+              Deliberately keyed on scrubHour, not on `activeHour`. A latched
+              hour is not a gesture in progress: the reading was pinned, the
+              finger is gone, and the next change to it — a tap on another bar,
+              or the release back to "teraz" — is the ring moving on its own
+              again and gets the full 600ms curve. Only the live drag, where
+              the arc is the finger's own output, has to be instant.
+            */}
             <circle
               className="oze-ring-fill stroke-oze"
+              data-scrub={scrubHour !== null}
               cx={60}
               cy={60}
               r={RING_RADIUS}
