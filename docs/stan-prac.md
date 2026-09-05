@@ -136,6 +136,13 @@ paska nagłówka, liczby na odznace aplikacji, `STATUS_THEME_COLOR`. To dyscypli
    komponentów. Wykryte tylko dlatego, że po dodaniu widocznego elementu **żaden wzorzec się nie
    zmienił** — a to jest niemożliwe. Ogniwo pilnuje teraz test w `chartSection.test.tsx`.
 
+**Pas pod wykresem — usunięty 05.09.2026, tego samego dnia.** Właściciel po obejrzeniu: „na wykresie
+to dramat, nie chcę tego". Wycofany w całości (`CompassLane` i cały przelot propa), został w historii
+pod tagiem `v3.68.0`, gdyby kiedyś wracać. Kompas ma odtąd **dwa** miejsca: linię w karcie stanu, gdy
+flaga obejmuje bieżącą godzinę, i blok w karcie alertów. Wniosek: sam pomysł zestawienia prośby
+operatora z najciaśniejszą godziną na jednej osi był słuszny analitycznie, ale na wykresie, który jest
+już gęsty od pasm i linii, dołożenie czwartej rodziny znaków nie zadziałało wizualnie.
+
 **Zasada operacyjna stąd:** odtworzenie wzorców, które nie zmienia ani jednego pliku po dodaniu
 czegoś widocznego, jest sygnałem błędu, nie sukcesu.
 

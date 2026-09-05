@@ -421,7 +421,6 @@ function App() {
               }
               isLoading={isLoading}
               kseDemand={kseDemand}
-              compassRanges={dayCompassRanges}
             />
 
             <AlertsPanel

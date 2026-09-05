@@ -34,13 +34,9 @@ import {
   useDismissibleTooltip,
 } from './chart/shared';
 import HourTable, { HourColumn } from './chart/HourTable';
-import CompassLane from './chart/CompassLane';
-import { CompassRange } from '../utils/compass';
 
 interface ReserveChartProps {
   data: PSEDataPoint[];
-  /** Flagged Kompas hours for this day; empty means the operator asks nothing. */
-  compassRanges?: CompassRange[];
   orangeThreshold: number;
   redThreshold: number;
   currentHourLabel: string | null;
@@ -212,7 +208,6 @@ const RESERVE_COLUMNS: HourColumn<Row>[] = [
 
 const ReserveChart: React.FC<ReserveChartProps> = ({
   data,
-  compassRanges = [],
   orangeThreshold,
   redThreshold,
   currentHourLabel,
@@ -535,11 +530,6 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
           </ComposedChart>
         </ResponsiveContainer>
       </div>
-        <CompassLane
-          ranges={compassRanges}
-          hourKeys={rows.map((row) => row.key)}
-          axisWidth={axisWidthFor(scale.ticks)}
-        />
         <figcaption className="sr-only">
           Dostępna i wymagana rezerwa mocy w kolejnych godzinach doby, z pasmami
           progów uwagi i alarmu; te same wartości godzina po godzinie znajdują

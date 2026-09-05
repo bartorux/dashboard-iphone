@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { CompassRange } from '../utils/compass';
 import { PSEDataPoint } from '../types';
 import ReserveChart from './ReserveChart';
 import GenerationChart from './GenerationChart';
@@ -21,12 +20,6 @@ const VIEWS: { value: ChartView; label: string; title: string }[] = [
 
 interface ChartSectionProps {
   dayData: PSEDataPoint[];
-  /**
-   * Flagged Kompas hours for the day on screen. Forwarded to ReserveChart so
-   * the lane under the plot sits on the same time axis as the curve — the one
-   * place the operator's request and the tightest hour can be compared.
-   */
-  compassRanges?: CompassRange[];
   /** Which of the three days is on screen — the views label themselves with it. */
   dayLabel: string;
   orangeThreshold: number;
@@ -51,7 +44,6 @@ interface ChartSectionProps {
  */
 const ChartSection: React.FC<ChartSectionProps> = ({
   dayData,
-  compassRanges = [],
   dayLabel,
   orangeThreshold,
   redThreshold,
@@ -136,7 +128,6 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     return (
       <ReserveChart
         data={dayData}
-        compassRanges={compassRanges}
         orangeThreshold={orangeThreshold}
         redThreshold={redThreshold}
         currentHourLabel={currentHourLabel}
