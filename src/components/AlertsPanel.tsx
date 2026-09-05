@@ -1,7 +1,8 @@
 import React from 'react';
-import { AlertRange } from '../types';
+import { AlertRange, SystemStatus } from '../types';
 import { dayLabel } from '../utils/dayWindow';
 import { formatMW, signedMW } from '../utils/format';
+import { marginLabel } from '../utils/status';
 import { AlertIcon, CheckIcon } from './icons';
 import Skeleton from './Skeleton';
 
@@ -22,15 +23,26 @@ const SEVERITY_STYLE = {
     wrapper: 'bg-alarm-soft',
     bar: 'bg-alarm',
     text: 'text-alarm-text',
-    label: 'Alarm',
+    pill: 'bg-alarm-soft text-alarm-text',
   },
   orange: {
     wrapper: 'bg-warn-soft',
     bar: 'bg-warn',
     text: 'text-warn-text',
-    label: 'Uwaga',
+    pill: 'bg-warn-soft text-warn-text',
   },
 } as const;
+
+/**
+ * `findAlerts` classifies by `'red' | 'orange'`, but the row label wording
+ * (see `marginLabel` in status.ts) is shared with ReserveTooltip, which
+ * speaks in `SystemStatus`. One place to convert rather than two copies of
+ * "red means alarm".
+ */
+const SEVERITY_TO_STATUS: Record<AlertRange['severity'], SystemStatus> = {
+  red: 'alarm',
+  orange: 'warn',
+};
 
 /**
  * Consecutive alert hours arrive pre-merged into ranges: a four-hour risk window
@@ -50,18 +62,39 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
   isLoading = false,
 }) => {
   const dayName = dayLabel(currentDayOffset);
-  const hours = ranges.reduce((sum, range) => sum + range.hours, 0);
+  // Two separate totals, not one: a day that only ever touched the orange
+  // band must not show the red pill (nor its "biały na czerwieni" reading of
+  // severity) just because SOME hour somewhere needed attention.
+  const redHours = ranges
+    .filter((range) => range.severity === 'red')
+    .reduce((sum, range) => sum + range.hours, 0);
+  const orangeHours = ranges
+    .filter((range) => range.severity === 'orange')
+    .reduce((sum, range) => sum + range.hours, 0);
 
   return (
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="text-[0.9375rem] font-semibold text-text">
+        <h2 className="min-w-0 truncate text-[0.9375rem] font-semibold text-text">
           Alerty <span className="text-text-tertiary">· {dayName}</span>
         </h2>
-        {hours > 0 && (
-          <span className="tnum rounded-full bg-alarm px-2 py-0.5 text-[0.6875rem] font-semibold text-white">
-            {hours} godz.
-          </span>
+        {(redHours > 0 || orangeHours > 0) && (
+          <div className="flex shrink-0 items-center gap-1">
+            {redHours > 0 && (
+              <span
+                className={`tnum rounded-full ${SEVERITY_STYLE.red.pill} px-2 py-0.5 text-[0.6875rem] font-semibold`}
+              >
+                {redHours} godz.
+              </span>
+            )}
+            {orangeHours > 0 && (
+              <span
+                className={`tnum rounded-full ${SEVERITY_STYLE.orange.pill} px-2 py-0.5 text-[0.6875rem] font-semibold`}
+              >
+                {orangeHours} godz.
+              </span>
+            )}
+          </div>
         )}
       </div>
 
@@ -97,6 +130,10 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
           <ul className="space-y-1.5 xl:grid xl:grid-cols-2 xl:gap-1.5 xl:space-y-0">
             {ranges.map((range) => {
               const style = SEVERITY_STYLE[range.severity];
+              const rowLabel = marginLabel(
+                SEVERITY_TO_STATUS[range.severity],
+                range.worstDifference
+              );
               return (
                 <li
                   key={`${range.severity}-${range.from}`}
@@ -119,7 +156,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
                         className={`flex shrink-0 items-center gap-1 text-[0.6875rem] font-semibold ${style.text}`}
                       >
                         <AlertIcon className="h-3.5 w-3.5" />
-                        {style.label}
+                        {rowLabel}
                       </span>
                       <span className="tnum text-[0.75rem] text-text-secondary">
                         o {range.worstHour} · {formatMW(range.reserve)} /{' '}
@@ -134,6 +171,13 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
           {/* Raz, zamiast siedmiu razy "Najniższy margines" w kolejnych wierszach. */}
           <p className="mt-2 text-[0.6875rem] text-text-tertiary">
             Po prawej: najniższy margines oraz rezerwa / wymagana moc.
+          </p>
+          {/* Wyjaśnia, dlaczego "Poniżej progu" bywa opisem dodatniego marginesu:
+              próg czerwony w findAlerts to ostrzeżenie wyprzedzające (patrz
+              marginLabel w status.ts), nie granica deficytu. */}
+          <p className="text-[0.6875rem] text-text-tertiary">
+            Próg alarmowy to ostrzeżenie wyprzedzające — margines może być
+            jeszcze dodatni.
           </p>
         </div>
       )}
