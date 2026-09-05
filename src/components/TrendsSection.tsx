@@ -2,12 +2,13 @@ import React, { useMemo } from 'react';
 import { PSEDataPoint } from '../types';
 import { TREND_STABLE_THRESHOLD } from '../utils/constants';
 import { dayLabel } from '../utils/dayWindow';
-import { getValidMargins, safeAvg, classifyMargin } from '../utils/dataTransform';
+import { getValidMargins, marginSeries, safeAvg, classifyMargin } from '../utils/dataTransform';
 import { STATUS_TEXT } from '../utils/status';
 import { usePersistentFlag } from '../hooks/usePersistentFlag';
 import { signedMW, formatPercent } from '../utils/format';
 import { ChevronDownIcon } from './icons';
 import Skeleton from './Skeleton';
+import Sparkline from './Sparkline';
 
 interface TrendsSectionProps {
   dayData: PSEDataPoint[];
@@ -31,7 +32,33 @@ const Tile: React.FC<{
    * is merely waiting into a tile that has lost its identity.
    */
   loading?: boolean;
-}> = ({ label, value, hint, tone = 'text-text', loading }) => (
+  /**
+   * The day's 24 hourly margins. All three tiles that carry one show the same
+   * trace — it is one day, read three ways — and differ only in where the dot
+   * lands.
+   */
+  series?: (number | null)[];
+  /** Index the dot marks, or null for a trace with no dot. */
+  dotIndex?: number | null;
+  /**
+   * True only for the three tiles that ever carry a `series` once loaded —
+   * "Względem dziś" never does (see the no-trace comment where it renders).
+   * Reserves the sparkline's own height during `loading` so the tile does not
+   * grow by ~22px the moment the first response lands: without this, the
+   * loading skeleton was one line shorter than the loaded tile ever is, and
+   * every tile in the row jumped down together when the sparkline appeared.
+   */
+  reservesSparkline?: boolean;
+}> = ({
+  label,
+  value,
+  hint,
+  tone = 'text-text',
+  loading,
+  series,
+  dotIndex = null,
+  reservesSparkline,
+}) => (
   <div className="rounded-xl bg-surface-2 p-3">
     <div className="text-[0.6875rem] text-text-secondary">{label}</div>
     {loading ? (
@@ -42,6 +69,15 @@ const Tile: React.FC<{
       </div>
     )}
     <div className="text-[0.625rem] text-text-tertiary">{hint}</div>
+    {loading && reservesSparkline && <Skeleton className="mt-1.5 h-4 xl:h-5" />}
+    {series && !loading && (
+      <Sparkline
+        values={series}
+        dotIndex={dotIndex}
+        toneClassName={tone}
+        className="mt-1.5 h-4 xl:h-5"
+      />
+    )}
   </div>
 );
 
@@ -73,6 +109,34 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
   const firstLoad = isLoading && dayData.length === 0;
 
   const margins = useMemo(() => getValidMargins(dayData), [dayData]);
+
+  /*
+   * The shape of the selected day, gaps included — the trace behind three of
+   * the four tiles. `getValidMargins` above cannot serve here: it drops missing
+   * hours, which is right for the average, the minimum and the maximum and
+   * wrong for anything laid out along time (see marginSeries).
+   *
+   * argmin/argmax are computed on this series rather than taken from the tiles'
+   * own min/max, so the dot sits on the hour the figure came from even when the
+   * day has gaps in it.
+   */
+  const series = useMemo(() => marginSeries(dayData), [dayData]);
+  const extremes = useMemo(() => {
+    let lowest = -1;
+    let highest = -1;
+    for (let index = 0; index < series.length; index++) {
+      const value = series[index];
+      if (value === null) continue;
+      if (lowest === -1 || value < (series[lowest] as number)) lowest = index;
+      if (highest === -1 || value > (series[highest] as number)) highest = index;
+    }
+    return {
+      lowest: lowest === -1 ? null : lowest,
+      highest: highest === -1 ? null : highest,
+    };
+  }, [series]);
+  const hasSeries = series.some((value) => value !== null);
+
   const avgMargin = useMemo(() => safeAvg(margins), [margins]);
   const minMargin = useMemo(
     () => (margins.length > 0 ? Math.min(...margins) : null),
@@ -178,13 +242,23 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
               the margin sitting above the available and required figures it is
               derived from. */}
           <div className="grid grid-cols-2 gap-2 pt-3">
+            {/* The average has no hour of its own, so it gets the trace and no
+                dot: a dot would have to sit somewhere, and every somewhere
+                would be a claim the figure does not make. */}
             <Tile
               label="Średni margines"
               value={avgMargin !== null ? signedMW(avgMargin) : '—'}
               hint={dayName.toLowerCase()}
               tone={toneFor(avgMargin)}
               loading={firstLoad}
+              series={hasSeries ? series : undefined}
+              reservesSparkline
             />
+            {/* No trace at all here, deliberately. This tile is the difference
+                between two days' averages — a single scalar, not a run of
+                hours. Drawing the selected day's shape under it would put a
+                24-hour trace beside a figure that is not a 24-hour anything,
+                and the eye would read the two as related. */}
             <Tile
               label="Względem dziś"
               value={trend.value !== null ? signedMW(trend.value) : '—'}
@@ -208,6 +282,9 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
               hint="najtrudniejsza godzina doby"
               tone={toneFor(minMargin)}
               loading={firstLoad}
+              series={hasSeries ? series : undefined}
+              dotIndex={extremes.lowest}
+              reservesSparkline
             />
             <Tile
               label="Najwyższy margines"
@@ -215,6 +292,9 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
               hint="największy zapas doby"
               tone={toneFor(maxMargin)}
               loading={firstLoad}
+              series={hasSeries ? series : undefined}
+              dotIndex={extremes.highest}
+              reservesSparkline
             />
           </div>
 

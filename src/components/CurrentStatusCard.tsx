@@ -2,7 +2,9 @@ import React from 'react';
 import { PSEDataPoint, SystemStatus } from '../types';
 import { STATUS_LABEL, STATUS_SOFT_BG, STATUS_TEXT } from '../utils/status';
 import { formatMW } from '../utils/format';
+import { marginSeries } from '../utils/dataTransform';
 import Skeleton from './Skeleton';
+import Sparkline from './Sparkline';
 
 interface CurrentStatusCardProps {
   point: PSEDataPoint | undefined;
@@ -14,6 +16,8 @@ interface CurrentStatusCardProps {
    * flight": on a refresh the figures below are still correct and stay put.
    */
   isLoading?: boolean;
+  /** Today's 24 blocks, for the trace under the figure. */
+  todayData?: PSEDataPoint[];
 }
 
 /**
@@ -25,6 +29,7 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
   status,
   isStale,
   isLoading = false,
+  todayData = [],
 }) => {
   const hasValues =
     point != null && point.reserve !== null && point.required !== null;
@@ -34,6 +39,13 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
   // placeholder is honest. Once `point` exists this branch is dead for the rest
   // of the session, which is what keeps a refresh from blanking the figure.
   const firstLoad = isLoading && point == null;
+
+  const series = React.useMemo(() => marginSeries(todayData), [todayData]);
+  const currentIndex = React.useMemo(() => {
+    if (!point) return null;
+    const index = todayData.findIndex((entry) => entry.hourLabel === point.hourLabel);
+    return index === -1 ? null : index;
+  }, [todayData, point]);
 
   // The status badge and the margin figure both recolour off the same
   // `status` value that drives Header's own transition-colors duration-500 —
@@ -102,6 +114,31 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
               </dd>
             </div>
           </dl>
+
+          {/*
+            Where in the day this hour sits. The figure above is a single
+            reading and says nothing about whether the margin is on its way up
+            or has just come off a trough — which is the next thing anyone asks,
+            and until now meant scrolling to the chart to find out.
+
+            The dot marks the hour the figure belongs to, in the same status
+            colour as the figure, so the two are visibly one statement. Every
+            value in the trace is available as a number in the hour table under
+            the chart.
+          */}
+          {series.some((value) => value !== null) && (
+            <div className="mt-3">
+              <Sparkline
+                values={series}
+                dotIndex={currentIndex}
+                toneClassName={STATUS_TEXT[status]}
+                className="h-8 xl:h-10"
+              />
+              <div className="mt-0.5 text-[0.625rem] text-text-tertiary">
+                margines w ciągu doby · 00–23
+              </div>
+            </div>
+          )}
         </>
       )}
 

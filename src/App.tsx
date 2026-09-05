@@ -305,7 +305,24 @@ function App() {
           visible error. Leave this expression alone; keep it in lockstep with
           .chart-box-h by eye if that value ever changes again.
         */}
-        <div className="xl:grid xl:grid-cols-[minmax(0,calc(52vh*1.6))_28rem] xl:grid-rows-[auto_auto_1fr] xl:items-start xl:justify-center xl:gap-4">
+        {/*
+          And a third column above 110rem (1760px).
+
+          The two-column split above is the line between what follows the
+          selected day and what does not. On a 24-inch monitor the right-hand
+          column then had to carry five things at once — the margin, the
+          analysis, the OZE ring, the trends and the buttons — in 28rem, while
+          the space beside them stayed empty. Splitting it again keeps the same
+          rule and adds one: column 2 is the ANSWER (what is the margin, and
+          what does it mean), column 3 is the READINGS (the mix, the day's
+          spread, and the controls). Nothing crosses between columns, so a
+          reader who has learned where a figure lives keeps finding it there.
+
+          Below 110rem not a single class here applies — the two-column layout
+          is untouched, and a 1536px laptop cannot reach this breakpoint. See
+          the matching .content-width block in App.css for why 110/120rem.
+        */}
+        <div className="xl:grid xl:grid-cols-[minmax(0,calc(52vh*1.6))_28rem] xl:grid-rows-[auto_auto_1fr] xl:items-start xl:justify-center xl:gap-4 min-[110rem]:grid-cols-[minmax(0,calc(52vh*1.6))_minmax(24rem,30rem)_minmax(24rem,30rem)]">
           <div className="xl:col-start-2 xl:row-start-1">
             {/* The figure people open the app for comes first; the prose explains
                 it afterwards. Both stay above the day tabs. */}
@@ -314,6 +331,7 @@ function App() {
               status={currentStatus}
               isStale={isStale && hasData}
               isLoading={firstLoad}
+              todayData={todayData}
             />
 
             {/*
@@ -361,7 +379,7 @@ function App() {
           {/* Its own cell rather than part of the chart column: the tiles are
               small, and on a monitor they fill the space under the analysis that
               would otherwise sit empty beside a tall chart. */}
-          <div className="xl:col-start-2 xl:row-start-2">
+          <div className="xl:col-start-2 xl:row-start-2 min-[110rem]:col-start-3 min-[110rem]:row-start-1">
             {/*
               Today only, always — never the selected day. pdgobpkd (the
               source behind kseDemand) is published for the current business
@@ -385,7 +403,7 @@ function App() {
           {/* Under the right-hand column, where a full-width refresh button
               across a 24-inch monitor would be absurd. */}
           <div
-            className="mx-3 mt-3 space-y-2 xl:col-start-2 xl:row-start-3 xl:self-start"
+            className="mx-3 mt-3 space-y-2 xl:col-start-2 xl:row-start-3 xl:self-start min-[110rem]:col-start-3 min-[110rem]:row-start-2"
             style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
           >
             <button
