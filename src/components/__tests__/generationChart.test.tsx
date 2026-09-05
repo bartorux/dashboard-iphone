@@ -165,6 +165,51 @@ describe('GenerationChart — redispatch legend', () => {
 
 });
 
+describe('GenerationChart — PV seam', () => {
+  /*
+   * A single PV=0 hour in the middle of an otherwise sunny day. If the seam
+   * Lines were keyed on plain `pv` (the pre-fix shape), 0 is a valid,
+   * non-null value: connectNulls={false} never sees a gap, and the casing
+   * paints straight through the zero hour as one unbroken path — which is
+   * exactly the bug this test guards against, the phantom white notch the
+   * casing cut under the wind band on every PV-less hour of the night.
+   * Keyed on `pvSeam` (null whenever PV is not strictly positive), the same
+   * hour breaks the path into two subpaths — a second "M" moveto command.
+   */
+  it('does not draw the PV seam casing through an hour where PV is 0', () => {
+    const dayWithGap = day.map((point, hour) =>
+      hour === 12 ? { ...point, pv: 0 } : point
+    );
+
+    const { container } = render(
+      <GenerationChart data={dayWithGap} currentHourLabel="12:00" />
+    );
+
+    // Render order (Areas excluded — see reserveChart.test.tsx's own note on
+    // this selector): pvSeam casing, pvSeam edge, exchange, generation
+    // casing, generation edge, demand casing, demand edge.
+    const lineCurves = [...container.querySelectorAll('.recharts-line-curve')];
+    const pvSeamEdge = lineCurves[1];
+    const d = pvSeamEdge.getAttribute('d') ?? '';
+    const moveCount = (d.match(/M/g) ?? []).length;
+
+    expect(moveCount).toBe(2);
+  });
+
+  it('draws one unbroken casing across a day with no PV=0 hour at all', () => {
+    const { container } = render(
+      <GenerationChart data={day} currentHourLabel="12:00" />
+    );
+
+    const lineCurves = [...container.querySelectorAll('.recharts-line-curve')];
+    const pvSeamEdge = lineCurves[1];
+    const d = pvSeamEdge.getAttribute('d') ?? '';
+    const moveCount = (d.match(/M/g) ?? []).length;
+
+    expect(moveCount).toBe(1);
+  });
+});
+
 describe('redispatchForPoint — the join', () => {
   const point = makePoint({ time: new Date(Date.UTC(2026, 7, 3, 13)) }); // block ends 13:00, so starts 12:00
 

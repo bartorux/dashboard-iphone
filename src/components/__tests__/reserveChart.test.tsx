@@ -121,6 +121,25 @@ describe('ReserveChart — jak zaznacza godziny alertowe', () => {
     expect(dot.getAttribute('stroke')).toBe('#ffffff');
     expect(dot.getAttribute('stroke-width')).toBe('2');
   });
+
+  /*
+   * r=4, not 3.5. With the 2px surface ring, the painted disc is 8px across —
+   * exactly the floor a marker has to clear to stay findable on a phone held
+   * at arm's length. Half a pixel of radius is below what a 0.1%
+   * visual-regression pixel-count threshold reliably catches at chart scale
+   * (a handful of pixels on one dot, out of hundreds of thousands on the
+   * page), so this value has to be pinned directly rather than left to the
+   * screenshot suite to notice if it silently regressed.
+   */
+  it('draws the alert dot at r=4, not the pre-fix r=3.5', () => {
+    const container = chart('12:00');
+    const dots = alertDots(container);
+
+    expect(dots.length).toBeGreaterThan(0);
+    for (const dot of dots) {
+      expect(dot.getAttribute('r')).toBe('4');
+    }
+  });
 });
 
 describe('ReserveChart — teren', () => {

@@ -273,11 +273,13 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
-            <CartesianGrid
-              vertical={false}
-              stroke={colors.grid}
-              strokeDasharray="3 3"
-            />
+            {/* Solid, like the other two views. This was the last dashed grid
+                in the app, and it was dashed on the one chart that already
+                spends its dash budget on data: the median and the zero line
+                both carried a pattern, so a third dashed thing behind them made
+                the plot read as texture. A gridline is chrome — hairline,
+                solid, recessive (marks-and-anatomy). */}
+            <CartesianGrid vertical={false} stroke={colors.grid} />
 
             <XAxis
               dataKey="key"
@@ -317,11 +319,26 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
               cursor={{ stroke: colors.axis, strokeDasharray: '3 3' }}
             />
 
-            {/* Below this line the reserve fails to cover what is required */}
+            {/*
+              Below this line the reserve fails to cover what is required.
+
+              Solid now, and thinner. It shared the exact `4 4` pattern with the
+              median line below, so the only thing separating them was colour —
+              and they cross each other repeatedly on a normal day. The dash is
+              worth more as a distinction than as decoration, and of the two
+              this one has no claim to it: zero is a FACT that falls out of the
+              data, the median is an ESTIMATE from 30 days of it. The dash stays
+              with the estimate, where a broken line has always meant "modelled,
+              not measured". The legend's "Mediana" swatch is dashed to match,
+              and stays so.
+
+              Colour and opacity unchanged; only the pattern and the width move,
+              so the line does not gain weight by becoming continuous.
+            */}
             <ReferenceLine
               y={0}
               stroke={colors.alarm}
-              strokeDasharray="4 4"
+              strokeWidth={1}
               strokeOpacity={0.6}
             />
 

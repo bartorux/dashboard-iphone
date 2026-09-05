@@ -157,7 +157,12 @@ const alertDot =
         key={key}
         cx={cx}
         cy={cy}
-        r={3.5}
+        /* r=4, not 3.5: with the 2px surface ring the mark specs already ask
+           for, the painted disc was 7px across — under the 8px floor a marker
+           has to clear to stay findable on a phone held at arm's length. Half a
+           pixel of radius is the whole change; the ring, the colour and the
+           double encoding by band are untouched. */
+        r={4}
         fill={
           payload.alert === 'alarm' ? colors.bandAlarmEdge : colors.bandWarnEdge
         }

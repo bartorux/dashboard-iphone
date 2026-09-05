@@ -621,6 +621,29 @@ body {
   transition-duration: 0s;
 }
 
+/* Chart view switch. The three views answer different questions off one time
+   axis, and swapping them was a hard cut: the old plot vanished and the new one
+   appeared already drawn, so nothing said the two were the same card being
+   re-read rather than the page jumping.
+
+   Same mechanism as .offline-indicator above — a settled state plus
+   @starting-style, no mount flag, no JS. 150ms because this is a bridge, not an
+   event: long enough to register as one thing becoming another, short enough
+   that a reader flicking between Rezerwa and Generacja is never waiting on it.
+   Opacity only; the box does not move, and a slide would claim a spatial
+   relationship the three views do not have.
+
+   Nothing here touches the Recharts SVG inside, which runs its own 450ms draw
+   (see useChartAnimationMs) — two motions on one element would fight. */
+.chart-swap {
+  opacity: 1;
+  transition: opacity 150ms cubic-bezier(0.23, 1, 0.32, 1);
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
