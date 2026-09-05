@@ -203,7 +203,7 @@ export async function fetchCompass(
     `${API_BASE}/pdgsz`,
     `$filter=${encodeURIComponent(
       `business_date ge '${from}' and business_date le '${to}' and is_active eq true`
-    )}&$first=200`
+    )}&$select=business_date,dtime,dtime_utc,usage_fcst,publication_ts_utc&$first=200`
   );
   return rows ?? [];
 }

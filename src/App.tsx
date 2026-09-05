@@ -17,6 +17,7 @@ import InstallButton from './components/InstallButton';
 import { RefreshIcon } from './components/icons';
 import { usePSEData } from './hooks/usePSEData';
 import { useKseDemand } from './hooks/useKseDemand';
+import { useCompass } from './hooks/useCompass';
 import { useSettings } from './hooks/useSettings';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { useTouchGestures } from './hooks/useTouchGestures';
@@ -67,6 +68,18 @@ function App() {
    */
   const { byHour: kseDemand } = useKseDemand(true, todayData[0]?.businessDate ?? null);
 
+  /*
+   * Data layer only, for now: no card reads `compass` yet. Called here rather
+   * than from a future component for the same reason as `useKseDemand` above —
+   * one fetch, not one per consumer — and `refresh` is wired into `refreshAll`
+   * below so a manual/pull-to-refresh re-asks for tomorrow's compass, which
+   * pdgsz does not publish until roughly 16:35.
+   */
+  const { refresh: refreshCompass } = useCompass(
+    true,
+    todayData[0]?.businessDate ?? null
+  );
+
   const { settings, saveSettings, resetSettings } = useSettings();
   const { preference: themePreference, setTheme } = useTheme();
   const browserOnline = useOnlineStatus();
@@ -83,8 +96,9 @@ function App() {
   /** Asking for fresh data means all of it, not only the figures. */
   const refreshAll = useCallback(async () => {
     refreshSummary();
+    refreshCompass();
     await refreshData();
-  }, [refreshData, refreshSummary]);
+  }, [refreshData, refreshSummary, refreshCompass]);
 
   /*
    * The days on offer, recomputed only when the calendar day turns over rather
