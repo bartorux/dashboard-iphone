@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-03T01:07:24.807Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie i stracił możliwość jego pominięcia.",
-      "body": "Dziś prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Wtorek 8 września przyniesie podobne godziny z uprawnieniem do przywołania, w środę 9 września operator zachowa wybór między 18:00 a 21:00, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-03T01:25:41.753Z",
       "prompt": 51,
       "accepted": true,
@@ -603,6 +595,14 @@
       "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00.",
       "body": "W poniedziałek 7 września zapotrzebowanie wzrosło powyżej normy, a fotowoltaika spadła poniżej normy. Ogłoszenie może jeszcze nadejść, do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "We wtorek 8 września i w środę 9 września nadwyżka również spadała poniżej progu 1100 MW, w czwartek 10 września operator zachował wybór, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-05T04:55:19.644Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Najniższy margines w tym dniu wypada o godzinie 19:00, a powodem są wysokie zapotrzebowanie oraz niska generacja fotowoltaiczna. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 8 września i środę 9 września nadwyżka również spada miejscami poniżej progu 1100 MW, w czwartek 10 września utrzymuje się powyżej niego, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
