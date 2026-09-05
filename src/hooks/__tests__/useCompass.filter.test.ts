@@ -46,4 +46,35 @@ describe('useCompass — filtr na prawdziwym fetchCompass', () => {
     const url = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
     expect(url).toContain('is_active eq true');
   });
+
+  it('asks for usage_fcst — the field that carries the level itself', async () => {
+    /*
+     * Dropping `usage_fcst` from the $select breaks the whole feature in the
+     * quietest way there is: pdgsz still answers, every row still parses, and
+     * compassRanges filters all of them out for having no level — so the panel
+     * renders nothing and every other test stays green. A probe confirmed that
+     * gap before this assertion existed. The other four fields are load-bearing
+     * too (the date keys the day, dtime_utc places the hour, publication_ts_utc
+     * breaks ties between republished versions), so the whole set is pinned.
+     */
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ value: [row('2026-09-05', '10:00', 1)] }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    renderHook(() => useCompass(true, '2026-09-05'));
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+
+    const url = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
+    for (const field of [
+      'business_date',
+      'dtime_utc',
+      'usage_fcst',
+      'publication_ts_utc',
+    ]) {
+      expect(url).toContain(field);
+    }
+  });
 });
