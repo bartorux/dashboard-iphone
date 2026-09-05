@@ -81,6 +81,17 @@
      to carry an alarm. */
   --l-accent-soft: #e9f2ff;     --d-accent-soft: rgba(10, 132, 255, 0.16);
 
+  /* Kompas Energetyczny PSE (pdgsz) — CompassRows only. Deliberately magenta:
+     the only hue on this page that is not a status colour (red/orange/green),
+     not the data blue, not the regulatory-threshold indigo, and not a grey —
+     and carries no learned traffic-light meaning, so a reader has no shortcut
+     around actually reading the label next to it. One token does both the
+     4px bar and the label text, measured at 5.86:1 (light, on --surface) and
+     6.75:1 (dark, on --d-surface) — both clear the 4.5:1 text floor. */
+  --l-compass: #b5179e;         --d-compass: #ff70c0;
+  --l-compass-soft: rgba(181, 23, 158, 0.10);
+  --d-compass-soft: rgba(255, 112, 192, 0.16);
+
   /* chart series */
   --l-series-reserve: #007aff;  --d-series-reserve: #0a84ff;
   --l-series-required: #8e8e93; --d-series-required: #98989d;
@@ -223,6 +234,8 @@
   --accent: var(--l-accent);
   --accent-text: var(--l-accent-text);
   --accent-soft: var(--l-accent-soft);
+  --compass: var(--l-compass);
+  --compass-soft: var(--l-compass-soft);
   --series-reserve: var(--l-series-reserve);
   --series-required: var(--l-series-required);
   --band-alarm: var(--l-band-alarm);
@@ -271,6 +284,8 @@
     --accent: var(--d-accent);
     --accent-text: var(--d-accent-text);
     --accent-soft: var(--d-accent-soft);
+    --compass: var(--d-compass);
+    --compass-soft: var(--d-compass-soft);
     --series-reserve: var(--d-series-reserve);
     --series-required: var(--d-series-required);
     --band-alarm: var(--d-band-alarm);
@@ -319,6 +334,8 @@
   --accent: var(--d-accent);
   --accent-text: var(--d-accent-text);
   --accent-soft: var(--d-accent-soft);
+  --compass: var(--d-compass);
+  --compass-soft: var(--d-compass-soft);
   --series-reserve: var(--d-series-reserve);
   --series-required: var(--d-series-required);
   --band-alarm: var(--d-band-alarm);
@@ -379,6 +396,10 @@
   /* RenewableMixCard only — see the --l-oze/--d-oze comment above. */
   --color-oze: var(--oze);
   --color-oze-soft: var(--oze-soft);
+
+  /* CompassRows only — see the --l-compass/--d-compass comment above. */
+  --color-compass: var(--compass);
+  --color-compass-soft: var(--compass-soft);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Helvetica Neue", Arial, sans-serif;

@@ -90,6 +90,18 @@ export const BoltIcon: React.FC<IconProps> = ({ className }) => (
   </svg>
 );
 
+/**
+ * A circle with a needle, for Kompas Energetyczny PSE — deliberately not
+ * `AlertIcon`: the warning triangle is already claimed by margin alerts, and
+ * reusing it here would blur the one distinction CompassRows exists to draw.
+ */
+export const CompassIcon: React.FC<IconProps> = ({ className }) => (
+  <svg {...base(className)}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M15.5 8.5 13.3 13.3 8.5 15.5l2.2-4.8z" />
+  </svg>
+);
+
 export const CheckIcon: React.FC<IconProps> = ({ className }) => (
   <svg {...base(className)}>
     <path d="M20 6L9 17l-5-5" />

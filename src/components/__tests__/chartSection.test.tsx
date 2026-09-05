@@ -26,6 +26,31 @@ function renderSection() {
 }
 
 describe('ChartSection', () => {
+  it('forwards the compass ranges down to the reserve chart lane', () => {
+    /*
+     * This link broke silently once already: App passed compassRanges to
+     * AlertsPanel but not to ChartSection, so the block under the alerts
+     * showed the flag while the lane under the plot stayed empty — and every
+     * test stayed green, because nothing crossed the boundary between the two
+     * components. The visual baselines caught it only because a regeneration
+     * that changes nothing is itself suspicious.
+     */
+    render(
+      <ChartSection
+        dayData={dayData}
+        dayLabel="Dziś"
+        orangeThreshold={500}
+        redThreshold={300}
+        currentHourLabel="12:00"
+        isLoading={false}
+        kseDemand={new Map()}
+        compassRanges={[{ level: 3, from: '19:00', to: '21:00', hours: 2 }]}
+      />
+    );
+
+    expect(screen.getByTestId('compass-lane')).toBeInTheDocument();
+  });
+
   beforeEach(() => {
     localStorage.clear();
     vi.stubGlobal(

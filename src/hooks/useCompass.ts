@@ -56,7 +56,19 @@ function byBusinessDate(hours: CompassHour[]): Map<string, CompassHour[]> {
 export function useCompass(
   enabled: boolean,
   businessDate: string | null
-): { hours: CompassHour[]; refresh: () => void } {
+): {
+  hours: CompassHour[];
+  /**
+   * Hours for an arbitrary business date, read from the same one-fetch-per-
+   * session map `hours` above is keyed from — added so a consumer that needs
+   * the day currently ON SCREEN (which may be tomorrow's tab, not today's
+   * actual business date `businessDate` above is fixed to) can read it
+   * without a second fetch. Same "no entry means nothing published" rule as
+   * `hours`.
+   */
+  hoursFor: (date: string | null) => CompassHour[];
+  refresh: () => void;
+} {
   const [byDate, setByDate] = useState<Map<string, CompassHour[]>>(
     () => new Map()
   );
@@ -92,8 +104,14 @@ export function useCompass(
     load();
   }, [enabled, businessDate, load]);
 
+  const hoursFor = useCallback(
+    (date: string | null) => (date && byDate.get(date)) || EMPTY,
+    [byDate]
+  );
+
   return {
     hours: (businessDate && byDate.get(businessDate)) || EMPTY,
+    hoursFor,
     refresh,
   };
 }
