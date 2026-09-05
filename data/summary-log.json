@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-03T19:07:32.958Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "Przywołanie wchodzi w grę w poniedziałek 7 września oraz we wtorek 8 września, podczas gdy w pozostałe dni nic go nie zapowiada.",
-      "body": "W poniedziałek 7 września margines spada najniżej o 19:00 z powodu fotowoltaiki poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "We wtorek 8 września margines spada poniżej wymaganego poziomu między 19:00 a 21:00, a w pozostałych okresach rezerwa pokrywa wymagane wielkości bez żadnych sygnałów."
-    },
-    {
       "at": "2026-09-03T20:07:05.991Z",
       "prompt": 51,
       "accepted": false,
@@ -612,6 +604,14 @@
       "headline": "We wtorek 8 września nadwyżka spadła poniżej progu 1100 MW między 19:00 a 22:00, co oznacza, że operator może ogłosić przywołanie bez zachowania dawnego zwolnienia.",
       "body": "Prognoza na piątek 11 września jeszcze się ustala. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Ponadto w poniedziałek 7 września, środę 9 września, czwartek 10 września oraz piątek 11 września występują godziny, w których operator może ogłosić przywołanie, podczas gdy dziś i w pozostałe dni nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-05T18:33:48.603Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "W poniedziałek 7 września między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie bezwarunkowo.",
+      "body": "Prognoza na poniedziałek 7 września pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 8 września i środę 9 września nadwyżka również spada miejscami poniżej progu 1100 MW, natomiast w czwartek 10 września i piątek 11 września utrzymuje się stale powyżej tego progu."
     }
   ]
 }
