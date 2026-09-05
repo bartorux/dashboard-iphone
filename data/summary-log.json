@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-02T22:49:55.525Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "Margines wypadł poza typowy zakres ostatnich trzydziestu dni w poniedziałek 7 września i we wtorek 8 września, a nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-20:00.",
-      "body": "W poniedziałek 7 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W jutrzejszym dniu oraz w piątek nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-02T23:07:28.459Z",
       "prompt": 51,
       "accepted": true,
@@ -603,6 +595,14 @@
       "headline": "W poniedziałek 7 września o 19:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Zapotrzebowanie wzrośnie ponad normę, podczas gdy produkcja z instalacji fotowoltaicznych spadnie poniżej normy. Do wyznaczonych godzin wciąż pozostaje wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 8 września i środę 9 września nadwyżka również spadnie poniżej progu 1100 MW w godzinach wieczornych, w czwartek 10 września utrzyma się powyżej tego progu między 19:00 a 21:00, natomiast w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-05T02:07:26.344Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "W poniedziałek 7 września zapotrzebowanie wzrosło powyżej normy, a produkcja z paneli fotowoltaicznych spadła poniżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 8 września i środę 9 września nadwyżka również spada poniżej progu 1100 MW, w czwartek 10 września operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
