@@ -33,6 +33,7 @@ import {
   getUpcomingStatus,
   hasReadings,
 } from './utils/dataTransform';
+import { compassRanges } from './utils/compass';
 import { DayOffset } from './types';
 import { formatDate } from './utils/dateHelpers';
 import { dayLabel, visibleDayOffsets } from './utils/dayWindow';
@@ -69,13 +70,13 @@ function App() {
   const { byHour: kseDemand } = useKseDemand(true, todayData[0]?.businessDate ?? null);
 
   /*
-   * Data layer only, for now: no card reads `compass` yet. Called here rather
-   * than from a future component for the same reason as `useKseDemand` above —
-   * one fetch, not one per consumer — and `refresh` is wired into `refreshAll`
-   * below so a manual/pull-to-refresh re-asks for tomorrow's compass, which
-   * pdgsz does not publish until roughly 16:35.
+   * Fetched here for the same reason as `useKseDemand` above — one fetch, not
+   * one per consumer, currently AlertsPanel's CompassRows block via
+   * `compassHoursFor` below. `refresh` is wired into `refreshAll` below so a
+   * manual/pull-to-refresh re-asks for tomorrow's compass, which pdgsz does
+   * not publish until roughly 16:35.
    */
-  const { refresh: refreshCompass } = useCompass(
+  const { hoursFor: compassHoursFor, refresh: refreshCompass } = useCompass(
     true,
     todayData[0]?.businessDate ?? null
   );
@@ -148,6 +149,16 @@ function App() {
   const alertRanges = useMemo(
     () => buildAlertRanges(dayData, dayAlerts),
     [dayData, dayAlerts]
+  );
+
+  // Kompas Energetyczny PSE for the day ON SCREEN — deliberately dayData's own
+  // businessDate, not todayData's (the fixed date useCompass is fetched with):
+  // a reader looking at tomorrow's tab must see tomorrow's compass, not
+  // today's. Independent of dayAlerts/alertRanges above by design — see the
+  // AlertsPanel comment on why the two are never merged.
+  const dayCompassRanges = useMemo(
+    () => compassRanges(compassHoursFor(dayData[0]?.businessDate ?? null), now),
+    [compassHoursFor, dayData, now]
   );
 
   // ...while the app badge counts the whole 72-hour horizon, so it does not
@@ -386,6 +397,7 @@ function App() {
               currentDayOffset={currentDayOffset}
               hasData={hasReadings(dayData)}
               isLoading={firstLoad}
+              compassRanges={dayCompassRanges}
             />
 
           </div>

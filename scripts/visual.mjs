@@ -52,6 +52,17 @@ const kseDemand = readFileSync(
   resolve(root, 'src/utils/__fixtures__/pse-pdgobpkd.json'),
   'utf8'
 );
+// Kompas Energetyczny PSE (pdgsz) for the same frozen window: level 2 at
+// 19:00-21:00 on the frozen "today" (2026-08-04), overlapping the existing
+// red alert on purpose — the "same hour flagged in both" case — and level 3
+// at 12:00-14:00 on 2026-08-05 (the "tomorrow" tab). pse-okno.json happens to
+// carry an alert on every one of the five visible days under the default
+// thresholds, so no scenario here can show "compass without alerts" on a real
+// tab — that case is covered directly in AlertsPanel.test.tsx instead.
+const compass = readFileSync(
+  resolve(root, 'src/utils/__fixtures__/pse-pdgsz.json'),
+  'utf8'
+);
 
 /**
  * Antialiasing and font rendering wobble by a pixel between runs. This tolerance
@@ -101,6 +112,21 @@ const SCENARIOS = [
   // comment on why it never shrinks its type to fit), so a phone capture would
   // show the same three columns regardless of how many the view actually has.
   { name: 'tabela-godzin-monitor', scheme: 'light', monitor: true, expandTable: true },
+  // Kompas Energetyczny PSE (AlertsPanel's CompassRows block) on the
+  // "tomorrow" tab — 2026-08-05 in pse-pdgsz.json, flagged level 3.
+  // Deliberately a different day from every other scenario here (all of
+  // which sit on day 0 and, once the fixture below is wired in, already show
+  // "today"'s level-2 flag alongside its alert list): this exercises level 3
+  // and a distinct hour range instead of just repeating day 0's capture under
+  // a new name. pse-okno.json turns out to carry an alert on every one of the
+  // five visible days under the default thresholds, so this is NOT the
+  // "compass without alerts" case (that one is covered directly by
+  // AlertsPanel.test.tsx, and pictorially by the forced live capture in the
+  // report). MUST still differ from reserve-light (checked explicitly, see
+  // the report) — if it did not, the fixture would carry no flag at all and
+  // the whole feature would be unguarded by every scene here.
+  { name: 'kompas-light', scheme: 'light', dayIndex: 1 },
+  { name: 'kompas-monitor', scheme: 'light', monitor: true, dayIndex: 1 },
 ];
 
 /**
@@ -196,13 +222,21 @@ for (const scenario of SCENARIOS) {
     // history's `ge` — checked first, or it would fall through to the `ge`
     // branch below and never match, then to the forecast fixture, which
     // carries none of the redispatch fields and would silently draw nothing.
+    // pdgsz's own filter also contains the substring "business_date ge" (see
+    // fetchCompass in api.ts), so it MUST be checked before that branch below
+    // — exactly like poze-redoze is checked before it, for the same reason.
+    // Missing this would silently hand pdgsz requests the pk5l-wp history
+    // fixture instead: Kompas would render nothing in every baseline, and
+    // every one of these scenarios would still pass.
     const body = requested.includes('poze-redoze')
       ? redispatch
       : requested.includes('pdgobpkd')
         ? kseDemand
-        : requested.includes('business_date ge')
-          ? history
-          : forecast;
+        : requested.includes('pdgsz')
+          ? compass
+          : requested.includes('business_date ge')
+            ? history
+            : forecast;
     return route.fulfill({
       status: 200,
       contentType: 'application/json',

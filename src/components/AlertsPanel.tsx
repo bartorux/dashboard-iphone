@@ -1,8 +1,10 @@
 import React from 'react';
 import { AlertRange, SystemStatus } from '../types';
+import { CompassRange } from '../utils/compass';
 import { dayLabel } from '../utils/dayWindow';
 import { formatMW, signedMW } from '../utils/format';
 import { marginLabel } from '../utils/status';
+import CompassRows from './CompassRows';
 import { AlertIcon, CheckIcon } from './icons';
 import Skeleton from './Skeleton';
 
@@ -16,6 +18,16 @@ interface AlertsPanelProps {
    * "a request is in flight": on a refresh the ranges below are still correct.
    */
   isLoading?: boolean;
+  /**
+   * Kompas Energetyczny PSE ranges for the day on screen, independent of
+   * `ranges` above: the margin can be calm while the operator still asks for
+   * saving, and that combination — not "alerts and compass together" — is the
+   * case this feature exists for. An empty array here must render nothing
+   * (see CompassRows), never a "no signal" row: with the endpoint holding two
+   * business days against a five-day window, that would read as a daily
+   * non-event on most tabs.
+   */
+  compassRanges?: CompassRange[];
 }
 
 const SEVERITY_STYLE = {
@@ -60,6 +72,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
   currentDayOffset,
   hasData,
   isLoading = false,
+  compassRanges = [],
 }) => {
   const dayName = dayLabel(currentDayOffset);
   // Two separate totals, not one: a day that only ever touched the orange
@@ -121,9 +134,12 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
           Brak danych dla tego dnia
         </div>
       ) : ranges.length === 0 ? (
-        <div className="flex items-center gap-2 rounded-xl bg-ok-soft px-3 py-3 text-[0.8125rem] text-ok-text">
-          <CheckIcon className="h-4 w-4 shrink-0" />
-          Brak alertów w tym dniu
+        <div>
+          <div className="flex items-center gap-2 rounded-xl bg-ok-soft px-3 py-3 text-[0.8125rem] text-ok-text">
+            <CheckIcon className="h-4 w-4 shrink-0" />
+            Brak alertów w tym dniu
+          </div>
+          <CompassRows ranges={compassRanges} />
         </div>
       ) : (
         <div>
@@ -179,6 +195,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
             Próg alarmowy to ostrzeżenie wyprzedzające — margines może być
             jeszcze dodatni.
           </p>
+          <CompassRows ranges={compassRanges} />
         </div>
       )}
     </section>
