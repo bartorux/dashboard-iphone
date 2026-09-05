@@ -2,11 +2,18 @@ import React from 'react';
 import { PSEDataPoint, SystemStatus } from '../types';
 import { STATUS_LABEL, STATUS_SOFT_BG, STATUS_TEXT } from '../utils/status';
 import { formatMW } from '../utils/format';
+import Skeleton from './Skeleton';
 
 interface CurrentStatusCardProps {
   point: PSEDataPoint | undefined;
   status: SystemStatus;
   isStale: boolean;
+  /**
+   * The first fetch of the session, with nothing in state yet — the same flag
+   * that puts the header into `connection: 'loading'`. Not "a request is in
+   * flight": on a refresh the figures below are still correct and stay put.
+   */
+  isLoading?: boolean;
 }
 
 /**
@@ -17,10 +24,16 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
   point,
   status,
   isStale,
+  isLoading = false,
 }) => {
   const hasValues =
     point != null && point.reserve !== null && point.required !== null;
   const margin = hasValues ? point!.reserve! - point!.required! : null;
+
+  // Nothing has arrived yet AND nothing was cached: the only state in which a
+  // placeholder is honest. Once `point` exists this branch is dead for the rest
+  // of the session, which is what keeps a refresh from blanking the figure.
+  const firstLoad = isLoading && point == null;
 
   // The status badge and the margin figure both recolour off the same
   // `status` value that drives Header's own transition-colors duration-500 —
@@ -44,7 +57,22 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
         </span>
       </div>
 
-      {margin === null ? (
+      {/*
+        Three states, not two. "Brak odczytu" is an ANSWER — PSE published no
+        reserve for this block — and printing it while the first request is
+        still in flight told the reader something false about the grid to avoid
+        an empty box for two seconds. The skeleton says "not yet"; the tertiary
+        sentence keeps saying "not published".
+      */}
+      {firstLoad ? (
+        <>
+          <Skeleton className="mt-2 h-12 w-48" />
+          <div className="mt-4 flex gap-6 border-t border-separator pt-3">
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-5 w-24" />
+          </div>
+        </>
+      ) : margin === null ? (
         <div className="mt-3 text-2xl font-semibold text-text-tertiary">
           Brak odczytu
         </div>

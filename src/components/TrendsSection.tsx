@@ -7,6 +7,7 @@ import { STATUS_TEXT } from '../utils/status';
 import { usePersistentFlag } from '../hooks/usePersistentFlag';
 import { signedMW, formatPercent } from '../utils/format';
 import { ChevronDownIcon } from './icons';
+import Skeleton from './Skeleton';
 
 interface TrendsSectionProps {
   dayData: PSEDataPoint[];
@@ -15,6 +16,8 @@ interface TrendsSectionProps {
   currentDayOffset: number;
   orangeThreshold: number;
   redThreshold: number;
+  /** First fetch of the session — the flag behind the header's 'loading'. */
+  isLoading?: boolean;
 }
 
 const Tile: React.FC<{
@@ -22,12 +25,22 @@ const Tile: React.FC<{
   value: string;
   hint: string;
   tone?: string;
-}> = ({ label, value, hint, tone = 'text-text' }) => (
+  /**
+   * Figure not fetched yet. The label and the hint stay: they are ours, they
+   * are true before any data arrives, and blanking them would turn a tile that
+   * is merely waiting into a tile that has lost its identity.
+   */
+  loading?: boolean;
+}> = ({ label, value, hint, tone = 'text-text', loading }) => (
   <div className="rounded-xl bg-surface-2 p-3">
     <div className="text-[0.6875rem] text-text-secondary">{label}</div>
-    <div className={`tnum mt-0.5 text-[1.1875rem] font-semibold ${tone}`}>
-      {value}
-    </div>
+    {loading ? (
+      <Skeleton className="mt-0.5 h-6 w-28" />
+    ) : (
+      <div className={`tnum mt-0.5 text-[1.1875rem] font-semibold ${tone}`}>
+        {value}
+      </div>
+    )}
     <div className="text-[0.625rem] text-text-tertiary">{hint}</div>
   </div>
 );
@@ -48,10 +61,16 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
   currentDayOffset,
   orangeThreshold,
   redThreshold,
+  isLoading = false,
 }) => {
   // Persisted like the analysis card's: two chevrons on one screen behaving
   // differently — one remembering, one not — was an inconsistency of my own making.
   const [expanded, setExpanded] = usePersistentFlag('trends-expanded', true);
+
+  // Nothing fetched yet, and nothing cached. Same rule as the status card:
+  // once there is a day in state this is false for the rest of the session, so
+  // a refresh never replaces four correct figures with four grey boxes.
+  const firstLoad = isLoading && dayData.length === 0;
 
   const margins = useMemo(() => getValidMargins(dayData), [dayData]);
   const avgMargin = useMemo(() => safeAvg(margins), [margins]);
@@ -164,12 +183,14 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
               value={avgMargin !== null ? signedMW(avgMargin) : '—'}
               hint={dayName.toLowerCase()}
               tone={toneFor(avgMargin)}
+              loading={firstLoad}
             />
             <Tile
               label="Względem dziś"
               value={trend.value !== null ? signedMW(trend.value) : '—'}
               hint={currentDayOffset === 0 ? 'wybrany dzień to dziś' : 'różnica średnich'}
               tone={trend.tone}
+              loading={firstLoad}
             />
             {/*
               The window has to be named, because the analysis card above reports
@@ -186,12 +207,14 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
               value={minMargin !== null ? signedMW(minMargin) : '—'}
               hint="najtrudniejsza godzina doby"
               tone={toneFor(minMargin)}
+              loading={firstLoad}
             />
             <Tile
               label="Najwyższy margines"
               value={maxMargin !== null ? signedMW(maxMargin) : '—'}
               hint="największy zapas doby"
               tone={toneFor(maxMargin)}
+              loading={firstLoad}
             />
           </div>
 

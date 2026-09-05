@@ -103,6 +103,34 @@ describe('CurrentStatusCard', () => {
 
     expect(screen.getByText('Brak odczytu')).toBeInTheDocument();
   });
+
+  it('shows a skeleton on the first fetch of the session, before anything has arrived', () => {
+    // firstLoad = isLoading && point == null — "Brak odczytu" here would be a
+    // false answer: PSE has not been asked yet, this is not a confirmed gap.
+    const { container } = render(
+      <CurrentStatusCard point={undefined} status="unknown" isStale={false} isLoading />
+    );
+
+    expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
+    expect(screen.queryByText('Brak odczytu')).not.toBeInTheDocument();
+  });
+
+  it('never shows a skeleton on a refresh once a reading is already in state (no skeleton flash on refetch)', () => {
+    // isLoading can be true again on any poll, but `point` is no longer null —
+    // the figure must stay on screen rather than being replaced by a placeholder.
+    const { container } = render(
+      <CurrentStatusCard
+        point={point(1897, 1900)}
+        status="alarm"
+        isStale={false}
+        isLoading
+      />
+    );
+
+    expect(screen.getByText('1897 MW')).toBeInTheDocument();
+    expect(screen.getByText('1900 MW')).toBeInTheDocument();
+    expect(container.querySelectorAll('.animate-pulse')).toHaveLength(0);
+  });
 });
 
 describe('AlertsPanel', () => {

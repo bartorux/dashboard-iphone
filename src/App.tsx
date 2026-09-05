@@ -204,13 +204,24 @@ function App() {
    * frame, so the header would otherwise announce "Zaktualizowano" over figures
    * it had not yet fetched.
    */
-  const connection: ConnectionState = isLoading && !hasFreshData
+  const firstLoad = isLoading && !hasFreshData;
+
+  const connection: ConnectionState = firstLoad
     ? 'loading'
     : !hasData
     ? 'error'
     : isStale || !browserOnline
     ? 'cached'
     : 'online';
+
+  /*
+   * One flag, three cards. `firstLoad` above is the whole of the loading
+   * language: it drives the header's own 'loading' state and is handed down to
+   * the status card, the alerts panel and the trends tiles so all four agree on
+   * what "not yet" means. Each of the three still checks that its OWN data is
+   * empty before drawing a placeholder — a refetch leaves the figures in state,
+   * and blanking them mid-read is the anti-pattern this exists to avoid.
+   */
 
   const connectionText = {
     loading: 'Pobieranie danych…',
@@ -302,6 +313,7 @@ function App() {
               point={currentPoint}
               status={currentStatus}
               isStale={isStale && hasData}
+              isLoading={firstLoad}
             />
 
             {/*
@@ -341,6 +353,7 @@ function App() {
               ranges={alertRanges}
               currentDayOffset={currentDayOffset}
               hasData={hasReadings(dayData)}
+              isLoading={firstLoad}
             />
 
           </div>
@@ -365,6 +378,7 @@ function App() {
               currentDayOffset={currentDayOffset}
               orangeThreshold={orangeThreshold}
               redThreshold={redThreshold}
+              isLoading={firstLoad}
             />
           </div>
 

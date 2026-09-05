@@ -88,6 +88,12 @@ const SCENARIOS = [
   // scenario can see it — the shared clock sits at midday, where the fixture is
   // calm.
   { name: 'teraz-w-alercie', scheme: 'light', at: '2026-08-04T19:30:00+02:00' },
+  // The skeleton language (Skeleton.tsx, and `firstLoad` in App.tsx): what the
+  // status card, the alerts panel and the trends tiles look like for the one
+  // window that matters, between mount and the first response landing. Every
+  // other scenario's fetch resolves before the first paint anyone would look
+  // at, so without a deliberately slow response this state is never captured.
+  { name: 'pierwsze-ladowanie', scheme: 'light', slowFetch: true, waitAfterLoad: 500 },
 ];
 
 /**
@@ -171,8 +177,13 @@ for (const scenario of SCENARIOS) {
     });
   });
 
-  await context.route('**/api.raporty.pse.pl/**', (route) => {
+  await context.route('**/api.raporty.pse.pl/**', async (route) => {
     if (scenario.offline) return route.abort('failed');
+    // Every other scenario's fixtures resolve before the first frame anyone
+    // would screenshot, so the skeleton language never appears in any of them.
+    // Held open for a fixed 5s here, behind its own flag, to capture that
+    // window instead — see `pierwsze-ladowanie` above.
+    if (scenario.slowFetch) await new Promise((r) => setTimeout(r, 5000));
     const requested = decodeURIComponent(route.request().url());
     // poze-redoze also filters with business_date, but with `eq` rather than
     // history's `ge` — checked first, or it would fall through to the `ge`
@@ -211,8 +222,10 @@ for (const scenario of SCENARIOS) {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
   // These waits are for the fetch and the render, not for any animation —
   // reducedMotion above turns those off, so what is left to wait for is data
-  // landing and React committing it.
-  await page.waitForTimeout(700);
+  // landing and React committing it. `pierwsze-ladowanie` overrides this to
+  // ~500ms so the shot lands while its 5s-delayed fetch is still in flight,
+  // rather than after the default wait has outlasted it.
+  await page.waitForTimeout(scenario.waitAfterLoad ?? 700);
 
   if (scenario.dayIndex !== undefined) {
     await page.getByRole('tab').nth(scenario.dayIndex).click();
