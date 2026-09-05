@@ -32,7 +32,11 @@ export const STATUS_HEADER_BG: Record<SystemStatus, string> = {
   ok: 'bg-ok',
   warn: 'bg-warn',
   alarm: 'bg-alarm',
-  unknown: 'bg-text-tertiary',
+  // Not bg-text-tertiary: that token is re-stepped for body-text legibility
+  // (etap 2, naprawa D) and no longer holds the value Header's black-ink
+  // contrast (naprawa C) was verified against on light mode. --status-unknown
+  // is pinned at #8e8e93 in both themes, same as STATUS_THEME_COLOR below.
+  unknown: 'bg-status-unknown',
 };
 
 export const STATUS_TEXT: Record<SystemStatus, string> = {

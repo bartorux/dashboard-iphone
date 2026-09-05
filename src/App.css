@@ -26,10 +26,37 @@
   --l-separator: rgba(60, 60, 67, 0.18);
   --d-separator: rgba(84, 84, 88, 0.6);
 
-  /* text */
+  /* text
+     l-text-secondary and l-text-tertiary re-stepped together (etap 2, naprawa
+     D): the old tertiary #8e8e93 measured 3.26:1 on white and 2.92:1 on
+     --surface-2, both under the 4.5:1 floor for normal text. #6e6e73 clears
+     both (5.07 / 4.54:1). Secondary moved too, from #6c6c70 to #545458
+     (7.54 / 6.75:1) - left alone, the old secondary (#6c6c70) and the new
+     tertiary would have sat within a few percent of each other and the
+     three-step hierarchy (text / secondary / tertiary) would have read as
+     two. Dark tertiary moved the other way, #8e8e93 -> #98989d (5.93 / 4.85,
+     was 5.22 / 4.27), for the same floor on --d-surface / --d-surface-2. */
   --l-text: #000000;            --d-text: #ffffff;
-  --l-text-secondary: #6c6c70;  --d-text-secondary: #aeaeb2;
-  --l-text-tertiary: #8e8e93;   --d-text-tertiary: #8e8e93;
+  --l-text-secondary: #545458;  --d-text-secondary: #aeaeb2;
+  --l-text-tertiary: #6e6e73;   --d-text-tertiary: #98989d;
+  /* Chart tick labels and grid lines only (useChartColors' `axis`) — split
+     off from text-tertiary so re-stepping body text for legibility above
+     could never, as a side effect, move a single pixel of a chart already
+     validated against the series it sits behind. Same value in both themes,
+     matching what text-tertiary used to be everywhere: the axis is
+     scaffolding a reading is measured against, not itself something being
+     read, so it stays exactly where it was. Verified by screenshot (etap 2
+     baselines): no chart pixel differs from the pre-D captures. */
+  --l-axis: #8e8e93;            --d-axis: #8e8e93;
+  /* Header's "unknown" bar background only. It used to alias text-tertiary
+     directly, which happened to work only because the two started out equal
+     (#8e8e93); re-stepping text-tertiary for body-text legibility above
+     dropped light mode to #6e6e73, and black ink on THAT (etap 2, naprawa C)
+     falls to 4.14:1 - under the floor the header fix promised. Split out and
+     pinned at the value both were verified against, the same way
+     STATUS_THEME_COLOR already hardcodes '#8e8e93' for this same status
+     independent of the token. */
+  --l-status-unknown: #8e8e93;  --d-status-unknown: #8e8e93;
 
   /* semantic - `-text` variants carry enough contrast to sit on the surface,
      `-soft` variants are backgrounds only */
@@ -181,6 +208,8 @@
   --text: var(--l-text);
   --text-secondary: var(--l-text-secondary);
   --text-tertiary: var(--l-text-tertiary);
+  --axis: var(--l-axis);
+  --status-unknown: var(--l-status-unknown);
   --on-accent: #ffffff;
   --ok: var(--l-ok);
   --ok-text: var(--l-ok-text);
@@ -228,6 +257,8 @@
     --text: var(--d-text);
     --text-secondary: var(--d-text-secondary);
     --text-tertiary: var(--d-text-tertiary);
+    --axis: var(--d-axis);
+    --status-unknown: var(--d-status-unknown);
     --ok: var(--d-ok);
     --ok-text: var(--d-ok-text);
     --ok-soft: var(--d-ok-soft);
@@ -274,6 +305,8 @@
   --text: var(--d-text);
   --text-secondary: var(--d-text-secondary);
   --text-tertiary: var(--d-text-tertiary);
+  --axis: var(--d-axis);
+  --status-unknown: var(--d-status-unknown);
   --ok: var(--d-ok);
   --ok-text: var(--d-ok-text);
   --ok-soft: var(--d-ok-soft);
@@ -320,6 +353,12 @@
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
   --color-on-accent: var(--on-accent);
+
+  /* Header's "unknown" status bar only — see the --l-status-unknown comment
+     above. Not text-tertiary: that one is retuned for body-text legibility
+     and no longer holds the value the header's black-ink contrast (etap 2,
+     naprawa C) was verified against. */
+  --color-status-unknown: var(--status-unknown);
 
   --color-ok: var(--ok);
   --color-ok-text: var(--ok-text);
