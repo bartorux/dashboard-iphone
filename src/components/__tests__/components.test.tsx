@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import Header from '../Header';
 import CurrentStatusCard from '../CurrentStatusCard';
 import AlertsPanel from '../AlertsPanel';
@@ -167,6 +167,49 @@ describe('AlertsPanel', () => {
 
     expect(screen.getByText('Brak danych dla tego dnia')).toBeInTheDocument();
     expect(screen.queryByText('Brak alertów w tym dniu')).not.toBeInTheDocument();
+  });
+
+  // w4: the hour range and the worst margin are the two numbers a reader
+  // decides on, so they share one row (left edge / right edge) rather than
+  // living in separate blocks — that pairing is the entire point of this form.
+  it('keeps the hour range and the worst margin in the same row', () => {
+    render(<AlertsPanel ranges={[range]} currentDayOffset={0} hasData />);
+
+    const hourRange = screen.getByText('20:00–23:00');
+    const margin = screen.getByText('-155 MW');
+    expect(hourRange.parentElement).toBe(margin.parentElement);
+  });
+
+  it('carries both an icon and a text label for severity on every row', () => {
+    const orange: AlertRange = {
+      severity: 'orange',
+      from: '10:00',
+      to: '11:00',
+      worstDifference: -40,
+      worstHour: '10:00',
+      reserve: 2100,
+      required: 2140,
+      hours: 1,
+    };
+    render(<AlertsPanel ranges={[range, orange]} currentDayOffset={0} hasData />);
+
+    const items = screen.getAllByRole('listitem');
+    expect(items).toHaveLength(2);
+    items.forEach((item) => {
+      // Color alone must never carry status: every row needs the icon AND
+      // the word, not just the tinted background.
+      expect(item.querySelector('svg')).toBeTruthy();
+      expect(within(item).getByText(/^(Alarm|Uwaga)$/)).toBeInTheDocument();
+    });
+  });
+
+  it('keeps reserve and required visible after the line was shortened', () => {
+    render(<AlertsPanel ranges={[range]} currentDayOffset={0} hasData />);
+
+    // Shortening the sentence for w4 must not drop a figure that used to be
+    // in the old paragraph: reserve and required both still have to show up.
+    expect(screen.getByText(/1663/)).toBeInTheDocument();
+    expect(screen.getByText(/1818/)).toBeInTheDocument();
   });
 });
 

@@ -35,6 +35,13 @@ const SEVERITY_STYLE = {
 /**
  * Consecutive alert hours arrive pre-merged into ranges: a four-hour risk window
  * reads as one "17:00-21:00" entry instead of four near-identical rows.
+ *
+ * Hierarchy: the two numbers a reader decides on — the hour range and the
+ * worst margin — sit in one line, one type size, one at the left edge and one
+ * at the right, so they line up in columns down the whole list. Everything
+ * else (severity label with its icon, the hour of the worst reading, reserve
+ * and required) drops to a second, smaller line. "Najniższy margines" does
+ * not repeat per row — it is said once, in the caption below the list.
  */
 const AlertsPanel: React.FC<AlertsPanelProps> = ({
   ranges,
@@ -70,7 +77,10 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
         again.
       */}
       {isLoading && !hasData ? (
-        <Skeleton className="h-16 w-full rounded-xl" />
+        <div className="space-y-1.5">
+          <Skeleton className="h-[3.25rem] w-full rounded-xl" />
+          <Skeleton className="h-[3.25rem] w-full rounded-xl" />
+        </div>
       ) : !hasData ? (
         // Without readings we cannot claim an all-clear — a green "no alerts"
         // here would present missing data as a confirmed safe state.
@@ -83,40 +93,49 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
           Brak alertów w tym dniu
         </div>
       ) : (
-        <ul className="space-y-2 xl:grid xl:grid-cols-2 xl:gap-2 xl:space-y-0">
-          {ranges.map((range) => {
-            const style = SEVERITY_STYLE[range.severity];
-            return (
-              <li
-                key={`${range.severity}-${range.from}`}
-                className={`flex gap-3 overflow-hidden rounded-xl ${style.wrapper}`}
-              >
-                <span className={`w-1 shrink-0 ${style.bar}`} aria-hidden />
-                <div className="min-w-0 flex-1 py-2.5 pr-3">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <span className="tnum text-[0.9375rem] font-semibold text-text">
-                      {range.from}–{range.to}
-                    </span>
-                    <span
-                      className={`flex items-center gap-1 text-[0.6875rem] font-semibold ${style.text}`}
-                    >
-                      <AlertIcon className="h-3.5 w-3.5" />
-                      {style.label}
-                    </span>
+        <div>
+          <ul className="space-y-1.5 xl:grid xl:grid-cols-2 xl:gap-1.5 xl:space-y-0">
+            {ranges.map((range) => {
+              const style = SEVERITY_STYLE[range.severity];
+              return (
+                <li
+                  key={`${range.severity}-${range.from}`}
+                  className={`flex gap-3 overflow-hidden rounded-xl ${style.wrapper}`}
+                >
+                  <span className={`w-1 shrink-0 ${style.bar}`} aria-hidden />
+                  <div className="min-w-0 flex-1 py-2 pr-3">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className="tnum text-[0.9375rem] font-semibold text-text">
+                        {range.from}–{range.to}
+                      </span>
+                      <span
+                        className={`tnum text-[0.9375rem] font-semibold ${style.text}`}
+                      >
+                        {signedMW(range.worstDifference)}
+                      </span>
+                    </div>
+                    <div className="mt-0.5 flex items-baseline justify-between gap-3">
+                      <span
+                        className={`flex shrink-0 items-center gap-1 text-[0.6875rem] font-semibold ${style.text}`}
+                      >
+                        <AlertIcon className="h-3.5 w-3.5" />
+                        {style.label}
+                      </span>
+                      <span className="tnum text-[0.75rem] text-text-secondary">
+                        o {range.worstHour} · {formatMW(range.reserve)} /{' '}
+                        {formatMW(range.required)} MW
+                      </span>
+                    </div>
                   </div>
-                  <p className="tnum mt-0.5 text-[0.75rem] text-text-secondary">
-                    Najniższy margines{' '}
-                    <span className={`font-semibold ${style.text}`}>
-                      {signedMW(range.worstDifference)}
-                    </span>{' '}
-                    o {range.worstHour} · rezerwa {formatMW(range.reserve)} /
-                    wymagana {formatMW(range.required)} MW
-                  </p>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+                </li>
+              );
+            })}
+          </ul>
+          {/* Raz, zamiast siedmiu razy "Najniższy margines" w kolejnych wierszach. */}
+          <p className="mt-2 text-[0.6875rem] text-text-tertiary">
+            Po prawej: najniższy margines oraz rezerwa / wymagana moc.
+          </p>
+        </div>
       )}
     </section>
   );
