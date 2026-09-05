@@ -258,3 +258,80 @@ describe('ReserveChart — tabela godzinowa zgadza się z dymkiem', () => {
     expect(row.textContent).toContain(expectedMargin);
   });
 });
+
+describe('ReserveTooltip — słowo obok marginesu (etap 2, naprawa B)', () => {
+  /*
+   * `day[8]` in the module-level fixture is the red hour: reserve 2135,
+   * required 1900, margin +235 — still comfortably positive, and red only
+   * because findAlerts' redThreshold (300) is an early-warning line, not a
+   * deficit test. Printing "ALARM" beside "+235 MW" read as a contradiction;
+   * the badge now uses the shared marginLabel wording instead.
+   */
+  it('does not print "ALARM" beside a still-positive red margin', () => {
+    const targetHour = day[8];
+    const row = {
+      key: targetHour.hourLabel,
+      endLabel: targetHour.endLabel,
+      reserve: targetHour.reserve,
+      required: targetHour.required,
+      alert: 'alarm' as const,
+    };
+    const { container } = render(
+      <ReserveTooltip
+        active
+        payload={[{ payload: row } as never]}
+        label={targetHour.hourLabel}
+        orangeThreshold={500}
+        redThreshold={300}
+      />
+    );
+
+    expect(container.textContent).toContain('Poniżej progu');
+    expect(container.textContent).not.toContain('ALARM');
+  });
+
+  it('words the orange hour "Blisko progu", not "UWAGA"', () => {
+    const targetHour = day[9]; // reserve 2260, required 1900 -> margin +360
+    const row = {
+      key: targetHour.hourLabel,
+      endLabel: targetHour.endLabel,
+      reserve: targetHour.reserve,
+      required: targetHour.required,
+      alert: 'warn' as const,
+    };
+    const { container } = render(
+      <ReserveTooltip
+        active
+        payload={[{ payload: row } as never]}
+        label={targetHour.hourLabel}
+        orangeThreshold={500}
+        redThreshold={300}
+      />
+    );
+
+    expect(container.textContent).toContain('Blisko progu');
+    expect(container.textContent).not.toContain('UWAGA');
+  });
+
+  it('reserves "Niedobór rezerwy" for an hour where reserve is actually under required', () => {
+    const row = {
+      key: '05:00',
+      endLabel: '06:00',
+      reserve: 1500,
+      required: 1900, // margin -400: a genuine deficit, not just a threshold breach
+      alert: 'alarm' as const,
+    };
+    const { container } = render(
+      <ReserveTooltip
+        active
+        payload={[{ payload: row } as never]}
+        label="05:00"
+        orangeThreshold={500}
+        redThreshold={300}
+      />
+    );
+
+    expect(container.textContent).toContain('Niedobór rezerwy');
+    expect(container.textContent).not.toContain('Poniżej progu');
+  });
+});

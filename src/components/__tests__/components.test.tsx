@@ -56,6 +56,60 @@ describe('Header', () => {
     expect(screen.getAllByRole('button')).toHaveLength(1);
     expect(screen.getByRole('button', { name: 'Ustawienia' })).toBeInTheDocument();
   });
+
+  // Etap 2, naprawa C: white text on --l-ok/--l-warn measured at 2.2:1 and on
+  // --l-alarm at 3.55:1 — both below the 4.5:1 floor for the 11-17px semibold
+  // text here. Ink is now three steps of black instead, with the bar's own
+  // background colour (STATUS_HEADER_BG) untouched — this only asserts on the
+  // text/dot classes, never on colour, since the fix must not move a pixel of
+  // the status colour itself.
+  (['ok', 'warn', 'alarm', 'unknown'] as const).forEach((status) => {
+    it(`inks the ${status} bar in black, not white, on the label/description/connection line`, () => {
+      const { container } = render(
+        <Header
+          status={status}
+          connection="online"
+          connectionText="Zaktualizowano 20:15"
+          onToggleSettings={noop}
+        />
+      );
+
+      const h1 = container.querySelector('h1')!;
+      expect(h1.className).toContain('text-black');
+      expect(h1.className).not.toContain('text-white');
+
+      const description = screen.getByText(
+        status === 'ok'
+          ? 'Najbliższe godziny w normie'
+          : status === 'warn'
+            ? 'Najbliższe godziny przy progu'
+            : status === 'alarm'
+              ? 'Najbliższe godziny poniżej progu'
+              : 'Brak danych do oceny'
+      );
+      expect(description.className).toContain('text-black/85');
+
+      const connectionLine = screen.getByText('Zaktualizowano 20:15').parentElement!;
+      expect(connectionLine.className).toContain('text-black/80');
+
+      const dot = connectionLine.querySelector('span')!;
+      expect(dot.className).toContain('bg-black/70');
+      expect(dot.className).not.toMatch(/bg-white/);
+    });
+  });
+
+  it('keeps the settings icon white (inherited), which the ink fix deliberately does not touch', () => {
+    const { container } = render(
+      <Header
+        status="alarm"
+        connection="online"
+        connectionText="Zaktualizowano 20:15"
+        onToggleSettings={noop}
+      />
+    );
+
+    expect(container.querySelector('header')!.className).toContain('text-white');
+  });
 });
 
 describe('CurrentStatusCard', () => {
@@ -185,10 +239,10 @@ describe('AlertsPanel', () => {
       severity: 'orange',
       from: '10:00',
       to: '11:00',
-      worstDifference: -40,
+      worstDifference: 40,
       worstHour: '10:00',
-      reserve: 2100,
-      required: 2140,
+      reserve: 2140,
+      required: 2100,
       hours: 1,
     };
     render(<AlertsPanel ranges={[range, orange]} currentDayOffset={0} hasData />);
@@ -199,8 +253,112 @@ describe('AlertsPanel', () => {
       // Color alone must never carry status: every row needs the icon AND
       // the word, not just the tinted background.
       expect(item.querySelector('svg')).toBeTruthy();
-      expect(within(item).getByText(/^(Alarm|Uwaga)$/)).toBeInTheDocument();
+      expect(
+        within(item).getByText(/^(Niedobór rezerwy|Poniżej progu|Blisko progu)$/)
+      ).toBeInTheDocument();
     });
+  });
+
+  // w2 (etap 2, naprawa B): the red THRESHOLD is an early-warning line, not a
+  // deficit — findAlerts routes a range at e.g. +227 MW into the red weight
+  // too (difference <= redThreshold). Printing "Alarm" beside that positive
+  // number read as a contradiction, so the row's word is reworded to match
+  // STATUS_DESCRIPTION's own "poniżej progu" / "przy progu" vocabulary, with
+  // a genuine deficit worded separately.
+  it('words the red row as a threshold breach when the margin is still positive', () => {
+    const stillPositive: AlertRange = {
+      severity: 'red',
+      from: '17:00',
+      to: '18:00',
+      worstDifference: 227,
+      worstHour: '17:00',
+      reserve: 2127,
+      required: 1900,
+      hours: 1,
+    };
+    render(<AlertsPanel ranges={[stillPositive]} currentDayOffset={0} hasData />);
+
+    expect(screen.getByText('Poniżej progu')).toBeInTheDocument();
+    expect(screen.queryByText('Niedobór rezerwy')).not.toBeInTheDocument();
+    expect(screen.queryByText('Alarm')).not.toBeInTheDocument();
+  });
+
+  it('reserves "Niedobór rezerwy" for a red row where reserve actually falls under required', () => {
+    // `range` above: reserve 1663 < required 1818, worstDifference -155.
+    render(<AlertsPanel ranges={[range]} currentDayOffset={0} hasData />);
+
+    expect(screen.getByText('Niedobór rezerwy')).toBeInTheDocument();
+    expect(screen.queryByText('Poniżej progu')).not.toBeInTheDocument();
+  });
+
+  it('words the orange row as a threshold breach, never "Uwaga" beside the number', () => {
+    const orange: AlertRange = {
+      severity: 'orange',
+      from: '10:00',
+      to: '11:00',
+      worstDifference: 40,
+      worstHour: '10:00',
+      reserve: 2140,
+      required: 2100,
+      hours: 1,
+    };
+    render(<AlertsPanel ranges={[orange]} currentDayOffset={0} hasData />);
+
+    expect(screen.getByText('Blisko progu')).toBeInTheDocument();
+    expect(screen.queryByText('Uwaga')).not.toBeInTheDocument();
+  });
+
+  it('adds the caption explaining the red threshold is an early warning, margin can be positive', () => {
+    render(<AlertsPanel ranges={[range]} currentDayOffset={0} hasData />);
+
+    expect(
+      screen.getByText(/ostrzeżenie wyprzedzające.*margines może być jeszcze dodatni/)
+    ).toBeInTheDocument();
+  });
+
+  // w1 (etap 2, naprawa A): the header pill used to be hardcoded bg-alarm +
+  // white text (3.55:1 at 11px semibold, below the 4.5:1 floor) regardless of
+  // which weight the day actually carried — an "Uwaga"-only day still showed
+  // the red pill. Now one pill per weight actually present, each in the same
+  // soft/-text idiom the rows below already use.
+  it('gives the hour pill the weight actually present, in the soft/-text idiom (not a hardcoded red)', () => {
+    const orangeOnly: AlertRange = {
+      severity: 'orange',
+      from: '10:00',
+      to: '12:00',
+      worstDifference: 40,
+      worstHour: '10:00',
+      reserve: 2140,
+      required: 2100,
+      hours: 2,
+    };
+    render(<AlertsPanel ranges={[orangeOnly]} currentDayOffset={0} hasData />);
+
+    const pill = screen.getByText('2 godz.');
+    expect(pill.className).toContain('bg-warn-soft');
+    expect(pill.className).toContain('text-warn-text');
+    expect(pill.className).not.toContain('bg-alarm');
+  });
+
+  it('shows two separate pills, one per weight, on a day carrying both', () => {
+    const orange: AlertRange = {
+      severity: 'orange',
+      from: '10:00',
+      to: '11:00',
+      worstDifference: 40,
+      worstHour: '10:00',
+      reserve: 2140,
+      required: 2100,
+      hours: 1,
+    };
+    render(<AlertsPanel ranges={[range, orange]} currentDayOffset={0} hasData />);
+
+    const redPill = screen.getByText('3 godz.');
+    const orangePill = screen.getByText('1 godz.');
+    expect(redPill.className).toContain('bg-alarm-soft');
+    expect(redPill.className).toContain('text-alarm-text');
+    expect(orangePill.className).toContain('bg-warn-soft');
+    expect(orangePill.className).toContain('text-warn-text');
   });
 
   it('keeps reserve and required visible after the line was shortened', () => {

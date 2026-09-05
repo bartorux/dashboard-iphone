@@ -32,7 +32,11 @@ export const STATUS_HEADER_BG: Record<SystemStatus, string> = {
   ok: 'bg-ok',
   warn: 'bg-warn',
   alarm: 'bg-alarm',
-  unknown: 'bg-text-tertiary',
+  // Not bg-text-tertiary: that token is re-stepped for body-text legibility
+  // (etap 2, naprawa D) and no longer holds the value Header's black-ink
+  // contrast (naprawa C) was verified against on light mode. --status-unknown
+  // is pinned at #8e8e93 in both themes, same as STATUS_THEME_COLOR below.
+  unknown: 'bg-status-unknown',
 };
 
 export const STATUS_TEXT: Record<SystemStatus, string> = {
@@ -56,3 +60,31 @@ export const STATUS_THEME_COLOR: Record<SystemStatus, string> = {
   alarm: '#ff3b30',
   unknown: '#8e8e93',
 };
+
+/**
+ * Word printed directly BESIDE a signed margin figure — AlertsPanel's row
+ * label, ReserveTooltip's per-hour badge. Deliberately not STATUS_LABEL: that
+ * one names the red/orange THRESHOLD BAND ("ALARM"/"UWAGA") and is correct
+ * there — the header bar and the chart legend both name a band, with no
+ * number sitting next to the word, so "ALARM" is what the band is called.
+ *
+ * Next to a number it reads differently. `findAlerts` classifies red at
+ * `difference <= redThreshold` (default 300 MW) as an early-warning line, not
+ * a deficit — a range can carry "+227 MW" and still be red. "Alarm" beside a
+ * positive margin then reads as a contradiction, so the word said next to the
+ * figure is reworded to match what STATUS_DESCRIPTION already calls it
+ * elsewhere in this file ("Najbliższe godziny poniżej progu" / "przy progu"):
+ * "Poniżej progu" for red, "Blisko progu" for orange.
+ *
+ * A genuine deficit — reserve actually below what's required, margin < 0 —
+ * is a real state, not a forward-looking warning, and gets its own plain
+ * wording: "Niedobór rezerwy".
+ *
+ * One function so AlertsPanel and ReserveTooltip cannot drift into two
+ * different sets of literals for the same number.
+ */
+export function marginLabel(status: SystemStatus, margin: number): string {
+  if (status === 'alarm') return margin < 0 ? 'Niedobór rezerwy' : 'Poniżej progu';
+  if (status === 'warn') return 'Blisko progu';
+  return STATUS_LABEL[status];
+}

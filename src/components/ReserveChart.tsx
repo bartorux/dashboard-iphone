@@ -14,7 +14,7 @@ import { PSEDataPoint } from '../types';
 import { niceScale } from '../utils/scale';
 import { classifyMargin } from '../utils/dataTransform';
 import { useChartColors } from '../hooks/useChartColors';
-import { STATUS_LABEL, STATUS_TEXT } from '../utils/status';
+import { STATUS_TEXT, marginLabel } from '../utils/status';
 import { CALL_PERIOD_EXEMPTION_MW } from '../utils/constants';
 import {
   useChartAnimationMs,
@@ -98,7 +98,7 @@ export const ReserveTooltip: React.FC<TooltipProps> = ({
           {String(label)}&ndash;{row.endLabel}
         </span>
         <span className={`text-[0.6875rem] font-semibold ${STATUS_TEXT[status]}`}>
-          {STATUS_LABEL[status]}
+          {marginLabel(status, margin)}
         </span>
       </div>
       <dl className="space-y-0.5">

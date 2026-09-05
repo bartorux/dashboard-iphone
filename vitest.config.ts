@@ -16,5 +16,14 @@ export default defineConfig({
     // The API contract test hits the real PSE endpoint — run it explicitly
     // with `npm run test:api`, never in CI.
     exclude: ['**/node_modules/**', '**/*.api.test.ts'],
+    // `css: false` (the default) stubs out every *.css import, `?raw` query
+    // included — Vitest's own mock plugin matches on the .css extension
+    // before Vite's `?raw` plugin gets a turn. designTokens.test.ts reads
+    // App.css's literal token values via `?raw` (the only way to check an
+    // exact hex value without giving `src` a dependency on Node's `fs`,
+    // which tsconfig.json deliberately keeps out — see its comment). This
+    // carve-out lets that one query pattern through to the real pipeline
+    // without turning on full CSS processing for every other test.
+    css: { include: [/\?raw$/] },
   },
 });

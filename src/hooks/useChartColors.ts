@@ -9,7 +9,12 @@ const TOKENS = {
   reserve: '--series-reserve',
   required: '--series-required',
   grid: '--separator',
-  axis: '--text-tertiary',
+  // Not --text-tertiary: that token is re-stepped for body-text legibility
+  // (etap 2, naprawa D) and would have dragged the axis with it. --axis is a
+  // dedicated token pinned at the pre-D tertiary value (#8e8e93, both
+  // themes) so no chart pixel moves — the axis is scaffolding a reading is
+  // measured against, not itself something being read.
+  axis: '--axis',
   surface: '--surface',
   text: '--text',
   textSecondary: '--text-secondary',
@@ -53,7 +58,7 @@ const FALLBACK: ChartColors = {
   axis: '#8e8e93',
   surface: '#ffffff',
   text: '#000000',
-  textSecondary: '#6c6c70',
+  textSecondary: '#545458',
   warn: '#ff9500',
   alarm: '#ff3b30',
   accent: '#007aff',
