@@ -353,6 +353,24 @@ export function hasReadings(data: PSEDataPoint[]): boolean {
   );
 }
 
+/**
+ * The same margins in the same order, with the gaps left in.
+ *
+ * `getValidMargins` below drops missing hours, which is right for an average, a
+ * minimum and a maximum — a gap has no place in any of them. It is wrong for
+ * anything drawn along a time axis: dropping hour 03 there does not remove a
+ * point, it MOVES every later point one slot to the left and closes the gap
+ * with a straight line PSE never published. Two callers, two shapes; both are
+ * needed, and neither can be derived from the other.
+ */
+export function marginSeries(data: PSEDataPoint[]): (number | null)[] {
+  return data.map((point) => {
+    if (point.reserve === null || point.required === null) return null;
+    const margin = point.reserve - point.required;
+    return Number.isFinite(margin) ? margin : null;
+  });
+}
+
 export function getValidMargins(data: PSEDataPoint[]): number[] {
   const margins: number[] = [];
   for (const point of data) {

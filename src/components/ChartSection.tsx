@@ -63,6 +63,25 @@ const ChartSection: React.FC<ChartSectionProps> = ({
 
   const active = VIEWS.find((entry) => entry.value === view) ?? VIEWS[0];
 
+  /*
+   * Which of body()'s four branches is on screen — and NOTHING ELSE.
+   *
+   * This is the key that drives the crossfade below, so it decides when the
+   * chart is remounted. Keyed on `dayData` (or on anything derived from its
+   * contents) it would remount on every successful refetch: Recharts would tear
+   * down its SVG and replay the 450ms draw over data that had barely moved, at
+   * whatever moment the poll happened to land. Branch identity changes only
+   * when the reader changes it, which is exactly when a transition is wanted.
+   */
+  const branch =
+    view === 'history'
+      ? 'history'
+      : isLoading && dayData.length === 0
+      ? 'skeleton'
+      : dayData.length === 0
+      ? 'empty'
+      : view;
+
   const body = () => {
     if (view === 'history') {
       return (
@@ -134,7 +153,10 @@ const ChartSection: React.FC<ChartSectionProps> = ({
         className="mb-2 xl:w-[34rem]"
       />
 
-      {body()}
+      {/* key={branch}: identity of the branch, never the data — see above. */}
+      <div key={branch} className="chart-swap">
+        {body()}
+      </div>
     </section>
   );
 };

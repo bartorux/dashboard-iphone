@@ -2,10 +2,13 @@ import React, { useMemo } from 'react';
 import { PSEDataPoint } from '../types';
 import { TREND_STABLE_THRESHOLD } from '../utils/constants';
 import { dayLabel } from '../utils/dayWindow';
-import { getValidMargins, safeAvg, classifyMargin } from '../utils/dataTransform';
+import { getValidMargins, marginSeries, safeAvg, classifyMargin } from '../utils/dataTransform';
 import { STATUS_TEXT } from '../utils/status';
 import { usePersistentFlag } from '../hooks/usePersistentFlag';
+import { signedMW, formatPercent } from '../utils/format';
 import { ChevronDownIcon } from './icons';
+import Skeleton from './Skeleton';
+import Sparkline from './Sparkline';
 
 interface TrendsSectionProps {
   dayData: PSEDataPoint[];
@@ -14,25 +17,67 @@ interface TrendsSectionProps {
   currentDayOffset: number;
   orangeThreshold: number;
   redThreshold: number;
+  /** First fetch of the session — the flag behind the header's 'loading'. */
+  isLoading?: boolean;
 }
-
-const formatMW = (value: number) =>
-  new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
-
-const signed = (value: number) => `${value > 0 ? '+' : ''}${formatMW(value)} MW`;
 
 const Tile: React.FC<{
   label: string;
   value: string;
   hint: string;
   tone?: string;
-}> = ({ label, value, hint, tone = 'text-text' }) => (
+  /**
+   * Figure not fetched yet. The label and the hint stay: they are ours, they
+   * are true before any data arrives, and blanking them would turn a tile that
+   * is merely waiting into a tile that has lost its identity.
+   */
+  loading?: boolean;
+  /**
+   * The day's 24 hourly margins. All three tiles that carry one show the same
+   * trace — it is one day, read three ways — and differ only in where the dot
+   * lands.
+   */
+  series?: (number | null)[];
+  /** Index the dot marks, or null for a trace with no dot. */
+  dotIndex?: number | null;
+  /**
+   * True only for the three tiles that ever carry a `series` once loaded —
+   * "Względem dziś" never does (see the no-trace comment where it renders).
+   * Reserves the sparkline's own height during `loading` so the tile does not
+   * grow by ~22px the moment the first response lands: without this, the
+   * loading skeleton was one line shorter than the loaded tile ever is, and
+   * every tile in the row jumped down together when the sparkline appeared.
+   */
+  reservesSparkline?: boolean;
+}> = ({
+  label,
+  value,
+  hint,
+  tone = 'text-text',
+  loading,
+  series,
+  dotIndex = null,
+  reservesSparkline,
+}) => (
   <div className="rounded-xl bg-surface-2 p-3">
     <div className="text-[0.6875rem] text-text-secondary">{label}</div>
-    <div className={`tnum mt-0.5 text-[1.1875rem] font-semibold ${tone}`}>
-      {value}
-    </div>
+    {loading ? (
+      <Skeleton className="mt-0.5 h-6 w-28" />
+    ) : (
+      <div className={`tnum mt-0.5 text-[1.1875rem] font-semibold ${tone}`}>
+        {value}
+      </div>
+    )}
     <div className="text-[0.625rem] text-text-tertiary">{hint}</div>
+    {loading && reservesSparkline && <Skeleton className="mt-1.5 h-4 xl:h-5" />}
+    {series && !loading && (
+      <Sparkline
+        values={series}
+        dotIndex={dotIndex}
+        toneClassName={tone}
+        className="mt-1.5 h-4 xl:h-5"
+      />
+    )}
   </div>
 );
 
@@ -52,12 +97,46 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
   currentDayOffset,
   orangeThreshold,
   redThreshold,
+  isLoading = false,
 }) => {
   // Persisted like the analysis card's: two chevrons on one screen behaving
   // differently — one remembering, one not — was an inconsistency of my own making.
   const [expanded, setExpanded] = usePersistentFlag('trends-expanded', true);
 
+  // Nothing fetched yet, and nothing cached. Same rule as the status card:
+  // once there is a day in state this is false for the rest of the session, so
+  // a refresh never replaces four correct figures with four grey boxes.
+  const firstLoad = isLoading && dayData.length === 0;
+
   const margins = useMemo(() => getValidMargins(dayData), [dayData]);
+
+  /*
+   * The shape of the selected day, gaps included — the trace behind three of
+   * the four tiles. `getValidMargins` above cannot serve here: it drops missing
+   * hours, which is right for the average, the minimum and the maximum and
+   * wrong for anything laid out along time (see marginSeries).
+   *
+   * argmin/argmax are computed on this series rather than taken from the tiles'
+   * own min/max, so the dot sits on the hour the figure came from even when the
+   * day has gaps in it.
+   */
+  const series = useMemo(() => marginSeries(dayData), [dayData]);
+  const extremes = useMemo(() => {
+    let lowest = -1;
+    let highest = -1;
+    for (let index = 0; index < series.length; index++) {
+      const value = series[index];
+      if (value === null) continue;
+      if (lowest === -1 || value < (series[lowest] as number)) lowest = index;
+      if (highest === -1 || value > (series[highest] as number)) highest = index;
+    }
+    return {
+      lowest: lowest === -1 ? null : lowest,
+      highest: highest === -1 ? null : highest,
+    };
+  }, [series]);
+  const hasSeries = series.some((value) => value !== null);
+
   const avgMargin = useMemo(() => safeAvg(margins), [margins]);
   const minMargin = useMemo(
     () => (margins.length > 0 ? Math.min(...margins) : null),
@@ -163,17 +242,29 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
               the margin sitting above the available and required figures it is
               derived from. */}
           <div className="grid grid-cols-2 gap-2 pt-3">
+            {/* The average has no hour of its own, so it gets the trace and no
+                dot: a dot would have to sit somewhere, and every somewhere
+                would be a claim the figure does not make. */}
             <Tile
               label="Średni margines"
-              value={avgMargin !== null ? signed(avgMargin) : '—'}
+              value={avgMargin !== null ? signedMW(avgMargin) : '—'}
               hint={dayName.toLowerCase()}
               tone={toneFor(avgMargin)}
+              loading={firstLoad}
+              series={hasSeries ? series : undefined}
+              reservesSparkline
             />
+            {/* No trace at all here, deliberately. This tile is the difference
+                between two days' averages — a single scalar, not a run of
+                hours. Drawing the selected day's shape under it would put a
+                24-hour trace beside a figure that is not a 24-hour anything,
+                and the eye would read the two as related. */}
             <Tile
               label="Względem dziś"
-              value={trend.value !== null ? signed(trend.value) : '—'}
+              value={trend.value !== null ? signedMW(trend.value) : '—'}
               hint={currentDayOffset === 0 ? 'wybrany dzień to dziś' : 'różnica średnich'}
               tone={trend.tone}
+              loading={firstLoad}
             />
             {/*
               The window has to be named, because the analysis card above reports
@@ -187,15 +278,23 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
             */}
             <Tile
               label="Najniższy margines"
-              value={minMargin !== null ? signed(minMargin) : '—'}
+              value={minMargin !== null ? signedMW(minMargin) : '—'}
               hint="najtrudniejsza godzina doby"
               tone={toneFor(minMargin)}
+              loading={firstLoad}
+              series={hasSeries ? series : undefined}
+              dotIndex={extremes.lowest}
+              reservesSparkline
             />
             <Tile
               label="Najwyższy margines"
-              value={maxMargin !== null ? signed(maxMargin) : '—'}
+              value={maxMargin !== null ? signedMW(maxMargin) : '—'}
               hint="największy zapas doby"
               tone={toneFor(maxMargin)}
+              loading={firstLoad}
+              series={hasSeries ? series : undefined}
+              dotIndex={extremes.highest}
+              reservesSparkline
             />
           </div>
 
@@ -210,7 +309,7 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
                   <div>
                     <div className="text-[0.6875rem] text-text-secondary">Dziś</div>
                     <div className="tnum text-[0.9375rem] font-semibold text-text">
-                      {signed(comparison.today)}
+                      {signedMW(comparison.today)}
                     </div>
                   </div>
                   <div className="text-center">
@@ -219,19 +318,18 @@ const TrendsSection: React.FC<TrendsSectionProps> = ({
                         comparison.diff >= 0 ? 'text-ok-text' : 'text-alarm-text'
                       }`}
                     >
-                      {signed(comparison.diff)}
+                      {signedMW(comparison.diff)}
                     </div>
                     {comparison.pct !== null && (
                       <div className="tnum text-[0.625rem] text-text-tertiary">
-                        {comparison.pct >= 0 ? '+' : ''}
-                        {comparison.pct.toFixed(1)}%
+                        {formatPercent(comparison.pct, 1)}
                       </div>
                     )}
                   </div>
                   <div className="text-right">
                     <div className="text-[0.6875rem] text-text-secondary">{dayName}</div>
                     <div className="tnum text-[0.9375rem] font-semibold text-text">
-                      {signed(comparison.selected)}
+                      {signedMW(comparison.selected)}
                     </div>
                   </div>
                 </div>

@@ -271,6 +271,25 @@ describe('RenewableMixCard hour scrubbing', () => {
     expect(biezacy.className).not.toContain('ring-2');
   });
 
+  it('marks the ring with data-scrub while a pointer is actively down on the strip', () => {
+    // .oze-ring-fill[data-scrub="true"] (App.css) is what zeroes the ring's
+    // transition duration during a drag — this pins the attribute the CSS
+    // rule keys on, not the visual effect itself.
+    const { container } = render(
+      <RenewableMixCard points={scrubPoints} kseDemand={flatKseDemand()} now={NOW} />
+    );
+    const strip = screen.getByTestId('oze-hour-strip');
+    mockStripRect(strip);
+    const ring = container.querySelector('.oze-ring-fill');
+    expect(ring).toHaveAttribute('data-scrub', 'false');
+
+    fireEvent.pointerDown(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+    expect(ring).toHaveAttribute('data-scrub', 'true');
+
+    fireEvent.pointerUp(strip, { clientX: 1450, pointerId: 1, pointerType: 'touch' });
+    expect(ring).toHaveAttribute('data-scrub', 'false');
+  });
+
   it('scrubbing an hour with no data shows a dash, not a fabricated percent', () => {
     const gappy = scrubPoints.filter((point) => point.hourLabel !== '18:00');
     render(<RenewableMixCard points={gappy} kseDemand={flatKseDemand()} now={NOW} />);

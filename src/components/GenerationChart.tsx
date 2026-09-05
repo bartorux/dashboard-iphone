@@ -33,6 +33,7 @@ import {
   shortHour,
   useDismissibleTooltip,
 } from './chart/shared';
+import HourTable, { HourColumn } from './chart/HourTable';
 
 interface GenerationChartProps {
   data: PSEDataPoint[];
@@ -75,6 +76,16 @@ interface Row {
    */
   generation: number | null;
   /**
+   * PV's own value, but only on hours where PV > 0 — null everywhere else,
+   * including the many null-or-zero night hours. Feeds the seam Lines below,
+   * which draw a 2px surface gap between the solar and wind bands. Keeping
+   * `pv` itself unchanged (still drawn as the stacked Area at 0 through the
+   * night) and introducing this second field is what lets the seam and the
+   * area disagree about the night — see the seam Lines' own comment for why
+   * they must.
+   */
+  pvSeam: number | null;
+  /**
    * MW curtailed this hour by PSE order, <= 0. Null means the day's
    * redispatch data has not loaded (or does not exist yet) — nothing is
    * drawn. Zero means it loaded and there was nothing curtailed that hour.
@@ -113,6 +124,8 @@ export function redispatchForPoint(
 const DEMAND_WIDTH = 2.75;
 const GENERATION_WIDTH = 1.75;
 const CASING = 3;
+/** The stroke every OZE area already draws on its own edge. */
+const PV_EDGE = 1.5;
 
 /** Long enough to read as a deliberate dash at phone width, not as a texture. */
 const GENERATION_DASH = '6 4';
@@ -233,6 +246,34 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
  * alarm and calm hours, so drawing them would add a line that explains nothing.
  * They stay in the tooltip.
  */
+/**
+ * The figures behind the generation view.
+ *
+ * Five columns, and no more: demand, the two renewable series the stack is
+ * made of, grid generation and exchange. Curtailment and outages stay in the
+ * tooltip — they are a footnote on the plot and would be a footnote here too,
+ * at the cost of two more columns to scroll past on a phone.
+ *
+ * No tone on any column. Nothing on this view is a threshold: these are
+ * quantities, not judgements, and colouring them would invent a status the
+ * chart itself does not claim.
+ */
+const GENERATION_COLUMNS: HourColumn<Row>[] = [
+  { header: 'Godz.', value: (row) => `${row.key}–${row.endLabel}` },
+  { header: 'Zapotrz.', value: (row) => (row.demand === null ? '—' : formatMW(row.demand)) },
+  { header: 'PV', value: (row) => (row.pv === null ? '—' : formatMW(row.pv)) },
+  { header: 'Wiatr', value: (row) => (row.wind === null ? '—' : formatMW(row.wind)) },
+  {
+    header: 'Generacja',
+    value: (row) => (row.generation === null ? '—' : formatMW(row.generation)),
+  },
+  {
+    header: 'Wymiana',
+    value: (row) =>
+      row.exchange === null ? '—' : `${row.exchange > 0 ? '+' : ''}${formatMW(row.exchange)}`,
+  },
+];
+
 const GenerationChart: React.FC<GenerationChartProps> = ({
   data,
   currentHourLabel,
@@ -267,6 +308,11 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         outages: point.outages,
         exchange: point.exchange,
         generation: point.generation,
+        // > 0, not !== null: a 0 MW night hour is a real reading, not a gap,
+        // and the seam Lines below must treat it as one — see the fix note on
+        // the seam Lines themselves for why a plain `pv` gate drew a phantom
+        // white notch under the wind band on every PV-less hour.
+        pvSeam: point.pv !== null && point.pv > 0 ? point.pv : null,
         ...redispatchForPoint(point, redispatch),
         kseDemand:
           kseDemand?.get(point.time.getTime() - HOUR_MS) ?? null,
@@ -389,6 +435,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         ]}
       />
 
+      <figure className="m-0">
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
@@ -500,6 +547,79 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               animationDuration={animationMs}
               activeDot={false}
               connectNulls={false}
+            />
+
+            {/*
+              The seam between solar and wind, given the same 2px surface gap
+              every other pair of touching marks in this app already has.
+
+              PV is the bottom of the "mix" stack, so its own top edge IS the
+              boundary between the two bands — and stacked areas touch, so the
+              orange edge sat directly against the cyan wash with nothing
+              between them. At 06:00 and again at 18:00 the solar band is a few
+              pixels tall and the two colours simply met, which is the one place
+              the reader is measuring: how much of the stack is sun.
+
+              Same mechanism as the casing under `demand` and `generation`
+              below, and the same arithmetic: PV_EDGE + CASING, so the seam is
+              1.5px of surface on each side — exactly what the two grid lines
+              already carry. Written with the same constant rather than a
+              literal, so the three can never drift apart.
+
+              5.5px was the first attempt (a 2px gap per side, the round number
+              marks-and-anatomy names). Measured against the live 05.09 curve
+              instead: the plot ran 49 MW per pixel, and the solar band is 0px
+              from 20:00 to 05:00, 3.6px at 06:00, 27.9px at 07:00, 169px at its
+              11:00 peak, and back to 5.0px at 19:00. A 5.5px casing reaches
+              2.75px below the edge and so leaves 0.85px of orange fill at 06:00
+              and 2.25px at 19:00; at 4.5px those become 1.35px and 2.75px. The
+              two hours either side of the band being readable at all are the
+              only ones where the difference exists, and in both of them the
+              narrower casing keeps more of a band that is already a hairline.
+              0.5px of extra separation at midday, where the band is 169px tall,
+              buys nothing against that.
+
+              Drawn off `pvSeam`, not `pv` — and this is the fix, not the
+              original design. `pv` is 0 (not null) through the whole night, so
+              a casing keyed on it drew its 4.5px white notch under the wind
+              band for every one of those hours too, cutting a stripe out of a
+              band with no seam to separate in the first place — there is
+              nothing under the wind area at 03:00 for the casing to protect a
+              boundary against. `pvSeam` is null whenever PV is not strictly
+              positive, and `connectNulls={false}` on both Lines below turns
+              that into an honest gap: the casing and the edge draw only across
+              the hours that actually have a solar band to hem in, and stop
+              existing the moment PV returns to zero. Verified against the
+              05:00 dawn: no white notch remains under the wind band at any
+              PV-less hour, and the seam still starts exactly at the first hour
+              PV goes positive.
+
+              Deliberately NOT applied to the redispatch layer below zero. That
+              band was consciously slimmed to a wash plus a hairline (see its
+              comment): it is a footnote, and giving it the same seam treatment
+              as the day's main stack would restate it as a peer.
+            */}
+            <Line
+              type="monotone"
+              dataKey="pvSeam"
+              stroke={colors.surface}
+              strokeWidth={PV_EDGE + CASING}
+              dot={false}
+              activeDot={false}
+              legendType="none"
+              connectNulls={false}
+              animationDuration={animationMs}
+            />
+            <Line
+              type="monotone"
+              dataKey="pvSeam"
+              stroke={colors.pv}
+              strokeWidth={PV_EDGE}
+              dot={false}
+              activeDot={false}
+              legendType="none"
+              connectNulls={false}
+              animationDuration={animationMs}
             />
 
             <Tooltip
@@ -631,6 +751,19 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
           </ComposedChart>
         </ResponsiveContainer>
       </div>
+        <figcaption className="sr-only">
+          Krajowe zapotrzebowanie na tle generacji z wiatru i fotowoltaiki w
+          kolejnych godzinach doby; te same wartości godzina po godzinie
+          znajdują się w tabeli pod wykresem.
+        </figcaption>
+      </figure>
+
+      <HourTable
+        rows={rows}
+        rowKey={(row) => row.key}
+        storageKey="hours-generation"
+        columns={GENERATION_COLUMNS}
+      />
     </>
   );
 };

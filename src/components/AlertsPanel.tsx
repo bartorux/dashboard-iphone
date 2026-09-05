@@ -1,17 +1,21 @@
 import React from 'react';
 import { AlertRange } from '../types';
 import { dayLabel } from '../utils/dayWindow';
+import { formatMW, signedMW } from '../utils/format';
 import { AlertIcon, CheckIcon } from './icons';
+import Skeleton from './Skeleton';
 
 interface AlertsPanelProps {
   ranges: AlertRange[];
   currentDayOffset: number;
   /** False when the day has no readings at all — distinct from "no alerts". */
   hasData: boolean;
+  /**
+   * First fetch of the session — the flag behind the header's 'loading'. Not
+   * "a request is in flight": on a refresh the ranges below are still correct.
+   */
+  isLoading?: boolean;
 }
-
-const formatMW = (value: number) =>
-  new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
 
 const SEVERITY_STYLE = {
   red: {
@@ -36,6 +40,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
   ranges,
   currentDayOffset,
   hasData,
+  isLoading = false,
 }) => {
   const dayName = dayLabel(currentDayOffset);
   const hours = ranges.reduce((sum, range) => sum + range.hours, 0);
@@ -53,7 +58,20 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
         )}
       </div>
 
-      {!hasData ? (
+      {/*
+        This branch has to come FIRST, before !hasData.
+
+        With nothing fetched yet, hasData is false — and the panel therefore
+        announced "Brak danych dla tego dnia" for the whole of the first
+        fetch. That is not a slow answer, it is a false one: the day's
+        forecast exists, we simply had not asked for it yet, and the reader
+        was told PSE had published nothing. Once the request has landed,
+        `hasData` regains its real meaning and the sentence below is true
+        again.
+      */}
+      {isLoading && !hasData ? (
+        <Skeleton className="h-16 w-full rounded-xl" />
+      ) : !hasData ? (
         // Without readings we cannot claim an all-clear — a green "no alerts"
         // here would present missing data as a confirmed safe state.
         <div className="rounded-xl bg-surface-2 px-3 py-3 text-[0.8125rem] text-text-tertiary">
@@ -89,8 +107,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
                   <p className="tnum mt-0.5 text-[0.75rem] text-text-secondary">
                     Najniższy margines{' '}
                     <span className={`font-semibold ${style.text}`}>
-                      {range.worstDifference > 0 ? '+' : ''}
-                      {formatMW(range.worstDifference)} MW
+                      {signedMW(range.worstDifference)}
                     </span>{' '}
                     o {range.worstHour} · rezerwa {formatMW(range.reserve)} /
                     wymagana {formatMW(range.required)} MW

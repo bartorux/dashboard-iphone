@@ -1,12 +1,19 @@
 import React from 'react';
+import { formatMW } from '../../utils/format';
 
 /**
  * Pieces every chart view shares. Kept together so the three views cannot drift
  * apart in spacing, number formatting or empty-state wording.
  */
 
-export const formatMW = (value: number) =>
-  new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
+/**
+ * Re-exported rather than imported directly by the three chart views below:
+ * their own `import { formatMW } from './shared'` stays exactly as it was, so
+ * moving the one true implementation to utils/format.ts (shared with
+ * AlertsPanel, CurrentStatusCard and TrendsSection) touches no import lines
+ * in this file's own consumers.
+ */
+export { formatMW };
 
 /** Curves redraw rather than jump when the selected day changes. */
 export const ANIMATION_MS = 450;
@@ -113,8 +120,14 @@ export const shortHour = (value: string) => value.slice(0, -3);
  * into a horizontal smear. The phone keeps 45vh capped at 22rem exactly as
  * before; both larger sizes only ever apply above a breakpoint it cannot reach.
  */
+/*
+ * Height lives in the .chart-box-h class (App.css), not in this Tailwind
+ * chain, so it can be expressed in dvh as well as vh — see that rule's own
+ * comment for why: vh on iOS Safari holds the address bar's height even after
+ * it collapses on scroll, so the chart visibly grew every time the bar hid.
+ */
 export const CHART_BOX =
-  'h-[45vh] max-h-[22rem] min-h-[15rem] w-full md:max-h-[26rem] xl:h-[52vh] xl:max-h-[36rem]';
+  'chart-box-h max-h-[22rem] min-h-[15rem] w-full md:max-h-[26rem] xl:max-h-[36rem]';
 
 export interface LegendItem {
   label: string;

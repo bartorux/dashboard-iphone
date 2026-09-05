@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, fireEvent, within } from '@testing-library/react';
 
 /*
  * ResponsiveContainer measures its parent, and jsdom reports every element as
@@ -18,8 +18,9 @@ vi.mock('recharts', async () => {
   };
 });
 import React from 'react';
-import ReserveChart from '../ReserveChart';
+import ReserveChart, { ReserveTooltip } from '../ReserveChart';
 import { makePoint } from '../../test/factories';
+import { formatMW } from '../../utils/format';
 
 const pad = (h: number) => String(h).padStart(2, '0');
 
@@ -121,6 +122,25 @@ describe('ReserveChart — jak zaznacza godziny alertowe', () => {
     expect(dot.getAttribute('stroke')).toBe('#ffffff');
     expect(dot.getAttribute('stroke-width')).toBe('2');
   });
+
+  /*
+   * r=4, not 3.5. With the 2px surface ring, the painted disc is 8px across —
+   * exactly the floor a marker has to clear to stay findable on a phone held
+   * at arm's length. Half a pixel of radius is below what a 0.1%
+   * visual-regression pixel-count threshold reliably catches at chart scale
+   * (a handful of pixels on one dot, out of hundreds of thousands on the
+   * page), so this value has to be pinned directly rather than left to the
+   * screenshot suite to notice if it silently regressed.
+   */
+  it('draws the alert dot at r=4, not the pre-fix r=3.5', () => {
+    const container = chart('12:00');
+    const dots = alertDots(container);
+
+    expect(dots.length).toBeGreaterThan(0);
+    for (const dot of dots) {
+      expect(dot.getAttribute('r')).toBe('4');
+    }
+  });
 });
 
 describe('ReserveChart — teren', () => {
@@ -172,5 +192,69 @@ describe('ReserveChart — teren', () => {
       alarmEdge.getAttribute('stroke'),
       warnEdge.getAttribute('stroke'),
     ]);
+  });
+});
+
+describe('ReserveChart — tabela godzinowa zgadza się z dymkiem', () => {
+  beforeEach(() => localStorage.clear());
+
+  /*
+   * Cross-check, not a copy: the expected strings are computed once, straight
+   * from the input PSEDataPoint (via the same formatMW everything else in the
+   * app uses), and then checked against TWO independent renderings — the
+   * tooltip (which only ever exists on hover, and would otherwise be invisible
+   * to a chart-level assertion) and the collapsed table beneath the chart.
+   * Neither rendering's expected value is copied from the other, so a table
+   * that silently dropped a row, or a column that silently reformatted a
+   * number, fails this without needing its own hard-coded string.
+   */
+  it('shows the same reserve, required and margin for an hour in the table as the tooltip prints', () => {
+    const targetHour = day[8]; // 08:00, the alarm hour in the module-level `day` fixture
+    const margin = targetHour.reserve! - targetHour.required!;
+    const expectedReserve = formatMW(targetHour.reserve!);
+    const expectedRequired = formatMW(targetHour.required!);
+    const expectedMargin = `${margin > 0 ? '+' : ''}${formatMW(margin)}`;
+
+    const tooltipRow = {
+      key: targetHour.hourLabel,
+      endLabel: targetHour.endLabel,
+      reserve: targetHour.reserve,
+      required: targetHour.required,
+      alert: 'alarm' as const,
+    };
+    const { container: tooltipContainer } = render(
+      <ReserveTooltip
+        active
+        payload={[{ payload: tooltipRow } as never]}
+        label={targetHour.hourLabel}
+        orangeThreshold={500}
+        redThreshold={300}
+      />
+    );
+    expect(tooltipContainer.textContent).toContain(expectedReserve);
+    expect(tooltipContainer.textContent).toContain(expectedRequired);
+    expect(tooltipContainer.textContent).toContain(expectedMargin);
+
+    // Scoped to the <table> itself: Recharts pre-renders its own Tooltip
+    // content off-screen for sizing even while inactive, so ReserveTooltip's
+    // "08:00–09:00" label is *also* sitting in this same container — a query
+    // against the whole render would find that copy too.
+    const { getByRole, container } = render(
+      <ReserveChart
+        data={day}
+        orangeThreshold={500}
+        redThreshold={300}
+        currentHourLabel={null}
+      />
+    );
+    fireEvent.click(getByRole('button', { name: 'Tabela godzinowa' }));
+    const table = container.querySelector('table')!;
+    const row = within(table)
+      .getByText(`${targetHour.hourLabel}–${targetHour.endLabel}`)
+      .closest('tr')!;
+
+    expect(row.textContent).toContain(expectedReserve);
+    expect(row.textContent).toContain(expectedRequired);
+    expect(row.textContent).toContain(expectedMargin);
   });
 });

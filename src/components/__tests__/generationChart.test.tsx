@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 
 // Same workaround as reserveChart.test.tsx: ResponsiveContainer measures its
 // parent, which jsdom always reports as zero by zero.
@@ -19,6 +19,7 @@ import GenerationChart, { GenerationTooltip, redispatchForPoint } from '../Gener
 import { makePoint } from '../../test/factories';
 import { RedispatchHour } from '../../utils/redispatch';
 import { HOUR_MS } from '../../utils/constants';
+import { formatMW } from '../../utils/format';
 
 const pad = (h: number) => String(h).padStart(2, '0');
 
@@ -163,6 +164,107 @@ describe('GenerationChart — redispatch legend', () => {
     expect(screen.getByText('Redysponowanie')).toBeInTheDocument();
   });
 
+});
+
+describe('GenerationChart — PV seam', () => {
+  /*
+   * A single PV=0 hour in the middle of an otherwise sunny day. If the seam
+   * Lines were keyed on plain `pv` (the pre-fix shape), 0 is a valid,
+   * non-null value: connectNulls={false} never sees a gap, and the casing
+   * paints straight through the zero hour as one unbroken path — which is
+   * exactly the bug this test guards against, the phantom white notch the
+   * casing cut under the wind band on every PV-less hour of the night.
+   * Keyed on `pvSeam` (null whenever PV is not strictly positive), the same
+   * hour breaks the path into two subpaths — a second "M" moveto command.
+   */
+  it('does not draw the PV seam casing through an hour where PV is 0', () => {
+    const dayWithGap = day.map((point, hour) =>
+      hour === 12 ? { ...point, pv: 0 } : point
+    );
+
+    const { container } = render(
+      <GenerationChart data={dayWithGap} currentHourLabel="12:00" />
+    );
+
+    // Render order (Areas excluded — see reserveChart.test.tsx's own note on
+    // this selector): pvSeam casing, pvSeam edge, exchange, generation
+    // casing, generation edge, demand casing, demand edge.
+    const lineCurves = [...container.querySelectorAll('.recharts-line-curve')];
+    const pvSeamEdge = lineCurves[1];
+    const d = pvSeamEdge.getAttribute('d') ?? '';
+    const moveCount = (d.match(/M/g) ?? []).length;
+
+    expect(moveCount).toBe(2);
+  });
+
+  it('draws one unbroken casing across a day with no PV=0 hour at all', () => {
+    const { container } = render(
+      <GenerationChart data={day} currentHourLabel="12:00" />
+    );
+
+    const lineCurves = [...container.querySelectorAll('.recharts-line-curve')];
+    const pvSeamEdge = lineCurves[1];
+    const d = pvSeamEdge.getAttribute('d') ?? '';
+    const moveCount = (d.match(/M/g) ?? []).length;
+
+    expect(moveCount).toBe(1);
+  });
+});
+
+describe('GenerationChart — tabela godzinowa zgadza się z dymkiem', () => {
+  beforeEach(() => localStorage.clear());
+
+  /*
+   * Cross-check, not a copy — see the same test in reserveChart.test.tsx for
+   * the full rationale. The expected strings come from the input
+   * PSEDataPoint via formatMW, and are then checked against the tooltip and
+   * the table independently.
+   */
+  it('shows the same demand, PV, wind and grid generation for an hour in the table as the tooltip prints', () => {
+    const targetHour = day[12]; // 12:00
+    const expectedDemand = formatMW(targetHour.demand!);
+    const expectedPv = formatMW(targetHour.pv!);
+    const expectedWind = formatMW(targetHour.wind!);
+    const expectedGeneration = formatMW(targetHour.generation!);
+
+    const tooltipRow = {
+      key: targetHour.hourLabel,
+      endLabel: targetHour.endLabel,
+      demand: targetHour.demand,
+      pv: targetHour.pv,
+      wind: targetHour.wind,
+      outages: targetHour.outages,
+      exchange: targetHour.exchange,
+      generation: targetHour.generation,
+      pvRed: 0,
+      windRed: 0,
+      kseDemand: null,
+    };
+    const { container: tooltipContainer } = render(
+      <GenerationTooltip active payload={[{ payload: tooltipRow } as never]} label={targetHour.hourLabel} />
+    );
+    expect(tooltipContainer.textContent).toContain(expectedDemand);
+    expect(tooltipContainer.textContent).toContain(expectedPv);
+    expect(tooltipContainer.textContent).toContain(expectedWind);
+    expect(tooltipContainer.textContent).toContain(expectedGeneration);
+
+    // Scoped to the <table>: Recharts pre-renders its own Tooltip content
+    // off-screen for sizing even while inactive, so the tooltip's own
+    // "12:00–13:00" label is also sitting in this same container.
+    const { getByRole, container } = render(
+      <GenerationChart data={day} currentHourLabel="12:00" />
+    );
+    fireEvent.click(getByRole('button', { name: 'Tabela godzinowa' }));
+    const table = container.querySelector('table')!;
+    const row = within(table)
+      .getByText(`${targetHour.hourLabel}–${targetHour.endLabel}`)
+      .closest('tr')!;
+
+    expect(row.textContent).toContain(expectedDemand);
+    expect(row.textContent).toContain(expectedPv);
+    expect(row.textContent).toContain(expectedWind);
+    expect(row.textContent).toContain(expectedGeneration);
+  });
 });
 
 describe('redispatchForPoint — the join', () => {

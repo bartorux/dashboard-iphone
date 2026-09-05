@@ -408,6 +408,65 @@
   }
 }
 
+/*
+ * A third column, and the only breakpoint above 96rem.
+ *
+ * 110rem is 1760px: a 1920px monitor is past it, a 1600px one is not, and a
+ * 1536px laptop is nowhere near — which is the whole point of the number. The
+ * block above stays exactly as it was below this width, so nothing a laptop can
+ * see is touched by this rule.
+ *
+ * 120rem, not "none". Uncapping would put the day tabs and the alerts a full
+ * 1920px apart from the trends; 120rem is the width at which three columns of
+ * the sizes App.tsx asks for fill the screen with the page's own gutters left
+ * over, and no more.
+ *
+ * Known and accepted: this does not make the whole screen fit without
+ * scrolling at 1920px, because the third column's own height still follows
+ * the chart column (row-span through the chart, which is the tallest thing on
+ * the page) — three tiles plus a card can outgrow the chart beside them once
+ * every trend tile grows a sparkline. Shortening the chart or moving the
+ * alerts out of the middle column would fix that, and both are out of scope
+ * here: the owner signed off on this breakpoint solving the "empty glass
+ * beside a tall chart" problem, not the separate "no scrolling at all"
+ * problem.
+ */
+@media (min-width: 110rem) {
+  .content-width {
+    max-width: 120rem;
+  }
+}
+
+/*
+ * Chart height, pulled out of the Tailwind chain in CHART_BOX (chart/shared.tsx)
+ * so it can be expressed in dvh as well as vh.
+ *
+ * vh on iOS Safari is measured against the viewport with the address bar
+ * showing, not the taller one after it hides on scroll — so a chart sized in
+ * vh visibly grows the moment the bar collapses, on every phone this app is
+ * built for. dvh tracks the viewport that is actually there. @supports keeps
+ * the vh rule as the fallback for the browsers dvh does not reach, rather than
+ * replacing it outright.
+ */
+.chart-box-h {
+  height: 45vh;
+}
+@supports (height: 1dvh) {
+  .chart-box-h {
+    height: 45dvh;
+  }
+}
+@media (min-width: 80rem) {
+  .chart-box-h {
+    height: 52vh;
+  }
+  @supports (height: 1dvh) {
+    .chart-box-h {
+      height: 52dvh;
+    }
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Base
    --------------------------------------------------------------------------- */
@@ -569,6 +628,48 @@ body {
 
   @starting-style {
     stroke-dashoffset: 314.159;
+  }
+}
+
+/* Scrubbing the hour strip is direct manipulation: the ring is the finger's
+   own output, so it has to sit under the finger, not chase it. The 600ms above
+   was written for the one entrance and for the hour rolling over on its own —
+   both of which are the ring MOVING BY ITSELF, where an eased curve reads as
+   the value settling. Under a drag it read as lag: the percentage in the
+   middle of the ring changed on the frame the finger crossed a bar, and the
+   arc arrived up to 600ms later, so the two disagreed for most of the gesture.
+
+   transition-duration, not `transition: none`. The shorthand would reset
+   transition-property to `all` and wipe the property list this rule sets,
+   which is the same longhand-vs-shorthand trap .offline-indicator and
+   .segment-button already carry notes about. Zeroing only the duration keeps
+   stroke-dashoffset the one transitioned property, so the moment the finger
+   lifts (data-scrub goes false) the 600ms curve is back for the trip home to
+   "teraz" — and the entrance @starting-style is untouched. */
+.oze-ring-fill[data-scrub="true"] {
+  transition-duration: 0s;
+}
+
+/* Chart view switch. The three views answer different questions off one time
+   axis, and swapping them was a hard cut: the old plot vanished and the new one
+   appeared already drawn, so nothing said the two were the same card being
+   re-read rather than the page jumping.
+
+   Same mechanism as .offline-indicator above — a settled state plus
+   @starting-style, no mount flag, no JS. 150ms because this is a bridge, not an
+   event: long enough to register as one thing becoming another, short enough
+   that a reader flicking between Rezerwa and Generacja is never waiting on it.
+   Opacity only; the box does not move, and a slide would claim a spatial
+   relationship the three views do not have.
+
+   Nothing here touches the Recharts SVG inside, which runs its own 450ms draw
+   (see useChartAnimationMs) — two motions on one element would fight. */
+.chart-swap {
+  opacity: 1;
+  transition: opacity 150ms cubic-bezier(0.23, 1, 0.32, 1);
+
+  @starting-style {
+    opacity: 0;
   }
 }
 

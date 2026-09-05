@@ -33,6 +33,7 @@ import {
   shortHour,
   useDismissibleTooltip,
 } from './chart/shared';
+import HourTable, { HourColumn } from './chart/HourTable';
 
 interface ReserveChartProps {
   data: PSEDataPoint[];
@@ -65,7 +66,10 @@ interface TooltipProps {
   redThreshold: number;
 }
 
-const ReserveTooltip: React.FC<TooltipProps> = ({
+/** Exported for the cross-check test against HourTable, and for the same
+ * reason GenerationTooltip is: on hover-only UI a chart-level assertion can
+ * never see what the tooltip prints. */
+export const ReserveTooltip: React.FC<TooltipProps> = ({
   active,
   payload,
   label,
@@ -157,7 +161,12 @@ const alertDot =
         key={key}
         cx={cx}
         cy={cy}
-        r={3.5}
+        /* r=4, not 3.5: with the 2px surface ring the mark specs already ask
+           for, the painted disc was 7px across — under the 8px floor a marker
+           has to clear to stay findable on a phone held at arm's length. Half a
+           pixel of radius is the whole change; the ring, the colour and the
+           double encoding by band are untouched. */
+        r={4}
         fill={
           payload.alert === 'alarm' ? colors.bandAlarmEdge : colors.bandWarnEdge
         }
@@ -167,6 +176,35 @@ const alertDot =
       />
     );
   };
+
+/**
+ * The figures behind the reserve view.
+ *
+ * Margin last, because it is the derived column: reserve and required are what
+ * PSE published, the margin is our subtraction, and a reader checking our
+ * arithmetic reads left to right. It carries the only tone in the table — the
+ * same alarm/warn ink the dots on the curve use — so the table and the plot
+ * agree about which hours are the difficult ones.
+ */
+const RESERVE_COLUMNS: HourColumn<Row>[] = [
+  { header: 'Godz.', value: (row) => `${row.key}–${row.endLabel}` },
+  { header: 'Rezerwa', value: (row) => (row.reserve === null ? '—' : formatMW(row.reserve)) },
+  { header: 'Wymagana', value: (row) => (row.required === null ? '—' : formatMW(row.required)) },
+  {
+    header: 'Margines',
+    value: (row) => {
+      if (row.reserve === null || row.required === null) return '—';
+      const margin = row.reserve - row.required;
+      return `${margin > 0 ? '+' : ''}${formatMW(margin)}`;
+    },
+    tone: (row) =>
+      row.alert === 'alarm'
+        ? 'text-alarm-text'
+        : row.alert === 'warn'
+        ? 'text-warn-text'
+        : 'text-text',
+  },
+];
 
 const ReserveChart: React.FC<ReserveChartProps> = ({
   data,
@@ -276,6 +314,12 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
         ]}
       />
 
+      {/* <figure> rather than a bare div: the plot and the sentence that names
+          it are one object, and the caption points at the table below for
+          anyone who needs the figures rather than the shape. sr-only because
+          the heading above the card already says the same thing on screen —
+          this exists for a reader arriving by landmark. */}
+      <figure className="m-0">
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={rows} margin={CHART_MARGIN}>
@@ -486,6 +530,19 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
           </ComposedChart>
         </ResponsiveContainer>
       </div>
+        <figcaption className="sr-only">
+          Dostępna i wymagana rezerwa mocy w kolejnych godzinach doby, z pasmami
+          progów uwagi i alarmu; te same wartości godzina po godzinie znajdują
+          się w tabeli pod wykresem.
+        </figcaption>
+      </figure>
+
+      <HourTable
+        rows={rows}
+        rowKey={(row) => row.key}
+        storageKey="hours-reserve"
+        columns={RESERVE_COLUMNS}
+      />
     </>
   );
 };
