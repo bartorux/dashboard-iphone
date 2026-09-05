@@ -81,6 +81,25 @@ z gestem nie mają nic wspólnego: brak obsługi `touchcancel`, nasłuchy zdejmo
 sekunda kręciołka, i wyciszenie ruchu niesięgające wykresów. Wyjęcie: cofnąć `App.tsx`
 i `gestureMath.ts`, zostawić `useTouchGestures.ts`, `PullToRefresh.tsx` i `chart/shared.tsx`.
 
+Gałąź **`proto/alerty`** (commit `fda68b7`, wypchnięta na origin) trzyma **oś doby w bloku alertów** —
+pasek 24 godzin z oknami alertowymi na swoich miejscach, pod nim najostrzejsze okno w pełni, niżej
+pozostałe jednowierszowo. Właściciel obejrzał ją 05.09.2026 i powiedział „kozacko to wygląda"; do
+wdrożenia nie weszła tylko dlatego, że **nad kartą alertów stoi wykres rezerwy z własną osią doby,
+a te dwie podziałki się nie pokrywają**: tor alertów biegnie od krawędzi karty, pole wykresu zaczyna
+się dopiero za opisami osi pionowej. W kontekście całej strony czyta się to jak niedoróbka, nie jak
+decyzja (dowód: `kontekst-w2-telefon.png` w materiałach z tamtego dnia).
+
+Warunek wyjęcia: **zrównać rozpiętość toru z polem wykresu** — wspólny token odsunięcia czytany
+przez `AlertsPanel.tsx` i `chart/shared.tsx` (`CHART_MARGIN` plus szerokość opisów osi Y), zamiast
+dwóch niezależnych szerokości. Wtedy dwie osie doby na jednym ekranie zaczynają się bronić nawzajem,
+zamiast sobie przeczyć. Reszta wariantu jest gotowa i przetestowana: obsługuje 7 okien, 1 okno,
+dobę bez alertów i stan ładowania, jest o jedną trzecią niższa od listy i niesie ciężkość drugim
+kanałem obok barwy (alarm wypełnia pasek na pełną wysokość, uwaga siedzi niżej).
+
+W tej samej gałęzi leżą jeszcze dwie formy odrzucone świadomie: **tabela** (`w3` — najczystsza na
+monitorze, ale gubi miękkie tło w tonie ciężkości, więc zła doba czyta się spokojniej niż jest)
+i **stan sprzed zmiany** (`w1`). Wszystkie cztery przełącza atrybut `data-alerty` na `<html>`.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
