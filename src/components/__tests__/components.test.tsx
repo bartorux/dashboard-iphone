@@ -56,6 +56,60 @@ describe('Header', () => {
     expect(screen.getAllByRole('button')).toHaveLength(1);
     expect(screen.getByRole('button', { name: 'Ustawienia' })).toBeInTheDocument();
   });
+
+  // Etap 2, naprawa C: white text on --l-ok/--l-warn measured at 2.2:1 and on
+  // --l-alarm at 3.55:1 — both below the 4.5:1 floor for the 11-17px semibold
+  // text here. Ink is now three steps of black instead, with the bar's own
+  // background colour (STATUS_HEADER_BG) untouched — this only asserts on the
+  // text/dot classes, never on colour, since the fix must not move a pixel of
+  // the status colour itself.
+  (['ok', 'warn', 'alarm', 'unknown'] as const).forEach((status) => {
+    it(`inks the ${status} bar in black, not white, on the label/description/connection line`, () => {
+      const { container } = render(
+        <Header
+          status={status}
+          connection="online"
+          connectionText="Zaktualizowano 20:15"
+          onToggleSettings={noop}
+        />
+      );
+
+      const h1 = container.querySelector('h1')!;
+      expect(h1.className).toContain('text-black');
+      expect(h1.className).not.toContain('text-white');
+
+      const description = screen.getByText(
+        status === 'ok'
+          ? 'Najbliższe godziny w normie'
+          : status === 'warn'
+            ? 'Najbliższe godziny przy progu'
+            : status === 'alarm'
+              ? 'Najbliższe godziny poniżej progu'
+              : 'Brak danych do oceny'
+      );
+      expect(description.className).toContain('text-black/85');
+
+      const connectionLine = screen.getByText('Zaktualizowano 20:15').parentElement!;
+      expect(connectionLine.className).toContain('text-black/80');
+
+      const dot = connectionLine.querySelector('span')!;
+      expect(dot.className).toContain('bg-black/70');
+      expect(dot.className).not.toMatch(/bg-white/);
+    });
+  });
+
+  it('keeps the settings icon white (inherited), which the ink fix deliberately does not touch', () => {
+    const { container } = render(
+      <Header
+        status="alarm"
+        connection="online"
+        connectionText="Zaktualizowano 20:15"
+        onToggleSettings={noop}
+      />
+    );
+
+    expect(container.querySelector('header')!.className).toContain('text-white');
+  });
 });
 
 describe('CurrentStatusCard', () => {
