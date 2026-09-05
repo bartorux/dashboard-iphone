@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-03T00:07:23.541Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "W poniedziałek 7 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 8 września i środę 9 września nadwyżka trzyma się powyżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-03T01:07:24.807Z",
-      "prompt": 51,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 7 września między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-      "body": "W poniedziałek 7 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 8 września i środę 9 września operator również ma wybór w godzinach wieczornych, podczas gdy dzisiaj i jutro nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-03T01:07:24.807Z",
       "prompt": 51,
       "accepted": true,
@@ -603,6 +586,23 @@
       "headline": "W środę 9 września nadwyżka spadła poniżej progu 1100 MW w godzinach 18:00-20:00.",
       "body": "W poniedziałek 7 września zapotrzebowanie wzrosło powyżej normy, a fotowoltaika spadła poniżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 7 września, we wtorek 8 września i w środę 9 września nadwyżka spada poniżej progu 1100 MW, w czwartek 10 września operator zachowuje wybór, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-05T04:07:28.175Z",
+      "prompt": 51,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00.",
+      "body": "W poniedziałek 7 września zapotrzebowanie wzrosło powyżej normy, a fotowoltaika spadła poniżej normy. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 8 września i w środę 9 września nadwyżka również spadała poniżej progu 1100 MW w godzinach wieczornych, w czwartek 10 września operator zachował wybór, a w piątek 11 września i w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-05T04:07:28.175Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00.",
+      "body": "W poniedziałek 7 września zapotrzebowanie wzrosło powyżej normy, a fotowoltaika spadła poniżej normy. Ogłoszenie może jeszcze nadejść, do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "We wtorek 8 września i w środę 9 września nadwyżka również spadała poniżej progu 1100 MW, w czwartek 10 września operator zachował wybór, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
