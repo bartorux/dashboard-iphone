@@ -38,7 +38,7 @@ const FIXTURE: BadanieFile = {
     {
       date: '2026-09-03',
       window: { readAt: '2026-09-03T10:00:00Z', deadline: '2026-09-03T10:00:00Z', open: false },
-      worstHour: 20,
+      worstHour: 21,
       surplus: 3000,
       required: 2000,
       margin: 1000,
@@ -132,6 +132,18 @@ describe('Badanie', () => {
     const cell = within(row).getByText('-200 MW').closest('td')!;
     expect(cell.className).toContain('bg-alarm-soft');
     expect(cell.className).toContain('text-alarm-text');
+  });
+
+  it('shows each day its own target hour, not a fixed one', async () => {
+    respondWith(FIXTURE);
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+    // The quiet day in the fixture is scored on 21:00; a column that always
+    // said 20:00 would pass every other test here and still be wrong. Scoped
+    // to that day's row, because a reading time elsewhere can also be 21:00.
+    const row = screen.getByRole('button', { name: '03.09' }).closest('tr');
+    expect(row).not.toBeNull();
+    expect(within(row as HTMLElement).getByText('21:00')).toBeInTheDocument();
   });
 
   it('leaves a quiet day unmarked', async () => {

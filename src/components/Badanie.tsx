@@ -180,7 +180,12 @@ function DayRow({
         <td className="px-2 py-1.5 tnum">
           {day.window.open ? 'otwarte' : formatLocalTime(day.window.readAt)}
         </td>
-        <td className="px-2 py-1.5 tnum">20:00</td>
+        <td className="px-2 py-1.5 tnum">
+          {/* The hour the study was scored on — the event's own when one is on
+              record, else the hour that looked worst in its own window. It is
+              NOT always 20:00: 01.09 scored on 21:00, 09.09 on 18:00. */}
+          {day.worstHour === null ? '—' : `${String(day.worstHour).padStart(2, '0')}:00`}
+        </td>
         <td className="px-2 py-1.5 text-right tnum">
           {day.surplus === null ? '—' : `${formatMW(day.surplus)} MW`}
         </td>
