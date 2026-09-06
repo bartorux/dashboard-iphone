@@ -1,0 +1,375 @@
+import { useEffect, useState } from 'react';
+import {
+  BadanieFile,
+  CallEvent,
+  DayStudy,
+  Feature,
+  Verdict,
+} from '../utils/badanieTypes';
+import { formatMW, signedMW } from '../utils/format';
+
+/**
+ * Research subpage, not the product. Reachable only at `#badanie` (see
+ * utils/route.ts + main.tsx) — nothing on the main screen links here, and
+ * nothing here feeds back into it. The owner's own words: "dopóki nie mamy
+ * dokładnych danych, nie wdrażamy tego na ekran główny; podstrona może nawet
+ * wyglądać jak gówno" — so this file spends zero effort on layout and reuses
+ * whatever Tailwind tokens already exist in App.css, none of them new.
+ *
+ * Reads a file a separate generator writes (contract: badanieTypes.ts) — this
+ * page never computes a verdict, it only displays one that was already
+ * computed, exactly like SummaryCard reads summary.json rather than writing
+ * its own prose.
+ */
+
+// Exported so the test can pin it: this is the one thing that must never
+// silently drift to a different branch or repo.
+export const BADANIE_URL =
+  'https://raw.githubusercontent.com/bartorux/dashboard-iphone/react/data/badanie.json';
+
+type LoadState =
+  | { status: 'loading' }
+  | { status: 'error' }
+  | { status: 'ready'; data: BadanieFile };
+
+const VERDICT_WORD: Record<Verdict, string> = {
+  trafienie: 'trafienie',
+  'falszywy-alarm': 'fałszywy alarm',
+  przeoczenie: 'przeoczenie',
+  cisza: 'cisza',
+  otwarte: 'otwarte',
+};
+
+const EVENT_KIND_WORD: Record<CallEvent['kind'], string> = {
+  test: 'test',
+  real: 'przywołanie',
+};
+
+const EVENT_SCOPE_WORD: Record<CallEvent['scope'], string> = {
+  unit: 'jedna jednostka',
+  market: 'cały rynek',
+};
+
+function formatEvent(event: CallEvent): string {
+  return `${EVENT_KIND_WORD[event.kind]}, ${EVENT_SCOPE_WORD[event.scope]}`;
+}
+
+/** "2026-09-02" -> "02.09". Parsed by hand rather than through `new Date`,
+ *  same reasoning as dateHelpers' UTC-anchored parsing: a business date is a
+ *  calendar label, and building it through local midnight could roll it back
+ *  a day for a reader west of the data. */
+function formatDayDate(date: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
+  return match ? `${match[3]}.${match[2]}` : date;
+}
+
+/** An ISO instant, as the reader's own clock would show it. */
+function formatLocalTime(iso: string | null): string {
+  if (!iso) return '—';
+  const parsed = new Date(iso);
+  return Number.isNaN(parsed.getTime())
+    ? '—'
+    : parsed.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+}
+
+function formatLocalDateTime(iso: string | null): string {
+  if (!iso) return '—';
+  const parsed = new Date(iso);
+  if (Number.isNaN(parsed.getTime())) return '—';
+  const date = parsed.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit' });
+  const time = parsed.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+  return `${date} ${time}`;
+}
+
+function formatPercentile(percentile: number | null): string | null {
+  if (percentile === null) return null;
+  return `p ${percentile.toLocaleString('pl-PL', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
+
+/**
+ * One feature cell: value, and — when the file has one — the percentile that
+ * says how it ranks against every other closed day. Highlighted the same way
+ * an alert row is elsewhere in the app (bg-alarm-soft/text-alarm-text): an
+ * extreme feature is the same kind of fact as an active alert, just measured
+ * after the day closed instead of while it is happening.
+ */
+function FeatureCell({
+  feature,
+  format,
+}: {
+  feature: Feature;
+  format: (value: number) => string;
+}) {
+  const percentileLabel = formatPercentile(feature.percentile);
+  return (
+    <td
+      className={`px-2 py-1.5 text-right tnum ${
+        feature.extreme ? 'bg-alarm-soft text-alarm-text' : ''
+      }`}
+    >
+      <div>{feature.value === null ? '—' : format(feature.value)}</div>
+      {percentileLabel && (
+        <div className="text-[0.6875rem] text-text-secondary">{percentileLabel}</div>
+      )}
+    </td>
+  );
+}
+
+/**
+ * The day's timeline, shown only once its date row is expanded.
+ * `dwellFloorMw` lives on the file, not the day, so it is passed in rather
+ * than read off `day` itself.
+ */
+function ReadingsList({ day, dwellFloorMw }: { day: DayStudy; dwellFloorMw: number }) {
+  return (
+    <ol className="space-y-1 py-2 pl-1 text-[0.8125rem]">
+      {day.readings.map(([readAt, surplus, required]) => {
+        const isWindow = readAt === day.window.readAt;
+        const margin = surplus - required;
+        const belowFloor = surplus < dwellFloorMw;
+        return (
+          <li
+            key={readAt}
+            className={`tnum ${isWindow ? 'font-semibold' : ''} ${
+              belowFloor ? 'text-warn-text' : ''
+            }`}
+          >
+            {formatLocalDateTime(readAt)} — rezerwa {formatMW(surplus)} MW, wymagana{' '}
+            {formatMW(required)} MW, margines {signedMW(margin)}
+            {isWindow && ' (okno)'}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+function DayRow({
+  day,
+  dwellFloorMw,
+  expanded,
+  onToggle,
+}: {
+  day: DayStudy;
+  dwellFloorMw: number;
+  expanded: boolean;
+  onToggle: () => void;
+}) {
+  const detailsId = `badanie-readings-${day.date}`;
+  const rowMuted = day.window.open ? 'text-text-secondary' : '';
+  const rowBold = day.event ? 'font-semibold' : '';
+  const rowClass = `${rowMuted} ${rowBold}`.trim();
+
+  return (
+    <>
+      <tr className={rowClass}>
+        <th scope="row" className="px-2 py-1.5 text-left font-normal">
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={expanded}
+            aria-controls={detailsId}
+            className={`underline decoration-dotted ${rowBold}`}
+          >
+            {formatDayDate(day.date)}
+          </button>
+        </th>
+        <td className="px-2 py-1.5 tnum">
+          {day.window.open ? 'otwarte' : formatLocalTime(day.window.readAt)}
+        </td>
+        <td className="px-2 py-1.5 tnum">20:00</td>
+        <td className="px-2 py-1.5 text-right tnum">
+          {day.surplus === null ? '—' : `${formatMW(day.surplus)} MW`}
+        </td>
+        <td className="px-2 py-1.5 text-right tnum">
+          {day.margin === null ? '—' : signedMW(day.margin)}
+        </td>
+        <FeatureCell feature={day.headroom} format={signedMW} />
+        <FeatureCell feature={day.dwell} format={formatMW} />
+        <FeatureCell feature={day.eveMargin} format={signedMW} />
+        <td
+          className={`px-2 py-1.5 text-right tnum ${
+            day.compass.extreme ? 'bg-alarm-soft text-alarm-text' : ''
+          }`}
+        >
+          {day.compass.level === null ? '—' : day.compass.level}
+        </td>
+        <td className="px-2 py-1.5 text-right tnum">{day.extremeCount}/4</td>
+        <td className="px-2 py-1.5">{VERDICT_WORD[day.verdict]}</td>
+        <td className="px-2 py-1.5">{day.event ? formatEvent(day.event) : '—'}</td>
+      </tr>
+      {expanded && (
+        <tr>
+          <td colSpan={12} id={detailsId} className="border-t border-separator px-2">
+            {day.readings.length === 0 ? (
+              <p className="py-2 text-[0.8125rem] text-text-secondary">Brak odczytów.</p>
+            ) : (
+              <ReadingsList day={day} dwellFloorMw={dwellFloorMw} />
+            )}
+          </td>
+        </tr>
+      )}
+    </>
+  );
+}
+
+function Content({ data }: { data: BadanieFile }) {
+  const [expandedDates, setExpandedDates] = useState<ReadonlySet<string>>(new Set());
+
+  const toggleDate = (date: string) => {
+    setExpandedDates((prev) => {
+      const next = new Set(prev);
+      if (next.has(date)) next.delete(date);
+      else next.add(date);
+      return next;
+    });
+  };
+
+  return (
+    <div className="bg-bg text-text p-4">
+      <h1 className="text-[1.0625rem] font-semibold">Badanie przywołań</h1>
+      <p className="mt-1 text-[0.8125rem] text-text-secondary">
+        Strona robocza. Nic z tego nie trafia na ekran główny, dopóki reguła nie sprawdzi się
+        na kolejnych zdarzeniach.
+      </p>
+      <p className="mt-1 text-[0.75rem] text-text-secondary">
+        Wygenerowano: {formatLocalDateTime(data.generatedAt)}
+      </p>
+
+      <p className="mt-3 max-w-prose text-[0.8125rem] text-text-secondary">
+        Okno decyzyjne to ostatni zarchiwizowany odczyt przed terminem — godzina docelowa minus{' '}
+        {data.noticeHours} h. Cztery cechy wchodzą do oceny: zapas nad progem odstępstwa (
+        {formatMW(data.exemptionMw)} MW), dwell (kolejne odczyty poniżej{' '}
+        {formatMW(data.dwellFloorMw)} MW), margines wieczorem w dobie D−1 i poziom Kompasu na
+        godzinie docelowej. Percentyl cechy to udział innych dób, które wypadły łagodniej niż ta;
+        ekstremum zaczyna się od percentyla 0,9. Werdykt „alarm" liczy się od {data.alarmFrom}{' '}
+        ekstremów na cztery.
+      </p>
+
+      <div className="mt-3 overflow-x-auto">
+        <table className="w-full border-collapse text-[0.8125rem]">
+          <caption className="sr-only">Doby zbadane pod kątem przywołania mocy</caption>
+          <thead>
+            <tr className="border-b border-separator text-left text-text-secondary">
+              <th scope="col" className="px-2 py-1.5 font-normal">
+                Data
+              </th>
+              <th scope="col" className="px-2 py-1.5 font-normal">
+                Okno
+              </th>
+              <th scope="col" className="px-2 py-1.5 font-normal">
+                Godz. docelowa
+              </th>
+              <th scope="col" className="px-2 py-1.5 text-right font-normal">
+                Rezerwa
+              </th>
+              <th scope="col" className="px-2 py-1.5 text-right font-normal">
+                Margines
+              </th>
+              <th scope="col" className="px-2 py-1.5 text-right font-normal">
+                Zapas
+              </th>
+              <th scope="col" className="px-2 py-1.5 text-right font-normal">
+                Dwell
+              </th>
+              <th scope="col" className="px-2 py-1.5 text-right font-normal">
+                D−1 wiecz.
+              </th>
+              <th scope="col" className="px-2 py-1.5 text-right font-normal">
+                Kompas
+              </th>
+              <th scope="col" className="px-2 py-1.5 text-right font-normal">
+                Ekstrema
+              </th>
+              <th scope="col" className="px-2 py-1.5 font-normal">
+                Werdykt
+              </th>
+              <th scope="col" className="px-2 py-1.5 font-normal">
+                Zdarzenie
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.days.map((day) => (
+              <DayRow
+                key={day.date}
+                day={day}
+                dwellFloorMw={data.dwellFloorMw}
+                expanded={expandedDates.has(day.date)}
+                onToggle={() => toggleDate(day.date)}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <footer className="mt-4 text-[0.75rem] text-text-secondary">
+        <h2 className="font-semibold text-text">Rejestr zdarzeń</h2>
+        {data.events.length === 0 ? (
+          <p className="mt-1">Brak zarejestrowanych zdarzeń.</p>
+        ) : (
+          <ul className="mt-1 space-y-0.5">
+            {data.events.map((event) => (
+              <li key={`${event.date}-${event.hour}`}>
+                {formatDayDate(event.date)} {String(event.hour).padStart(2, '0')}:00 —{' '}
+                {formatEvent(event)}
+                {event.note ? `: ${event.note}` : ''}
+              </li>
+            ))}
+          </ul>
+        )}
+      </footer>
+    </div>
+  );
+}
+
+/**
+ * Fetches the generator's output directly from GitHub's raw content, not from
+ * this build's own `public/` — the whole point is to see the newest file
+ * without redeploying the app, since a redeploy pass is exactly the ceremony
+ * this "not on the main screen yet" page is meant to avoid.
+ *
+ * Mirrors useSummary's failure handling: every rejection resolves to the
+ * error state rather than reaching the ErrorBoundary, because a network hiccup
+ * on a research page is not "the app is broken".
+ */
+export default function Badanie() {
+  const [state, setState] = useState<LoadState>({ status: 'loading' });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch(BADANIE_URL, { cache: 'no-store' })
+      .then((response) => (response.ok ? (response.json() as Promise<BadanieFile>) : null))
+      .then((data) => {
+        if (cancelled) return;
+        setState(data ? { status: 'ready', data } : { status: 'error' });
+      })
+      .catch(() => {
+        if (!cancelled) setState({ status: 'error' });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (state.status === 'loading') {
+    return (
+      <div className="bg-bg p-4 text-text-secondary">Wczytywanie danych badania…</div>
+    );
+  }
+
+  if (state.status === 'error') {
+    return (
+      <div className="bg-bg p-4 text-alarm-text">
+        Brak danych badania — nie udało się pobrać pliku.
+      </div>
+    );
+  }
+
+  return <Content data={state.data} />;
+}
