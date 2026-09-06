@@ -36,11 +36,49 @@ export function SegmentedControl<T extends string | number>({
     segments.findIndex((segment) => segment.value === value)
   );
   const optionRole = role === 'tablist' ? 'tab' : 'radio';
+  const buttonRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
+
+  // WAI-ARIA tabs/radiogroup pattern: roving tabindex (only the active button
+  // sits in the Tab order; arrows move within the group) with automatic
+  // activation — the arrow itself commits the new value, there is no separate
+  // "confirm" step, since every caller here is a view switch or a setting
+  // pick rather than a multi-field form. Wrapping at the ends matches the
+  // pill's own closed loop: there is no visible first/last edge that should
+  // stop movement.
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const count = segments.length;
+    if (count === 0) return;
+
+    let nextIndex: number;
+    switch (event.key) {
+      case 'ArrowLeft':
+        nextIndex = (activeIndex - 1 + count) % count;
+        break;
+      case 'ArrowRight':
+        nextIndex = (activeIndex + 1) % count;
+        break;
+      case 'Home':
+        nextIndex = 0;
+        break;
+      case 'End':
+        nextIndex = count - 1;
+        break;
+      default:
+        // Anything else (Tab, Enter, letters...) is left alone — swallowing
+        // it here would also block the browser's own focus movement.
+        return;
+    }
+
+    event.preventDefault();
+    onChange(segments[nextIndex].value);
+    buttonRefs.current[nextIndex]?.focus();
+  };
 
   return (
     <div
       role={role}
       aria-label={ariaLabel}
+      onKeyDown={handleKeyDown}
       className={`relative flex rounded-xl bg-surface-3 p-1 ${className}`}
     >
       <div
@@ -53,16 +91,23 @@ export function SegmentedControl<T extends string | number>({
         }}
       />
 
-      {segments.map((segment) => {
+      {segments.map((segment, index) => {
         const active = segment.value === value;
         return (
           <button
             key={segment.value}
+            ref={(el) => {
+              buttonRefs.current[index] = el;
+            }}
             type="button"
             role={optionRole}
             {...(optionRole === 'tab'
               ? { 'aria-selected': active }
               : { 'aria-checked': active })}
+            // Roving tabindex: exactly one segment is a Tab stop at a time, so
+            // moving through a page of segmented controls costs one Tab each,
+            // not one per segment — the rest is reached with the arrow keys.
+            tabIndex={active ? 0 : -1}
             onClick={() => onChange(segment.value)}
             // .segment-button, not the transition-colors/transition-transform
             // utility pair: transition-property is a longhand, so a second

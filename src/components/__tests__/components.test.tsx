@@ -185,6 +185,26 @@ describe('CurrentStatusCard', () => {
     expect(screen.getByText('1900 MW')).toBeInTheDocument();
     expect(container.querySelectorAll('.animate-pulse')).toHaveLength(0);
   });
+
+  // A refresh recolours the badge (ok -> alarm) but was otherwise silent to a
+  // screen reader — nothing in the accessibility tree said the status had
+  // changed. This is the only role="status" inside the card, so getByRole
+  // finds it without disambiguation.
+  it('announces the status badge to assistive technology and updates it live', () => {
+    const { rerender } = render(
+      <CurrentStatusCard point={point(3000, 1000)} status="ok" isStale={false} />
+    );
+
+    const badge = screen.getByRole('status');
+    expect(badge).toHaveTextContent('OK');
+    expect(badge).toHaveAttribute('aria-live', 'polite');
+
+    rerender(
+      <CurrentStatusCard point={point(1897, 1900)} status="alarm" isStale={false} />
+    );
+
+    expect(screen.getByRole('status')).toHaveTextContent('ALARM');
+  });
 });
 
 describe('AlertsPanel', () => {

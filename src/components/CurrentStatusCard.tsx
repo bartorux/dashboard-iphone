@@ -74,7 +74,17 @@ const CurrentStatusCard: React.FC<CurrentStatusCardProps> = ({
             {point ? `godzina ${point.hourLabel}–${point.endLabel}` : 'teraz'}
           </div>
         </div>
+        {/*
+          role="status"/aria-live="polite": today a status change on refresh is
+          purely visual (the badge recolours), so a screen reader hears nothing
+          when "OK" becomes "ALARM". This is the one spot for it — the badge
+          changes rarely and in whole words, unlike the margin figure next to
+          it, which recomputes every poll and would turn "polite" into a
+          running commentary.
+        */}
         <span
+          role="status"
+          aria-live="polite"
           className={`shrink-0 rounded-full px-2.5 py-1 text-[0.6875rem] font-semibold transition-colors duration-500 ${STATUS_SOFT_BG[status]} ${STATUS_TEXT[status]}`}
         >
           {STATUS_LABEL[status]}
