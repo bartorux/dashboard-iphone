@@ -165,16 +165,35 @@ describe('Badanie', () => {
     expect(within(fold as HTMLElement).getByRole('button', { name: '03.09' })).toBeInTheDocument();
   });
 
-  it('explains the feature columns on hover', async () => {
+  it('explains a column at once on hover and pins it on click', async () => {
     respondWith(FIXTURE);
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
-    const header = (label: string) =>
-      screen.getAllByRole('columnheader', { name: label })[0] as HTMLElement;
-    // "Dwell" is a word this page coined, so its hint has to say what it counts.
-    expect(header('Dwell').getAttribute('title')).toMatch(/kolejnych odczytów/);
+    // The first table's header buttons; every table has its own hint line.
+    const dwell = screen.getAllByRole('button', { name: 'Dwell' })[0];
+    const status = () => screen.getAllByRole('status')[0];
+    expect(status().textContent).toMatch(/Najedź na nagłówek/);
+    // Hover: shown immediately, no browser tooltip delay involved.
+    fireEvent.mouseEnter(dwell);
+    expect(status().textContent).toMatch(/kolejnych odczytów/);
+    fireEvent.mouseLeave(dwell);
+    expect(status().textContent).toMatch(/Najedź na nagłówek/);
+    // Click pins it — the only gesture a phone has.
+    fireEvent.click(dwell);
+    expect(dwell).toHaveAttribute('aria-pressed', 'true');
+    expect(status().textContent).toMatch(/kolejnych odczytów/);
+    // With one column pinned, hovering another wins for as long as the
+    // pointer stays there, then the pinned one comes back.
+    const zapas = screen.getAllByRole('button', { name: 'Zapas' })[0];
+    fireEvent.mouseEnter(zapas);
+    expect(status().textContent).toMatch(/nad progiem/);
+    fireEvent.mouseLeave(zapas);
+    expect(status().textContent).toMatch(/kolejnych odczytów/);
+    fireEvent.click(dwell);
+    expect(status().textContent).toMatch(/Najedź na nagłówek/);
+    // Every feature column has something to say.
     for (const label of ['Zapas', 'D−1 wiecz.', 'Kompas', 'Ekstrema', 'Werdykt']) {
-      expect(header(label).getAttribute('title')?.length ?? 0).toBeGreaterThan(20);
+      expect(screen.getAllByRole('button', { name: label })[0]).toBeInTheDocument();
     }
   });
 

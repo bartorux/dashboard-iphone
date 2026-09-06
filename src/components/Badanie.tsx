@@ -290,8 +290,31 @@ function DaysTable({
   expanded: ReadonlySet<string>;
   onToggle: (date: string) => void;
 }) {
+  // The hint line is our own, not the browser's `title` bubble: that one
+  // waits about a second before it appears — long enough that the owner
+  // reported "nic się nie pojawia" — and never appears at all on a phone.
+  // Hover shows a hint at once; a click pins it, which is the only way a
+  // touch screen can ask. Rendered above the table with a reserved height,
+  // so a hint arriving does not push the rows down under the pointer.
+  const [pinned, setPinned] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const shown = COLUMNS.find((column) => column.label === (hovered ?? pinned));
+
   return (
-  <div className="mt-2 overflow-x-auto">
+  <div className="mt-2">
+      <p
+        role="status"
+        className="min-h-[2.5rem] text-[0.75rem] text-text-secondary"
+      >
+        {shown?.hint ? (
+          <>
+            <span className="font-semibold text-text">{shown.label}:</span> {shown.hint}
+          </>
+        ) : (
+          'Najedź na nagłówek kolumny albo go kliknij, żeby zobaczyć, co mierzy.'
+        )}
+      </p>
+      <div className="overflow-x-auto">
       <table className="w-full border-collapse text-[0.8125rem]">
         <caption className="sr-only">{caption}</caption>
         <thead>
@@ -300,12 +323,26 @@ function DaysTable({
               <th
                 key={column.label}
                 scope="col"
-                title={column.hint}
-                className={`px-2 py-1.5 font-normal ${column.align === 'right' ? 'text-right' : ''} ${
-                  column.hint ? 'cursor-help underline decoration-dotted' : ''
-                }`}
+                className={`px-2 py-1.5 font-normal ${column.align === 'right' ? 'text-right' : ''}`}
               >
-                {column.label}
+                {column.hint ? (
+                  <button
+                    type="button"
+                    aria-pressed={pinned === column.label}
+                    onMouseEnter={() => setHovered(column.label)}
+                    onMouseLeave={() => setHovered(null)}
+                    onFocus={() => setHovered(column.label)}
+                    onBlur={() => setHovered(null)}
+                    onClick={() =>
+                      setPinned((current) => (current === column.label ? null : column.label))
+                    }
+                    className="cursor-help underline decoration-dotted"
+                  >
+                    {column.label}
+                  </button>
+                ) : (
+                  column.label
+                )}
               </th>
             ))}
           </tr>
@@ -322,6 +359,7 @@ function DaysTable({
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
