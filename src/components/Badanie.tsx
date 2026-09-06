@@ -803,6 +803,21 @@ function Content({ data }: { data: BadanieFile }) {
 }
 
 /**
+ * The file on the server can be one generator version behind this page: the
+ * observations fields were added on 06.09.2026 and, for the hour between a
+ * deploy and the next scheduled run, the live file simply lacks them. A
+ * missing list is an empty list, never a crash — this page must open on the
+ * older file exactly as it did before the fields existed.
+ */
+export function withObservations(data: BadanieFile): BadanieFile {
+  return {
+    ...data,
+    observations: Array.isArray(data.observations) ? data.observations : [],
+    days: (data.days ?? []).map((day) => ({ ...day, observation: day.observation ?? null })),
+  };
+}
+
+/**
  * Fetches the generator's output directly from GitHub's raw content, not from
  * this build's own `public/` — the whole point is to see the newest file
  * without redeploying the app, since a redeploy pass is exactly the ceremony
@@ -822,7 +837,7 @@ export default function Badanie() {
       .then((response) => (response.ok ? (response.json() as Promise<BadanieFile>) : null))
       .then((data) => {
         if (cancelled) return;
-        setState(data ? { status: 'ready', data } : { status: 'error' });
+        setState(data ? { status: 'ready', data: withObservations(data) } : { status: 'error' });
       })
       .catch(() => {
         if (!cancelled) setState({ status: 'error' });
