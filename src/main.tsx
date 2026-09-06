@@ -1,7 +1,6 @@
-import { StrictMode, Component, ReactNode } from 'react';
+import { StrictMode, Suspense, lazy, Component, ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import Badanie from './components/Badanie';
 import { RefreshIcon } from './components/icons';
 import { isBadanieHash } from './utils/route';
 import './App.css';
@@ -89,10 +88,21 @@ class ErrorBoundary extends Component<
 // `#badanie` (or `#/badanie`) picks the research subpage instead of the
 // product — checked once at load, not on `hashchange`, so switching between
 // the two is a reload, not a client-side route. See utils/route.ts.
+//
+// Lazy on purpose: the page is research nobody on a phone asked for, so its
+// code must not ride in the main chunk every reader downloads. The fallback
+// is empty — there is nothing to say before the page itself says it.
+const Badanie = lazy(() => import('./components/Badanie'));
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      {isBadanieHash(window.location.hash) ? <Badanie /> : <App />}
+      {isBadanieHash(window.location.hash) ? (
+        <Suspense fallback={null}>
+          <Badanie />
+        </Suspense>
+      ) : (
+        <App />
+      )}
     </ErrorBoundary>
   </StrictMode>
 );
