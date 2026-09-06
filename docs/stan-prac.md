@@ -146,6 +146,55 @@ już gęsty od pasm i linii, dołożenie czwartej rodziny znaków nie zadziała�
 **Zasada operacyjna stąd:** odtworzenie wzorców, które nie zmienia ani jednego pliku po dodaniu
 czegoś widocznego, jest sygnałem błędu, nie sukcesu.
 
+## Badanie przywołań — podstrona robocza (06.09.2026, v3.70.0–v3.72.0)
+
+Właściciel miał **testowy okres przywołania 2026-09-02 na 20:00** i pytał, czy dało się to
+przewidzieć z danych. Rama regulaminowa: wezwanie musi przyjść **co najmniej 8 godzin przed**
+(`NOTICE_HOURS`), więc dla 20:00 termin to 12:00 — pytanie brzmi wyłącznie, co narzędzie wiedziało
+**do 12:00 dnia D**. Godzina samego wezwania (11:14:59) jest terminem regulaminowym, nie momentem
+w danych, i nie należy w niej niczego szukać.
+
+**Bezpośredniego źródła nie ma.** Cały katalog `api.raporty.pse.pl` (90 zasobów): żaden nie
+publikuje okresów przywołania ani testów; jedyna fraza „rynku mocy" to stały harmonogram godzin
+szczytu (`cap_market_obligation`). Jawne zdarzenia istnieją dla nas tylko w ręcznym rejestrze
+`data/przywolania.json` — właściciel dostaje je bezpośrednio jako CMU.
+
+**Archiwum `pk5l-archiwum` jest jedynym miejscem, gdzie sygnał istnieje.** PSE oddaje dziś dla
+02.09 20:00 rezerwę 857 MW (świat po interwencji); wartość 1162 MW sprzed zdarzenia jest tylko
+u nas. To potwierdza sens archiwum, którego nie widać w produkcie.
+
+**Sygnałem jest stan, nie zmiana.** Obalone, żeby nie wracało:
+- „aktualizacja danych na 20:00" — poranna rewizja w dół to norma (6 z 8 dób), a 02.09 miała
+  z nich **najmniejszą** (−228 MW; 01.09: −854); była dobą najspokojniejszą;
+- próg 1100 MW — pierwsze zejście poniżej o 20:07, po rozpoczęciu; to skutek, nie ostrzeżenie;
+- pasmo 1100–1200 MW — dopasowane do jednego przypadku; 07 i 08.09 mają rezerwę poniżej 1100
+  i by w nie nie weszły;
+- liczba godzin z ujemnym marginesem — odstęp zero (31.08 i 01.09 też 4).
+
+**Cztery cechy z okna decyzyjnego, każda z uzasadnieniem niezależnym od próbki:** zapas nad
+1100 MW (02.09: +7, druga doba +416 — próg, według którego operator decyduje), **dwell**
+(ile kolejnych odczytów wstecz najgorsza godzina siedziała poniżej 1500 MW: 18 wobec 0 wszędzie
+indziej — trwałość niedoboru, nie mrugnięcie), margines wieczorem D−1 (−488, jedyny ujemny),
+Kompas L2 na najgorszej godzinie w wersji **aktywnej w oknie** (31.08 i 03.09 dostały flagę dopiero
+po południu — liczy się wersja z chwili, nie ostatnia).
+
+**Uczciwie: jeden przypadek pozytywny.** Każda cecha, w której 02.09 jest ekstremum, da separację
+7/7 — to arytmetyka, nie wynik. Dlatego podstrona pokazuje **wartości ciągłe i percentyle**, nie
+progi; werdykt liczy ekstrema, nie porównuje z liczbą dobraną po zobaczeniu danych. **Rozstrzygną
+07, 08 i 09.09** — wszystkie cztery cechy strzelają tam mocniej niż 02.09 (09.09: zapas +40,
+dwell 31). Brak przywołania w tych dobach = cechy za luźne; choć jedno = pierwszy niezależny dowód.
+Właściciel wpisuje wynik do rejestru.
+
+**Budowa, bez dotykania głównego ekranu:** generator liczy `data/badanie.json` (`src/utils/badanie.ts`,
+kontrakt `badanieTypes.ts`); plik leży w `data/`, które workflow commituje, ale wdrożenie jest
+bramkowane tylko `summary.json` — więc **nie ma deployu ani churnu service workera**. Podstrona
+`/#badanie` (gałąź w `main.tsx`, `App.tsx` nietknięty) pobiera go z `raw.githubusercontent.com`
+(CORS `*`, cache 5 min). Kompas archiwizowany odtąd w `data/kompas-archiwum/` wg wzorca
+`pk5lArchive`, z jednorazowym zasileniem historią wersji z `pdgsz`.
+
+**Odłożone:** cap 72 wpisów w logach (dla przewidywania archiwum wystarcza); zagęszczenie crona do
+15 min (stan 1141/1165 był widoczny od 10:07 — wyprzedzenie urosłoby do rzędu godziny).
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
