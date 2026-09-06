@@ -152,14 +152,17 @@ maszynowym — pytany o to model musiałby zmyślać.
 Generowanie zachodzi **wyłącznie w harmonogramie**, nigdy przy wejściu na stronę. Przeglądarka
 czyta gotowy `public/summary.json`, więc liczba odwiedzających nie ma wpływu na zużycie limitu.
 
-`.github/workflows/summary.yml` chodzi **co godzinę**, nie o stałej porze dnia — to rozpuszcza
-różnicę między UTC w cronie a czasem polskim w danych PSE, bo przy pracy co godzinę przesunięcie
-przestaje mieć znaczenie. Wewnątrz i tak wszystko liczy się z `plan_dtime_utc`.
+Kadencję wyznacza **zewnętrzny harmonogram**: cron-job.org wywołuje `repository_dispatch` **co
+15 minut**. `schedule '37 * * * *'` w `.github/workflows/summary.yml` zostaje w pliku jako
+**zapasowa druga szansa** — uruchamia przebieg, gdyby zewnętrzne wywołanie akurat zawiodło —
+a nie jako główny napęd. Różnica między UTC w cronie a czasem polskim w danych PSE nie ma
+znaczenia przy żadnej z tych kadencji, bo wewnątrz i tak wszystko liczy się z `plan_dtime_utc`.
 
-Minuta jest **nietypowa (`:37`)**, i to nie przypadek: przy `:05` przebiegi lądowały regularnie
-35–45 minut po czasie. Zadania cykliczne stoją w kolejce za wszystkim innym, a początek pełnej
-godziny to moment, na który celuje najwięcej cronów. Nic dalej od tej minuty nie zależy — fakty
-patrzą przed siebie, więc środek godziny jest tak samo dobry jak jej początek.
+Minuta `:37` w harmonogramie zapasowym jest **nietypowa**, i to nie przypadek: przy `:05`
+przebiegi lądowały regularnie 35–45 minut po czasie, bo zadania cykliczne stoją w kolejce za
+wszystkim innym, a początek pełnej godziny to moment, na który celuje najwięcej cronów. Odkąd
+kadencję steruje wywołanie zewnętrzne, `:37` ma znaczenie wyłącznie dla ścieżki awaryjnej —
+fakty patrzą przed siebie, więc środek godziny jest tam tak samo dobry jak jej początek.
 
 Model jest wołany, **gdy zmieni się ocena albo gdy tekst przekroczy sześć godzin**. To drugie
 jest zabezpieczeniem: karta chowa podsumowanie starsze niż dwanaście godzin, więc spokojna noc
@@ -187,17 +190,21 @@ więc nie ma tam czego przemyśliwać.
 
 Zapytanie przy pięciu dobach ma około **10,4 tys. znaków** — sprawdzasz to bez klucza przez
 `npx tsx scripts/summary.ts --dry-run`. Zużycie ogranicza jednak nie długość, tylko **liczba
-wywołań**, a tę wyznacza harmonogram co godzinę, nie treść: rozszerzenie okna z trzech dób na pięć
-nie ruszyło jej wcale.
+wywołań**, a tę wyznacza harmonogram co 15 minut, nie treść: rozszerzenie okna z trzech dób na pięć
+nie ruszyło jej wcale. Model jest wołany tylko przy zmianie oceny albo po sześciu godzinach, więc
+kadencja co 15 minut nie przekłada się jeden do jednego na liczbę wywołań — górna granica to
+96 przebiegów generatora na dobę × 2 próby, czyli 192 wobec RPD 500.
 
 Odczytane z konsoli 11 sierpnia: **RPM 6/15, TPM 3,59 tys./250 tys., RPD 54/500**. Ta ostatnia liczba
 jest wyższa niż 24 przebiegi harmonogramu, bo doszły ręczne uruchomienia zadania — warto o tym
 pamiętać, zanim uzna się dobę za spokojną. Wcześniej stało tu „24 na dobę wobec 1000", i obie te
-liczby brały się z rozumowania, nie z pomiaru.
+liczby brały się z rozumowania, nie z pomiaru. **Pomiar dotyczy jeszcze kadencji co godzinę
+(24 przebiegi na dobę)** — od przejścia na 15 minut (96 przebiegów na dobę) wymaga powtórzenia.
 
 ### Zapis prognoz
 
-`data/forecast-log.json` przechowuje, co prognoza mówiła wcześniej — trzy doby przebiegów wstecz.
+`data/forecast-log.json` przechowuje, co prognoza mówiła wcześniej — okno **72 godzin** wstecz,
+z sufitem 400 wpisów, żeby kadencja co 15 minut nie rozrastała pliku bez ograniczenia.
 Powstał, bo aplikacja pokazywała migawkę i opisywała ją z pewnością siebie, nie mając jak zauważyć,
 że migawka się zmieniła. Zmierzone 11 sierpnia: o 11:20 najciaśniejsza środowa godzina to było 20:00
 z marginesem +139 MW, dwie godziny później ta sama godzina miała +1331 MW, a najciaśniejszy punkt
@@ -260,8 +267,15 @@ miesiąca — poprzednią, bo doba widoczna nawet ~5 dni naprzód mogła mieć p
 jeszcze w poprzednim miesiącu.
 
 Zapisywany w tym samym miejscu i z tego samego powodu co log prognoz: zaraz po nim, przed każdą
-bramką, na surowych wierszach z `fetchPSEData()` — więc rośnie co godzinę niezależnie od tego, czy
+bramką, na surowych wierszach z `fetchPSEData()` — więc rośnie co 15 minut niezależnie od tego, czy
 model w ogóle zostanie zapytany. Awaria zapisu nie kończy przebiegu.
+
+**Rotacja nie jest planowana** — plik rośnie wyłącznie przez dopisywanie, bez czyszczenia starszych
+partycji. To świadoma decyzja: archiwum jest źródłem prawdy do liczenia trafności narzędzia, więc
+skracanie go odbierałoby możliwość, po którą w ogóle powstał. Przyrost mierzony przy poprzedniej
+kadencji to około 1,6 MB miesięcznie (ok. 19 MB rocznie); dedupe po wartości `(surplus, required)`
+sprawia, że kadencja co 15 minut nie mnoży tego szesnastokrotnie — szacowany mnożnik przyrostu to
+rzędu 1,5–3×.
 
 ### Strażnik świeżości
 

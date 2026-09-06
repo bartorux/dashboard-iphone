@@ -9,6 +9,9 @@ opisuje, **co jest otwarte** — czego nie widać ani w kodzie, ani w historii c
 - backup przed warstwą AI w trzech warstwach na **`v3.28.3`**, każda odtworzona i sprawdzona:
   gałąź `backup/v3.28.3-przed-warstwa-ai` i tag `v3.28.3-przed-warstwa-ai` na `origin`, archiwum
   `~/Documents/dashboard-iphone-backup-v3.28.3.tar.gz` (rozpakowane, `diff -r` czysty)
+- backup przed kadencją 15 minut w trzech warstwach na **`v3.72.1`**, każda odtworzona
+  i porównana: gałąź `backup/v3.72.1-przed-kadencja` i tag `v3.72.1-przed-kadencja` na `origin`,
+  archiwum `~/Documents/dashboard-iphone-backup-v3.72.1.tar.gz`
 - punkty pośrednie: `v3.29.0`, `v3.29.1`, `v3.30.0`, `v3.30.1`, `v3.30.2`, `v3.31.0`, `v3.31.1`
 
 ## Co doszło tego popołudnia
@@ -173,8 +176,9 @@ u nas. To potwierdza sens archiwum, którego nie widać w produkcie.
 
 **Cztery cechy z okna decyzyjnego, każda z uzasadnieniem niezależnym od próbki:** zapas nad
 1100 MW (02.09: +7, druga doba +416 — próg, według którego operator decyduje), **dwell**
-(ile kolejnych odczytów wstecz najgorsza godzina siedziała poniżej 1500 MW: 18 wobec 0 wszędzie
-indziej — trwałość niedoboru, nie mrugnięcie), margines wieczorem D−1 (−488, jedyny ujemny),
+(rozpiętość nieprzerwanego ciągu poniżej 1500 MW do okna decyzyjnego, teraz liczona w godzinach,
+nie w liczbie odczytów: dla 02.09 ok. 17–20 h wobec 0 wszędzie indziej — trwałość niedoboru, nie
+mrugnięcie), margines wieczorem D−1 (−488, jedyny ujemny),
 Kompas L2 na najgorszej godzinie w wersji **aktywnej w oknie** (31.08 i 03.09 dostały flagę dopiero
 po południu — liczy się wersja z chwili, nie ostatnia).
 
@@ -182,7 +186,8 @@ po południu — liczy się wersja z chwili, nie ostatnia).
 7/7 — to arytmetyka, nie wynik. Dlatego podstrona pokazuje **wartości ciągłe i percentyle**, nie
 progi; werdykt liczy ekstrema, nie porównuje z liczbą dobraną po zobaczeniu danych. **Rozstrzygną
 07, 08 i 09.09** — wszystkie cztery cechy strzelają tam mocniej niż 02.09 (09.09: zapas +40,
-dwell 31). Brak przywołania w tych dobach = cechy za luźne; choć jedno = pierwszy niezależny dowód.
+dwell dłuższy — w godzinach, przeliczone z dawnej liczby odczytów). Brak przywołania w tych dobach
+= cechy za luźne; choć jedno = pierwszy niezależny dowód.
 Właściciel wpisuje wynik do rejestru.
 
 **Definicja, która o mało nie podglądnęła przyszłości.** Pierwsza wersja wybierała najgorszą godzinę po
@@ -248,8 +253,54 @@ wykonalna (drugi plik wejściowy Vite + wyjątek `navigateFallbackDenylist` w se
 zainstalowana aplikacja przechwyciłaby nawigację i podała główny ekran), ale nie jest potrzebna.
 Nie proponować ponownie.
 
-**Odłożone:** cap 72 wpisów w logach (dla przewidywania archiwum wystarcza); zagęszczenie crona do
-15 min (stan 1141/1165 był widoczny od 10:07 — wyprzedzenie urosłoby do rzędu godziny).
+## Kadencja 15 minut i zaległości (06.09.2026, v3.73.0)
+
+**Co zmieniono i dlaczego.** Trzy podsystemy podniesione naraz, bo dotyczą tej samej zmiany
+częstotliwości:
+- `scripts/summary.ts` uruchamia się teraz **co 15 minut** — cron-job.org wywołuje
+  `repository_dispatch`, a `schedule '37 * * * *'` w `summary.yml` zostaje jako **awaryjna druga
+  szansa**, gdyby zewnętrzne wywołanie zawiodło.
+- `forecastLog.ts` liczy ruch i ustalanie prognozy na serii **przepróbkowanej do godziny**
+  (ostatnia migawka w każdej godzinie zegarowej) — dzięki temu progi `MOVEMENT_MIN_SNAPSHOTS`
+  i `SETTLING_WINDOW` zachowują znaczenie „12 godzin" niezależnie od tego, ile migawek faktycznie
+  wpadło w daną godzinę. Limit logu zmienił się z 72 wpisów na **okno 72 godzin** z sufitem
+  400 wpisów.
+- `badanie.ts` liczy **dwell w godzinach** (rozpiętość nieprzerwanego ciągu poniżej 1500 MW do
+  okna decyzyjnego), a nie w liczbie wpisów — żeby doby sprzed zmiany kadencji i po niej były
+  porównywalne.
+
+**Czy baza wytrzyma.** Rotacja `data/pk5l-archiwum/` nie jest planowana — plik rośnie wyłącznie
+przez dopisywanie. To świadoma decyzja: archiwum jest źródłem prawdy do liczenia trafności
+narzędzia, a skracanie go odbierałoby tę możliwość. Przyrost mierzony przy poprzedniej kadencji to
+ok. 1,6 MB miesięcznie (ok. 19 MB rocznie); dedupe po wartości ogranicza, o ile więcej doda
+kadencja co 15 minut — szacowany mnożnik przyrostu to rzędu 1,5–3×, nie szesnastokrotny.
+
+**Limit Gemini.** Model jest pytany tylko przy zmianie oceny albo po 6 godzinach (`decideRun`,
+`MAX_STALE_MS`), więc górna granica to 96 przebiegów generatora na dobę × 2 próby = 192 wobec
+RPD 500. Dziś zmierzone 54/500 — ale przy poprzedniej kadencji co godzinę (24 przebiegi na dobę),
+więc ta liczba nie odzwierciedla nowego reżimu i pomiar wymaga powtórzenia.
+
+**Pomiary do zrobienia po 24 h od przełączenia:**
+- czas trwania joba i zachowanie kolejki `concurrency: summary` przy kadencji co 15 minut
+- RPD i RPM Gemini w nowym reżimie
+- przyrost `data/*.jsonl` i `data/badanie.json`
+- ewentualne HTTP 429 z API PSE
+
+**Zaległości, wykonane w tym samym zestawie zmian:** strzałki, Home i End w `SegmentedControl`
+(roving tabindex); `role="status"` i `aria-live="polite"` na odznace statusu w
+`CurrentStatusCard`; usunięcie martwych pól `text`/`textSecondary`/`warn` z `useChartColors`;
+testy dla siedmiu hooków — `useOnlineStatus`, `usePersistentFlag`, `useTheme`,
+`useThemeColorMeta`, `useKseDemand`, `useInstallPrompt`, `useHistory`.
+
+**Odłożone dalej, z powodem:**
+- walidator liczb słownych — leży w walidacji tekstu modelu, a lista słów-liczb odrzucałaby zwykłe
+  zdania; ryzyko dla tekstu na głównym ekranie.
+- `proto/alerty` — warunek osi (rozjazd toru alertów z polem wykresu) bez zmian, warunek wyjęcia
+  opisany wyżej wciąż obowiązuje.
+- gałąź `feat/gest-sledzacy-palec` — cztery naprawy do wyjęcia z commitu, osobna decyzja.
+
+**PAT do cron-job.org wygasa 28.09.2026.** Odnowienie leży po stronie właściciela; token nie trafia
+do czatu, repozytorium ani żadnego pliku.
 
 ## Czego dzień nauczył
 
