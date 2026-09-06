@@ -62,9 +62,12 @@ import {
   previousPartition,
 } from '../src/utils/pk5lArchive';
 import {
+  compassVersionRows,
   lastCompassValuesFrom,
   newCompassArchiveLines,
 } from '../src/utils/kompasArchive';
+import { buildBadanie, parseArchiveRows } from '../src/utils/badanie';
+import type { CallEvent } from '../src/utils/badanieTypes';
 import type { PSERawItem, PSECompassRawItem } from '../src/types';
 import {
   PROMPT_VERSION,
@@ -91,6 +94,8 @@ const logTarget = resolve(root, 'data/forecast-log.json');
 const textLogTarget = resolve(root, 'data/summary-log.json');
 const archiveDir = resolve(root, 'data/pk5l-archiwum');
 const compassArchiveDir = resolve(root, 'data/kompas-archiwum');
+const badanieTarget = resolve(root, 'data/badanie.json');
+const eventsTarget = resolve(root, 'data/przywolania.json');
 
 interface SummaryFile extends Summary {
   /** When the text was written, so the card can show its age. */
@@ -246,6 +251,56 @@ function archiveCompass(rows: PSECompassRawItem[], at: Date): void {
     console.log(`Archiwum Kompasu: dopisano ${lines.length} wierszy do ${partition}.jsonl.`);
   } catch (error) {
     console.warn(`Archiwum Kompasu pominiete w tym przebiegu: ${String(error)}`);
+  }
+}
+
+/**
+ * Recomputes the call-period study (data/badanie.json) from the two archives
+ * and the hand-kept event register — research, not product. It lives in
+ * `data/` on purpose: the workflow commits everything there but deploys only
+ * on a changed summary.json, so this file reaches the research subpage
+ * (which reads it straight from the repository) without ever rebuilding the
+ * site or churning the service worker on a phone.
+ *
+ * Reads the previous and current partitions only, like the archives do —
+ * two months of days is plenty for a rank against "the rest of the record"
+ * and keeps the file small enough to fetch on every open of the subpage.
+ * Wrapped whole for the same reason as every archive above: the summary is
+ * the product, this is a study, and a study failing must never end the run.
+ */
+function writeBadanie(at: Date): void {
+  try {
+    const partition = archivePartition(at);
+    const partitions = [previousPartition(partition), partition];
+    const readPartition = (dir: string, name: string): string => {
+      try {
+        return readFileSync(resolve(dir, `${name}.jsonl`), 'utf8');
+      } catch {
+        return '';
+      }
+    };
+    const rows = parseArchiveRows(
+      partitions.map((name) => readPartition(archiveDir, name)).join('\n')
+    );
+    const compass = partitions.flatMap((name) =>
+      compassVersionRows(readPartition(compassArchiveDir, name))
+    );
+    let events: CallEvent[] = [];
+    try {
+      const parsed = JSON.parse(readFileSync(eventsTarget, 'utf8')) as { events?: CallEvent[] };
+      events = Array.isArray(parsed.events) ? parsed.events : [];
+    } catch {
+      // No register yet — the study still runs, every day simply scores as
+      // "no event on record", which is what the register would have said.
+    }
+
+    const file = buildBadanie(rows, compass, events, at);
+    // Compact on purpose: this file is fetched by a browser, and the readings
+    // list alone runs to thousands of entries a month.
+    writeFileSync(badanieTarget, `${JSON.stringify(file)}\n`);
+    console.log(`Badanie przywolan: ${file.days.length} dob, zapisano data/badanie.json.`);
+  } catch (error) {
+    console.warn(`Badanie przywolan pominiete w tym przebiegu: ${String(error)}`);
   }
 }
 
@@ -481,6 +536,10 @@ try {
   // No compass this run. The card simply says nothing about it, which is what
   // it says on the great majority of days anyway.
 }
+
+// After both archives have taken this hour's rows, so the study sees them —
+// and before the first exit below, so a quiet day still gets re-scored.
+if (!dryRun) writeBadanie(now);
 
 const facts = buildFacts(
   points,

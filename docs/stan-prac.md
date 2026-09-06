@@ -146,7 +146,7 @@ już gęsty od pasm i linii, dołożenie czwartej rodziny znaków nie zadziała�
 **Zasada operacyjna stąd:** odtworzenie wzorców, które nie zmienia ani jednego pliku po dodaniu
 czegoś widocznego, jest sygnałem błędu, nie sukcesu.
 
-## Badanie przywołań — podstrona robocza (06.09.2026, v3.70.0–v3.72.0)
+## Badanie przywołań — podstrona robocza (06.09.2026, v3.70.0)
 
 Właściciel miał **testowy okres przywołania 2026-09-02 na 20:00** i pytał, czy dało się to
 przewidzieć z danych. Rama regulaminowa: wezwanie musi przyjść **co najmniej 8 godzin przed**
@@ -184,6 +184,13 @@ progi; werdykt liczy ekstrema, nie porównuje z liczbą dobraną po zobaczeniu d
 07, 08 i 09.09** — wszystkie cztery cechy strzelają tam mocniej niż 02.09 (09.09: zapas +40,
 dwell 31). Brak przywołania w tych dobach = cechy za luźne; choć jedno = pierwszy niezależny dowód.
 Właściciel wpisuje wynik do rejestru.
+
+**Definicja, która o mało nie podglądnęła przyszłości.** Pierwsza wersja wybierała najgorszą godzinę po
+jej *najnowszym* odczycie — dla 02.09 to 857 MW z odczytu po zdarzeniu. Poprawiona reguła: każda
+godzina 12–23 ma własne okno decyzyjne i wybieramy tę z najniższą rezerwą **w jej oknie**; zdarzenie
+z rejestru wymusza swoją godzinę. Bez zdarzenia 02.09 wybrałoby h19 (1141 MW) zamiast h20 (1142 MW)
+— różnica 1 MW, co samo w sobie mówi, jak płaski był ten wieczór. Praca podzielona na trzech agentów
+równolegle (worktree), stąd jeden tag zamiast trzech.
 
 **Budowa, bez dotykania głównego ekranu:** generator liczy `data/badanie.json` (`src/utils/badanie.ts`,
 kontrakt `badanieTypes.ts`); plik leży w `data/`, które workflow commituje, ale wdrożenie jest
