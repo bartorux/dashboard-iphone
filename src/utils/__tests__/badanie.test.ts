@@ -25,6 +25,13 @@ function row(
 // definitions directly against the same two source files, so the numbers are
 // measured from data, not read off `badanie.ts` itself. `now` is fixed well
 // after all three days, so every window here is closed.
+//
+// Auto-selection ranks each candidate hour (12-23) by ITS OWN decision
+// window, never by its latest reading overall — an hour's own window is the
+// only thing the tool could have known by ITS OWN deadline. Ranking by the
+// latest reading instead looks into the future: for 2026-09-02 it picked
+// hour 20 off an 857 MW reading taken at 20:05, after the test call period
+// had already started.
 // ---------------------------------------------------------------------------
 
 const REAL_NOW = new Date('2026-09-06T00:00:00Z');
@@ -51,22 +58,21 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     expect(rows.length).toBe(7135);
   });
 
-  it('picks the worst hour by the latest known reading, then measures its OWN decision window', () => {
+  it('picks the worst hour from each candidate hour\'s OWN decision window, never its latest reading overall', () => {
     const days = studyDays(realRows(), [], [REAL_EVENT], REAL_NOW);
     const byDate = new Map(days.map((d) => [d.date, d]));
 
-    // 2026-09-02 carries a CallEvent for hour 20 — which, measured
-    // independently below, is also what plain auto-selection would have
-    // picked on this particular day (hour 20's own latest reading, 857 MW,
-    // is the lowest of the day). The event-forcing mechanism itself, where
-    // forcing actually changes the outcome, is checked in its own test below
-    // with a hand-built event on a different hour.
+    // 2026-09-02 carries a CallEvent for hour 20, which is forced regardless
+    // of auto-selection. Without that event, auto-selection (measured
+    // independently) would have picked hour 19 instead — its own window
+    // shows 1141 MW against hour 20's own window at 1142 MW, a 1 MW margin —
+    // which is exactly the "event forces the target hour" test below.
     expect(byDate.get('2026-09-02')?.worstHour).toBe(20);
 
     // 2026-09-01 and 2026-09-03 have no event: auto-selected from each
-    // candidate hour's own latest archived reading.
-    expect(byDate.get('2026-09-01')?.worstHour).toBe(20);
-    expect(byDate.get('2026-09-03')?.worstHour).toBe(19);
+    // candidate hour's OWN window, not its latest reading overall.
+    expect(byDate.get('2026-09-01')?.worstHour).toBe(21);
+    expect(byDate.get('2026-09-03')?.worstHour).toBe(20);
   });
 
   it('pins the window (readAt, surplus, required, margin) for all three days', () => {
@@ -75,10 +81,10 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
 
     const d0901 = byDate.get('2026-09-01')!;
     expect(d0901.window.open).toBe(false);
-    expect(d0901.window.readAt).toBe('2026-09-01T09:07:28.853Z');
-    expect(d0901.surplus).toBe(1712);
-    expect(d0901.required).toBe(2041);
-    expect(d0901.margin).toBe(-329);
+    expect(d0901.window.readAt).toBe('2026-09-01T10:07:28.432Z');
+    expect(d0901.surplus).toBe(1547);
+    expect(d0901.required).toBe(1899);
+    expect(d0901.margin).toBe(-352);
 
     const d0902 = byDate.get('2026-09-02')!;
     expect(d0902.window.open).toBe(false);
@@ -90,9 +96,9 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     const d0903 = byDate.get('2026-09-03')!;
     expect(d0903.window.open).toBe(false);
     expect(d0903.window.readAt).toBe('2026-09-03T08:07:31.068Z');
-    expect(d0903.surplus).toBe(1952);
-    expect(d0903.required).toBe(2098);
-    expect(d0903.margin).toBe(-146);
+    expect(d0903.surplus).toBe(1864);
+    expect(d0903.required).toBe(2101);
+    expect(d0903.margin).toBe(-237);
   });
 
   it('pins headroom, dwell and eveMargin raw values', () => {
@@ -100,9 +106,9 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     const byDate = new Map(days.map((d) => [d.date, d]));
 
     const d0901 = byDate.get('2026-09-01')!;
-    expect(d0901.headroom.value).toBe(612); // 1712 - 1100
+    expect(d0901.headroom.value).toBe(447); // 1547 - 1100
     expect(d0901.dwell.value).toBe(0);
-    expect(d0901.eveMargin.value).toBe(556); // last 2026-08-31 reading: 2597 - 2041
+    expect(d0901.eveMargin.value).toBe(432); // last 2026-08-31 reading: 2331 - 1899
 
     const d0902 = byDate.get('2026-09-02')!;
     expect(d0902.headroom.value).toBe(42); // 1142 - 1100
@@ -110,16 +116,16 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     expect(d0902.eveMargin.value).toBe(-939); // last 2026-09-01 reading: 1056 - 1995
 
     const d0903 = byDate.get('2026-09-03')!;
-    expect(d0903.headroom.value).toBe(852); // 1952 - 1100
+    expect(d0903.headroom.value).toBe(764); // 1864 - 1100
     expect(d0903.dwell.value).toBe(0);
-    expect(d0903.eveMargin.value).toBe(170); // last 2026-09-02 reading: 2268 - 2098
+    expect(d0903.eveMargin.value).toBe(115); // last 2026-09-02 reading: 2216 - 2101
   });
 
   it('ranks headroom 1.0 for the worst day, 0.0 for the best, across the 3-day population', () => {
     const days = studyDays(realRows(), [], [REAL_EVENT], REAL_NOW);
     const byDate = new Map(days.map((d) => [d.date, d]));
 
-    // headroom: 09-02 = 42 (worst), 09-01 = 612 (middle), 09-03 = 852 (best).
+    // headroom: 09-02 = 42 (worst), 09-01 = 447 (middle), 09-03 = 764 (best).
     expect(byDate.get('2026-09-02')?.headroom.percentile).toBe(1);
     expect(byDate.get('2026-09-01')?.headroom.percentile).toBe(0.5);
     expect(byDate.get('2026-09-03')?.headroom.percentile).toBe(0);
@@ -139,7 +145,7 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     expect(byDate.get('2026-09-01')?.dwell.percentile).toBe(0);
     expect(byDate.get('2026-09-03')?.dwell.percentile).toBe(0);
 
-    // eveMargin: -939 (09-02, worst) vs +556 (09-01, best) vs +170 (09-03, middle).
+    // eveMargin: -939 (09-02, worst) vs +432 (09-01, best) vs +115 (09-03, middle).
     expect(byDate.get('2026-09-02')?.eveMargin.percentile).toBe(1);
     expect(byDate.get('2026-09-02')?.eveMargin.extreme).toBe(true);
     expect(byDate.get('2026-09-01')?.eveMargin.percentile).toBe(0);
@@ -167,13 +173,13 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     const d0901 = byDate.get('2026-09-01')!;
     expect(d0901.readings.length).toBe(80);
     expect(d0901.readings[0][0]).toBe('2026-08-28T18:59:47.185Z');
-    expect(d0901.readings[d0901.readings.length - 1][0]).toBe('2026-09-01T20:07:28.659Z');
+    expect(d0901.readings[d0901.readings.length - 1][0]).toBe('2026-09-01T21:07:28.175Z');
 
     const d0902 = byDate.get('2026-09-02')!;
     expect(d0902.readings.length).toBe(107);
 
     const d0903 = byDate.get('2026-09-03')!;
-    expect(d0903.readings.length).toBe(133);
+    expect(d0903.readings.length).toBe(132);
 
     // Strictly ascending readAt — the whole study depends on this order.
     for (const day of [d0901, d0902, d0903]) {
@@ -183,26 +189,24 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     }
   });
 
-  it('event forces the target hour, overriding auto-selection even when the two disagree', () => {
-    // On the real data, 2026-09-03 auto-selects hour 19 (measured independently:
-    // hour 19's own latest reading, 1437 MW, is the day's lowest — see the
-    // "picks the worst hour" test above and the task report). A hand-built
-    // event for a deliberately different hour (12, one of the day's calmest)
-    // isolates the forcing rule itself from what auto-selection would have
-    // chosen anyway.
+  it('event forces the target hour: without it, 2026-09-02 auto-selects hour 19, not 20', () => {
+    // On the real data, hour 19's own window (1141 MW) is a hair below hour
+    // 20's own window (1142 MW) — auto-selection picks 19 by a 1 MW margin.
+    // The CallEvent for hour 20 overrides that, which is the whole point of
+    // this rule: what was actually declared, not what the numbers alone
+    // would have flagged.
     const rows = realRows();
-    const forcedEvent: CallEvent = { date: '2026-09-03', hour: 12, kind: 'real', scope: 'market' };
 
     const withoutEvent = studyDays(rows, [], [], REAL_NOW);
-    const withEvent = studyDays(rows, [], [forcedEvent], REAL_NOW);
+    const withEvent = studyDays(rows, [], [REAL_EVENT], REAL_NOW);
 
-    const auto = withoutEvent.find((d) => d.date === '2026-09-03')!;
-    const forced = withEvent.find((d) => d.date === '2026-09-03')!;
+    const auto = withoutEvent.find((d) => d.date === '2026-09-02')!;
+    const forced = withEvent.find((d) => d.date === '2026-09-02')!;
 
     expect(auto.worstHour).toBe(19);
     expect(auto.event).toBeNull();
-    expect(forced.worstHour).toBe(12);
-    expect(forced.event).toEqual(forcedEvent);
+    expect(forced.worstHour).toBe(20);
+    expect(forced.event).toEqual(REAL_EVENT);
   });
 
   it('buildBadanie carries the constants and events through unchanged', () => {
@@ -291,21 +295,44 @@ describe('window selection: the deadline boundary', () => {
 });
 
 describe('auto target hour: tie-break', () => {
-  it('picks the EARLIER hour when two candidate hours tie on their latest surplus', () => {
+  it('picks the EARLIER hour when two candidate hours tie in their OWN windows', () => {
+    // A single reading, timestamped 00:00Z — well before every candidate
+    // hour's own deadline in this range (even hour 12's, the earliest,
+    // whose deadline is 02:00Z that day) — so it lands in every hour's own
+    // window unchanged.
     const now = new Date('2026-07-20T00:00:00Z');
     const rows: ArchiveRow[] = [
-      // Hour 14 and hour 16 both settle on the same latest surplus (900) —
-      // the day's actual minimum. Hour 14 comes first, so it must win.
-      row('2026-07-15', 14, 900, 1000, '2026-07-15T05:00:00Z'),
-      row('2026-07-15', 16, 900, 1000, '2026-07-15T05:00:00Z'),
+      // Hour 14 and hour 16 both settle on the same value (900) in their OWN
+      // windows — the day's actual minimum. Hour 14 comes first, so it must win.
+      row('2026-07-15', 14, 900, 1000, '2026-07-15T00:00:00Z'),
+      row('2026-07-15', 16, 900, 1000, '2026-07-15T00:00:00Z'),
       // A clearly higher, non-competing hour, so the tie above is really
       // between 14 and 16 and not an accident of there being only one hour.
-      row('2026-07-15', 18, 2000, 1000, '2026-07-15T05:00:00Z'),
+      row('2026-07-15', 18, 2000, 1000, '2026-07-15T00:00:00Z'),
     ];
 
     const [day] = studyDays(rows, [], [], now);
 
     expect(day.worstHour).toBe(14);
+  });
+
+  it('ranks by each hour\'s OWN window, not its latest reading overall: a later, lower reading outside the window must not win', () => {
+    // Hour A (12): a SAFE reading inside its own window (deadline 02:00Z),
+    // plus a much LOWER reading stamped after that deadline — knowledge the
+    // tool could not have had by hour 12's own decision point.
+    // Hour B (15): a genuinely worse reading, inside its OWN window
+    // (deadline 05:00Z). B must win, even though A's later reading is lower
+    // than anything B ever shows.
+    const now = new Date('2026-07-20T00:00:00Z');
+    const rows: ArchiveRow[] = [
+      row('2026-07-16', 12, 3000, 1000, '2026-07-16T00:00:00Z'), // in A's window: safe
+      row('2026-07-16', 12, 100, 1000, '2026-07-16T05:00:00Z'), // AFTER A's deadline (02:00Z): must be invisible to selection
+      row('2026-07-16', 15, 500, 1000, '2026-07-16T04:00:00Z'), // in B's window (deadline 05:00Z): the real worst
+    ];
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.worstHour).toBe(15);
   });
 });
 

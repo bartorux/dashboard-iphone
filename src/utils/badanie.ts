@@ -185,26 +185,82 @@ function readingsOf(rows: readonly ArchiveRow[], businessDate: string, hour: num
   return readings;
 }
 
+/** One hour's own decision window — see `computeHourWindow`. */
+interface HourWindow {
+  deadline: Date;
+  open: boolean;
+  readingsAsc: HourReading[];
+  /** Index into `readingsAsc` of the window reading, or -1 when none qualifies. */
+  windowIndex: number;
+}
+
+/**
+ * One (businessDate, hour) block's own decision window: the last reading AT
+ * OR BEFORE its deadline (the hour's Warsaw-local start minus NOTICE_HOURS),
+ * inclusive — or, while that deadline has not arrived yet, the latest
+ * reading known so far ("open").
+ *
+ * Shared by `autoTargetHour`, which needs EVERY candidate hour's own window
+ * to compare them fairly, and `buildRawDay`, which needs the chosen hour's
+ * window to measure it — one rule, computed the same way both times.
+ */
+function computeHourWindow(
+  rows: readonly ArchiveRow[],
+  businessDate: string,
+  hour: number,
+  now: Date
+): HourWindow {
+  const hourStartUtc = warsawWallClockToUtc(businessDate, hour);
+  const deadline = new Date(hourStartUtc.getTime() - NOTICE_HOURS * HOUR_MS);
+  const open = now.getTime() < deadline.getTime();
+  const readingsAsc = readingsOf(rows, businessDate, hour);
+
+  // Open: the window is simply the latest thing known so far, unbounded by a
+  // deadline that has not arrived. Closed: the last reading AT OR BEFORE the
+  // deadline — `<=`, so a reading landing exactly on the deadline still
+  // counts, matching "at least NOTICE_HOURS ahead" read as an inclusive bound.
+  let windowIndex = -1;
+  if (open) {
+    windowIndex = readingsAsc.length - 1;
+  } else {
+    for (let index = readingsAsc.length - 1; index >= 0; index--) {
+      if (readingsAsc[index].readAtMs <= deadline.getTime()) {
+        windowIndex = index;
+        break;
+      }
+    }
+  }
+
+  return { deadline, open, readingsAsc, windowIndex };
+}
+
 /**
  * Which hour (12-23) counts as "the day's worst" when no `CallEvent` forces
  * one.
  *
- * Picked from each hour's OWN latest available reading — what the forecast
- * had settled on by the time this study runs — not from what each hour's
- * decision window would show, which is `windowFor`'s job for the hour this
- * picks. Ties go to the earlier hour, which is what the ascending loop with a
- * strict `<` naturally does: the first hour to reach a value only ever loses
- * that spot to something strictly lower.
+ * Ranked by each hour's OWN decision window, never by its latest reading
+ * overall. An hour's latest archived reading can land long after THAT HOUR'S
+ * OWN deadline — the forecast keeps updating all day — and picking on that
+ * basis looks into the future: measured on 2026-09-02, it picked hour 20 off
+ * an 857 MW reading taken at 20:05, after the block had already started and
+ * the test call period was already running, which is knowledge nobody had
+ * by the 12:00 deadline that actually governed the day. Ranking each hour by
+ * what its OWN window shows fixes that. An hour with nothing in its window
+ * yet (deadline closed with no qualifying reading, or still open with
+ * nothing archived at all) is skipped rather than guessed at. Ties go to the
+ * earlier hour, which is what the ascending loop with a strict `<` naturally
+ * does: the first hour to reach a value only ever loses that spot to
+ * something strictly lower.
  */
-function autoTargetHour(rows: readonly ArchiveRow[], businessDate: string): number | null {
+function autoTargetHour(rows: readonly ArchiveRow[], businessDate: string, now: Date): number | null {
   let best: { hour: number; surplus: number } | null = null;
 
   for (let hour = AUTO_HOUR_FIRST; hour <= AUTO_HOUR_LAST; hour++) {
-    const readings = readingsOf(rows, businessDate, hour);
-    if (readings.length === 0) continue;
-    const latest = readings[readings.length - 1];
-    if (best === null || latest.surplus < best.surplus) {
-      best = { hour, surplus: latest.surplus };
+    const window = computeHourWindow(rows, businessDate, hour, now);
+    if (window.windowIndex === -1) continue;
+    const surplus = window.readingsAsc[window.windowIndex].surplus;
+    if (best === null || surplus < best.surplus) {
+      best = { hour, surplus };
     }
   }
 
@@ -297,7 +353,7 @@ function buildRawDay(
   businessDate: string,
   now: Date
 ): RawDay {
-  const worstHour = event ? event.hour : autoTargetHour(rows, businessDate);
+  const worstHour = event ? event.hour : autoTargetHour(rows, businessDate, now);
 
   if (worstHour === null) {
     // No CallEvent and not one reading in 12-23 for this day: nothing to
@@ -319,28 +375,8 @@ function buildRawDay(
     };
   }
 
-  const hourStartUtc = warsawWallClockToUtc(businessDate, worstHour);
-  const deadline = new Date(hourStartUtc.getTime() - NOTICE_HOURS * HOUR_MS);
-  const open = now.getTime() < deadline.getTime();
-
-  const readingsAsc = readingsOf(rows, businessDate, worstHour);
+  const { deadline, open, readingsAsc, windowIndex } = computeHourWindow(rows, businessDate, worstHour, now);
   const readings: Reading[] = readingsAsc.map((r) => [r.readAt, r.surplus, r.required]);
-
-  // Open: the window is simply the latest thing known so far, unbounded by a
-  // deadline that has not arrived. Closed: the last reading AT OR BEFORE the
-  // deadline — `<=`, so a reading landing exactly on the deadline still
-  // counts, matching "at least NOTICE_HOURS ahead" read as an inclusive bound.
-  let windowIndex = -1;
-  if (open) {
-    windowIndex = readingsAsc.length - 1;
-  } else {
-    for (let index = readingsAsc.length - 1; index >= 0; index--) {
-      if (readingsAsc[index].readAtMs <= deadline.getTime()) {
-        windowIndex = index;
-        break;
-      }
-    }
-  }
 
   if (windowIndex === -1) {
     return {
