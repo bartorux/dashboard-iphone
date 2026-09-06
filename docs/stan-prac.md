@@ -213,6 +213,36 @@ w jednostce innego agregatora jest dla właściciela niewidoczny, więc „nic" 
 **górne oszacowanie** fałszywego alarmu, nie dowód. Prawdziwe przywołanie całego rynku widzą wszyscy
 — tam „nic" jest pewne. Kalibracja cech opiera się wyłącznie na tym, co właściciel może zobaczyć.
 
+**Regulamin: test a okres przywołania — i korekta „nie ma źródła" (06.09.2026).**
+Rozporządzenie z 19.09.2024 (Dz.U. 2024 poz. 1389) i Regulamin Rynku Mocy (pkt 16.3, 16.8):
+- **Okres przywołania** (§4–§6): operator ogłasza go, gdy w bilansowaniu dobowym nadwyżka mocy
+  osiągalnej netto ponad zapotrzebowanie jest **mniejsza niż wymagana**; może odstąpić, gdy nadwyżka
+  **nie jest niższa niż 1100 MW** i nie widzi zagrożenia. Tylko godziny 7–22 w dni robocze. Dotyczy
+  wszystkich jednostek z obowiązkiem. Ogłoszenie **≥ 8 h przed** (16.3.2.5: późniejsze uznaje się
+  za niebyłe) — na stronie PSE, w rejestrze, mailem i SMS-em.
+- **Testowy okres przywołania** (§12 ust. 3; 16.8): dla **wybranych** jednostek, **nie częściej niż
+  raz na kwartał** na jednostkę (po wyniku negatywnym — kolejne aż do pozytywnego), **jedna
+  dowolna godzina wybrana przez operatora** z 7–22, ogłoszenie ≥ 8 h przed, **tylko przez rejestr,
+  mail i SMS — nie na stronie PSE** (16.8.1.3 odsyła do 16.3.2.1 pkt 2 i 3, z pominięciem pkt 1).
+  Wynik pozytywny = dostarczona moc ≥ obowiązek w tej godzinie; negatywny = kara (17.2.4).
+  Dostawca może sam **wnioskować o test**, gdy w dwóch pierwszych miesiącach kwartału nie było
+  ani testu, ani przywołania (§13 ust. 3) — test służy demonstracji zdolności (§12 ust. 2).
+- **Wniosek dla badania:** cechy z okna decyzyjnego (zapas nad 1100, margines, dwell) są
+  **wprost zakotwiczone w regulaminie dla okresu przywołania**. Dla **testu regulamin nie daje
+  żadnego powodu, by rezerwa miała znaczenie** — godzinę wybiera operator. Zbieżność testu 02.09
+  z ciasną dobą to hipoteza o praktyce PSE (testować wtedy, gdy moc i tak jest potrzebna), nie
+  reguła. Dlatego w rejestrze `kind` rozróżnia test od przywołania i oba są liczone osobno.
+- **Korekta:** API nie ma źródła, ale **strona PSE ma tabelę ogłoszonych okresów przywołania**
+  (`pse.pl/rynek-mocy-okresy-przywolania`, szczegóły na `purm.pse.pl`): 16 godzin, w tym
+  **30.06.2026 18–22, 04.08.2026 17–19, 06.08.2026 17–22** (prawdziwe, całorynkowe) oraz
+  23.09.2022, 06.11.2024. Kolumny: P_OP (zapotrzebowanie), P_RM (wymagana nadwyżka ≈ 2000 MW,
+  zgodna z `req_pow_res`), W_NJRM, ΣOM, UR_JRM, α_SOM. Testów tam nie ma — zgodnie z 16.8.1.3.
+  Do zrobienia: zaciągać tę tabelę do rejestru automatycznie (zdarzenia `real`); doby z sierpnia
+  są sprzed archiwum (od 28.08), więc okna decyzyjnego dla nich nie odtworzymy.
+- 16.3.1.1: OSP publikuje prognozy zapotrzebowania, mocy dyspozycyjnej, niedyspozycyjności,
+  generacji poza rynkiem mocy i sumy obowiązków — w cyklu rocznym, miesięcznym, tygodniowym
+  i dobowym. Warto sprawdzić, czy są w API pod inną nazwą niż `pk5l-wp`.
+
 **Adres z hashem zostaje — decyzja właściciela (06.09.2026).** Prawdziwa ścieżka `/badanie/` jest
 wykonalna (drugi plik wejściowy Vite + wyjątek `navigateFallbackDenylist` w service workerze, bo
 zainstalowana aplikacja przechwyciłaby nawigację i podała główny ekran), ale nie jest potrzebna.
