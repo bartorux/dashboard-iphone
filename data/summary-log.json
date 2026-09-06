@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-04T03:09:04.414Z",
-      "prompt": 51,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "W poniedziałek 7 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00, więc operator może ogłosić przywołanie, a wcześniejsza godzina 18:00 daje mu wybór.",
-      "body": "W poniedziałek 7 września margines spada poniżej typowego zakresu z ostatnich trzydziestu dni. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 8 września i czwartek 10 września między 19:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW i operator ma wybór, w środę 9 września prognoza jeszcze się ustala między 18:00 a 20:00, a w pozostałych dniach okresu nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-04T04:09:30.531Z",
       "prompt": 51,
       "accepted": true,
@@ -610,6 +601,14 @@
       "headline": "W najbliższych dniach rezerwa wielokrotnie spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Jutro margines spada poniżej wymaganego poziomu, a nadwyżka obniża się poniżej progu 1100 MW między 19:00 a 21:00. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek, środę, czwartek oraz piątek operator może ogłosić przywołanie w wyznaczonych godzinach, natomiast dzisiaj nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-06T03:07:28.098Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "We wtorek 8 września nadwyżka spadła poniżej progu 1100 MW, co pozwala operatorowi pominąć przywołanie.",
+      "body": "Zapotrzebowanie wzrosło powyżej normy, a fotowoltaika spadła poniżej normy. Do wyznaczonych godzin pozostaje ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 8 września nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00, podczas gdy w pozostałych dniach rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka utrzymuje się powyżej progu 1100 MW."
     }
   ]
 }
