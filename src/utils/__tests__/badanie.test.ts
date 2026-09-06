@@ -1,8 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import fixtureText from '../__fixtures__/pk5l-archiwum-wycinek.jsonl?raw';
-import { ALARM_FROM, DWELL_FLOOR_MW, buildBadanie, parseArchiveRows, studyDays } from '../badanie';
+import {
+  ALARM_FROM,
+  DWELL_FLOOR_MW,
+  applyObservations,
+  buildBadanie,
+  buildBadanieWithObservations,
+  parseArchiveRows,
+  studyDays,
+} from '../badanie';
 import type { ArchiveRow } from '../pk5lArchive';
-import type { CallEvent, CompassVersionRow } from '../badanieTypes';
+import type { CallEvent, CompassVersionRow, Observation } from '../badanieTypes';
 
 /** One synthetic archive line, in `ArchiveRow`'s committed field order. */
 function row(
@@ -519,5 +527,221 @@ describe('verdicts', () => {
 
     expect(day.window.open).toBe(true);
     expect(day.verdict).toBe('otwarte');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// applyObservations — merging the register (file.events) with Issue reports.
+// Uses the real archive slice: 2026-09-02 carries REAL_EVENT (register),
+// 2026-09-01 and -03 have no event and verdict 'cisza'.
+// ---------------------------------------------------------------------------
+
+describe('applyObservations', () => {
+  it('the register wins a same-date conflict against an Issue observation', () => {
+    const file = buildBadanie(realRows(), [], [REAL_EVENT], REAL_NOW);
+    const issueObservation: Observation = {
+      date: '2026-09-02',
+      outcome: 'real',
+      hour: 5,
+      scope: 'market',
+      source: 'issue',
+      issueNumber: 42,
+    };
+
+    const applied = applyObservations(file, [issueObservation]);
+    const day = applied.days.find((d) => d.date === '2026-09-02')!;
+
+    expect(day.observation).toEqual({
+      date: '2026-09-02',
+      outcome: 'test',
+      hour: 20,
+      scope: 'unit',
+      note: REAL_EVENT.note,
+      source: 'register',
+    });
+    // The conflict is resolved for the label only — scoring never re-runs here.
+    expect(day.verdict).toBe('trafienie');
+    expect(day.worstHour).toBe(20);
+  });
+
+  it('an Issue observation for a date the register knows nothing about is kept as-is', () => {
+    const file = buildBadanie(realRows(), [], [REAL_EVENT], REAL_NOW);
+    const issueObservation: Observation = {
+      date: '2026-09-01',
+      outcome: 'none',
+      source: 'issue',
+      issueNumber: 7,
+    };
+
+    const applied = applyObservations(file, [issueObservation]);
+    const day = applied.days.find((d) => d.date === '2026-09-01')!;
+
+    expect(day.observation).toEqual(issueObservation);
+  });
+
+  it('a "none" observation is visible on the day but never changes its verdict', () => {
+    const file = buildBadanie(realRows(), [], [], REAL_NOW); // no register event anywhere
+    const before = file.days.find((d) => d.date === '2026-09-01')!;
+    expect(before.verdict).toBe('cisza');
+
+    const applied = applyObservations(file, [
+      { date: '2026-09-01', outcome: 'none', source: 'issue', issueNumber: 1 },
+    ]);
+    const after = applied.days.find((d) => d.date === '2026-09-01')!;
+
+    expect(after.observation?.outcome).toBe('none');
+    expect(after.verdict).toBe('cisza'); // unchanged
+    expect(after.worstHour).toBe(before.worstHour); // unchanged
+    expect(after.extremeCount).toBe(before.extremeCount); // unchanged
+  });
+
+  it('days with neither a register event nor an Issue observation get observation: null', () => {
+    const file = buildBadanie(realRows(), [], [], REAL_NOW);
+    const applied = applyObservations(file, []);
+    for (const day of applied.days) {
+      expect(day.observation).toBeNull();
+    }
+  });
+
+  it('lists observations newest date first', () => {
+    const file = buildBadanie(realRows(), [], [], REAL_NOW);
+    const applied = applyObservations(file, [
+      { date: '2026-09-01', outcome: 'none', source: 'issue', issueNumber: 1 },
+      { date: '2026-09-03', outcome: 'none', source: 'issue', issueNumber: 2 },
+    ]);
+
+    expect(applied.observations.map((o) => o.date)).toEqual(['2026-09-03', '2026-09-01']);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// buildBadanieWithObservations — rescoring a day off an Issue's test/real
+// report when the register itself has nothing for that date.
+// ---------------------------------------------------------------------------
+
+describe('buildBadanieWithObservations', () => {
+  it('forces the target hour from an Issue test/real observation on a day the register has nothing for', () => {
+    const now = new Date('2026-07-20T00:00:00Z');
+    const rows: ArchiveRow[] = [
+      // Auto-selection would pick hour 12 (lower surplus, in its own window).
+      row('2026-07-16', 12, 100, 1000, '2026-07-16T00:00:00Z'),
+      // The hour the Issue reports as the actual call period.
+      row('2026-07-16', 18, 3000, 1000, '2026-07-16T00:00:00Z'),
+    ];
+    const issueObservations: Observation[] = [
+      { date: '2026-07-16', outcome: 'test', hour: 18, scope: 'unit', source: 'issue', issueNumber: 3 },
+    ];
+
+    const withoutIssue = buildBadanie(rows, [], [], now);
+    expect(withoutIssue.days[0].worstHour).toBe(12);
+
+    const withIssue = buildBadanieWithObservations(rows, [], [], issueObservations, now);
+    const day = withIssue.days[0];
+
+    expect(day.worstHour).toBe(18); // forced to the reported hour, not auto-selected
+    expect(day.event).toEqual({ date: '2026-07-16', hour: 18, kind: 'test', scope: 'unit' });
+    expect(day.observation).toEqual({
+      date: '2026-07-16',
+      outcome: 'test',
+      hour: 18,
+      scope: 'unit',
+      source: 'issue',
+      issueNumber: 3,
+    });
+    // The synthetic event drives scoring and shows up in the aggregate list...
+    expect(withIssue.events).toEqual([{ date: '2026-07-16', hour: 18, kind: 'test', scope: 'unit' }]);
+  });
+
+  it('a "none" observation from an Issue never becomes a scoring event, even on a day the register has nothing for', () => {
+    const now = new Date('2026-07-20T00:00:00Z');
+    const rows: ArchiveRow[] = [
+      row('2026-07-16', 12, 100, 1000, '2026-07-16T00:00:00Z'), // auto-selected: lowest own-window surplus
+      row('2026-07-16', 18, 3000, 1000, '2026-07-16T00:00:00Z'),
+    ];
+    const issueObservations: Observation[] = [
+      { date: '2026-07-16', outcome: 'none', source: 'issue', issueNumber: 4 },
+    ];
+
+    const result = buildBadanieWithObservations(rows, [], [], issueObservations, now);
+    const day = result.days[0];
+
+    expect(day.worstHour).toBe(12); // untouched by the "none" report — still auto-selected
+    expect(day.event).toBeNull(); // "none" must never become a CallEvent
+    expect(day.observation).toEqual({
+      date: '2026-07-16',
+      outcome: 'none',
+      source: 'issue',
+      issueNumber: 4,
+    });
+  });
+
+  it('the register wins per date: an Issue test/real report for a date the register already covers changes neither the score nor the label', () => {
+    const now = new Date('2026-07-20T00:00:00Z');
+    const rows: ArchiveRow[] = [
+      row('2026-07-16', 12, 100, 1000, '2026-07-16T00:00:00Z'),
+      row('2026-07-16', 18, 3000, 1000, '2026-07-16T00:00:00Z'),
+    ];
+    const registerEvent: CallEvent = { date: '2026-07-16', hour: 12, kind: 'real', scope: 'market' };
+    const issueObservations: Observation[] = [
+      { date: '2026-07-16', outcome: 'test', hour: 18, scope: 'unit', source: 'issue', issueNumber: 9 },
+    ];
+
+    const result = buildBadanieWithObservations(rows, [], [registerEvent], issueObservations, now);
+    const day = result.days[0];
+
+    expect(day.worstHour).toBe(12); // register's own hour, not the Issue's 18
+    expect(day.event).toEqual(registerEvent);
+    expect(day.observation).toEqual({
+      date: '2026-07-16',
+      outcome: 'real',
+      hour: 12,
+      scope: 'market',
+      note: undefined,
+      source: 'register',
+    });
+  });
+
+  it('an Issue test observation on an otherwise-quiet day flips the verdict to trafienie once extremeCount reaches ALARM_FROM', () => {
+    // Three days, one reading each at hour 15 plus its D-1 evening reading;
+    // 2026-08-10 is engineered to be the worst on headroom, dwell AND
+    // eveMargin against the other two — extremeCount 3, meeting ALARM_FROM —
+    // exactly the "falszywy-alarm" shape from the `verdicts` tests above,
+    // reused here to isolate the ONE thing this test is about: an event
+    // arriving via an Issue instead of the register flips that verdict to
+    // 'trafienie', the same as a register event would.
+    function threeDayRows(): ArchiveRow[] {
+      const plan: Array<{ date: string; surplus: number; eveSurplus: number }> = [
+        { date: '2026-08-10', surplus: 200, eveSurplus: 100 }, // worst on every axis
+        { date: '2026-08-11', surplus: 2000, eveSurplus: 1900 },
+        { date: '2026-08-12', surplus: 3000, eveSurplus: 2900 },
+      ];
+      const rows: ArchiveRow[] = [];
+      for (const { date, surplus, eveSurplus } of plan) {
+        rows.push(row(date, 15, surplus, 1000, `${date}T04:00:00Z`));
+        const [y, m, d] = date.split('-').map(Number);
+        const prev = new Date(Date.UTC(y, m - 1, d - 1));
+        const prevDate = prev.toISOString().slice(0, 10);
+        rows.push(row(date, 15, eveSurplus, 1000, `${prevDate}T20:00:00Z`));
+      }
+      return rows;
+    }
+
+    const now = new Date('2026-08-20T00:00:00Z');
+    const rows = threeDayRows();
+
+    const withoutObservation = studyDays(rows, [], [], now);
+    const dayWithout = withoutObservation.find((d) => d.date === '2026-08-10')!;
+    expect(dayWithout.extremeCount).toBeGreaterThanOrEqual(ALARM_FROM);
+    expect(dayWithout.verdict).toBe('falszywy-alarm');
+
+    const issueObservations: Observation[] = [
+      { date: '2026-08-10', outcome: 'test', hour: 15, scope: 'unit', source: 'issue', issueNumber: 11 },
+    ];
+    const withObservation = buildBadanieWithObservations(rows, [], [], issueObservations, now);
+    const dayWith = withObservation.days.find((d) => d.date === '2026-08-10')!;
+
+    expect(dayWith.extremeCount).toBeGreaterThanOrEqual(ALARM_FROM);
+    expect(dayWith.event).not.toBeNull();
+    expect(dayWith.verdict).toBe('trafienie');
   });
 });

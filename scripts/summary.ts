@@ -66,8 +66,10 @@ import {
   lastCompassValuesFrom,
   newCompassArchiveLines,
 } from '../src/utils/kompasArchive';
-import { buildBadanie, parseArchiveRows } from '../src/utils/badanie';
-import type { CallEvent } from '../src/utils/badanieTypes';
+import { buildBadanieWithObservations, parseArchiveRows } from '../src/utils/badanie';
+import type { CallEvent, Observation } from '../src/utils/badanieTypes';
+import { observationsFromIssues } from '../src/utils/obserwacje';
+import type { IssueLike } from '../src/utils/obserwacje';
 import type { PSERawItem, PSECompassRawItem } from '../src/types';
 import {
   PROMPT_VERSION,
@@ -268,7 +270,63 @@ function archiveCompass(rows: PSECompassRawItem[], at: Date): void {
  * Wrapped whole for the same reason as every archive above: the summary is
  * the product, this is a study, and a study failing must never end the run.
  */
-function writeBadanie(at: Date): void {
+const OBSERVATIONS_REPO = 'bartorux/dashboard-iphone';
+
+/**
+ * The owner's Issues-filed observations — see `src/utils/obserwacje.ts` for
+ * the title format both this and the research page agree on.
+ *
+ * Unauthenticated (no `GITHUB_TOKEN`) still works: Issues on a public repo
+ * are readable without a token, just at the lower unauthenticated rate limit,
+ * which an hourly job never comes close to. The token is added whenever the
+ * workflow provides one, mostly to keep this call away from that limit
+ * entirely rather than out of necessity.
+ *
+ * Every failure — network, HTTP, a shape that is not an array — resolves to
+ * an empty list rather than throwing: a missing observation this hour is
+ * simply a day the study cannot yet caption, never a reason to fail the run.
+ */
+async function fetchObservationIssues(): Promise<IssueLike[]> {
+  try {
+    const headers: Record<string, string> = {
+      Accept: 'application/vnd.github+json',
+      'User-Agent': 'pse-dashboard-summary',
+    };
+    const token = process.env.GITHUB_TOKEN;
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const response = await fetch(
+      `https://api.github.com/repos/${OBSERVATIONS_REPO}/issues?state=all&per_page=100`,
+      { headers }
+    );
+    if (!response.ok) {
+      console.warn(`Obserwacje z Issues pominiete: GitHub odpowiedzial HTTP ${response.status}.`);
+      return [];
+    }
+
+    const payload = (await response.json()) as unknown;
+    if (!Array.isArray(payload)) {
+      console.warn('Obserwacje z Issues pominiete: nieoczekiwany ksztalt odpowiedzi GitHub.');
+      return [];
+    }
+
+    // Issues and pull requests share one endpoint; a PR carries its own
+    // `pull_request` field and is never something the owner filed as an
+    // observation, so it is dropped here rather than fed to the parser.
+    return (payload as Array<Record<string, unknown>>)
+      .filter((item) => !item.pull_request)
+      .map((item) => ({
+        number: Number(item.number),
+        title: String(item.title ?? ''),
+        body: typeof item.body === 'string' ? item.body : null,
+      }));
+  } catch (error) {
+    console.warn(`Obserwacje z Issues pominiete w tym przebiegu: ${String(error)}`);
+    return [];
+  }
+}
+
+async function writeBadanie(at: Date): Promise<void> {
   try {
     const partition = archivePartition(at);
     const partitions = [previousPartition(partition), partition];
@@ -294,7 +352,10 @@ function writeBadanie(at: Date): void {
       // "no event on record", which is what the register would have said.
     }
 
-    const file = buildBadanie(rows, compass, events, at);
+    const issues = await fetchObservationIssues();
+    const issueObservations: Observation[] = observationsFromIssues(issues);
+
+    const file = buildBadanieWithObservations(rows, compass, events, issueObservations, at);
     // Compact on purpose: this file is fetched by a browser, and the readings
     // list alone runs to thousands of entries a month.
     writeFileSync(badanieTarget, `${JSON.stringify(file)}\n`);
@@ -539,7 +600,7 @@ try {
 
 // After both archives have taken this hour's rows, so the study sees them —
 // and before the first exit below, so a quiet day still gets re-scored.
-if (!dryRun) writeBadanie(now);
+if (!dryRun) await writeBadanie(now);
 
 const facts = buildFacts(
   points,

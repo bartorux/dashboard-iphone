@@ -5,6 +5,7 @@ import type {
   CompassVersionRow,
   DayStudy,
   Feature,
+  Observation,
   Reading,
 } from './badanieTypes';
 import { NOTICE_HOURS } from './callPeriod';
@@ -550,4 +551,113 @@ export function buildBadanie(
     days: studyDays(rows, compass, events, now),
     events: [...events],
   };
+}
+
+// ---------------------------------------------------------------------------
+// Observations: the owner's word on a day, layered on top of the score above.
+// ---------------------------------------------------------------------------
+
+/** Newest date first — how `observations` is meant to be read (most recent report up top). */
+function byDateDesc(a: Observation, b: Observation): number {
+  if (a.date === b.date) return 0;
+  return a.date > b.date ? -1 : 1;
+}
+
+/**
+ * Merges the hand-kept register (`file.events`) with observations reported
+ * through Issues, and writes the result onto `day.observation` / the
+ * top-level `observations` list.
+ *
+ * The register always wins a same-date conflict — it is curated by hand,
+ * while an Issue is a drive-by report anyone with the link can file. Built
+ * by seeding the map with Issues FIRST and letting the register's entries
+ * overwrite them second, so "last write wins" naturally becomes "register
+ * wins" without a separate conflict check.
+ *
+ * Deliberately does not touch `verdict`, `worstHour` or any scored field: a
+ * day already scored by `studyDays` stays exactly as scored. The one case
+ * that needs the day RESCORED — an Issue reporting a test/real call on a day
+ * the register knows nothing about — is out of reach for a function that
+ * only sees the already-built `file`, which is exactly why
+ * `buildBadanieWithObservations` exists below: it rescores first, then calls
+ * this.
+ */
+export function applyObservations(file: BadanieFile, observations: readonly Observation[]): BadanieFile {
+  const registerObservations: Observation[] = file.events.map((event) => ({
+    date: event.date,
+    outcome: event.kind,
+    hour: event.hour,
+    scope: event.scope,
+    note: event.note,
+    source: 'register',
+  }));
+
+  const byDate = new Map<string, Observation>();
+  for (const observation of observations) byDate.set(observation.date, observation);
+  for (const observation of registerObservations) byDate.set(observation.date, observation);
+
+  const merged = [...byDate.values()].sort(byDateDesc);
+
+  const days: DayStudy[] = file.days.map((day) => ({
+    ...day,
+    observation: byDate.get(day.date) ?? null,
+  }));
+
+  return { ...file, days, observations: merged };
+}
+
+/**
+ * `buildBadanie` plus the owner's observations, Issues included.
+ *
+ * An Issue reporting `test`/`real` for a day with no register event is not
+ * just a label: the whole point of recording it is that the day's own
+ * numbers get judged against a call period that genuinely happened, so the
+ * day must be scored as if that event HAD been typed into the register —
+ * target hour taken from the observation, verdict computed with the event in
+ * play. `buildBadanie` already takes an `events` list to do exactly that, so
+ * the fix is to build a synthetic `CallEvent` for each such Issue and hand
+ * the combined list to `buildBadanie` before doing anything else.
+ *
+ * The register still wins per date: an Issue for a date the register already
+ * covers contributes nothing to scoring (its event is dropped here) and
+ * nothing to `day.observation` either (`applyObservations` below re-applies
+ * the same register-wins rule).
+ *
+ * `day.observation` / `observations`, however, must still say "issue", not
+ * "register", for the days scored off a synthetic event — reporting the
+ * source of a same-day guess as the hand-kept register would be a lie about
+ * how sure it is. That is why `applyObservations` is called against a copy
+ * of the scored file with `events` swapped back to the REAL register: it
+ * only ever sees genuine register entries when deciding what counts as
+ * `source: 'register'`, while the returned file keeps every event actually
+ * used for scoring (register plus the synthetic ones), which is what
+ * `day.event` needs to explain its own verdict.
+ */
+export function buildBadanieWithObservations(
+  rows: readonly ArchiveRow[],
+  compass: readonly CompassVersionRow[],
+  registerEvents: readonly CallEvent[],
+  issueObservations: readonly Observation[],
+  now: Date
+): BadanieFile {
+  const registerDates = new Set(registerEvents.map((event) => event.date));
+
+  const eventsFromIssues: CallEvent[] = issueObservations
+    .filter(
+      (observation) =>
+        (observation.outcome === 'test' || observation.outcome === 'real') &&
+        typeof observation.hour === 'number' &&
+        !registerDates.has(observation.date)
+    )
+    .map((observation) => ({
+      date: observation.date,
+      hour: observation.hour as number,
+      kind: observation.outcome as 'test' | 'real',
+      scope: observation.scope ?? 'unit',
+      note: observation.note,
+    }));
+
+  const scored = buildBadanie(rows, compass, [...registerEvents, ...eventsFromIssues], now);
+  const labeled = applyObservations({ ...scored, events: [...registerEvents] }, issueObservations);
+  return { ...labeled, events: scored.events };
 }
