@@ -7,6 +7,7 @@ import {
   periodStart,
   periodEnd,
   spokenDay,
+  publicationTsToIso,
 } from '../dateHelpers';
 
 describe('formatDateTimeApi', () => {
@@ -128,5 +129,28 @@ describe('spokenDay', () => {
 
   it('returns nothing for a date it cannot read', () => {
     expect(spokenDay('kiedyś', wtorek)).toBe('');
+  });
+});
+
+describe('publicationTsToIso', () => {
+  it('turns PSE\'s space-separated stamp with fractional seconds into compact ISO', () => {
+    expect(publicationTsToIso('2026-08-28 16:42:11.322')).toBe(
+      '2026-08-28T16:42:11Z'
+    );
+  });
+
+  it('accepts a stamp with no fractional seconds', () => {
+    expect(publicationTsToIso('2026-08-28 16:42:11')).toBe(
+      '2026-08-28T16:42:11Z'
+    );
+  });
+
+  it('returns an empty string when PSE sent no stamp', () => {
+    expect(publicationTsToIso(undefined)).toBe('');
+    expect(publicationTsToIso('')).toBe('');
+  });
+
+  it('returns an empty string rather than throwing on junk', () => {
+    expect(publicationTsToIso('nonsense')).toBe('');
   });
 });

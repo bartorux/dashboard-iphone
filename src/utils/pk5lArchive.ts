@@ -1,5 +1,5 @@
 import type { PSERawItem } from '../types';
-import { periodStart } from './dateHelpers';
+import { periodStart, publicationTsToIso } from './dateHelpers';
 
 /**
  * Our own hourly archive of pk5l-wp: what surplus/required reserve the
@@ -42,8 +42,6 @@ export type ArchiveRow = readonly [
 ];
 
 const BUSINESS_DATE = /^\d{4}-\d{2}-\d{2}$/;
-const PSE_PUBLICATION_STAMP =
-  /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})(?:\.\d+)?$/;
 
 function archiveKey(businessDate: string, hour: number): ArchiveKey {
   return `${businessDate}#${hour}`;
@@ -53,21 +51,6 @@ function toNumber(value: unknown): number | null {
   if (value == null) return null;
   const parsed = typeof value === 'number' ? value : parseFloat(String(value));
   return Number.isFinite(parsed) ? parsed : null;
-}
-
-/**
- * PSE's own publication stamp for a row ("2026-08-28 16:42:11.322", space-
- * separated, fractional seconds included) turned into the compact form this
- * archive stores ("2026-08-28T16:42:11Z"). '' when the row carries none, or
- * when it does not parse — never thrown, since a missing publication stamp
- * must not cost the archive the reading itself.
- */
-function toIsoUtc(value: string | undefined): string {
-  if (!value) return '';
-  const match = PSE_PUBLICATION_STAMP.exec(value);
-  if (!match) return '';
-  const [, year, month, day, hour, minute, second] = match;
-  return `${year}-${month}-${day}T${hour}:${minute}:${second}Z`;
 }
 
 /**
@@ -204,7 +187,7 @@ export function newArchiveLines(
     // reading only this archive uses) — so on today's live rows this is
     // always ''. Read defensively regardless, so the day that field is added
     // this starts recording it with no further change here.
-    const publicationTs = toIsoUtc(
+    const publicationTs = publicationTsToIso(
       (row as PSERawItem & { publication_ts_utc?: string }).publication_ts_utc
     );
 

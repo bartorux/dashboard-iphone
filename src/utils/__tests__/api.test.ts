@@ -4,6 +4,7 @@ import {
   fetchPSEData,
   fetchPSEHistory,
   fetchRedispatch,
+  fetchCompassHistory,
 } from '../api';
 
 const ok = (value: unknown[]) => ({
@@ -212,5 +213,72 @@ describe('fetchRedispatch', () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
 
     await expect(fetchRedispatch('2026-08-04')).resolves.toEqual([]);
+  });
+});
+
+describe('fetchCompassHistory', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  /**
+   * The one thing that separates this from `fetchCompass`: that function's
+   * whole point is asking pdgsz for `is_active eq true` so a superseded
+   * version never reaches the card. This one exists to fetch exactly what
+   * that filter throws away, so pinning its ABSENCE here is what would catch
+   * someone "fixing" the two functions to look more alike.
+   */
+  it('does not filter on is_active — every version is wanted', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok([{ business_date: 'x' }]));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await fetchCompassHistory('2026-08-25', '2026-09-06');
+
+    const url = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
+    expect(url).not.toContain('is_active eq true');
+  });
+
+  it('selects is_active alongside the fields fetchCompass already asks for', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok([{ business_date: 'x' }]));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await fetchCompassHistory('2026-08-25', '2026-09-06');
+
+    const url = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
+    expect(url).toContain('usage_fcst,publication_ts_utc,is_active');
+  });
+
+  it('filters on the given business-date span', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok([{ business_date: 'x' }]));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await fetchCompassHistory('2026-08-25', '2026-09-06');
+
+    const url = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
+    expect(url).toContain("business_date ge '2026-08-25'");
+    expect(url).toContain("business_date le '2026-09-06'");
+  });
+
+  /*
+   * $first=5000 was the first guess and measured live (2026-09-06) at only
+   * six of fifteen days' worth of versions, with no error signalling the
+   * truncation — see the comment on fetchCompassHistory for the measurement
+   * (11,088 rows for 2026-08-25 through 2026-09-06). A >= check rather than
+   * an exact one, so raising the limit further stays a passing change.
+   */
+  it('requests a $first large enough for the measured 15-day version count (11,088 rows)', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok([{ business_date: 'x' }]));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await fetchCompassHistory('2026-08-25', '2026-09-08');
+
+    const url = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
+    const match = /\$first=(\d+)/.exec(url);
+    expect(match).not.toBeNull();
+    expect(Number(match![1])).toBeGreaterThanOrEqual(15000);
+  });
+
+  it('returns an empty array rather than throwing when the request fails', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
+
+    await expect(fetchCompassHistory('2026-08-25', '2026-09-06')).resolves.toEqual([]);
   });
 });

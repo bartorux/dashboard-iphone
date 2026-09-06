@@ -11,13 +11,20 @@
  * not replace a good summary with a bad one, nor fail a scheduled run for
  * something as ordinary as the model being briefly unavailable.
  */
-import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import {
+  appendFileSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   FORECAST_FIELDS,
   HISTORY_FIELDS_WITH_MIX,
   fetchCompass,
+  fetchCompassHistory,
   fetchPSEData,
   fetchPSEHistory,
 } from '../src/utils/api';
@@ -54,14 +61,23 @@ import {
   newArchiveLines,
   previousPartition,
 } from '../src/utils/pk5lArchive';
-import type { PSERawItem } from '../src/types';
+import {
+  lastCompassValuesFrom,
+  newCompassArchiveLines,
+} from '../src/utils/kompasArchive';
+import type { PSERawItem, PSECompassRawItem } from '../src/types';
 import {
   PROMPT_VERSION,
   buildPrompt,
   parseSummary,
   validateSummary,
 } from '../src/utils/summaryText';
-import { dayMonth } from '../src/utils/dateHelpers';
+import {
+  addDays,
+  dayMonth,
+  formatDate,
+  publicationTsToIso,
+} from '../src/utils/dateHelpers';
 import { askWithRetry, decideRun } from '../src/utils/summaryRun';
 import type { Proba } from '../src/utils/summaryRun';
 import type { Summary } from '../src/utils/summaryText';
@@ -74,6 +90,7 @@ const target = resolve(root, 'public/summary.json');
 const logTarget = resolve(root, 'data/forecast-log.json');
 const textLogTarget = resolve(root, 'data/summary-log.json');
 const archiveDir = resolve(root, 'data/pk5l-archiwum');
+const compassArchiveDir = resolve(root, 'data/kompas-archiwum');
 
 interface SummaryFile extends Summary {
   /** When the text was written, so the card can show its age. */
@@ -189,6 +206,189 @@ function archivePk5l(rows: PSERawItem[], at: Date): void {
   }
 }
 
+/**
+ * Appends this run's raw pdgsz (Kompas Energetyczny) readings to the monthly
+ * JSONL archive — the same shape and the same reason as `archivePk5l`: PSE
+ * serves only the current `is_active` version through the endpoint this job
+ * polls every hour, so without this the version that was live at any past
+ * moment is lost the instant PSE republishes a period.
+ */
+function archiveCompass(rows: PSECompassRawItem[], at: Date): void {
+  try {
+    const partition = archivePartition(at);
+    const partitionPath = resolve(compassArchiveDir, `${partition}.jsonl`);
+    const previousPath = resolve(
+      compassArchiveDir,
+      `${previousPartition(partition)}.jsonl`
+    );
+
+    const readPartition = (path: string): string => {
+      try {
+        return readFileSync(path, 'utf8');
+      } catch {
+        return '';
+      }
+    };
+
+    const lastByKey = lastCompassValuesFrom([
+      readPartition(previousPath),
+      readPartition(partitionPath),
+    ]);
+
+    const lines = newCompassArchiveLines(rows, lastByKey, at.toISOString());
+    if (lines.length === 0) {
+      console.log('Archiwum Kompasu: bez zmian wobec ostatnich odczytow — nic nie dopisuje.');
+      return;
+    }
+
+    mkdirSync(compassArchiveDir, { recursive: true });
+    appendFileSync(partitionPath, `${lines.join('\n')}\n`);
+    console.log(`Archiwum Kompasu: dopisano ${lines.length} wierszy do ${partition}.jsonl.`);
+  } catch (error) {
+    console.warn(`Archiwum Kompasu pominiete w tym przebiegu: ${String(error)}`);
+  }
+}
+
+/** True while the archive has never been written to — the one condition
+ *  `seedCompassArchive` runs under. */
+function isCompassArchiveEmpty(): boolean {
+  try {
+    return readdirSync(compassArchiveDir).length === 0;
+  } catch {
+    return true; // directory does not exist yet
+  }
+}
+
+/**
+ * ONE-TIME backfill of the Kompas archive from PSE's own version history —
+ * this is PSE's history, not something this job observed. Runs only while
+ * `data/kompas-archiwum/` is still empty: every later run only ever sees the
+ * live pdgsz endpoint, which serves the active version alone, so this is the
+ * one chance to recover whatever versions PSE is still willing to hand back
+ * from before this archive existed. Once the directory holds anything at all,
+ * this becomes a no-op forever — including on every scheduled run after the
+ * first one that lands after this code ships.
+ *
+ * Written with `readAt` := each row's own `publication_ts_utc`: this backfill
+ * has no real "moment this job read it", so the only honest instant to record
+ * is the one PSE itself stamped the version with. That also means the
+ * partition a version belongs in is the month of ITS publication stamp, not
+ * the month `at` falls in — a version published in August must land in
+ * August's file even when the seed itself runs in September.
+ */
+async function seedCompassArchive(at: Date): Promise<void> {
+  try {
+    if (!isCompassArchiveEmpty()) {
+      console.log('Zasilenie historii Kompasu pominiete — archiwum juz istnieje.');
+      return;
+    }
+
+    const from = '2026-08-25';
+    const to = formatDate(addDays(at, 2));
+    const rows = await fetchCompassHistory(from, to);
+    if (rows.length === 0) {
+      console.log('Zasilenie historii Kompasu: PSE nie zwrocilo zadnych wersji.');
+      return;
+    }
+
+    // Oldest first, so each key's versions are compared in the order PSE
+    // actually published them — the same order a live run would have seen
+    // them in, one hour at a time, had this archive existed back then.
+    const sorted = [...rows].sort((a, b) =>
+      String(a.publication_ts_utc ?? '').localeCompare(String(b.publication_ts_utc ?? ''))
+    );
+
+    const linesByPartition = new Map<string, string[]>();
+    // One running dedupe map per partition, seeded from whatever that
+    // partition's file already holds (empty here, since the whole point of
+    // this function is that the archive starts empty, but kept symmetrical
+    // with `archiveCompass` rather than assuming so).
+    const runningByPartition = new Map<
+      string,
+      Map<string, { level: 0 | 1 | 2 | 3; publicationTsUtc: string }>
+    >();
+    let skipped = 0;
+
+    const readPartition = (path: string): string => {
+      try {
+        return readFileSync(path, 'utf8');
+      } catch {
+        return '';
+      }
+    };
+
+    for (const row of sorted) {
+      // `newCompassArchiveLines` converts each row's own stamp the same way
+      // internally, but the partition a version belongs in has to be known
+      // BEFORE calling it — so the same conversion is done here too, once,
+      // purely to place the line. A row with no usable stamp at all cannot be
+      // dated, which for a backfill (unlike a live run, where `readAt` is
+      // simply "now") means there is nothing honest left to record it as.
+      const publicationTsUtc = publicationTsToIso(row.publication_ts_utc);
+      if (!publicationTsUtc) {
+        skipped += 1;
+        continue;
+      }
+
+      const partition = archivePartition(new Date(publicationTsUtc));
+      if (!runningByPartition.has(partition)) {
+        const partitionPath = resolve(compassArchiveDir, `${partition}.jsonl`);
+        const previousPath = resolve(
+          compassArchiveDir,
+          `${previousPartition(partition)}.jsonl`
+        );
+        runningByPartition.set(
+          partition,
+          lastCompassValuesFrom([readPartition(previousPath), readPartition(partitionPath)])
+        );
+      }
+
+      const lastByKey = runningByPartition.get(partition)!;
+      const lines = newCompassArchiveLines([row], lastByKey, publicationTsUtc);
+      if (lines.length === 0) continue;
+
+      const [line] = lines;
+      const [businessDate, hour, level] = JSON.parse(line) as [
+        string,
+        number,
+        0 | 1 | 2 | 3,
+        string,
+        string,
+      ];
+      // `newCompassArchiveLines` never mutates its input map (by design, so
+      // that live runs can dedupe a batch against an untouched copy of what
+      // is already on disk) — so the running state for this partition has to
+      // be advanced by hand here, or the next version of the same hour would
+      // dedupe against nothing and every version PSE ever published would be
+      // written back out as if it were new.
+      lastByKey.set(`${businessDate}#${hour}`, { level, publicationTsUtc });
+
+      const bucket = linesByPartition.get(partition);
+      if (bucket) bucket.push(line);
+      else linesByPartition.set(partition, [line]);
+    }
+
+    if (linesByPartition.size === 0) {
+      console.log(`Zasilenie historii Kompasu: nic do zapisania (pominieto ${skipped}).`);
+      return;
+    }
+
+    mkdirSync(compassArchiveDir, { recursive: true });
+    let written = 0;
+    for (const [partition, lines] of linesByPartition) {
+      const partitionPath = resolve(compassArchiveDir, `${partition}.jsonl`);
+      appendFileSync(partitionPath, `${lines.join('\n')}\n`);
+      written += lines.length;
+    }
+
+    console.log(
+      `Zasilenie historii Kompasu z wersji PSE: zapisano ${written} wierszy w ${linesByPartition.size} partycjach (pominieto ${skipped} bez uzytecznego znacznika publikacji).`
+    );
+  } catch (error) {
+    console.warn(`Zasilenie historii Kompasu pominiete: ${String(error)}`);
+  }
+}
+
 const [forecast, history] = await Promise.all([
   fetchPSEData(
     // The archive stamps every reading with the PSE revision it came from;
@@ -217,6 +417,11 @@ if (!dryRun) recordForecast(points, now);
 // asked anything, and `dryRun` means "show me the prompt", not "read PSE
 // live and pretend the run never happened".
 if (!dryRun) archivePk5l(forecast, now);
+
+// One-time, and a no-op the moment the archive holds anything at all — see
+// the function's own comment. Placed before the live Kompas fetch below so a
+// first-ever run seeds history before also archiving today's live reading.
+if (!dryRun) await seedCompassArchive(now);
 
 /*
  * What the log says about each day, read back from the file this job has been
@@ -266,6 +471,7 @@ const kompas = new Map<string, CompassHour[]>();
 try {
   const dni = visibleBusinessDates(now);
   const surowe = await fetchCompass(dni[0], dni[dni.length - 1]);
+  if (!dryRun) archiveCompass(surowe, now);
   for (const hour of parseCompass(surowe)) {
     const bucket = kompas.get(hour.businessDate);
     if (bucket) bucket.push(hour);

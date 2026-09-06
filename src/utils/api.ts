@@ -207,3 +207,41 @@ export async function fetchCompass(
   );
   return rows ?? [];
 }
+
+/**
+ * pdgsz across a span of business days, EVERY version — the one difference
+ * from `fetchCompass`, which asks PSE to filter itself down to `is_active`.
+ *
+ * Exists for the one thing only PSE's own version history can answer: what a
+ * period said BEFORE it was superseded. `fetchCompass` runs every hour and
+ * only ever sees the CURRENT version, so from the moment kompasArchive.ts
+ * started running this endpoint is never needed again for anything but a
+ * one-time backfill (`seedCompassArchive` in scripts/summary.ts) — the
+ * superseded versions PSE is willing to hand back at all, before this app's
+ * own archive becomes the only record.
+ *
+ * `is_active` rides along in `$select` so a caller can tell which row was the
+ * live one at fetch time, though kompasArchive itself keys purely on
+ * `publication_ts_utc`.
+ *
+ * `$first` is generous rather than tuned: `query` issues a single request and
+ * does not paginate on its own, so whatever is asked for is the hard cap on
+ * what comes back. Measured live against a 15-day span (2026-08-25 through
+ * today) at 11,088 rows — PSE republishes some hours dozens of times a day —
+ * so 5,000 (a first guess) silently truncated to six of those fifteen days
+ * with no error at all. 20,000 leaves headroom for that to keep growing, and
+ * this call is never made from a browser, so a larger payload costs nothing a
+ * phone would ever pay for.
+ */
+export async function fetchCompassHistory(
+  from: string,
+  to: string
+): Promise<PSECompassRawItem[]> {
+  const rows = await query<PSECompassRawItem>(
+    `${API_BASE}/pdgsz`,
+    `$filter=${encodeURIComponent(
+      `business_date ge '${from}' and business_date le '${to}'`
+    )}&$select=business_date,dtime,dtime_utc,usage_fcst,publication_ts_utc,is_active&$first=20000`
+  );
+  return rows ?? [];
+}
