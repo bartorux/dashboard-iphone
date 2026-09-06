@@ -13,6 +13,7 @@ import {
   describeMovement,
   movementFor,
   type DaySnapshot,
+  LOG_FLOOR,
 } from '../forecastLog';
 import { makePoint } from '../../test/factories';
 
@@ -189,33 +190,80 @@ describe('appendEntry', () => {
     expect(moved.entries[1].days[0].worstMargin).toBe(1331);
   });
 
+  it('keeps history when the incoming entry is stamped EARLIER than what is stored', () => {
+    // A runner clock stepped back, or a delayed run writing after a later one.
+    // The window is measured against the new entry, so an older stamp must not
+    // read as "everything else has aged out".
+    const log = appendEntry(
+      {
+        entries: [
+          { at: '2026-09-06T10:00:00Z', days: [day({ worstMargin: 1 })] },
+          { at: '2026-09-06T11:00:00Z', days: [day({ worstMargin: 2 })] },
+        ],
+      },
+      { at: '2026-09-06T09:00:00Z', days: [day({ worstMargin: 3 })] }
+    );
+
+    expect(log.entries).toHaveLength(3);
+  });
+
+  it('does not let one stamp from the future erase the history', () => {
+    // A broken runner clock. Measured before the floor was added: 72 entries
+    // collapsed to 1, and three days of movement went in a single write.
+    const entries = Array.from({ length: 60 }, (_, index) => ({
+      at: new Date(Date.UTC(2026, 8, 4, index, 0)).toISOString(),
+      days: [day({ worstMargin: index })],
+    }));
+
+    const log = appendEntry(
+      { entries },
+      { at: '2027-01-01T00:00:00Z', days: [day({ worstMargin: 999 })] }
+    );
+
+    expect(log.entries.length).toBeGreaterThanOrEqual(LOG_FLOOR);
+    expect(LOG_FLOOR).toBe(48);
+  });
+
   it('drops what has aged out of the window and keeps the rest', () => {
     // Retention counted in TIME rather than in entries. The old rule kept 72
     // entries, which was three days only while the job ran hourly; at a
     // quarter-hourly cadence the same count covers less than one day, and
     // "since yesterday" would quietly stop being answerable.
+    //
+    // Sixty hourly entries, so the floor (48) is comfortably met and it is the
+    // WINDOW that decides: with the incoming entry at hour 80, hours 0–7 are
+    // more than 72 h old and go, hours 8–59 stay.
+    const entries = Array.from({ length: 60 }, (_, hour) => ({
+      at: new Date(Date.UTC(2026, 7, 8, hour, 0)).toISOString(),
+      days: [day({ worstMargin: hour })],
+    }));
+    const log = appendEntry(
+      { entries },
+      { at: new Date(Date.UTC(2026, 7, 8, 80, 0)).toISOString(), days: [day({ worstMargin: 999 })] }
+    );
+
+    const margins = log.entries.map((entry) => entry.days[0].worstMargin);
+    expect(margins[0]).toBe(8); // hour 7 is 73 h old — gone; hour 8 is 72 h — kept
+    expect(margins).toHaveLength(53); // hours 8–59 plus the new entry
+    expect(margins[margins.length - 1]).toBe(999);
+  });
+
+  it('keeps a small log whole even past the window — the floor outranks the window below 48 entries', () => {
+    // A fresh log with two entries, one of them 73 h old: the window alone would
+    // drop it, the floor keeps it. Deliberate — the floor exists so that no
+    // single write can leave less than half a day of history, and a young log
+    // holding a stale entry for a while is the smaller harm.
     const log = appendEntry(
       {
         entries: [
-          // 73 hours before the incoming entry — past the window.
           { at: '2026-08-08T09:00:00Z', days: [day({ worstMargin: 1 })] },
-          // 71 hours — still inside it.
           { at: '2026-08-08T11:00:00Z', days: [day({ worstMargin: 2 })] },
         ],
       },
       { at: '2026-08-11T10:00:00Z', days: [day({ worstMargin: 3 })] }
     );
 
-    expect(log.entries.map((entry) => entry.days[0].worstMargin)).toEqual([2, 3]);
-  });
-
-  it('keeps an entry sitting exactly on the window edge', () => {
-    const log = appendEntry(
-      { entries: [{ at: '2026-08-08T10:00:00Z', days: [day({ worstMargin: 1 })] }] },
-      { at: '2026-08-11T10:00:00Z', days: [day({ worstMargin: 3 })] }
-    );
-
-    expect(log.entries).toHaveLength(2);
+    expect(log.entries.map((entry) => entry.days[0].worstMargin)).toEqual([1, 2, 3]);
   });
 
   it('holds the file under the safety cap', () => {
@@ -281,6 +329,19 @@ describe('hourlyEntries', () => {
   const wpis = (at: string, worstMargin: number) => ({
     at,
     days: [day({ worstMargin })],
+  });
+
+  it('buckets by elapsed hours, not by a Warsaw wall clock — the autumn hour repeats', () => {
+    // 25.10.2026: the clock goes back at 01:00Z, so 00:30Z and 01:30Z BOTH read
+    // 02:30 in Warsaw. Bucketed on local time they fold into one entry and an
+    // hour of history vanishes; bucketed on elapsed time they stay two — which
+    // is what every threshold in this module means by "an hour".
+    const godziny = hourlyEntries([
+      wpis('2026-10-25T00:30:00Z', 1),
+      wpis('2026-10-25T01:30:00Z', 2),
+    ]);
+
+    expect(godziny.map((entry) => entry.days[0].worstMargin)).toEqual([1, 2]);
   });
 
   it('keeps the last reading of each clock hour', () => {

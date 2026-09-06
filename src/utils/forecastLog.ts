@@ -50,10 +50,28 @@ export const LOG_WINDOW_MS = 72 * 60 * 60 * 1000;
  *
  * The window above decides what is worth keeping; this only bounds what a
  * misbehaving clock or a much faster cadence could do to the file size. 400
- * entries is well above three days at a quarter-hourly cadence (289), so under
- * normal running it never binds, and the file stays a few tens of kilobytes.
+ * entries is well above three days at a quarter-hourly cadence (289), and above
+ * the 360 that four dispatches plus the hourly fallback can produce in a window,
+ * so under normal running it never binds. Measured at 953 B per entry with five
+ * days in a snapshot, the file runs ~270 kB at that depth and ~370 kB at the
+ * ceiling — no longer "a few tens of kilobytes", and rewritten on every run.
  */
 export const LOG_CAP = 400;
+
+/**
+ * A floor on what the window may take away.
+ *
+ * The window is measured against the incoming entry's own stamp, which is what
+ * keeps this function pure — and hands a broken runner clock a way to erase the
+ * whole history in one write: one entry stamped a year ahead puts every real
+ * entry outside the window (measured in review: 72 entries collapsed to 1, and
+ * the bad stamp then sat at the end of the resampled series, inside the drift
+ * window). Retention still belongs to the window; this only says it may never
+ * leave less than half a day of forecasting — the depth MOVEMENT_MIN_SNAPSHOTS
+ * needs. The price: after a real multi-day outage the floor holds old entries
+ * for one more half day, which is exactly what the old count-based slice did.
+ */
+export const LOG_FLOOR = 48; // 12 h at the quarter-hourly cadence
 
 export const EMPTY_LOG: ForecastLog = { entries: [] };
 
@@ -165,7 +183,10 @@ export function appendEntry(
       })
     : entries;
 
-  return { entries: kept.slice(Math.max(0, kept.length - cap)) };
+  const guarded =
+    kept.length >= LOG_FLOOR ? kept : entries.slice(Math.max(0, entries.length - LOG_FLOOR));
+
+  return { entries: guarded.slice(Math.max(0, guarded.length - cap)) };
 }
 
 /**
@@ -209,7 +230,15 @@ export function parseLog(raw: unknown): ForecastLog {
  * day sliding.
  *
  * The LAST reading in an hour, because it is the one that was true at the end of
- * it, which is exactly what the hourly job used to record.
+ * it — the closest thing to what the hourly job recorded. Not identical: Actions
+ * delivered that job 15–30 minutes late, so on the live log 72 hourly entries
+ * fold into 61 clock hours (11 hours held two readings, 2 held none). The
+ * resampled series is the cleaner of the two, and it is the one the thresholds
+ * below now mean.
+ *
+ * Buckets are ELAPSED hours (UTC epoch), never a Warsaw wall clock: on the
+ * autumn change 00:30Z and 01:30Z both read 02:30 locally and would fold into
+ * one, losing an hour of history; in spring a wall-clock hour is simply absent.
  */
 export function hourlyEntries(entries: LogEntry[]): LogEntry[] {
   const HOUR_MS = 60 * 60 * 1000;

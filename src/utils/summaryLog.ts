@@ -27,7 +27,14 @@ export interface SummaryLog {
   attempts: Attempt[];
 }
 
-/** Three days of hourly runs, the same depth the forecast log keeps. */
+/**
+ * 72 attempts, not 72 runs: an attempt is written only when the model was
+ * actually asked, and that follows the assessment changing (or six hours
+ * passing), not the run cadence. At a quarter-hourly cadence the runs are
+ * four times as frequent; the attempts are not, so this still covers days,
+ * not hours. Kept as a count on purpose — a time window would tie the file
+ * size to how restless the grid is.
+ */
 export const LOG_LIMIT = 72;
 
 export const EMPTY_LOG: SummaryLog = { attempts: [] };

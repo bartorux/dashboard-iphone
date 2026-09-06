@@ -387,6 +387,28 @@ describe('dwell', () => {
     expect(day.dwell.value).toBe(2);
   });
 
+  it('reads 0 both for a day that never dipped and for one that dipped only at the window — a decision, not an accident', () => {
+    // The two are NOT the same fact, and dwell alone cannot tell them apart:
+    // `surplus`/`headroom` do that. Pinned because the collision costs a real
+    // signal — a day that has just gone under ranks at percentile 0, exactly
+    // like a quiet one, where the old reading-count definition gave it 1 vs 0.
+    const nigdy: ArchiveRow[] = [
+      row('2026-07-11', 15, 4000, 1000, '2026-07-11T02:00:00Z'),
+      row('2026-07-11', 15, 3800, 1000, '2026-07-11T04:00:00Z'), // the window, above the floor
+    ];
+    const wlasnieWszedl: ArchiveRow[] = [
+      row('2026-07-11', 15, 4000, 1000, '2026-07-11T02:00:00Z'),
+      row('2026-07-11', 15, 900, 1000, '2026-07-11T04:00:00Z'), // the window, below it
+    ];
+    const now = new Date('2026-07-12T00:00:00Z');
+
+    expect(studyDays(nigdy, [], [], now)[0].dwell.value).toBe(0);
+    expect(studyDays(wlasnieWszedl, [], [], now)[0].dwell.value).toBe(0);
+    // What actually separates them:
+    expect(studyDays(nigdy, [], [], now)[0].surplus).toBeGreaterThanOrEqual(1500);
+    expect(studyDays(wlasnieWszedl, [], [], now)[0].surplus).toBeLessThan(1500);
+  });
+
   it('reads 0 for a single reading below the floor — nothing to span yet', () => {
     const rows: ArchiveRow[] = [
       row('2026-07-09', 15, 2000, 1000, '2026-07-09T00:00:00Z'), // >= floor
