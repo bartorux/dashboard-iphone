@@ -142,6 +142,20 @@ function formatPercentile(percentile: number | null): string | null {
 }
 
 /**
+ * Dwell, in hours — always one decimal place, Polish comma (`toLocaleString`
+ * with `pl-PL`, same convention `formatPercentile` above uses). Unlike
+ * `formatMW`/`signedMW`, which format a whole megawatt figure, `dwell` is a
+ * fractional hour count now that it measures a time span rather than a
+ * reading count — see `badanie.ts`'s `dwellFor`.
+ */
+function formatDwellHours(hours: number): string {
+  return `${hours.toLocaleString('pl-PL', {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  })} h`;
+}
+
+/**
  * One feature cell: value, and — when the file has one — the percentile that
  * says how it ranks against every other closed day. Highlighted the same way
  * an alert row is elsewhere in the app (bg-alarm-soft/text-alarm-text): an
@@ -265,7 +279,7 @@ function DayRow({
           {day.margin === null ? '—' : signedMW(day.margin)}
         </td>
         <FeatureCell feature={day.headroom} format={signedMW} />
-        <FeatureCell feature={day.dwell} format={formatMW} />
+        <FeatureCell feature={day.dwell} format={formatDwellHours} />
         <FeatureCell feature={day.eveMargin} format={signedMW} />
         <td
           className={`px-2 py-1.5 text-right tnum ${
@@ -320,9 +334,9 @@ const COLUMNS: ReadonlyArray<{ label: string; hint?: string; align?: 'right' }> 
     hint: 'Ile rezerwy zostaje nad progiem 1100 MW, przy którym operator może odstąpić od ogłoszenia. Im mniej, tym gorzej.',
   },
   {
-    label: 'Dwell',
+    label: 'Dwell (h)',
     align: 'right',
-    hint: 'Ile kolejnych odczytów wstecz od okna godzina docelowa siedziała poniżej 1500 MW. Mierzy trwałość niedoboru, nie jego chwilową głębokość: jedno mrugnięcie daje 1, doba trzymająca się nisko od wczoraj daje kilkadziesiąt.',
+    hint: 'Ile godzin godzina docelowa siedziała poniżej 1500 MW bez przerwy, licząc wstecz od okna. Mierzy trwałość niedoboru, nie jego chwilową głębokość: jedno mrugnięcie tuż przy oknie daje 0 h, doba trzymająca się nisko od wczoraj daje kilkanaście czy kilkadziesiąt godzin.',
   },
   {
     label: 'D−1 wiecz.',
@@ -726,8 +740,8 @@ function Content({ data }: { data: BadanieFile }) {
       <p className="mt-3 max-w-prose text-[0.8125rem] text-text-secondary">
         Okno decyzyjne to ostatni zarchiwizowany odczyt przed terminem — godzina docelowa minus{' '}
         {data.noticeHours} h. Cztery cechy wchodzą do oceny: zapas nad progem odstępstwa (
-        {formatMW(data.exemptionMw)} MW), dwell (kolejne odczyty poniżej{' '}
-        {formatMW(data.dwellFloorMw)} MW), margines wieczorem w dobie D−1 i poziom Kompasu na
+        {formatMW(data.exemptionMw)} MW), dwell (ile godzin godzina docelowa siedziała poniżej{' '}
+        {formatMW(data.dwellFloorMw)} MW bez przerwy), margines wieczorem w dobie D−1 i poziom Kompasu na
         godzinie docelowej. Percentyl cechy to udział innych dób, które wypadły łagodniej niż ta;
         ekstremum zaczyna się od percentyla 0,9. Werdykt „alarm" liczy się od {data.alarmFrom}{' '}
         ekstremów na cztery.

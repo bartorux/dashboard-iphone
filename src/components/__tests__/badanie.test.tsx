@@ -73,7 +73,8 @@ const FIXTURE: BadanieFile = {
       required: 2000,
       margin: -1100,
       headroom: { value: -200, percentile: 0.95, extreme: true },
-      dwell: { value: 5, percentile: 0.92, extreme: true },
+      // Hours, not a reading count, since the dwell change — see badanie.ts.
+      dwell: { value: 17.5, percentile: 0.92, extreme: true },
       eveMargin: { value: -300, percentile: 0.91, extreme: true },
       compass: { level: 3, extreme: true },
       extremeCount: 4,
@@ -119,7 +120,7 @@ const FIXTURE: BadanieFile = {
       required: 2000,
       margin: 500,
       headroom: { value: 1400, percentile: 0.3, extreme: false },
-      dwell: { value: 1, percentile: 0.2, extreme: false },
+      dwell: { value: 2.5, percentile: 0.2, extreme: false },
       eveMargin: { value: null, percentile: null, extreme: false },
       compass: { level: null, extreme: false },
       extremeCount: 0,
@@ -245,6 +246,18 @@ describe('Badanie', () => {
     expect(row.className).toContain('font-semibold');
   });
 
+  it('labels the dwell column in hours and formats its value with one decimal and a Polish comma', async () => {
+    respondWith({ badanie: FIXTURE });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    expect(screen.getAllByRole('button', { name: 'Dwell (h)' })[0]).toBeInTheDocument();
+    const row = screen.getByText('02.09').closest('tr')!;
+    // 17.5 -> "17,5 h", not "17.5 h" (English decimal point) nor the bare
+    // MW-style integer formatting `formatMW` used to apply here.
+    expect(within(row).getByText('17,5 h')).toBeInTheDocument();
+  });
+
   it('paints an extreme feature cell in the alarm colours', async () => {
     respondWith({ badanie: FIXTURE });
     render(<Badanie />);
@@ -298,25 +311,25 @@ describe('Badanie', () => {
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
     // The first table's header buttons; every table has its own hint line.
-    const dwell = screen.getAllByRole('button', { name: 'Dwell' })[0];
+    const dwell = screen.getAllByRole('button', { name: 'Dwell (h)' })[0];
     const status = () => screen.getAllByRole('status')[0];
     expect(status().textContent).toMatch(/Najedź na nagłówek/);
     // Hover: shown immediately, no browser tooltip delay involved.
     fireEvent.mouseEnter(dwell);
-    expect(status().textContent).toMatch(/kolejnych odczytów/);
+    expect(status().textContent).toMatch(/siedziała poniżej/);
     fireEvent.mouseLeave(dwell);
     expect(status().textContent).toMatch(/Najedź na nagłówek/);
     // Click pins it — the only gesture a phone has.
     fireEvent.click(dwell);
     expect(dwell).toHaveAttribute('aria-pressed', 'true');
-    expect(status().textContent).toMatch(/kolejnych odczytów/);
+    expect(status().textContent).toMatch(/siedziała poniżej/);
     // With one column pinned, hovering another wins for as long as the
     // pointer stays there, then the pinned one comes back.
     const zapas = screen.getAllByRole('button', { name: 'Zapas' })[0];
     fireEvent.mouseEnter(zapas);
     expect(status().textContent).toMatch(/nad progiem/);
     fireEvent.mouseLeave(zapas);
-    expect(status().textContent).toMatch(/kolejnych odczytów/);
+    expect(status().textContent).toMatch(/siedziała poniżej/);
     fireEvent.click(dwell);
     expect(status().textContent).toMatch(/Najedź na nagłówek/);
     // Every feature column has something to say.

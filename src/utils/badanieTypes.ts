@@ -70,7 +70,7 @@ export interface DayStudy {
   margin: number | null;
   /** surplus − CALL_PERIOD_EXEMPTION_MW at the window; lower = worse. */
   headroom: Feature;
-  /** Consecutive readings back from the window in which the worst hour stayed below DWELL_FLOOR_MW; higher = worse. */
+  /** Hours the worst hour has sat below DWELL_FLOOR_MW, measured as the time span of the unbroken run ending at the window; higher = worse. */
   dwell: Feature;
   /** Margin of the worst hour in the last reading stamped on D-1 (local); lower = worse. */
   eveMargin: Feature;
