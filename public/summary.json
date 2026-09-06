@@ -1,16 +1,16 @@
 {
-  "headline": "We wtorek 8 września o 20:00 margines spadnie najniżej ze wszystkich dni, a nadwyżka spadnie poniżej progu 1100 MW.",
-  "body": "W poniedziałek 7 września zapotrzebowanie wzrośnie powyżej normy, podczas gdy ubytki spadną poniżej typowego poziomu. Do wymienionych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "W poniedziałek 7 września, we wtorek 8 września, w środę 9 września, w czwartek 10 września oraz w piątek 11 września operator zachowuje wybór w poszczególnych godzinach, a w pozostałym okresie rezerwa pokrywa wymagany poziom.",
-  "generatedAt": "2026-09-05T21:07:20.960Z",
+  "headline": "W środę 9 września nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00, co oznacza, że operator może ogłosić przywołanie, a rezerwa nie pokrywa wymaganego poziomu.",
+  "body": "W poniedziałek najniższy margines wystąpi o 19:00, a nadwyżka spadnie poniżej progu 1100 MW między 18:00 a 21:00. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+  "outlook": "We wtorek 8 września i w środę 9 września nadwyżka również spadnie poniżej progu 1100 MW w wieczornych godzinach, natomiast w czwartek 10 września prognoza jeszcze się ustala, a w pozostałe dni okresu rezerwa pokrywa wymagany poziom lub sytuacja dotyczy godzin wolnych od przywołań.",
+  "generatedAt": "2026-09-06T08:07:28.143Z",
   "dates": [
-    "2026-09-05",
+    "2026-09-06",
     "2026-09-07",
     "2026-09-08",
     "2026-09-09",
     "2026-09-10",
     "2026-09-11"
   ],
-  "assessment": "2026-09-05|W|none|3100|23:00|0|0|1||;2026-09-07|R|high|-2500|19:00|1|4|14|moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00|;2026-09-08|R|high|-3000|20:00|0|4|17|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00|;2026-09-09|R|moderate|-1800|18:00|1|8|14|moderate:07:00-09:00,moderate:17:00-22:00|;2026-09-10|R|moderate|-700|20:00|0|0|16|moderate:19:00-21:00|;2026-09-11|R|moderate|-700|20:00|0|2|11|moderate:07:00-09:00,moderate:17:00-22:00|#zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v51",
+  "assessment": "2026-09-06|W|none|1200|10:00|0|0|13||;2026-09-07|R|high|-2400|19:00|0|6|11|moderate:07:00-08:00,moderate:17:00-18:00,high:18:00-21:00,moderate:21:00-22:00|;2026-09-08|R|high|-2900|20:00|0|4|17|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00|;2026-09-09|R|high|-2300|18:00|0|8|8|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-21:00,moderate:21:00-22:00|;2026-09-10|R|moderate|0|19:00|1|0|16|moderate:19:00-20:00|;2026-09-11|R|moderate|0|19:00|0|0|15|moderate:19:00-21:00|#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
   "model": "gemini-3.5-flash-lite"
 }
