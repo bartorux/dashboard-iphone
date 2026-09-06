@@ -97,3 +97,20 @@ export interface BadanieFile {
   days: DayStudy[];
   events: CallEvent[];
 }
+
+/**
+ * One published version of one Kompas hour — every version, not only the
+ * active one. The analysis picks, for each day's decision window, the
+ * version whose `publishedAt` is the latest at or before the window's
+ * `readAt`; that is what a reader of this tool could have seen at the time.
+ * Produced by the Kompas archive (src/utils/kompasArchive.ts) and, until that
+ * archive has history, by the versioned pdgsz endpoint.
+ */
+export interface CompassVersionRow {
+  businessDate: string;
+  /** Hour the block starts, 0-23, local. */
+  hour: number;
+  level: 0 | 1 | 2 | 3;
+  /** PSE's publication_ts_utc as an ISO instant. */
+  publishedAt: string;
+}
