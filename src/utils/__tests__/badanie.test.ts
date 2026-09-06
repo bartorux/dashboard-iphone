@@ -120,7 +120,12 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
 
     const d0902 = byDate.get('2026-09-02')!;
     expect(d0902.headroom.value).toBe(42); // 1142 - 1100
-    expect(d0902.dwell.value).toBe(21);
+    // Below the 1500 MW floor from 2026-09-01T14:07:29.982Z (first reading
+    // after the last at-or-above-floor reading, 1644 MW at 13:07:25Z) through
+    // the window reading at 2026-09-02T09:07:24.343Z — 18.998h, rounded to
+    // 19.0. (Was pinned at 21 under the old reading-count definition — 21
+    // readings, hourly cadence, ~1h apart on average.)
+    expect(d0902.dwell.value).toBe(19);
     expect(d0902.eveMargin.value).toBe(-939); // last 2026-09-01 reading: 1056 - 1995
 
     const d0903 = byDate.get('2026-09-03')!;
@@ -147,7 +152,7 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     const days = studyDays(realRows(), [], [REAL_EVENT], REAL_NOW);
     const byDate = new Map(days.map((d) => [d.date, d]));
 
-    // dwell: 21 vs 0 vs 0 — 09-02 strictly worse than both others.
+    // dwell: 19 vs 0 vs 0 — 09-02 strictly worse than both others.
     expect(byDate.get('2026-09-02')?.dwell.percentile).toBe(1);
     expect(byDate.get('2026-09-02')?.dwell.extreme).toBe(true);
     expect(byDate.get('2026-09-01')?.dwell.percentile).toBe(0);
@@ -364,11 +369,11 @@ describe('open day', () => {
 });
 
 describe('dwell', () => {
-  it('counts consecutive readings below the floor walking back from the window reading, and a reading at/above the floor breaks the count', () => {
+  it('measures the time span from the first below-floor reading to the window reading, and a reading at/above the floor breaks the run — the span starts at the entry AFTER the break', () => {
     const rows: ArchiveRow[] = [
       row('2026-07-08', 15, 2000, 1000, '2026-07-08T00:00:00Z'), // >= floor, before the break — must not be reached
       row('2026-07-08', 15, 1600, 1000, '2026-07-08T01:00:00Z'), // >= floor: the break
-      row('2026-07-08', 15, 1200, 1000, '2026-07-08T02:00:00Z'), // < floor
+      row('2026-07-08', 15, 1200, 1000, '2026-07-08T02:00:00Z'), // < floor — first entry AFTER the break
       row('2026-07-08', 15, 900, 1000, '2026-07-08T03:00:00Z'), // < floor
       row('2026-07-08', 15, 800, 1000, '2026-07-08T04:00:00Z'), // < floor — the window reading
     ];
@@ -377,7 +382,50 @@ describe('dwell', () => {
     const [day] = studyDays(rows, [], [], now);
 
     expect(day.window.readAt).toBe('2026-07-08T04:00:00Z');
-    expect(day.dwell.value).toBe(3); // 800, 900, 1200 — stops at the 1600 reading
+    // 02:00Z (right after the 1600 MW break) to 04:00Z (the window) — 2h, not
+    // the 4h from the very first row, and not a reading count (3).
+    expect(day.dwell.value).toBe(2);
+  });
+
+  it('reads 0 for a single reading below the floor — nothing to span yet', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-07-09', 15, 2000, 1000, '2026-07-09T00:00:00Z'), // >= floor
+      row('2026-07-09', 15, 900, 1000, '2026-07-09T04:00:00Z'), // < floor — the window reading, alone in its run
+    ];
+    const now = new Date('2026-07-10T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.window.readAt).toBe('2026-07-09T04:00:00Z');
+    expect(day.dwell.value).toBe(0);
+  });
+
+  it('gives the same dwell (±0.1h) for the same real time span whether the archive was sampled hourly or every 15 minutes', () => {
+    // Hourly cadence: 3 readings, 1h apart, spanning 2h (02:00Z -> 04:00Z).
+    const hourly: ArchiveRow[] = [
+      row('2026-07-20', 15, 2000, 1000, '2026-07-20T00:00:00Z'), // >= floor: the break
+      row('2026-07-20', 15, 1200, 1000, '2026-07-20T02:00:00Z'), // < floor — first of the run
+      row('2026-07-20', 15, 1100, 1000, '2026-07-20T03:00:00Z'), // < floor
+      row('2026-07-20', 15, 900, 1000, '2026-07-20T04:00:00Z'), // < floor — the window reading
+    ];
+
+    // 15-minute cadence, same real span (02:00Z -> 04:00Z): 9 readings.
+    const quarterHourly: ArchiveRow[] = [
+      row('2026-07-21', 15, 2000, 1000, '2026-07-21T01:45:00Z'), // >= floor: the break
+      ...Array.from({ length: 9 }, (_, i) => {
+        const minutes = i * 15;
+        const readAt = new Date(Date.UTC(2026, 6, 21, 2, minutes)).toISOString();
+        return row('2026-07-21', 15, 900, 1000, readAt); // < floor throughout
+      }),
+    ];
+
+    const now = new Date('2026-07-25T00:00:00Z');
+    const [hourlyDay] = studyDays(hourly, [], [], now);
+    const [quarterDay] = studyDays(quarterHourly, [], [], now);
+
+    expect(hourlyDay.dwell.value).toBe(2);
+    expect(quarterDay.dwell.value).toBe(2);
+    expect(Math.abs(hourlyDay.dwell.value! - quarterDay.dwell.value!)).toBeLessThanOrEqual(0.1);
   });
 });
 
@@ -473,6 +521,13 @@ describe('verdicts', () => {
       const prevDate = prev.toISOString().slice(0, 10);
       rows.push(row(date, 15, eveSurplus, 1000, `${prevDate}T20:00:00Z`));
     }
+    // Day A's window reading (200 MW) is below the floor on its own, but a
+    // single below-floor reading spans 0h (see the `dwell` tests above) —
+    // not enough to stay "worst on dwell" once dwell measures a time span
+    // instead of a reading count. An earlier same-day reading, also below
+    // the floor, gives it an actual 2h span while every other day's single
+    // reading (all at/above the floor) still spans 0h.
+    rows.push(row('2026-06-10', 15, 300, 1000, '2026-06-10T02:00:00Z'));
     return rows;
   }
 
@@ -723,6 +778,10 @@ describe('buildBadanieWithObservations', () => {
         const prevDate = prev.toISOString().slice(0, 10);
         rows.push(row(date, 15, eveSurplus, 1000, `${prevDate}T20:00:00Z`));
       }
+      // Same reasoning as `fiveDayRows` above: a single below-floor reading
+      // spans 0h, so 08-10 needs an earlier same-day below-floor reading to
+      // stay "worst on dwell" too (extremeCount must still reach 3).
+      rows.push(row('2026-08-10', 15, 300, 1000, '2026-08-10T02:00:00Z'));
       return rows;
     }
 

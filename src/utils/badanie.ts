@@ -275,19 +275,43 @@ function autoTargetHour(rows: readonly ArchiveRow[], businessDate: string, now: 
 const nullFeature: Feature = { value: null, percentile: null, extreme: false };
 
 /**
- * Consecutive readings, walking BACK from the window reading (inclusive),
- * whose surplus stays below `DWELL_FLOOR_MW`. The first reading at or above
- * the floor — a "breath" the reserve took before slipping again — ends the
- * count, so an old, unrelated dip earlier in the day's history never gets
- * glued onto the current one.
+ * Hours the window reading has sat below `DWELL_FLOOR_MW`, measured as the
+ * time SPAN from the first reading of the unbroken run to the window reading
+ * — not a count of readings.
+ *
+ * WHY a span and not a count: the generator moved from reading the archive
+ * once an hour to once every 15 minutes, so a raw reading count stopped being
+ * comparable between a day recorded under the old cadence and one recorded
+ * under the new one — the same real dwell time would tally roughly 4x more
+ * "readings" after the change for no change in what actually happened.
+ * Measuring elapsed wall-clock time instead keeps every day comparable
+ * regardless of how densely the archive happened to sample it (verified: the
+ * same real span produces the same figure, ±0.1h, whether it is sampled
+ * hourly or every 15 minutes).
+ *
+ * Walking BACK from the window reading (inclusive), the first reading at or
+ * above the floor — a "breath" the reserve took before slipping again — ends
+ * the run, so an old, unrelated dip earlier in the day's history never gets
+ * glued onto the current one; the span is measured from the reading right
+ * AFTER that break, not from the break itself.
+ *
+ * A run of exactly one reading — the window dipped below the floor with the
+ * previous reading (if any) at or above it — has nothing to span and reads
+ * `0`. That is NOT the same fact as "never dipped below the floor at all" (a
+ * quiet day also reads `0` here); the two are told apart by `surplus` /
+ * `headroom`, never by this feature alone. Rounded to one decimal place.
  */
 function dwellFor(readingsAsc: HourReading[], windowIndex: number): number {
-  let count = 0;
-  for (let index = windowIndex; index >= 0; index--) {
+  if (readingsAsc[windowIndex].surplus >= DWELL_FLOOR_MW) return 0;
+
+  let runStart = windowIndex;
+  for (let index = windowIndex - 1; index >= 0; index--) {
     if (readingsAsc[index].surplus >= DWELL_FLOOR_MW) break;
-    count++;
+    runStart = index;
   }
-  return count;
+
+  const spanMs = readingsAsc[windowIndex].readAtMs - readingsAsc[runStart].readAtMs;
+  return Math.round((spanMs / HOUR_MS) * 10) / 10;
 }
 
 /**
