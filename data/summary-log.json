@@ -5,15 +5,6 @@
       "prompt": 51,
       "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 7 września o 19:00 nadwyżka w systemie spadła poniżej progu 1100 MW i operator może ogłosić przywołanie, straciwszy wybór, który daje ten próg.",
-      "body": "W piątek 11 września prognoza jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 7 września i we wtorek 8 września nadwyżka spada poniżej progiem w godzinach wieczornych, w środę 9 września i w czwartek 10 września operator zachowuje wybór, a w pozostałe dni i godziny nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-05T11:07:29.457Z",
-      "prompt": 51,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
       "headline": "W poniedziałek 7 września o 19:00 nadwyżka spadła poniżej progu 1100 MW, przez co operator może ogłosić przywołanie bez możliwości jego pominięcia.",
       "body": "W piątek 11 września prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść w godzinach popołudniowych i wieczornych.",
       "outlook": "W środę, czwartek i piątek margines bywa wąski, a w pozostałe dni okresu nic nie zapowiada przywołania."
@@ -604,6 +595,14 @@
       "headline": "We wtorek 8 września operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza dla jutrzejszego dnia jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę 9 września przywołanie również wchodzi w grę, natomiast w czwartek 10 września i piątek 11 września margines bywa wąski, lecz rezerwa nadal pokrywa wymagany poziom."
+    },
+    {
+      "at": "2026-09-06T19:45:43.103Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "We wtorek 8 września nadwyżka spadła poniżej progu 1100 MW w godzinach 18:00-21:00, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Prognoza jeszcze się ustala we wtorek 8 września, więc raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek, środę i piątek operator może ogłosić przywołanie, natomiast w pozostałe dni okresu nic nie zapowiada przywołania."
     }
   ]
 }
