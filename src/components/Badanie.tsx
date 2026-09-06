@@ -221,6 +221,89 @@ function DayRow({
   );
 }
 
+/**
+ * One table, reused for each group below — the columns are the same whether
+ * a day is still ahead or long settled; only which days are worth a reader's
+ * eye differs.
+ */
+function DaysTable({
+  caption,
+  days,
+  dwellFloorMw,
+  expanded,
+  onToggle,
+}: {
+  caption: string;
+  days: DayStudy[];
+  dwellFloorMw: number;
+  expanded: ReadonlySet<string>;
+  onToggle: (date: string) => void;
+}) {
+  return (
+  <div className="mt-2 overflow-x-auto">
+      <table className="w-full border-collapse text-[0.8125rem]">
+        <caption className="sr-only">{caption}</caption>
+        <thead>
+          <tr className="border-b border-separator text-left text-text-secondary">
+            <th scope="col" className="px-2 py-1.5 font-normal">
+              Data
+            </th>
+            <th scope="col" className="px-2 py-1.5 font-normal">
+              Okno
+            </th>
+            <th scope="col" className="px-2 py-1.5 font-normal">
+              Godz. docelowa
+            </th>
+            <th scope="col" className="px-2 py-1.5 text-right font-normal">
+              Rezerwa
+            </th>
+            <th scope="col" className="px-2 py-1.5 text-right font-normal">
+              Margines
+            </th>
+            <th scope="col" className="px-2 py-1.5 text-right font-normal">
+              Zapas
+            </th>
+            <th scope="col" className="px-2 py-1.5 text-right font-normal">
+              Dwell
+            </th>
+            <th scope="col" className="px-2 py-1.5 text-right font-normal">
+              D−1 wiecz.
+            </th>
+            <th scope="col" className="px-2 py-1.5 text-right font-normal">
+              Kompas
+            </th>
+            <th scope="col" className="px-2 py-1.5 text-right font-normal">
+              Ekstrema
+            </th>
+            <th scope="col" className="px-2 py-1.5 font-normal">
+              Werdykt
+            </th>
+            <th scope="col" className="px-2 py-1.5 font-normal">
+              Zdarzenie
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {days.map((day) => (
+            <DayRow
+              key={day.date}
+              day={day}
+              dwellFloorMw={dwellFloorMw}
+              expanded={expanded.has(day.date)}
+              onToggle={() => onToggle(day.date)}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/** Newest first — for settled days the latest is the one a reader compares against. */
+function newestFirst(days: DayStudy[]): DayStudy[] {
+  return [...days].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+}
+
 function Content({ data }: { data: BadanieFile }) {
   const [expandedDates, setExpandedDates] = useState<ReadonlySet<string>>(new Set());
 
@@ -232,6 +315,13 @@ function Content({ data }: { data: BadanieFile }) {
       return next;
     });
   };
+
+  const ahead = data.days.filter((day) => day.window.open);
+  const settled = newestFirst(data.days.filter((day) => !day.window.open));
+  // "Notable" is anything the verdict has something to say about: a hit, a
+  // false alarm, a miss. Plain silence is the default state of the grid.
+  const notable = settled.filter((day) => day.verdict !== 'cisza');
+  const quiet = settled.filter((day) => day.verdict === 'cisza');
 
   return (
     <div className="bg-bg text-text p-4">
@@ -254,62 +344,55 @@ function Content({ data }: { data: BadanieFile }) {
         ekstremów na cztery.
       </p>
 
-      <div className="mt-3 overflow-x-auto">
-        <table className="w-full border-collapse text-[0.8125rem]">
-          <caption className="sr-only">Doby zbadane pod kątem przywołania mocy</caption>
-          <thead>
-            <tr className="border-b border-separator text-left text-text-secondary">
-              <th scope="col" className="px-2 py-1.5 font-normal">
-                Data
-              </th>
-              <th scope="col" className="px-2 py-1.5 font-normal">
-                Okno
-              </th>
-              <th scope="col" className="px-2 py-1.5 font-normal">
-                Godz. docelowa
-              </th>
-              <th scope="col" className="px-2 py-1.5 text-right font-normal">
-                Rezerwa
-              </th>
-              <th scope="col" className="px-2 py-1.5 text-right font-normal">
-                Margines
-              </th>
-              <th scope="col" className="px-2 py-1.5 text-right font-normal">
-                Zapas
-              </th>
-              <th scope="col" className="px-2 py-1.5 text-right font-normal">
-                Dwell
-              </th>
-              <th scope="col" className="px-2 py-1.5 text-right font-normal">
-                D−1 wiecz.
-              </th>
-              <th scope="col" className="px-2 py-1.5 text-right font-normal">
-                Kompas
-              </th>
-              <th scope="col" className="px-2 py-1.5 text-right font-normal">
-                Ekstrema
-              </th>
-              <th scope="col" className="px-2 py-1.5 font-normal">
-                Werdykt
-              </th>
-              <th scope="col" className="px-2 py-1.5 font-normal">
-                Zdarzenie
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.days.map((day) => (
-              <DayRow
-                key={day.date}
-                day={day}
-                dwellFloorMw={data.dwellFloorMw}
-                expanded={expandedDates.has(day.date)}
-                onToggle={() => toggleDate(day.date)}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* Ahead first: these are the rows that still change every hour and the
+          only ones a forecast can act on. Settled days follow, and the quiet
+          ones — most of them, on most weeks — sit behind a fold, because the
+          owner's own reading of the page was "duzo przeszlych jest
+          niepotrzebnie": a wall of "cisza" buries the one row that matters. */}
+      <h2 className="mt-4 text-[0.875rem] font-semibold">Przed nami</h2>
+      {ahead.length === 0 ? (
+        <p className="mt-1 text-[0.8125rem] text-text-secondary">
+          Brak dób z otwartym oknem — archiwum nie ma jeszcze odczytów na przyszłe doby.
+        </p>
+      ) : (
+        <DaysTable
+          caption="Doby, których termin decyzyjny jeszcze nie minął"
+          days={ahead}
+          dwellFloorMw={data.dwellFloorMw}
+          expanded={expandedDates}
+          onToggle={toggleDate}
+        />
+      )}
+
+      <h2 className="mt-5 text-[0.875rem] font-semibold">Zamknięte — warte uwagi</h2>
+      {notable.length === 0 ? (
+        <p className="mt-1 text-[0.8125rem] text-text-secondary">
+          Żadna zamknięta doba nie ma zdarzenia ani alarmu.
+        </p>
+      ) : (
+        <DaysTable
+          caption="Zamknięte doby ze zdarzeniem w rejestrze albo z alarmem"
+          days={notable}
+          dwellFloorMw={data.dwellFloorMw}
+          expanded={expandedDates}
+          onToggle={toggleDate}
+        />
+      )}
+
+      {quiet.length > 0 && (
+        <details className="mt-4">
+          <summary className="cursor-pointer text-[0.875rem] font-semibold">
+            Cisza — {quiet.length} {quiet.length === 1 ? 'doba' : 'dób'} bez zdarzenia i bez alarmu
+          </summary>
+          <DaysTable
+            caption="Zamknięte doby bez zdarzenia i bez alarmu"
+            days={quiet}
+            dwellFloorMw={data.dwellFloorMw}
+            expanded={expandedDates}
+            onToggle={toggleDate}
+          />
+        </details>
+      )}
 
       <footer className="mt-4 text-[0.75rem] text-text-secondary">
         <h2 className="font-semibold text-text">Rejestr zdarzeń</h2>

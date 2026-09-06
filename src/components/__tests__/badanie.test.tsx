@@ -146,6 +146,25 @@ describe('Badanie', () => {
     expect(within(row as HTMLElement).getByText('21:00')).toBeInTheDocument();
   });
 
+  it('groups days: ahead first, settled notable next, quiet ones behind a fold', async () => {
+    respondWith(FIXTURE);
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+    const tableOf = (caption: RegExp) =>
+      screen.getByRole('table', { name: caption }) as HTMLElement;
+    // The open day (04.09) is the only row in the "ahead" table.
+    expect(within(tableOf(/jeszcze nie minął/)).getByRole('button', { name: '04.09' })).toBeInTheDocument();
+    expect(within(tableOf(/jeszcze nie minął/)).queryByRole('button', { name: '02.09' })).toBeNull();
+    // The event day (02.09) is notable; the quiet day (03.09) is not.
+    expect(within(tableOf(/ze zdarzeniem/)).getByRole('button', { name: '02.09' })).toBeInTheDocument();
+    expect(within(tableOf(/ze zdarzeniem/)).queryByRole('button', { name: '03.09' })).toBeNull();
+    // Quiet days live inside a collapsed <details>, counted in its summary.
+    const fold = screen.getByText(/Cisza — 1 doba/).closest('details');
+    expect(fold).not.toBeNull();
+    expect(fold).not.toHaveAttribute('open');
+    expect(within(fold as HTMLElement).getByRole('button', { name: '03.09' })).toBeInTheDocument();
+  });
+
   it('leaves a quiet day unmarked', async () => {
     respondWith(FIXTURE);
     render(<Badanie />);
