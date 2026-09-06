@@ -29,6 +29,7 @@ const FIXTURE: BadanieFile = {
       compass: { level: 3, extreme: true },
       extremeCount: 4,
       event: { date: '2026-09-02', hour: 20, kind: 'test', scope: 'unit', note: 'jedna jednostka wyłączona' },
+      observation: null,
       verdict: 'trafienie',
       readings: [
         ['2026-09-02T08:00:00Z', 950, 2000],
@@ -48,6 +49,7 @@ const FIXTURE: BadanieFile = {
       compass: { level: 0, extreme: false },
       extremeCount: 0,
       event: null,
+      observation: null,
       verdict: 'cisza',
       readings: [['2026-09-03T10:00:00Z', 3000, 2000]],
     },
@@ -64,10 +66,12 @@ const FIXTURE: BadanieFile = {
       compass: { level: null, extreme: false },
       extremeCount: 0,
       event: null,
+      observation: null,
       verdict: 'otwarte',
       readings: [['2026-09-04T08:00:00Z', 2500, 2000]],
     },
   ],
+  observations: [],
   events: [
     { date: '2026-09-02', hour: 20, kind: 'test', scope: 'unit', note: 'jedna jednostka wyłączona' },
   ],
