@@ -44,3 +44,22 @@ describe('useChartAnimationMs', () => {
     expect(result.current).toBe(ANIMATION_MS);
   });
 });
+
+describe('useAnimateOnDataChange', () => {
+  it('animates a new day and snaps a late layer', async () => {
+    const { renderHook } = await import('@testing-library/react');
+    const { useAnimateOnDataChange } = await import('../shared');
+    const day = [{ hour: 1 }];
+    const { result, rerender } = renderHook(({ data }) => useAnimateOnDataChange(data), {
+      initialProps: { data: day as unknown },
+    });
+    // First draw of a day: animate.
+    expect(result.current).toBe(true);
+    // Same day, some other prop changed (curtailment landed): no replay.
+    rerender({ data: day as unknown });
+    expect(result.current).toBe(false);
+    // A different day: animate again.
+    rerender({ data: [{ hour: 2 }] as unknown });
+    expect(result.current).toBe(true);
+  });
+});

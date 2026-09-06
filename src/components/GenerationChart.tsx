@@ -32,6 +32,7 @@ import {
   hourTicks,
   shortHour,
   useDismissibleTooltip,
+  useAnimateOnDataChange,
 } from './chart/shared';
 import HourTable, { HourColumn } from './chart/HourTable';
 
@@ -281,6 +282,8 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
   kseDemand,
 }) => {
   const animationMs = useChartAnimationMs();
+  // Only a new day animates; a redispatch layer landing later snaps in.
+  const animate = useAnimateOnDataChange(data);
 
   const colors = useChartColors();
   const { ref, handlers, tooltipActive } = useDismissibleTooltip();
@@ -489,6 +492,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               fill={colors.pvFill}
               fillOpacity={fillWash}
               animationDuration={animationMs}
+              isAnimationActive={animate}
               activeDot={false}
               connectNulls={false}
             />
@@ -501,6 +505,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               fill={colors.windFill}
               fillOpacity={fillWash}
               animationDuration={animationMs}
+              isAnimationActive={animate}
               activeDot={false}
               connectNulls={false}
             />
@@ -533,6 +538,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               fill={colors.pv}
               fillOpacity={0.28}
               animationDuration={animationMs}
+              isAnimationActive={animate}
               activeDot={false}
               connectNulls={false}
             />
@@ -545,6 +551,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               fill={colors.wind}
               fillOpacity={0.28}
               animationDuration={animationMs}
+              isAnimationActive={animate}
               activeDot={false}
               connectNulls={false}
             />
@@ -609,6 +616,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               legendType="none"
               connectNulls={false}
               animationDuration={animationMs}
+              isAnimationActive={animate}
             />
             <Line
               type="monotone"
@@ -620,6 +628,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               legendType="none"
               connectNulls={false}
               animationDuration={animationMs}
+              isAnimationActive={animate}
             />
 
             <Tooltip
@@ -650,6 +659,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               dot={false}
               connectNulls={false}
               animationDuration={animationMs}
+              isAnimationActive={animate}
               activeDot={false}
             />
 
@@ -682,6 +692,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               dot={false}
               connectNulls={false}
               animationDuration={animationMs}
+              isAnimationActive={animate}
               activeDot={false}
               legendType="none"
             />
@@ -694,6 +705,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               dot={false}
               connectNulls={false}
               animationDuration={animationMs}
+              isAnimationActive={animate}
               activeDot={false}
             />
 
@@ -723,6 +735,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               dot={false}
               connectNulls={false}
               animationDuration={animationMs}
+              isAnimationActive={animate}
               activeDot={false}
               legendType="none"
             />
@@ -734,6 +747,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               dot={false}
               connectNulls={false}
               animationDuration={animationMs}
+              isAnimationActive={animate}
               /* Cleared with the tooltip: `active={false}` hides the box but
                  the dot is series state, so it lingered and pointed at an hour
                  the user had already dismissed. */

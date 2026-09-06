@@ -53,6 +53,24 @@ export function useChartAnimationMs(): number {
 }
 
 /**
+ * Whether THIS render should animate: true only when `data` — the day's rows —
+ * is a different object than last time. A chart that also takes layers which
+ * arrive later (curtailment, country demand) re-renders when they land, and
+ * Recharts would then restart the 450 ms draw from wherever the first one had
+ * got to. The reader saw that as the generation view "jerking" on every day
+ * switch while the reserve view, which has no late layer, stayed smooth.
+ * The late layer snaps in; only a new day gets the draw.
+ */
+export function useAnimateOnDataChange(data: unknown): boolean {
+  const previous = React.useRef<unknown>(undefined);
+  const changed = previous.current !== data;
+  React.useEffect(() => {
+    previous.current = data;
+  });
+  return changed;
+}
+
+/**
  * Axis and label sizes for the charts, in the same scalable units as the rest
  * of the app.
  *

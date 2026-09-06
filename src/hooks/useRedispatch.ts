@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { fetchRedispatch } from '../utils/api';
 import { STORAGE_PREFIX } from '../utils/constants';
 import { visibleBusinessDates } from '../utils/dayWindow';
@@ -63,6 +63,8 @@ export function useRedispatch(enabled: boolean, businessDate: string | null) {
   const load = useCallback(async (date: string) => {
     const cached = readCachedRedispatch(loadCache(), date, Date.now());
     if (cached) {
+      // Already served synchronously by the memo below; kept in state so the
+      // memo stops re-parsing localStorage on every render of this day.
       setByDate((prev) => new Map(prev).set(date, redispatchByHour(cached)));
       return;
     }
@@ -77,13 +79,39 @@ export function useRedispatch(enabled: boolean, businessDate: string | null) {
     }
   }, []);
 
+  /*
+   * Every visible day at once, not just the one on screen. A reader who opened
+   * the generation view is a reader who will tab across days, and each tab
+   * used to be its own fetch landing a beat after the chart had already drawn
+   * the new day — a second render, a restarted animation, a y-axis that
+   * dipped below zero once the curtailment arrived. Warming the other days now
+   * means the switch finds them in the cache.
+   */
   useEffect(() => {
-    if (!enabled || !businessDate) return;
-    if (requestedRef.current.get(businessDate)) return;
-    requestedRef.current.set(businessDate, true);
-    load(businessDate);
+    if (!enabled) return;
+    const wanted = new Set(visibleBusinessDates(new Date()));
+    if (businessDate) wanted.add(businessDate);
+    for (const date of wanted) {
+      if (requestedRef.current.get(date)) continue;
+      requestedRef.current.set(date, true);
+      load(date);
+    }
   }, [enabled, businessDate, load]);
 
-  const byHour = (businessDate && byDate.get(businessDate)) || EMPTY_MAP;
+  /*
+   * Read synchronously, in the same render as the day change. `load` above
+   * still writes the cached day into state, but only from an effect — one
+   * render later — and that gap is exactly the double draw the reader saw:
+   * a chart without curtailment, then the same chart with it. A day the
+   * cache already knows must arrive complete the first time it is drawn.
+   */
+  const byHour = useMemo(() => {
+    if (!businessDate) return EMPTY_MAP;
+    const loaded = byDate.get(businessDate);
+    if (loaded) return loaded;
+    const cached = readCachedRedispatch(loadCache(), businessDate, Date.now());
+    return cached ? redispatchByHour(cached) : EMPTY_MAP;
+  }, [businessDate, byDate]);
+
   return { byHour };
 }

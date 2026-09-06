@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ChartSection from '../ChartSection';
 import { makePoint } from '../../test/factories';
+import { visibleBusinessDates } from '../../utils/dayWindow';
 
 const dayData = Array.from({ length: 24 }, (_, hour) =>
   makePoint({
@@ -88,15 +89,20 @@ describe('ChartSection', () => {
     // needs that same map whether or not this view is ever opened, and a
     // second `useKseDemand` call here would fetch pdgobpkd twice for one
     // business date. See the `kseDemand` prop doc on ChartSectionProps.
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    //
+    // One call per visible day plus the day on screen (the factory's
+    // 2026-08-03 lies outside today's window): the hook warms every tab the
+    // moment the view opens, so a later day switch finds its curtailment in
+    // the cache instead of drawing the chart twice. See useRedispatch.
+    const expected = new Set([...visibleBusinessDates(new Date()), '2026-08-03']);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(expected.size));
     const urls = vi
       .mocked(fetch)
       .mock.calls.map((call) => decodeURIComponent(String(call[0])));
-    expect(urls.some((u) => u.includes('/poze-redoze?'))).toBe(true);
+    expect(urls.every((u) => u.includes('/poze-redoze?'))).toBe(true);
     expect(urls.some((u) => u.includes('/pdgobpkd?'))).toBe(false);
-    for (const url of urls) {
-      // dayData[0].businessDate from the shared factory
-      expect(url).toContain("business_date eq '2026-08-03'");
+    for (const date of expected) {
+      expect(urls.some((u) => u.includes(`business_date eq '${date}'`))).toBe(true);
     }
   });
 
@@ -119,9 +125,9 @@ describe('ChartSection', () => {
     );
 
     fireEvent.click(screen.getByRole('tab', { name: 'Generacja' }));
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(fetch).toHaveBeenCalled());
 
-    // The one call is redispatch; pdgobpkd never appears, confirming the
+    // Every call is redispatch; pdgobpkd never appears, confirming the
     // prop — not a second hook — is this map's only way in.
     expect(
       vi
