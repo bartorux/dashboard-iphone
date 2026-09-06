@@ -199,6 +199,20 @@ bramkowane tylko `summary.json` — więc **nie ma deployu ani churnu service wo
 (CORS `*`, cache 5 min). Kompas archiwizowany odtąd w `data/kompas-archiwum/` wg wzorca
 `pk5lArchive`, z jednorazowym zasileniem historią wersji z `pdgsz`.
 
+**Zapis obserwacji przez GitHub Issues (06.09.2026).** Właściciel chce oznaczać na podstronie, co
+faktycznie było w dobie: „u nas nic", test albo przywołanie z godziną i zakresem. Strona nie ma
+backendu i **nie może trzymać tokenu** (zasada: token widzi wyłącznie cron-job.org). Dlatego strona
+buduje gotowy link „new issue" z tytułem w stałym formacie (`src/utils/obserwacje.ts`:
+`[badanie] 2026-09-07 nic` / `[badanie] 2026-09-07 20:00 test jednostka`), właściciel naciska
+„Submit" zalogowany do GitHub, a generator co godzinę czyta Issues (`GITHUB_TOKEN` z Actions,
+`issues: read`) i wpisuje obserwacje do `badanie.json`. Rejestr ręczny ma pierwszeństwo per data.
+Issues są zarazem miejscem rozmowy o dobie — „będziemy mieli o czym rozmawiać".
+
+**Ograniczenie, którego nie da się usunąć:** „u nas nic" znaczy „nic w naszych jednostkach". Test
+w jednostce innego agregatora jest dla właściciela niewidoczny, więc „nic" na dobie z alarmem to
+**górne oszacowanie** fałszywego alarmu, nie dowód. Prawdziwe przywołanie całego rynku widzą wszyscy
+— tam „nic" jest pewne. Kalibracja cech opiera się wyłącznie na tym, co właściciel może zobaczyć.
+
 **Adres z hashem zostaje — decyzja właściciela (06.09.2026).** Prawdziwa ścieżka `/badanie/` jest
 wykonalna (drugi plik wejściowy Vite + wyjątek `navigateFallbackDenylist` w service workerze, bo
 zainstalowana aplikacja przechwyciłaby nawigację i podała główny ekran), ale nie jest potrzebna.
