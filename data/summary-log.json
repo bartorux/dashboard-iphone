@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-05T01:07:26.593Z",
-      "prompt": 51,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 7 września o 19:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Zapotrzebowanie wzrośnie ponad normę, podczas gdy produkcja z instalacji fotowoltaicznych spadnie poniżej normy. Do wyznaczonych godzin wciąż pozostaje wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 8 września i środę 9 września nadwyżka również spadnie poniżej progu 1100 MW w godzinach wieczornych, w czwartek 10 września utrzyma się powyżej tego progu między 19:00 a 21:00, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-05T02:07:26.344Z",
       "prompt": 51,
       "accepted": true,
@@ -609,6 +600,14 @@
       "headline": "We wtorek 8 września między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW. Nadwyżka ta nie pozwala już operatorowi pominąć przywołania.",
       "body": "Prognoza na poniedziałek jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek, środę, czwartek i piątek przywołanie wchodzi w grę, natomiast w pozostałe dni nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-06T16:15:40.645Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "We wtorek 8 września między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
+      "body": "Jutro prognoza jeszcze się ustala i rezerwa raz pokryje wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin pozostało ponad osiem godzin.",
+      "outlook": "We wtorek 8 września, w środę 9 września, w czwartek 10 września oraz w piątek 11 września rezerwa miejscami nie pokryje wymaganego poziomu, podczas gdy dzisiaj nic nie zapowiada przywołania."
     }
   ]
 }
