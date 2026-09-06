@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import {
   EMPTY_LOG,
+  LOG_CAP,
   crossingsFor,
   describeSettling,
   appendEntry,
+  hourlyEntries,
   parseLog,
   sameDays,
   snapshotDay,
@@ -187,18 +189,56 @@ describe('appendEntry', () => {
     expect(moved.entries[1].days[0].worstMargin).toBe(1331);
   });
 
-  it('drops the oldest entries past the limit', () => {
+  it('drops what has aged out of the window and keeps the rest', () => {
+    // Retention counted in TIME rather than in entries. The old rule kept 72
+    // entries, which was three days only while the job ran hourly; at a
+    // quarter-hourly cadence the same count covers less than one day, and
+    // "since yesterday" would quietly stop being answerable.
+    const log = appendEntry(
+      {
+        entries: [
+          // 73 hours before the incoming entry — past the window.
+          { at: '2026-08-08T09:00:00Z', days: [day({ worstMargin: 1 })] },
+          // 71 hours — still inside it.
+          { at: '2026-08-08T11:00:00Z', days: [day({ worstMargin: 2 })] },
+        ],
+      },
+      { at: '2026-08-11T10:00:00Z', days: [day({ worstMargin: 3 })] }
+    );
+
+    expect(log.entries.map((entry) => entry.days[0].worstMargin)).toEqual([2, 3]);
+  });
+
+  it('keeps an entry sitting exactly on the window edge', () => {
+    const log = appendEntry(
+      { entries: [{ at: '2026-08-08T10:00:00Z', days: [day({ worstMargin: 1 })] }] },
+      { at: '2026-08-11T10:00:00Z', days: [day({ worstMargin: 3 })] }
+    );
+
+    expect(log.entries).toHaveLength(2);
+  });
+
+  it('holds the file under the safety cap', () => {
+    // The window is the retention rule; this only bounds what a cadence faster
+    // than expected could do to the file. A minute apart, so the whole run sits
+    // well inside the window and nothing but the cap can trim it.
     let log = EMPTY_LOG;
-    for (let index = 0; index < 5; index++) {
-      log = appendEntry(
-        log,
-        { at: `2026-08-11T0${index}:37:00Z`, days: [day({ worstMargin: index })] },
-        3
-      );
+    const start = Date.UTC(2026, 7, 11, 0, 0, 0);
+    for (let index = 0; index < LOG_CAP + 20; index++) {
+      log = appendEntry(log, {
+        at: new Date(start + index * 60_000).toISOString(),
+        days: [day({ worstMargin: index })],
+      });
     }
 
-    expect(log.entries).toHaveLength(3);
-    expect(log.entries.map((entry) => entry.days[0].worstMargin)).toEqual([2, 3, 4]);
+    // The figure is pinned, not just the mechanism: three days at a
+    // quarter-hourly cadence is 289 entries, so a ceiling below that would
+    // start deciding retention instead of merely bounding the file.
+    expect(LOG_CAP).toBe(400);
+    expect(log.entries).toHaveLength(LOG_CAP);
+    // The twenty oldest went, the newest stayed.
+    expect(log.entries[0].days[0].worstMargin).toBe(20);
+    expect(log.entries[LOG_CAP - 1].days[0].worstMargin).toBe(LOG_CAP + 19);
   });
 
   it('leaves the original log untouched', () => {
@@ -234,6 +274,49 @@ describe('parseLog', () => {
     };
 
     expect(parseLog(raw).entries).toHaveLength(1);
+  });
+});
+
+describe('hourlyEntries', () => {
+  const wpis = (at: string, worstMargin: number) => ({
+    at,
+    days: [day({ worstMargin })],
+  });
+
+  it('keeps the last reading of each clock hour', () => {
+    // The reading that was true at the END of the hour is the one the hourly
+    // job used to record, so it is the one that keeps the meaning unchanged.
+    const godziny = hourlyEntries([
+      wpis('2026-08-11T10:00:00Z', 1),
+      wpis('2026-08-11T10:15:00Z', 2),
+      wpis('2026-08-11T10:30:00Z', 3),
+      wpis('2026-08-11T10:45:00Z', 4),
+    ]);
+
+    expect(godziny).toHaveLength(1);
+    expect(godziny[0].at).toBe('2026-08-11T10:45:00Z');
+    expect(godziny[0].days[0].worstMargin).toBe(4);
+  });
+
+  it('splits readings on the hour boundary into the hours they belong to', () => {
+    const godziny = hourlyEntries([
+      wpis('2026-08-11T09:59:00Z', 1),
+      wpis('2026-08-11T10:00:00Z', 2),
+      wpis('2026-08-11T10:59:00Z', 3),
+      wpis('2026-08-11T11:00:00Z', 4),
+    ]);
+
+    // 09:59 and 10:00 are a minute apart and belong to different hours; 10:00
+    // and 10:59 are nearly an hour apart and belong to the same one.
+    expect(godziny.map((entry) => entry.at)).toEqual([
+      '2026-08-11T09:59:00Z',
+      '2026-08-11T10:59:00Z',
+      '2026-08-11T11:00:00Z',
+    ]);
+  });
+
+  it('has nothing to say about an empty log', () => {
+    expect(hourlyEntries([])).toEqual([]);
   });
 });
 
@@ -327,6 +410,74 @@ describe('movementFor', () => {
   it('never reports a jumpiness of zero', () => {
     // A flat day would otherwise make every later comparison divide by nothing.
     expect(movementFor(logZ(Array(14).fill(1000)), WEDNESDAY)!.jumpiness).toBe(1);
+  });
+});
+
+describe('kadencja odczytu a semantyka tekstu', () => {
+  /*
+   * The reason `hourlyEntries` exists. The job moved from one run an hour to one
+   * every 15 minutes, and every threshold in this module is stated in hours:
+   * twelve snapshots meant half a day, and `jumpiness` was the typical
+   * hour-to-hour step the noise multiple is calibrated against. Read on raw
+   * snapshots, the same forecast would suddenly be judged over three hours
+   * against a quarter-hourly noise floor.
+   */
+  const GODZINOWE = [1500, 1400, 1200, 900, 600, 300, -100, 200, -300, -600, -900, -1200];
+
+  const stempel = (hour: number, minute: number) =>
+    new Date(Date.UTC(2026, 7, 11, hour, minute)).toISOString();
+
+  const wpis = (at: string, worstMargin: number) => ({
+    at,
+    days: [
+      { businessDate: WEDNESDAY, worstMargin, averageMargin: worstMargin, worstHour: '20:00' },
+    ],
+  });
+
+  /** The trajectory as the hourly job wrote it. */
+  const coGodzine = { entries: GODZINOWE.map((m, h) => wpis(stempel(h, 0), m)) };
+
+  /**
+   * And as the quarter-hourly job writes it: the same forecast at the end of
+   * each hour, wandering in between the way a live forecast does.
+   */
+  const coKwadrans = {
+    entries: GODZINOWE.flatMap((m, h) => [
+      wpis(stempel(h, 0), m + 250),
+      wpis(stempel(h, 15), m - 250),
+      wpis(stempel(h, 30), m + 120),
+      wpis(stempel(h, 45), m),
+    ]),
+  };
+
+  it('reads the same trajectory the same way at either cadence', () => {
+    const godzinowy = movementFor(coGodzine, WEDNESDAY);
+    const kwadransowy = movementFor(coKwadrans, WEDNESDAY);
+
+    // Pinned, so the equality below cannot pass by both sides being null: the
+    // drift is a median of windows, the jumpiness an hourly step.
+    expect(godzinowy).toEqual({ shift: -2300, jumpiness: 300 });
+    expect(kwadransowy).toEqual(godzinowy);
+
+    expect(crossingsFor(coGodzine, WEDNESDAY)).toBe(3);
+    expect(crossingsFor(coKwadrans, WEDNESDAY)).toBe(3);
+
+    // And therefore the same sentences, which is the whole point.
+    expect(describeMovement(kwadransowy)).toBe(describeMovement(godzinowy));
+    expect(describeMovement(kwadransowy)).toBe('prognoza pogarsza się');
+    expect(describeSettling(crossingsFor(coKwadrans, WEDNESDAY))).toContain(
+      'jeszcze się ustala'
+    );
+  });
+
+  it('counts hours, so three hours of quarter-hourly runs are still too little', () => {
+    // Twelve entries, and under the old reading that was enough history to
+    // pronounce on a day. It is three hours.
+    const trzyGodziny = { entries: coKwadrans.entries.slice(0, 12) };
+
+    expect(trzyGodziny.entries).toHaveLength(12);
+    expect(movementFor(trzyGodziny, WEDNESDAY)).toBeNull();
+    expect(crossingsFor(trzyGodziny, WEDNESDAY)).toBeNull();
   });
 });
 
