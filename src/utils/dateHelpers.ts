@@ -7,6 +7,8 @@ const pad = (n: number): string => String(n).padStart(2, '0');
  */
 const PSE_STAMP = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}a?):(\d{2}):(\d{2})$/;
 const PSE_UTC_STAMP = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/;
+const PSE_PUBLICATION_STAMP =
+  /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})(?:\.\d+)?$/;
 
 export function formatDate(date: Date): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
@@ -81,6 +83,26 @@ export function periodEnd(period: string): string | null {
 /** Local wall-clock hour of an instant, as "HH:00". */
 export function localHourLabel(date: Date): string {
   return `${pad(date.getHours())}:00`;
+}
+
+/**
+ * PSE's own publication stamp for a versioned row ("2026-08-28 16:42:11.322",
+ * space-separated, fractional seconds included) turned into the compact ISO
+ * form the archives store it in ("2026-08-28T16:42:11Z"). '' when the row
+ * carries none, or when it does not parse — never thrown, since a missing
+ * publication stamp must not cost an archive the reading itself.
+ *
+ * Shared by pk5lArchive and kompasArchive: both dedupe partly on this exact
+ * stamp, and letting the two parsers drift apart would silently break that
+ * comparison for whichever archive changed first. Originally lived only in
+ * pk5lArchive, moved here once kompasArchive needed the identical behaviour.
+ */
+export function publicationTsToIso(value: string | undefined): string {
+  if (!value) return '';
+  const match = PSE_PUBLICATION_STAMP.exec(value);
+  if (!match) return '';
+  const [, year, month, day, hour, minute, second] = match;
+  return `${year}-${month}-${day}T${hour}:${minute}:${second}Z`;
 }
 
 export function getDayDate(offset: number): string {
