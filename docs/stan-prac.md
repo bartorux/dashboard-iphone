@@ -199,6 +199,11 @@ bramkowane tylko `summary.json` — więc **nie ma deployu ani churnu service wo
 (CORS `*`, cache 5 min). Kompas archiwizowany odtąd w `data/kompas-archiwum/` wg wzorca
 `pk5lArchive`, z jednorazowym zasileniem historią wersji z `pdgsz`.
 
+**Adres z hashem zostaje — decyzja właściciela (06.09.2026).** Prawdziwa ścieżka `/badanie/` jest
+wykonalna (drugi plik wejściowy Vite + wyjątek `navigateFallbackDenylist` w service workerze, bo
+zainstalowana aplikacja przechwyciłaby nawigację i podała główny ekran), ale nie jest potrzebna.
+Nie proponować ponownie.
+
 **Odłożone:** cap 72 wpisów w logach (dla przewidywania archiwum wystarcza); zagęszczenie crona do
 15 min (stan 1141/1165 był widoczny od 10:07 — wyprzedzenie urosłoby do rzędu godziny).
 
