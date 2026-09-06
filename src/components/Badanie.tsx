@@ -222,6 +222,57 @@ function DayRow({
 }
 
 /**
+ * Column headers with a one-line explanation on hover — the owner's note:
+ * "nie każdy wie", and "dwell" in particular is a word this page invented.
+ * `title` is what a desktop reader hovers over; the paragraph above the
+ * tables carries the same definitions for anyone on a phone, where hover does
+ * not exist. Kept as data so a test can pin that every feature column has one.
+ */
+const COLUMNS: ReadonlyArray<{ label: string; hint?: string; align?: 'right' }> = [
+  { label: 'Data' },
+  {
+    label: 'Okno',
+    hint: 'Godzina ostatniego odczytu przed terminem wezwania (godzina docelowa minus 8 h). Wszystko w tym wierszu pochodzi z tego odczytu.',
+  },
+  {
+    label: 'Godz. docelowa',
+    hint: 'Godzina, dla której liczona jest ocena: ze zdarzenia w rejestrze, a bez niego ta, która w swoim oknie miała najniższą rezerwę (12–23).',
+  },
+  { label: 'Rezerwa', align: 'right', hint: 'Prognozowana rezerwa mocy na godzinę docelową w odczycie z okna.' },
+  { label: 'Margines', align: 'right', hint: 'Rezerwa minus rezerwa wymagana. Poniżej zera przywołanie może zostać ogłoszone.' },
+  {
+    label: 'Zapas',
+    align: 'right',
+    hint: 'Ile rezerwy zostaje nad progiem 1100 MW, przy którym operator może odstąpić od ogłoszenia. Im mniej, tym gorzej.',
+  },
+  {
+    label: 'Dwell',
+    align: 'right',
+    hint: 'Ile kolejnych odczytów wstecz od okna godzina docelowa siedziała poniżej 1500 MW. Mierzy trwałość niedoboru, nie jego chwilową głębokość: jedno mrugnięcie daje 1, doba trzymająca się nisko od wczoraj daje kilkadziesiąt.',
+  },
+  {
+    label: 'D−1 wiecz.',
+    align: 'right',
+    hint: 'Margines godziny docelowej w ostatnim odczycie z dnia poprzedniego. Mówi, jak wcześnie problem był widoczny.',
+  },
+  {
+    label: 'Kompas',
+    align: 'right',
+    hint: 'Stopień Kompasu Energetycznego PSE na godzinę docelową w wersji, która była aktywna w chwili okna. 2 i 3 to prośba operatora o ograniczenie poboru.',
+  },
+  {
+    label: 'Ekstrema',
+    align: 'right',
+    hint: 'Ile z czterech cech (zapas, dwell, D−1, Kompas) jest w tej dobie skrajnych na tle pozostałych zamkniętych dób.',
+  },
+  {
+    label: 'Werdykt',
+    hint: 'Zestawienie liczby ekstremów z rejestrem: trafienie, fałszywy alarm, przeoczenie, cisza. „Otwarte" — termin jeszcze nie minął.',
+  },
+  { label: 'Zdarzenie', hint: 'Wpis z rejestru: test albo przywołanie, jedna jednostka albo cały rynek.' },
+];
+
+/**
  * One table, reused for each group below — the columns are the same whether
  * a day is still ahead or long settled; only which days are worth a reader's
  * eye differs.
@@ -245,42 +296,18 @@ function DaysTable({
         <caption className="sr-only">{caption}</caption>
         <thead>
           <tr className="border-b border-separator text-left text-text-secondary">
-            <th scope="col" className="px-2 py-1.5 font-normal">
-              Data
-            </th>
-            <th scope="col" className="px-2 py-1.5 font-normal">
-              Okno
-            </th>
-            <th scope="col" className="px-2 py-1.5 font-normal">
-              Godz. docelowa
-            </th>
-            <th scope="col" className="px-2 py-1.5 text-right font-normal">
-              Rezerwa
-            </th>
-            <th scope="col" className="px-2 py-1.5 text-right font-normal">
-              Margines
-            </th>
-            <th scope="col" className="px-2 py-1.5 text-right font-normal">
-              Zapas
-            </th>
-            <th scope="col" className="px-2 py-1.5 text-right font-normal">
-              Dwell
-            </th>
-            <th scope="col" className="px-2 py-1.5 text-right font-normal">
-              D−1 wiecz.
-            </th>
-            <th scope="col" className="px-2 py-1.5 text-right font-normal">
-              Kompas
-            </th>
-            <th scope="col" className="px-2 py-1.5 text-right font-normal">
-              Ekstrema
-            </th>
-            <th scope="col" className="px-2 py-1.5 font-normal">
-              Werdykt
-            </th>
-            <th scope="col" className="px-2 py-1.5 font-normal">
-              Zdarzenie
-            </th>
+            {COLUMNS.map((column) => (
+              <th
+                key={column.label}
+                scope="col"
+                title={column.hint}
+                className={`px-2 py-1.5 font-normal ${column.align === 'right' ? 'text-right' : ''} ${
+                  column.hint ? 'cursor-help underline decoration-dotted' : ''
+                }`}
+              >
+                {column.label}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>

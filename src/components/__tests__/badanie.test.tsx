@@ -165,6 +165,19 @@ describe('Badanie', () => {
     expect(within(fold as HTMLElement).getByRole('button', { name: '03.09' })).toBeInTheDocument();
   });
 
+  it('explains the feature columns on hover', async () => {
+    respondWith(FIXTURE);
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+    const header = (label: string) =>
+      screen.getAllByRole('columnheader', { name: label })[0] as HTMLElement;
+    // "Dwell" is a word this page coined, so its hint has to say what it counts.
+    expect(header('Dwell').getAttribute('title')).toMatch(/kolejnych odczytów/);
+    for (const label of ['Zapas', 'D−1 wiecz.', 'Kompas', 'Ekstrema', 'Werdykt']) {
+      expect(header(label).getAttribute('title')?.length ?? 0).toBeGreaterThan(20);
+    }
+  });
+
   it('leaves a quiet day unmarked', async () => {
     respondWith(FIXTURE);
     render(<Badanie />);
