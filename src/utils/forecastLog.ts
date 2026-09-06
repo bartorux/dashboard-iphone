@@ -35,11 +35,25 @@ export interface ForecastLog {
 }
 
 /**
- * Three days of hourly runs. Enough to answer "since this morning" and "since
- * yesterday", which are the two spans anyone asks about, and small enough that
- * the file stays a few tens of kilobytes.
+ * Three days of history, measured in TIME rather than in entries.
+ *
+ * It used to be 72 entries, which meant three days only for as long as the job
+ * ran once an hour. At a quarter-hourly cadence the same 72 entries would cover
+ * less than a day, and "since yesterday" — one of the two spans anyone asks
+ * about — would silently stop being answerable. The span the reader cares about
+ * does not depend on how often we happen to look.
  */
-export const LOG_LIMIT = 72;
+export const LOG_WINDOW_MS = 72 * 60 * 60 * 1000;
+
+/**
+ * A safety ceiling on the file, not a retention rule.
+ *
+ * The window above decides what is worth keeping; this only bounds what a
+ * misbehaving clock or a much faster cadence could do to the file size. 400
+ * entries is well above three days at a quarter-hourly cadence (289), so under
+ * normal running it never binds, and the file stays a few tens of kilobytes.
+ */
+export const LOG_CAP = 400;
 
 export const EMPTY_LOG: ForecastLog = { entries: [] };
 
@@ -120,22 +134,38 @@ export function sameDays(a: DaySnapshot[], b: DaySnapshot[]): boolean {
 }
 
 /**
- * Add a snapshot, unless it repeats the last one.
+ * Add a snapshot, unless it repeats the last one, and drop what has aged out.
  *
- * Without the guard the scheduled job would commit an identical file every hour
- * — 24 commits a day carrying no information, in a repository where a commit is
- * how anything durable is recorded.
+ * Without the guard the scheduled job would commit an identical file every run
+ * — at a quarter-hourly cadence 96 commits a day carrying no information, in a
+ * repository where a commit is how anything durable is recorded.
+ *
+ * Trimming is measured against the NEW entry rather than the wall clock, so the
+ * function stays pure and a re-run over old data does not quietly empty the log.
  */
 export function appendEntry(
   log: ForecastLog,
   entry: LogEntry,
-  limit = LOG_LIMIT
+  windowMs = LOG_WINDOW_MS,
+  cap = LOG_CAP
 ): ForecastLog {
   const last = log.entries[log.entries.length - 1];
   if (last && sameDays(last.days, entry.days)) return log;
 
   const entries = [...log.entries, entry];
-  return { entries: entries.slice(Math.max(0, entries.length - limit)) };
+  const newest = Date.parse(entry.at);
+
+  // An unreadable stamp on the incoming entry leaves the window unapplied
+  // rather than dropping the whole history: nothing can be placed in time, and
+  // losing three days over one bad string is the larger harm.
+  const kept = Number.isFinite(newest)
+    ? entries.filter((candidate) => {
+        const at = Date.parse(candidate.at);
+        return Number.isFinite(at) && newest - at <= windowMs;
+      })
+    : entries;
+
+  return { entries: kept.slice(Math.max(0, kept.length - cap)) };
 }
 
 /**
@@ -162,6 +192,43 @@ export function parseLog(raw: unknown): ForecastLog {
   });
 
   return { entries: clean };
+}
+
+/**
+ * One reading per clock hour — the last one taken inside each.
+ *
+ * WHY: the reading cadence is an operational detail that has already changed
+ * once (hourly to every 15 minutes) and may change again, while the meaning of
+ * the sentences built on top must not move with it. Every threshold below is
+ * expressed in hours: `MOVEMENT_MIN_SNAPSHOTS` and `SETTLING_WINDOW` are read as
+ * "half a day of history", and `jumpiness` is the typical HOUR-to-hour step that
+ * `MOVEMENT_NOISE_MULTIPLE` is calibrated against. Counting raw snapshots would
+ * turn all three into something else overnight: twelve snapshots would mean
+ * three hours instead of twelve, and the noise floor would collapse to the size
+ * of a quarter-hourly step — a fifteen-minute wobble would start reading as a
+ * day sliding.
+ *
+ * The LAST reading in an hour, because it is the one that was true at the end of
+ * it, which is exactly what the hourly job used to record.
+ */
+export function hourlyEntries(entries: LogEntry[]): LogEntry[] {
+  const HOUR_MS = 60 * 60 * 1000;
+  const byHour = new Map<number, { at: number; entry: LogEntry }>();
+
+  for (const entry of entries) {
+    const at = Date.parse(entry.at);
+    if (!Number.isFinite(at)) continue;
+
+    const hour = Math.floor(at / HOUR_MS);
+    const held = byHour.get(hour);
+    // `>=` so that, among stamps that tie, the later position in the log wins —
+    // the log is written in order, so that is the more recent writing.
+    if (!held || at >= held.at) byHour.set(hour, { at, entry });
+  }
+
+  return [...byHour.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([, held]) => held.entry);
 }
 
 /**
@@ -196,10 +263,21 @@ export const MOVEMENT_FLOOR_MW = DEFAULT_ORANGE_THRESHOLD;
  * a wild one it means nothing. This is the same mistake the cause layer already
  * paid for with a fixed 300 MW threshold — one number cannot serve quantities
  * that vary on different scales.
+ *
+ * The multiple survives a change of cadence unchanged BECAUSE the series is
+ * resampled to the hour before the median is taken: it multiplies an hourly
+ * step, the same quantity it was measured against, and never a quarter-hourly
+ * one. Recalibrating it for a faster job would have been the wrong repair — the
+ * measurement under it is about how far a forecast moves in an hour.
  */
 export const MOVEMENT_NOISE_MULTIPLE = 3;
 
-/** Fewer than this and the windows overlap into meaninglessness. */
+/**
+ * Fewer than this and the windows overlap into meaninglessness.
+ *
+ * Twelve HOURS, counted on the hourly resampling above rather than on raw
+ * snapshots — half a day of forecasting, whatever the job's cadence.
+ */
 export const MOVEMENT_MIN_SNAPSHOTS = 12;
 
 function median(values: number[]): number {
@@ -221,7 +299,9 @@ export function movementFor(
   businessDate: string,
   minSnapshots = MOVEMENT_MIN_SNAPSHOTS
 ): Movement | null {
-  const series = log.entries
+  // Resampled to the hour first, so `minSnapshots` counts hours and the median
+  // step below is an hour-to-hour step, whatever the job's cadence happens to be.
+  const series = hourlyEntries(log.entries)
     .map((entry) => entry.days.find((day) => day.businessDate === businessDate))
     .filter((day): day is DaySnapshot => day?.worstMargin != null)
     .map((day) => day.worstMargin as number);
@@ -269,7 +349,7 @@ export function describeMovement(movement: Movement | null): string | null {
   return shift < 0 ? 'prognoza pogarsza się' : 'prognoza poprawia się';
 }
 
-/** How many recent snapshots decide whether a day has settled. */
+/** How many recent HOURS decide whether a day has settled. */
 export const SETTLING_WINDOW = MOVEMENT_MIN_SNAPSHOTS;
 
 /**
@@ -301,7 +381,9 @@ export function crossingsFor(
   businessDate: string,
   window = SETTLING_WINDOW
 ): number | null {
-  const series = log.entries
+  // Resampled like the drift above: the window is half a day of forecasting,
+  // not a count of however many times the job happened to run.
+  const series = hourlyEntries(log.entries)
     .map((entry) => entry.days.find((day) => day.businessDate === businessDate))
     .filter((day): day is DaySnapshot => day?.worstMargin != null)
     .map((day) => day.worstMargin as number);
