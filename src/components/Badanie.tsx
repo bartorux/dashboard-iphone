@@ -4,9 +4,12 @@ import {
   CallEvent,
   DayStudy,
   Feature,
+  Observation,
+  Outcome,
   Verdict,
 } from '../utils/badanieTypes';
 import { formatMW, signedMW } from '../utils/format';
+import { issueUrlFor, ObservationDraft, parseObservationTitle } from '../utils/obserwacje';
 
 /**
  * Research subpage, not the product. Reachable only at `#badanie` (see
@@ -26,6 +29,15 @@ import { formatMW, signedMW } from '../utils/format';
 // silently drift to a different branch or repo.
 export const BADANIE_URL =
   'https://raw.githubusercontent.com/bartorux/dashboard-iphone/react/data/badanie.json';
+
+/**
+ * GitHub's REST API, read-only and unauthenticated — this page has no token
+ * to send, same reasoning as `issueUrlFor` never taking one. Lists every
+ * issue (open and closed) so a freshly filed report still shows up here in
+ * the minutes before the hourly generator has had a chance to read it.
+ */
+export const ISSUES_URL =
+  'https://api.github.com/repos/bartorux/dashboard-iphone/issues?state=all&per_page=100';
 
 type LoadState =
   | { status: 'loading' }
@@ -52,6 +64,46 @@ const EVENT_SCOPE_WORD: Record<CallEvent['scope'], string> = {
 
 function formatEvent(event: CallEvent): string {
   return `${EVENT_KIND_WORD[event.kind]}, ${EVENT_SCOPE_WORD[event.scope]}`;
+}
+
+// Radio labels for the record form, in the owner's own words — distinct from
+// `describeOutcome` below, which is the noun form used inline in sentences
+// ("u nas nic" rather than "u nas nic było").
+const OUTCOME_RADIO_LABEL: Record<Outcome, string> = {
+  none: 'u nas nic było',
+  test: 'test',
+  real: 'przywołanie',
+};
+
+const SCOPE_RADIO_LABEL: Record<'unit' | 'market', string> = {
+  unit: 'jedna lub kilka jednostek',
+  market: 'cały rynek',
+};
+
+/** Hours a call period can start on — the same 12-23 range the study scores. */
+const OBSERVATION_HOURS = Array.from({ length: 12 }, (_, i) => i + 12);
+
+/** The outcome half of an observation's text, shared by every place that
+ *  renders one (table cell, footer line, pending list, day-select option) so
+ *  the wording never drifts between them. Reuses EVENT_*_WORD: an
+ *  Observation's `test`/`real` + `scope` is the same vocabulary as a
+ *  CallEvent's `kind` + `scope`. */
+function describeOutcome(outcome: Outcome, scope?: 'unit' | 'market'): string {
+  if (outcome === 'none') return 'u nas nic';
+  return `${EVENT_KIND_WORD[outcome]}, ${EVENT_SCOPE_WORD[scope ?? 'unit']}`;
+}
+
+/** One line for the footer register: date (+ hour, for anything but "none"),
+ *  the outcome, where it came from when that is an issue rather than the
+ *  hand-kept register, and the free note. */
+function formatObservationLine(obs: Observation): string {
+  const date = formatDayDate(obs.date);
+  const github = obs.source === 'issue' ? ` (z GitHub #${obs.issueNumber})` : '';
+  const note = obs.note ? `: ${obs.note}` : '';
+  const desc = describeOutcome(obs.outcome, obs.scope);
+  if (obs.outcome === 'none') return `${date} — ${desc}${github}${note}`;
+  const hour = `${String(obs.hour ?? 0).padStart(2, '0')}:00`;
+  return `${date} ${hour} — ${desc}${github}${note}`;
 }
 
 /** "2026-09-02" -> "02.09". Parsed by hand rather than through `new Date`,
@@ -147,6 +199,25 @@ function ReadingsList({ day, dwellFloorMw }: { day: DayStudy; dwellFloorMw: numb
   );
 }
 
+/**
+ * What the "Zdarzenie" column shows, in priority order: "nothing" first — an
+ * issue-sourced `none` is worth saying even when the register itself is
+ * silent, and it is the one outcome the register cannot express at all —
+ * then a test/real observation filed through Issues (tagged, so a reader
+ * knows it did not come from the hand-kept register), and only then the
+ * register's own event. A register-sourced observation is never printed on
+ * top of the event it was derived from — same fact, shown once.
+ */
+function eventCellContent(day: DayStudy): { text: string; muted: boolean } {
+  const obs = day.observation;
+  if (obs?.outcome === 'none') return { text: 'u nas nic', muted: true };
+  if (obs && obs.source === 'issue') {
+    return { text: `${describeOutcome(obs.outcome, obs.scope)} (z GitHub)`, muted: false };
+  }
+  if (day.event) return { text: formatEvent(day.event), muted: false };
+  return { text: '—', muted: false };
+}
+
 function DayRow({
   day,
   dwellFloorMw,
@@ -162,6 +233,7 @@ function DayRow({
   const rowMuted = day.window.open ? 'text-text-secondary' : '';
   const rowBold = day.event ? 'font-semibold' : '';
   const rowClass = `${rowMuted} ${rowBold}`.trim();
+  const eventCell = eventCellContent(day);
 
   return (
     <>
@@ -204,7 +276,9 @@ function DayRow({
         </td>
         <td className="px-2 py-1.5 text-right tnum">{day.extremeCount}/4</td>
         <td className="px-2 py-1.5">{VERDICT_WORD[day.verdict]}</td>
-        <td className="px-2 py-1.5">{day.event ? formatEvent(day.event) : '—'}</td>
+        <td className={`px-2 py-1.5 ${eventCell.muted ? 'text-text-secondary' : ''}`}>
+          {eventCell.text}
+        </td>
       </tr>
       {expanded && (
         <tr>
@@ -269,7 +343,10 @@ const COLUMNS: ReadonlyArray<{ label: string; hint?: string; align?: 'right' }> 
     label: 'Werdykt',
     hint: 'Zestawienie liczby ekstremów z rejestrem: trafienie, fałszywy alarm, przeoczenie, cisza. „Otwarte" — termin jeszcze nie minął.',
   },
-  { label: 'Zdarzenie', hint: 'Wpis z rejestru: test albo przywołanie, jedna jednostka albo cały rynek.' },
+  {
+    label: 'Zdarzenie',
+    hint: 'Wpis z rejestru: test albo przywołanie, jedna jednostka albo cały rynek — albo obserwacja zgłoszona w GitHub Issues, w tym „u nas nic".',
+  },
 ];
 
 /**
@@ -369,6 +446,253 @@ function newestFirst(days: DayStudy[]): DayStudy[] {
   return [...days].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 }
 
+/** Newest closed day without a recorded observation, or else the newest
+ *  closed day overall — closed because until the window shuts there is
+ *  nothing yet to record, and "newest" gives the owner the freshest gap to
+ *  fill without hunting through the dropdown. Exported standalone so a test
+ *  can pin the selection rule without going through the DOM. */
+export function defaultDraftFor(days: DayStudy[]): string | null {
+  const closed = newestFirst(days.filter((day) => !day.window.open));
+  const withoutEntry = closed.find((day) => day.observation === null);
+  return (withoutEntry ?? closed[0])?.date ?? null;
+}
+
+/**
+ * "Zapisz, co było": the owner's own way of writing to this page without a
+ * backend or a token. It never posts anything itself — filling the form only
+ * builds the pre-filled GitHub "new issue" link via `issueUrlFor`; pressing
+ * "Submit" on GitHub is the actual write, and the hourly generator reads it
+ * back into badanie.json. Only closed days are offered: an open one has
+ * nothing yet to confirm or deny.
+ */
+function ObservationRecorder({ days }: { days: DayStudy[] }) {
+  const closedDays = newestFirst(days.filter((day) => !day.window.open));
+  const [date, setDate] = useState<string | null>(() => defaultDraftFor(days));
+  const selectedDay = closedDays.find((day) => day.date === date) ?? closedDays[0] ?? null;
+  const [outcome, setOutcome] = useState<Outcome>('none');
+  const [hour, setHour] = useState<number>(selectedDay?.worstHour ?? 20);
+  const [scope, setScope] = useState<'unit' | 'market'>('unit');
+  const [note, setNote] = useState('');
+
+  if (!selectedDay) return null;
+
+  const handleDateChange = (nextDate: string) => {
+    setDate(nextDate);
+    // The target hour follows the newly chosen day rather than staying
+    // pinned to whichever day was picked before.
+    const day = closedDays.find((d) => d.date === nextDate);
+    setHour(day?.worstHour ?? 20);
+  };
+
+  const draft: ObservationDraft =
+    outcome === 'none'
+      ? { date: selectedDay.date, outcome: 'none' }
+      : { date: selectedDay.date, outcome, hour, scope };
+  const href = issueUrlFor('bartorux/dashboard-iphone', draft, note);
+
+  return (
+    <section className="mt-4">
+      <h2 className="text-[0.875rem] font-semibold">Zapisz, co było</h2>
+      <div className="mt-2 flex flex-col gap-3 text-[0.8125rem]">
+        <div>
+          <label htmlFor="obs-date" className="block text-text-secondary">
+            Doba
+          </label>
+          <select
+            id="obs-date"
+            value={selectedDay.date}
+            onChange={(e) => handleDateChange(e.target.value)}
+            className="mt-1 rounded-lg border border-separator bg-surface px-2 py-1.5"
+          >
+            {closedDays.map((day) => (
+              <option key={day.date} value={day.date}>
+                {formatDayDate(day.date)}
+                {day.observation === null
+                  ? ' — bez wpisu'
+                  : ` — zapisane: ${
+                      day.observation.outcome === 'none'
+                        ? describeOutcome('none')
+                        : `${String(day.observation.hour ?? 0).padStart(2, '0')}:00 ${describeOutcome(
+                            day.observation.outcome,
+                            day.observation.scope
+                          )}`
+                    }`}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <fieldset>
+          <legend className="text-text-secondary">Wynik</legend>
+          <div className="mt-1 flex flex-wrap gap-3">
+            {(Object.keys(OUTCOME_RADIO_LABEL) as Outcome[]).map((value) => (
+              <label key={value} className="inline-flex items-center gap-1">
+                <input
+                  type="radio"
+                  name="obs-outcome"
+                  value={value}
+                  checked={outcome === value}
+                  onChange={() => setOutcome(value)}
+                />
+                {OUTCOME_RADIO_LABEL[value]}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        {outcome !== 'none' && (
+          <div className="flex flex-wrap gap-4">
+            <div>
+              <label htmlFor="obs-hour" className="block text-text-secondary">
+                Godzina
+              </label>
+              <select
+                id="obs-hour"
+                value={hour}
+                onChange={(e) => setHour(Number(e.target.value))}
+                className="mt-1 rounded-lg border border-separator bg-surface px-2 py-1.5"
+              >
+                {OBSERVATION_HOURS.map((h) => (
+                  <option key={h} value={h}>
+                    {String(h).padStart(2, '0')}:00
+                  </option>
+                ))}
+              </select>
+            </div>
+            <fieldset>
+              <legend className="text-text-secondary">Zakres</legend>
+              <div className="mt-1 flex flex-wrap gap-3">
+                {(Object.keys(SCOPE_RADIO_LABEL) as Array<'unit' | 'market'>).map((value) => (
+                  <label key={value} className="inline-flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="obs-scope"
+                      value={value}
+                      checked={scope === value}
+                      onChange={() => setScope(value)}
+                    />
+                    {SCOPE_RADIO_LABEL[value]}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </div>
+        )}
+
+        <div>
+          <label htmlFor="obs-note" className="block text-text-secondary">
+            Notatka (opcjonalnie)
+          </label>
+          <textarea
+            id="obs-note"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="np. wezwanie o 11:14"
+            rows={2}
+            className="mt-1 w-full rounded-lg border border-separator bg-surface px-2 py-1.5"
+          />
+        </div>
+
+        <div>
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener"
+            className="inline-block rounded-lg bg-accent px-3 py-1.5 font-medium text-on-accent"
+          >
+            Zapisz w GitHub
+          </a>
+          <p className="mt-1 text-[0.75rem] text-text-secondary">
+            Otworzy się gotowe zgłoszenie w GitHub — wystarczy nacisnąć „Submit”. Generator wczyta
+            je w ciągu godziny.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** One parsed-but-not-yet-generated observation: the page already knows the
+ *  shape (obserwacje.ts parses it the same way the generator will), but
+ *  badanie.json has not been rebuilt with it yet. */
+interface PendingObservation extends ObservationDraft {
+  issueNumber: number;
+  url: string;
+}
+
+function formatPendingLine(item: PendingObservation): string {
+  const date = formatDayDate(item.date);
+  const desc = describeOutcome(item.outcome, item.scope);
+  if (item.outcome === 'none') return `${date} — ${desc} (#${item.issueNumber})`;
+  const hour = `${String(item.hour ?? 0).padStart(2, '0')}:00`;
+  return `${date} ${hour} — ${desc} (#${item.issueNumber})`;
+}
+
+/**
+ * Issues filed through the form above but not yet folded into badanie.json —
+ * the generator only runs hourly, so there is always a window where the
+ * owner has pressed "Submit" and the page still has nothing to show for it.
+ * Matched against `observations` sourced from an issue specifically: a
+ * register-typed observation on the same date does not mean THIS issue was
+ * read yet. A failed fetch is not this page's problem — the list is simply
+ * absent, same reasoning as Badanie's own load — a network hiccup on a
+ * research page is not "the app is broken".
+ */
+function PendingIssues({ observations }: { observations: Observation[] }) {
+  const [pending, setPending] = useState<PendingObservation[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const known = new Set(
+      observations.filter((obs) => obs.source === 'issue').map((obs) => obs.date)
+    );
+
+    fetch(ISSUES_URL, { cache: 'no-store' })
+      .then((response) =>
+        response.ok ? response.json() : Promise.reject(new Error('bad status'))
+      )
+      .then((issues: Array<{ number: number; title: string; html_url: string }>) => {
+        if (cancelled) return;
+        const items: PendingObservation[] = [];
+        for (const issue of issues) {
+          const draft = parseObservationTitle(issue.title);
+          if (!draft || known.has(draft.date)) continue;
+          items.push({ ...draft, issueNumber: issue.number, url: issue.html_url });
+        }
+        setPending(items);
+      })
+      .catch(() => {
+        if (!cancelled) setPending([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [observations]);
+
+  if (pending.length === 0) return null;
+
+  return (
+    <section className="mt-4">
+      <h2 className="text-[0.875rem] font-semibold">Zgłoszone, czeka na przeliczenie</h2>
+      <ul className="mt-1 space-y-0.5 text-[0.8125rem]">
+        {pending.map((item) => (
+          <li key={item.issueNumber}>
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener"
+              className="text-accent-text underline"
+            >
+              {formatPendingLine(item)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 function Content({ data }: { data: BadanieFile }) {
   const [expandedDates, setExpandedDates] = useState<ReadonlySet<string>>(new Set());
 
@@ -459,18 +783,17 @@ function Content({ data }: { data: BadanieFile }) {
         </details>
       )}
 
+      <ObservationRecorder days={data.days} />
+      <PendingIssues observations={data.observations} />
+
       <footer className="mt-4 text-[0.75rem] text-text-secondary">
-        <h2 className="font-semibold text-text">Rejestr zdarzeń</h2>
-        {data.events.length === 0 ? (
-          <p className="mt-1">Brak zarejestrowanych zdarzeń.</p>
+        <h2 className="font-semibold text-text">Rejestr zdarzeń i obserwacji</h2>
+        {data.observations.length === 0 ? (
+          <p className="mt-1">Brak zarejestrowanych obserwacji.</p>
         ) : (
           <ul className="mt-1 space-y-0.5">
-            {data.events.map((event) => (
-              <li key={`${event.date}-${event.hour}`}>
-                {formatDayDate(event.date)} {String(event.hour).padStart(2, '0')}:00 —{' '}
-                {formatEvent(event)}
-                {event.note ? `: ${event.note}` : ''}
-              </li>
+            {data.observations.map((obs) => (
+              <li key={obs.date}>{formatObservationLine(obs)}</li>
             ))}
           </ul>
         )}

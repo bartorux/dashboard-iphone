@@ -1,13 +1,16 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, within, waitFor } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
-import Badanie, { BADANIE_URL } from '../Badanie';
+import Badanie, { BADANIE_URL, ISSUES_URL, defaultDraftFor } from '../Badanie';
 import { BadanieFile } from '../../utils/badanieTypes';
 
 /**
  * One day of each shape the table has to tell apart at a glance: a hit (event
- * on record, all four features extreme), a quiet day (nothing on either
- * side), and a day whose decision window has not closed yet.
+ * on record, all four features extreme, register-sourced observation that
+ * mirrors it), a day with an issue-sourced test/real observation and no
+ * register event at all, a quiet day with an issue-sourced "nothing
+ * happened" observation, a quiet day with no entry at all, and a day whose
+ * decision window has not closed yet.
  */
 const FIXTURE: BadanieFile = {
   generatedAt: '2026-09-05T06:00:00Z',
@@ -16,6 +19,52 @@ const FIXTURE: BadanieFile = {
   dwellFloorMw: 1500,
   alarmFrom: 3,
   days: [
+    {
+      date: '2026-08-31',
+      window: { readAt: '2026-08-31T09:00:00Z', deadline: '2026-08-31T09:00:00Z', open: false },
+      worstHour: 19,
+      surplus: 3100,
+      required: 2000,
+      margin: 1100,
+      headroom: { value: 2000, percentile: 0.15, extreme: false },
+      dwell: { value: 0, percentile: 0.05, extreme: false },
+      eveMargin: { value: 700, percentile: 0.1, extreme: false },
+      compass: { level: 0, extreme: false },
+      extremeCount: 0,
+      // No register event at all: the ONLY record of this call period is the
+      // Issue below. Distinct from 02.09, whose observation just mirrors an
+      // event already in the register.
+      event: null,
+      observation: {
+        date: '2026-08-31',
+        outcome: 'real',
+        hour: 19,
+        scope: 'market',
+        source: 'issue',
+        issueNumber: 9,
+      },
+      verdict: 'cisza',
+      readings: [['2026-08-31T09:00:00Z', 3100, 2000]],
+    },
+    {
+      date: '2026-09-01',
+      window: { readAt: '2026-09-01T10:00:00Z', deadline: '2026-09-01T10:00:00Z', open: false },
+      worstHour: 20,
+      surplus: 3200,
+      required: 2000,
+      margin: 1200,
+      headroom: { value: 2100, percentile: 0.1, extreme: false },
+      dwell: { value: 0, percentile: 0.05, extreme: false },
+      eveMargin: { value: 900, percentile: 0.1, extreme: false },
+      compass: { level: 0, extreme: false },
+      extremeCount: 0,
+      event: null,
+      // Filed through Issues, already folded into `observations` below —
+      // this is the case the "czeka na przeliczenie" list must NOT show.
+      observation: { date: '2026-09-01', outcome: 'none', source: 'issue', issueNumber: 3 },
+      verdict: 'cisza',
+      readings: [['2026-09-01T10:00:00Z', 3200, 2000]],
+    },
     {
       date: '2026-09-02',
       window: { readAt: '2026-09-02T10:00:00Z', deadline: '2026-09-02T10:00:00Z', open: false },
@@ -29,7 +78,15 @@ const FIXTURE: BadanieFile = {
       compass: { level: 3, extreme: true },
       extremeCount: 4,
       event: { date: '2026-09-02', hour: 20, kind: 'test', scope: 'unit', note: 'jedna jednostka wyłączona' },
-      observation: null,
+      // Register-sourced: mirrors `event` above and must not print twice.
+      observation: {
+        date: '2026-09-02',
+        outcome: 'test',
+        hour: 20,
+        scope: 'unit',
+        note: 'jedna jednostka wyłączona',
+        source: 'register',
+      },
       verdict: 'trafienie',
       readings: [
         ['2026-09-02T08:00:00Z', 950, 2000],
@@ -49,6 +106,7 @@ const FIXTURE: BadanieFile = {
       compass: { level: 0, extreme: false },
       extremeCount: 0,
       event: null,
+      // The one closed day with no entry yet — the record form's default.
       observation: null,
       verdict: 'cisza',
       readings: [['2026-09-03T10:00:00Z', 3000, 2000]],
@@ -71,14 +129,59 @@ const FIXTURE: BadanieFile = {
       readings: [['2026-09-04T08:00:00Z', 2500, 2000]],
     },
   ],
-  observations: [],
+  // Newest first, per the contract comment on BadanieFile.observations.
+  observations: [
+    {
+      date: '2026-09-02',
+      outcome: 'test',
+      hour: 20,
+      scope: 'unit',
+      note: 'jedna jednostka wyłączona',
+      source: 'register',
+    },
+    { date: '2026-09-01', outcome: 'none', source: 'issue', issueNumber: 3 },
+    {
+      date: '2026-08-31',
+      outcome: 'real',
+      hour: 19,
+      scope: 'market',
+      source: 'issue',
+      issueNumber: 9,
+    },
+  ],
   events: [
     { date: '2026-09-02', hour: 20, kind: 'test', scope: 'unit', note: 'jedna jednostka wyłączona' },
   ],
 };
 
-function respondWith(value: unknown, ok = true) {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok, json: async () => value }));
+/** Minimum shape read from the GitHub issues list by PendingIssues. */
+type IssueFixture = { number: number; title: string; html_url: string };
+
+/**
+ * Routes the mocked fetch by URL: the page hits two different endpoints
+ * (badanie.json and the GitHub issues list), and each test only cares about
+ * shaping one or the other. Defaults keep the other endpoint harmless —
+ * `issues: []` so PendingIssues renders nothing unless a test asks otherwise.
+ */
+function respondWith(routes: {
+  badanie?: unknown;
+  badanieOk?: boolean;
+  issues?: IssueFixture[];
+  issuesOk?: boolean;
+}) {
+  const { badanie, badanieOk = true, issues = [], issuesOk = true } = routes;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: string) => {
+      if (url === BADANIE_URL) {
+        return Promise.resolve({ ok: badanieOk, json: async () => badanie });
+      }
+      if (url === ISSUES_URL) {
+        return Promise.resolve({ ok: issuesOk, json: async () => issues });
+      }
+      return Promise.reject(new Error(`unexpected fetch: ${url}`));
+    })
+  );
 }
 
 describe('Badanie', () => {
@@ -86,7 +189,7 @@ describe('Badanie', () => {
   afterEach(() => vi.unstubAllGlobals());
 
   it('fetches the pinned URL, uncached', async () => {
-    respondWith(FIXTURE);
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
 
     await screen.findByText('Badanie przywołań');
@@ -101,7 +204,7 @@ describe('Badanie', () => {
   });
 
   it('shows the header and the running commentary', async () => {
-    respondWith(FIXTURE);
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
 
     expect(await screen.findByText('Badanie przywołań')).toBeInTheDocument();
@@ -113,20 +216,23 @@ describe('Badanie', () => {
   });
 
   it('marks the day with an event as a hit, naming the event kind', async () => {
-    respondWith(FIXTURE);
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
 
     const row = screen.getByText('02.09').closest('tr')!;
     expect(within(row).getByText('trafienie')).toBeInTheDocument();
+    // Register-sourced observation mirrors the event: shown once, in the
+    // existing format, no "(z GitHub)" tag.
     expect(within(row).getByText('test, jedna jednostka')).toBeInTheDocument();
+    expect(within(row).queryByText(/z GitHub/)).toBeNull();
     // The event row is bold — the one visual distinction this "may look like
     // garbage" page still has to make.
     expect(row.className).toContain('font-semibold');
   });
 
   it('paints an extreme feature cell in the alarm colours', async () => {
-    respondWith(FIXTURE);
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
 
@@ -139,7 +245,7 @@ describe('Badanie', () => {
   });
 
   it('shows each day its own target hour, not a fixed one', async () => {
-    respondWith(FIXTURE);
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
     // The quiet day in the fixture is scored on 21:00; a column that always
@@ -151,7 +257,7 @@ describe('Badanie', () => {
   });
 
   it('groups days: ahead first, settled notable next, quiet ones behind a fold', async () => {
-    respondWith(FIXTURE);
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
     const tableOf = (caption: RegExp) =>
@@ -159,18 +265,22 @@ describe('Badanie', () => {
     // The open day (04.09) is the only row in the "ahead" table.
     expect(within(tableOf(/jeszcze nie minął/)).getByRole('button', { name: '04.09' })).toBeInTheDocument();
     expect(within(tableOf(/jeszcze nie minął/)).queryByRole('button', { name: '02.09' })).toBeNull();
-    // The event day (02.09) is notable; the quiet day (03.09) is not.
+    // The event day (02.09) is notable; the quiet days (01.09, 03.09) are not.
     expect(within(tableOf(/ze zdarzeniem/)).getByRole('button', { name: '02.09' })).toBeInTheDocument();
     expect(within(tableOf(/ze zdarzeniem/)).queryByRole('button', { name: '03.09' })).toBeNull();
-    // Quiet days live inside a collapsed <details>, counted in its summary.
-    const fold = screen.getByText(/Cisza — 1 doba/).closest('details');
+    // Quiet days live inside a collapsed <details>, counted in its summary —
+    // three now: 31.08 (issue-observed real, no register event), 01.09
+    // (issue-observed "nic"), and 03.09 (no entry at all).
+    const fold = screen.getByText(/Cisza — 3 dób/).closest('details');
     expect(fold).not.toBeNull();
     expect(fold).not.toHaveAttribute('open');
     expect(within(fold as HTMLElement).getByRole('button', { name: '03.09' })).toBeInTheDocument();
+    expect(within(fold as HTMLElement).getByRole('button', { name: '01.09' })).toBeInTheDocument();
+    expect(within(fold as HTMLElement).getByRole('button', { name: '31.08' })).toBeInTheDocument();
   });
 
   it('explains a column at once on hover and pins it on click', async () => {
-    respondWith(FIXTURE);
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
     // The first table's header buttons; every table has its own hint line.
@@ -201,20 +311,41 @@ describe('Badanie', () => {
     }
   });
 
-  it('leaves a quiet day unmarked', async () => {
-    respondWith(FIXTURE);
+  it('leaves a quiet day without any observation unmarked', async () => {
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
 
     const row = screen.getByText('03.09').closest('tr')!;
     expect(within(row).getByText('cisza')).toBeInTheDocument();
-    expect(within(row).getByText('—')).toBeInTheDocument(); // no event
+    expect(within(row).getByText('—')).toBeInTheDocument(); // no event, no observation
     expect(row.className).not.toContain('font-semibold');
     expect(row.querySelector('.bg-alarm-soft')).toBeNull();
   });
 
+  it('marks a quiet day with an issue-sourced "nothing" observation, muted', async () => {
+    respondWith({ badanie: FIXTURE });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const row = screen.getByText('01.09').closest('tr')!;
+    const cell = within(row).getByText('u nas nic').closest('td')!;
+    expect(cell.className).toContain('text-text-secondary');
+    // Grey text, not the bold hit styling: an observed "nic" is not an event.
+    expect(row.className).not.toContain('font-semibold');
+  });
+
+  it('tags a test/real observation from Issues, with no register event behind it', async () => {
+    respondWith({ badanie: FIXTURE });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const row = screen.getByText('31.08').closest('tr')!;
+    expect(within(row).getByText('przywołanie, cały rynek (z GitHub)')).toBeInTheDocument();
+  });
+
   it('expands a day to its readings, marking the window reading', async () => {
-    respondWith(FIXTURE);
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
 
@@ -246,7 +377,7 @@ describe('Badanie', () => {
   });
 
   it('marks an open day as open instead of showing a window time', async () => {
-    respondWith(FIXTURE);
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
 
@@ -267,7 +398,7 @@ describe('Badanie', () => {
   });
 
   it('shows an error when the server responds but not ok', async () => {
-    respondWith(null, false);
+    respondWith({ badanie: null, badanieOk: false });
     render(<Badanie />);
 
     expect(
@@ -275,15 +406,173 @@ describe('Badanie', () => {
     ).toBeInTheDocument();
   });
 
-  it('lists the event register in the footer', async () => {
-    respondWith(FIXTURE);
+  it('lists the event and observation register in the footer, newest first', async () => {
+    respondWith({ badanie: FIXTURE });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
 
-    const footer = screen.getByText('Rejestr zdarzeń').closest('footer')!;
-    const entry = within(footer).getByRole('listitem');
-    expect(entry.textContent).toBe(
-      '02.09 20:00 — test, jedna jednostka: jedna jednostka wyłączona'
-    );
+    const footer = screen.getByText('Rejestr zdarzeń i obserwacji').closest('footer')!;
+    const entries = within(footer).getAllByRole('listitem');
+    expect(entries.map((li) => li.textContent)).toEqual([
+      '02.09 20:00 — test, jedna jednostka: jedna jednostka wyłączona',
+      '01.09 — u nas nic (z GitHub #3)',
+      '31.08 19:00 — przywołanie, cały rynek (z GitHub #9)',
+    ]);
+  });
+
+  describe('defaultDraftFor', () => {
+    it('picks the newest closed day without an entry', () => {
+      expect(defaultDraftFor(FIXTURE.days)).toBe('2026-09-03');
+    });
+
+    it('falls back to the newest closed day when every one has an entry', () => {
+      const allEntered = FIXTURE.days.map((day) =>
+        day.date === '2026-09-03' ? { ...day, observation: FIXTURE.observations[0] } : day
+      );
+      expect(defaultDraftFor(allEntered)).toBe('2026-09-03');
+    });
+
+    it('ignores open days entirely', () => {
+      const onlyOpen = FIXTURE.days.filter((day) => day.window.open);
+      expect(defaultDraftFor(onlyOpen)).toBeNull();
+    });
+  });
+
+  describe('"Zapisz, co było"', () => {
+    it('defaults to the newest closed day without an entry, outcome "none"', async () => {
+      respondWith({ badanie: FIXTURE });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      const select = screen.getByLabelText('Doba') as HTMLSelectElement;
+      expect(select.value).toBe('2026-09-03');
+      expect(
+        (screen.getByLabelText('u nas nic było') as HTMLInputElement).checked
+      ).toBe(true);
+      // The date select carries the "bez wpisu" / "zapisane" hint per option.
+      const options = within(select).getAllByRole('option') as HTMLOptionElement[];
+      expect(options.find((o) => o.value === '2026-09-03')!.textContent).toBe('03.09 — bez wpisu');
+      expect(options.find((o) => o.value === '2026-09-02')!.textContent).toContain('zapisane');
+    });
+
+    it('follows the day select to a different day, with its own target hour', async () => {
+      respondWith({ badanie: FIXTURE });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      const select = screen.getByLabelText('Doba') as HTMLSelectElement;
+      fireEvent.change(select, { target: { value: '2026-09-02' } });
+      expect(select.value).toBe('2026-09-02');
+
+      // 02.09's own target hour (20:00) replaces 03.09's (21:00).
+      fireEvent.click(screen.getByLabelText('test'));
+      const hourSelect = screen.getByLabelText('Godzina') as HTMLSelectElement;
+      expect(hourSelect.value).toBe('20');
+    });
+
+    it('hides hour and scope for "none", reveals them for "test"', async () => {
+      respondWith({ badanie: FIXTURE });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      expect(screen.queryByLabelText('Godzina')).toBeNull();
+      fireEvent.click(screen.getByLabelText('test'));
+      expect(screen.getByLabelText('Godzina')).toBeInTheDocument();
+      expect(screen.getByLabelText('jedna lub kilka jednostek')).toBeInTheDocument();
+      expect(screen.getByLabelText('cały rynek')).toBeInTheDocument();
+    });
+
+    it('builds the exact issue link for the chosen values', async () => {
+      respondWith({ badanie: FIXTURE });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      fireEvent.change(screen.getByLabelText('Doba'), { target: { value: '2026-09-03' } });
+      fireEvent.click(screen.getByLabelText('test'));
+      fireEvent.change(screen.getByLabelText('Godzina'), { target: { value: '20' } });
+      // Scope stays at its default, "jedna lub kilka jednostek" (unit).
+
+      const link = screen.getByRole('link', { name: 'Zapisz w GitHub' }) as HTMLAnchorElement;
+      const url = new URL(link.href);
+      expect(url.origin + url.pathname).toBe(
+        'https://github.com/bartorux/dashboard-iphone/issues/new'
+      );
+      expect(url.searchParams.get('title')).toBe('[badanie] 2026-09-03 20:00 test jednostka');
+      expect(link.target).toBe('_blank');
+      expect(link.rel).toContain('noopener');
+    });
+
+    it('omits the hour from the title when the outcome is "none"', async () => {
+      respondWith({ badanie: FIXTURE });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      const link = screen.getByRole('link', { name: 'Zapisz w GitHub' }) as HTMLAnchorElement;
+      const url = new URL(link.href);
+      expect(url.searchParams.get('title')).toBe('[badanie] 2026-09-03 nic');
+      expect(url.searchParams.get('title')).not.toMatch(/\d{2}:00/);
+    });
+
+    it('carries the note into the issue body', async () => {
+      respondWith({ badanie: FIXTURE });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      fireEvent.change(screen.getByLabelText('Notatka (opcjonalnie)'), {
+        target: { value: 'wezwanie o 11:14' },
+      });
+      const link = screen.getByRole('link', { name: 'Zapisz w GitHub' }) as HTMLAnchorElement;
+      const url = new URL(link.href);
+      expect(url.searchParams.get('body')).toBe('wezwanie o 11:14');
+    });
+  });
+
+  describe('"Zgłoszone, czeka na przeliczenie"', () => {
+    it('shows an issue not yet folded into observations, hides one already there', async () => {
+      respondWith({
+        badanie: FIXTURE,
+        issues: [
+          // Already reflected in FIXTURE.observations (source: 'issue') — must not reappear.
+          { number: 3, title: '[badanie] 2026-09-01 nic', html_url: 'https://github.com/x/y/issues/3' },
+          // Not yet in observations — this is the one the list is for.
+          { number: 7, title: '[badanie] 2026-09-05 20:00 test jednostka', html_url: 'https://github.com/x/y/issues/7' },
+        ],
+      });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      const section = await screen.findByText('Zgłoszone, czeka na przeliczenie');
+      const list = section.closest('section')!;
+      const items = within(list).getAllByRole('listitem');
+      expect(items).toHaveLength(1);
+      expect(items[0].textContent).toBe('05.09 20:00 — test, jedna jednostka (#7)');
+      const link = within(items[0]).getByRole('link') as HTMLAnchorElement;
+      expect(link.href).toBe('https://github.com/x/y/issues/7');
+    });
+
+    it('shows nothing when every open issue is already accounted for', async () => {
+      respondWith({
+        badanie: FIXTURE,
+        issues: [
+          { number: 3, title: '[badanie] 2026-09-01 nic', html_url: 'https://github.com/x/y/issues/3' },
+        ],
+      });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      await waitFor(() => expect(fetch).toHaveBeenCalledWith(ISSUES_URL, { cache: 'no-store' }));
+      expect(screen.queryByText('Zgłoszone, czeka na przeliczenie')).toBeNull();
+    });
+
+    it('does not break the page when the GitHub fetch fails', async () => {
+      respondWith({ badanie: FIXTURE, issuesOk: false });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      await waitFor(() => expect(fetch).toHaveBeenCalledWith(ISSUES_URL, { cache: 'no-store' }));
+      expect(screen.queryByText('Zgłoszone, czeka na przeliczenie')).toBeNull();
+      // The rest of the page is unaffected.
+      expect(screen.getByText('02.09')).toBeInTheDocument();
+    });
   });
 });
