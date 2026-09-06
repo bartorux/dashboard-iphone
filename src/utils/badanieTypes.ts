@@ -79,6 +79,8 @@ export interface DayStudy {
   /** How many of the four features are extreme, 0-4. */
   extremeCount: number;
   event: CallEvent | null;
+  /** The owner's word on the day, when there is one — from the register or an issue. */
+  observation: Observation | null;
   verdict: Verdict;
   /** Every archived reading of the worst hour, oldest first — the day's timeline. */
   readings: Reading[];
@@ -96,6 +98,8 @@ export interface BadanieFile {
   alarmFrom: number;
   days: DayStudy[];
   events: CallEvent[];
+  /** Every observation the generator knew of, issues included, newest first. */
+  observations: Observation[];
 }
 
 /**
@@ -113,4 +117,27 @@ export interface CompassVersionRow {
   level: 0 | 1 | 2 | 3;
   /** PSE's publication_ts_utc as an ISO instant. */
   publishedAt: string;
+}
+
+/**
+ * What the owner says actually happened on a day — including "nothing", which
+ * is the observation the study needs most and the register cannot express.
+ *
+ * `none` means "nothing at OUR units": a test at another aggregator's unit is
+ * invisible to the owner, so a `none` on an alarm day is an upper bound on the
+ * false-alarm rate, never a proof of one. Market-wide real calls are seen by
+ * everyone, so a `none` there is firm.
+ */
+export type Outcome = 'none' | 'test' | 'real';
+
+export interface Observation {
+  date: string;
+  outcome: Outcome;
+  /** Hour the block starts, 0-23; absent for `none`. */
+  hour?: number;
+  scope?: 'unit' | 'market';
+  note?: string;
+  /** Hand-kept register (data/przywolania.json) or a GitHub issue filed from the page. */
+  source: 'register' | 'issue';
+  issueNumber?: number;
 }

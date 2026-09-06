@@ -513,6 +513,9 @@ export function studyDays(
 
     const study: DayStudy = {
       date: day.date,
+      // Filled in by the observations step (obserwacje.ts); the scoring here
+      // knows only the register.
+      observation: null,
       window: day.window,
       worstHour: day.worstHour,
       surplus: day.surplus,
@@ -543,6 +546,7 @@ export function buildBadanie(
     exemptionMw: CALL_PERIOD_EXEMPTION_MW,
     dwellFloorMw: DWELL_FLOOR_MW,
     alarmFrom: ALARM_FROM,
+    observations: [],
     days: studyDays(rows, compass, events, now),
     events: [...events],
   };
