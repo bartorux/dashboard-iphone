@@ -3,15 +3,6 @@
     {
       "at": "2026-09-07T02:45:41.996Z",
       "prompt": 51,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni przez wiele godzin tego okresu.",
-      "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek i środę nadwyżka spada poniżej progu 1100 MW między 18:00 a 21:00, podczas gdy w czwartek i piątek trzyma się powyżej tego progu w godzinach wieczornych."
-    },
-    {
-      "at": "2026-09-07T02:45:41.996Z",
-      "prompt": 51,
       "accepted": true,
       "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni przez większą część nadchodzącej doby.",
       "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin, w których nadwyżka spadła poniżej progu, zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -604,6 +595,14 @@
       "headline": "W środę operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00.",
       "body": "W dzisiejszej dobie prognoza wciąż się ustala, raz pokrywając wymagany poziom, a raz go nie pokrywając. Na ogłoszenie jest już za późno.",
       "outlook": "Jutro margines dodatni pozostaje wąski, natomiast w czwartek saldo wymiany nie zostało jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-07T19:01:09.286Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 18:00-21:00.",
+      "body": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez trzy godziny. Ogłoszenie nie nadejdzie, bo do tych godzin zostało mniej niż osiem godzin, a Kompas Energetyczny PSE zaleca oszczędzanie między 21:00 a 23:00.",
+      "outlook": "Jutro margines utrzymuje dodatni poziom, natomiast w środę, czwartek i piątek operator może ogłosić przywołanie w wyznaczonych porach popołudniowo-wieczornych."
     }
   ]
 }
