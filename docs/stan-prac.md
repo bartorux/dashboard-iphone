@@ -248,6 +248,17 @@ Rozporządzenie z 19.09.2024 (Dz.U. 2024 poz. 1389) i Regulamin Rynku Mocy (pkt 
   generacji poza rynkiem mocy i sumy obowiązków — w cyklu rocznym, miesięcznym, tygodniowym
   i dobowym. Warto sprawdzić, czy są w API pod inną nazwą niż `pk5l-wp`.
 
+**Zastrzeżenia właściciela do badania (07.09.2026, v3.73.1).** „Widzę tylko jedną godzinę na dobę",
+„nie mogę zaznaczyć godziny testu", „dane poprawiają się sporo po dodaniu eksportu/importu, dość
+późno". Odpowiedź w kodzie: zakres godzin docelowych i formularza **7–21** (rozporządzenie §6: okresy
+tylko w blokach 7:00–22:00; dotąd 12–23, co wykluczało poranek — 03.09 dostało 07:00 z 1813 MW);
+pola godziny i zakresu w formularzu zawsze widoczne, wyszarzone przy „u nas nic"; w rozwinięciu
+doby lista **innych godzin z ujemnym marginesem w ich własnym oknie**; archiwum `pk5l` ma **siódmą
+kolumnę `plannedExchange`** (dedupe po `(surplus, required, plannedExchange)`, więc rewizja samego
+salda też zostaje zapisana), a oś odczytów pokazuje saldo i pogrubia moment jego zmiany. Hipotezy
+o wymianie nie da się sprawdzić wstecz — od 07.09 16:30 archiwum ją rejestruje; po kilku dobach
+porównać skoki rezerwy (jak 07.09 o 13:19, +2700 MW) ze zmianą salda w tym samym odczycie.
+
 **Adres z hashem zostaje — decyzja właściciela (06.09.2026).** Prawdziwa ścieżka `/badanie/` jest
 wykonalna (drugi plik wejściowy Vite + wyjątek `navigateFallbackDenylist` w service workerze, bo
 zainstalowana aplikacja przechwyciłaby nawigację i podała główny ekran), ale nie jest potrzebna.
