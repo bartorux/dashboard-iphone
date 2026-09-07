@@ -5,15 +5,6 @@
       "prompt": 51,
       "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 07:00 a 08:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin minęło już osiem godzin, więc na ogłoszenie jest za późno.",
-      "outlook": "Jutro między 18:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, a w środę i piątek sytuacja powtarza się w godzinach wieczornych, podczas gdy w czwartek margines pozostaje ujemny tylko w wyznaczonych godzinach, a w pozostałe dni okresu rezerwa pokrywa wymagany poziom."
-    },
-    {
-      "at": "2026-09-07T05:11:33.728Z",
-      "prompt": 51,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
       "headline": "Dziś między 07:00 a 08:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin na ogłoszenie jest już za późno.",
       "outlook": "W kolejnych dniach nadwyżka miejscami spada poniżej progu 1100 MW między 19:00 a 21:00, a poza tym w wyznaczonych godzinach od poniedziałku do piątku operator zachowuje wybór, natomiast w pozostałym okresie rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania."
@@ -608,6 +599,14 @@
       "headline": "W najbliższych godzinach nic nie zapowiada przywołania, ale w kolejnych dniach operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę, czwartek i piątek marginesy w wybranym czasie nie pokrywają wymaganego poziomu, a w pozostałe dni okresu nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-07T20:45:42.140Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Dziś nic nie zapowiada przywołania, ale Kompas Energetyczny PSE zaleca oszczędzanie od 22:00 do 23:00.",
+      "body": "Jutro prognoza jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało ponad osiem godzin.",
+      "outlook": "W środę, czwartek i piątek operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada."
     }
   ]
 }
