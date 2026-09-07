@@ -1,8 +1,8 @@
 {
-  "headline": "W środę o 18:00 rezerwa osiągnie najniższy punkt, a nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
-  "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "We wtorek, środę, czwartek i piątek margines miejscami spada poniżej wymaganego poziomu, podczas gdy dzisiejsza doba nie niesie takich trudności poza pojedynczymi wąskimi godzinami.",
-  "generatedAt": "2026-09-07T01:01:02.052Z",
+  "headline": "W środę o 18:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
+  "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść w kolejnych dobie.",
+  "outlook": "W czwartek między 19:00 a 21:00 operator może ogłosić przywołanie, a w pozostałe dni tego okresu stan rezerw waha się między wyborem operatora a wąskim, dodatnim marginesem.",
+  "generatedAt": "2026-09-07T01:30:56.707Z",
   "dates": [
     "2026-09-07",
     "2026-09-08",
@@ -10,6 +10,6 @@
     "2026-09-10",
     "2026-09-11"
   ],
-  "assessment": "2026-09-07|R|none|0|21:00|5|0|3||;2026-09-08|R|high|-1700|20:00|1|2|20|moderate:18:00-19:00,high:19:00-21:00|;2026-09-09|R|high|-2400|18:00|1|7|14|moderate:07:00-09:00,moderate:17:00-18:00,high:18:00-21:00,moderate:21:00-22:00|;2026-09-10|R|moderate|-100|19:00|0|0|19|moderate:19:00-21:00|;2026-09-11|R|moderate|-1100|20:00|1|2|13|moderate:07:00-08:00,moderate:17:00-21:00|#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
+  "assessment": "2026-09-07|R|none|0|21:00|5|0|3||;2026-09-08|R|high|-1700|20:00|1|2|20|moderate:18:00-19:00,high:19:00-21:00|;2026-09-09|R|high|-2400|18:00|2|6|14|moderate:07:00-08:00,moderate:17:00-18:00,high:18:00-21:00,moderate:21:00-22:00|;2026-09-10|R|moderate|-300|19:00|0|0|18|moderate:19:00-21:00|;2026-09-11|R|moderate|-1100|20:00|0|3|13|moderate:07:00-08:00,moderate:17:00-22:00|#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v51",
   "model": "gemini-3.5-flash-lite"
 }
