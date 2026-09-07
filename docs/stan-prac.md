@@ -277,6 +277,33 @@ Okno decyzyjne (12:00 dnia D) leży po dodaniu salda, więc cechy z okna są ucz
 19,0 h bez zmian (ciąg zaczął się po saldzie). **Pomiar po kilku dobach:** czy skok salda zawsze
 przychodzi w tym samym oknie ~13:00 (archiwum od 07.09 16:30 ma kolumnę salda).
 
+**Kompas na prawdziwych przywołaniach (07.09.2026, v3.75.0).** Historia wersji `pdgsz` istnieje od
+06.2024, więc cechę Kompasu dało się sprawdzić na czterech prawdziwych, całorynkowych okresach
+przywołania z tabeli PSE (`pse.pl/rynek-mocy-okresy-przywolania`): 06.11.2024 (16–19; jedna wersja,
+PSE wtedy nie wersjonowało, h17–18 L2), **30.06.2026** (18–22: h18 L2, h19 **L3**, h20 L2, h21 L1),
+**04.08.2026** (17–19: h17 L2, h18 L1 — L2 istniało od 03.08 14:00 i zostało cofnięte przed
+terminem), **06.08.2026** (17–22: h17–18 L2, h19–21 L1). Wersja = aktywna 8 h przed daną godziną.
+
+**Tło, 70 dni roboczych 01.06–06.09.2026, godziny 7–21:** L2+ w wersji aktywnej przed terminem na
+jakiejkolwiek godzinie miało **16 dni**, w tym **wszystkie 3 przywołania i test 02.09** → warunek
+konieczny 4/4, precyzja 4/16. Doby z flagą bez zdarzenia w naszym rejestrze: 18.06 (L3 h20–21),
+24.06, 26.06, 15–17.07, 31.07, 03.08, 17–19.08, 01.09 — kandydaci do sprawdzenia u właściciela,
+czy nie było wtedy testów w innych jednostkach. Flaga „L2+ w jakiejkolwiek wersji do terminu" ma
+33/70 — bezużyteczna; potwierdza definicję „wersja aktywna w chwili okna". Wezwane godziny nie
+zawsze są flagowane pojedynczo, dlatego cecha przechodzi z godziny docelowej na **dobę** (dowolna
+godzina 7–21 w wersji aktywnej przed terminem tej godziny); `ALARM_FROM` bez zmian — Kompas jest
+filtrem koniecznym, nie alarmem.
+
+**Historii prognozy `pk5l-wp` w API nie ma — sprawdzone ponownie 07.09:** 24 wiersze na dobę,
+każdy w ostatniej wersji; filtr po `publication_ts_utc` zwraca tylko godziny o wcześniejszej
+ostatniej rewizji, nie starsze wersje. Nasze archiwum pozostaje jedynym zapisem stanu w czasie.
+
+**Archiwum Kompasu zasilone wstecz** do 01.06.2026 (partycje 2026-05…08, ~74 tys. wierszy, ~5,3 MB,
+jednorazowo; wiersze starsze wpisane przed istniejącymi, żeby „późniejsza linia wygrywa" pozostało
+prawdą). Rejestr `data/przywolania.json` ma cztery prawdziwe zdarzenia (`real`, `market`, `hour` =
+pierwsza wezwana godzina, zakres w notatce); doby sprzed archiwum prognozy nie mają okna
+decyzyjnego i pojawiają się tylko w stopce podstrony.
+
 **Adres z hashem zostaje — decyzja właściciela (06.09.2026).** Prawdziwa ścieżka `/badanie/` jest
 wykonalna (drugi plik wejściowy Vite + wyjątek `navigateFallbackDenylist` w service workerze, bo
 zainstalowana aplikacja przechwyciłaby nawigację i podała główny ekran), ale nie jest potrzebna.
