@@ -87,8 +87,27 @@ export interface DayStudy {
   dwell: Feature;
   /** Margin of the worst hour in the last reading stamped on D-1 (local); lower = worse. */
   eveMargin: Feature;
-  /** Kompas level for the worst hour in the pdgsz version active at the window; ≥2 counts as extreme. */
-  compass: { level: 0 | 1 | 2 | 3 | null; extreme: boolean };
+  /**
+   * Kompas across the WHOLE DAY, not just the worst hour: for every hour
+   * 7-21, the pdgsz version active at that hour's OWN deadline (its start
+   * minus NOTICE_HOURS) — see `compassForDay` in badanie.ts. `level` is the
+   * highest of those; `hours` lists every hour that reached L2+, ascending;
+   * `extreme` is `level >= 2`.
+   *
+   * WHY per-day and not per-target-hour: on the three real 2026 call periods
+   * (30.06 18-21, 04.08 17-18, 06.08 17-21), the version active 8h ahead of
+   * each CALLED hour was L2/L3 only on SOME of the called hours, never all —
+   * 04.08 showed L2 at 17:00 but only L1 at 18:00; 06.08 showed L2 at
+   * 17:00-18:00 but only L1 at 19:00-21:00. A flag scored on a single target
+   * hour (the day's worst by reserve, which need not be the hour PSE
+   * actually flagged) would have missed the L2 reading entirely on any day
+   * where that particular hour drew L1. Scoring the day as extreme when ANY
+   * hour 7-21 reached L2+ in ITS OWN window caught all three real call
+   * periods; the alternative tried first — L2+ in ANY published version
+   * regardless of timing — passed on 33 of 70 business days and was
+   * useless as a signal.
+   */
+  compass: { level: 0 | 1 | 2 | 3 | null; extreme: boolean; hours: number[] };
   /** How many of the four features are extreme, 0-4. */
   extremeCount: number;
   /**

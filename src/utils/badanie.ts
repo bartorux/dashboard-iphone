@@ -410,27 +410,71 @@ function eveMarginFor(readingsAsc: HourReading[], businessDate: string): number 
 }
 
 /**
- * The Kompas level active at the window: the published version for (D, hour)
- * with the latest `publishedAt` at or before the window's `readAt`. A version
- * published AFTER the window closed describes knowledge nobody had yet, so it
+ * The Kompas level active at one (businessDate, hour) block's OWN deadline —
+ * its Warsaw-local start minus NOTICE_HOURS, exactly the deadline
+ * `computeHourWindow` uses for the archive readings, computed directly here
+ * rather than reused from it because compass versions have nothing to do
+ * with `rows`/`now`: PSE publishes them on its own schedule, every version
+ * already happened by the time this module ever sees it. The active version
+ * is the one with the latest `publishedAt` at or before that deadline; one
+ * published AFTER it describes knowledge nobody had by the deadline, so it
  * must stay invisible here even though it is sitting in `compass`.
  */
-function compassAt(
+function compassForHour(
   compass: readonly CompassVersionRow[],
   businessDate: string,
-  hour: number,
-  windowReadAtMs: number
-): { level: 0 | 1 | 2 | 3 | null; extreme: boolean } {
+  hour: number
+): 0 | 1 | 2 | 3 | null {
+  const deadlineMs = warsawWallClockToUtc(businessDate, hour).getTime() - NOTICE_HOURS * HOUR_MS;
+
   let active: CompassVersionRow | null = null;
   for (const version of compass) {
     if (version.businessDate !== businessDate || version.hour !== hour) continue;
     const publishedMs = Date.parse(version.publishedAt);
-    if (Number.isNaN(publishedMs) || publishedMs > windowReadAtMs) continue;
+    if (Number.isNaN(publishedMs) || publishedMs > deadlineMs) continue;
     if (!active || publishedMs > Date.parse(active.publishedAt)) active = version;
   }
 
-  if (!active) return { level: null, extreme: false };
-  return { level: active.level, extreme: active.level >= 2 };
+  return active ? active.level : null;
+}
+
+/**
+ * `DayStudy.compass` for one business date: the highest Kompas level active,
+ * by ITS OWN deadline, across every hour 7-21 — not just the day's target
+ * hour.
+ *
+ * WHY the whole day and not the target hour alone: on 2026-08-04 the version
+ * active 8h ahead of 17:00 was L2, but the version active 8h ahead of 18:00
+ * (a different hour, a different deadline, very possibly a different
+ * version) was only L1 — both hours were part of the SAME real call period.
+ * A flag pinned to a single target hour — e.g. the day's worst hour by
+ * reserve, which need not be the hour PSE actually called — would have read
+ * that day off whichever hour it happened to look at and could easily have
+ * landed on the L1 one, losing the event. Scanning every hour 7-21 and
+ * taking the maximum means the day reads extreme as soon as ANY hour showed
+ * L2+ in its own window, which is what actually caught all three real 2026
+ * call periods (30.06, 04.08, 06.08) despite each of them mixing L1 and L2+
+ * across their own called hours.
+ *
+ * An hour with no version published before its own deadline contributes
+ * nothing (skipped, not treated as level 0) — `level` is `null` only when
+ * NOT ONE hour of the day had anything to show by its deadline.
+ */
+function compassForDay(
+  compass: readonly CompassVersionRow[],
+  businessDate: string
+): { level: 0 | 1 | 2 | 3 | null; extreme: boolean; hours: number[] } {
+  let level: 0 | 1 | 2 | 3 | null = null;
+  const hours: number[] = [];
+
+  for (let hour = AUTO_HOUR_FIRST; hour <= AUTO_HOUR_LAST; hour++) {
+    const hourLevel = compassForHour(compass, businessDate, hour);
+    if (hourLevel === null) continue;
+    if (level === null || hourLevel > level) level = hourLevel;
+    if (hourLevel >= 2) hours.push(hour); // loop is ascending, so already sorted
+  }
+
+  return { level, extreme: level !== null && level >= 2, hours };
 }
 
 /** Raw (pre-percentile) shape for one day, before the population pass fills in ranks. */
@@ -445,7 +489,7 @@ interface RawDay {
   headroom: number | null;
   dwell: number | null;
   eveMargin: number | null;
-  compass: { level: 0 | 1 | 2 | 3 | null; extreme: boolean };
+  compass: { level: 0 | 1 | 2 | 3 | null; extreme: boolean; hours: number[] };
   tightHours: Array<{ hour: number; surplus: number; margin: number }>;
   readings: Reading[];
 }
@@ -459,6 +503,10 @@ function buildRawDay(
 ): RawDay {
   const worstHour = event ? event.hour : autoTargetHour(rows, businessDate, now);
   const tightHours = tightHoursFor(rows, businessDate, now, worstHour);
+  // Independent of worstHour/readings entirely — see compassForDay — so it
+  // is computed once up front and reused in every return branch below,
+  // including the ones with no target hour or no qualifying reading at all.
+  const dayCompass = compassForDay(compass, businessDate);
 
   if (worstHour === null) {
     // No CallEvent and not one reading in 7-21 for this day: nothing to
@@ -475,7 +523,7 @@ function buildRawDay(
       headroom: null,
       dwell: null,
       eveMargin: null,
-      compass: { level: null, extreme: false },
+      compass: dayCompass,
       tightHours,
       readings: [],
     };
@@ -496,7 +544,7 @@ function buildRawDay(
       headroom: null,
       dwell: null,
       eveMargin: null,
-      compass: { level: null, extreme: false },
+      compass: dayCompass,
       tightHours,
       readings,
     };
@@ -517,7 +565,7 @@ function buildRawDay(
     headroom: surplus - CALL_PERIOD_EXEMPTION_MW,
     dwell: dwellFor(readingsAsc, windowIndex),
     eveMargin: eveMarginFor(readingsAsc, businessDate),
-    compass: compassAt(compass, businessDate, worstHour, windowReading.readAtMs),
+    compass: dayCompass,
     tightHours,
     readings,
   };

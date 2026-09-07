@@ -664,14 +664,19 @@ describe('eveMargin', () => {
 });
 
 describe('compass', () => {
-  it('picks the version with the latest publishedAt AT OR BEFORE the window, never one published after it', () => {
+  // NOTICE_HOURS is 8; a July business date is CEST (UTC+2), so hour 15
+  // local = 13:00Z and its own deadline is 05:00Z — independent of the
+  // archive row's own readAt (04:00Z), which is what these dates are chosen
+  // to make visible: the deadline used for compass is the HOUR's own, not
+  // whatever the surplus/reserve window happened to read at.
+  it('picks the version with the latest publishedAt AT OR BEFORE the hour\'s OWN deadline, never one published after it', () => {
     const rows: ArchiveRow[] = [row('2026-07-11', 15, 1800, 1000, '2026-07-11T04:00:00Z')];
     const compass: CompassVersionRow[] = [
       { businessDate: '2026-07-11', hour: 15, level: 1, publishedAt: '2026-07-10T00:00:00Z' },
-      { businessDate: '2026-07-11', hour: 15, level: 3, publishedAt: '2026-07-11T03:00:00Z' }, // latest <= window
-      // Published AFTER the window (04:00Z) — must stay invisible. Given a
-      // level that would flip `extreme` if it leaked through, so a mistake
-      // here fails loudly rather than by coincidence.
+      { businessDate: '2026-07-11', hour: 15, level: 3, publishedAt: '2026-07-11T03:00:00Z' }, // latest <= 05:00Z deadline
+      // Published AFTER hour 15's own deadline (05:00Z) — must stay
+      // invisible. Given a level that would flip `extreme` if it leaked
+      // through, so a mistake here fails loudly rather than by coincidence.
       { businessDate: '2026-07-11', hour: 15, level: 0, publishedAt: '2026-07-11T10:00:00Z' },
     ];
     const now = new Date('2026-07-15T00:00:00Z');
@@ -680,9 +685,10 @@ describe('compass', () => {
 
     expect(day.compass.level).toBe(3);
     expect(day.compass.extreme).toBe(true);
+    expect(day.compass.hours).toEqual([15]);
   });
 
-  it('is null when no compass version qualifies', () => {
+  it('is null, with no hours, when no compass version qualifies', () => {
     const rows: ArchiveRow[] = [row('2026-07-11', 15, 1800, 1000, '2026-07-11T04:00:00Z')];
     const now = new Date('2026-07-15T00:00:00Z');
 
@@ -690,6 +696,104 @@ describe('compass', () => {
 
     expect(day.compass.level).toBeNull();
     expect(day.compass.extreme).toBe(false);
+    expect(day.compass.hours).toEqual([]);
+  });
+
+  // A version published EXACTLY on the hour's own deadline still counts —
+  // `<=`, matching the same inclusive boundary `computeHourWindow` uses for
+  // archive readings — while one a millisecond later does not.
+  it('treats a version published exactly at the hour\'s own deadline as counting, one millisecond later as not', () => {
+    // Hour 15 local (July, CEST) = 13:00Z; deadline = 13:00Z - 8h = 05:00:00.000Z.
+    const rows: ArchiveRow[] = [row('2026-07-16', 15, 1800, 1000, '2026-07-16T04:00:00Z')];
+    const now = new Date('2026-07-20T00:00:00Z');
+
+    const onDeadline: CompassVersionRow[] = [
+      { businessDate: '2026-07-16', hour: 15, level: 2, publishedAt: '2026-07-16T05:00:00.000Z' },
+    ];
+    const afterDeadline: CompassVersionRow[] = [
+      { businessDate: '2026-07-16', hour: 15, level: 2, publishedAt: '2026-07-16T05:00:00.001Z' },
+    ];
+
+    expect(studyDays(rows, onDeadline, [], now)[0].compass.level).toBe(2);
+    expect(studyDays(rows, afterDeadline, [], now)[0].compass.level).toBeNull();
+  });
+
+  // (a) A day whose worst hour (by reserve) is 20, but the ONLY hour with an
+  // L2+ Kompas version is a different hour, 18 — the exact shape of 04.08/
+  // 06.08, where the hour PSE actually flagged was not the hour this study's
+  // own reserve-based auto-selection would have picked. Scoring compass
+  // against the day, not the target hour, must still catch it.
+  it('counts an L2+ flag on an hour other than the auto-selected target hour', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-07-12', 18, 1800, 1000, '2026-07-12T00:00:00Z'), // not the worst
+      row('2026-07-12', 20, 900, 1000, '2026-07-12T00:00:00Z'), // auto-selected target
+    ];
+    const compass: CompassVersionRow[] = [
+      // Hour 18 local = 16:00Z, deadline 08:00Z.
+      { businessDate: '2026-07-12', hour: 18, level: 2, publishedAt: '2026-07-12T07:00:00Z' },
+    ];
+    const now = new Date('2026-07-15T00:00:00Z');
+
+    const [day] = studyDays(rows, compass, [], now);
+
+    expect(day.worstHour).toBe(20); // the target hour the rest of the row scores on
+    expect(day.compass.level).toBe(2);
+    expect(day.compass.extreme).toBe(true);
+    expect(day.compass.hours).toEqual([18]); // not 20 — the target hour never had a version at all
+  });
+
+  // (b) One version published at 07:30Z: hour 17's own deadline (07:00Z, see
+  // above) has already passed by then, so it must NOT count for hour 17 —
+  // but hour 18's own deadline (08:00Z) has not, so the SAME publishedAt
+  // must count there. Hour 17 also carries an earlier, genuinely qualifying
+  // L1 version so the day can tell "excluded" apart from "no data at all".
+  it('excludes a version published after ITS hour\'s deadline, but the identical timestamp counts for a later hour whose own deadline is still ahead', () => {
+    const compass: CompassVersionRow[] = [
+      { businessDate: '2026-08-04', hour: 17, level: 1, publishedAt: '2026-08-04T06:00:00Z' }, // before 07:00Z: counts
+      { businessDate: '2026-08-04', hour: 17, level: 2, publishedAt: '2026-08-04T07:30:00Z' }, // after 07:00Z: excluded
+      { businessDate: '2026-08-04', hour: 18, level: 2, publishedAt: '2026-08-04T07:30:00Z' }, // before 08:00Z: counts
+    ];
+    const rows: ArchiveRow[] = [row('2026-08-04', 17, 1800, 1000, '2026-08-04T00:00:00Z')];
+    const now = new Date('2026-08-10T00:00:00Z');
+
+    const [day] = studyDays(rows, compass, [], now);
+
+    // Hour 17 stayed at L1 (the late L2 version never counted for it), hour
+    // 18 reached L2 — the day's maximum is 2, and only 18 shows in `hours`.
+    expect(day.compass.level).toBe(2);
+    expect(day.compass.hours).toEqual([18]);
+  });
+
+  // (c) Hours 22-23 sit outside the 7-21 range §6 restricts call periods to
+  // (see AUTO_HOUR_FIRST/LAST) — an L3 version there must never surface.
+  it('ignores an L3 version on hour 22, outside the 7-21 range', () => {
+    const compass: CompassVersionRow[] = [
+      { businessDate: '2026-07-13', hour: 22, level: 3, publishedAt: '2026-07-12T00:00:00Z' },
+    ];
+    const rows: ArchiveRow[] = [row('2026-07-13', 15, 1800, 1000, '2026-07-13T00:00:00Z')];
+    const now = new Date('2026-07-20T00:00:00Z');
+
+    const [day] = studyDays(rows, compass, [], now);
+
+    expect(day.compass.level).toBeNull();
+    expect(day.compass.hours).toEqual([]);
+  });
+
+  // (d) `hours` must read ascending regardless of the order the versions
+  // were handed in.
+  it('sorts `hours` ascending regardless of input order', () => {
+    const compass: CompassVersionRow[] = [
+      { businessDate: '2026-07-14', hour: 20, level: 2, publishedAt: '2026-07-13T00:00:00Z' },
+      { businessDate: '2026-07-14', hour: 18, level: 3, publishedAt: '2026-07-13T00:00:00Z' },
+      { businessDate: '2026-07-14', hour: 19, level: 1, publishedAt: '2026-07-13T00:00:00Z' },
+    ];
+    const rows: ArchiveRow[] = [row('2026-07-14', 15, 1800, 1000, '2026-07-14T00:00:00Z')];
+    const now = new Date('2026-07-20T00:00:00Z');
+
+    const [day] = studyDays(rows, compass, [], now);
+
+    expect(day.compass.level).toBe(3);
+    expect(day.compass.hours).toEqual([18, 20]); // 19 is L1, excluded — sorted ascending
   });
 });
 
