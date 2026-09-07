@@ -80,8 +80,32 @@ const SCOPE_RADIO_LABEL: Record<'unit' | 'market', string> = {
   market: 'cały rynek',
 };
 
-/** Hours a call period can start on — the same 12-23 range the study scores. */
-const OBSERVATION_HOURS = Array.from({ length: 12 }, (_, i) => i + 12);
+/**
+ * Hours a call period can start on. Rozporządzenie §6: przywołania i testy
+ * ogłasza się wyłącznie w blokach mieszczących się w 7:00-22:00, więc godziny
+ * startowe są 7-21 — the same range `badanie.ts` auto-selects a target hour
+ * from (AUTO_HOUR_FIRST/AUTO_HOUR_LAST there).
+ */
+const OBSERVATION_HOURS = Array.from({ length: 15 }, (_, i) => i + 7);
+const OBSERVATION_HOUR_FIRST = 7;
+const OBSERVATION_HOUR_LAST = 21;
+/** Used when the day's own target hour falls outside 7-21 (should not
+ *  happen now that the study's own range matches, but a defensive fallback
+ *  costs nothing and keeps the form usable against an older data file). */
+const DEFAULT_HOUR_FALLBACK = 19;
+
+/** The hour "Zapisz, co było" pre-selects for a given day: its own target
+ *  hour when that falls in the allowed 7-21 range, else the fallback.
+ *  Exported so a test can pin the fallback branch without going through the
+ *  DOM — every day in the file's own study fixture lands in-range, so the
+ *  fallback needs a hand-built `DayStudy` to exercise at all. */
+export function defaultHourFor(day: DayStudy | null): number {
+  const worstHour = day?.worstHour ?? null;
+  if (worstHour !== null && worstHour >= OBSERVATION_HOUR_FIRST && worstHour <= OBSERVATION_HOUR_LAST) {
+    return worstHour;
+  }
+  return DEFAULT_HOUR_FALLBACK;
+}
 
 /** The outcome half of an observation's text, shared by every place that
  *  renders one (table cell, footer line, pending list, day-select option) so
@@ -188,14 +212,24 @@ function FeatureCell({
  * The day's timeline, shown only once its date row is expanded.
  * `dwellFloorMw` lives on the file, not the day, so it is passed in rather
  * than read off `day` itself.
+ *
+ * Each reading also carries planned exchange (negative = export, same sign
+ * convention as `PSEDataPoint.exchange`) — the hypothesis this study exists
+ * to check is that the forecast steadies once exchange is added, and often
+ * late, so a reading whose exchange differs from the one right before it is
+ * flagged "(zmiana salda)": that is the moment worth noticing, not the
+ * figure itself.
  */
 function ReadingsList({ day, dwellFloorMw }: { day: DayStudy; dwellFloorMw: number }) {
   return (
     <ol className="space-y-1 py-2 pl-1 text-[0.8125rem]">
-      {day.readings.map(([readAt, surplus, required]) => {
+      {day.readings.map(([readAt, surplus, required, exchange], index) => {
         const isWindow = readAt === day.window.readAt;
         const margin = surplus - required;
         const belowFloor = surplus < dwellFloorMw;
+        const currentExchange = exchange ?? null;
+        const previousExchange = index > 0 ? (day.readings[index - 1][3] ?? null) : null;
+        const exchangeChanged = index > 0 && currentExchange !== previousExchange;
         return (
           <li
             key={readAt}
@@ -204,7 +238,9 @@ function ReadingsList({ day, dwellFloorMw }: { day: DayStudy; dwellFloorMw: numb
             }`}
           >
             {formatLocalDateTime(readAt)} — rezerwa {formatMW(surplus)} MW, wymagana{' '}
-            {formatMW(required)} MW, margines {signedMW(margin)}
+            {formatMW(required)} MW, margines {signedMW(margin)}, wymiana{' '}
+            {currentExchange === null ? '—' : signedMW(currentExchange)}
+            {exchangeChanged && <strong> (zmiana salda)</strong>}
             {isWindow && ' (okno)'}
           </li>
         );
@@ -230,6 +266,22 @@ function eventCellContent(day: DayStudy): { text: string; muted: boolean } {
   }
   if (day.event) return { text: formatEvent(day.event), muted: false };
   return { text: '—', muted: false };
+}
+
+/**
+ * "Inne godziny z ujemnym marginesem w oknie: 18:00 (−300 MW), 21:00 (−120
+ * MW)" — or "brak" when nothing else was tight. Shown above the readings
+ * list so a single target hour never hides that the same day had more than
+ * one hour looking bad; see `DayStudy.tightHours` in badanie.ts.
+ */
+function formatTightHoursLine(day: DayStudy): string {
+  if (day.tightHours.length === 0) {
+    return 'Inne godziny z ujemnym marginesem w oknie: brak.';
+  }
+  const parts = day.tightHours.map(
+    (h) => `${String(h.hour).padStart(2, '0')}:00 (${signedMW(h.margin)})`
+  );
+  return `Inne godziny z ujemnym marginesem w oknie: ${parts.join(', ')}.`;
 }
 
 function DayRow({
@@ -297,6 +349,7 @@ function DayRow({
       {expanded && (
         <tr>
           <td colSpan={12} id={detailsId} className="border-t border-separator px-2">
+            <p className="pt-2 text-[0.8125rem] text-text-secondary">{formatTightHoursLine(day)}</p>
             {day.readings.length === 0 ? (
               <p className="py-2 text-[0.8125rem] text-text-secondary">Brak odczytów.</p>
             ) : (
@@ -484,7 +537,7 @@ function ObservationRecorder({ days }: { days: DayStudy[] }) {
   const [date, setDate] = useState<string | null>(() => defaultDraftFor(days));
   const selectedDay = closedDays.find((day) => day.date === date) ?? closedDays[0] ?? null;
   const [outcome, setOutcome] = useState<Outcome>('none');
-  const [hour, setHour] = useState<number>(selectedDay?.worstHour ?? 20);
+  const [hour, setHour] = useState<number>(() => defaultHourFor(selectedDay));
   const [scope, setScope] = useState<'unit' | 'market'>('unit');
   const [note, setNote] = useState('');
 
@@ -494,8 +547,8 @@ function ObservationRecorder({ days }: { days: DayStudy[] }) {
     setDate(nextDate);
     // The target hour follows the newly chosen day rather than staying
     // pinned to whichever day was picked before.
-    const day = closedDays.find((d) => d.date === nextDate);
-    setHour(day?.worstHour ?? 20);
+    const day = closedDays.find((d) => d.date === nextDate) ?? null;
+    setHour(defaultHourFor(day));
   };
 
   const draft: ObservationDraft =
@@ -554,44 +607,55 @@ function ObservationRecorder({ days }: { days: DayStudy[] }) {
           </div>
         </fieldset>
 
-        {outcome !== 'none' && (
-          <div className="flex flex-wrap gap-4">
-            <div>
-              <label htmlFor="obs-hour" className="block text-text-secondary">
-                Godzina
-              </label>
-              <select
-                id="obs-hour"
-                value={hour}
-                onChange={(e) => setHour(Number(e.target.value))}
-                className="mt-1 rounded-lg border border-separator bg-surface px-2 py-1.5"
-              >
-                {OBSERVATION_HOURS.map((h) => (
-                  <option key={h} value={h}>
-                    {String(h).padStart(2, '0')}:00
-                  </option>
-                ))}
-              </select>
-            </div>
-            <fieldset>
-              <legend className="text-text-secondary">Zakres</legend>
-              <div className="mt-1 flex flex-wrap gap-3">
-                {(Object.keys(SCOPE_RADIO_LABEL) as Array<'unit' | 'market'>).map((value) => (
-                  <label key={value} className="inline-flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="obs-scope"
-                      value={value}
-                      checked={scope === value}
-                      onChange={() => setScope(value)}
-                    />
-                    {SCOPE_RADIO_LABEL[value]}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+        {/* Always visible, not just for test/real: the owner's own complaint
+            was that the hour picker only appeared once "test" or
+            "przywołanie" was already selected, so it went unnoticed.
+            Disabled — not hidden — for "u nas nic", which carries no hour. */}
+        <div className="flex flex-wrap gap-4">
+          <div>
+            <label htmlFor="obs-hour" className="block text-text-secondary">
+              Godzina
+            </label>
+            <select
+              id="obs-hour"
+              value={hour}
+              disabled={outcome === 'none'}
+              onChange={(e) => setHour(Number(e.target.value))}
+              className="mt-1 rounded-lg border border-separator bg-surface px-2 py-1.5 disabled:opacity-50"
+            >
+              {OBSERVATION_HOURS.map((h) => (
+                <option key={h} value={h}>
+                  {String(h).padStart(2, '0')}:00
+                </option>
+              ))}
+            </select>
           </div>
-        )}
+          <fieldset disabled={outcome === 'none'}>
+            <legend className="text-text-secondary">Zakres</legend>
+            <div className="mt-1 flex flex-wrap gap-3">
+              {(Object.keys(SCOPE_RADIO_LABEL) as Array<'unit' | 'market'>).map((value) => (
+                <label
+                  key={value}
+                  className={`inline-flex items-center gap-1 ${outcome === 'none' ? 'opacity-50' : ''}`}
+                >
+                  <input
+                    type="radio"
+                    name="obs-scope"
+                    value={value}
+                    checked={scope === value}
+                    onChange={() => setScope(value)}
+                  />
+                  {SCOPE_RADIO_LABEL[value]}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          {outcome === 'none' && (
+            <p className="w-full text-[0.75rem] text-text-secondary">
+              (dla testu lub przywołania)
+            </p>
+          )}
+        </div>
 
         <div>
           <label htmlFor="obs-note" className="block text-text-secondary">

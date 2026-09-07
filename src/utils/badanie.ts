@@ -36,9 +36,18 @@ export const DWELL_FLOOR_MW = 1500;
 /** Feature count (0-4) from which a day's verdict is called "alarm". */
 export const ALARM_FROM = 3;
 
-/** First and last hour a target hour can be auto-selected from, inclusive. */
-const AUTO_HOUR_FIRST = 12;
-const AUTO_HOUR_LAST = 23;
+/**
+ * First and last hour a target hour can be auto-selected from, inclusive.
+ *
+ * Rozporządzenie w sprawie szczegółowych warunków funkcjonowania systemu
+ * elektroenergetycznego, §6: okresy przywołania i testy ogłasza się wyłącznie
+ * w blokach mieszczących się w przedziale 7:00-22:00 — a więc godziny
+ * STARTOWE mogą być tylko 7-21 (godzina 21 startuje blok 21:00-22:00, ostatni
+ * mieszczący się w oknie). Wcześniej ten zakres był zawężony do 12-23, co
+ * ucinało blokom porannym prawo do bycia wybranym jako godzina docelowa.
+ */
+const AUTO_HOUR_FIRST = 7;
+const AUTO_HOUR_LAST = 21;
 
 const BUSINESS_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -55,6 +64,12 @@ const BUSINESS_DATE = /^\d{4}-\d{2}-\d{2}$/;
  * it ended up. A line that fails to parse or does not match the shape is
  * skipped, never thrown — one truncated line from an interrupted write must
  * not cost the whole study.
+ *
+ * Accepts both the six-element shape (no `plannedExchange` — every line
+ * written before that field existed) and the seven-element shape that added
+ * it: the same monthly files feed both this and pk5lArchive.ts's own parser,
+ * and a line archived last month must keep reading here exactly as it always
+ * has. A missing seventh field reads as `plannedExchange: null`.
  */
 export function parseArchiveRows(text: string): ArchiveRow[] {
   const rows: ArchiveRow[] = [];
@@ -71,8 +86,9 @@ export function parseArchiveRows(text: string): ArchiveRow[] {
       continue;
     }
 
-    if (!Array.isArray(parsed) || parsed.length !== 6) continue;
-    const [businessDate, hour, surplus, required, publicationTsUtc, readAt] = parsed as unknown[];
+    if (!Array.isArray(parsed) || (parsed.length !== 6 && parsed.length !== 7)) continue;
+    const [businessDate, hour, surplus, required, publicationTsUtc, readAt, exchangeRaw] =
+      parsed as unknown[];
 
     if (typeof businessDate !== 'string' || !BUSINESS_DATE.test(businessDate)) continue;
     if (typeof hour !== 'number' || !Number.isInteger(hour) || hour < 0 || hour > 23) continue;
@@ -81,7 +97,15 @@ export function parseArchiveRows(text: string): ArchiveRow[] {
     if (typeof publicationTsUtc !== 'string') continue;
     if (typeof readAt !== 'string' || Number.isNaN(Date.parse(readAt))) continue;
 
-    rows.push([businessDate, hour, surplus, required, publicationTsUtc, readAt]);
+    let plannedExchange: number | null = null;
+    if (parsed.length === 7) {
+      if (exchangeRaw === null) plannedExchange = null;
+      else if (typeof exchangeRaw === 'number' && Number.isFinite(exchangeRaw)) {
+        plannedExchange = exchangeRaw;
+      } else continue; // seventh field present but malformed: skip, same as any other bad shape
+    }
+
+    rows.push([businessDate, hour, surplus, required, publicationTsUtc, readAt, plannedExchange]);
   }
 
   return rows;
@@ -165,6 +189,8 @@ interface HourReading {
   readAtMs: number;
   surplus: number;
   required: number;
+  /** Planned exchange, MW, negative = export — null when PSE reported none. */
+  exchange: number | null;
 }
 
 /**
@@ -180,7 +206,13 @@ function readingsOf(rows: readonly ArchiveRow[], businessDate: string, hour: num
     if (row[0] !== businessDate || row[1] !== hour) continue;
     const readAtMs = Date.parse(row[5]);
     if (Number.isNaN(readAtMs)) continue;
-    readings.push({ readAt: row[5], readAtMs, surplus: row[2], required: row[3] });
+    readings.push({
+      readAt: row[5],
+      readAtMs,
+      surplus: row[2],
+      required: row[3],
+      exchange: row[6] ?? null,
+    });
   }
   readings.sort((a, b) => a.readAtMs - b.readAtMs);
   return readings;
@@ -236,7 +268,7 @@ function computeHourWindow(
 }
 
 /**
- * Which hour (12-23) counts as "the day's worst" when no `CallEvent` forces
+ * Which hour (7-21) counts as "the day's worst" when no `CallEvent` forces
  * one.
  *
  * Ranked by each hour's OWN decision window, never by its latest reading
@@ -266,6 +298,37 @@ function autoTargetHour(rows: readonly ArchiveRow[], businessDate: string, now: 
   }
 
   return best?.hour ?? null;
+}
+
+/**
+ * Every candidate hour (7-21) other than `excludeHour` whose OWN decision
+ * window (same rule `autoTargetHour` ranks by) shows a negative margin — a
+ * day can easily have more than one tight hour, and the owner's own reading
+ * of the page was that a single target hour hides that. `excludeHour` is
+ * normally the day's own target hour, so the list never repeats what the
+ * "Godz. docelowa" column already says. An hour with nothing in its window
+ * yet is skipped, exactly like `autoTargetHour` skips it. Sorted by surplus
+ * ascending — worst first.
+ */
+function tightHoursFor(
+  rows: readonly ArchiveRow[],
+  businessDate: string,
+  now: Date,
+  excludeHour: number | null
+): Array<{ hour: number; surplus: number; margin: number }> {
+  const tight: Array<{ hour: number; surplus: number; margin: number }> = [];
+
+  for (let hour = AUTO_HOUR_FIRST; hour <= AUTO_HOUR_LAST; hour++) {
+    if (hour === excludeHour) continue;
+    const window = computeHourWindow(rows, businessDate, hour, now);
+    if (window.windowIndex === -1) continue;
+    const reading = window.readingsAsc[window.windowIndex];
+    const margin = reading.surplus - reading.required;
+    if (margin < 0) tight.push({ hour, surplus: reading.surplus, margin });
+  }
+
+  tight.sort((a, b) => a.surplus - b.surplus);
+  return tight;
 }
 
 // ---------------------------------------------------------------------------
@@ -368,6 +431,7 @@ interface RawDay {
   dwell: number | null;
   eveMargin: number | null;
   compass: { level: 0 | 1 | 2 | 3 | null; extreme: boolean };
+  tightHours: Array<{ hour: number; surplus: number; margin: number }>;
   readings: Reading[];
 }
 
@@ -379,9 +443,10 @@ function buildRawDay(
   now: Date
 ): RawDay {
   const worstHour = event ? event.hour : autoTargetHour(rows, businessDate, now);
+  const tightHours = tightHoursFor(rows, businessDate, now, worstHour);
 
   if (worstHour === null) {
-    // No CallEvent and not one reading in 12-23 for this day: nothing to
+    // No CallEvent and not one reading in 7-21 for this day: nothing to
     // measure. Kept as its own day rather than dropped, so the study still
     // accounts for every businessDate in the archive.
     return {
@@ -396,12 +461,13 @@ function buildRawDay(
       dwell: null,
       eveMargin: null,
       compass: { level: null, extreme: false },
+      tightHours,
       readings: [],
     };
   }
 
   const { deadline, open, readingsAsc, windowIndex } = computeHourWindow(rows, businessDate, worstHour, now);
-  const readings: Reading[] = readingsAsc.map((r) => [r.readAt, r.surplus, r.required]);
+  const readings: Reading[] = readingsAsc.map((r) => [r.readAt, r.surplus, r.required, r.exchange]);
 
   if (windowIndex === -1) {
     return {
@@ -416,6 +482,7 @@ function buildRawDay(
       dwell: null,
       eveMargin: null,
       compass: { level: null, extreme: false },
+      tightHours,
       readings,
     };
   }
@@ -436,6 +503,7 @@ function buildRawDay(
     dwell: dwellFor(readingsAsc, windowIndex),
     eveMargin: eveMarginFor(readingsAsc, businessDate),
     compass: compassAt(compass, businessDate, worstHour, windowReading.readAtMs),
+    tightHours,
     readings,
   };
 }
@@ -551,6 +619,7 @@ export function studyDays(
       eveMargin: eveMarginFeature,
       compass: day.compass,
       extremeCount,
+      tightHours: day.tightHours,
       event: day.event,
       verdict,
       readings: day.readings,

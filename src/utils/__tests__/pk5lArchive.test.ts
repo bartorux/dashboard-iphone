@@ -54,7 +54,28 @@ describe('parseArchiveLines', () => {
   it('reads a well-formed line back into its key and value', () => {
     const text = '["2026-08-29",18,2101,1964,"2026-08-28T16:42:11Z","2026-08-28T17:37:02Z"]\n';
     const parsed = parseArchiveLines(text);
-    expect(parsed.get('2026-08-29#18')).toEqual([2101, 1964]);
+    // Six elements — no plannedExchange field at all: reads as null, not 0.
+    expect(parsed.get('2026-08-29#18')).toEqual([2101, 1964, null]);
+  });
+
+  it('reads a seven-element line, plannedExchange included as a number', () => {
+    const text =
+      '["2026-08-29",18,2101,1964,"2026-08-28T16:42:11Z","2026-08-28T17:37:02Z",-350]\n';
+    const parsed = parseArchiveLines(text);
+    expect(parsed.get('2026-08-29#18')).toEqual([2101, 1964, -350]);
+  });
+
+  it('reads a seven-element line with plannedExchange explicitly null', () => {
+    const text =
+      '["2026-08-29",18,2101,1964,"2026-08-28T16:42:11Z","2026-08-28T17:37:02Z",null]\n';
+    const parsed = parseArchiveLines(text);
+    expect(parsed.get('2026-08-29#18')).toEqual([2101, 1964, null]);
+  });
+
+  it('skips a seven-element line whose plannedExchange is neither a number nor null', () => {
+    const text =
+      '["2026-08-29",18,2101,1964,"2026-08-28T16:42:11Z","2026-08-28T17:37:02Z","not-a-number"]\n';
+    expect(parseArchiveLines(text).size).toBe(0);
   });
 
   it('returns an empty map for empty text', () => {
@@ -87,13 +108,13 @@ describe('parseArchiveLines', () => {
       '["2026-08-29",18,2101,1964,"","2026-08-28T16:00:00Z"]',
       '["2026-08-29",18,1900,1964,"","2026-08-28T17:00:00Z"]',
     ].join('\n');
-    expect(parseArchiveLines(text).get('2026-08-29#18')).toEqual([1900, 1964]);
+    expect(parseArchiveLines(text).get('2026-08-29#18')).toEqual([1900, 1964, null]);
   });
 });
 
 describe('newArchiveLines — dedupe by value', () => {
   it('writes nothing when surplus and required repeat the last archived value', () => {
-    const lastByKey = new Map([['2026-08-29#18', [2101, 1964] as const]]);
+    const lastByKey = new Map([['2026-08-29#18', [2101, 1964, null] as const]]);
     const lines = newArchiveLines([rawRow()], lastByKey, '2026-08-29T18:00:00Z');
     expect(lines).toEqual([]);
   });
@@ -102,11 +123,11 @@ describe('newArchiveLines — dedupe by value', () => {
    * The dedupe key is the VALUE, not PSE republishing the row: a revision
    * that only touches publication_ts_utc, leaving the reserve figures
    * unchanged, must still write nothing. Deduping on the publication stamp
-   * instead of the pair would treat this as a change and archive a line that
-   * carries no news.
+   * instead of the triple would treat this as a change and archive a line
+   * that carries no news.
    */
   it('still writes nothing when only PSE republication_ts_utc changes, values held', () => {
-    const lastByKey = new Map([['2026-08-29#18', [2101, 1964] as const]]);
+    const lastByKey = new Map([['2026-08-29#18', [2101, 1964, null] as const]]);
     const row = rawRow({
       surplus_cap_avail_tso: 2101,
       req_pow_res: 1964,
@@ -119,7 +140,7 @@ describe('newArchiveLines — dedupe by value', () => {
   });
 
   it('writes a line for a swing of exactly 1 MW', () => {
-    const lastByKey = new Map([['2026-08-29#18', [2100, 1964] as const]]);
+    const lastByKey = new Map([['2026-08-29#18', [2100, 1964, null] as const]]);
     const lines = newArchiveLines(
       [rawRow({ surplus_cap_avail_tso: 2101 })],
       lastByKey,
@@ -133,6 +154,7 @@ describe('newArchiveLines — dedupe by value', () => {
       1964,
       '',
       '2026-08-29T18:00:00Z',
+      null,
     ]);
   });
 
@@ -148,9 +170,48 @@ describe('newArchiveLines — dedupe by value', () => {
   });
 
   it('leaves the caller-supplied lastByKey untouched', () => {
-    const lastByKey = new Map([['2026-08-29#18', [2100, 1964] as const]]);
+    const lastByKey = new Map([['2026-08-29#18', [2100, 1964, null] as const]]);
     newArchiveLines([rawRow({ surplus_cap_avail_tso: 2101 })], lastByKey, '2026-08-29T18:00:00Z');
-    expect(lastByKey.get('2026-08-29#18')).toEqual([2100, 1964]);
+    expect(lastByKey.get('2026-08-29#18')).toEqual([2100, 1964, null]);
+  });
+
+  /**
+   * The whole reason plannedExchange joined the dedupe key rather than
+   * sitting outside it: PSE has been seen to publish the exchange figure for
+   * a block well after its surplus/required settle, so the moment worth
+   * seeing is exactly a line where those two repeat and only the exchange
+   * moves — the change the hypothesis in the study is built on.
+   */
+  it('writes a line when only plannedExchange changes, surplus and required held', () => {
+    const lastByKey = new Map([['2026-08-29#18', [2101, 1964, -100] as const]]);
+    const row = rawRow({ planned_exchange: -350 });
+    const lines = newArchiveLines([row], lastByKey, '2026-08-29T18:00:00Z');
+    expect(lines).toHaveLength(1);
+    expect(JSON.parse(lines[0])).toEqual([
+      '2026-08-29',
+      18,
+      2101,
+      1964,
+      '',
+      '2026-08-29T18:00:00Z',
+      -350,
+    ]);
+  });
+
+  it('writes nothing when plannedExchange repeats too, alongside surplus and required', () => {
+    const lastByKey = new Map([['2026-08-29#18', [2101, 1964, -350] as const]]);
+    const lines = newArchiveLines(
+      [rawRow({ planned_exchange: -350 })],
+      lastByKey,
+      '2026-08-29T18:00:00Z'
+    );
+    expect(lines).toEqual([]);
+  });
+
+  it('archives plannedExchange as null when PSE sent no figure, distinct from a real 0', () => {
+    const lines = newArchiveLines([rawRow()], new Map(), '2026-08-29T18:00:00Z');
+    const [, , , , , , plannedExchange] = JSON.parse(lines[0]);
+    expect(plannedExchange).toBeNull();
   });
 });
 
@@ -223,9 +284,9 @@ describe('newArchiveLines — line format', () => {
     const [line] = newArchiveLines([row], new Map(), '2026-08-28T17:37:02Z');
 
     expect(line).toBe(
-      '["2026-08-29",18,2101,1964,"2026-08-28T16:42:11Z","2026-08-28T17:37:02Z"]'
+      '["2026-08-29",18,2101,1964,"2026-08-28T16:42:11Z","2026-08-28T17:37:02Z",null]'
     );
-    // Round-trips to exactly the six fields the format promises.
+    // Round-trips to exactly the seven fields the format promises.
     expect(JSON.parse(line)).toEqual([
       '2026-08-29',
       18,
@@ -233,6 +294,7 @@ describe('newArchiveLines — line format', () => {
       1964,
       '2026-08-28T16:42:11Z',
       '2026-08-28T17:37:02Z',
+      null,
     ]);
   });
 
@@ -261,9 +323,9 @@ describe('reconstructing lastByKey across a month boundary', () => {
     const merged = new Map([...previousMonth, ...currentMonth]);
 
     // Updated in September: the newer value wins.
-    expect(merged.get('2026-09-03#18')).toEqual([1990, 1964]);
+    expect(merged.get('2026-09-03#18')).toEqual([1990, 1964, null]);
     // Untouched since August: still there, read from the older partition.
-    expect(merged.get('2026-09-04#9')).toEqual([1500, 1400]);
+    expect(merged.get('2026-09-04#9')).toEqual([1500, 1400, null]);
   });
 });
 
@@ -279,7 +341,7 @@ describe('lastValuesFrom', () => {
     const biezaca = [linia('2026-09-02', 18, 2500, 1900)].join('\n');
 
     const zObu = lastValuesFrom([poprzednia, biezaca]);
-    expect(zObu.get('2026-09-02#18')).toEqual([2500, 1900]);
+    expect(zObu.get('2026-09-02#18')).toEqual([2500, 1900, null]);
 
     const tylkoBiezaca = lastValuesFrom(['', biezaca]);
     const bezPoprzedniej = lastValuesFrom([biezaca]);
@@ -287,6 +349,6 @@ describe('lastValuesFrom', () => {
 
     // And a key living ONLY in the previous partition must survive the fold.
     const osobny = lastValuesFrom([linia('2026-08-31', 20, 1500, 1800), biezaca]);
-    expect(osobny.get('2026-08-31#20')).toEqual([1500, 1800]);
+    expect(osobny.get('2026-08-31#20')).toEqual([1500, 1800, null]);
   });
 });

@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, within, waitFor } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
-import Badanie, { BADANIE_URL, ISSUES_URL, defaultDraftFor } from '../Badanie';
+import Badanie, { BADANIE_URL, ISSUES_URL, defaultDraftFor, defaultHourFor } from '../Badanie';
 import { BadanieFile } from '../../utils/badanieTypes';
+import { signedMW } from '../../utils/format';
 
 /**
  * One day of each shape the table has to tell apart at a glance: a hit (event
@@ -31,6 +32,7 @@ const FIXTURE: BadanieFile = {
       eveMargin: { value: 700, percentile: 0.1, extreme: false },
       compass: { level: 0, extreme: false },
       extremeCount: 0,
+      tightHours: [],
       // No register event at all: the ONLY record of this call period is the
       // Issue below. Distinct from 02.09, whose observation just mirrors an
       // event already in the register.
@@ -58,6 +60,7 @@ const FIXTURE: BadanieFile = {
       eveMargin: { value: 900, percentile: 0.1, extreme: false },
       compass: { level: 0, extreme: false },
       extremeCount: 0,
+      tightHours: [],
       event: null,
       // Filed through Issues, already folded into `observations` below —
       // this is the case the "czeka na przeliczenie" list must NOT show.
@@ -78,6 +81,12 @@ const FIXTURE: BadanieFile = {
       eveMargin: { value: -300, percentile: 0.91, extreme: true },
       compass: { level: 3, extreme: true },
       extremeCount: 4,
+      // Two other hours also looked tight the same day — the example the
+      // component's own doc comment quotes.
+      tightHours: [
+        { hour: 18, surplus: 1700, margin: -300 },
+        { hour: 21, surplus: 1880, margin: -120 },
+      ],
       event: { date: '2026-09-02', hour: 20, kind: 'test', scope: 'unit', note: 'jedna jednostka wyłączona' },
       // Register-sourced: mirrors `event` above and must not print twice.
       observation: {
@@ -89,9 +98,11 @@ const FIXTURE: BadanieFile = {
         source: 'register',
       },
       verdict: 'trafienie',
+      // Exchange carried on both readings, changing between them — exercises
+      // the "(zmiana salda)" marker in ReadingsList.
       readings: [
-        ['2026-09-02T08:00:00Z', 950, 2000],
-        ['2026-09-02T10:00:00Z', 900, 2000],
+        ['2026-09-02T08:00:00Z', 950, 2000, -800],
+        ['2026-09-02T10:00:00Z', 900, 2000, -1200],
       ],
     },
     {
@@ -106,6 +117,7 @@ const FIXTURE: BadanieFile = {
       eveMargin: { value: 800, percentile: 0.15, extreme: false },
       compass: { level: 0, extreme: false },
       extremeCount: 0,
+      tightHours: [],
       event: null,
       // The one closed day with no entry yet — the record form's default.
       observation: null,
@@ -124,6 +136,7 @@ const FIXTURE: BadanieFile = {
       eveMargin: { value: null, percentile: null, extreme: false },
       compass: { level: null, extreme: false },
       extremeCount: 0,
+      tightHours: [],
       event: null,
       observation: null,
       verdict: 'otwarte',
@@ -398,9 +411,49 @@ describe('Badanie', () => {
     expect(items[0].className).toContain('text-warn-text');
     expect(items[1].className).toContain('text-warn-text');
 
+    // Exchange carried on each reading, signed like PSEDataPoint.exchange
+    // (negative = export) — changed between the two, flagged only from the
+    // second reading on, since the first has nothing to compare against.
+    expect(items[0].textContent).toContain(`wymiana ${signedMW(-800)}`);
+    expect(items[0].textContent).not.toContain('zmiana salda');
+    expect(items[1].textContent).toContain(`wymiana ${signedMW(-1200)}`);
+    expect(items[1].textContent).toContain('(zmiana salda)');
+
+    // Above the readings, the day's other tight hours from `DayStudy.tightHours`.
+    expect(details.textContent).toContain(
+      `Inne godziny z ujemnym marginesem w oknie: 18:00 (${signedMW(-300)}), 21:00 (${signedMW(-120)}).`
+    );
+
     fireEvent.click(button);
     expect(button).toHaveAttribute('aria-expanded', 'false');
     expect(document.getElementById(detailsId)).toBeNull();
+  });
+
+  it('says "brak" for the other-tight-hours line when the day has none', async () => {
+    respondWith({ badanie: FIXTURE });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const button = screen.getByRole('button', { name: '03.09' }); // tightHours: []
+    const detailsId = button.getAttribute('aria-controls')!;
+    fireEvent.click(button);
+
+    const details = document.getElementById(detailsId)!;
+    expect(details.textContent).toContain('Inne godziny z ujemnym marginesem w oknie: brak.');
+  });
+
+  it('shows "—" for wymiana when a reading carries no exchange figure', async () => {
+    respondWith({ badanie: FIXTURE });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const button = screen.getByRole('button', { name: '03.09' }); // reading has no 4th element
+    const detailsId = button.getAttribute('aria-controls')!;
+    fireEvent.click(button);
+
+    const details = document.getElementById(detailsId)!;
+    const item = within(details).getAllByRole('listitem')[0];
+    expect(item.textContent).toContain('wymiana —');
   });
 
   it('marks an open day as open instead of showing a window time', async () => {
@@ -465,6 +518,24 @@ describe('Badanie', () => {
     });
   });
 
+  describe('defaultHourFor', () => {
+    it('uses the day\'s own target hour when it falls in 7-21', () => {
+      expect(defaultHourFor({ ...FIXTURE.days[2], worstHour: 20 })).toBe(20);
+      expect(defaultHourFor({ ...FIXTURE.days[2], worstHour: 7 })).toBe(7);
+      expect(defaultHourFor({ ...FIXTURE.days[2], worstHour: 21 })).toBe(21);
+    });
+
+    it('falls back to 19 when the target hour is outside 7-21', () => {
+      expect(defaultHourFor({ ...FIXTURE.days[2], worstHour: 6 })).toBe(19);
+      expect(defaultHourFor({ ...FIXTURE.days[2], worstHour: 22 })).toBe(19);
+      expect(defaultHourFor({ ...FIXTURE.days[2], worstHour: null })).toBe(19);
+    });
+
+    it('falls back to 19 when there is no day at all', () => {
+      expect(defaultHourFor(null)).toBe(19);
+    });
+  });
+
   describe('"Zapisz, co było"', () => {
     it('defaults to the newest closed day without an entry, outcome "none"', async () => {
       respondWith({ badanie: FIXTURE });
@@ -497,16 +568,52 @@ describe('Badanie', () => {
       expect(hourSelect.value).toBe('20');
     });
 
-    it('hides hour and scope for "none", reveals them for "test"', async () => {
+    it('disables hour and scope for "none" instead of hiding them, and enables them for "test"', async () => {
       respondWith({ badanie: FIXTURE });
       render(<Badanie />);
       await screen.findByText('Badanie przywołań');
 
-      expect(screen.queryByLabelText('Godzina')).toBeNull();
-      fireEvent.click(screen.getByLabelText('test'));
+      // Always visible — the owner's own complaint was that the hour picker
+      // only appeared once an outcome was already chosen, so it went unseen.
       expect(screen.getByLabelText('Godzina')).toBeInTheDocument();
       expect(screen.getByLabelText('jedna lub kilka jednostek')).toBeInTheDocument();
       expect(screen.getByLabelText('cały rynek')).toBeInTheDocument();
+      expect(screen.getByLabelText('Godzina')).toBeDisabled();
+      expect(screen.getByLabelText('jedna lub kilka jednostek')).toBeDisabled();
+      expect(screen.getByLabelText('cały rynek')).toBeDisabled();
+      expect(screen.getByText('(dla testu lub przywołania)')).toBeInTheDocument();
+
+      fireEvent.click(screen.getByLabelText('test'));
+      expect(screen.getByLabelText('Godzina')).toBeEnabled();
+      expect(screen.getByLabelText('jedna lub kilka jednostek')).toBeEnabled();
+      expect(screen.getByLabelText('cały rynek')).toBeEnabled();
+      expect(screen.queryByText('(dla testu lub przywołania)')).toBeNull();
+    });
+
+    it('lists hours 7:00-21:00 only, per rozporządzenie §6', async () => {
+      respondWith({ badanie: FIXTURE });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      const select = screen.getByLabelText('Godzina') as HTMLSelectElement;
+      const values = within(select)
+        .getAllByRole('option')
+        .map((o) => (o as HTMLOptionElement).value);
+      expect(values).toEqual(Array.from({ length: 15 }, (_, i) => String(i + 7)));
+    });
+
+    it('defaults the hour to the day\'s own target hour when it falls in 7-21, else 19', async () => {
+      respondWith({ badanie: FIXTURE });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      // 03.09's own target hour, 21, is within 7-21 — used as-is.
+      expect((screen.getByLabelText('Godzina') as HTMLSelectElement).value).toBe('21');
+
+      // 01.09 (event-mirrored register day 02.09 aside) has target hour 20 —
+      // also within range.
+      fireEvent.change(screen.getByLabelText('Doba'), { target: { value: '2026-09-02' } });
+      expect((screen.getByLabelText('Godzina') as HTMLSelectElement).value).toBe('20');
     });
 
     it('builds the exact issue link for the chosen values', async () => {
