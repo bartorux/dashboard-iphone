@@ -16,6 +16,7 @@ import {
 } from './compass';
 import { spokenDay, weekdayOf } from './dateHelpers';
 import { visibleBusinessDates } from './dayWindow';
+import { exchangePlanned } from './exchangePlan';
 import { DEFAULT_RED_THRESHOLD } from './constants';
 import { Standing, marginDistribution, standingFor } from './history';
 import { describeDrivers, explainHour, generationNorms } from './generationNorm';
@@ -136,6 +137,18 @@ export interface DayFacts {
    * joining them.
    */
   compass: CompassRange[];
+  /**
+   * True when PSE has not yet cleared the day-ahead exchange plan for this
+   * day — see `exchangePlanned` in exchangePlan.ts. Until it clears, the
+   * reserve figures above are computed WITHOUT the cross-border import that
+   * typically covers much of the evening gap, so a narrow or negative margin
+   * on such a day is not yet the settled picture: the plan usually lands the
+   * day before, around 13:00, and can move the margin by several gigawatts in
+   * one write. Kept separate from `risk`/`ranges`, which describe what the
+   * regulation allows given the figures AS THEY STAND — this only says the
+   * figures themselves are still provisional.
+   */
+  exchangeMissing: boolean;
 }
 
 /**
@@ -330,6 +343,7 @@ export function buildFacts(
         // philosophy as `upcoming`: a flag on an hour that has passed is not
         // something anyone can still act on.
         compass: compassRanges(compass.get(businessDate) ?? [], now),
+        exchangeMissing: !exchangePlanned(points),
       };
     });
 
@@ -491,6 +505,14 @@ export function assessmentKey(facts: DayFacts[]): string {
          * layers (the cause, and the gate); it is not a hypothetical.
          */
         day.compass.map((range) => `K${range.level}:${range.from}-${range.to}`).join(','),
+        /*
+         * Whether the exchange plan has cleared travels with the fingerprint
+         * too — it is a line in the rendered facts (below), and the plan can
+         * land while nothing else about the day moves, mid-afternoon on D−1.
+         * Without this the stored text would stand after the plan arrived and
+         * keep warning about a deficit the reserve no longer carries.
+         */
+        day.exchangeMissing ? 'X' : '-',
       ].join('|')
     )
     .join(';');
@@ -715,6 +737,24 @@ export function renderFacts(facts: DayFacts[], days: number): string {
         `  najniższy margines ${round(day.worstMargin)}` +
           (worthNaming ? ` o ${day.worstHour}` : '') +
           (day.averageMargin !== null ? `, średni margines ${round(day.averageMargin)}` : '')
+      );
+    }
+
+    /*
+     * Printed before the state verdict, on purpose: the reserve figures the
+     * verdict below is computed from are the ones this line just qualified,
+     * so the model reads the caveat before it reads the number it caveats.
+     *
+     * No figure of its own — "kilka gigawatów" rather than the observed
+     * 1-3 GW, since the validator refuses any megawatt/gigawatt quantity the
+     * model might copy back out, and this is a typical range, not a reading
+     * we computed for this hour.
+     */
+    if (day.exchangeMissing) {
+      lines.push(
+        '  saldo wymiany na tę dobę nie jest jeszcze zaplanowane — rezerwa jest ' +
+          'podana bez importu i zwykle rośnie o kilka gigawatów, gdy plan dojdzie ' +
+          'dzień wcześniej około 13:00'
       );
     }
 
@@ -946,6 +986,11 @@ export function allowedHoursFor(facts: DayFacts[]): Set<string> {
       hours.add(range.from);
       hours.add(range.to);
     }
+    // The one clock time the exchange-caveat line names — the hour the
+    // day-ahead plan usually clears by. Fixed, like the 1100 MW threshold:
+    // the facts hand it to the model themselves, on every day that carries
+    // the caveat, so a model that repeats it must not be refused for it.
+    if (day.exchangeMissing) hours.add('13:00');
   }
 
   return hours;

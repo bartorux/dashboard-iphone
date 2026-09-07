@@ -28,6 +28,17 @@ interface AlertsPanelProps {
    * non-event on most tabs.
    */
   compassRanges?: CompassRange[];
+  /**
+   * True when PSE has not yet cleared the day-ahead cross-border exchange
+   * plan for the day on screen — see `exchangePlanned` in exchangePlan.ts.
+   * Until it clears, the reserve above is computed WITHOUT the import that
+   * usually covers most of the evening gap, so a narrow or negative margin on
+   * such a day is not the settled picture yet. This never changes a status or
+   * a threshold (see App.tsx) — it only adds the one sentence below, in the
+   * same place the Kompas block earns its own: never in the header, never in
+   * the status card.
+   */
+  exchangeMissing?: boolean;
 }
 
 const SEVERITY_STYLE = {
@@ -73,6 +84,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
   hasData,
   isLoading = false,
   compassRanges = [],
+  exchangeMissing = false,
 }) => {
   const dayName = dayLabel(currentDayOffset);
   // Two separate totals, not one: a day that only ever touched the orange
@@ -84,6 +96,22 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
   const orangeHours = ranges
     .filter((range) => range.severity === 'orange')
     .reduce((sum, range) => sum + range.hours, 0);
+
+  /*
+   * Below the alert list, above the Kompas block — the one place this app
+   * already carries a note that qualifies the figures above it without
+   * touching their color or status (see the two `text-text-tertiary`
+   * paragraphs a few lines down). Shown in both branches below (with alerts
+   * and without) since the caveat is about the day's data, not about whether
+   * an alert happened to fire on it.
+   */
+  const exchangeNote = exchangeMissing ? (
+    <p className="mt-2 text-[0.75rem] text-text-secondary">
+      Saldo wymiany na tę dobę nie jest jeszcze zaplanowane — rezerwa bez
+      importu, zwykle zaniżona o 1–3 GW. Plan dochodzi dzień wcześniej około
+      13:00.
+    </p>
+  ) : null;
 
   return (
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
@@ -139,6 +167,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
             <CheckIcon className="h-4 w-4 shrink-0" />
             Brak alertów w tym dniu
           </div>
+          {exchangeNote}
           <CompassRows ranges={compassRanges} />
         </div>
       ) : (
@@ -195,6 +224,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
             Próg alarmowy to ostrzeżenie wyprzedzające — margines może być
             jeszcze dodatni.
           </p>
+          {exchangeNote}
           <CompassRows ranges={compassRanges} />
         </div>
       )}

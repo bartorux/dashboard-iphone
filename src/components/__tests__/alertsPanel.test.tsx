@@ -123,3 +123,84 @@ describe('AlertsPanel — Kompas Energetyczny PSE', () => {
     expect(screen.getByText('zalecane oszczędzanie')).toBeInTheDocument();
   });
 });
+
+const EXCHANGE_SENTENCE =
+  /Saldo wymiany na tę dobę nie jest jeszcze zaplanowane/;
+
+describe('AlertsPanel — zastrzeżenie o niezaplanowanym saldzie wymiany', () => {
+  it('domyślnie (prop pominięty) nic nie pokazuje', () => {
+    render(<AlertsPanel ranges={[]} currentDayOffset={0} hasData />);
+    expect(screen.queryByText(EXCHANGE_SENTENCE)).not.toBeInTheDocument();
+  });
+
+  it('exchangeMissing={false}: zdanie się nie pojawia', () => {
+    render(
+      <AlertsPanel
+        ranges={[alertRange()]}
+        currentDayOffset={0}
+        hasData
+        exchangeMissing={false}
+      />
+    );
+    expect(screen.queryByText(EXCHANGE_SENTENCE)).not.toBeInTheDocument();
+  });
+
+  it('exchangeMissing={true} bez alertów: zdanie widoczne, pod zieloną linią i nad Kompasem', () => {
+    render(
+      <AlertsPanel
+        ranges={[]}
+        currentDayOffset={2}
+        hasData
+        exchangeMissing
+        compassRanges={[compassRange({ from: '12:00', to: '14:00' })]}
+      />
+    );
+
+    const okLine = screen.getByText('Brak alertów w tym dniu');
+    const note = screen.getByText(EXCHANGE_SENTENCE);
+    const heading = screen.getByText(COMPASS_HEADING);
+
+    expect(
+      okLine.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      note.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it('exchangeMissing={true} z alertami: zdanie widoczne pod listą alertów, nad Kompasem', () => {
+    const { container } = render(
+      <AlertsPanel
+        ranges={[alertRange()]}
+        currentDayOffset={2}
+        hasData
+        exchangeMissing
+        compassRanges={[compassRange({ from: '12:00', to: '14:00' })]}
+      />
+    );
+
+    const alertRow = container.querySelector('li')!;
+    const note = screen.getByText(EXCHANGE_SENTENCE);
+    const heading = screen.getByText(COMPASS_HEADING);
+
+    expect(
+      alertRow.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      note.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it('brak danych PSE dla dnia: zdanie się nie pojawia, nawet gdy exchangeMissing jest true', () => {
+    render(
+      <AlertsPanel
+        ranges={[]}
+        currentDayOffset={2}
+        hasData={false}
+        exchangeMissing
+      />
+    );
+    expect(screen.getByText('Brak danych dla tego dnia')).toBeInTheDocument();
+    expect(screen.queryByText(EXCHANGE_SENTENCE)).not.toBeInTheDocument();
+  });
+});
