@@ -3,15 +3,6 @@
     {
       "at": "2026-09-07T00:01:05.433Z",
       "prompt": 51,
-      "accepted": false,
-      "reason": "zdanie przeczy samo sobie o pokryciu",
-      "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00.",
-      "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek, środę, czwartek i piątek margines bywa ujemny, a w pozostałe dni okresu rezerwa pokrywa wymagany poziom."
-    },
-    {
-      "at": "2026-09-07T00:01:05.433Z",
-      "prompt": 51,
       "accepted": true,
       "headline": "W środę nadwyżka spadnie poniżej progu 1100 MW w godzinach 18:00-21:00 i operator może ogłosić przywołanie.",
       "body": "Dziś prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść w kolejnych dobach, do których zostało jeszcze ponad osiem godzin.",
@@ -605,6 +596,14 @@
       "headline": "W środę margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę, czwartek i piątek nadwyżka spada poniżej progu 1100 MW między 18:00 a 21:00."
+    },
+    {
+      "at": "2026-09-07T17:30:54.822Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 18:00-21:00.",
+      "body": "W środę rezerwa nie pokrywa wymaganego poziomu, co sprawia, że nadwyżka spada poniżej progu 1100 MW. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W kolejnych dniach margines również odbiega od normy, a w czwartek i piątek saldo wymiany nie jest jeszcze zaplanowane."
     }
   ]
 }
