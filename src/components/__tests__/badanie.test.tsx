@@ -453,7 +453,7 @@ describe('Badanie', () => {
     await screen.findByText('Badanie przywołań');
 
     const row = screen.getByText('01.09').closest('tr')!;
-    const cell = within(row).getByText('u nas nic').closest('td')!;
+    const cell = within(row).getByText('u nas nic nie było').closest('td')!;
     expect(cell.className).toContain('text-text-secondary');
     // Grey text, not the bold hit styling: an observed "nic" is not an event.
     expect(row.className).not.toContain('font-semibold');
@@ -636,7 +636,7 @@ describe('Badanie', () => {
     const entries = within(footer).getAllByRole('listitem');
     expect(entries.map((li) => li.textContent)).toEqual([
       '02.09 20:00 — test, jedna jednostka: jedna jednostka wyłączona',
-      '01.09 — u nas nic (z GitHub #3)',
+      '01.09 — u nas nic nie było (z GitHub #3)',
       '31.08 19:00 — przywołanie, cały rynek (z GitHub #9)',
     ]);
   });
@@ -686,7 +686,7 @@ describe('Badanie', () => {
       const select = screen.getByLabelText('Doba') as HTMLSelectElement;
       expect(select.value).toBe('2026-09-03');
       expect(
-        (screen.getByLabelText('u nas nic było') as HTMLInputElement).checked
+        (screen.getByLabelText('U nas nic nie było') as HTMLInputElement).checked
       ).toBe(true);
       // The date select carries the "bez wpisu" / "zapisane" hint per option.
       const options = within(select).getAllByRole('option') as HTMLOptionElement[];
@@ -704,7 +704,7 @@ describe('Badanie', () => {
       expect(select.value).toBe('2026-09-02');
 
       // 02.09's own target hour (20:00) replaces 03.09's (21:00).
-      fireEvent.click(screen.getByLabelText('test'));
+      fireEvent.click(screen.getByLabelText('Testowy okres przywołania'));
       const hourSelect = screen.getByLabelText('Godzina') as HTMLSelectElement;
       expect(hourSelect.value).toBe('20');
     });
@@ -717,17 +717,17 @@ describe('Badanie', () => {
       // Always visible — the owner's own complaint was that the hour picker
       // only appeared once an outcome was already chosen, so it went unseen.
       expect(screen.getByLabelText('Godzina')).toBeInTheDocument();
-      expect(screen.getByLabelText('jedna lub kilka jednostek')).toBeInTheDocument();
-      expect(screen.getByLabelText('cały rynek')).toBeInTheDocument();
+      expect(screen.getByLabelText('Jedna lub kilka jednostek')).toBeInTheDocument();
+      expect(screen.getByLabelText('Cały rynek')).toBeInTheDocument();
       expect(screen.getByLabelText('Godzina')).toBeDisabled();
-      expect(screen.getByLabelText('jedna lub kilka jednostek')).toBeDisabled();
-      expect(screen.getByLabelText('cały rynek')).toBeDisabled();
+      expect(screen.getByLabelText('Jedna lub kilka jednostek')).toBeDisabled();
+      expect(screen.getByLabelText('Cały rynek')).toBeDisabled();
       expect(screen.getByText('(dla testu lub przywołania)')).toBeInTheDocument();
 
-      fireEvent.click(screen.getByLabelText('test'));
+      fireEvent.click(screen.getByLabelText('Testowy okres przywołania'));
       expect(screen.getByLabelText('Godzina')).toBeEnabled();
-      expect(screen.getByLabelText('jedna lub kilka jednostek')).toBeEnabled();
-      expect(screen.getByLabelText('cały rynek')).toBeEnabled();
+      expect(screen.getByLabelText('Jedna lub kilka jednostek')).toBeEnabled();
+      expect(screen.getByLabelText('Cały rynek')).toBeEnabled();
       expect(screen.queryByText('(dla testu lub przywołania)')).toBeNull();
     });
 
@@ -763,7 +763,7 @@ describe('Badanie', () => {
       await screen.findByText('Badanie przywołań');
 
       fireEvent.change(screen.getByLabelText('Doba'), { target: { value: '2026-09-03' } });
-      fireEvent.click(screen.getByLabelText('test'));
+      fireEvent.click(screen.getByLabelText('Testowy okres przywołania'));
       fireEvent.change(screen.getByLabelText('Godzina'), { target: { value: '20' } });
       // Scope stays at its default, "jedna lub kilka jednostek" (unit).
 

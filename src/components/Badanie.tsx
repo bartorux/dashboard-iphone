@@ -68,18 +68,20 @@ function formatEvent(event: CallEvent): string {
   return `${EVENT_KIND_WORD[event.kind]}, ${EVENT_SCOPE_WORD[event.scope]}`;
 }
 
-// Radio labels for the record form, in the owner's own words — distinct from
-// `describeOutcome` below, which is the noun form used inline in sentences
-// ("u nas nic" rather than "u nas nic było").
+// Radio labels for the record form: full, capitalised phrases, because the
+// owner reads them as a list of answers, not as words inside a sentence
+// (`describeOutcome` below is the inline form). "U nas" is deliberate — a test
+// at another aggregator's unit is invisible here, so "nic nie było" alone would
+// claim more than the owner can know.
 const OUTCOME_RADIO_LABEL: Record<Outcome, string> = {
-  none: 'u nas nic było',
-  test: 'test',
-  real: 'przywołanie',
+  none: 'U nas nic nie było',
+  test: 'Testowy okres przywołania',
+  real: 'Okres przywołania',
 };
 
 const SCOPE_RADIO_LABEL: Record<'unit' | 'market', string> = {
-  unit: 'jedna lub kilka jednostek',
-  market: 'cały rynek',
+  unit: 'Jedna lub kilka jednostek',
+  market: 'Cały rynek',
 };
 
 /**
@@ -115,7 +117,7 @@ export function defaultHourFor(day: DayStudy | null): number {
  *  Observation's `test`/`real` + `scope` is the same vocabulary as a
  *  CallEvent's `kind` + `scope`. */
 function describeOutcome(outcome: Outcome, scope?: 'unit' | 'market'): string {
-  if (outcome === 'none') return 'u nas nic';
+  if (outcome === 'none') return 'u nas nic nie było';
   return `${EVENT_KIND_WORD[outcome]}, ${EVENT_SCOPE_WORD[scope ?? 'unit']}`;
 }
 
@@ -287,7 +289,7 @@ function verdictCellText(day: DayStudy): string {
 
 function eventCellContent(day: DayStudy): { text: string; muted: boolean } {
   const obs = day.observation;
-  if (obs?.outcome === 'none') return { text: 'u nas nic', muted: true };
+  if (obs?.outcome === 'none') return { text: 'u nas nic nie było', muted: true };
   if (obs && obs.source === 'issue') {
     return { text: `${describeOutcome(obs.outcome, obs.scope)} (z GitHub)`, muted: false };
   }
@@ -463,7 +465,7 @@ const COLUMNS: ReadonlyArray<{ label: string; hint?: string; align?: 'right' }> 
   },
   {
     label: 'Zdarzenie',
-    hint: 'Wpis z rejestru: test albo przywołanie, jedna jednostka albo cały rynek — albo obserwacja zgłoszona w GitHub Issues, w tym „u nas nic".',
+    hint: 'Wpis z rejestru: test albo przywołanie, jedna jednostka albo cały rynek — albo obserwacja zgłoszona w GitHub Issues, w tym „u nas nic nie było".',
   },
 ];
 
