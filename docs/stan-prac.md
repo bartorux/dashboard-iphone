@@ -259,6 +259,22 @@ salda też zostaje zapisana), a oś odczytów pokazuje saldo i pogrubia moment j
 o wymianie nie da się sprawdzić wstecz — od 07.09 16:30 archiwum ją rejestruje; po kilku dobach
 porównać skoki rezerwy (jak 07.09 o 13:19, +2700 MW) ze zmianą salda w tym samym odczycie.
 
+**Saldo wymiany: hipoteza właściciela potwierdzona (07.09.2026, v3.74.0).** Odczyt PSE 07.09 16:32:
+dziś i jutro saldo prawdziwe, zmienne co godzinę (+1,9–3,3 GW importu w szczycie); doby od pojutrza
+do D+9 — stałe **−12 MW** na wszystkich godzinach, dalej 0. To placeholder sprzed rynku dnia
+następnego; saldo doby D dochodzi w D−1 około 13:00 (06.09 13:19: +2700 MW dla 07.09; 01.09 13:59
+dla 02.09). Rezerwa dób od pojutrza jest więc **zaniżona nawet o 3 GW** (09.09: 49 MW na 19:00).
+Wykrywanie z danych, nie z zegara: `src/utils/exchangePlan.ts` — doba ma plan, gdy 24 godziny mają
+≥ 2 różne wartości salda; odczyt archiwum ma saldo, gdy |saldo| > 15 MW (`null` = sprzed kolumny
+= traktowany jako planowany). Skutki: (1) podstrona — dwell liczony tylko z odczytów po saldzie
+(placeholder przerywa ciąg), doby „otwarte · bez salda", odczyty „przed saldem", zdanie nad
+„Przed nami"; (2) główny ekran — jedno zdanie w bloku alertów dla wybranej doby bez planu
+(statusy i progi bez zmian; fikstura scen ma zmienne saldo, więc wzorce wizualne nietknięte);
+(3) fakty AI — zdanie o braku salda dla takich dób, `13:00` dopuszczone w walidatorze, prompt 52.
+Okno decyzyjne (12:00 dnia D) leży po dodaniu salda, więc cechy z okna są uczciwe; 02.09 dwell
+19,0 h bez zmian (ciąg zaczął się po saldzie). **Pomiar po kilku dobach:** czy skok salda zawsze
+przychodzi w tym samym oknie ~13:00 (archiwum od 07.09 16:30 ma kolumnę salda).
+
 **Adres z hashem zostaje — decyzja właściciela (06.09.2026).** Prawdziwa ścieżka `/badanie/` jest
 wykonalna (drugi plik wejściowy Vite + wyjątek `navigateFallbackDenylist` w service workerze, bo
 zainstalowana aplikacja przechwyciłaby nawigację i podała główny ekran), ale nie jest potrzebna.
