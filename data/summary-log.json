@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-07T05:45:36.925Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00.",
-      "body": "Prognoza dzisiaj jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "Jutro, w środę, czwartek i piątek margines również miejscami spada poniżej wymaganego poziomu, a operator ma wybór lub nadwyżka spada poniżej progu 1100 MW."
-    },
-    {
-      "at": "2026-09-07T06:01:06.167Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "Jutro między 18:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
-      "body": "W dzisiejszej dobie prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, czwartek i piątek margines również miejscami spada poniżej wymaganego poziomu, podczas gdy w pozostałych dniach okresu rezerwa w pełni pokrywa zapotrzebowanie."
-    },
-    {
       "at": "2026-09-07T06:15:42.266Z",
       "prompt": 51,
       "accepted": false,
@@ -607,6 +591,23 @@
       "headline": "W środę między 18:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
       "body": "Jutro prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek i piątek przywołanie wchodzi w grę, dzisiaj natomiast nic go nie zapowiada, przy czym saldo wymiany na dzisiejszą i czwartkową dobę nie jest jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-07T21:15:39.738Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W środę między 18:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, straciwszy możliwość jego pominięcia.",
+      "body": "Prognoza na jutro jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś nic nie zapowiada przywołania, natomiast w czwartek i piątek marginesy spadają poniżej wymaganego poziomu w godzinach wieczornych."
+    },
+    {
+      "at": "2026-09-07T21:15:39.738Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę między 18:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, straciwszy możliwość jego pominięcia.",
+      "body": "Prognoza jutro wciąż się ustala. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś nic nie zapowiada przywołania, a w pozostałe dni ujemny margines dotyka czwartek między 18:00 a 22:00 oraz piątek między 07:00 a 22:00."
     }
   ]
 }
