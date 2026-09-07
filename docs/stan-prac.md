@@ -294,13 +294,25 @@ zawsze są flagowane pojedynczo, dlatego cecha przechodzi z godziny docelowej na
 godzina 7–21 w wersji aktywnej przed terminem tej godziny); `ALARM_FROM` bez zmian — Kompas jest
 filtrem koniecznym, nie alarmem.
 
-**16.07.2026 — dwa testy na 20:00 (relacja właściciela, 07.09).** Godzina 20:00 nie była ciasna: Kompas
-dla h20 miał L1 we wszystkich 37 wersjach (15.07 13:56 → 16.07 20:36), L2 tylko na h14–16; końcowa
-prognoza (po fakcie, z importem 4,5 GW) — rezerwa 3289 MW przy wymaganej 1824 (+1465 MW). Doba była
-na liście „flaga bez zdarzenia" wyłącznie przez popołudniowe L2. **Bilans dla testów: 02.09 ciasno,
-16.07 luźno — 1/2.** Regulamin (godzinę testu wybiera operator) na razie nie jest podważony przez
-dane; dla prawdziwych przywołań nadal 3/3 z flagą i niedoborem. W rejestrze jako `test`, `unit`,
-notatka o dwóch jednostkach.
+**Testy 2026 z relacji właściciela (07.09) — bez kodów jednostek, tylko daty i godziny.** Pięć dób
+testowych; Kompas w wersji aktywnej przed terminem na godzinie testu, godziny L2+ w dobie, i końcowa
+prognoza (po fakcie, z importem — obciążona w dół interwencją, więc tylko orientacyjnie):
+
+| doba | godzina testu | wezwania | Kompas na h (aktywna) | L2+ w dobie | rezerwa/wymagana po fakcie |
+|---|---|---|---|---|---|
+| 10.06 | 20:00 (×2) i 21:00 | 10:44–11:33 | L1 / L1 | — | 2281/1810 (+471), 2601/1753 (+848) |
+| 22.06 | 20:00 | 10:55 | L1 | — | 2763/1900 (+863) |
+| 16.07 | 20:00 (×2) | 10:23, 10:53 | L1 | 14–16 (południe) | 3289/1824 (+1465) |
+| 24.08 | 21:00 | 11:12 | L1 | — | 1449/1820 (**−371**) |
+| 02.09 | 20:00 | 11:15 | **L2** | 18–20 | 857/1995 (−1138) |
+
+**Wniosek dla testów: nie zależą od stanu systemu.** Kompas na godzinie testu flagował 1 z 5 dób;
+margines po fakcie ujemny w 2 z 5. Regulamin („dowolna godzina wybrana przez operatora") jest
+zgodny z danymi. Dwie prawidłowości praktyki, które dane pokazują: **testy zawsze na 20:00 lub
+21:00** (szczyt wieczorny — sprawdzają moc wtedy, gdy byłaby potrzebna) i **wezwania między 10:20
+a 11:35**, czyli tuż przed regulaminowym terminem. Dla prawdziwych przywołań bez zmian: 3/3 w dobach
+z flagą Kompasu i z niedoborem. **Badanie przewiduje przywołania; testów nie przewidzi i podstrona
+nie powinna tego obiecywać** — werdykty dla dób z `kind: test` liczą się osobno.
 
 **Historii prognozy `pk5l-wp` w API nie ma — sprawdzone ponownie 07.09:** 24 wiersze na dobę,
 każdy w ostatniej wersji; filtr po `publication_ts_utc` zwraca tylko godziny o wcześniejszej

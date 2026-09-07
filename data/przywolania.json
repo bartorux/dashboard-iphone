@@ -8,6 +8,20 @@
       "note": "Okres przywołania 16:00–19:00 (3 godziny). Tabela ogłoszonych okresów przywołania, pse.pl/rynek-mocy-okresy-przywolania."
     },
     {
+      "date": "2026-06-10",
+      "hour": 20,
+      "kind": "test",
+      "scope": "unit",
+      "note": "Trzy testowe okresy przywołania: dwa na 20:00, jeden na 21:00; wezwania 10:44–11:33 (relacja właściciela, 07.09.2026)."
+    },
+    {
+      "date": "2026-06-22",
+      "hour": 20,
+      "kind": "test",
+      "scope": "unit",
+      "note": "Testowy okres przywołania na 20:00; wezwanie 10:55 (relacja właściciela, 07.09.2026)."
+    },
+    {
       "date": "2026-06-30",
       "hour": 18,
       "kind": "real",
@@ -19,7 +33,7 @@
       "hour": 20,
       "kind": "test",
       "scope": "unit",
-      "note": "Dwa testowe okresy przywołania, obie jednostki na 20:00 (relacja właściciela, 07.09.2026)."
+      "note": "Dwa testowe okresy przywołania, oba na 20:00; wezwania 10:23 i 10:53 (relacja właściciela, 07.09.2026)."
     },
     {
       "date": "2026-08-04",
@@ -34,6 +48,13 @@
       "kind": "real",
       "scope": "market",
       "note": "Okres przywołania 17:00–22:00 (5 godzin). Tabela ogłoszonych okresów przywołania, pse.pl/rynek-mocy-okresy-przywolania."
+    },
+    {
+      "date": "2026-08-24",
+      "hour": 21,
+      "kind": "test",
+      "scope": "unit",
+      "note": "Testowy okres przywołania na 21:00; wezwanie 11:12 (relacja właściciela, 07.09.2026)."
     },
     {
       "date": "2026-09-02",
