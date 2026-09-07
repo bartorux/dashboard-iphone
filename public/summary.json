@@ -1,14 +1,14 @@
 {
-  "headline": "W środę operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00.",
-  "body": "Prognoza jeszcze się ustala w dniu jutrzejszym, raz pokrywając wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin zostało ponad osiem godzin.",
-  "outlook": "W czwartek i piątek margines również spada poniżej wymaganego poziomu, a saldo wymiany na te doby nie jest jeszcze zaplanowane.",
-  "generatedAt": "2026-09-07T23:01:00.589Z",
+  "headline": "W środę, czwartek i piątek nadwyżka spadła poniżej progu 1100 MW w wybranych godzinach, co oznacza, że operator może ogłosić przywołanie, a w pozostałych godzinach tych dni nadal ma wybór.",
+  "body": "W środę prognoza jeszcze się ustala, a w czwartek i piątek saldo wymiany na te doby nie jest jeszcze zaplanowane. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+  "outlook": "W jutrzejszym dniu nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-07T23:30:57.284Z",
   "dates": [
     "2026-09-08",
     "2026-09-09",
     "2026-09-10",
     "2026-09-11"
   ],
-  "assessment": "2026-09-08|R|moderate|-200|21:00|0|0|9|moderate:21:00-22:00||-;2026-09-09|R|high|-2300|20:00|0|4|15|moderate:17:00-18:00,high:18:00-21:00,moderate:21:00-22:00||-;2026-09-10|R|high|-2500|20:00|0|4|15|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-11|R|high|-2600|20:00|0|8|7|moderate:07:00-09:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
+  "assessment": "2026-09-08|R|none|300|21:00|1|0|13|||-;2026-09-09|R|high|-2400|19:00|0|4|16|moderate:17:00-18:00,high:18:00-21:00,moderate:21:00-22:00||-;2026-09-10|R|high|-2400|19:00|0|4|15|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-11|R|high|-2900|20:00|0|7|8|moderate:07:00-09:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
   "model": "gemini-3.5-flash-lite"
 }
