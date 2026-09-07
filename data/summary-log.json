@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-06T15:45:37.862Z",
-      "prompt": 51,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Wtorek 8 września przyniesie spadek nadwyżki poniżej progu 1100 MW, dając operatorowi uprawnienie do ogłoszenia przywołania.",
-      "body": "Prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do godzin wymagających czujności zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro operator ma wybór między 19:00 a 22:00, we wtorek 8 września nadwyżka spadnie poniżej progiem 1100 MW między 19:00 a 21:00, w środę 9 września sytuacja powtórzy się między 18:00 a 21:00, a w czwartek 10 września i piątek 11 września operator zachowa wybór między 19:00 a 21:00."
-    },
-    {
       "at": "2026-09-06T16:01:07.313Z",
       "prompt": 51,
       "accepted": true,
@@ -597,6 +588,14 @@
       "headline": "Przywołanie wchodzi w grę w najbliższych dniach, a jutro nadwyżka spadnie poniżej progu 1100 MW między 18:00 a 21:00.",
       "body": "Dziś margines spadnie między 20:00 a 22:00, co da operatorowi pełną swobodę decyzji. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
       "outlook": "W środę, czwartek i piątek margines również okresowo spadnie poniżej wymaganego poziomu, podczas gdy w pozostałym okresie rezerwa pokrywa wymagane wartości."
+    },
+    {
+      "at": "2026-09-07T10:01:13.696Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 18:00-21:00.",
+      "body": "Dziś margines spadnie do najniższego poziomu o godzinie 21:00. Ogłoszenie może jeszcze nadejść między 20:00 a 22:00, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W środę, czwartek i piątek operator również może ogłosić przywołanie, podczas gdy w pozostałe dni okresu rezerwa pokrywa wymagany poziom i nic tam go nie zapowiada."
     }
   ]
 }
