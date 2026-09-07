@@ -294,6 +294,14 @@ zawsze są flagowane pojedynczo, dlatego cecha przechodzi z godziny docelowej na
 godzina 7–21 w wersji aktywnej przed terminem tej godziny); `ALARM_FROM` bez zmian — Kompas jest
 filtrem koniecznym, nie alarmem.
 
+**16.07.2026 — dwa testy na 20:00 (relacja właściciela, 07.09).** Godzina 20:00 nie była ciasna: Kompas
+dla h20 miał L1 we wszystkich 37 wersjach (15.07 13:56 → 16.07 20:36), L2 tylko na h14–16; końcowa
+prognoza (po fakcie, z importem 4,5 GW) — rezerwa 3289 MW przy wymaganej 1824 (+1465 MW). Doba była
+na liście „flaga bez zdarzenia" wyłącznie przez popołudniowe L2. **Bilans dla testów: 02.09 ciasno,
+16.07 luźno — 1/2.** Regulamin (godzinę testu wybiera operator) na razie nie jest podważony przez
+dane; dla prawdziwych przywołań nadal 3/3 z flagą i niedoborem. W rejestrze jako `test`, `unit`,
+notatka o dwóch jednostkach.
+
 **Historii prognozy `pk5l-wp` w API nie ma — sprawdzone ponownie 07.09:** 24 wiersze na dobę,
 każdy w ostatniej wersji; filtr po `publication_ts_utc` zwraca tylko godziny o wcześniejszej
 ostatniej rewizji, nie starsze wersje. Nasze archiwum pozostaje jedynym zapisem stanu w czasie.
