@@ -295,6 +295,25 @@ function eventCellContent(day: DayStudy): { text: string; muted: boolean } {
 }
 
 /**
+ * Compresses a sorted, ascending list of hours into a compact range string —
+ * a run of consecutive hours as "18–20", a lone hour as "17", several runs
+ * joined by ", " as "17, 19–20". Used for `DayStudy.compass.hours`, which can
+ * otherwise run to a dozen-plus entries on a bad day; a raw comma list would
+ * swamp the small line under the Kompas figure. Empty input formats as "".
+ */
+function formatHourRanges(hours: readonly number[]): string {
+  const parts: string[] = [];
+  let i = 0;
+  while (i < hours.length) {
+    let j = i;
+    while (j + 1 < hours.length && hours[j + 1] === hours[j] + 1) j++;
+    parts.push(i === j ? `${hours[i]}` : `${hours[i]}–${hours[j]}`);
+    i = j + 1;
+  }
+  return parts.join(', ');
+}
+
+/**
  * "Inne godziny z ujemnym marginesem w oknie: 18:00 (−300 MW), 21:00 (−120
  * MW)" — or "brak" when nothing else was tight. Shown above the readings
  * list so a single target hour never hides that the same day had more than
@@ -364,7 +383,12 @@ function DayRow({
             day.compass.extreme ? 'bg-alarm-soft text-alarm-text' : ''
           }`}
         >
-          {day.compass.level === null ? '—' : day.compass.level}
+          <div>{day.compass.level === null ? '—' : day.compass.level}</div>
+          {day.compass.hours.length > 0 && (
+            <div className="text-[0.6875rem] text-text-secondary">
+              {formatHourRanges(day.compass.hours)}
+            </div>
+          )}
         </td>
         <td className="px-2 py-1.5 text-right tnum">{day.extremeCount}/4</td>
         <td className="px-2 py-1.5">{verdictCellText(day)}</td>
@@ -425,7 +449,7 @@ const COLUMNS: ReadonlyArray<{ label: string; hint?: string; align?: 'right' }> 
   {
     label: 'Kompas',
     align: 'right',
-    hint: 'Stopień Kompasu Energetycznego PSE na godzinę docelową w wersji, która była aktywna w chwili okna. 2 i 3 to prośba operatora o ograniczenie poboru.',
+    hint: 'Najwyższy stopień Kompasu Energetycznego PSE osiągnięty w dowolnej godzinie 7–21 w wersji aktywnej 8 h przed tą godziną; 2 i 3 to prośba operatora o ograniczenie poboru. Pod wartością — które godziny to były. Na przywołaniach 2026 flagowane były tylko niektóre wezwane godziny, nie wszystkie.',
   },
   {
     label: 'Ekstrema',
@@ -931,6 +955,9 @@ export function withObservations(data: BadanieFile): BadanieFile {
       tightHours: Array.isArray(day.tightHours) ? day.tightHours : [],
       readings: Array.isArray(day.readings) ? day.readings : [],
       exchangePlanned: day.exchangePlanned ?? null,
+      // compass.hours added 07.09, same day as the others above — a file one
+      // deploy behind has compass.level/extreme but not yet this field.
+      compass: { ...day.compass, hours: day.compass?.hours ?? [] },
     })),
   };
 }

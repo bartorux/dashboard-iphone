@@ -30,7 +30,7 @@ const FIXTURE: BadanieFile = {
       headroom: { value: 2000, percentile: 0.15, extreme: false },
       dwell: { value: 0, percentile: 0.05, extreme: false },
       eveMargin: { value: 700, percentile: 0.1, extreme: false },
-      compass: { level: 0, extreme: false },
+      compass: { level: 0, extreme: false, hours: [] },
       extremeCount: 0,
       tightHours: [],
       // No register event at all: the ONLY record of this call period is the
@@ -60,7 +60,7 @@ const FIXTURE: BadanieFile = {
       headroom: { value: 2100, percentile: 0.1, extreme: false },
       dwell: { value: 0, percentile: 0.05, extreme: false },
       eveMargin: { value: 900, percentile: 0.1, extreme: false },
-      compass: { level: 0, extreme: false },
+      compass: { level: 0, extreme: false, hours: [] },
       extremeCount: 0,
       tightHours: [],
       event: null,
@@ -82,7 +82,9 @@ const FIXTURE: BadanieFile = {
       // Hours, not a reading count, since the dwell change — see badanie.ts.
       dwell: { value: 17.5, percentile: 0.92, extreme: true },
       eveMargin: { value: -300, percentile: 0.91, extreme: true },
-      compass: { level: 3, extreme: true },
+      // Real 04.08/06.08 shape: the L2+ hour(s) need not be the target hour
+      // (20) itself — here hour 19, one of the day's other tight hours.
+      compass: { level: 3, extreme: true, hours: [19] },
       extremeCount: 4,
       // Two other hours also looked tight the same day — the example the
       // component's own doc comment quotes.
@@ -119,7 +121,7 @@ const FIXTURE: BadanieFile = {
       headroom: { value: 1900, percentile: 0.2, extreme: false },
       dwell: { value: 0, percentile: 0.1, extreme: false },
       eveMargin: { value: 800, percentile: 0.15, extreme: false },
-      compass: { level: 0, extreme: false },
+      compass: { level: 0, extreme: false, hours: [] },
       extremeCount: 0,
       tightHours: [],
       event: null,
@@ -139,7 +141,7 @@ const FIXTURE: BadanieFile = {
       headroom: { value: 1400, percentile: 0.3, extreme: false },
       dwell: { value: 2.5, percentile: 0.2, extreme: false },
       eveMargin: { value: null, percentile: null, extreme: false },
-      compass: { level: null, extreme: false },
+      compass: { level: null, extreme: false, hours: [] },
       extremeCount: 0,
       tightHours: [],
       event: null,
@@ -216,6 +218,11 @@ describe('Badanie', () => {
       delete day.observation;
       delete day.tightHours; // added 07.09 — crashed the live page once
       delete day.exchangePlanned; // added 07.09 too — same risk, same guard
+      // compass.hours added 07.09, same day as the others above: the
+      // generator can be one deploy behind, so compass.level/extreme exist
+      // but hours does not yet.
+      const compass = day.compass as Record<string, unknown> | undefined;
+      if (compass) delete compass.hours;
     }
     respondWith({ badanie: older });
     render(<Badanie />);
@@ -284,6 +291,23 @@ describe('Badanie', () => {
     // 17.5 -> "17,5 h", not "17.5 h" (English decimal point) nor the bare
     // MW-style integer formatting `formatMW` used to apply here.
     expect(within(row).getByText('17,5 h')).toBeInTheDocument();
+  });
+
+  it('formats compass hours as compact ranges under the level: a run as "19–20", a lone hour joined with a comma', async () => {
+    const withHourRun: BadanieFile = {
+      ...FIXTURE,
+      days: FIXTURE.days.map((day) =>
+        day.date === '2026-09-02'
+          ? { ...day, compass: { ...day.compass, hours: [17, 19, 20] } }
+          : day
+      ),
+    };
+    respondWith({ badanie: withHourRun });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const row = screen.getByText('02.09').closest('tr')!;
+    expect(within(row).getByText('17, 19–20')).toBeInTheDocument();
   });
 
   it('paints an extreme feature cell in the alarm colours', async () => {
