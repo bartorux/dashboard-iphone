@@ -355,7 +355,25 @@ async function writeBadanie(at: Date): Promise<void> {
     const issues = await fetchObservationIssues();
     const issueObservations: Observation[] = observationsFromIssues(issues);
 
-    const file = buildBadanieWithObservations(rows, compass, events, issueObservations, at);
+    // The CURRENT day-ahead forecast, per business date — this run's own
+    // `points`, already computed above for the summary text. Lets the study
+    // mark `DayStudy.exchangePlanned` from the SAME forecast a reader of the
+    // page would see right now, not from the archive alone.
+    const forecastByDate = new Map<string, Array<{ exchange: number | null }>>();
+    for (const point of points) {
+      const bucket = forecastByDate.get(point.businessDate);
+      if (bucket) bucket.push({ exchange: point.exchange });
+      else forecastByDate.set(point.businessDate, [{ exchange: point.exchange }]);
+    }
+
+    const file = buildBadanieWithObservations(
+      rows,
+      compass,
+      events,
+      issueObservations,
+      at,
+      forecastByDate
+    );
     // Compact on purpose: this file is fetched by a browser, and the readings
     // list alone runs to thousands of entries a month.
     writeFileSync(badanieTarget, `${JSON.stringify(file)}\n`);

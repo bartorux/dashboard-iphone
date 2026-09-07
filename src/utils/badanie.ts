@@ -10,6 +10,7 @@ import type {
 } from './badanieTypes';
 import { NOTICE_HOURS } from './callPeriod';
 import { CALL_PERIOD_EXEMPTION_MW, HOUR_MS } from './constants';
+import { exchangePlanned, readingHasExchange } from './exchangePlan';
 
 /**
  * Retrospective study: what this tool's own archive said, by the regulatory
@@ -363,13 +364,27 @@ const nullFeature: Feature = { value: null, percentile: null, extreme: false };
  * `0`. That is NOT the same fact as "never dipped below the floor at all" (a
  * quiet day also reads `0` here); the two are told apart by `surplus` /
  * `headroom`, never by this feature alone. Rounded to one decimal place.
+ *
+ * A reading whose exchange is still the pre-market-clearing placeholder (see
+ * `readingHasExchange` in exchangePlan.ts) breaks the run exactly like a
+ * reading AT OR ABOVE the floor does, and for the same reason it counts as
+ * one when it IS below the floor: a deficit computed without the import that
+ * later covers most of an evening gap is an artefact of the forecast not
+ * having cleared yet, not a real state of the grid — so it must not glue two
+ * genuine below-floor runs together, nor count as a genuine one on its own.
+ * This applies to the window reading itself too: a window reading with no
+ * real exchange yet reads dwell `0`, the same as one at or above the floor.
  */
 function dwellFor(readingsAsc: HourReading[], windowIndex: number): number {
-  if (readingsAsc[windowIndex].surplus >= DWELL_FLOOR_MW) return 0;
+  const windowReading = readingsAsc[windowIndex];
+  if (windowReading.surplus >= DWELL_FLOOR_MW || !readingHasExchange(windowReading.exchange)) {
+    return 0;
+  }
 
   let runStart = windowIndex;
   for (let index = windowIndex - 1; index >= 0; index--) {
-    if (readingsAsc[index].surplus >= DWELL_FLOOR_MW) break;
+    const reading = readingsAsc[index];
+    if (reading.surplus >= DWELL_FLOOR_MW || !readingHasExchange(reading.exchange)) break;
     runStart = index;
   }
 
@@ -560,7 +575,14 @@ export function studyDays(
   rows: readonly ArchiveRow[],
   compass: readonly CompassVersionRow[],
   events: readonly CallEvent[],
-  now: Date
+  now: Date,
+  /**
+   * The CURRENT day-ahead forecast, per business date — used only to decide
+   * `DayStudy.exchangePlanned` (see its own doc comment for why). Optional
+   * and defaulting to "unknown for every date" so every existing caller
+   * (tests included) that has no forecast to hand keeps working unchanged.
+   */
+  forecastByDate?: ReadonlyMap<string, ReadonlyArray<{ exchange: number | null }>>
 ): DayStudy[] {
   const nowMs = now.getTime();
   // What could actually be known AT `now` — a defensive floor, since real
@@ -623,6 +645,9 @@ export function studyDays(
       event: day.event,
       verdict,
       readings: day.readings,
+      exchangePlanned: forecastByDate?.has(day.date)
+        ? exchangePlanned(forecastByDate.get(day.date)!)
+        : null,
     };
     return study;
   });
@@ -632,7 +657,9 @@ export function buildBadanie(
   rows: readonly ArchiveRow[],
   compass: readonly CompassVersionRow[],
   events: readonly CallEvent[],
-  now: Date
+  now: Date,
+  /** Forwarded to `studyDays` — see its own doc comment. */
+  forecastByDate?: ReadonlyMap<string, ReadonlyArray<{ exchange: number | null }>>
 ): BadanieFile {
   return {
     generatedAt: now.toISOString(),
@@ -641,7 +668,7 @@ export function buildBadanie(
     dwellFloorMw: DWELL_FLOOR_MW,
     alarmFrom: ALARM_FROM,
     observations: [],
-    days: studyDays(rows, compass, events, now),
+    days: studyDays(rows, compass, events, now, forecastByDate),
     events: [...events],
   };
 }
@@ -731,7 +758,9 @@ export function buildBadanieWithObservations(
   compass: readonly CompassVersionRow[],
   registerEvents: readonly CallEvent[],
   issueObservations: readonly Observation[],
-  now: Date
+  now: Date,
+  /** Forwarded to `buildBadanie` — see its own doc comment. */
+  forecastByDate?: ReadonlyMap<string, ReadonlyArray<{ exchange: number | null }>>
 ): BadanieFile {
   const registerDates = new Set(registerEvents.map((event) => event.date));
 
@@ -750,7 +779,13 @@ export function buildBadanieWithObservations(
       note: observation.note,
     }));
 
-  const scored = buildBadanie(rows, compass, [...registerEvents, ...eventsFromIssues], now);
+  const scored = buildBadanie(
+    rows,
+    compass,
+    [...registerEvents, ...eventsFromIssues],
+    now,
+    forecastByDate
+  );
   const labeled = applyObservations({ ...scored, events: [...registerEvents] }, issueObservations);
   return { ...labeled, events: scored.events };
 }

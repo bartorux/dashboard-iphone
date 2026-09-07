@@ -47,6 +47,8 @@ const FIXTURE: BadanieFile = {
       },
       verdict: 'cisza',
       readings: [['2026-08-31T09:00:00Z', 3100, 2000]],
+      // A closed day from the past — never part of the current forecast.
+      exchangePlanned: null,
     },
     {
       date: '2026-09-01',
@@ -67,6 +69,7 @@ const FIXTURE: BadanieFile = {
       observation: { date: '2026-09-01', outcome: 'none', source: 'issue', issueNumber: 3 },
       verdict: 'cisza',
       readings: [['2026-09-01T10:00:00Z', 3200, 2000]],
+      exchangePlanned: null,
     },
     {
       date: '2026-09-02',
@@ -104,6 +107,7 @@ const FIXTURE: BadanieFile = {
         ['2026-09-02T08:00:00Z', 950, 2000, -800],
         ['2026-09-02T10:00:00Z', 900, 2000, -1200],
       ],
+      exchangePlanned: null,
     },
     {
       date: '2026-09-03',
@@ -123,6 +127,7 @@ const FIXTURE: BadanieFile = {
       observation: null,
       verdict: 'cisza',
       readings: [['2026-09-03T10:00:00Z', 3000, 2000]],
+      exchangePlanned: null,
     },
     {
       date: '2026-09-04',
@@ -141,6 +146,9 @@ const FIXTURE: BadanieFile = {
       observation: null,
       verdict: 'otwarte',
       readings: [['2026-09-04T08:00:00Z', 2500, 2000]],
+      // The current forecast already has a real exchange for this date — the
+      // ordinary open-day case, plain "otwarte" with no caveat.
+      exchangePlanned: true,
     },
   ],
   // Newest first, per the contract comment on BadanieFile.observations.
@@ -207,6 +215,7 @@ describe('Badanie', () => {
     for (const day of older.days as Record<string, unknown>[]) {
       delete day.observation;
       delete day.tightHours; // added 07.09 — crashed the live page once
+      delete day.exchangePlanned; // added 07.09 too — same risk, same guard
     }
     respondWith({ badanie: older });
     render(<Badanie />);
@@ -462,6 +471,34 @@ describe('Badanie', () => {
     expect(item.textContent).toContain('wymiana —');
   });
 
+  it('tags a reading whose exchange is still the placeholder "przed saldem", and keeps it out of the warn colour', async () => {
+    // Below dwellFloorMw (1500) AND carrying the −12 MW placeholder — the
+    // same shape `readingHasExchange` treats as "not yet planned" — so this
+    // reading must read "przed saldem" and stay UNcoloured, unlike a genuine
+    // below-floor reading (see the 02.09 case in the "expands a day..." test,
+    // which has a real exchange and IS coloured).
+    const withPlaceholder: BadanieFile = {
+      ...FIXTURE,
+      days: FIXTURE.days.map((day) =>
+        day.date === '2026-09-03'
+          ? { ...day, readings: [['2026-09-03T10:00:00Z', 900, 2000, -12]] as typeof day.readings }
+          : day
+      ),
+    };
+    respondWith({ badanie: withPlaceholder });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const button = screen.getByRole('button', { name: '03.09' });
+    const detailsId = button.getAttribute('aria-controls')!;
+    fireEvent.click(button);
+
+    const details = document.getElementById(detailsId)!;
+    const item = within(details).getAllByRole('listitem')[0];
+    expect(item.textContent).toContain('przed saldem');
+    expect(item.className).not.toContain('text-warn-text');
+  });
+
   it('marks an open day as open instead of showing a window time', async () => {
     respondWith({ badanie: FIXTURE });
     render(<Badanie />);
@@ -472,6 +509,35 @@ describe('Badanie', () => {
     expect(within(row).getAllByText('otwarte')).toHaveLength(2);
     // Muted, not bold — no event, and the day itself is still open.
     expect(row.className).toContain('text-text-secondary');
+  });
+
+  it('tags an open day "otwarte · bez salda" in the Werdykt column when the forecast has no exchange for it yet', async () => {
+    const withoutExchange: BadanieFile = {
+      ...FIXTURE,
+      days: FIXTURE.days.map((day) =>
+        day.date === '2026-09-04' ? { ...day, exchangePlanned: false } : day
+      ),
+    };
+    respondWith({ badanie: withoutExchange });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const row = screen.getByText('04.09').closest('tr')!;
+    // The "Okno" cell keeps saying plain "otwarte" — only Werdykt gets the caveat.
+    expect(within(row).getByText('otwarte')).toBeInTheDocument();
+    expect(within(row).getByText('otwarte · bez salda')).toBeInTheDocument();
+  });
+
+  it('shows the fixed note above "Przed nami" about the exchange arriving a day ahead', async () => {
+    respondWith({ badanie: FIXTURE });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    expect(
+      screen.getByText(
+        'Doby od pojutrza nie mają jeszcze salda wymiany — rezerwa bez importu, zwykle zaniżona o 1–3 GW. Saldo dochodzi dzień wcześniej około 13:00.'
+      )
+    ).toBeInTheDocument();
   });
 
   it('shows an error rather than throwing when the fetch is rejected', async () => {

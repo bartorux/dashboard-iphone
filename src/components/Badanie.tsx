@@ -9,6 +9,7 @@ import {
   Verdict,
 } from '../utils/badanieTypes';
 import { formatMW, signedMW } from '../utils/format';
+import { readingHasExchange } from '../utils/exchangePlan';
 import { issueUrlFor, ObservationDraft, parseObservationTitle } from '../utils/obserwacje';
 
 /**
@@ -219,6 +220,14 @@ function FeatureCell({
  * late, so a reading whose exchange differs from the one right before it is
  * flagged "(zmiana salda)": that is the moment worth noticing, not the
  * figure itself.
+ *
+ * A reading whose exchange is still the pre-market-clearing placeholder
+ * (`!readingHasExchange`, see exchangePlan.ts) is tagged "przed saldem" and
+ * kept OUT of the warn-colour count: its low surplus is an artefact of the
+ * forecast not having cleared yet — see `dwellFor` in badanie.ts, which
+ * excludes the very same readings from the dwell run for the same reason —
+ * so painting it the same red as a genuine below-floor reading would say the
+ * grid is short when the truth is just "not yet priced".
  */
 function ReadingsList({ day, dwellFloorMw }: { day: DayStudy; dwellFloorMw: number }) {
   return (
@@ -226,8 +235,9 @@ function ReadingsList({ day, dwellFloorMw }: { day: DayStudy; dwellFloorMw: numb
       {day.readings.map(([readAt, surplus, required, exchange], index) => {
         const isWindow = readAt === day.window.readAt;
         const margin = surplus - required;
-        const belowFloor = surplus < dwellFloorMw;
         const currentExchange = exchange ?? null;
+        const hasExchange = readingHasExchange(currentExchange);
+        const belowFloor = surplus < dwellFloorMw && hasExchange;
         const previousExchange = index > 0 ? (day.readings[index - 1][3] ?? null) : null;
         const exchangeChanged = index > 0 && currentExchange !== previousExchange;
         return (
@@ -240,6 +250,7 @@ function ReadingsList({ day, dwellFloorMw }: { day: DayStudy; dwellFloorMw: numb
             {formatLocalDateTime(readAt)} — rezerwa {formatMW(surplus)} MW, wymagana{' '}
             {formatMW(required)} MW, margines {signedMW(margin)}, wymiana{' '}
             {currentExchange === null ? '—' : signedMW(currentExchange)}
+            {!hasExchange && <span className="text-text-secondary"> (przed saldem)</span>}
             {exchangeChanged && <strong> (zmiana salda)</strong>}
             {isWindow && ' (okno)'}
           </li>
@@ -258,6 +269,21 @@ function ReadingsList({ day, dwellFloorMw }: { day: DayStudy; dwellFloorMw: numb
  * register's own event. A register-sourced observation is never printed on
  * top of the event it was derived from — same fact, shown once.
  */
+/**
+ * What the "Werdykt" column shows for an open day: plain "otwarte" once the
+ * current forecast already carries a real exchange for this date, else
+ * "otwarte · bez salda" — the day's own reserve is still stated without the
+ * import that usually arrives around 13:00 the day before (see
+ * `DayStudy.exchangePlanned`), so the number a reader sees now can still be
+ * understated by a couple of gigawatts. Never touches the "Okno" cell, which
+ * always says plain "otwarte": that cell reports the window's own state, not
+ * the exchange caveat.
+ */
+function verdictCellText(day: DayStudy): string {
+  if (day.window.open && day.exchangePlanned === false) return 'otwarte · bez salda';
+  return VERDICT_WORD[day.verdict];
+}
+
 function eventCellContent(day: DayStudy): { text: string; muted: boolean } {
   const obs = day.observation;
   if (obs?.outcome === 'none') return { text: 'u nas nic', muted: true };
@@ -341,7 +367,7 @@ function DayRow({
           {day.compass.level === null ? '—' : day.compass.level}
         </td>
         <td className="px-2 py-1.5 text-right tnum">{day.extremeCount}/4</td>
-        <td className="px-2 py-1.5">{VERDICT_WORD[day.verdict]}</td>
+        <td className="px-2 py-1.5">{verdictCellText(day)}</td>
         <td className={`px-2 py-1.5 ${eventCell.muted ? 'text-text-secondary' : ''}`}>
           {eventCell.text}
         </td>
@@ -408,7 +434,7 @@ const COLUMNS: ReadonlyArray<{ label: string; hint?: string; align?: 'right' }> 
   },
   {
     label: 'Werdykt',
-    hint: 'Zestawienie liczby ekstremów z rejestrem: trafienie, fałszywy alarm, przeoczenie, cisza. „Otwarte" — termin jeszcze nie minął.',
+    hint: 'Zestawienie liczby ekstremów z rejestrem: trafienie, fałszywy alarm, przeoczenie, cisza. „Otwarte" — termin jeszcze nie minął; „otwarte · bez salda" — ta doba nie ma jeszcze w prognozie salda wymiany, więc rezerwa bywa zaniżona nawet o kilka GW.',
   },
   {
     label: 'Zdarzenie',
@@ -817,6 +843,10 @@ function Content({ data }: { data: BadanieFile }) {
           owner's own reading of the page was "duzo przeszlych jest
           niepotrzebnie": a wall of "cisza" buries the one row that matters. */}
       <h2 className="mt-4 text-[0.875rem] font-semibold">Przed nami</h2>
+      <p className="mt-1 text-[0.8125rem] text-text-secondary">
+        Doby od pojutrza nie mają jeszcze salda wymiany — rezerwa bez importu, zwykle zaniżona o
+        1–3 GW. Saldo dochodzi dzień wcześniej około 13:00.
+      </p>
       {ahead.length === 0 ? (
         <p className="mt-1 text-[0.8125rem] text-text-secondary">
           Brak dób z otwartym oknem — archiwum nie ma jeszcze odczytów na przyszłe doby.
@@ -899,6 +929,7 @@ export function withObservations(data: BadanieFile): BadanieFile {
       observation: day.observation ?? null,
       tightHours: Array.isArray(day.tightHours) ? day.tightHours : [],
       readings: Array.isArray(day.readings) ? day.readings : [],
+      exchangePlanned: day.exchangePlanned ?? null,
     })),
   };
 }

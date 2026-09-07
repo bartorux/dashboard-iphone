@@ -555,6 +555,90 @@ describe('dwell', () => {
   });
 });
 
+describe('dwell: a placeholder-exchange reading breaks the run', () => {
+  it('a below-floor reading carrying the −12 MW placeholder breaks the run exactly like one at/above the floor — dwell counts only from the reading AFTER it', () => {
+    const rows: ArchiveRow[] = [
+      // Below floor, real exchange: would extend a run, but never gets the
+      // chance because the placeholder reading right after it cuts it off.
+      row('2026-09-09', 19, 1200, 1000, '2026-09-09T00:00:00Z', '', 1900),
+      // Below floor, but the −12 MW placeholder: an artefact of the forecast
+      // not having cleared yet, not a real deficit — must break the run.
+      row('2026-09-09', 19, 1300, 1000, '2026-09-09T01:00:00Z', '', -12),
+      // Below floor, real exchange again — the window reading.
+      row('2026-09-09', 19, 1100, 1000, '2026-09-09T02:00:00Z', '', 2200),
+    ];
+    const now = new Date('2026-09-10T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.window.readAt).toBe('2026-09-09T02:00:00Z');
+    // Nothing to span: the placeholder reading right before the window broke
+    // the run, so it starts fresh at the window itself.
+    expect(day.dwell.value).toBe(0);
+  });
+
+  it('a window reading that is itself still the placeholder reads dwell 0, the same as one at/above the floor', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-09-09', 19, 1200, 1000, '2026-09-09T00:00:00Z', '', 1900), // real exchange, below floor
+      // The window reading: below floor, but no real exchange yet — the
+      // whole run is an artefact and must not report any dwell at all.
+      row('2026-09-09', 19, 1000, 1000, '2026-09-09T01:00:00Z', '', 0),
+    ];
+    const now = new Date('2026-09-10T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.window.readAt).toBe('2026-09-09T01:00:00Z');
+    expect(day.dwell.value).toBe(0);
+  });
+});
+
+describe('exchangePlanned on DayStudy', () => {
+  it('is true when the forecast map has a varying-exchange day, false for the flat placeholder, and null when the date is absent from the map', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-09-09', 15, 1800, 1000, '2026-09-09T04:00:00Z'),
+      row('2026-09-10', 15, 1800, 1000, '2026-09-10T04:00:00Z'),
+      row('2026-09-11', 15, 1800, 1000, '2026-09-11T04:00:00Z'),
+    ];
+    const now = new Date('2026-09-15T00:00:00Z');
+    const forecastByDate = new Map<string, Array<{ exchange: number | null }>>([
+      ['2026-09-09', [{ exchange: -12 }, { exchange: 1900 }]], // varies: planned
+      ['2026-09-10', [{ exchange: -12 }, { exchange: -12 }]], // flat placeholder: not planned
+      // 2026-09-11 deliberately absent from the map.
+    ]);
+
+    const days = studyDays(rows, [], [], now, forecastByDate);
+    const byDate = new Map(days.map((d) => [d.date, d]));
+
+    expect(byDate.get('2026-09-09')?.exchangePlanned).toBe(true);
+    expect(byDate.get('2026-09-10')?.exchangePlanned).toBe(false);
+    expect(byDate.get('2026-09-11')?.exchangePlanned).toBeNull();
+  });
+
+  it('is null for every day when no forecast map is given at all', () => {
+    const rows: ArchiveRow[] = [row('2026-09-09', 15, 1800, 1000, '2026-09-09T04:00:00Z')];
+    const now = new Date('2026-09-15T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.exchangePlanned).toBeNull();
+  });
+
+  it('buildBadanie and buildBadanieWithObservations forward the forecast map through to exchangePlanned', () => {
+    const rows: ArchiveRow[] = [row('2026-09-09', 15, 1800, 1000, '2026-09-09T04:00:00Z')];
+    const now = new Date('2026-09-15T00:00:00Z');
+    const forecastByDate = new Map<string, Array<{ exchange: number | null }>>([
+      ['2026-09-09', [{ exchange: -12 }, { exchange: 1900 }]],
+    ]);
+
+    const viaBuildBadanie = buildBadanie(rows, [], [], now, forecastByDate);
+    expect(viaBuildBadanie.days[0].exchangePlanned).toBe(true);
+
+    const viaWithObservations = buildBadanieWithObservations(rows, [], [], [], now, forecastByDate);
+    expect(viaWithObservations.days[0].exchangePlanned).toBe(true);
+  });
+});
+
 describe('eveMargin', () => {
   it('takes the LAST reading stamped on D-1, not the first', () => {
     const rows: ArchiveRow[] = [

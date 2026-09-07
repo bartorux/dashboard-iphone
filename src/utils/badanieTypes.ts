@@ -105,6 +105,23 @@ export interface DayStudy {
   verdict: Verdict;
   /** Every archived reading of the worst hour, oldest first — the day's timeline. */
   readings: Reading[];
+  /**
+   * Whether the CURRENT day-ahead forecast (`pk5l-wp`, as read when this file
+   * was generated) already carries a real cross-border exchange for this
+   * date, per `exchangePlanned` in exchangePlan.ts. `null` when the date is
+   * not in that forecast at all — every closed day from the past, which the
+   * forecast never reaches back to.
+   *
+   * WHY this matters: on 07.09.2026, today and tomorrow carried an
+   * hourly-varying exchange (+1.9 to +3.3 GW of import in the evening peak),
+   * while every day from D+2 on carried a flat placeholder (−12 MW, then 0) —
+   * a reserve stated WITHOUT the import that later covers most of the evening
+   * gap. 09.09 showed just 49 MW of reserve at 19:00 for exactly this reason.
+   * The exchange for a day arrives on D−1 once the market clears, around
+   * 13:00 (seen at 13:19 on 06.09, 13:59 on 01.09) — so a day still `false`
+   * here is not yet wrong, only still waiting.
+   */
+  exchangePlanned: boolean | null;
 }
 
 export interface BadanieFile {
