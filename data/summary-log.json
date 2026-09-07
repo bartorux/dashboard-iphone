@@ -4,15 +4,6 @@
       "at": "2026-09-06T15:45:37.862Z",
       "prompt": 51,
       "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Jutro w godzinach 19:00-22:00 operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 8 września między 18:00 a 22:00 oraz w środę 9 września między 07:00 a 09:00 i między 16:00 a 22:00 nadwyżka spada poniżej progu 1100 MW lub operator zachowuje wybór, natomiast w czwartek 10 września i piątek 11 września między 19:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu przy zachowanym wyborze operatora."
-    },
-    {
-      "at": "2026-09-06T15:45:37.862Z",
-      "prompt": 51,
-      "accepted": false,
       "reason": "jeden zakres godzin rozciągnięty na kilka dni",
       "headline": "Wtorek 8 września przyniesie spadek nadwyżki poniżej progu 1100 MW, dając operatorowi uprawnienie do ogłoszenia przywołania.",
       "body": "Prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do godzin wymagających czujności zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -598,6 +589,14 @@
       "headline": "W najbliższych dniach operator może ogłosić przywołanie w wielu godzinach, bo nadwyżka spada poniżej progu 1100 MW.",
       "body": "Jutro margines spada poniżej typowego zakresu w ciągu czterech godzin. Na ogłoszenie w tych godzinach jest jeszcze czas.",
       "outlook": "W środę i piątek przywołanie również wchodzi w grę w godzinach wieczornych, w czwartek prognoza wciąż się ustala, a dzisiejszy dzień upłynie spokojnie."
+    },
+    {
+      "at": "2026-09-07T09:30:53.942Z",
+      "prompt": 51,
+      "accepted": true,
+      "headline": "Przywołanie wchodzi w grę w najbliższych dniach, a jutro nadwyżka spadnie poniżej progu 1100 MW między 18:00 a 21:00.",
+      "body": "Dziś margines spadnie między 20:00 a 22:00, co da operatorowi pełną swobodę decyzji. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W środę, czwartek i piątek margines również okresowo spadnie poniżej wymaganego poziomu, podczas gdy w pozostałym okresie rezerwa pokrywa wymagane wartości."
     }
   ]
 }
