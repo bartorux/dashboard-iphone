@@ -3,15 +3,6 @@
     {
       "at": "2026-09-07T06:15:42.266Z",
       "prompt": 51,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Jutro o 20:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Dziś prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek i w środę nadwyżka również spada poniżej progu 1100 MW w godzinach wieczornych, natomiast w czwartek i w piątek utrzymuje się powyżej niego."
-    },
-    {
-      "at": "2026-09-07T06:15:42.266Z",
-      "prompt": 51,
       "accepted": true,
       "headline": "Jutro o 20:00 rezerwa najmocniej spadnie, a nadwyżka spadnie poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
       "body": "Dziś prognoza jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -608,6 +599,14 @@
       "headline": "W środę między 18:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, straciwszy możliwość jego pominięcia.",
       "body": "Prognoza jutro wciąż się ustala. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś nic nie zapowiada przywołania, a w pozostałe dni ujemny margines dotyka czwartek między 18:00 a 22:00 oraz piątek między 07:00 a 22:00."
+    },
+    {
+      "at": "2026-09-07T21:45:40.090Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę o 19:00 rezerwa osiągnie najniższy punkt, a nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek i piątek margines w poszczególnych godzinach spada poniżej wymaganego poziomu, podczas gdy dzisiaj nic nie zapowiada przywołania."
     }
   ]
 }
