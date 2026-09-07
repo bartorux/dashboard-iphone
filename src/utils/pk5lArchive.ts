@@ -23,14 +23,25 @@ import { periodStart, publicationTsToIso } from './dateHelpers';
 /** [businessDate, hour] combined into the map key `parseArchiveLines` returns. */
 type ArchiveKey = string;
 
-/** The two values a line is deduped on: [surplus, required], both in MW. */
-type ArchivedValue = readonly [surplus: number, required: number];
+/**
+ * The three values a line is deduped on: [surplus, required, plannedExchange],
+ * all in MW — `plannedExchange` is `null` when PSE published no figure for
+ * that row (or when the line predates this field, see `parseArchiveLines`).
+ */
+type ArchivedValue = readonly [surplus: number, required: number, plannedExchange: number | null];
 
 /**
  * One archived line, in the exact order the format commits to:
  * [businessDate, hour of the block's START (0-23), surplus, required,
  * PSE's own publication_ts_utc for the row (or '' when PSE did not send
- * one), and the ISO instant this job read it].
+ * one), the ISO instant this job read it, and planned exchange (MW,
+ * negative = export, or null when PSE did not report one)].
+ *
+ * The seventh field is OPTIONAL in the type, not because a newly written line
+ * ever omits it (every line this module writes from now on carries seven
+ * elements, `null` included), but so that every six-element line already on
+ * disk — written before this field existed — still satisfies the type
+ * unchanged, and so existing call sites that build a row by hand keep typing.
  */
 export type ArchiveRow = readonly [
   businessDate: string,
@@ -39,6 +50,7 @@ export type ArchiveRow = readonly [
   required: number,
   publicationTsUtc: string,
   readAt: string,
+  plannedExchange?: number | null,
 ];
 
 const BUSINESS_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -108,6 +120,13 @@ export function previousPartition(partition: string): string {
  * fault than losing the whole run over it. Later lines win over earlier ones
  * for the same key, matching how the file was actually written — top to
  * bottom, oldest first.
+ *
+ * Accepts both the original six-element shape and the seven-element shape
+ * that added `plannedExchange`: every line ever committed to the archive must
+ * keep parsing, forever, or a month of history silently stops counting toward
+ * dedupe state the moment the format grows a field. A six-element line reads
+ * as `plannedExchange: null` — not "PSE reported zero", but "this line
+ * predates the field entirely".
  */
 export function parseArchiveLines(text: string): Map<ArchiveKey, ArchivedValue> {
   const result = new Map<ArchiveKey, ArchivedValue>();
@@ -124,8 +143,8 @@ export function parseArchiveLines(text: string): Map<ArchiveKey, ArchivedValue> 
       continue;
     }
 
-    if (!Array.isArray(row) || row.length !== 6) continue;
-    const [businessDate, hour, surplus, required] = row as unknown[];
+    if (!Array.isArray(row) || (row.length !== 6 && row.length !== 7)) continue;
+    const [businessDate, hour, surplus, required, , , plannedExchangeRaw] = row as unknown[];
 
     if (typeof businessDate !== 'string' || !BUSINESS_DATE.test(businessDate)) continue;
     if (typeof hour !== 'number' || !Number.isInteger(hour) || hour < 0 || hour > 23) {
@@ -134,7 +153,15 @@ export function parseArchiveLines(text: string): Map<ArchiveKey, ArchivedValue> 
     if (typeof surplus !== 'number' || !Number.isFinite(surplus)) continue;
     if (typeof required !== 'number' || !Number.isFinite(required)) continue;
 
-    result.set(archiveKey(businessDate, hour), [surplus, required]);
+    let plannedExchange: number | null = null;
+    if (row.length === 7) {
+      if (plannedExchangeRaw === null) plannedExchange = null;
+      else if (typeof plannedExchangeRaw === 'number' && Number.isFinite(plannedExchangeRaw)) {
+        plannedExchange = plannedExchangeRaw;
+      } else continue; // seventh field present but malformed: skip, same as any other bad shape
+    }
+
+    result.set(archiveKey(businessDate, hour), [surplus, required, plannedExchange]);
   }
 
   return result;
@@ -144,12 +171,17 @@ export function parseArchiveLines(text: string): Map<ArchiveKey, ArchivedValue> 
  * Which of this run's raw rows are worth appending, and the exact lines to
  * write for them.
  *
- * Dedupes on VALUE, not on PSE republishing the row: `(surplus, required)`
- * has to differ from what `lastByKey` already holds for that
- * (business_date, hour) — a revision that touches only `publication_ts_utc`
- * with the same two figures is not news and must not grow the file. The
- * comparison is exact equality, not a tolerance: a swing of exactly 1 MW is
- * as real a change as one of 1000.
+ * Dedupes on VALUE, not on PSE republishing the row: `(surplus, required,
+ * plannedExchange)` has to differ from what `lastByKey` already holds for
+ * that (business_date, hour) — a revision that touches only
+ * `publication_ts_utc` with the same three figures is not news and must not
+ * grow the file. The comparison is exact equality, not a tolerance: a swing
+ * of exactly 1 MW is as real a change as one of 1000. `plannedExchange` is
+ * deliberately IN the dedupe key, not left out of it: PSE has been observed
+ * to publish the exchange figure for a block well after its surplus/required
+ * settle, and that moment — the reserve forecast unchanged, only the
+ * exchange arriving or moving — is exactly what this archive exists to
+ * catch, so it must write a line even though the other two figures repeat.
  *
  * `lastByKey` is read, never mutated — the caller's map (typically freshly
  * built by `parseArchiveLines`) stays intact — but a local copy of it is
@@ -176,11 +208,20 @@ export function newArchiveLines(
     const required = toNumber(row.req_pow_res);
     if (surplus === null || required === null) continue;
 
+    const plannedExchange = toNumber(row.planned_exchange);
+
     const key = archiveKey(businessDate, hour);
     const previous = running.get(key);
-    if (previous && previous[0] === surplus && previous[1] === required) continue;
+    if (
+      previous &&
+      previous[0] === surplus &&
+      previous[1] === required &&
+      previous[2] === plannedExchange
+    ) {
+      continue;
+    }
 
-    running.set(key, [surplus, required]);
+    running.set(key, [surplus, required, plannedExchange]);
 
     // Not yet selected by api.ts's FORECAST_FIELDS (that list is shared with
     // the browser, and this field would cost every phone load to serve a
@@ -191,7 +232,15 @@ export function newArchiveLines(
       (row as PSERawItem & { publication_ts_utc?: string }).publication_ts_utc
     );
 
-    const line: ArchiveRow = [businessDate, hour, surplus, required, publicationTs, nowIso];
+    const line: ArchiveRow = [
+      businessDate,
+      hour,
+      surplus,
+      required,
+      publicationTs,
+      nowIso,
+      plannedExchange,
+    ];
     lines.push(JSON.stringify(line));
   }
 

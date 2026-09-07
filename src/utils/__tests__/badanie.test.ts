@@ -19,9 +19,10 @@ function row(
   surplus: number,
   required: number,
   readAt: string,
-  publicationTsUtc = ''
+  publicationTsUtc = '',
+  plannedExchange: number | null = null
 ): ArchiveRow {
-  return [businessDate, hour, surplus, required, publicationTsUtc, readAt];
+  return [businessDate, hour, surplus, required, publicationTsUtc, readAt, plannedExchange];
 }
 
 // ---------------------------------------------------------------------------
@@ -80,7 +81,10 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     // 2026-09-01 and 2026-09-03 have no event: auto-selected from each
     // candidate hour's OWN window, not its latest reading overall.
     expect(byDate.get('2026-09-01')?.worstHour).toBe(21);
-    expect(byDate.get('2026-09-03')?.worstHour).toBe(20);
+    // Candidate range is 7-21 (rozporządzenie §6), not 12-23: hour 7's own
+    // window (1813 MW, deadline 2026-09-02T21:00Z) undercuts hour 20's own
+    // window (1864 MW), which is what the old 12-23 range picked instead.
+    expect(byDate.get('2026-09-03')?.worstHour).toBe(7);
   });
 
   it('pins the window (readAt, surplus, required, margin) for all three days', () => {
@@ -101,12 +105,14 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     expect(d0902.required).toBe(1995);
     expect(d0902.margin).toBe(-853);
 
+    // Target hour 7 (7-21 range) rather than the old range's 20 — see the
+    // worst-hour test above.
     const d0903 = byDate.get('2026-09-03')!;
     expect(d0903.window.open).toBe(false);
-    expect(d0903.window.readAt).toBe('2026-09-03T08:07:31.068Z');
-    expect(d0903.surplus).toBe(1864);
-    expect(d0903.required).toBe(2101);
-    expect(d0903.margin).toBe(-237);
+    expect(d0903.window.readAt).toBe('2026-09-02T20:05:32.196Z');
+    expect(d0903.surplus).toBe(1813);
+    expect(d0903.required).toBe(1920);
+    expect(d0903.margin).toBe(-107);
   });
 
   it('pins headroom, dwell and eveMargin raw values', () => {
@@ -128,17 +134,22 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     expect(d0902.dwell.value).toBe(19);
     expect(d0902.eveMargin.value).toBe(-939); // last 2026-09-01 reading: 1056 - 1995
 
+    // Target hour 7 (7-21 range): window reading 1813/1920 at 2026-09-02T20:05:32Z.
     const d0903 = byDate.get('2026-09-03')!;
-    expect(d0903.headroom.value).toBe(764); // 1864 - 1100
+    expect(d0903.headroom.value).toBe(713); // 1813 - 1100
     expect(d0903.dwell.value).toBe(0);
-    expect(d0903.eveMargin.value).toBe(115); // last 2026-09-02 reading: 2216 - 2101
+    // Last reading of hour 7 stamped on the Warsaw-local calendar day before
+    // (2026-09-02): readAt 2026-09-02T21:07:24Z is 23:07 local, still 09-02;
+    // the next reading (22:07:23Z UTC = 00:07 local) has already rolled to
+    // 09-03 and is excluded.
+    expect(d0903.eveMargin.value).toBe(-16); // 1904 - 1920
   });
 
   it('ranks headroom 1.0 for the worst day, 0.0 for the best, across the 3-day population', () => {
     const days = studyDays(realRows(), [], [REAL_EVENT], REAL_NOW);
     const byDate = new Map(days.map((d) => [d.date, d]));
 
-    // headroom: 09-02 = 42 (worst), 09-01 = 447 (middle), 09-03 = 764 (best).
+    // headroom: 09-02 = 42 (worst), 09-01 = 447 (middle), 09-03 = 713 (best).
     expect(byDate.get('2026-09-02')?.headroom.percentile).toBe(1);
     expect(byDate.get('2026-09-01')?.headroom.percentile).toBe(0.5);
     expect(byDate.get('2026-09-03')?.headroom.percentile).toBe(0);
@@ -158,7 +169,7 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     expect(byDate.get('2026-09-01')?.dwell.percentile).toBe(0);
     expect(byDate.get('2026-09-03')?.dwell.percentile).toBe(0);
 
-    // eveMargin: -939 (09-02, worst) vs +432 (09-01, best) vs +115 (09-03, middle).
+    // eveMargin: -939 (09-02, worst) vs +432 (09-01, best) vs -16 (09-03, middle).
     expect(byDate.get('2026-09-02')?.eveMargin.percentile).toBe(1);
     expect(byDate.get('2026-09-02')?.eveMargin.extreme).toBe(true);
     expect(byDate.get('2026-09-01')?.eveMargin.percentile).toBe(0);
@@ -191,8 +202,9 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     const d0902 = byDate.get('2026-09-02')!;
     expect(d0902.readings.length).toBe(107);
 
+    // Target hour 7 (7-21 range) carries hour 7's own readings, not hour 20's.
     const d0903 = byDate.get('2026-09-03')!;
-    expect(d0903.readings.length).toBe(132);
+    expect(d0903.readings.length).toBe(122);
 
     // Strictly ascending readAt — the whole study depends on this order.
     for (const day of [d0901, d0902, d0903]) {
@@ -254,12 +266,32 @@ describe('parseArchiveRows', () => {
     const rows = parseArchiveRows(text);
 
     expect(rows).toHaveLength(2);
-    expect(rows[0]).toEqual(['2026-06-01', 10, 2000, 1000, '2026-06-01 08:00:00', '2026-06-01T08:00:05.000Z']);
-    expect(rows[1]).toEqual(['2026-06-01', 11, 1900, 1050, '', '2026-06-01T09:00:05.000Z']);
+    // Six-element lines (no plannedExchange field at all): reads as null.
+    expect(rows[0]).toEqual([
+      '2026-06-01', 10, 2000, 1000, '2026-06-01 08:00:00', '2026-06-01T08:00:05.000Z', null,
+    ]);
+    expect(rows[1]).toEqual(['2026-06-01', 11, 1900, 1050, '', '2026-06-01T09:00:05.000Z', null]);
   });
 
   it('returns an empty array for empty input', () => {
     expect(parseArchiveRows('')).toEqual([]);
+  });
+
+  it('parses a seven-element line, plannedExchange included as a number', () => {
+    const text = '["2026-06-01",10,2000,1000,"","2026-06-01T09:00:05.000Z",-1200]';
+    const rows = parseArchiveRows(text);
+    expect(rows).toEqual([['2026-06-01', 10, 2000, 1000, '', '2026-06-01T09:00:05.000Z', -1200]]);
+  });
+
+  it('parses a seven-element line with plannedExchange explicitly null', () => {
+    const text = '["2026-06-01",10,2000,1000,"","2026-06-01T09:00:05.000Z",null]';
+    const rows = parseArchiveRows(text);
+    expect(rows).toEqual([['2026-06-01', 10, 2000, 1000, '', '2026-06-01T09:00:05.000Z', null]]);
+  });
+
+  it('skips a seven-element line whose plannedExchange is neither a number nor null', () => {
+    const text = '["2026-06-01",10,2000,1000,"","2026-06-01T09:00:05.000Z","not-a-number"]';
+    expect(parseArchiveRows(text)).toEqual([]);
   });
 });
 
@@ -346,6 +378,78 @@ describe('auto target hour: tie-break', () => {
     const [day] = studyDays(rows, [], [], now);
 
     expect(day.worstHour).toBe(15);
+  });
+});
+
+describe('tightHours', () => {
+  it('lists every OTHER hour 7-21 with a negative own-window margin, sorted by surplus ascending, excludes the target hour, and ignores hour 23 (outside the range)', () => {
+    // Timestamped well before every candidate hour's own deadline that day,
+    // including hour 7's (the earliest) — see the tie-break tests above for
+    // the same reasoning.
+    const readAt = '2026-07-01T00:00:00Z';
+    const rows: ArchiveRow[] = [
+      row('2026-07-05', 10, 1000, 900, readAt), // margin +100: not tight
+      // The worst hour on record — auto-selected as the target — must be
+      // excluded from the list even though its own margin is the most
+      // negative of all.
+      row('2026-07-05', 15, 200, 1000, readAt), // margin -800: the target
+      row('2026-07-05', 18, 500, 700, readAt), // margin -200: tight, 2nd by surplus
+      row('2026-07-05', 20, 800, 850, readAt), // margin -50: tight, 3rd by surplus
+      // Outside the 7-21 range entirely: must never appear, no matter how
+      // negative its own margin is, and must not win auto-selection either.
+      row('2026-07-05', 23, 100, 5000, readAt), // margin -4900
+    ];
+    const now = new Date('2026-07-10T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.worstHour).toBe(15);
+    expect(day.tightHours).toEqual([
+      { hour: 18, surplus: 500, margin: -200 },
+      { hour: 20, surplus: 800, margin: -50 },
+    ]);
+  });
+
+  it('is empty when nothing else is tight', () => {
+    const readAt = '2026-07-01T00:00:00Z';
+    const rows: ArchiveRow[] = [
+      row('2026-07-06', 10, 2000, 900, readAt),
+      row('2026-07-06', 15, 200, 1000, readAt), // the target: still excluded from its own list
+    ];
+    const now = new Date('2026-07-10T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.tightHours).toEqual([]);
+  });
+
+  it('is empty when the day has no target hour at all', () => {
+    // No reading in 7-21 for this business date: worstHour is null, and
+    // tightHours has nothing to report either.
+    const rows: ArchiveRow[] = [row('2026-07-07', 23, 100, 5000, '2026-07-01T00:00:00Z')];
+    const now = new Date('2026-07-10T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.worstHour).toBeNull();
+    expect(day.tightHours).toEqual([]);
+  });
+});
+
+describe('readings carry plannedExchange', () => {
+  it('passes each reading\'s exchange through to `Reading[3]`, null when absent', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-07-05', 15, 2000, 1000, '2026-07-05T00:00:00Z', '', -1200),
+      row('2026-07-05', 15, 2100, 1000, '2026-07-05T01:00:00Z'), // no exchange given: null
+    ];
+    const now = new Date('2026-07-10T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.readings).toEqual([
+      ['2026-07-05T00:00:00Z', 2000, 1000, -1200],
+      ['2026-07-05T01:00:00Z', 2100, 1000, null],
+    ]);
   });
 });
 

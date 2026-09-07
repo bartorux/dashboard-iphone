@@ -39,8 +39,21 @@ export interface Feature {
   extreme: boolean;
 }
 
-/** One archived reading of the day's worst hour: [readAt ISO, surplus MW, required MW]. */
-export type Reading = readonly [readAt: string, surplus: number, required: number];
+/**
+ * One archived reading of the day's worst hour: [readAt ISO, surplus MW,
+ * required MW, planned exchange MW]. Exchange is `null` when PSE published no
+ * figure for that reading, and the fourth element is optional in the type
+ * only so a reading serialized before this field existed still matches it —
+ * every reading this module produces now carries one (possibly `null`).
+ * Negative = export, positive = import, same sign convention as
+ * `PSEDataPoint.exchange`.
+ */
+export type Reading = readonly [
+  readAt: string,
+  surplus: number,
+  required: number,
+  exchange?: number | null,
+];
 
 export type Verdict =
   /** Feature count high AND an event is on record. */
@@ -78,6 +91,14 @@ export interface DayStudy {
   compass: { level: 0 | 1 | 2 | 3 | null; extreme: boolean };
   /** How many of the four features are extreme, 0-4. */
   extremeCount: number;
+  /**
+   * Every hour 7-21, other than the target hour, whose OWN decision window
+   * (see `computeHourWindow` in badanie.ts) shows a negative margin — i.e.
+   * hours that also looked tight the same day, not just the one that was
+   * picked. Sorted by surplus ascending (worst first). Empty when nothing
+   * else was tight, including when the day has no target hour at all.
+   */
+  tightHours: Array<{ hour: number; surplus: number; margin: number }>;
   event: CallEvent | null;
   /** The owner's word on the day, when there is one — from the register or an issue. */
   observation: Observation | null;
