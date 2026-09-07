@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-07T06:45:44.076Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "Jutro między 18:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-      "body": "Prognoza na dzisiaj jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę przywołanie wejdzie w grę między 07:00 a 08:00 oraz od 17:00 do 22:00, w czwartek między 19:00 a 21:00, a w piątek od 07:00 do 08:00 i między 17:00 a 21:00; w pozostałe dni i godziny margines pokrywa wymagany poziom i nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-07T07:01:09.779Z",
-      "prompt": 51,
-      "accepted": true,
-      "headline": "Margines w dzisiejszej i czwartkowej dobie wypada poza typowy zakres z ostatnich trzydziestu dni.",
-      "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin dzisiejszej doby zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek między 18:00 a 22:00 oraz w środę między 07:00 a 22:00 operator może ogłosić przywołanie, a w pozostałych dniach rezerwa pokrywa wymagany poziom i nic tam go nie zapowiada."
-    },
-    {
       "at": "2026-09-07T07:15:43.680Z",
       "prompt": 51,
       "accepted": false,
@@ -607,6 +591,23 @@
       "headline": "Margines w kolejnych dniach odbiega od normy, a w środę nadwyżka spada poniżej próg 1100 MW między 18:00 a 21:00.",
       "body": "Prognoza jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek i piątek saldo wymiany nie jest jeszcze zaplanowane, a w pozostałych dniach rezerwa w poszczególnych godzinach daje operatorowi wybór lub wymaga uwagi."
+    },
+    {
+      "at": "2026-09-07T22:15:39.488Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "Marginesy w najbliższych dniach miejscami mocno odbiegają od typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza w środę jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek saldo wymiany nie jest jeszcze zaplanowane, a poza tym w środę, czwartek i piątek operator może ogłosić przywołanie między 18:00 a 21:00."
+    },
+    {
+      "at": "2026-09-07T22:15:39.488Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Margines spoczywa poza typowym zakresem z ostatnich trzydziestu dni, a w środę operator może ogłosić przywołanie, ponieważ nadwyżka spadła poniżej progu 1100 MW w godzinach 18:00-21:00.",
+      "body": "Prognoza jeszcze się ustala dla jutra, raz pokrywając wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin pozostało ponad osiem godzin.",
+      "outlook": "W czwartek i piątek saldo wymiany na te doby nie jest jeszcze zaplanowane, a w pozostałym okresie rezerwa utrzymuje się na stabilnym poziomie."
     }
   ]
 }
