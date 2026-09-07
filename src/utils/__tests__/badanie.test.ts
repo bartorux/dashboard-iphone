@@ -176,14 +176,17 @@ describe('studyDays — real archive slice (2026-09-01..03)', () => {
     expect(byDate.get('2026-09-03')?.eveMargin.percentile).toBe(0.5);
   });
 
-  it('calls 2026-09-02 a hit (trafienie): 3 of 4 features extreme AND the test call period is on record', () => {
+  it('calls 2026-09-02 a test day — poza oceną — even with 3 of 4 features extreme, because REAL_EVENT is a test call period', () => {
     const days = studyDays(realRows(), [], [REAL_EVENT], REAL_NOW);
     const byDate = new Map(days.map((d) => [d.date, d]));
 
     const d0902 = byDate.get('2026-09-02')!;
     expect(d0902.extremeCount).toBe(3); // compass is [] here, so it never contributes
     expect(d0902.event).toEqual(REAL_EVENT);
-    expect(d0902.verdict).toBe('trafienie');
+    // REAL_EVENT.kind is 'test' — the operator picked this hour regardless of
+    // the system state, so this study has no hit or miss to claim here, no
+    // matter how high extremeCount runs (see badanieTypes.ts's `Verdict.test`).
+    expect(d0902.verdict).toBe('test');
 
     // The two quiet days: nothing extreme, nothing declared.
     expect(byDate.get('2026-09-01')?.verdict).toBe('cisza');
@@ -897,6 +900,57 @@ describe('verdicts', () => {
     expect(day.window.open).toBe(true);
     expect(day.verdict).toBe('otwarte');
   });
+
+  // A test call period is picked by the operator regardless of the system
+  // state (see badanieTypes.ts's `Verdict.test`), so it must never resolve to
+  // 'trafienie' or 'przeoczenie' no matter how the four features land — the
+  // two tests below pin that at both ends of extremeCount, and the day still
+  // gets scored (features/percentiles computed normally, day A/E stay in the
+  // ranking population) rather than skipped.
+  it("doba z testem i 4/4 ekstremami → 'test', nie 'trafienie'", () => {
+    // Day A is already worst-of-five on headroom, dwell AND eveMargin
+    // (extremeCount 3 with compass empty, per the falszywy-alarm/trafienie
+    // tests above) — add a Kompas L2 version active by hour 15's own
+    // deadline (2026-06-10T05:00:00Z, NOTICE_HOURS=8 before 13:00Z/15:00
+    // Warsaw CEST) to push it to 4/4.
+    const compass: CompassVersionRow[] = [
+      { businessDate: '2026-06-10', hour: 15, level: 2, publishedAt: '2026-06-10T03:00:00Z' },
+    ];
+    const event: CallEvent = { date: '2026-06-10', hour: 15, kind: 'test', scope: 'unit' };
+    const days = studyDays(fiveDayRows(), compass, [event], NOW);
+    const dayA = days.find((d) => d.date === '2026-06-10')!;
+
+    expect(dayA.compass.extreme).toBe(true);
+    expect(dayA.extremeCount).toBe(4);
+    expect(dayA.event).toEqual(event);
+    expect(dayA.verdict).toBe('test');
+  });
+
+  it("doba z testem i 0/4 → 'test', nie 'przeoczenie'", () => {
+    // Day E is best-of-five on every axis — extremeCount 0 — the exact shape
+    // the `przeoczenie` test above uses to prove a miss; here the event is a
+    // test instead of a real call period, so the verdict must stay 'test'.
+    const event: CallEvent = { date: '2026-06-14', hour: 15, kind: 'test', scope: 'unit' };
+    const days = studyDays(fiveDayRows(), [], [event], NOW);
+    const dayE = days.find((d) => d.date === '2026-06-14')!;
+
+    expect(dayE.extremeCount).toBe(0);
+    expect(dayE.event).toEqual(event);
+    expect(dayE.verdict).toBe('test');
+  });
+
+  it("kind: 'real' keeps scoring exactly as before (trafienie/przeoczenie above use it already)", () => {
+    // Not a new behaviour — a regression pin: a real event still resolves
+    // through the ordinary trafienie/falszywy-alarm/przeoczenie/cisza tally,
+    // untouched by the new 'test' branch, which only ever fires on
+    // `event.kind === 'test'`.
+    const event: CallEvent = { date: '2026-06-10', hour: 15, kind: 'real', scope: 'market' };
+    const days = studyDays(fiveDayRows(), [], [event], NOW);
+    const dayA = days.find((d) => d.date === '2026-06-10')!;
+
+    expect(dayA.extremeCount).toBeGreaterThanOrEqual(ALARM_FROM);
+    expect(dayA.verdict).toBe('trafienie');
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -928,8 +982,9 @@ describe('applyObservations', () => {
       note: REAL_EVENT.note,
       source: 'register',
     });
-    // The conflict is resolved for the label only — scoring never re-runs here.
-    expect(day.verdict).toBe('trafienie');
+    // The conflict is resolved for the label only — scoring never re-runs
+    // here. REAL_EVENT.kind is 'test', so the verdict stays 'test'.
+    expect(day.verdict).toBe('test');
     expect(day.worstHour).toBe(20);
   });
 
@@ -1070,14 +1125,16 @@ describe('buildBadanieWithObservations', () => {
     });
   });
 
-  it('an Issue test observation on an otherwise-quiet day flips the verdict to trafienie once extremeCount reaches ALARM_FROM', () => {
+  it('an Issue real observation on an otherwise-quiet day flips the verdict to trafienie once extremeCount reaches ALARM_FROM', () => {
     // Three days, one reading each at hour 15 plus its D-1 evening reading;
     // 2026-08-10 is engineered to be the worst on headroom, dwell AND
     // eveMargin against the other two — extremeCount 3, meeting ALARM_FROM —
     // exactly the "falszywy-alarm" shape from the `verdicts` tests above,
     // reused here to isolate the ONE thing this test is about: an event
     // arriving via an Issue instead of the register flips that verdict to
-    // 'trafienie', the same as a register event would.
+    // 'trafienie', the same as a register event would. Uses outcome 'real'
+    // — the 'test' outcome case is covered separately below, since a test
+    // observation must NOT flip to 'trafienie' regardless of extremeCount.
     function threeDayRows(): ArchiveRow[] {
       const plan: Array<{ date: string; surplus: number; eveSurplus: number }> = [
         { date: '2026-08-10', surplus: 200, eveSurplus: 100 }, // worst on every axis
@@ -1108,7 +1165,7 @@ describe('buildBadanieWithObservations', () => {
     expect(dayWithout.verdict).toBe('falszywy-alarm');
 
     const issueObservations: Observation[] = [
-      { date: '2026-08-10', outcome: 'test', hour: 15, scope: 'unit', source: 'issue', issueNumber: 11 },
+      { date: '2026-08-10', outcome: 'real', hour: 15, scope: 'unit', source: 'issue', issueNumber: 11 },
     ];
     const withObservation = buildBadanieWithObservations(rows, [], [], issueObservations, now);
     const dayWith = withObservation.days.find((d) => d.date === '2026-08-10')!;
@@ -1116,5 +1173,43 @@ describe('buildBadanieWithObservations', () => {
     expect(dayWith.extremeCount).toBeGreaterThanOrEqual(ALARM_FROM);
     expect(dayWith.event).not.toBeNull();
     expect(dayWith.verdict).toBe('trafienie');
+  });
+
+  it("an Issue TEST observation (outcome: 'test') scores the day as 'test', never 'trafienie', even past ALARM_FROM", () => {
+    // Same fixture and extremeCount-3 shape as the 'real' case just above —
+    // the only variable here is outcome: 'test' instead of 'real'. The
+    // synthetic CallEvent built from it carries kind: 'test'
+    // (buildBadanieWithObservations maps observation.outcome straight to
+    // CallEvent.kind), so the day must resolve to 'test', not 'trafienie'.
+    function threeDayRows(): ArchiveRow[] {
+      const plan: Array<{ date: string; surplus: number; eveSurplus: number }> = [
+        { date: '2026-08-10', surplus: 200, eveSurplus: 100 }, // worst on every axis
+        { date: '2026-08-11', surplus: 2000, eveSurplus: 1900 },
+        { date: '2026-08-12', surplus: 3000, eveSurplus: 2900 },
+      ];
+      const rows: ArchiveRow[] = [];
+      for (const { date, surplus, eveSurplus } of plan) {
+        rows.push(row(date, 15, surplus, 1000, `${date}T04:00:00Z`));
+        const [y, m, d] = date.split('-').map(Number);
+        const prev = new Date(Date.UTC(y, m - 1, d - 1));
+        const prevDate = prev.toISOString().slice(0, 10);
+        rows.push(row(date, 15, eveSurplus, 1000, `${prevDate}T20:00:00Z`));
+      }
+      rows.push(row('2026-08-10', 15, 300, 1000, '2026-08-10T02:00:00Z'));
+      return rows;
+    }
+
+    const now = new Date('2026-08-20T00:00:00Z');
+    const rows = threeDayRows();
+
+    const issueObservations: Observation[] = [
+      { date: '2026-08-10', outcome: 'test', hour: 15, scope: 'unit', source: 'issue', issueNumber: 12 },
+    ];
+    const withObservation = buildBadanieWithObservations(rows, [], [], issueObservations, now);
+    const day = withObservation.days.find((d) => d.date === '2026-08-10')!;
+
+    expect(day.extremeCount).toBeGreaterThanOrEqual(ALARM_FROM);
+    expect(day.event).toEqual({ date: '2026-08-10', hour: 15, kind: 'test', scope: 'unit', note: undefined });
+    expect(day.verdict).toBe('test');
   });
 });

@@ -21,6 +21,35 @@ const FIXTURE: BadanieFile = {
   alarmFrom: 3,
   days: [
     {
+      // Real call period, on record, features extreme — the one day in this
+      // fixture that must still read "trafienie": 02.09 below carries a TEST
+      // call period instead, which the study never scores as a hit (see
+      // `Verdict.test` in badanieTypes.ts).
+      date: '2026-08-30',
+      window: { readAt: '2026-08-30T09:00:00Z', deadline: '2026-08-30T09:00:00Z', open: false },
+      worstHour: 18,
+      surplus: 800,
+      required: 2000,
+      margin: -1200,
+      headroom: { value: -300, percentile: 0.93, extreme: true },
+      dwell: { value: 20, percentile: 0.94, extreme: true },
+      eveMargin: { value: -400, percentile: 0.93, extreme: true },
+      compass: { level: 2, extreme: true, hours: [18] },
+      extremeCount: 4,
+      tightHours: [],
+      event: { date: '2026-08-30', hour: 18, kind: 'real', scope: 'market' },
+      observation: {
+        date: '2026-08-30',
+        outcome: 'real',
+        hour: 18,
+        scope: 'market',
+        source: 'register',
+      },
+      verdict: 'trafienie',
+      readings: [['2026-08-30T09:00:00Z', 800, 2000]],
+      exchangePlanned: null,
+    },
+    {
       date: '2026-08-31',
       window: { readAt: '2026-08-31T09:00:00Z', deadline: '2026-08-31T09:00:00Z', open: false },
       worstHour: 19,
@@ -102,7 +131,10 @@ const FIXTURE: BadanieFile = {
         note: 'jedna jednostka wyłączona',
         source: 'register',
       },
-      verdict: 'trafienie',
+      // A test call period, not real — never scored as a hit even with all
+      // four features extreme (see `Verdict.test`); 2026-08-30 above is the
+      // "trafienie" case now, with a real event instead.
+      verdict: 'test',
       // Exchange carried on both readings, changing between them — exercises
       // the "(zmiana salda)" marker in ReadingsList.
       readings: [
@@ -265,20 +297,33 @@ describe('Badanie', () => {
     ).toBeInTheDocument();
   });
 
-  it('marks the day with an event as a hit, naming the event kind', async () => {
+  it('marks the day with a real event as a hit, naming the event kind', async () => {
+    respondWith({ badanie: FIXTURE });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const row = screen.getByText('30.08').closest('tr')!;
+    expect(within(row).getByText('trafienie')).toBeInTheDocument();
+    // Register-sourced observation mirrors the event: shown once, in the
+    // existing format, no "(z GitHub)" tag.
+    expect(within(row).getByText('przywołanie, cały rynek')).toBeInTheDocument();
+    expect(within(row).queryByText(/z GitHub/)).toBeNull();
+    // The event row is bold — the one visual distinction this "may look like
+    // garbage" page still has to make.
+    expect(row.className).toContain('font-semibold');
+  });
+
+  it('marks a day with a TEST event "test · poza oceną", never a hit, even with every feature extreme', async () => {
     respondWith({ badanie: FIXTURE });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
 
     const row = screen.getByText('02.09').closest('tr')!;
-    expect(within(row).getByText('trafienie')).toBeInTheDocument();
-    // Register-sourced observation mirrors the event: shown once, in the
-    // existing format, no "(z GitHub)" tag.
+    expect(within(row).getByText('test · poza oceną')).toBeInTheDocument();
+    expect(within(row).queryByText('trafienie')).toBeNull();
+    // The observation is still shown — the day is displayed and scored, only
+    // kept out of the trafienie/przeoczenie tally.
     expect(within(row).getByText('test, jedna jednostka')).toBeInTheDocument();
-    expect(within(row).queryByText(/z GitHub/)).toBeNull();
-    // The event row is bold — the one visual distinction this "may look like
-    // garbage" page still has to make.
-    expect(row.className).toContain('font-semibold');
   });
 
   it('labels the dwell column in hours and formats its value with one decimal and a Polish comma', async () => {

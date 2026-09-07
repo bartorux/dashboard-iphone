@@ -65,7 +65,14 @@ export type Verdict =
   /** Nothing on either side. */
   | 'cisza'
   /** Deadline not yet passed — the numbers may still move. */
-  | 'otwarte';
+  | 'otwarte'
+  /**
+   * A test call period: the operator picks the hour regardless of the
+   * system state (5/5 tests in 2026 confirm the rule), so the study neither
+   * claims a hit nor a miss — the day is shown, scored, and kept out of the
+   * tally.
+   */
+  | 'test';
 
 export interface DayStudy {
   date: string;

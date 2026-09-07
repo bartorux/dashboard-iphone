@@ -664,15 +664,29 @@ export function studyDays(
       day.compass.extreme,
     ].filter(Boolean).length;
 
+    // A test call period is picked by the operator regardless of the system
+    // state (5/5 tests in 2026 confirm the rule — see badanieTypes.ts's
+    // `Verdict.test` comment), so this study — which predicts REAL call
+    // periods, not tests — has nothing to claim about the hour on a test day:
+    // not a hit, since nothing here forecast the operator's choice, and not a
+    // miss either. `'otwarte'` still wins first, ahead of even a test event,
+    // because a day whose window has not closed yet has no settled features
+    // to score at all. Once closed, a test event wins next, ahead of
+    // `extremeCount`: the features and percentiles are still computed
+    // normally and the day stays in the ranking population (see
+    // `rankFeature`), only the VERDICT is pulled out of the trafienie/
+    // falszywy-alarm/przeoczenie/cisza tally.
     const verdict = day.window.open
       ? 'otwarte'
-      : day.event && extremeCount >= ALARM_FROM
-        ? 'trafienie'
-        : !day.event && extremeCount >= ALARM_FROM
-          ? 'falszywy-alarm'
-          : day.event && extremeCount < ALARM_FROM
-            ? 'przeoczenie'
-            : 'cisza';
+      : day.event?.kind === 'test'
+        ? 'test'
+        : day.event && extremeCount >= ALARM_FROM
+          ? 'trafienie'
+          : !day.event && extremeCount >= ALARM_FROM
+            ? 'falszywy-alarm'
+            : day.event && extremeCount < ALARM_FROM
+              ? 'przeoczenie'
+              : 'cisza';
 
     const study: DayStudy = {
       date: day.date,

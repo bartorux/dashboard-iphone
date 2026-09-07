@@ -51,6 +51,7 @@ const VERDICT_WORD: Record<Verdict, string> = {
   przeoczenie: 'przeoczenie',
   cisza: 'cisza',
   otwarte: 'otwarte',
+  test: 'test · poza oceną',
 };
 
 const EVENT_KIND_WORD: Record<CallEvent['kind'], string> = {
@@ -458,7 +459,7 @@ const COLUMNS: ReadonlyArray<{ label: string; hint?: string; align?: 'right' }> 
   },
   {
     label: 'Werdykt',
-    hint: 'Zestawienie liczby ekstremów z rejestrem: trafienie, fałszywy alarm, przeoczenie, cisza. „Otwarte" — termin jeszcze nie minął; „otwarte · bez salda" — ta doba nie ma jeszcze w prognozie salda wymiany; rezerwa jest liczona bez importu i eksportu i po dodaniu planu może się zmienić w obie strony.',
+    hint: 'Zestawienie liczby ekstremów z rejestrem: trafienie, fałszywy alarm, przeoczenie, cisza. „Otwarte" — termin jeszcze nie minął; „otwarte · bez salda" — ta doba nie ma jeszcze w prognozie salda wymiany; rezerwa jest liczona bez importu i eksportu i po dodaniu planu może się zmienić w obie strony. „test — poza oceną": testów nie przewidujemy.',
   },
   {
     label: 'Zdarzenie',
@@ -836,7 +837,8 @@ function Content({ data }: { data: BadanieFile }) {
   const ahead = data.days.filter((day) => day.window.open);
   const settled = newestFirst(data.days.filter((day) => !day.window.open));
   // "Notable" is anything the verdict has something to say about: a hit, a
-  // false alarm, a miss. Plain silence is the default state of the grid.
+  // false alarm, a miss, or a test day (shown but excluded from the tally —
+  // see `Verdict.test`). Plain silence is the default state of the grid.
   const notable = settled.filter((day) => day.verdict !== 'cisza');
   const quiet = settled.filter((day) => day.verdict === 'cisza');
 
@@ -858,7 +860,8 @@ function Content({ data }: { data: BadanieFile }) {
         {formatMW(data.dwellFloorMw)} MW bez przerwy), margines wieczorem w dobie D−1 i poziom Kompasu na
         godzinie docelowej. Percentyl cechy to udział innych dób, które wypadły łagodniej niż ta;
         ekstremum zaczyna się od percentyla 0,9. Werdykt „alarm" liczy się od {data.alarmFrom}{' '}
-        ekstremów na cztery.
+        ekstremów na cztery. Testy są pokazywane, ale nie liczą się do trafień ani przeoczeń — ich
+        godzinę wybiera operator niezależnie od stanu systemu.
       </p>
 
       {/* Ahead first: these are the rows that still change every hour and the
