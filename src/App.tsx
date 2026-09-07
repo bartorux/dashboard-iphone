@@ -38,6 +38,7 @@ import { DayOffset } from './types';
 import { formatDate } from './utils/dateHelpers';
 import { dayLabel, visibleDayOffsets } from './utils/dayWindow';
 import { isEnergyDay } from './utils/energyDay';
+import { exchangePlanned } from './utils/exchangePlan';
 
 /** Re-evaluate "now" this often so the current hour rolls over on its own. */
 const CLOCK_TICK_MS = 30 * 1000;
@@ -170,6 +171,19 @@ function App() {
   const dayCompassRanges = useMemo(
     () => compassRanges(compassHoursFor(dayData[0]?.businessDate ?? null), now),
     [compassHoursFor, dayData, now]
+  );
+
+  /*
+   * Whether the day on screen still carries PSE's flat placeholder exchange
+   * rather than a cleared day-ahead plan — see exchangePlan.ts. Gated on
+   * `hasReadings` so an empty day (nothing fetched yet) never reads as
+   * "unplanned" merely for having nothing to check; today and tomorrow always
+   * carry a real, hour-varying plan on the live feed, so this only ever fires
+   * a few days out. Changes no status and no threshold — see AlertsPanel.
+   */
+  const exchangeMissing = useMemo(
+    () => hasReadings(dayData) && !exchangePlanned(dayData),
+    [dayData]
   );
 
   // ...while the app badge counts the whole 72-hour horizon, so it does not
@@ -429,6 +443,7 @@ function App() {
               hasData={hasReadings(dayData)}
               isLoading={firstLoad}
               compassRanges={dayCompassRanges}
+              exchangeMissing={exchangeMissing}
             />
 
           </div>

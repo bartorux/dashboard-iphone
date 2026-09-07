@@ -1165,6 +1165,115 @@ describe('Kompas Energetyczny w faktach', () => {
   });
 });
 
+/**
+ * A day whose exchange genuinely varies hour by hour — the day-ahead plan has
+ * cleared, in `exchangePlanned`'s own terms. Contrasts with `dayOf`, whose
+ * points all keep the factory's constant `exchange: -500` and therefore read
+ * as PSE's flat, not-yet-planned placeholder on every fixture that uses it.
+ */
+function dayOfPlanned(businessDate: string, reserve: number, required = 2000) {
+  return Array.from({ length: 24 }, (_, hour) =>
+    hourOn(businessDate, hour, {
+      reserve,
+      required,
+      exchange: hour < 12 ? -12 : 2200,
+    })
+  );
+}
+
+describe('Saldo wymiany w faktach', () => {
+  it('flaguje dobę, której saldo wymiany jest płaskie przez całą dobę', () => {
+    const facts = buildFacts(
+      dayOf('2026-08-10', 5000),
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      TYLKO_DZIESIATY
+    );
+    expect(facts[0].exchangeMissing).toBe(true);
+  });
+
+  it('nie flaguje doby, której saldo wymiany zmienia się w ciągu doby', () => {
+    const facts = buildFacts(
+      dayOfPlanned('2026-08-10', 5000),
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      TYLKO_DZIESIATY
+    );
+    expect(facts[0].exchangeMissing).toBe(false);
+  });
+
+  it('dopisuje zdanie o niezaplanowanym saldzie, gdy saldo jest płaskie', () => {
+    const facts = buildFacts(
+      dayOf('2026-08-10', 5000),
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      TYLKO_DZIESIATY
+    );
+    expect(renderFacts(facts, 30)).toContain(
+      'saldo wymiany na tę dobę nie jest jeszcze zaplanowane'
+    );
+  });
+
+  it('nie mówi nic o saldzie, gdy plan już doszedł', () => {
+    const facts = buildFacts(
+      dayOfPlanned('2026-08-10', 5000),
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      TYLKO_DZIESIATY
+    );
+    expect(renderFacts(facts, 30)).not.toMatch(/saldo wymiany/);
+  });
+
+  it('nie podaje żadnej wielkości mocy w zdaniu o saldzie — tylko "kilka gigawatów"', () => {
+    // The validator refuses any megawatt/gigawatt figure the model might copy
+    // out of its own answer, so the fact handed to it must not carry one
+    // either — this pins the wording to the safe fallback rather than the
+    // observed "1-3 GW".
+    const facts = buildFacts(
+      dayOf('2026-08-10', 5000),
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      TYLKO_DZIESIATY
+    );
+    const text = renderFacts(facts, 30);
+    expect(text).toContain('kilka gigawatów');
+    expect(text).not.toMatch(/\d+\s*[-–]?\s*\d*\s*GW/i);
+  });
+
+  it('rusza fingerprint, gdy saldo przestaje być płaskie i nic innego się nie zmienia', () => {
+    const plaska = assessmentKey(
+      buildFacts(dayOf('2026-08-10', 5000), HISTORY_WITH_MIX, BEFORE_ALL, TYLKO_DZIESIATY)
+    );
+    const zPlanem = assessmentKey(
+      buildFacts(
+        dayOfPlanned('2026-08-10', 5000),
+        HISTORY_WITH_MIX,
+        BEFORE_ALL,
+        TYLKO_DZIESIATY
+      )
+    );
+    expect(plaska).not.toBe(zPlanem);
+  });
+
+  it('allowedHoursFor dopuszcza 13:00 tylko na dobę, która niesie zastrzeżenie', () => {
+    const zPlaceholderem = buildFacts(
+      dayOf('2026-08-10', 5000),
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      TYLKO_DZIESIATY
+    );
+    expect(allowedHoursFor(zPlaceholderem).has('13:00')).toBe(true);
+
+    const zaplanowana = buildFacts(
+      dayOfPlanned('2026-08-10', 5000),
+      HISTORY_WITH_MIX,
+      BEFORE_ALL,
+      TYLKO_DZIESIATY
+    );
+    expect(allowedHoursFor(zaplanowana).has('13:00')).toBe(false);
+  });
+});
+
 describe('allowedHoursFor', () => {
   it('offers the hours of the call-period ranges and the worst hour', () => {
     const facts = buildFacts(

@@ -30,7 +30,10 @@ export interface Summary {
 // 51: the facts gained a Kompas Energetyczny PSE line and the instruction the
 // block that tells the model what it is — a change in the WORDING of the facts,
 // which the assessment key alone would never have carried.
-export const PROMPT_VERSION = 51;
+// 52: the facts gained a line for a day whose exchange plan has not cleared
+// yet, and the instruction the paragraph telling the model what that means —
+// again a change in WORDING the assessment key does not track by itself.
+export const PROMPT_VERSION = 52;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -85,6 +88,15 @@ prawnych. Nadwyżka i próg 1100 MW to liczby, nie instytucje prawne.
   nakazuje ogłosić, a nie nakazuje.
 - „nic nie zapowiada przywołania" — rezerwa pokrywa wymagany poziom albo godzina
   przypada poza dniem roboczym lub poza godzinami 07:00-22:00.
+
+SALDO WYMIANY NIEZAPLANOWANE — fakty czasem mówią, że dla danej doby saldo
+wymiany transgranicznej jeszcze nie doszło. Rezerwa dla tej doby jest wtedy
+liczona BEZ importu, który zwykle pokrywa większość wieczornego niedoboru, więc
+margines może wyglądać gorzej, niż wypadnie faktycznie, gdy plan dojdzie —
+zwykle dzień wcześniej około 13:00. Gdy fakty to mówią o którejś dobie, dodaj
+przy niej jednym zdaniem to zastrzeżenie, bez podawania żadnej wielkości mocy.
+Nie pisz o marginesie tej doby jak o ustalonym niedoborze — to liczba, która
+może się jeszcze poprawić, nie zapowiedź przywołania.
 
 KOMPAS ENERGETYCZNY PSE — druga, całkiem osobna rzecz. Fakty podają go tylko dla
 doby, w której operator coś sygnalizuje. Gdy takiego wiersza nie ma, nie wspominaj
