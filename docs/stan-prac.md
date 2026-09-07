@@ -263,7 +263,9 @@ porównać skoki rezerwy (jak 07.09 o 13:19, +2700 MW) ze zmianą salda w tym sa
 dziś i jutro saldo prawdziwe, zmienne co godzinę (+1,9–3,3 GW importu w szczycie); doby od pojutrza
 do D+9 — stałe **−12 MW** na wszystkich godzinach, dalej 0. To placeholder sprzed rynku dnia
 następnego; saldo doby D dochodzi w D−1 około 13:00 (06.09 13:19: +2700 MW dla 07.09; 01.09 13:59
-dla 02.09). Rezerwa dób od pojutrza jest więc **zaniżona nawet o 3 GW** (09.09: 49 MW na 19:00).
+dla 02.09). Rezerwa dób od pojutrza jest więc liczona **bez salda** (09.09: 49 MW na 19:00); dotąd plan
+przynosił import, ale właściciel słusznie zauważył, że eksport przesunąłby ją w dół — teksty na
+ekranie i dla modelu nie przesądzają kierunku ani wielkości (v3.74.1).
 Wykrywanie z danych, nie z zegara: `src/utils/exchangePlan.ts` — doba ma plan, gdy 24 godziny mają
 ≥ 2 różne wartości salda; odczyt archiwum ma saldo, gdy |saldo| > 15 MW (`null` = sprzed kolumny
 = traktowany jako planowany). Skutki: (1) podstrona — dwell liczony tylko z odczytów po saldzie

@@ -434,7 +434,7 @@ const COLUMNS: ReadonlyArray<{ label: string; hint?: string; align?: 'right' }> 
   },
   {
     label: 'Werdykt',
-    hint: 'Zestawienie liczby ekstremów z rejestrem: trafienie, fałszywy alarm, przeoczenie, cisza. „Otwarte" — termin jeszcze nie minął; „otwarte · bez salda" — ta doba nie ma jeszcze w prognozie salda wymiany, więc rezerwa bywa zaniżona nawet o kilka GW.',
+    hint: 'Zestawienie liczby ekstremów z rejestrem: trafienie, fałszywy alarm, przeoczenie, cisza. „Otwarte" — termin jeszcze nie minął; „otwarte · bez salda" — ta doba nie ma jeszcze w prognozie salda wymiany; rezerwa jest liczona bez importu i eksportu i po dodaniu planu może się zmienić w obie strony.',
   },
   {
     label: 'Zdarzenie',
@@ -844,8 +844,9 @@ function Content({ data }: { data: BadanieFile }) {
           niepotrzebnie": a wall of "cisza" buries the one row that matters. */}
       <h2 className="mt-4 text-[0.875rem] font-semibold">Przed nami</h2>
       <p className="mt-1 text-[0.8125rem] text-text-secondary">
-        Doby od pojutrza nie mają jeszcze salda wymiany — rezerwa bez importu, zwykle zaniżona o
-        1–3 GW. Saldo dochodzi dzień wcześniej około 13:00.
+        Doby od pojutrza nie mają jeszcze salda wymiany — rezerwa liczona bez importu i eksportu,
+        po dodaniu planu może się zmienić o kilka gigawatów w obie strony. Saldo dochodzi dzień
+        wcześniej około 13:00.
       </p>
       {ahead.length === 0 ? (
         <p className="mt-1 text-[0.8125rem] text-text-secondary">

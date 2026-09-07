@@ -745,16 +745,17 @@ export function renderFacts(facts: DayFacts[], days: number): string {
      * verdict below is computed from are the ones this line just qualified,
      * so the model reads the caveat before it reads the number it caveats.
      *
-     * No figure of its own — "kilka gigawatów" rather than the observed
-     * 1-3 GW, since the validator refuses any megawatt/gigawatt quantity the
-     * model might copy back out, and this is a typical range, not a reading
-     * we computed for this hour.
+     * No figure and no direction of its own: "kilka gigawatów w obie strony".
+     * The validator refuses any megawatt/gigawatt quantity the model might
+     * copy back out — and the owner's point stands: the plan so far has been
+     * import, but an export day would move the reserve DOWN, so "understated"
+     * is a guess, not a fact.
      */
     if (day.exchangeMissing) {
       lines.push(
         '  saldo wymiany na tę dobę nie jest jeszcze zaplanowane — rezerwa jest ' +
-          'podana bez importu i zwykle rośnie o kilka gigawatów, gdy plan dojdzie ' +
-          'dzień wcześniej około 13:00'
+          'podana bez importu i eksportu i może się zmienić o kilka gigawatów ' +
+          'w obie strony, gdy plan dojdzie dzień wcześniej około 13:00'
       );
     }
 
