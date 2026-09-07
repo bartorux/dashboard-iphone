@@ -891,7 +891,15 @@ export function withObservations(data: BadanieFile): BadanieFile {
   return {
     ...data,
     observations: Array.isArray(data.observations) ? data.observations : [],
-    days: (data.days ?? []).map((day) => ({ ...day, observation: day.observation ?? null })),
+    // Every field a later generator added gets a default here, in ONE place —
+    // the file on the server is always one deploy behind for up to an hour,
+    // and each of these once crashed the page ("undefined is not an object").
+    days: (data.days ?? []).map((day) => ({
+      ...day,
+      observation: day.observation ?? null,
+      tightHours: Array.isArray(day.tightHours) ? day.tightHours : [],
+      readings: Array.isArray(day.readings) ? day.readings : [],
+    })),
   };
 }
 

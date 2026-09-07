@@ -204,11 +204,17 @@ describe('Badanie', () => {
     // every table and the recorder, with nothing recorded.
     const older = JSON.parse(JSON.stringify(FIXTURE)) as Record<string, unknown>;
     delete older.observations;
-    for (const day of older.days as Record<string, unknown>[]) delete day.observation;
+    for (const day of older.days as Record<string, unknown>[]) {
+      delete day.observation;
+      delete day.tightHours; // added 07.09 — crashed the live page once
+    }
     respondWith({ badanie: older });
     render(<Badanie />);
     await screen.findByText('Badanie przywołań');
     expect(screen.getByText('Zapisz, co było')).toBeInTheDocument();
+    expect(screen.queryByText('Błąd aplikacji')).toBeNull();
+    // Expanding a day touches tightHours and readings — must not throw either.
+    fireEvent.click(screen.getByRole('button', { name: '02.09' }));
     expect(screen.queryByText('Błąd aplikacji')).toBeNull();
   });
 
