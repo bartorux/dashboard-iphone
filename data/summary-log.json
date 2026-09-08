@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-07T20:45:42.140Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Dziś nic nie zapowiada przywołania, ale Kompas Energetyczny PSE zaleca oszczędzanie od 22:00 do 23:00.",
-      "body": "Jutro prognoza jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało ponad osiem godzin.",
-      "outlook": "W środę, czwartek i piątek operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada."
-    },
-    {
       "at": "2026-09-07T21:01:06.360Z",
       "prompt": 53,
       "accepted": false,
@@ -593,6 +585,14 @@
       "headline": "W najbliższych dniach rezerwa miejscami odbiega od typowego zakresu z ostatnich trzydziestu dni, a w środę operator może ogłosić przywołanie między 19:00 a 21:00.",
       "body": "Prognoza na dzisiaj jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek operator ma wybór między 19:00 a 21:00, w piątek nadwyżka spada poniżej próg 1100 MW między 18:00 a 21:00, natomiast w poniedziałek 14 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-08T13:01:14.123Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00.",
+      "body": "W piątek saldo wymiany nie jest jeszcze zaplanowane, więc rezerwa liczy się bez importu i eksportu i może się zmienić w obie strony. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dzisiaj prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie, a w czwartek i poniedziałek 14 września rezerwa pokrywa wymagany poziom."
     }
   ]
 }
