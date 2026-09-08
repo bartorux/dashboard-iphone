@@ -3,15 +3,6 @@
     {
       "at": "2026-09-07T15:45:53.364Z",
       "prompt": 51,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Dziś między 20:00 a 22:00 operator może ogłosić przywołanie, ale na jego nadejście jest już za późno.",
-      "body": "W tych godzinach rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW. Ogłoszenie nie nadejdzie, bo do tych godzin zostało mniej niż osiem godzin.",
-      "outlook": "W środę, czwartek i piątek między 18:00 a 21:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
-      "at": "2026-09-07T15:45:53.364Z",
-      "prompt": 51,
       "accepted": true,
       "headline": "Dziś między 20:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez jedną godzinę. Na ogłoszenie jest już za późno, bo do wskazanych godzin zostało mniej niż osiem godzin.",
@@ -603,6 +594,14 @@
       "headline": "Operator może ogłosić przywołanie między 18:00 a 22:00, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, do tych godzin zostało ponad osiem godzin.",
       "outlook": "W środę, czwartek i piątek margines również miejscami spada poniżej wymaganego poziomu, natomiast w poniedziałek 14 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-08T06:01:04.051Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Jutro między 17:00 a 22:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza na dzisiaj wciąż się ustala, więc rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek między 18:00 a 22:00 oraz w piątek między 07:00 a 09:00 i od 17:00 do 22:00 operator również może ogłosić przywołanie, podczas gdy poniedziałek 14 września nie niesie takich zapowiedzi."
     }
   ]
 }

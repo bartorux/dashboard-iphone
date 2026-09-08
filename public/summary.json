@@ -1,8 +1,8 @@
 {
-  "headline": "Operator może ogłosić przywołanie między 18:00 a 22:00, bo nadwyżka spadła poniżej progu 1100 MW.",
-  "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, do tych godzin zostało ponad osiem godzin.",
-  "outlook": "W środę, czwartek i piątek margines również miejscami spada poniżej wymaganego poziomu, natomiast w poniedziałek 14 września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-08T05:45:42.350Z",
+  "headline": "Jutro między 17:00 a 22:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
+  "body": "Prognoza na dzisiaj wciąż się ustala, więc rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "W czwartek między 18:00 a 22:00 oraz w piątek między 07:00 a 09:00 i od 17:00 do 22:00 operator również może ogłosić przywołanie, podczas gdy poniedziałek 14 września nie niesie takich zapowiedzi.",
+  "generatedAt": "2026-09-08T06:01:04.051Z",
   "dates": [
     "2026-09-08",
     "2026-09-09",
@@ -10,6 +10,6 @@
     "2026-09-11",
     "2026-09-14"
   ],
-  "assessment": "2026-09-08|R|moderate|0|21:00|1|0|3|moderate:21:00-22:00||-;2026-09-09|R|high|-3000|20:00|0|5|15|moderate:17:00-18:00,high:18:00-22:00||-;2026-09-10|R|high|-2400|20:00|0|4|15|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-11|R|high|-2900|20:00|0|8|7|moderate:07:00-09:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-14|R|none|1100|20:00|0|0|22|||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
+  "assessment": "2026-09-08|R|none|200|21:00|1|0|8|||-;2026-09-09|R|high|-3600|19:00|1|5|14|high:17:00-22:00||-;2026-09-10|R|high|-2700|19:00|1|4|15|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-11|R|high|-3100|20:00|0|8|7|moderate:07:00-09:00,moderate:17:00-18:00,high:18:00-22:00||X;2026-09-14|R|none|500|20:00|0|0|18|||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
   "model": "gemini-3.5-flash-lite"
 }
