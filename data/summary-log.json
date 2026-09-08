@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-07T20:15:43.766Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Dziś nic nie zapowiada przywołania, ale jutro rezerwa nie pokryje wymaganego poziomu, choć nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, czwartek i piątek nadwyżka spadnie poniżej progu 1100 MW między 19:00 a 21:00, co oznacza, że operator może ogłosić przywołanie, przy czym saldo wymiany czwartku i piątku nie jest jeszcze zaplanowane."
-    },
-    {
       "at": "2026-09-07T20:30:53.829Z",
       "prompt": 53,
       "accepted": true,
@@ -594,6 +585,14 @@
       "headline": "Margines wypada poza typowy zakres w wielu godzinach, a w najbliższych dniach operator może ogłosić przywołanie.",
       "body": "Dziś prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek między 19:00 a 22:00 oraz w piątek między 07:00 a 22:00 operator może ogłosić przywołanie, natomiast w poniedziałek 14 września nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-08T12:31:05.063Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W jutrzejszym dobie margines spadnie poniżej typowego zakresu w czterech godzinach, a operator może ogłosić przywołanie, gdyż nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00.",
+      "body": "Dziś prognoza jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek i piątek operator również może ogłosić przywołanie, natomiast w poniedziałek 14 września saldo wymiany nie jest jeszcze zaplanowane i nic nie zapowiada przywołania w całym okresie poza wymienionymi dniami."
     }
   ]
 }
