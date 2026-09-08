@@ -1,14 +1,14 @@
 {
-  "headline": "W piątek operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 18:00 a 22:00.",
-  "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało ponad osiem godzin.",
-  "outlook": "W piątek i jutro pojawiają się godziny, w których operator może ogłosić przywołanie, natomiast w czwartek i w poniedziałek 14 września nic go nie zapowiada.",
-  "generatedAt": "2026-09-08T23:30:55.618Z",
+  "headline": "W piątek operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00.",
+  "body": "Prognoza na piątek poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+  "outlook": "W poniedziałek 14 września saldo wymiany nie jest jeszcze zaplanowane, a w pozostałe dni nic nie zapowiada przywołania poza wybranymi godzinami z nadwyżką powyżej progu 1100 MW.",
+  "generatedAt": "2026-09-08T23:45:42.729Z",
   "dates": [
     "2026-09-09",
     "2026-09-10",
     "2026-09-11",
     "2026-09-14"
   ],
-  "assessment": "2026-09-09|R|high|-1300|20:00|2|1|10|moderate:19:00-20:00,high:20:00-21:00,moderate:21:00-22:00|K2:20:00-21:00|-;2026-09-10|R|none|100|20:00|2|0|22|||-;2026-09-11|R|high|-3200|20:00|1|8|6|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-22:00||X;2026-09-14|R|none|1000|20:00|0|0|19|||X#-/below/prognoza poprawia się#v53",
+  "assessment": "2026-09-09|R|high|-1000|20:00|2|0|13|high:20:00-21:00|K2:20:00-21:00|-;2026-09-10|R|moderate|-100|20:00|1|0|21|moderate:20:00-21:00||-;2026-09-11|R|high|-2900|19:00|0|9|4|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-21:00,moderate:21:00-22:00||X;2026-09-14|R|none|1000|20:00|0|0|19|||X#-/typical/prognoza poprawia się#v53",
   "model": "gemini-3.5-flash-lite"
 }
