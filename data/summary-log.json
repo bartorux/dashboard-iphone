@@ -3,15 +3,6 @@
     {
       "at": "2026-09-07T23:01:00.589Z",
       "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W piątek nadwyżka spadnie poniżej progu 1100 MW w godzinach 19:00-21:00, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "W piątek prognoza jeszcze się ustala, bo saldo wymiany na tę dobę nie jest jeszcze zaplanowane. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę i czwartek nadwyżka również spadnie poniżej progu 1100 MW w godzinach wieczornych, natomiast jutro operator zachowa pełny wybór."
-    },
-    {
-      "at": "2026-09-07T23:01:00.589Z",
-      "prompt": 53,
       "accepted": true,
       "headline": "W środę operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00.",
       "body": "Prognoza jeszcze się ustala w dniu jutrzejszym, raz pokrywając wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin zostało ponad osiem godzin.",
@@ -589,6 +580,14 @@
       "headline": "W piątek między 18:00 a 19:00 margines spadnie najniżej ze wszystkich dni, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "W piątek prognoza pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W pozostałych dniach rezerwa nie pokrywa wymaganego poziomu, a operator ma wybór, czy ogłosi przywołanie."
+    },
+    {
+      "at": "2026-09-08T16:30:59.541Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W piątek między 18:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a próg ten nie pozwala mu go pominąć.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś, jutro, w czwartek i w piątek rezerwa nie pokrywa wymaganego poziomu, podczas gdy w poniedziałek 14 września nic nie zapowiada przywołania."
     }
   ]
 }
