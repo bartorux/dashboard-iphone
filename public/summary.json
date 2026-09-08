@@ -1,8 +1,8 @@
 {
-  "headline": "Operator może ogłosić przywołanie jutro, w czwartek i w piątek.",
-  "body": "Margines spadnie między 20:00 a 21:00, bo zapotrzebowanie urośnie powyżej normy, a fotowoltaika spadnie poniżej normy. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE wyznacza zalecane oszczędzanie między 19:00 a 21:00.",
-  "outlook": "W poniedziałek 14 września rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania.",
-  "generatedAt": "2026-09-08T19:31:01.588Z",
+  "headline": "Operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 20:00 a 21:00.",
+  "body": "Zapotrzebowanie wzrosło powyżej normy, a instalacje fotowoltaiczne wyprodukowały mniej energii niż zwykle. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+  "outlook": "W czwartek i piątek operator również może ogłosić przywołanie, natomiast dzisiaj oraz w poniedziałek 14 września nic go nie zapowiada.",
+  "generatedAt": "2026-09-08T19:45:42.711Z",
   "dates": [
     "2026-09-08",
     "2026-09-09",
@@ -10,6 +10,6 @@
     "2026-09-11",
     "2026-09-14"
   ],
-  "assessment": "2026-09-08|R|none|400|21:00|0|0|0|||-;2026-09-09|R|high|-1000|20:00|3|0|13|moderate:19:00-20:00,high:20:00-21:00|K2:19:00-21:00|-;2026-09-10|R|moderate|-1100|20:00|1|1|17|moderate:19:00-21:00||-;2026-09-11|R|high|-2900|19:00|0|9|4|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-21:00,moderate:21:00-22:00||X;2026-09-14|R|none|1500|20:00|0|0|23|||X#zapotrzebowanie powyżej normy, PV poniżej normy/typical/-#v53",
+  "assessment": "2026-09-08|R|none|400|21:00|0|0|0|||-;2026-09-09|R|high|-1000|20:00|3|0|12|moderate:19:00-20:00,high:20:00-21:00|K2:19:00-21:00|-;2026-09-10|R|moderate|-1100|20:00|1|1|17|moderate:19:00-21:00||-;2026-09-11|R|high|-2900|19:00|0|9|4|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-21:00,moderate:21:00-22:00||X;2026-09-14|R|none|1500|20:00|0|0|23|||X#zapotrzebowanie powyżej normy, PV poniżej normy/typical/-#v53",
   "model": "gemini-3.5-flash-lite"
 }
