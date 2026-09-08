@@ -1,8 +1,8 @@
 {
-  "headline": "W piątek między 18:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie i stracił możliwość jego pominięcia.",
-  "body": "W piątek prognoza się pogarsza, a do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "Jutro operator może ogłosić przywołanie między 17:00 a 22:00, a w czwartek między 18:00 a 22:00; w pozostałe dni rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania.",
-  "generatedAt": "2026-09-08T08:01:01.430Z",
+  "headline": "W piątek nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00, więc operator może ogłosić przywołanie.",
+  "body": "Prognoza w piątek jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "W czwartek margines spada poniżej wymaganego poziomu między 18:00 a 22:00, natomiast w poniedziałek 14 września nic nie zapowiada przywołania w całym okresie.",
+  "generatedAt": "2026-09-08T08:15:48.323Z",
   "dates": [
     "2026-09-08",
     "2026-09-09",
@@ -10,6 +10,6 @@
     "2026-09-11",
     "2026-09-14"
   ],
-  "assessment": "2026-09-08|R|none|300|21:00|1|0|8|||-;2026-09-09|R|high|-3500|20:00|1|5|14|moderate:17:00-18:00,high:18:00-22:00||-;2026-09-10|R|high|-2500|20:00|0|4|15|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-11|R|high|-3100|19:00|0|8|5|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-22:00||X;2026-09-14|R|none|700|20:00|0|0|17|||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
+  "assessment": "2026-09-08|R|moderate|-200|21:00|1|0|0|moderate:21:00-22:00||-;2026-09-09|R|high|-3700|19:00|0|6|13|moderate:07:00-08:00,high:17:00-22:00||-;2026-09-10|R|high|-2100|20:00|0|3|17|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-11|R|high|-2800|20:00|0|9|5|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-21:00,moderate:21:00-22:00||X;2026-09-14|R|none|1500|20:00|0|0|24|||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
   "model": "gemini-3.5-flash-lite"
 }
