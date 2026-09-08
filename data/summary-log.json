@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-08T01:30:59.452Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Jutro między 18:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, co sprawi, że operator straci możliwość pominięcia przywołania.",
-      "body": "W dzisiejszej dobie prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek i piątek saldo wymiany nie jest jeszcze zaplanowane, a w poniedziałek 14 września nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-08T01:45:42.139Z",
       "prompt": 53,
       "accepted": true,
@@ -590,6 +582,14 @@
       "headline": "W piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 18:00-21:00.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W jutrzejszym dniu oraz w czwartek operator może ogłosić przywołanie między 19:00 a 21:00, a w pozostałym okresie nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-08T18:57:21.033Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W piątek operator może ogłosić przywołanie między 18:00 a 21:00, bo nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W jutrzejszy dzień oraz w czwartek między 19:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, a w pozostałym okresie nic go nie zapowiada."
     }
   ]
 }
