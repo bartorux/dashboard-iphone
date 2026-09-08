@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-07T16:30:58.207Z",
-      "prompt": 51,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę między 18:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
-      "body": "W środę margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez sześć godzin. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W kolejnych dniach margines również ułoży się zmiennie, a w czwartek i piątek ogłoszenie może nadejść w godzinach wieczornych."
-    },
-    {
       "at": "2026-09-07T16:39:05.983Z",
       "prompt": 51,
       "accepted": true,
@@ -601,6 +592,14 @@
       "headline": "Jutro między 18:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Dziś prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
       "outlook": "W czwartek i piątek saldo wymiany nie jest jeszcze zaplanowane, a w poniedziałek 14 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-08T07:01:07.380Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Marginesy na najbliższe dni bywają wyraźnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza na dziś jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek i piątek saldo wymiany transgranicznej nie jest jeszcze zaplanowane, a w poniedziałek 14 września nic nie zapowiada przywołania."
     }
   ]
 }
