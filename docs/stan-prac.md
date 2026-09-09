@@ -334,6 +334,19 @@ marginesu — teraz `xl:w-full xl:max-w-[34rem]`, kurczą się z kolumną (błą
 scena strażnika `laptop-light` (1536×982), która pilnuje, że laptop dostaje dwie kolumny bez
 nachodzenia. Test źródłowy `tabsShrinkWithColumn` pinuje klasy i próg 110rem. Sceny 1920 bez zmian.
 
+**Przycisk „Odśwież" znika w zwykłej przeglądarce na komputerze (09.09.2026, v3.77.0).** Właściciel:
+„na Windows mnie drażni". Dane odświeżają się same co 15 min, więc przycisk nie jest o świeżość,
+tylko o dostępną drogę tam, gdzie przeglądarka jej nie daje: zainstalowana aplikacja (brak F5),
+ekran dotykowy (gest działa tylko od góry strony, czytnik ekranu nie zrobi gestu). Hook
+`useRefreshButton`: pokazuj, gdy `display-mode: standalone`, `navigator.standalone` (Safari),
+`pointer: coarse` albo `maxTouchPoints > 0`; bez `matchMedia` — pokazuj (bezpieczna strona).
+**Decyzja raz, przy montowaniu, bez nasłuchu zmian mediów** — pierwsza wersja nasłuchiwała i przycisk
+znikał w strażniku podczas zrzutu całej strony (Chromium chwilowo przelicza metryki urządzenia,
+`pointer: coarse` przełączało się na klatkę, nasłuch chował przycisk tuż przed przechwyceniem);
+realny użytkownik mógłby to zobaczyć jako miganie przy zmianie okna. Ekran błędu w `main.tsx`
+zachowuje przycisk zawsze (test źródłowy `refreshButtonWiring`). Sześć wzorców pulpitu przepisanych,
+dwanaście scen telefonu bez zmian.
+
 **Adres z hashem zostaje — decyzja właściciela (06.09.2026).** Prawdziwa ścieżka `/badanie/` jest
 wykonalna (drugi plik wejściowy Vite + wyjątek `navigateFallbackDenylist` w service workerze, bo
 zainstalowana aplikacja przechwyciłaby nawigację i podała główny ekran), ale nie jest potrzebna.

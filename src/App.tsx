@@ -15,6 +15,7 @@ import NotificationBanner from './components/NotificationBanner';
 import OfflineIndicator from './components/OfflineIndicator';
 import InstallButton from './components/InstallButton';
 import { RefreshIcon } from './components/icons';
+import { useRefreshButton } from './hooks/useRefreshButton';
 import { usePSEData } from './hooks/usePSEData';
 import { useKseDemand } from './hooks/useKseDemand';
 import { useCompass } from './hooks/useCompass';
@@ -96,6 +97,9 @@ function App() {
   const { summary, refresh: refreshSummary } = useSummary(now);
 
   /** Asking for fresh data means all of it, not only the figures. */
+  // Hidden in a plain desktop browser, where F5 does the same — see the hook.
+  const showRefreshButton = useRefreshButton();
+
   const refreshAll = useCallback(async () => {
     refreshSummary();
     refreshCompass();
@@ -479,15 +483,17 @@ function App() {
             className="mx-3 mt-3 space-y-2 xl:col-start-2 xl:row-start-3 xl:self-start min-[110rem]:col-start-3 min-[110rem]:row-start-2"
             style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
           >
-            <button
-              type="button"
-              onClick={refreshAll}
-              disabled={isLoading}
-              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface px-4 text-[0.9375rem] font-medium text-accent-text shadow-sm active:opacity-70 disabled:opacity-50"
-            >
-              <RefreshIcon className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-              {isLoading ? 'Odświeżanie…' : 'Odśwież'}
-            </button>
+            {showRefreshButton && (
+              <button
+                type="button"
+                onClick={refreshAll}
+                disabled={isLoading}
+                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface px-4 text-[0.9375rem] font-medium text-accent-text shadow-sm active:opacity-70 disabled:opacity-50"
+              >
+                <RefreshIcon className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                {isLoading ? 'Odświeżanie…' : 'Odśwież'}
+              </button>
+            )}
 
             <InstallButton
               installableState={installableState}
