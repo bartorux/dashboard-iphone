@@ -113,9 +113,19 @@ export async function fetchPSEData(
   // Fallback: newest rows first. Without $orderby the API serves its oldest
   // records (June 2024), which all fall outside the window and render as an
   // empty chart.
+  //
+  // Bounded above by the same `to` as the filtered query, and that bound is not
+  // belt-and-braces: PSE's own feed carries rows dated years ahead (measured
+  // 08.09.2026 — 200 rows for 2031-08-24…2031-09-01, published 02.09), and
+  // "newest first" without a ceiling means those come back FIRST. The fallback
+  // then returned 200 rows of 2031, which render as an empty chart just the
+  // same — and, because the hourly job archives whatever it is handed, wrote
+  // 2031 into the record the whole call-period study is built on. One bound
+  // fixes both: the fallback now means "the newest rows that could plausibly
+  // be about today".
   const latest = await query<PSERawItem>(
     API_URL,
-    `$select=${fields}&$orderby=${encodeURIComponent(
+    `$filter=${encodeURIComponent(`plan_dtime le '${to}'`)}&$select=${fields}&$orderby=${encodeURIComponent(
       'plan_dtime desc'
     )}&$first=200`
   );

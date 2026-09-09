@@ -55,6 +55,25 @@ describe('fetchPSEData', () => {
     expect(url).toContain('$orderby=plan_dtime desc');
   });
 
+  it('caps the fallback at the same upper bound as the filtered query', async () => {
+    // Measured 08.09.2026: PSE serves rows dated 2031, and "newest first"
+    // without a ceiling puts THOSE first — 200 of them, which the hourly job
+    // then archived. The ceiling is what makes "newest" mean "about today".
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({}) })
+      .mockResolvedValueOnce(ok([{ plan_dtime: 'x' }]));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await fetchPSEData();
+
+    const filtered = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
+    const fallback = decodeURIComponent(String(fetchMock.mock.calls[1][0]));
+    const bound = /plan_dtime le '([^']+)'/.exec(filtered)?.[1];
+    expect(bound).toBeTruthy();
+    expect(fallback).toContain(`plan_dtime le '${bound}'`);
+  });
+
   it('uses the fallback when the network throws', async () => {
     const fetchMock = vi
       .fn()
