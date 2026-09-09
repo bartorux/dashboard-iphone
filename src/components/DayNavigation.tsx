@@ -22,9 +22,11 @@ interface DayNavigationProps {
  * max-width and the pair would end up the same distance apart, just at the other
  * end.
  *
- * The width stays at 34rem, matching the view switcher inside the card below to
- * the pixel. Five segments divide it into 108px each against the 47px a label
- * needs, so widening it would buy nothing and break the alignment.
+ * The width is AT MOST 34rem, matching the view switcher inside the card below
+ * to the pixel, and shrinks with the column: a fixed 34rem overflowed into the
+ * margin card once the third column arrived at 1536px, where the chart column
+ * is narrower than 34rem. Five segments divide 34rem into 108px each against
+ * the 47px a label needs, so widening it would buy nothing.
  */
 const DayNavigation: React.FC<DayNavigationProps> = ({
   offsets,
@@ -37,7 +39,7 @@ const DayNavigation: React.FC<DayNavigationProps> = ({
       value={currentDay}
       onChange={onSwitchDay}
       segments={offsets.map((offset) => ({ value: offset, ...dayTab(offset) }))}
-      className="xl:w-[34rem]"
+      className="xl:w-full xl:max-w-[34rem]"
     />
   </div>
 );

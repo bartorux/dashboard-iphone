@@ -375,7 +375,7 @@ function App() {
           .chart-box-h by eye if that value ever changes again.
         */}
         {/*
-          And a third column above 110rem (1760px).
+          And a third column from 96rem (1536px) up.
 
           The two-column split above is the line between what follows the
           selected day and what does not. On a 24-inch monitor the right-hand
@@ -387,11 +387,12 @@ function App() {
           spread, and the controls). Nothing crosses between columns, so a
           reader who has learned where a figure lives keeps finding it there.
 
-          Below 110rem not a single class here applies — the two-column layout
-          is untouched, and a 1536px laptop cannot reach this breakpoint. See
-          the matching .content-width block in App.css for why 110/120rem.
+          Below 96rem not a single class here applies — the two-column layout
+          is untouched. 96rem, not the original 110rem: a 16-inch MacBook is
+          1728px and never reached 1760. See the matching .content-width block
+          in App.css for the history and for why the cap is 120rem.
         */}
-        <div className="xl:grid xl:grid-cols-[minmax(0,calc(52vh*1.6))_28rem] xl:grid-rows-[auto_auto_1fr] xl:items-start xl:justify-center xl:gap-4 min-[110rem]:grid-cols-[minmax(0,calc(52vh*1.6))_minmax(24rem,30rem)_minmax(24rem,30rem)]">
+        <div className="xl:grid xl:grid-cols-[minmax(0,calc(52vh*1.6))_28rem] xl:grid-rows-[auto_auto_1fr] xl:items-start xl:justify-center xl:gap-4 min-[96rem]:grid-cols-[minmax(0,calc(52vh*1.6))_minmax(24rem,30rem)_minmax(24rem,30rem)]">
           <div className="xl:col-start-2 xl:row-start-1">
             {/* The figure people open the app for comes first; the prose explains
                 it afterwards. Both stay above the day tabs. */}
@@ -451,7 +452,7 @@ function App() {
           {/* Its own cell rather than part of the chart column: the tiles are
               small, and on a monitor they fill the space under the analysis that
               would otherwise sit empty beside a tall chart. */}
-          <div className="xl:col-start-2 xl:row-start-2 min-[110rem]:col-start-3 min-[110rem]:row-start-1">
+          <div className="xl:col-start-2 xl:row-start-2 min-[96rem]:col-start-3 min-[96rem]:row-start-1">
             {/*
               Today only, always — never the selected day. pdgobpkd (the
               source behind kseDemand) is published for the current business
@@ -475,7 +476,7 @@ function App() {
           {/* Under the right-hand column, where a full-width refresh button
               across a 24-inch monitor would be absurd. */}
           <div
-            className="mx-3 mt-3 space-y-2 xl:col-start-2 xl:row-start-3 xl:self-start min-[110rem]:col-start-3 min-[110rem]:row-start-2"
+            className="mx-3 mt-3 space-y-2 xl:col-start-2 xl:row-start-3 xl:self-start min-[96rem]:col-start-3 min-[96rem]:row-start-2"
             style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
           >
             <button

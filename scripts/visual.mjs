@@ -91,6 +91,10 @@ const SCENARIOS = [
   // splits into two columns, and nothing else in this list can see that — every
   // other scenario runs at 393px, where those rules do not exist.
   { name: 'monitor-light', scheme: 'light', monitor: true },
+  // A 16-inch laptop: the narrowest window that gets three columns since the
+  // breakpoint moved to 96rem. This is where the fixed-width day tabs once
+  // overflowed into the margin card, and nothing at 393px or 1920px can see it.
+  { name: 'laptop-light', scheme: 'light', laptop: true },
   { name: 'monitor-dark', scheme: 'dark', monitor: true },
   { name: 'monitor-settings', scheme: 'light', monitor: true, settings: true },
   // The current hour being itself an alert hour: the two vertical rules land on
@@ -141,6 +145,13 @@ const MONITOR = {
   hasTouch: false,
 };
 
+/** A 16-inch MacBook window, maximised: 1728 CSS px would also do, 1536 is the edge. */
+const LAPTOP = {
+  viewport: { width: 1536, height: 982 },
+  isMobile: false,
+  hasTouch: false,
+};
+
 mkdirSync(baselineDir, { recursive: true });
 if (existsSync(diffDir)) rmSync(diffDir, { recursive: true });
 mkdirSync(diffDir, { recursive: true });
@@ -162,7 +173,7 @@ let written = 0;
 
 for (const scenario of SCENARIOS) {
   const context = await browser.newContext({
-    ...(scenario.monitor ? MONITOR : devices['iPhone 15 Pro']),
+    ...(scenario.laptop ? LAPTOP : scenario.monitor ? MONITOR : devices['iPhone 15 Pro']),
     // Baselines are stored at 1x: layout regressions show up identically while
     // the committed PNGs stay a fraction of the size of 3x captures.
     deviceScaleFactor: 1,

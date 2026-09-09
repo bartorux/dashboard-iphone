@@ -150,7 +150,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
         value={view}
         onChange={setView}
         segments={VIEWS.map(({ value, label }) => ({ value, label }))}
-        className="mb-2 xl:w-[34rem]"
+        className="mb-2 xl:w-full xl:max-w-[34rem]"
       />
 
       {/* key={branch}: identity of the branch, never the data — see above. */}
