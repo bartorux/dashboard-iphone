@@ -103,6 +103,27 @@ W tej samej gałęzi leżą jeszcze dwie formy odrzucone świadomie: **tabela** 
 monitorze, ale gubi miękkie tło w tonie ciężkości, więc zła doba czyta się spokojniej niż jest)
 i **stan sprzed zmiany** (`w1`). Wszystkie cztery przełącza atrybut `data-alerty` na `<html>`.
 
+**Wyjęte 09.09.2026 (v3.79.0) — sama oś, wyrównana.** Właściciel wybrał wariant „oś nad obecną
+listą": do dzisiejszego bloku alertów doszedł 24-godzinny pasek, a lista, Kompas, zdanie o saldzie
+i etykiety marginesu zostały nietknięte. Blok „najostrzejsze okno" i przebudowa listy z prototypu
+**nie** weszły.
+
+Warunek wyjęcia okazał się większy, niż zapisano wtedy. Zmierzone przed zmianą na telefonie: pole
+wykresu zaczynało się **68 px** od krawędzi ekranu w widoku Rezerwa i **81 px** w Generacji — 13 px
+różnicy między dwoma widokami tej samej karty, do tego zmienne z dnia na dzień, bo `axisWidthFor`
+liczyło szerokość osi z długości najdłuższej etykiety bieżącej doby (myślnik kosztuje tyle co cyfra).
+Tor alertów zaczynał się na 28 px. Naprawa: `axisWidthFor()` liczy dla **stałej maksymalnej długości
+6 znaków** (`"-1 000"`, `"25 000"` — siedmioznakowe nie występuje w danych PSE), a `dayAxisInset()`
+w `chart/shared.tsx` jest jedynym źródłem prawdy o odsunięciu dla obu kart; wypełnienia kart
+(`p-3` wykres, `p-4` alerty) siedzą tam jako nazwane stałe, pilnowane testem źródłowym
+`src/__tests__/dayAxisAlignment.test.ts` — zmiana wypełnienia którejkolwiek karty psuje test zamiast
+po cichu rozjeżdżać podziałki. Po zmianie zmierzone: **81 px i 359 px w obu widokach, tor identycznie**.
+
+Skutek uboczny, sam w sobie dobry: wykres przestał **skakać w poziomie** przy zmianie doby.
+
+Świadomie zostawione: podziałki mają różny rytm — wykres opisuje co 4 godziny, pasek co 6, żeby
+domknąć dobę liczbą 24. Decyzja właściciela po obejrzeniu zrzutu.
+
 **Sprostowanie do akapitu wyżej (05.09.2026).** Tego samego dnia, kilka commitów po zapisaniu tamtej
 notatki, blok alertów przebudowano na wariant **w4** („lista dociśnięta": godziny i margines w jednej
 linii, wyrównane w kolumny; `6eebb4d`, tag `v3.65.0`), a mechanizm przełączania wariantów
