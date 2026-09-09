@@ -182,6 +182,63 @@ export function hourTicks(keys: string[]): string[] {
 export const shortHour = (value: string) => value.slice(0, -3);
 
 /**
+ * Appends a 25th row keyed "24:00" so a day of 24 hourly rows produces 24
+ * gaps across the plot instead of 23.
+ *
+ * Recharts places the first category at the plot's left edge and the last
+ * at its right edge, spreading the (n - 1) gaps between them evenly. With
+ * the raw 24 hours ("00:00".."23:00") that puts hour h at h/23 of the
+ * width, not h/24 — the chart was quietly saying the day ends at 23:00.
+ * Measured on the deployed app: 12.087px per hour on the chart against
+ * 11.583px on the alert panel's day-axis track, a gap that grew with the
+ * hour and peaked at 9.6px around 19:00, exactly where the alerts sit. A
+ * 25th, closing category fixes the arithmetic without changing what is
+ * plotted: hour h then lands at h/24 of the width, matching the day-axis
+ * track, which divides its own width by 24 because it has to fit the
+ * 23:00-24:00 hour completely rather than stopping at its start.
+ *
+ * The closing row copies every field from the real 23:00 row, because that
+ * row IS the 23:00-24:00 reading: a curve that stopped at the 23:00 point
+ * broke off 12px before the edge instead of running that last hour's block
+ * out to where it actually ends. `overrides` lets a caller blank out fields
+ * that mark a single, discrete hour — an alert dot, say — so the copy does
+ * not repaint that mark a second time at the new edge; continuous fields
+ * (the lines, bands and fills the reader is meant to see reach the edge)
+ * are left alone.
+ *
+ * Only ever feeds the plot's `data` prop. Everything else that reads a
+ * day's rows — the hour table, tooltips' own row list, the Y-axis scale,
+ * curtailment counts — keeps using the 24-row list this returns 25 from,
+ * so the synthetic hour cannot leak into a place that states it as real.
+ *
+ * An empty day (no rows at all) has no 23:00 row to extend, so it stays
+ * empty rather than manufacturing one from nothing.
+ */
+export function withDayEnd<T extends { key: string }>(
+  rows: readonly T[],
+  overrides: Partial<T> = {}
+): T[] {
+  if (rows.length === 0) return [];
+  const last = rows[rows.length - 1];
+  return [...rows, { ...last, ...overrides, key: '24:00' } as T];
+}
+
+/**
+ * The hour a tooltip should announce for a hovered row.
+ *
+ * The closing "24:00" row from `withDayEnd` exists only to give a chart a
+ * right edge to draw to — it is not a real hour. Left alone, hovering the
+ * sliver of plot between the real 23:00 point and that edge would open a
+ * tooltip captioned "24:00", a fourth hour nobody's data ever had. This
+ * reports it as 23:00 instead: the same block the real 23:00 row already
+ * describes, described the same way, so the two are indistinguishable to
+ * whoever is scrubbing across them.
+ */
+export function tooltipHourKey(rowKey: string): string {
+  return rowKey === '24:00' ? '23:00' : rowKey;
+}
+
+/**
  * Chart height.
  *
  * The ceiling has to rise with the width or the curve flattens into a strip:

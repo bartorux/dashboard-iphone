@@ -20,6 +20,18 @@ import { makePoint } from '../../test/factories';
 import { RedispatchHour } from '../../utils/redispatch';
 import { HOUR_MS } from '../../utils/constants';
 import { formatMW } from '../../utils/format';
+import { niceScaleRange } from '../../utils/scale';
+import { axisWidthFor, CHART_MARGIN } from '../chart/shared';
+
+/**
+ * The x-coordinate of every data point Recharts placed along a "monotone"
+ * line curve — see the identical helper's comment in reserveChart.test.tsx.
+ */
+const curvePointsX = (d: string): number[] =>
+  (d.match(/[MC][^MC]*/g) ?? []).map((command) => {
+    const numbers = command.slice(1).split(',').map(Number);
+    return numbers[numbers.length - 2];
+  });
 
 const pad = (h: number) => String(h).padStart(2, '0');
 
@@ -295,5 +307,109 @@ describe('redispatchForPoint — the join', () => {
   it('is null, not zero, when the map has no bucket at all for this hour (data not loaded / no such day)', () => {
     expect(redispatchForPoint(point, undefined)).toEqual({ pvRed: null, windRed: null });
     expect(redispatchForPoint(point, new Map())).toEqual({ pvRed: null, windRed: null });
+  });
+});
+
+describe('GenerationChart — doba pełna na osi (h/24, nie h/23)', () => {
+  /*
+   * Same fix, same test as reserveChart.test.tsx's identically-named
+   * describe block — see that file for the measured 12.087px vs 11.583px
+   * bug this closes. Reads the demand line's actual drawn points rather
+   * than trusting the source change to have worked.
+   */
+  it('spaces the 24 real hours across 24 equal steps, not 23', () => {
+    const { container } = render(<GenerationChart data={day} currentHourLabel={null} />);
+    const curves = [...container.querySelectorAll('.recharts-line-curve')];
+    // Source order: pvSeam casing, pvSeam edge, exchange, generation casing,
+    // generation edge, demand casing, demand edge — demand edge is last.
+    const demandCurve = curves[curves.length - 1];
+    const xs = curvePointsX(demandCurve.getAttribute('d') ?? '');
+
+    expect(xs).toHaveLength(25); // 24 real hours + the closing 24:00 row
+
+    const gaps = xs.slice(1).map((x, i) => x - xs[i]);
+    for (const gap of gaps) expect(gap).toBeCloseTo(gaps[0], 5);
+
+    const left = axisWidthFor();
+    const right = 800 - CHART_MARGIN.right;
+    expect(gaps[0]).toBeCloseTo((right - left) / 24, 5);
+  });
+
+  it('keeps exactly the six axis ticks — the closing row never becomes a seventh', () => {
+    const { container } = render(<GenerationChart data={day} currentHourLabel={null} />);
+    const ticks = container.querySelectorAll(
+      '.recharts-xAxis .recharts-cartesian-axis-tick'
+    );
+    expect(ticks).toHaveLength(6);
+  });
+
+  it('lists exactly 24 hours in the table, and never "24:00"', () => {
+    localStorage.clear();
+    const { getByRole, container } = render(
+      <GenerationChart data={day} currentHourLabel={null} />
+    );
+    fireEvent.click(getByRole('button', { name: 'Tabela godzinowa' }));
+    const table = container.querySelector('table')!;
+    const bodyRows = within(table).getAllByRole('row').slice(1); // drop the header row
+
+    expect(bodyRows).toHaveLength(24);
+    // "23:00–24:00" legitimately contains "24:00" as the block's end — only
+    // a ROW whose hour column starts with "24:00" would mean the synthetic
+    // row leaked in.
+    expect(within(table).queryByText(/^24:00/)).toBeNull();
+  });
+
+  /*
+   * Hovering the sliver of plot between the real 23:00 point and the new
+   * right edge resolves to the closing row. Without `tooltipHourKey`, that
+   * would caption the tooltip "24:00" — a fourth hour nobody's data has.
+   */
+  it('announces the closing row\'s tooltip as 23:00, identical to the real 23:00 row', () => {
+    const realRow = {
+      key: '23:00',
+      endLabel: '24:00',
+      demand: 14000,
+      pv: 3000,
+      wind: 2000,
+      outages: 2500,
+      exchange: -500,
+      generation: 14500,
+      pvRed: 0,
+      windRed: 0,
+      kseDemand: null,
+    };
+    const closingRow = { ...realRow, key: '24:00' };
+
+    const { container: real } = render(
+      <GenerationTooltip active payload={[{ payload: realRow } as never]} label={realRow.key} />
+    );
+    const { container: closing } = render(
+      <GenerationTooltip
+        active
+        payload={[{ payload: closingRow } as never]}
+        label={closingRow.key}
+      />
+    );
+
+    expect(closing.textContent).toBe(real.textContent);
+    expect(closing.textContent).toContain('23:00–24:00');
+    expect(closing.textContent).not.toContain('24:00–24:00');
+  });
+
+  /*
+   * The Y-axis domain is computed from the 24 real rows, never the 25-row
+   * `chartRows` — see the component's own comment. Because the closing row
+   * is always a plain copy of 23:00's values, feeding it into the scale
+   * calculation too could never actually change the domain here; this pins
+   * the axis to the same reading as before the closing row existed.
+   */
+  it('keeps the Y-axis scale exactly as it was before the closing row existed', () => {
+    const { container } = render(<GenerationChart data={day} currentHourLabel={null} />);
+    const gridLines = container.querySelectorAll('.recharts-cartesian-grid line');
+
+    // `day`'s fixture: demand 14000, generation 14500, pv+wind 5000,
+    // exchange -500, no curtailment.
+    const expected = niceScaleRange(-500, 14500);
+    expect(gridLines).toHaveLength(expected.ticks.length);
   });
 });

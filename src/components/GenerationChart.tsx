@@ -31,8 +31,10 @@ import {
   formatMW,
   hourTicks,
   shortHour,
+  tooltipHourKey,
   useDismissibleTooltip,
   useAnimateOnDataChange,
+  withDayEnd,
 } from './chart/shared';
 import HourTable, { HourColumn } from './chart/HourTable';
 
@@ -146,7 +148,7 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
   if (row.demand === null) {
     return (
       <ChartTooltipBox>
-        <div className="font-semibold text-text">{String(label)}</div>
+        <div className="font-semibold text-text">{tooltipHourKey(row.key)}</div>
         <div className="text-text-tertiary">Brak danych</div>
       </ChartTooltipBox>
     );
@@ -181,7 +183,11 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
   return (
     <ChartTooltipBox>
       <div className="mb-1 font-semibold text-text">
-        {String(label)}&ndash;{row.endLabel}
+        {/* The closing 24:00 row (see withDayEnd) reports as 23:00 here, so
+            hovering the plot's last sliver reads exactly like hovering the
+            real 23:00 point instead of naming a fourth hour that never
+            existed in the data. */}
+        {tooltipHourKey(row.key)}&ndash;{row.endLabel}
       </div>
       <dl className="space-y-0.5">
         {/* Totals and grid figures kept apart, no percentage across them: PV
@@ -355,6 +361,15 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
 
   const ticks = useMemo(() => hourTicks(rows.map((row) => row.key)), [rows]);
 
+  /*
+   * The plot's own data prop, and the ONLY place the closing 24:00 row is
+   * allowed to appear — see `withDayEnd`. No overrides: nothing on this
+   * view marks a single discrete hour the way the reserve view's alert dots
+   * do, so a plain copy of the 23:00 row is exactly what should sit at the
+   * new right edge.
+   */
+  const chartRows = useMemo(() => withDayEnd(rows), [rows]);
+
   if (rows.every((row) => row.demand === null)) {
     return (
       <div className={`${CHART_BOX} grid place-items-center text-[0.8125rem] text-text-tertiary`}>
@@ -441,7 +456,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
       <figure className="m-0">
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={rows} margin={CHART_MARGIN}>
+          <ComposedChart data={chartRows} margin={CHART_MARGIN}>
             {/* Solid, not dashed. Three of the four things drawn on this plot
                 now carry a stroke pattern that means something — solid demand,
                 dashed generation, dotted exchange — and a dashed grid behind

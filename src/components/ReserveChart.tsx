@@ -31,7 +31,9 @@ import {
   formatMW,
   hourTicks,
   shortHour,
+  tooltipHourKey,
   useDismissibleTooltip,
+  withDayEnd,
 } from './chart/shared';
 import HourTable, { HourColumn } from './chart/HourTable';
 
@@ -82,7 +84,7 @@ export const ReserveTooltip: React.FC<TooltipProps> = ({
   if (row.reserve === null || row.required === null) {
     return (
       <ChartTooltipBox>
-        <div className="font-semibold text-text">{String(label)}</div>
+        <div className="font-semibold text-text">{tooltipHourKey(row.key)}</div>
         <div className="text-text-tertiary">Brak danych</div>
       </ChartTooltipBox>
     );
@@ -95,7 +97,11 @@ export const ReserveTooltip: React.FC<TooltipProps> = ({
     <ChartTooltipBox>
       <div className="mb-1 flex items-baseline justify-between gap-3">
         <span className="font-semibold text-text">
-          {String(label)}&ndash;{row.endLabel}
+          {/* The closing 24:00 row (see withDayEnd) reports as 23:00 here,
+              so hovering the last sliver of plot reads exactly like
+              hovering the real 23:00 point instead of naming a fourth
+              hour nobody's data has. */}
+          {tooltipHourKey(row.key)}&ndash;{row.endLabel}
         </span>
         <span className={`text-[0.6875rem] font-semibold ${STATUS_TEXT[status]}`}>
           {marginLabel(status, margin)}
@@ -258,6 +264,15 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
   const ticks = useMemo(() => hourTicks(rows.map((row) => row.key)), [rows]);
 
   /*
+   * The plot's own data prop, and the ONLY place the closing 24:00 row is
+   * allowed to appear — see `withDayEnd`. `alert: null` on the closing row
+   * because it is a straight copy of the 23:00 row otherwise: without the
+   * override, an alert hour at 23:00 would paint its dot twice, once on the
+   * real point and once on the synthetic one at the new right edge.
+   */
+  const chartRows = useMemo(() => withDayEnd(rows, { alert: null }), [rows]);
+
+  /*
    * An SVG gradient is addressed by a document-wide id, and a hard-coded one is
    * a collision waiting for the day a second chart mounts beside this one —
    * `url(#…)` resolves to whichever definition the document happens to hold, and
@@ -322,7 +337,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
       <figure className="m-0">
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={rows} margin={CHART_MARGIN}>
+          <ComposedChart data={chartRows} margin={CHART_MARGIN}>
             {/* Solid, not dashed - the same move the generation view already
                 made. This plot draws two SIGNIFICANT dashed lines of its own,
                 the required-reserve curve and the regulatory threshold at
