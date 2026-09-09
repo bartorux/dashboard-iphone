@@ -21,6 +21,8 @@ import React from 'react';
 import ReserveChart, { ReserveTooltip } from '../ReserveChart';
 import { makePoint } from '../../test/factories';
 import { formatMW } from '../../utils/format';
+import { niceScale } from '../../utils/scale';
+import { axisWidthFor, CHART_MARGIN } from '../chart/shared';
 
 const pad = (h: number) => String(h).padStart(2, '0');
 
@@ -55,6 +57,19 @@ const alertDots = (container: HTMLElement) => [
 const referenceLines = (container: HTMLElement) => [
   ...container.querySelectorAll('.recharts-reference-line line'),
 ];
+
+/**
+ * The x-coordinate of every data point Recharts placed along a "monotone"
+ * line curve. The path is one initial `M x,y` followed by one `C
+ * cx,cy,cx,cy,x,y` cubic per subsequent point; the endpoint of each cubic —
+ * the last of its three coordinate pairs — is where that data point actually
+ * landed, the two control points before it are not data.
+ */
+const curvePointsX = (d: string): number[] =>
+  (d.match(/[MC][^MC]*/g) ?? []).map((command) => {
+    const numbers = command.slice(1).split(',').map(Number);
+    return numbers[numbers.length - 2];
+  });
 
 /** Effective alpha of a gradient stop: the token's own alpha × stop-opacity. */
 const stopAlpha = (stop: Element) => {
@@ -333,5 +348,165 @@ describe('ReserveTooltip — słowo obok marginesu (etap 2, naprawa B)', () => {
 
     expect(container.textContent).toContain('Niedobór rezerwy');
     expect(container.textContent).not.toContain('Poniżej progu');
+  });
+});
+
+describe('ReserveChart — doba pełna na osi (h/24, nie h/23)', () => {
+  /*
+   * Measured on the deployed app: the chart put hour h at h/23 of the plot
+   * width (12.087px/hour) while the alert panel's day-axis track put it at
+   * h/24 (11.583px/hour) — a gap that grew to 9.6px by 19:00. `withDayEnd`
+   * appends a 25th, closing row keyed "24:00" so the plot has 24 gaps across
+   * 25 points instead of 23 across 24, landing hour h at h/24 like the alert
+   * track. This test reads the actual pixel positions Recharts drew rather
+   * than trusting the source change to have worked.
+   */
+  it('spaces the 24 real hours across 24 equal steps, not 23', () => {
+    const container = chart(null);
+    const curves = [...container.querySelectorAll('.recharts-line-curve')];
+    // Source order in ReserveChart: alarmTop, warnTop, required, reserve —
+    // reserve is the last Line drawn.
+    const reserveCurve = curves[curves.length - 1];
+    const xs = curvePointsX(reserveCurve.getAttribute('d') ?? '');
+
+    expect(xs).toHaveLength(25); // 24 real hours + the closing 24:00 row
+
+    const gaps = xs.slice(1).map((x, i) => x - xs[i]);
+    for (const gap of gaps) expect(gap).toBeCloseTo(gaps[0], 5);
+
+    const left = axisWidthFor();
+    const right = 800 - CHART_MARGIN.right; // container width fixed to 800 above
+    expect(gaps[0]).toBeCloseTo((right - left) / 24, 5);
+  });
+
+  /*
+   * `hourTicks` only ever sees the 24 real hours (computed off `rows`, not
+   * the 25-row `chartRows` fed to the plot) — see the component's own
+   * comment. A mutation feeding it the closing row too would slip a 7th
+   * tick in, because index 24 is also a multiple of 4.
+   */
+  it('keeps exactly the six axis ticks — the closing row never becomes a seventh', () => {
+    const container = chart(null);
+    const ticks = container.querySelectorAll(
+      '.recharts-xAxis .recharts-cartesian-axis-tick'
+    );
+    expect(ticks).toHaveLength(6);
+  });
+
+  it('lists exactly 24 hours in the table, and never "24:00"', () => {
+    localStorage.clear();
+    const { getByRole, container } = render(
+      <ReserveChart
+        data={day}
+        orangeThreshold={500}
+        redThreshold={300}
+        currentHourLabel={null}
+      />
+    );
+    fireEvent.click(getByRole('button', { name: 'Tabela godzinowa' }));
+    const table = container.querySelector('table')!;
+    const bodyRows = within(table).getAllByRole('row').slice(1); // drop the header row
+
+    expect(bodyRows).toHaveLength(24);
+    // "23:00–24:00" legitimately contains "24:00" as the block's end — only
+    // a ROW whose hour column starts with "24:00" would mean the synthetic
+    // row leaked in.
+    expect(within(table).queryByText(/^24:00/)).toBeNull();
+  });
+
+  /*
+   * Hovering the sliver of plot between the real 23:00 point and the new
+   * right edge resolves to the closing row. Without `tooltipHourKey`, that
+   * would caption the tooltip "24:00" — a fourth hour nobody's data has.
+   */
+  it('announces the closing row\'s tooltip as 23:00, identical to the real 23:00 row', () => {
+    // endLabel "24:00", not the module fixture's wrapped "00:00": that wrap
+    // exists only so `day`'s own hourLabel/endLabel pairs stay distinct
+    // strings for unrelated tests, but a real 23:00 row's block genuinely
+    // ends at 24:00 (see hourLabels() in dataTransform.ts) — which is also
+    // exactly what withDayEnd copies onto the closing row.
+    const realRow = {
+      key: '23:00',
+      endLabel: '24:00',
+      reserve: 5000,
+      required: 1900,
+      alert: null,
+    };
+    const closingRow = { ...realRow, key: '24:00' };
+
+    const { container: real } = render(
+      <ReserveTooltip
+        active
+        payload={[{ payload: realRow } as never]}
+        label={realRow.key}
+        orangeThreshold={500}
+        redThreshold={300}
+      />
+    );
+    const { container: closing } = render(
+      <ReserveTooltip
+        active
+        payload={[{ payload: closingRow } as never]}
+        label={closingRow.key}
+        orangeThreshold={500}
+        redThreshold={300}
+      />
+    );
+
+    expect(closing.textContent).toBe(real.textContent);
+    expect(closing.textContent).toContain('23:00–24:00');
+    expect(closing.textContent).not.toContain('24:00–24:00');
+  });
+
+  /*
+   * The closing row is a straight copy of the 23:00 row, alert flag
+   * included, unless the caller blanks it out — which is exactly what
+   * ReserveChart's `withDayEnd(rows, { alert: null })` call does. Without
+   * that override, an alarm at 23:00 would paint its dot twice: once on the
+   * real point, once again on the synthetic one at the new right edge.
+   */
+  it('does not paint a second alert dot for an alarm at 23:00', () => {
+    // A day with no OTHER alert hour, so the one dot this asserts on cannot
+    // be confused with day[8]/day[9]'s built-in alarm and warn hours.
+    const alarmAtDayEnd = Array.from({ length: 24 }, (_, hour) =>
+      makePoint({
+        businessDate: '2026-08-11',
+        hourLabel: `${pad(hour)}:00`,
+        endLabel: `${pad((hour + 1) % 24)}:00`,
+        reserve: hour === 23 ? 2135 : 5000, // margin 235 < redThreshold 300 → alarm
+        required: 1900,
+      })
+    );
+
+    const container = render(
+      <ReserveChart
+        data={alarmAtDayEnd}
+        orangeThreshold={500}
+        redThreshold={300}
+        currentHourLabel={null}
+      />
+    ).container;
+
+    expect(alertDots(container).map((d) => d.getAttribute('data-alert'))).toEqual([
+      'alarm',
+    ]);
+  });
+
+  /*
+   * The Y-axis domain is computed from the 24 real rows, never the 25-row
+   * `chartRows` — see the component's own comment. Because the closing row
+   * is always a plain copy of 23:00's values, feeding it into the scale
+   * calculation too could never actually change `scale.max` here; this pins
+   * the axis to the same reading as before the closing row existed, so a
+   * future change to what feeds the scale has something concrete to answer
+   * to.
+   */
+  it('keeps the Y-axis scale exactly as it was before the closing row existed', () => {
+    const container = chart(null);
+    const gridLines = container.querySelectorAll('.recharts-cartesian-grid line');
+
+    // day's reserve values top out at 5000 MW (see the module-level fixture).
+    const expected = niceScale(5000);
+    expect(gridLines).toHaveLength(expected.ticks.length);
   });
 });

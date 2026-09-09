@@ -30,7 +30,9 @@ import {
   formatMW,
   hourTicks,
   shortHour,
+  tooltipHourKey,
   useDismissibleTooltip,
+  withDayEnd,
 } from './chart/shared';
 import HourTable, { HourColumn } from './chart/HourTable';
 
@@ -95,7 +97,11 @@ export const HistoryTooltip: React.FC<TooltipProps> = ({ active, payload, label 
   return (
     <ChartTooltipBox>
       <div className="mb-1 flex items-baseline justify-between gap-3">
-        <span className="font-semibold text-text">{String(label)}</span>
+        {/* The closing 24:00 row (see withDayEnd) reports as 23:00 here, so
+            hovering the plot's last sliver reads exactly like hovering the
+            real 23:00 point instead of naming a fourth hour that never
+            existed in the data. */}
+        <span className="font-semibold text-text">{tooltipHourKey(row.key)}</span>
         <span className={`text-[0.6875rem] font-semibold ${STANDING_TONE[standing]}`}>
           {STANDING_LABEL[standing]}
         </span>
@@ -197,6 +203,13 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
 
   const ticks = useMemo(() => hourTicks(rows.map((row) => row.key)), [rows]);
 
+  /*
+   * The plot's own data prop, and the ONLY place the closing 24:00 row is
+   * allowed to appear — see `withDayEnd`. No overrides: nothing on this
+   * view marks a single discrete hour, so a plain copy of the 23:00 row is
+   * exactly what should sit at the new right edge.
+   */
+  const chartRows = useMemo(() => withDayEnd(rows), [rows]);
 
   if (state === 'loading' || state === 'idle') {
     return (
@@ -297,7 +310,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
       <figure className="m-0">
       <div className={CHART_BOX} ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={rows} margin={CHART_MARGIN}>
+          <ComposedChart data={chartRows} margin={CHART_MARGIN}>
             {/* Solid, like the other two views. This was the last dashed grid
                 in the app, and it was dashed on the one chart that already
                 spends its dash budget on data: the median and the zero line

@@ -20,6 +20,18 @@ import HistoryChart, { HistoryTooltip } from '../HistoryChart';
 import { makePoint } from '../../test/factories';
 import { PSEDataPoint } from '../../types';
 import { formatMW } from '../../utils/format';
+import { niceScaleRange } from '../../utils/scale';
+import { axisWidthFor, CHART_MARGIN } from '../chart/shared';
+
+/**
+ * The x-coordinate of every data point Recharts placed along a "monotone"
+ * line curve — see the identical helper's comment in reserveChart.test.tsx.
+ */
+const curvePointsX = (d: string): number[] =>
+  (d.match(/[MC][^MC]*/g) ?? []).map((command) => {
+    const numbers = command.slice(1).split(',').map(Number);
+    return numbers[numbers.length - 2];
+  });
 
 const pad = (h: number) => String(h).padStart(2, '0');
 
@@ -188,5 +200,135 @@ describe('HistoryChart — tabela godzinowa zgadza się z dymkiem', () => {
     expect(row.textContent).toContain(expectedMedian);
     expect(row.textContent).toContain(expectedBandLow);
     expect(row.textContent).toContain(expectedBandHigh);
+  });
+});
+
+describe('HistoryChart — doba pełna na osi (h/24, nie h/23)', () => {
+  /*
+   * Same fix, same test as reserveChart.test.tsx's identically-named
+   * describe block — see that file for the measured 12.087px vs 11.583px
+   * bug this closes. Reads the "today" line's actual drawn points rather
+   * than trusting the source change to have worked.
+   */
+  it('spaces the 24 real hours across 24 equal steps, not 23', () => {
+    const { container } = render(
+      <HistoryChart
+        dayData={todayData}
+        dayLabel="Dziś"
+        days={30}
+        history={thirtyDayHistory}
+        state="ready"
+        onRetry={vi.fn()}
+      />
+    );
+    const curves = [...container.querySelectorAll('.recharts-line-curve')];
+    // Source order: median, then today — today is last.
+    const todayCurve = curves[curves.length - 1];
+    const xs = curvePointsX(todayCurve.getAttribute('d') ?? '');
+
+    expect(xs).toHaveLength(25); // 24 real hours + the closing 24:00 row
+
+    const gaps = xs.slice(1).map((x, i) => x - xs[i]);
+    for (const gap of gaps) expect(gap).toBeCloseTo(gaps[0], 5);
+
+    const left = axisWidthFor();
+    const right = 800 - CHART_MARGIN.right;
+    expect(gaps[0]).toBeCloseTo((right - left) / 24, 5);
+  });
+
+  it('keeps exactly the six axis ticks — the closing row never becomes a seventh', () => {
+    const { container } = render(
+      <HistoryChart
+        dayData={todayData}
+        dayLabel="Dziś"
+        days={30}
+        history={thirtyDayHistory}
+        state="ready"
+        onRetry={vi.fn()}
+      />
+    );
+    const ticks = container.querySelectorAll(
+      '.recharts-xAxis .recharts-cartesian-axis-tick'
+    );
+    expect(ticks).toHaveLength(6);
+  });
+
+  it('lists exactly 24 hours in the table, and never "24:00"', () => {
+    localStorage.clear();
+    const { getByRole, container } = render(
+      <HistoryChart
+        dayData={todayData}
+        dayLabel="Dziś"
+        days={30}
+        history={thirtyDayHistory}
+        state="ready"
+        onRetry={vi.fn()}
+      />
+    );
+    fireEvent.click(getByRole('button', { name: 'Tabela godzinowa' }));
+    const table = container.querySelector('table')!;
+    const bodyRows = within(table).getAllByRole('row').slice(1); // drop the header row
+
+    expect(bodyRows).toHaveLength(24);
+    expect(within(table).queryByText('24:00')).toBeNull();
+  });
+
+  /*
+   * Hovering the sliver of plot between the real 23:00 point and the new
+   * right edge resolves to the closing row. Without `tooltipHourKey`, that
+   * would caption the tooltip "24:00" — a fourth hour nobody's data has.
+   * Unlike Reserve/Generation, this tooltip prints only the hour, with no
+   * end label, so the whole header is expected to read "23:00" either way.
+   */
+  it('announces the closing row\'s tooltip as 23:00, identical to the real 23:00 row', () => {
+    const realRow = {
+      key: '23:00',
+      band: [1000, 1000] as [number, number],
+      median: 1000,
+      today: 1500,
+      samples: 3,
+    };
+    const closingRow = { ...realRow, key: '24:00' };
+
+    const { container: real } = render(
+      <HistoryTooltip active payload={[{ payload: realRow } as never]} label={realRow.key} />
+    );
+    const { container: closing } = render(
+      <HistoryTooltip
+        active
+        payload={[{ payload: closingRow } as never]}
+        label={closingRow.key}
+      />
+    );
+
+    expect(closing.textContent).toBe(real.textContent);
+    expect(closing.textContent).toContain('23:00');
+    expect(closing.textContent).not.toContain('24:00');
+  });
+
+  /*
+   * The Y-axis domain is computed from the 24 real rows, never the 25-row
+   * `chartRows` — see the component's own comment. Because the closing row
+   * is always a plain copy of 23:00's values, feeding it into the scale
+   * calculation too could never actually change the domain here; this pins
+   * the axis to the same reading as before the closing row existed.
+   */
+  it('keeps the Y-axis scale exactly as it was before the closing row existed', () => {
+    const { container } = render(
+      <HistoryChart
+        dayData={todayData}
+        dayLabel="Dziś"
+        days={30}
+        history={thirtyDayHistory}
+        state="ready"
+        onRetry={vi.fn()}
+      />
+    );
+    const gridLines = container.querySelectorAll('.recharts-cartesian-grid line');
+
+    // `thirtyDayHistory`'s band/median run 1000 (hour 00) to 1230 (hour 23);
+    // `todayData`'s margin is a flat 1500.
+    const expected = niceScaleRange(1000, 1500);
+    expect(gridLines).toHaveLength(expected.ticks.length);
   });
 });
