@@ -332,6 +332,27 @@ function formatTightHoursLine(day: DayStudy): string {
   return `Inne godziny z ujemnym marginesem w oknie: ${parts.join(', ')}.`;
 }
 
+/**
+ * "Saldo doszło 08.09 13:15." when this day's own timeline recorded the
+ * moment — `DayStudy.exchangeArrivedAt` — or "Saldo jeszcze nie doszło." when
+ * it has not yet, told apart from "the day never carried a placeholder at
+ * all" by the LAST reading's own exchange, exactly the same test
+ * `ReadingsList` already uses for its "przed saldem" tag. Neither line is
+ * shown for a day with no readings at all, or one whose last reading always
+ * had a real exchange (or none the archive could judge either way) with no
+ * transition on record — there is nothing to report either way.
+ */
+function formatExchangeArrivalLine(day: DayStudy): string | null {
+  if (day.exchangeArrivedAt !== null) {
+    return `Saldo doszło ${formatLocalDateTime(day.exchangeArrivedAt)}.`;
+  }
+  const last = day.readings[day.readings.length - 1];
+  if (last && !readingHasExchange(last[3] ?? null)) {
+    return 'Saldo jeszcze nie doszło.';
+  }
+  return null;
+}
+
 function DayRow({
   day,
   dwellFloorMw,
@@ -348,6 +369,7 @@ function DayRow({
   const rowBold = day.event ? 'font-semibold' : '';
   const rowClass = `${rowMuted} ${rowBold}`.trim();
   const eventCell = eventCellContent(day);
+  const exchangeArrivalLine = formatExchangeArrivalLine(day);
 
   return (
     <>
@@ -403,6 +425,9 @@ function DayRow({
         <tr>
           <td colSpan={12} id={detailsId} className="border-t border-separator px-2">
             <p className="pt-2 text-[0.8125rem] text-text-secondary">{formatTightHoursLine(day)}</p>
+            {exchangeArrivalLine && (
+              <p className="text-[0.8125rem] text-text-secondary">{exchangeArrivalLine}</p>
+            )}
             {day.readings.length === 0 ? (
               <p className="py-2 text-[0.8125rem] text-text-secondary">Brak odczytów.</p>
             ) : (
@@ -875,7 +900,7 @@ function Content({ data }: { data: BadanieFile }) {
       <p className="mt-1 text-[0.8125rem] text-text-secondary">
         Doby od pojutrza nie mają jeszcze salda wymiany — rezerwa liczona bez importu i eksportu,
         po dodaniu planu może się zmienić o kilka gigawatów w obie strony. Saldo dochodzi dzień
-        wcześniej około 13:00.
+        wcześniej, dotąd zawsze między 13:15 a 14:00.
       </p>
       {ahead.length === 0 ? (
         <p className="mt-1 text-[0.8125rem] text-text-secondary">
@@ -960,6 +985,7 @@ export function withObservations(data: BadanieFile): BadanieFile {
       tightHours: Array.isArray(day.tightHours) ? day.tightHours : [],
       readings: Array.isArray(day.readings) ? day.readings : [],
       exchangePlanned: day.exchangePlanned ?? null,
+      exchangeArrivedAt: day.exchangeArrivedAt ?? null,
       // compass.hours added 07.09, same day as the others above — a file one
       // deploy behind has compass.level/extreme but not yet this field.
       compass: { ...day.compass, hours: day.compass?.hours ?? [] },

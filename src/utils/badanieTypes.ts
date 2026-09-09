@@ -148,6 +148,27 @@ export interface DayStudy {
    * here is not yet wrong, only still waiting.
    */
   exchangePlanned: boolean | null;
+  /**
+   * When this day's OWN readings (the `readings` array above) first switched
+   * from PSE's placeholder exchange to a real one — `readAt`, ISO, of that
+   * first real-exchange reading, per `exchangeArrivedAt` in exchangePlan.ts.
+   * `null` covers two different facts the field itself does not distinguish
+   * (the reader tells them apart from the last entry of `readings`, exactly
+   * as `Badanie.tsx`'s "przed saldem" tag already does): either the day had a
+   * real exchange from its very first reading, or it still shows only the
+   * placeholder and nothing has arrived yet.
+   *
+   * WHY a field of its own rather than leaving the reader to scan `readings`:
+   * this is a genuinely new, separate measurement from `exchangePlanned`
+   * above — that one asks "does the CURRENT forecast already carry a plan for
+   * this date", this one asks "did THIS day's own archived timeline ever
+   * record the moment it arrived". A closed day historical to the study can
+   * answer the second question with a firm instant while the first is simply
+   * `null` for it (the current forecast never reaches back that far) — the
+   * two fields measure different things and neither can be derived from the
+   * other.
+   */
+  exchangeArrivedAt: string | null;
 }
 
 export interface BadanieFile {
