@@ -980,6 +980,23 @@
       "headline": "W piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
       "body": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni przez większą część doby. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "W poniedziałek 14 września i wtorek 15 września saldo wymiany nie jest jeszcze zaplanowane, a w pozostałe dni rezerwa zachowuje zmienny poziom i w wybranych godzinach operator ma wybór."
+    },
+    {
+      "at": "2026-09-09T18:45:44.701Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "W piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
+      "body": "Margines na ten dzień wypada poniżej typowego zakresu z ostatnich trzydziestu dni w osiemnastu godzinach. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś między 20:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, ale na ogłoszenie jest już za późno. Jutro między 07:00 a 08:00 oraz między 19:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka trzyma się powyżej progu 1100 MW, a prognoza jeszcze się ustala. W poniedziałek 14 września między 19:00 a 21:00 nadwyżka również utrzymuje się powyżej progu 1100 MW przy braku pokrycia wymaganego poziomu, przy czym rezerwa liczy się bez uwzględnienia salda wymiany transgranicznej. We wtorek 15 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-09T18:45:44.701Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
+      "body": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni przez osiemnaście godzin. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 14 września między 19:00 a 21:00 operator ma wybór, a w pozostałych dniach rezerwa pokrywa wymagany poziom lub nic jej nie zapowiada."
     }
   ]
 }
