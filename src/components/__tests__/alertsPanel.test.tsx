@@ -204,3 +204,105 @@ describe('AlertsPanel — zastrzeżenie o niezaplanowanym saldzie wymiany', () =
     expect(screen.queryByText(EXCHANGE_SENTENCE)).not.toBeInTheDocument();
   });
 });
+
+/**
+ * Extracts the calc(...) percentage a window's bar is positioned/sized with,
+ * tolerant of the exact float formatting JS produces for e.g. 19/24*100.
+ */
+function calcPercent(value: string): number {
+  const match = value.match(/calc\((-?[\d.]+)%/);
+  if (!match) throw new Error(`no calc() percentage in: ${value}`);
+  return parseFloat(match[1]);
+}
+
+describe('AlertsPanel — pasek doby', () => {
+  it('brak okien alertowych: paska nie ma wcale', () => {
+    render(<AlertsPanel ranges={[]} currentDayOffset={0} hasData />);
+    expect(document.querySelector('[data-os-doby]')).not.toBeInTheDocument();
+  });
+
+  it('jedno okno: jeden pasek, aria-hidden na torze, pozycja i szerokość z godzin', () => {
+    render(
+      <AlertsPanel
+        ranges={[alertRange({ severity: 'red', from: '19:00', hours: 2 })]}
+        currentDayOffset={0}
+        hasData
+      />
+    );
+
+    const track = document.querySelector('[data-os-doby]');
+    expect(track).toBeInTheDocument();
+    // Status is already said in the text rows below — the track only adds
+    // WHERE, so a screen reader must not see it as separate content.
+    expect(track).toHaveAttribute('aria-hidden');
+
+    const bars = track!.querySelectorAll('.bg-alarm, .bg-warn');
+    expect(bars).toHaveLength(1);
+
+    const bar = bars[0] as HTMLElement;
+    // 19:00 for 2 hours -> left = 19/24 = 79.17%, width = 2/24 = 8.33%.
+    expect(calcPercent(bar.style.left)).toBeCloseTo(79.17, 1);
+    expect(calcPercent(bar.style.width)).toBeCloseTo(8.33, 1);
+  });
+
+  it('alarm wypełnia cały pasek, uwaga jest wcięta — drugi kanał obok barwy', () => {
+    render(
+      <AlertsPanel
+        ranges={[
+          alertRange({ severity: 'red', from: '08:00', hours: 1 }),
+          alertRange({ severity: 'orange', from: '19:00', hours: 2 }),
+        ]}
+        currentDayOffset={0}
+        hasData
+      />
+    );
+
+    const track = document.querySelector('[data-os-doby]')!;
+    const alarmBar = track.querySelector('.bg-alarm')!;
+    const warnBar = track.querySelector('.bg-warn')!;
+
+    expect(alarmBar.className).toMatch(/\btop-0\b/);
+    expect(alarmBar.className).toMatch(/\bbottom-0\b/);
+    // Inset by 3px on both edges rather than full height — the size cue has
+    // to read as "lighter" than the alarm bar's, not merely a different hue.
+    expect(warnBar.className).toMatch(/top-\[3px\]/);
+    expect(warnBar.className).toMatch(/bottom-\[3px\]/);
+    expect(warnBar.className).not.toMatch(/\btop-0\b/);
+    expect(warnBar.className).not.toMatch(/\bbottom-0\b/);
+  });
+
+  it('dwa okna: dwa paski, jeden na okno', () => {
+    render(
+      <AlertsPanel
+        ranges={[
+          alertRange({ severity: 'orange', from: '06:00', hours: 2 }),
+          alertRange({ severity: 'red', from: '19:00', hours: 2 }),
+        ]}
+        currentDayOffset={0}
+        hasData
+      />
+    );
+
+    const track = document.querySelector('[data-os-doby]')!;
+    expect(track.querySelectorAll('.bg-alarm, .bg-warn')).toHaveLength(2);
+  });
+
+  it('reszta panelu (Kompas, zdanie o saldzie) dalej dziala z paskiem nad lista', () => {
+    // Regression guard: DayAxis sits right under the header and above the
+    // list — it must not disturb the Kompas block or the exchange sentence
+    // rendered further down by the branches above.
+    render(
+      <AlertsPanel
+        ranges={[alertRange()]}
+        currentDayOffset={0}
+        hasData
+        exchangeMissing
+        compassRanges={[compassRange({ from: '12:00', to: '14:00' })]}
+      />
+    );
+
+    expect(document.querySelector('[data-os-doby]')).toBeInTheDocument();
+    expect(screen.getByText(COMPASS_HEADING)).toBeInTheDocument();
+    expect(screen.getByText(EXCHANGE_SENTENCE)).toBeInTheDocument();
+  });
+});

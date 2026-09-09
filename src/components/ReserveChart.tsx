@@ -352,7 +352,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
               tickFormatter={formatMW}
               tickLine={false}
               axisLine={false}
-              width={axisWidthFor(scale.ticks)}
+              width={axisWidthFor()}
             />
 
             {/*

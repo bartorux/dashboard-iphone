@@ -324,7 +324,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
               tickFormatter={formatMW}
               tickLine={false}
               axisLine={false}
-              width={axisWidthFor(scale.ticks)}
+              width={axisWidthFor()}
             />
 
             <Area
