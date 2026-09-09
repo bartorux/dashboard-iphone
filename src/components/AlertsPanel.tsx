@@ -4,6 +4,7 @@ import { CompassRange } from '../utils/compass';
 import { dayLabel } from '../utils/dayWindow';
 import { formatMW, signedMW } from '../utils/format';
 import { marginLabel } from '../utils/status';
+import { ALERTS_CARD_PADDING_PX, dayAxisInset } from './chart/shared';
 import CompassRows from './CompassRows';
 import { AlertIcon, CheckIcon } from './icons';
 import Skeleton from './Skeleton';
@@ -65,6 +66,95 @@ const SEVERITY_STYLE = {
 const SEVERITY_TO_STATUS: Record<AlertRange['severity'], SystemStatus> = {
   red: 'alarm',
   orange: 'warn',
+};
+
+/** "17:00" -> 17. */
+const startHour = (label: string) => parseInt(label, 10) || 0;
+
+/**
+ * 24-hour strip with each alert window drawn at its own hour, directly under
+ * the card's header. Answers a question the list below it does not: WHEN in
+ * the day it gets tight — evening peak or morning trough. Ported from
+ * proto/alerty's `w2` variant (the owner picked this one piece of that
+ * prototype, not the rest of it) — geometry unchanged.
+ *
+ * `aria-hidden` on the whole thing: the status this draws is already said in
+ * the text rows below, in words a screen reader can use, so the axis only
+ * adds WHERE, never WHAT.
+ *
+ * Weight rides a second channel besides colour, so a reader who cannot tell
+ * the two fills apart by hue still reads the shape: alarm fills the track
+ * full height, warning sits inset within it.
+ *
+ * `data-os-doby` carries no value — it exists purely as a hook for measuring
+ * on-screen alignment against the reserve chart's axis by hand, since a unit
+ * test proves the constants agree with each other but not that the browser
+ * actually painted them in the same place.
+ *
+ * Positioned by `dayAxisInset()` minus this card's own padding rather than by
+ * any number written here: that is what makes it land at the same x as the
+ * reserve chart's plot area in the card above (see shared.tsx) regardless of
+ * which of the two cards' padding changes later.
+ */
+const DayAxis: React.FC<{ ranges: AlertRange[] }> = ({ ranges }) => {
+  const inset = dayAxisInset();
+  const trackInset = {
+    marginLeft: Math.max(0, inset.left - ALERTS_CARD_PADDING_PX),
+    marginRight: Math.max(0, inset.right - ALERTS_CARD_PADDING_PX),
+  };
+
+  return (
+    <div aria-hidden data-os-doby="" className="mb-3" style={trackInset}>
+      <div className="relative h-3.5 overflow-hidden rounded-full bg-surface-2">
+        {ranges.map((range) => {
+          const style = SEVERITY_STYLE[range.severity];
+          const from = startHour(range.from);
+          const span = Math.min(range.hours, 24 - from);
+          return (
+            <span
+              key={`${range.severity}-${range.from}`}
+              className={`absolute rounded-full ${style.bar} ${
+                // Weight as a second channel: alarm runs the full height,
+                // warning sits inset — the size cue points the same way as
+                // the colour instead of contradicting it.
+                range.severity === 'red'
+                  ? 'top-0 bottom-0'
+                  : 'top-[3px] bottom-[3px]'
+              }`}
+              style={{
+                // 1px of slack on each side: two touching windows get a
+                // track-coloured gap between them instead of a drawn border.
+                left: `calc(${(from / 24) * 100}% + 1px)`,
+                width: `calc(${(span / 24) * 100}% - 2px)`,
+              }}
+            />
+          );
+        })}
+      </div>
+      <div className="relative mt-1 h-3.5">
+        {[0, 6, 12, 18, 24].map((hour) => (
+          <span
+            key={hour}
+            className="absolute top-0 flex flex-col items-center"
+            style={{
+              left: `${(hour / 24) * 100}%`,
+              transform:
+                hour === 0
+                  ? 'none'
+                  : hour === 24
+                    ? 'translateX(-100%)'
+                    : 'translateX(-50%)',
+            }}
+          >
+            <span className="h-[3px] w-px bg-separator" />
+            <span className="tnum mt-px text-[0.625rem] leading-none text-text-tertiary">
+              {String(hour).padStart(2, '0')}
+            </span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 /**
@@ -138,6 +228,12 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
           </div>
         )}
       </div>
+
+      {/* No windows, no axis: an empty 24-hour strip would say "checked, all
+          quiet" in a register the text branch below already owns (see
+          "Brak alertów w tym dniu") — one axis with nothing on it adds
+          nothing a reader can act on. */}
+      {ranges.length > 0 && <DayAxis ranges={ranges} />}
 
       {/*
         This branch has to come FIRST, before !hasData.
