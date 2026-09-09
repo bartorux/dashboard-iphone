@@ -121,6 +121,19 @@ po cichu rozjeżdżać podziałki. Po zmianie zmierzone: **81 px i 359 px w obu 
 
 Skutek uboczny, sam w sobie dobry: wykres przestał **skakać w poziomie** przy zmianie doby.
 
+**Doba na wykresie miała 23 godziny — poprawione tego samego dnia (v3.80.0).** Wyrównanie krawędzi
+nie wystarczyło: właściciel zauważył, że wewnątrz obu osi ta sama godzina ląduje gdzie indziej.
+Zmierzone: wykres kładł godzinę `h` na `81 + h × 12,087` px, pasek na `81 + h × 11,583`. Rozjazd
+rósł z godziną — 3 px o 06:00, **9,6 px o 19:00**, 11,1 px o 22:00, czyli najbardziej tam, gdzie są
+alerty. Przyczyna: Recharts kładzie pierwszą i ostatnią kategorię na krawędziach pola, więc 24
+godziny (`00:00`…`23:00`) dawały **23 odstępy** na całą szerokość — wykres twierdził, że doba kończy
+się o 23:00, choć ostatni odczyt opisuje blok do północy. Naprawa: `withDayEnd` w `chart/shared.tsx`
+dopisuje 25. wiersz zamykający o kluczu `24:00`, kopiujący wartości z `23:00` (to nie jest wymyślanie
+danych — ta liczba opisuje blok trwający do północy, więc przedłużenie jej płasko przez ten blok jest
+zgodne z jej znaczeniem). Wiersz zamykający jest wykluczony z tabeli godzinowej, z dymka, z podziałki
+osi i z kropek alertów, każde miejsce sprawdzone osobno i przypięte testem. Po zmianie zmierzone
+w przeglądarce: **rozjazd 0 px o 06, 12, 18, 19, 20 i 22**, krok godzinowy 11,583 px na obu osiach.
+
 Świadomie zostawione: podziałki mają różny rytm — wykres opisuje co 4 godziny, pasek co 6, żeby
 domknąć dobę liczbą 24. Decyzja właściciela po obejrzeniu zrzutu.
 
