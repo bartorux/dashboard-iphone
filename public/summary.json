@@ -1,8 +1,8 @@
 {
   "headline": "Dziś między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "W tych godzinach rezerwa przekracza typowy zakres z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 20:00 a 21:00.",
-  "outlook": "Jutro między 20:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, w piątek nadwyżka spada poniżej tego progu między 18:00 a 21:00, a w poniedziałek czternastego września i we wtorek piętnastego września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-09T05:15:41.048Z",
+  "body": "Margines przekracza typowy zakres z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE na tę dobę wskazuje zalecane oszczędzanie między 20:00 a 21:00.",
+  "outlook": "Jutro między 20:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu, a w piątek od 07:00 do 09:00 oraz od 16:00 do 22:00 nadwyżka spada poniżej progu 1100 MW, podczas gdy w poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-09T05:30:53.988Z",
   "dates": [
     "2026-09-09",
     "2026-09-10",
@@ -10,6 +10,6 @@
     "2026-09-14",
     "2026-09-15"
   ],
-  "assessment": "2026-09-09|R|moderate|-800|20:00|0|0|8|moderate:20:00-21:00|K2:20:00-21:00|-;2026-09-10|R|moderate|-100|20:00|1|0|21|moderate:20:00-21:00||-;2026-09-11|R|high|-2900|19:00|0|9|4|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-21:00,moderate:21:00-22:00||X;2026-09-14|R|none|900|20:00|0|0|19|||X;2026-09-15|R|none|1100|07:00|0|0|22|||X#-/below/prognoza pogarsza się#v53",
+  "assessment": "2026-09-09|R|moderate|-800|20:00|0|0|8|moderate:20:00-21:00|K2:20:00-21:00|-;2026-09-10|R|moderate|-100|20:00|1|0|21|moderate:20:00-21:00||-;2026-09-11|R|high|-2900|19:00|0|9|4|high:07:00-08:00,moderate:08:00-09:00,moderate:16:00-17:00,high:17:00-22:00||X;2026-09-14|R|none|900|20:00|0|0|19|||X;2026-09-15|R|none|1200|07:00|0|0|22|||X#-/below/prognoza pogarsza się#v53",
   "model": "gemini-3.5-flash-lite"
 }
