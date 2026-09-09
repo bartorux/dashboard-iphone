@@ -91,9 +91,10 @@ const SCENARIOS = [
   // splits into two columns, and nothing else in this list can see that — every
   // other scenario runs at 393px, where those rules do not exist.
   { name: 'monitor-light', scheme: 'light', monitor: true },
-  // A 16-inch laptop: the narrowest window that gets three columns since the
-  // breakpoint moved to 96rem. This is where the fixed-width day tabs once
-  // overflowed into the margin card, and nothing at 393px or 1920px can see it.
+  // A 16-inch laptop at 1536px: two columns, and the widest window that must
+  // NOT get three (the third starts at 110rem = 1760px). This is where the
+  // fixed-width day tabs once overflowed into the margin card during the 96rem
+  // trial, and nothing at 393px or 1920px can see it.
   { name: 'laptop-light', scheme: 'light', laptop: true },
   { name: 'monitor-dark', scheme: 'dark', monitor: true },
   { name: 'monitor-settings', scheme: 'light', monitor: true, settings: true },

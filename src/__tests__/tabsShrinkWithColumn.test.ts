@@ -21,8 +21,10 @@ describe('tabs shrink with the column', () => {
     expect(source).not.toContain('xl:w-[34rem]');
   });
 
-  it('the third column starts at 96rem, where a 16-inch laptop can reach it', () => {
-    expect(appCss).toContain('@media (min-width: 96rem) {\n  .content-width {\n    max-width: 120rem;');
-    expect(appCss).not.toContain('min-width: 110rem');
+  it('the third column starts at 110rem — 24-inch monitors and up, by the owner\'s decision', () => {
+    // A 96rem trial (09.09.2026) put three columns on a 14-inch screen and was
+    // rejected: "od 24 cali w górę". The number is a decision, so it is pinned.
+    expect(appCss).toContain('@media (min-width: 110rem) {\n  .content-width {\n    max-width: 120rem;');
+    expect(appCss).not.toContain('min-width: 96rem) {\n  .content-width {\n    max-width: 120rem');
   });
 });

@@ -469,17 +469,16 @@
 }
 
 /*
- * A third column, from 96rem up.
+ * A third column, and the only breakpoint above 96rem.
  *
- * 96rem is 1536px. It used to be 110rem (1760px), chosen so that only a 1920px
- * monitor would ever see three columns — and the owner then reported never
- * having hit them on a computer at all: a 14-inch MacBook is 1512px wide, a
- * 16-inch one 1728px, so the old number excluded every laptop there is. Lowered
- * on 09.09.2026 to the same 96rem the two-column cap below already uses; the
- * 16-inch laptop and anything wider gets three columns, the 14-inch stays at
- * two (its chart column would be ~440px). The day tabs and the view switcher
- * shrink with the column now instead of holding a fixed 34rem, which at 1536px
- * overflowed into the margin card — see DayNavigation.
+ * 110rem is 1760px: a 1920px monitor is past it, a 1600px one is not, and no
+ * laptop reaches it (a 14-inch MacBook is 1512px, a 16-inch 1728px). Tried at
+ * 96rem on 09.09.2026 after the owner reported never seeing three columns on a
+ * computer; on a 14-inch screen scaled to "more space" the chart column shrank
+ * to ~450px and the owner's verdict was "od 24 cali w górę" — so 110rem it is,
+ * by decision, not by accident. What that trial did leave behind: the day tabs
+ * and the view switcher shrink with the column instead of holding a fixed
+ * 34rem (see DayNavigation), and the visual guard has a 1536px scene.
  *
  * 120rem, not "none". Uncapping would put the day tabs and the alerts a full
  * 1920px apart from the trends; 120rem is the width at which three columns of
@@ -496,7 +495,7 @@
  * beside a tall chart" problem, not the separate "no scrolling at all"
  * problem.
  */
-@media (min-width: 96rem) {
+@media (min-width: 110rem) {
   .content-width {
     max-width: 120rem;
   }

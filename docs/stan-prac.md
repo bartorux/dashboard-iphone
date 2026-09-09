@@ -324,13 +324,15 @@ prawdą). Rejestr `data/przywolania.json` ma cztery prawdziwe zdarzenia (`real`,
 pierwsza wezwana godzina, zakres w notatce); doby sprzed archiwum prognozy nie mają okna
 decyzyjnego i pojawiają się tylko w stopce podstrony.
 
-**Trzecia kolumna od 1536 px (09.09.2026, v3.76.0).** Właściciel: „tych 3 kolumn na komputerze nie
-trafiłem jeszcze ani razu" — próg 110rem (1760 px) był dobrany pod monitor 1920, a żaden MacBook tam
-nie sięga (14" = 1512 px, 16" = 1728 px). Obniżony do **96rem = 1536 px** (decyzja właściciela; 14"
-zostaje przy dwóch kolumnach, bo kolumna wykresu miałaby ~440 px). Przy okazji wyszła pułapka:
-zakładki dób i widoków miały sztywne 34rem i przy 1536 px nachodziły na kartę marginesu — teraz
-`xl:w-full xl:max-w-[34rem]`, czyli kurczą się z kolumną. Strażnik dostał scenę `laptop-light`
-(1536×982), test źródłowy `tabsShrinkWithColumn` pilnuje klas i progu. Sceny 1920 bez zmian.
+**Trzecia kolumna: próba 1536 px odrzucona, zostaje 1760 px (09.09.2026, v3.76.0 → v3.76.1).**
+Właściciel: „tych 3 kolumn na komputerze nie trafiłem jeszcze ani razu" — próg 110rem (1760 px) był
+dobrany pod monitor 1920, a żaden MacBook tam nie sięga (14" = 1512 px, 16" = 1728 px). Próba z
+96rem (1536 px) na 14" w trybie „więcej miejsca" dała kolumnę wykresu ~450 px; werdykt: „na 14 calach
+słabo to wygląda, od 24 cali w górę" — **110rem wraca jako decyzja**, nie przypadek. Z próby zostały
+dwie rzeczy: zakładki dób i widoków miały sztywne 34rem i przy wąskiej kolumnie nachodziły na kartę
+marginesu — teraz `xl:w-full xl:max-w-[34rem]`, kurczą się z kolumną (błąd niezależny od progu); oraz
+scena strażnika `laptop-light` (1536×982), która pilnuje, że laptop dostaje dwie kolumny bez
+nachodzenia. Test źródłowy `tabsShrinkWithColumn` pinuje klasy i próg 110rem. Sceny 1920 bez zmian.
 
 **Adres z hashem zostaje — decyzja właściciela (06.09.2026).** Prawdziwa ścieżka `/badanie/` jest
 wykonalna (drugi plik wejściowy Vite + wyjątek `navigateFallbackDenylist` w service workerze, bo

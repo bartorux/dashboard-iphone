@@ -23,10 +23,11 @@ interface DayNavigationProps {
  * end.
  *
  * The width is AT MOST 34rem, matching the view switcher inside the card below
- * to the pixel, and shrinks with the column: a fixed 34rem overflowed into the
- * margin card once the third column arrived at 1536px, where the chart column
- * is narrower than 34rem. Five segments divide 34rem into 108px each against
- * the 47px a label needs, so widening it would buy nothing.
+ * to the pixel, and shrinks with the column rather than holding 34rem: during
+ * the 96rem trial of the third column (09.09.2026) a fixed width overflowed
+ * into the margin card, and a control that cannot be narrower than its column
+ * is a latent break at any breakpoint. Five segments divide 34rem into 108px
+ * each against the 47px a label needs, so widening it would buy nothing.
  */
 const DayNavigation: React.FC<DayNavigationProps> = ({
   offsets,
