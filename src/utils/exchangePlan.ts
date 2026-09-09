@@ -12,7 +12,9 @@
  * export day would move the reserve the other way, so no direction is
  * assumed anywhere this helper is used. The exchange for
  * day D arrives on D−1 once the day-ahead market clears, around 13:00 local
- * (seen at 13:19 on 06.09 and 13:59 on 01.09): a jump of 2–3 GW in one write.
+ * (seen at 13:59 on 01.09, 13:19 on 06.09, and 13:15 on 08.09 — the last one
+ * a single reading jumping from 49 to 877 MW of reserve, −12 to 2941 MW of
+ * exchange): a jump of 2–3 GW in one write.
  *
  * "Planned" is decided from the data, never from the clock: a day whose 24
  * hours all share one exchange value has not been planned yet. A real plan
@@ -38,4 +40,48 @@ export const EXCHANGE_PLACEHOLDER_ABS_MW = 15;
 export function readingHasExchange(exchange: number | null | undefined): boolean {
   if (exchange === null || exchange === undefined) return true;
   return Math.abs(exchange) > EXCHANGE_PLACEHOLDER_ABS_MW;
+}
+
+/**
+ * The observed local-time window in which the exchange has arrived so far —
+ * three measurements, all on D−1: 13:59 (01.09→02.09), 13:19 (06.09→07.09),
+ * 13:15 (08.09→09.09). This is an observation of PSE's practice, NOT a rule
+ * out of the regulations: nothing requires the day-ahead market to clear at
+ * any particular minute, and a fourth measurement could easily fall outside
+ * it. Kept here only as a documented, named constant so a caller wanting to
+ * quote "so far always between X and Y" has one place to read the figures
+ * from instead of copying them into prose by hand.
+ */
+export const EXCHANGE_ARRIVAL_OBSERVED_LOCAL = { earliest: '13:15', latest: '13:59' } as const;
+
+/**
+ * The moment a day's readings first show a real exchange after having shown
+ * only the placeholder — i.e. `readAt` of the first reading, in a series
+ * ordered oldest first, that `readingHasExchange` AND that is preceded
+ * somewhere earlier in the series by a reading that did not.
+ *
+ * `null` in two different situations that this function deliberately does not
+ * tell apart (the caller does, from the day's own last reading — see
+ * `readingHasExchange` on it): the day had a real exchange from its very
+ * first reading (nothing ever arrived, because there was nothing to wait
+ * for), or the day still shows only the placeholder and the transition has
+ * not happened yet (nothing arrived YET). Both read as "no arrival moment to
+ * report" from this function's own point of view — it only ever answers "when
+ * did it change", never "has it changed".
+ *
+ * See `EXCHANGE_ARRIVAL_OBSERVED_LOCAL` for what "arrives" has meant in
+ * practice so far.
+ */
+export function exchangeArrivedAt(
+  readings: ReadonlyArray<{ readAt: string; exchange: number | null }>
+): string | null {
+  let sawPlaceholder = false;
+  for (const reading of readings) {
+    if (readingHasExchange(reading.exchange)) {
+      if (sawPlaceholder) return reading.readAt;
+    } else {
+      sawPlaceholder = true;
+    }
+  }
+  return null;
 }

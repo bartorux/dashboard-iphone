@@ -10,7 +10,7 @@ import type {
 } from './badanieTypes';
 import { NOTICE_HOURS } from './callPeriod';
 import { CALL_PERIOD_EXEMPTION_MW, HOUR_MS } from './constants';
-import { exchangePlanned, readingHasExchange } from './exchangePlan';
+import { exchangeArrivedAt, exchangePlanned, readingHasExchange } from './exchangePlan';
 
 /**
  * Retrospective study: what this tool's own archive said, by the regulatory
@@ -51,6 +51,48 @@ const AUTO_HOUR_FIRST = 7;
 const AUTO_HOUR_LAST = 21;
 
 const BUSINESS_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * How far a `businessDate` may sit from `now`, in either direction, before
+ * this study refuses to treat it as a real day rather than archive noise.
+ *
+ * Measured need, not a guess: on 09.09.2026 `data/badanie.json` held 28 days,
+ * 9 of them dated in 2031 — PSE published rows carrying that businessDate on
+ * 08.09.2026, and the archive wrote them down verbatim, which alone doubled
+ * the "Przed nami" table (16 rows shown, 9 of them uninterpretable 2031
+ * dates) with nothing a reader could act on. Same two figures the write side
+ * uses when it sanity-checks a row before archiving it — enforced again here,
+ * independently, so a stray line already sitting in the archive (written
+ * before that check existed, or by some other path entirely) still cannot
+ * surface on this page. 14 days ahead comfortably covers every open window
+ * this study ever produces (`readAt`/deadline never look further out than the
+ * day-ahead plan itself); 40 days back is generous enough for a slow-to-close
+ * decision window while still rejecting anything that is not, in any
+ * plausible sense, "this study's near past or near future".
+ */
+const STUDY_DAY_MAX_AHEAD_DAYS = 14;
+const STUDY_DAY_MAX_BEHIND_DAYS = 40;
+
+const DAY_MS = 24 * HOUR_MS;
+
+/**
+ * Whether `businessDate` sits within `STUDY_DAY_MAX_BEHIND_DAYS` /
+ * `STUDY_DAY_MAX_AHEAD_DAYS` of `now`, comparing calendar dates in UTC —
+ * never Warsaw-local, unlike the wall-clock/instant conversions elsewhere in
+ * this module: a business date is a calendar label with no time-of-day
+ * attached (see `dayBefore`'s own reasoning), so anchoring the comparison to
+ * a timezone would let the boundary shift by an hour for no reason tied to
+ * the actual question, which is "how many calendar days apart are these two
+ * dates". A malformed `businessDate` is out of window by definition.
+ */
+function withinStudyWindow(businessDate: string, now: Date): boolean {
+  if (!BUSINESS_DATE.test(businessDate)) return false;
+  const [year, month, day] = businessDate.split('-').map(Number);
+  const businessMs = Date.UTC(year, month - 1, day);
+  const todayMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const diffDays = Math.round((businessMs - todayMs) / DAY_MS);
+  return diffDays <= STUDY_DAY_MAX_AHEAD_DAYS && diffDays >= -STUDY_DAY_MAX_BEHIND_DAYS;
+}
 
 // ---------------------------------------------------------------------------
 // Parsing
@@ -492,6 +534,7 @@ interface RawDay {
   compass: { level: 0 | 1 | 2 | 3 | null; extreme: boolean; hours: number[] };
   tightHours: Array<{ hour: number; surplus: number; margin: number }>;
   readings: Reading[];
+  exchangeArrivedAt: string | null;
 }
 
 function buildRawDay(
@@ -526,11 +569,17 @@ function buildRawDay(
       compass: dayCompass,
       tightHours,
       readings: [],
+      exchangeArrivedAt: null,
     };
   }
 
   const { deadline, open, readingsAsc, windowIndex } = computeHourWindow(rows, businessDate, worstHour, now);
   const readings: Reading[] = readingsAsc.map((r) => [r.readAt, r.surplus, r.required, r.exchange]);
+  // Computed from the whole timeline, not just the window reading: the
+  // transition from placeholder to real exchange can — and typically does —
+  // happen well before the window (the window is the deadline reading, the
+  // arrival is whenever it actually happened).
+  const arrivedAt = exchangeArrivedAt(readingsAsc);
 
   if (windowIndex === -1) {
     return {
@@ -542,11 +591,12 @@ function buildRawDay(
       required: null,
       margin: null,
       headroom: null,
-      dwell: null,
       eveMargin: null,
+      dwell: null,
       compass: dayCompass,
       tightHours,
       readings,
+      exchangeArrivedAt: arrivedAt,
     };
   }
 
@@ -568,6 +618,7 @@ function buildRawDay(
     compass: dayCompass,
     tightHours,
     readings,
+    exchangeArrivedAt: arrivedAt,
   };
 }
 
@@ -641,7 +692,9 @@ export function studyDays(
     return !Number.isNaN(readAtMs) && readAtMs <= nowMs;
   });
 
-  const businessDates = Array.from(new Set(rows.map((row) => row[0]))).sort();
+  const businessDates = Array.from(new Set(rows.map((row) => row[0])))
+    .filter((date) => withinStudyWindow(date, now))
+    .sort();
   const eventByDate = new Map(events.map((event) => [event.date, event]));
 
   const raw = businessDates.map((date) =>
@@ -710,6 +763,7 @@ export function studyDays(
       exchangePlanned: forecastByDate?.has(day.date)
         ? exchangePlanned(forecastByDate.get(day.date)!)
         : null,
+      exchangeArrivedAt: day.exchangeArrivedAt,
     };
     return study;
   });

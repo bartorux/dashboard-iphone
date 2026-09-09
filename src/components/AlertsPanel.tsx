@@ -108,7 +108,8 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
   const exchangeNote = exchangeMissing ? (
     <p className="mt-2 text-[0.75rem] text-text-secondary">
       Saldo wymiany na tę dobę nie jest jeszcze zaplanowane — rezerwa liczona
-      bez importu i eksportu. Plan dochodzi dzień wcześniej około 13:00.
+      bez importu i eksportu. Plan dochodzi dzień wcześniej, dotąd zawsze
+      między 13:15 a 14:00.
     </p>
   ) : null;
 

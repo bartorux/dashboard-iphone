@@ -48,6 +48,7 @@ const FIXTURE: BadanieFile = {
       verdict: 'trafienie',
       readings: [['2026-08-30T09:00:00Z', 800, 2000]],
       exchangePlanned: null,
+      exchangeArrivedAt: null,
     },
     {
       date: '2026-08-31',
@@ -78,6 +79,7 @@ const FIXTURE: BadanieFile = {
       readings: [['2026-08-31T09:00:00Z', 3100, 2000]],
       // A closed day from the past — never part of the current forecast.
       exchangePlanned: null,
+      exchangeArrivedAt: null,
     },
     {
       date: '2026-09-01',
@@ -99,6 +101,10 @@ const FIXTURE: BadanieFile = {
       verdict: 'cisza',
       readings: [['2026-09-01T10:00:00Z', 3200, 2000]],
       exchangePlanned: null,
+      // No 4th element on the one reading (readingHasExchange(undefined) is
+      // true — "nothing can be said either way") and no transition on record:
+      // the day this fixture uses for "neither arrival line applies".
+      exchangeArrivedAt: null,
     },
     {
       date: '2026-09-02',
@@ -142,6 +148,9 @@ const FIXTURE: BadanieFile = {
         ['2026-09-02T10:00:00Z', 900, 2000, -1200],
       ],
       exchangePlanned: null,
+      // Exercises the "saldo doszło" line: this day's own timeline (not shown
+      // above, which starts after the arrival) transitioned on 01.09 13:15.
+      exchangeArrivedAt: '2026-09-01T11:15:00Z',
     },
     {
       date: '2026-09-03',
@@ -162,6 +171,7 @@ const FIXTURE: BadanieFile = {
       verdict: 'cisza',
       readings: [['2026-09-03T10:00:00Z', 3000, 2000]],
       exchangePlanned: null,
+      exchangeArrivedAt: null,
     },
     {
       date: '2026-09-04',
@@ -183,6 +193,7 @@ const FIXTURE: BadanieFile = {
       // The current forecast already has a real exchange for this date — the
       // ordinary open-day case, plain "otwarte" with no caveat.
       exchangePlanned: true,
+      exchangeArrivedAt: null,
     },
   ],
   // Newest first, per the contract comment on BadanieFile.observations.
@@ -250,6 +261,7 @@ describe('Badanie', () => {
       delete day.observation;
       delete day.tightHours; // added 07.09 — crashed the live page once
       delete day.exchangePlanned; // added 07.09 too — same risk, same guard
+      delete day.exchangeArrivedAt; // added 09.09 — same risk, same guard
       // compass.hours added 07.09, same day as the others above: the
       // generator can be one deploy behind, so compass.level/extreme exist
       // but hours does not yet.
@@ -262,8 +274,16 @@ describe('Badanie', () => {
     expect(screen.getByText('Zapisz, co było')).toBeInTheDocument();
     expect(screen.queryByText('Błąd aplikacji')).toBeNull();
     // Expanding a day touches tightHours and readings — must not throw either.
-    fireEvent.click(screen.getByRole('button', { name: '02.09' }));
+    const button = screen.getByRole('button', { name: '02.09' });
+    fireEvent.click(button);
     expect(screen.queryByText('Błąd aplikacji')).toBeNull();
+    // The stripped exchangeArrivedAt must default to null, not stay
+    // `undefined`: 02.09's own readings carry a real exchange throughout, so
+    // a correct default shows neither arrival line at all — an `undefined`
+    // left unguarded would instead print the bogus "Saldo doszło —.".
+    const details = document.getElementById(button.getAttribute('aria-controls')!)!;
+    expect(details.textContent).not.toContain('Saldo doszło');
+    expect(details.textContent).not.toContain('Saldo jeszcze nie doszło');
   });
 
 
@@ -526,6 +546,64 @@ describe('Badanie', () => {
     expect(details.textContent).toContain('Inne godziny z ujemnym marginesem w oknie: brak.');
   });
 
+  it('shows "saldo doszło <data> <godzina>" next to the tight-hours line when exchangeArrivedAt is set', async () => {
+    respondWith({ badanie: FIXTURE });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    // 2026-09-02's fixture carries exchangeArrivedAt: '2026-09-01T11:15:00Z',
+    // which is 01.09 13:15 local (Warsaw, CEST in September).
+    const button = screen.getByRole('button', { name: '02.09' });
+    const detailsId = button.getAttribute('aria-controls')!;
+    fireEvent.click(button);
+
+    const details = document.getElementById(detailsId)!;
+    expect(details.textContent).toContain('Saldo doszło 01.09 13:15.');
+  });
+
+  it('shows "saldo jeszcze nie doszło" when exchangeArrivedAt is null and the last reading is still the placeholder', async () => {
+    const stillWaiting: BadanieFile = {
+      ...FIXTURE,
+      days: FIXTURE.days.map((day) =>
+        day.date === '2026-09-03'
+          ? {
+              ...day,
+              readings: [['2026-09-03T10:00:00Z', 900, 2000, -12]] as typeof day.readings,
+              exchangeArrivedAt: null,
+            }
+          : day
+      ),
+    };
+    respondWith({ badanie: stillWaiting });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const button = screen.getByRole('button', { name: '03.09' });
+    const detailsId = button.getAttribute('aria-controls')!;
+    fireEvent.click(button);
+
+    const details = document.getElementById(detailsId)!;
+    expect(details.textContent).toContain('Saldo jeszcze nie doszło.');
+    expect(details.textContent).not.toContain('Saldo doszło');
+  });
+
+  it('shows neither exchange-arrival line when the day never had a placeholder and never transitioned', async () => {
+    respondWith({ badanie: FIXTURE });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    // 2026-09-01's one reading has no exchange field at all (readingHasExchange
+    // treats undefined as "planned") and exchangeArrivedAt is null — nothing
+    // to report either way.
+    const button = screen.getByRole('button', { name: '01.09' });
+    const detailsId = button.getAttribute('aria-controls')!;
+    fireEvent.click(button);
+
+    const details = document.getElementById(detailsId)!;
+    expect(details.textContent).not.toContain('Saldo doszło');
+    expect(details.textContent).not.toContain('Saldo jeszcze nie doszło');
+  });
+
   it('shows "—" for wymiana when a reading carries no exchange figure', async () => {
     respondWith({ badanie: FIXTURE });
     render(<Badanie />);
@@ -604,7 +682,7 @@ describe('Badanie', () => {
 
     expect(
       screen.getByText(
-        'Doby od pojutrza nie mają jeszcze salda wymiany — rezerwa liczona bez importu i eksportu, po dodaniu planu może się zmienić o kilka gigawatów w obie strony. Saldo dochodzi dzień wcześniej około 13:00.'
+        'Doby od pojutrza nie mają jeszcze salda wymiany — rezerwa liczona bez importu i eksportu, po dodaniu planu może się zmienić o kilka gigawatów w obie strony. Saldo dochodzi dzień wcześniej, dotąd zawsze między 13:15 a 14:00.'
       )
     ).toBeInTheDocument();
   });

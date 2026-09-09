@@ -642,6 +642,98 @@ describe('exchangePlanned on DayStudy', () => {
   });
 });
 
+describe('exchangeArrivedAt on DayStudy', () => {
+  it('is set to the readAt of the reading where the day transitioned from placeholder to real exchange', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-09-09', 18, 49, 2000, '2026-09-08T10:00:00Z', '', -12),
+      row('2026-09-09', 18, 60, 2000, '2026-09-08T13:00:00Z', '', -12),
+      row('2026-09-09', 18, 877, 2000, '2026-09-08T13:15:00Z', '', 2941), // the transition
+      row('2026-09-09', 18, 900, 2000, '2026-09-08T14:00:00Z', '', 2990),
+    ];
+    const now = new Date('2026-09-09T15:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.exchangeArrivedAt).toBe('2026-09-08T13:15:00Z');
+  });
+
+  it('is null when the day still shows only the placeholder — nothing has arrived yet', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-09-10', 18, 49, 2000, '2026-09-09T10:00:00Z', '', -12),
+      row('2026-09-10', 18, 55, 2000, '2026-09-09T11:00:00Z', '', 0),
+    ];
+    const now = new Date('2026-09-09T12:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.exchangeArrivedAt).toBeNull();
+  });
+
+  it('is null when the day had a real exchange from its very first reading — nothing to arrive', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-09-07', 18, 3100, 2000, '2026-09-06T10:00:00Z', '', 1900),
+      row('2026-09-07', 18, 3200, 2000, '2026-09-06T11:00:00Z', '', 2100),
+    ];
+    const now = new Date('2026-09-09T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.exchangeArrivedAt).toBeNull();
+  });
+
+  it('is null for a day with no readings in the auto-select range (no target hour at all)', () => {
+    // Hour 5 sits outside AUTO_HOUR_FIRST..AUTO_HOUR_LAST (7-21), so
+    // autoTargetHour finds nothing and the day takes the "no worstHour"
+    // branch of buildRawDay, which reports an empty `readings` array.
+    const rows: ArchiveRow[] = [row('2026-09-08', 5, 2000, 1000, '2026-09-08T02:00:00Z')];
+    const now = new Date('2026-09-09T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.worstHour).toBeNull();
+    expect(day.readings).toEqual([]);
+    expect(day.exchangeArrivedAt).toBeNull();
+  });
+});
+
+describe('studyDays: businessDate sanity window (14 days ahead, 40 days back)', () => {
+  // PSE published rows carrying businessDate 2031-xx-xx on 08.09.2026; the
+  // archive wrote them down verbatim (see badanie.ts's own comment on
+  // `STUDY_DAY_MAX_AHEAD_DAYS`). This is the read-side guard: regardless of
+  // what already sits in the archive, such a row must never surface as a
+  // study day.
+  const NOW = new Date('2026-09-09T12:00:00Z'); // UTC calendar date 2026-09-09
+
+  it('drops a businessDate far in the future (e.g. year 2031)', () => {
+    const rows: ArchiveRow[] = [row('2031-01-15', 18, 2000, 1000, '2026-09-08T10:00:00Z')];
+    const days = studyDays(rows, [], [], NOW);
+    expect(days.map((d) => d.date)).not.toContain('2031-01-15');
+    expect(days).toEqual([]);
+  });
+
+  it('keeps a businessDate exactly 14 days ahead, drops one 15 days ahead', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-09-23', 18, 2000, 1000, '2026-09-09T10:00:00Z'), // +14 days
+      row('2026-09-24', 18, 2000, 1000, '2026-09-09T10:00:00Z'), // +15 days
+    ];
+    const days = studyDays(rows, [], [], NOW);
+    const dates = days.map((d) => d.date);
+    expect(dates).toContain('2026-09-23');
+    expect(dates).not.toContain('2026-09-24');
+  });
+
+  it('keeps a businessDate exactly 40 days back, drops one 41 days back', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-07-31', 18, 2000, 1000, '2026-07-31T10:00:00Z'), // -40 days
+      row('2026-07-30', 18, 2000, 1000, '2026-07-30T10:00:00Z'), // -41 days
+    ];
+    const days = studyDays(rows, [], [], NOW);
+    const dates = days.map((d) => d.date);
+    expect(dates).toContain('2026-07-31');
+    expect(dates).not.toContain('2026-07-30');
+  });
+});
+
 describe('eveMargin', () => {
   it('takes the LAST reading stamped on D-1, not the first', () => {
     const rows: ArchiveRow[] = [
