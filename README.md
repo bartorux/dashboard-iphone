@@ -204,7 +204,9 @@ liczby brały się z rozumowania, nie z pomiaru. **Pomiar dotyczy jeszcze kadenc
 ### Zapis prognoz
 
 `data/forecast-log.json` przechowuje, co prognoza mówiła wcześniej — okno **72 godzin** wstecz,
-z sufitem 400 wpisów, żeby kadencja co 15 minut nie rozrastała pliku bez ograniczenia.
+z sufitem 400 wpisów, żeby kadencja co 15 minut nie rozrastała pliku bez ograniczenia. Zmierzone
+09.09, po pierwszej dobie na kwadransach: **231 kB, 268 wpisów, rozpiętość 71,1 h** — poniżej
+sufitu i w granicach okna, więc mechanizm działa zgodnie z projektem.
 Powstał, bo aplikacja pokazywała migawkę i opisywała ją z pewnością siebie, nie mając jak zauważyć,
 że migawka się zmieniła. Zmierzone 11 sierpnia: o 11:20 najciaśniejsza środowa godzina to było 20:00
 z marginesem +139 MW, dwie godziny później ta sama godzina miała +1331 MW, a najciaśniejszy punkt
@@ -272,10 +274,14 @@ model w ogóle zostanie zapytany. Awaria zapisu nie kończy przebiegu.
 
 **Rotacja nie jest planowana** — plik rośnie wyłącznie przez dopisywanie, bez czyszczenia starszych
 partycji. To świadoma decyzja: archiwum jest źródłem prawdy do liczenia trafności narzędzia, więc
-skracanie go odbierałoby możliwość, po którą w ogóle powstał. Przyrost mierzony przy poprzedniej
-kadencji to około 1,6 MB miesięcznie (ok. 19 MB rocznie); dedupe po wartości `(surplus, required)`
-sprawia, że kadencja co 15 minut nie mnoży tego szesnastokrotnie — szacowany mnożnik przyrostu to
-rzędu 1,5–3×.
+skracanie go odbierałoby możliwość, po którą w ogóle powstał. Zmierzone 09.09: `2026-09.jsonl` waży
+3,8 MB po dziewięciu dniach, czyli około **13 MB miesięcznie** — wcześniej podana liczba 1,6 MB była
+błędem pomiaru, nie tylko wartością sprzed zmiany kadencji. Linii na dobę: 8991 (06.09, jeszcze
+kadencja godzinowa) → 17843 (08.09, pełna doba na kwadransach), czyli około **2×, nie 4×** — dedupe
+po `(surplus, required, plannedExchange)` działa; same bajty rosną szybciej niż linie, bo siódma
+kolumna dodana w v3.73.1 i waży coś, i sama bywa tym, co odróżnia kolejny wiersz od poprzedniego.
+Archiwum Kompasu, prowadzone tym samym mechanizmem, rośnie o około 1,7 MB miesięcznie po zasileniu
+wstecz.
 
 ### Strażnik świeżości
 

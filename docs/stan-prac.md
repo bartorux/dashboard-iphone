@@ -209,8 +209,11 @@ faktycznie było w dobie: „u nas nic", test albo przywołanie z godziną i zak
 backendu i **nie może trzymać tokenu** (zasada: token widzi wyłącznie cron-job.org). Dlatego strona
 buduje gotowy link „new issue" z tytułem w stałym formacie (`src/utils/obserwacje.ts`:
 `[badanie] 2026-09-07 nic` / `[badanie] 2026-09-07 20:00 test jednostka`), właściciel naciska
-„Submit" zalogowany do GitHub, a generator co godzinę czyta Issues (`GITHUB_TOKEN` z Actions,
-`issues: read`) i wpisuje obserwacje do `badanie.json`. Rejestr ręczny ma pierwszeństwo per data.
+„Submit" zalogowany do GitHub, a generator co 15 minut czyta Issues (`GITHUB_TOKEN` z Actions,
+`issues: read`) i wpisuje obserwacje do `badanie.json` — czytanie Issues jedzie w tym samym
+przebiegu co reszta generatora, nie na osobnym harmonogramie, więc poszło z nim razem na kadencję
+kwartalną. (Komentarz w `src/utils/obserwacje.ts` mówiący o „hourly generator" jest z tego samego
+powodu nieaktualny — poza zestawem plików tej poprawki.) Rejestr ręczny ma pierwszeństwo per data.
 Issues są zarazem miejscem rozmowy o dobie — „będziemy mieli o czym rozmawiać".
 
 **Ograniczenie, którego nie da się usunąć:** „u nas nic" znaczy „nic w naszych jednostkach". Test
@@ -275,7 +278,10 @@ Wykrywanie z danych, nie z zegara: `src/utils/exchangePlan.ts` — doba ma plan,
 (3) fakty AI — zdanie o braku salda dla takich dób, `13:00` dopuszczone w walidatorze, prompt 52.
 Okno decyzyjne (12:00 dnia D) leży po dodaniu salda, więc cechy z okna są uczciwe; 02.09 dwell
 19,0 h bez zmian (ciąg zaczął się po saldzie). **Pomiar po kilku dobach:** czy skok salda zawsze
-przychodzi w tym samym oknie ~13:00 (archiwum od 07.09 16:30 ma kolumnę salda).
+przychodzi w tym samym oknie ~13:00 (archiwum od 07.09 16:30 ma kolumnę salda). **Potwierdzone
+09.09, trzecim pomiarem:** 01.09 o 13:59 (dla 02.09), 06.09 o 13:19 (dla 07.09), 08.09 o 13:15
+(dla 09.09) — doba D dostaje prawdziwe saldo zawsze po południu D−1, w oknie kilkunastu minut
+wokół 13:00.
 
 **Kompas na prawdziwych przywołaniach (07.09.2026, v3.75.0).** Historia wersji `pdgsz` istnieje od
 06.2024, więc cechę Kompasu dało się sprawdzić na czterech prawdziwych, całorynkowych okresach
@@ -373,6 +379,8 @@ przez dopisywanie. To świadoma decyzja: archiwum jest źródłem prawdy do licz
 narzędzia, a skracanie go odbierałoby tę możliwość. Przyrost mierzony przy poprzedniej kadencji to
 ok. 1,6 MB miesięcznie (ok. 19 MB rocznie); dedupe po wartości ogranicza, o ile więcej doda
 kadencja co 15 minut — szacowany mnożnik przyrostu to rzędu 1,5–3×, nie szesnastokrotny.
+**(Liczba nieaktualna, i to nie tylko z powodu kadencji — zmierzone 09.09: patrz „Kadencja 15
+minut — pomiary pierwszej doby" niżej, rzeczywisty przyrost wychodzi bliżej 13 MB miesięcznie.)**
 
 **Limit Gemini.** Model jest pytany tylko przy zmianie oceny albo po 6 godzinach (`decideRun`,
 `MAX_STALE_MS`), więc górna granica to 96 przebiegów generatora na dobę × 2 próby = 192 wobec
@@ -380,10 +388,11 @@ RPD 500. Dziś zmierzone 54/500 — ale przy poprzedniej kadencji co godzinę (2
 więc ta liczba nie odzwierciedla nowego reżimu i pomiar wymaga powtórzenia.
 
 **Pomiary do zrobienia po 24 h od przełączenia:**
-- czas trwania joba i zachowanie kolejki `concurrency: summary` przy kadencji co 15 minut
-- RPD i RPM Gemini w nowym reżimie
-- przyrost `data/*.jsonl` i `data/badanie.json`
-- ewentualne HTTP 429 z API PSE
+- czas trwania joba i zachowanie kolejki `concurrency: summary` przy kadencji co 15 minut —
+  zmierzone 09.09, patrz „Kadencja 15 minut — pomiary pierwszej doby" niżej
+- RPD i RPM Gemini w nowym reżimie — wciąż nie zmierzone
+- przyrost `data/*.jsonl` i `data/badanie.json` — zmierzone 09.09, patrz sekcja niżej
+- ewentualne HTTP 429 z API PSE — wciąż nie zaobserwowane ani nie sprawdzone celowo
 
 **Zaległości, wykonane w tym samym zestawie zmian:** strzałki, Home i End w `SegmentedControl`
 (roving tabindex); `role="status"` i `aria-live="polite"` na odznace statusu w
@@ -400,6 +409,35 @@ testy dla siedmiu hooków — `useOnlineStatus`, `usePersistentFlag`, `useTheme`
 
 **PAT do cron-job.org wygasa 28.09.2026.** Odnowienie leży po stronie właściciela; token nie trafia
 do czatu, repozytorium ani żadnego pliku.
+
+## Kadencja 15 minut — pomiary pierwszej doby (09.09.2026)
+
+Odpowiedź na listę „Pomiary do zrobienia po 24 h" w sekcji wyżej — pierwsza pełna doba na
+kwadransach, 08–09.09.
+
+**Czas trwania joba.** Doba 08–09.09: **95 przebiegów, 92 udane i 3 nieudane**, mediana **63 s**,
+maksimum **295 s**, łącznie **101 minut** czasu Actions. Wszystkie trzy nieudane padły na kroku
+zapisu do repozytorium — naprawa jest **w toku**, jako osobne zadanie, nie zrobiona przy okazji tego
+pomiaru.
+
+**Przyrost archiwum `pk5l`.** `data/pk5l-archiwum/2026-09.jsonl` waży 3,8 MB po dziewięciu dniach,
+czyli około **13 MB miesięcznie** — liczba 1,6 MB podana w sekcji wyżej była błędem pomiaru, nie
+tylko wartością sprzed zmiany kadencji. Linii na dobę: 8991 (06.09, jeszcze kadencja godzinowa) →
+17843 (08.09, pełna doba na kwadransach), czyli około **2×, nie 4×** — dedupe po `(surplus,
+required, plannedExchange)` działa. Bajty rosną szybciej niż linie, bo siódma kolumna dodana w
+v3.73.1 sama coś waży i sama bywa tym, co odróżnia kolejny wiersz od poprzedniego. Archiwum Kompasu,
+prowadzone tym samym mechanizmem: partycje **~1,7 MB miesięcznie** po zasileniu wstecz.
+
+**`forecast-log.json`.** 231 kB, 268 wpisów, rozpiętość 71,1 h — poniżej sufitu 400 wpisów i w
+granicach okna 72 h, więc mechanizm z poprzedniej sekcji działa zgodnie z projektem.
+
+**`data/badanie.json`.** 121 kB.
+
+**Saldo wymiany.** Wzorzec „doba D dostaje prawdziwe saldo po południu D−1" potwierdzony trzecim
+pomiarem: 01.09 o 13:59 (dla 02.09), 06.09 o 13:19 (dla 07.09), 08.09 o 13:15 (dla 09.09) — zawsze
+w oknie kilkunastu minut wokół 13:00.
+
+**Wciąż nie zmierzone:** RPD i RPM Gemini w nowym reżimie, HTTP 429 z API PSE.
 
 ## Czego dzień nauczył
 
