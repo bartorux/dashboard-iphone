@@ -616,6 +616,24 @@
       "headline": "W piątek operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 08:00 oraz od 17:00 do 22:00.",
       "body": "Prognoza poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś przywołanie może nadejść między 20:00 a 21:00, jutro operator ma wybór między 19:00 a 21:00, a w poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-09T09:15:43.146Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś, jutro i w piątek wchodzi w grę przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania, a w pozostałe dni rezerwa w wyznaczonych godzinach nie pokrywa wymaganego poziomu."
+    },
+    {
+      "at": "2026-09-09T09:15:43.146Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś, jutro i w piątek przywołanie wchodzi w grę, bo nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza dzisiaj poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "Dzisiaj między 20:00 a 21:00 nadwyżka trzyma się poniżej progu 1100 MW, a Kompas Energetyczny PSE zaleca oszczędzanie. Jutro nadwyżka spada poniżej tego progu między 19:00 a 21:00, a w godzinach 21:00-22:00 operator ma wybór. W piątek saldo wymiany nie jest jeszcze zaplanowane, a nadwyżka spada poniżej progu 1100 MW między 07:00 a 09:00 oraz od 17:00 do 22:00, podczas gdy między 15:00 a 17:00 operator ma wybór. W poniedziałek 14 września i wtorek 15 września saldo wymiany nie jest jeszcze zaplanowane i nic tam nie zapowiada przywołania."
     }
   ]
 }
