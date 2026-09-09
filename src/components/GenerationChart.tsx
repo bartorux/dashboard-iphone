@@ -467,7 +467,7 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
               tickFormatter={formatMW}
               tickLine={false}
               axisLine={false}
-              width={axisWidthFor(scale.ticks)}
+              width={axisWidthFor()}
             />
 
             {/* OZE stacked: the height of the stack is the country's total

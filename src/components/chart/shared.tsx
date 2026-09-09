@@ -100,18 +100,70 @@ function rootFontPx(): number {
 }
 
 /**
- * Y axis width has to follow the widest tick label; a value sized for four
- * digits clips the fifth once a series passes 10 000 MW.
+ * Longest tick label PSE data actually produces: "-1 000" and "25 000" both
+ * run 6 characters (the minus sign costs as much room as a digit); a
+ * seven-character reading does not occur in the feed.
  *
- * Scaled by the root size, because the tick font is now in rem: a width fixed
- * for an 11px label clipped the axis outright once the reader enlarged their
+ * Used to be `Math.max(...ticks.map((t) => formatMW(t).length))` instead — the
+ * width of THIS day's widest label. That made the Y axis, and with it the
+ * whole plot area, shift day to day (51px at an 8 000 MW peak, 57px at
+ * 10 000 or at a negative value) and disagree between the three chart views
+ * looking at different data on the same day. The alert panel's day-axis track
+ * (see `dayAxisInset` below) has to land its own left edge at the same x as
+ * this one, which only holds if the axis width is a constant rather than a
+ * function of whatever numbers happen to be on screen.
+ */
+const MAX_TICK_LABEL_LENGTH = 6;
+
+/**
+ * Y axis width, fixed rather than measured from the ticks on screen — see
+ * `MAX_TICK_LABEL_LENGTH` for why a per-render measurement was the bug, not
+ * the feature.
+ *
+ * Scaled by the root size, because the tick font is in rem: a width fixed for
+ * an 11px label clipped the axis outright once the reader enlarged their
  * text — the chart grew, the room for its numbers did not.
  */
-export function axisWidthFor(ticks: number[]): number {
-  const longest = Math.max(...ticks.map((tick) => formatMW(tick).length));
+export function axisWidthFor(): number {
   const scale = rootFontPx() / 16;
-  // ~6.5px per digit at the default size, plus tick margin and breathing room
-  return Math.ceil(longest * 6.5 * scale) + Math.ceil(18 * scale);
+  // ~6.5px per character at the default size, plus tick margin and breathing room
+  return Math.ceil(MAX_TICK_LABEL_LENGTH * 6.5 * scale) + Math.ceil(18 * scale);
+}
+
+/**
+ * Card padding the day axis has to reach through, kept as constants rather
+ * than read off the DOM: `dayAxisInset` runs before layout (it sizes a track
+ * that hasn't painted yet), so the two numbers it depends on have to be
+ * known ahead of time. They live here, next to the function that is their
+ * only reader, instead of in ChartSection.tsx and AlertsPanel.tsx — a
+ * constant sitting in the component it describes looks like it only has to
+ * agree with itself, when its actual job is to agree with a number in an
+ * unrelated file two DOM trees away. One file that has to know both wrong
+ * numbers at once is easier to catch drifting than two files that each look
+ * locally correct.
+ */
+const CHART_CARD_PADDING_PX = 12; // p-3 on the chart card (ChartSection.tsx, ~line 139)
+/** p-4 on the alerts card (AlertsPanel.tsx) — exported so that file can
+ *  subtract its own padding back out without hardcoding the number. */
+export const ALERTS_CARD_PADDING_PX = 16;
+
+/**
+ * Where the day axis starts and ends, measured from the OUTER edge of
+ * whichever card draws it.
+ *
+ * This is the single fact both the reserve chart's plot area and the alert
+ * panel's day-axis track have to agree with: the chart's Y axis sits `left`
+ * pixels in from its card's outer edge, and its plot area ends `right`
+ * pixels short of the card's outer edge on the right. A caller that wants a
+ * track lined up with that axis subtracts its OWN card's padding back out —
+ * see AlertsPanel.tsx — rather than this function trying to guess which
+ * card is asking.
+ */
+export function dayAxisInset(): { left: number; right: number } {
+  return {
+    left: CHART_CARD_PADDING_PX + axisWidthFor(),
+    right: CHART_CARD_PADDING_PX + CHART_MARGIN.right,
+  };
 }
 
 /**
