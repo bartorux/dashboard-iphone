@@ -5,7 +5,7 @@ import type { Observation, Outcome } from './badanieTypes';
  *
  * The research page has no backend and must not hold a token, so the owner
  * records what happened by filing an issue from a pre-filled link, and the
- * hourly generator reads the issues back. The title carries the whole
+ * generator reads the issues back on its next run (every 15 minutes). The title carries the whole
  * observation in a fixed shape; the body is a free note. Anything that does
  * not parse is ignored, never guessed at — an issue is a conversation, and
  * only its title is data.
