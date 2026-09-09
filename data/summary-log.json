@@ -1021,6 +1021,24 @@
       "headline": "W najbliższych godzinach nic nie zapowiada przywołania, ale w kolejnych dobach operator zyska lub straci wybór.",
       "body": "Prognoza jutro jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek między 07:00 a 10:00 oraz między 15:00 a 22:00 rezerwa spadnie, a w poniedziałek między 19:00 a 21:00 saldo wymiany nie jest jeszcze zaplanowane, natomiast w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-09T20:31:04.272Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Jutro w godzinach 07:00-08:00 i 19:00-22:00 oraz w piątek rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka pozostaje powyżej progu 1100 MW, co daje operatorowi pełną swobodę w podjęciu decyzji o przywołaniu.",
+      "body": "Prognoza na jutro jeszcze się ustala, na przemian pokrywając wymagany poziom i spadając poniżej niego. Do wyznaczonych godzin pozostało wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 14 września między 19:00 a 21:00 rezerwa również nie pokryje wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-09T20:31:04.272Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Jutro w godzinach 07:00-08:00 i 19:00-22:00 oraz w poniedziałek 14 września w godzinach 19:00-21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi; w piątek w godzinach 07:00-09:00 i 16:00-22:00 nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę nic nie zapowiada przywołania, a we wtorek 15 września rezerwa pokrywa wymagany poziom przez całą dobę."
     }
   ]
 }
