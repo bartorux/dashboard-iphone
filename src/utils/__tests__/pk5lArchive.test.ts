@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   archivePartition,
+  countImplausibleBusinessDates,
   newArchiveLines,
   parseArchiveLines,
   previousPartition,
@@ -267,6 +268,63 @@ describe('newArchiveLines — values that cannot be archived', () => {
       '2026-08-29T18:00:00Z'
     );
     expect(lines).toEqual([]);
+  });
+});
+
+describe('newArchiveLines — business_date sanity window', () => {
+  // The actual incident: on 2026-09-08 at 14:31 PSE served 200 rows dated
+  // 2031-08-24 .. 2031-09-01 and the archive wrote every one of them.
+  const nowIso = '2026-09-08T14:31:00Z';
+
+  it('drops a row dated years in the future, as PSE actually served on 2026-09-08', () => {
+    const lines = newArchiveLines([rawRow({ business_date: '2031-08-24' })], new Map(), nowIso);
+    expect(lines).toEqual([]);
+  });
+
+  it('keeps a row exactly 14 days ahead of readAt', () => {
+    const lines = newArchiveLines([rawRow({ business_date: '2026-09-22' })], new Map(), nowIso);
+    expect(lines).toHaveLength(1);
+  });
+
+  it('drops a row 15 days ahead of readAt', () => {
+    const lines = newArchiveLines([rawRow({ business_date: '2026-09-23' })], new Map(), nowIso);
+    expect(lines).toEqual([]);
+  });
+
+  it('keeps a row exactly 40 days behind readAt', () => {
+    const lines = newArchiveLines([rawRow({ business_date: '2026-07-30' })], new Map(), nowIso);
+    expect(lines).toHaveLength(1);
+  });
+
+  it('drops a row 41 days behind readAt', () => {
+    const lines = newArchiveLines([rawRow({ business_date: '2026-07-29' })], new Map(), nowIso);
+    expect(lines).toEqual([]);
+  });
+
+  it('drops a row whose business_date matches the shape but is not a real calendar date', () => {
+    const lines = newArchiveLines([rawRow({ business_date: '2026-13-40' })], new Map(), nowIso);
+    expect(lines).toEqual([]);
+  });
+});
+
+describe('countImplausibleBusinessDates', () => {
+  const nowIso = '2026-09-08T14:31:00Z';
+
+  it('counts rows outside the sanity window, as logging the 2031 incident would have needed', () => {
+    const rows = [
+      rawRow({ business_date: '2026-09-08' }), // today: plausible
+      rawRow({ business_date: '2031-08-24' }), // the actual incident date
+      rawRow({ business_date: '2031-08-25' }),
+    ];
+    expect(countImplausibleBusinessDates(rows, nowIso)).toBe(2);
+  });
+
+  it('returns 0 when every row falls inside the window', () => {
+    const rows = [
+      rawRow({ business_date: '2026-09-08' }),
+      rawRow({ business_date: '2026-09-22' }),
+    ];
+    expect(countImplausibleBusinessDates(rows, nowIso)).toBe(0);
   });
 });
 

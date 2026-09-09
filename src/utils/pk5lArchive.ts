@@ -55,8 +55,101 @@ export type ArchiveRow = readonly [
 
 const BUSINESS_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
+/**
+ * How far a row's business_date may sit from this run's own calendar date
+ * before it is treated as garbage rather than a legitimate forecast row.
+ *
+ * On 2026-09-08 at 14:31 PSE served — with no error, no flag, nothing to
+ * distinguish it from a normal row — 200 rows for business dates
+ * 2031-08-24 through 2031-09-01 (PSE's own publication_ts_utc on those rows:
+ * 2026-09-02T20:11), and this archive wrote every one of them verbatim. A
+ * live re-check the same day found PSE still serving equally implausible
+ * rows dated in 2027, so this is not a one-off glitch to special-case away
+ * but a standing property of the source every run has to guard against.
+ *
+ * 14 days ahead is a wide margin over PSE's own publication horizon for
+ * pk5l-wp, which in practice is about 5 business days out. 40 days back
+ * covers the one case a genuinely wide backward window exists for:
+ * backfilling history around a calendar month boundary.
+ */
+const MAX_BUSINESS_DATE_DAYS_AHEAD = 14;
+const MAX_BUSINESS_DATE_DAYS_BEHIND = 40;
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
 function archiveKey(businessDate: string, hour: number): ArchiveKey {
   return `${businessDate}#${hour}`;
+}
+
+/**
+ * Parses a strict "YYYY-MM-DD" into a UTC calendar-day timestamp (midnight
+ * UTC that day), or null if the string is not that shape or not a real
+ * calendar date (month 13, day 31 of a 30-day month, ...). `Date.UTC` alone
+ * would silently roll such input over into the following month rather than
+ * reject it, so the constructed date is read back and compared field by
+ * field before it is trusted.
+ */
+function parseUtcCalendarDate(dateStr: string): number | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr);
+  if (!match) return null;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const ms = Date.UTC(year, month - 1, day);
+  const roundTrip = new Date(ms);
+  if (
+    roundTrip.getUTCFullYear() !== year ||
+    roundTrip.getUTCMonth() !== month - 1 ||
+    roundTrip.getUTCDate() !== day
+  ) {
+    return null;
+  }
+  return ms;
+}
+
+/**
+ * Whether `businessDate` falls within [-40, +14] CALENDAR days of `nowIso`'s
+ * own UTC calendar date. Deliberately compares dates, not instants:
+ * business_date is a bare "YYYY-MM-DD" with no time of day, so comparing it
+ * to a millisecond timestamp would make the boundary flicker with the time
+ * of day a run happens to execute at — a row for "tomorrow" filed at 23:59
+ * UTC must not read any differently than the same row filed at 00:01 UTC.
+ */
+function isPlausibleBusinessDate(businessDate: string, nowIso: string): boolean {
+  const businessMs = parseUtcCalendarDate(businessDate);
+  if (businessMs === null) return false;
+
+  const now = new Date(nowIso);
+  if (Number.isNaN(now.getTime())) return false;
+  const nowCalendarMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+
+  const diffDays = Math.round((businessMs - nowCalendarMs) / MS_PER_DAY);
+  return diffDays <= MAX_BUSINESS_DATE_DAYS_AHEAD && diffDays >= -MAX_BUSINESS_DATE_DAYS_BEHIND;
+}
+
+/**
+ * How many of this run's raw rows `newArchiveLines` would drop purely for
+ * failing the business_date sanity window above — counted independently of
+ * whether a row would also be dropped for some other reason (bad period,
+ * missing surplus, ...). `newArchiveLines` keeps its existing signature (no
+ * `{ lines, skipped }` return) so this stays a second, opt-in call; the
+ * caller in scripts/summary.ts is expected to call this alongside
+ * `newArchiveLines` and log the count, since staying silent about it is
+ * exactly the failure mode that let 200 rows dated 2031 into the archive
+ * unnoticed on 2026-09-08.
+ */
+export function countImplausibleBusinessDates(
+  rows: readonly PSERawItem[],
+  nowIso: string
+): number {
+  let count = 0;
+  for (const row of rows) {
+    const businessDate = row.business_date;
+    if (typeof businessDate !== 'string' || !isPlausibleBusinessDate(businessDate, nowIso)) {
+      count++;
+    }
+  }
+  return count;
 }
 
 function toNumber(value: unknown): number | null {
@@ -200,6 +293,7 @@ export function newArchiveLines(
   for (const row of rows) {
     const businessDate = row.business_date;
     if (typeof businessDate !== 'string' || !BUSINESS_DATE.test(businessDate)) continue;
+    if (!isPlausibleBusinessDate(businessDate, nowIso)) continue;
 
     const hour = blockStartHour(row.period);
     if (hour === null) continue;
