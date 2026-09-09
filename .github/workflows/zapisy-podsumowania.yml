@@ -1,0 +1,72 @@
+name: Zapisy podsumowania sie udaja
+
+# Straznik swiezosci (analiza-zywa.yml) pilnuje, czy opublikowana analiza nie
+# jest starsza niz 15 h. To za grube sito na dwie awarie, ktore ten plik lapie:
+#
+# 1. Padajace zapisy. Zmierzone 09.09.2026: 3 nieudane przebiegi na 95 w dobie,
+#    wszystkie na kroku "Zapisz, jesli sie zmienilo". Kazdy to bezpowrotnie
+#    utracony odczyt archiwum — jedyny zapis tego, co prognoza mowila w tej
+#    chwili, bo PSE nie wersjonuje pk5l-wp. Dla straznika swiezosci byly one
+#    niewidzialne, bo kolejny przebieg za 15 minut odswiezal analize.
+# 2. Smierc zewnetrznego pulsu. Kadencje wyznacza cron-job.org przez
+#    repository_dispatch (~96 przebiegow na dobe); wlasny `schedule` GitHuba to
+#    tylko zapas raz na godzine. Gdyby puls umarl (wygasly PAT, skasowane
+#    zadanie), zapas utrzymalby analize znacznie ponizej progu 15 h, a
+#    czestotliwosc archiwum spadlaby czterokrotnie w ciszy.
+on:
+  schedule:
+    - cron: '20 8 * * *' # zaraz po strazniku swiezosci o 07:40 UTC
+  workflow_dispatch:
+
+permissions:
+  actions: read # jedyne, czego trzeba: odczyt historii przebiegow
+
+jobs:
+  nieudane:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Policz nieudane przebiegi z ostatniej doby
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          # Po naprawie kroku zapisu jedno padniecie oznacza cztery nieudane
+          # podejscia rozlozone na ponad dwie minuty — czyli awarie, nie
+          # mrugniecie sieci. Jedna taka na dobe jeszcze sie zdarza, dwie to
+          # juz prawidlowosc.
+          PROG_NIEUDANYCH=2
+          # ~96 z pulsu zewnetrznego plus do 24 z zapasowego crona. Spadek
+          # ponizej 60 znaczy, ze puls umarl.
+          PROG_MINIMUM=60
+
+          OD=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)
+          BIEG="repos/${GITHUB_REPOSITORY}/actions/workflows/summary.yml/runs"
+
+          # -f, a nie sklejanie adresu: gh koduje ">=" samo.
+          wszystkie=$(gh api -X GET "$BIEG" -f created=">=$OD" -f per_page=1 --jq '.total_count')
+          nieudane=$(gh api -X GET "$BIEG" -f created=">=$OD" -f status=failure -f per_page=1 --jq '.total_count')
+          # Skasowane przebiegi sa NORMALNE: `concurrency: summary` stoi na
+          # poziomie workflow, wiec gdy cron i puls trafia w siebie, oczekujacy
+          # dostaje `cancelled`. Raportujemy, nigdy nie zapalamy.
+          skasowane=$(gh api -X GET "$BIEG" -f created=">=$OD" -f status=cancelled -f per_page=1 --jq '.total_count')
+
+          echo "Od $OD: $wszystkie przebiegow, $nieudane nieudanych, $skasowane skasowanych."
+
+          if [ "$nieudane" -ge "$PROG_NIEUDANYCH" ]; then
+            gh run list --workflow summary.yml --status failure --limit 10 \
+              --json createdAt,url --jq '.[] | "  \(.createdAt)  \(.url)"' || true
+            echo "::error title=Zapisy podsumowania padaja::$nieudane nieudanych przebiegow na $wszystkie w ostatniej dobie, prog to $PROG_NIEUDANYCH. Kazdy to bezpowrotnie utracony odczyt archiwum. Zajrzyj do kroku 'Zapisz, jesli sie zmienilo'."
+            exit 1
+          fi
+
+          if [ "$wszystkie" -lt "$PROG_MINIMUM" ]; then
+            echo "::error title=Puls oslabl::Tylko $wszystkie przebiegow w ostatniej dobie, oczekiwane okolo 96 z cron-job.org. Sprawdz zadanie zewnetrzne i termin waznosci jego PAT-a."
+            exit 1
+          fi
+
+          if [ "$nieudane" -gt 0 ]; then
+            echo "::warning title=Jedno padniecie zapisu::$nieudane na $wszystkie — w progu, ale odczyt z tego kwadransa przepadl."
+          fi
+
+          echo "W porzadku."

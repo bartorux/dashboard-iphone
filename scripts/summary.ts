@@ -57,6 +57,7 @@ import { parseCompass } from '../src/utils/compass';
 import type { CompassHour } from '../src/utils/compass';
 import {
   archivePartition,
+  countImplausibleBusinessDates,
   lastValuesFrom,
   newArchiveLines,
   previousPartition,
@@ -198,6 +199,15 @@ function archivePk5l(rows: PSERawItem[], at: Date): void {
       readPartition(previousPath),
       readPartition(partitionPath),
     ]);
+
+    // Counted separately from the lines actually written: PSE's own feed
+    // carries rows dated years ahead (measured 08.09.2026 — 200 rows for 2031,
+    // which reached the archive through the unbounded fallback query), and a
+    // silent filter would repeat the mistake that let them in.
+    const nierealne = countImplausibleBusinessDates(rows, at.toISOString());
+    if (nierealne > 0) {
+      console.warn(`Archiwum pk5l-wp: pominieto ${nierealne} wierszy z niewiarygodna data doby.`);
+    }
 
     const lines = newArchiveLines(rows, lastByKey, at.toISOString());
     if (lines.length === 0) {

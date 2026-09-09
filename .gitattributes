@@ -1,0 +1,13 @@
+# Archiwa sa append-only: dwa zapisy nigdy nie zmieniaja tej samej linii, tylko
+# dopisuja na koncu. Sterownik "union" bierze linie z OBU stron zamiast zglaszac
+# konflikt, wiec przy rebase w zadaniu "Podsumowanie AI" — i przy recznym
+# merge'u — zaden odczyt nie ginie. Zmierzone na kopii repozytorium: przy
+# rebase union wypisuje najpierw strone bazowa (zdalna, czyli wczesniejsza
+# w czasie), a potem przenoszony commit (nasz, pozniejszy), czyli dokladnie
+# w kolejnosci, ktora zaklada `parseArchiveLines` — pozniejsza linia wygrywa.
+#
+# Cena, o ktorej warto wiedziec: na tych plikach nigdy nie zobaczysz znacznikow
+# konfliktu, takze przy recznym merge'u. Gdyby ktorykolwiek przestal byc
+# append-only, ten wpis trzeba zdjac tego samego dnia.
+data/pk5l-archiwum/*.jsonl   merge=union
+data/kompas-archiwum/*.jsonl merge=union

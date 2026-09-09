@@ -47,6 +47,10 @@ env:
 jobs:
   summary:
     runs-on: ubuntu-latest
+    # Ponowienia moga dolozyc do ~130 s przy pelnej porazce; mediana przebiegu
+    # to 63 s, maksimum 295 s. Limit jest po to, zeby zawieszony runner nie
+    # blokowal kolejki `concurrency` przez cala godzine.
+    timeout-minutes: 15
     outputs:
       changed: ${{ steps.publish.outputs.changed }}
     steps:
@@ -110,9 +114,53 @@ jobs:
           if [ -f public/summary.json ]; then git add public/summary.json; fi
           if [ -d data ]; then git add data; fi
           git commit -m "$wiadomosc"
-          # Someone may have pushed while the model was answering.
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+          # Jedno podejscie: dociagnij, przenies nasz commit, oddaj. `fetch` +
+          # `rebase` zamiast `pull --rebase`, zeby kazda faze dalo sie
+          # rozroznic i zeby zadna konfiguracja `pull.rebase` nie zmieniala tu
+          # zachowania.
+          sprobuj() {
+            git fetch --no-tags --quiet origin "$GITHUB_REF_NAME" || return 1
+
+            # Najpierw rebase bez zadnych rozstrzygniec, zeby konflikt byl
+            # WIDOCZNY. Archiwa JSONL i tak nie skonfliktuja — .gitattributes
+            # laczy je sterownikiem union — wiec to ostrzezenie zapali sie
+            # tylko dla plikow przepisywanych w calosci, czyli dokladnie tam,
+            # gdzie warto na nie spojrzec.
+            if ! git rebase --quiet FETCH_HEAD; then
+              git rebase --abort >/dev/null 2>&1 || true
+              echo "::warning title=Konflikt przy zapisie::Ktos ruszyl te same pliki na ${GITHUB_REF_NAME}. Rozstrzygam na korzysc tego przebiegu — jego dane sa swiezsze."
+              # UWAGA na odwrocenie: przy rebase "ours" to galaz docelowa
+              # (zdalna), a "theirs" to przenoszony commit, czyli NASZ. Wiec
+              # `-X theirs` znaczy "zachowaj wersje tego przebiegu". Zmierzone
+              # na kopii repozytorium, nie wywnioskowane.
+              git rebase --quiet -X theirs FETCH_HEAD || {
+                git rebase --abort >/dev/null 2>&1 || true
+                return 1
+              }
+            fi
+
+            git push --quiet origin "HEAD:${GITHUB_REF_NAME}" || return 1
+          }
+
+          # Cztery podejscia, przerwy 10/30/90 s. Zmierzone 09.09.2026: 3
+          # padniecia na 95 przebiegow, wszystkie na tym kroku. Skonczona lista
+          # prob, nie `while`: przy bledzie trwalym ten krok ma sie poddac
+          # glosno, a nie zajac runnera. `git rebase --abort` po kazdej
+          # nieudanej probie gwarantuje, ze kolejna zaczyna od naszego commita
+          # na starej bazie, a nie od polowy rebase'u.
+          udalo=nie
+          for przerwa in 10 30 90 koniec; do
+            if sprobuj; then udalo=tak; break; fi
+            [ "$przerwa" = koniec ] && break
+            echo "::notice title=Ponawiam zapis::Nie udalo sie oddac commita; kolejne podejscie za ${przerwa} s."
+            sleep "$przerwa"
+          done
+
+          if [ "$udalo" != tak ]; then
+            echo "::error title=Odczyt przepadl::Cztery podejscia do rebase i push na ${GITHUB_REF_NAME} nie powiodly sie. Przepadl odczyt archiwum z tego kwadransa — a to jedyny zapis tego, co prognoza mowila w tej chwili, bo PSE nie wersjonuje pk5l-wp."
+            exit 1
+          fi
 
           if [ "$summary_changed" = yes ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
