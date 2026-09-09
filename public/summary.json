@@ -1,8 +1,8 @@
 {
-  "headline": "W piątek między 18:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW.",
-  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-  "outlook": "Dziś, jutro i w piątek rezerwa nie pokryje wymaganego poziomu, a w poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-09T03:01:09.512Z",
+  "headline": "W piątek nadwyżka spadła poniżej progu 1100 MW w godzinach 18:00-21:00, co oznacza, że operator może ogłosić przywołanie i stracił możliwość jego pominięcia.",
+  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE wymaga oszczędzania dzisiaj od 20:00 do 21:00.",
+  "outlook": "Dzisiaj, jutro oraz w piątek w pozostałych godzinach rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, podczas gdy poniedziałek 14 września i wtorek 15 września nie niosą takich ograniczeń.",
+  "generatedAt": "2026-09-09T03:45:38.343Z",
   "dates": [
     "2026-09-09",
     "2026-09-10",
@@ -10,6 +10,6 @@
     "2026-09-14",
     "2026-09-15"
   ],
-  "assessment": "2026-09-09|R|moderate|-900|20:00|0|0|9|moderate:20:00-21:00|K2:20:00-21:00|-;2026-09-10|R|moderate|0|20:00|1|0|21|moderate:20:00-21:00||-;2026-09-11|R|high|-3000|19:00|0|9|4|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-21:00,moderate:21:00-22:00||X;2026-09-14|R|none|900|20:00|0|0|19|||X;2026-09-15|R|none|1100|07:00|0|0|22|||X#-/below/prognoza pogarsza się#v53",
+  "assessment": "2026-09-09|R|moderate|-900|20:00|0|0|9|moderate:20:00-21:00|K2:20:00-21:00|-;2026-09-10|R|moderate|-100|20:00|1|0|21|moderate:20:00-21:00||-;2026-09-11|R|high|-3000|19:00|0|9|4|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-21:00,moderate:21:00-22:00||X;2026-09-14|R|none|900|20:00|0|0|19|||X;2026-09-15|R|none|1100|07:00|0|0|22|||X#-/below/prognoza pogarsza się#v53",
   "model": "gemini-3.5-flash-lite"
 }
