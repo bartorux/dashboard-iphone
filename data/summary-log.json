@@ -1463,6 +1463,24 @@
       "headline": "Jutro między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
       "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W pozostałe dni przywołanie wchodzi w grę między 07:00 a 22:00, natomiast w środę 16 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-10T11:30:52.026Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Najniższy margines w poniedziałek 14 września o 20:00 wynosi -1412 MW, przy czym nadwyżka utrzymuje się powyżej progu 1100 MW, co daje operatorowi wybór w kwestii przywołania.",
+      "body": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez dwie godziny, natomiast w Kompasie Energetycznym PSE zalecane jest oszczędzanie między 19:00 a 20:00. Na ogłoszenie dla dzisiejszych godzin jest już za późno, ponieważ do wyznaczonego czasu pozostało mniej niż osiem godzin.",
+      "outlook": "Jutro między 07:00 a 10:00 oraz od 16:00 do 22:00 operator może ogłosić przywołanie, w poniedziałek 14 września w godzinach 07:00-10:00 i 17:00-22:00 oraz we wtorek 15 września między 07:00 a 08:00 i od 17:00 do 21:00 ogłoszenie może jeszcze nadejść, natomiast w środę 16 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-10T11:30:52.026Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Najniższy margines wyniesie poniedziałek 14 września o 20:00, kiedy rezerwa nie pokryje wymaganego poziomu, a nadwyżka utrzyma się powyżej progu 1100 MW, dając operatorowi prawo do ogłoszenia przywołania, choć nie musi z niego skorzystać.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie dzisiaj między 19:00 a 20:00.",
+      "outlook": "W poniedziałek 14 września między 07:00 a 10:00 oraz między 17:00 a 22:00, we wtorek 15 września między 07:00 a 08:00 oraz między 17:00 a 21:00, a także jutro między 07:00 a 10:00 i między 16:00 a 22:00 operator może ogłosić przywołanie, natomiast w środę 16 września nic go nie zapowiada."
     }
   ]
 }
