@@ -1,8 +1,8 @@
 {
-  "headline": "Operator może ogłosić przywołanie jutro między 07:00 a 09:00.",
-  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
-  "outlook": "Dziś między 19:00 a 22:00 oraz w poniedziałek 14 września między 19:00 a 21:00 operator zachowuje wybór, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-10T04:15:45.373Z",
+  "headline": "Jutro w godzinach 07:00-09:00 nadwyżka spadnie poniżej progu 1100 MW.",
+  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść dla godzin popołudniowych i wieczornych, do których zostało ponad osiem godzin.",
+  "outlook": "W poniedziałek 14 września między 19:00 a 21:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-10T04:30:54.417Z",
   "dates": [
     "2026-09-10",
     "2026-09-11",
@@ -10,6 +10,6 @@
     "2026-09-15",
     "2026-09-16"
   ],
-  "assessment": "2026-09-10|R|moderate|-300|19:00|1|2|0|moderate:07:00-08:00,moderate:19:00-22:00||-;2026-09-11|R|high|-3300|19:00|0|11|0|high:07:00-09:00,moderate:15:00-16:00,high:16:00-22:00||-;2026-09-14|R|moderate|-500|20:00|1|0|12|moderate:19:00-21:00||X;2026-09-15|R|none|300|19:00|0|0|17|||X;2026-09-16|R|none|1800|19:00|0|0|24|||X#-/below/prognoza pogarsza się#v53",
+  "assessment": "2026-09-10|R|moderate|-300|19:00|1|3|0|moderate:07:00-08:00,moderate:19:00-22:00||-;2026-09-11|R|high|-3500|19:00|0|12|0|high:07:00-09:00,moderate:15:00-16:00,high:16:00-22:00||-;2026-09-14|R|moderate|-500|20:00|1|0|12|moderate:19:00-21:00||X;2026-09-15|R|none|300|19:00|1|0|17|||X;2026-09-16|R|none|1700|19:00|0|0|24|||X#-/below/prognoza pogarsza się#v53",
   "model": "gemini-3.5-flash-lite"
 }
