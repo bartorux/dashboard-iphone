@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś rezerwa nie pokrywa wymaganego poziomu, a nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Margines spadnie poniżej typowego zakresu w ciągu jednej godziny. Ogłoszenie może jeszcze nadejść między 19:00 a 22:00.",
-  "outlook": "Jutro operator może ogłosić przywołanie, a w poniedziałek 14 września margines miejscami spadnie poniżej wymaganego poziomu, natomiast wtorek 15 września oraz środa 16 września nie przyniosą takich problemów.",
-  "generatedAt": "2026-09-10T05:45:39.656Z",
+  "headline": "W godzinach 19:00 najniższy margines spadnie do poziomu ujemnego, przez co operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
+  "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść.",
+  "outlook": "W poniedziałek 14 września między 19:00 a 21:00 nadwyżka utrzyma się powyżej progu 1100 MW i operator ma wybór, natomiast w środę 16 września nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-10T06:01:08.445Z",
   "dates": [
     "2026-09-10",
     "2026-09-11",
@@ -10,6 +10,6 @@
     "2026-09-15",
     "2026-09-16"
   ],
-  "assessment": "2026-09-10|R|moderate|-400|19:00|0|1|0|moderate:07:00-08:00,moderate:19:00-22:00||-;2026-09-11|R|high|-3500|19:00|1|12|0|high:07:00-09:00,moderate:15:00-16:00,high:16:00-22:00||-;2026-09-14|R|moderate|-500|20:00|2|0|11|moderate:19:00-21:00||X;2026-09-15|R|none|300|19:00|1|0|17|||X;2026-09-16|R|none|1700|19:00|0|0|24|||X#-/below/prognoza pogarsza się#v53",
+  "assessment": "2026-09-10|R|moderate|-400|19:00|0|0|0|moderate:19:00-22:00||-;2026-09-11|R|high|-3500|19:00|1|13|0|high:07:00-09:00,moderate:15:00-16:00,high:16:00-22:00||-;2026-09-14|R|moderate|-500|20:00|2|0|10|moderate:19:00-21:00||X;2026-09-15|R|none|300|19:00|1|0|17|||X;2026-09-16|R|none|1800|19:00|0|0|24|||X#-/below/prognoza pogarsza się#v53",
   "model": "gemini-3.5-flash-lite"
 }
