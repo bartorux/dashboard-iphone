@@ -1,8 +1,8 @@
 {
-  "headline": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni przez jedenaście godzin jutro, a w poniedziałek 14 września i w pozostałe dni odbiega od normy.",
-  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść między 07:00 a 09:00 oraz między 15:00 a 22:00.",
-  "outlook": "Dziś ogłoszenie może jeszcze nadejść między 19:00 a 22:00, w poniedziałek 14 września między 19:00 a 21:00, natomiast we wtorek 15 września i w środę 16 września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-10T02:01:12.093Z",
+  "headline": "Margines bywa poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie.",
+  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
+  "outlook": "W poniedziałek 14 września margines ujemny wystąpi między 19:00 a 21:00, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-10T02:31:00.750Z",
   "dates": [
     "2026-09-10",
     "2026-09-11",
@@ -10,6 +10,6 @@
     "2026-09-15",
     "2026-09-16"
   ],
-  "assessment": "2026-09-10|R|moderate|-300|19:00|1|1|1|moderate:07:00-08:00,moderate:19:00-22:00|K2:19:00-20:00|-;2026-09-11|R|high|-3300|19:00|0|11|0|high:07:00-09:00,moderate:15:00-16:00,high:16:00-22:00||-;2026-09-14|R|moderate|-500|20:00|1|0|12|moderate:19:00-21:00||X;2026-09-15|R|none|300|19:00|0|0|17|||X;2026-09-16|R|none|1800|19:00|0|0|24|||X#-/below/prognoza pogarsza się#v53",
+  "assessment": "2026-09-10|R|moderate|-300|19:00|0|1|1|moderate:07:00-08:00,moderate:19:00-22:00|K2:19:00-20:00|-;2026-09-11|R|high|-3300|19:00|0|11|0|high:07:00-09:00,moderate:15:00-16:00,high:16:00-22:00||-;2026-09-14|R|moderate|-400|20:00|0|0|12|moderate:19:00-21:00||X;2026-09-15|R|none|500|19:00|0|0|19|||X;2026-09-16|R|none|1900|19:00|0|0|24|||X#-/below/prognoza pogarsza się#v53",
   "model": "gemini-3.5-flash-lite"
 }
