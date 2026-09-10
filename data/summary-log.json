@@ -1709,6 +1709,23 @@
       "headline": "W najbliższych dniach margines miejscami spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator zachowuje uprawnienie do ogłoszenia przywołania.",
       "body": "Prognoza na jutro wciąż się ustala, bo rezerwa na przemian pokrywa wymagany poziom i go nie pokrywa. Ogłoszenie między 07:00 a 13:00 może jeszcze nadejść.",
       "outlook": "Dzisiaj na ogłoszenie jest już za późno, natomiast w poniedziałek między 07:00 a 10:00 oraz 17:00 a 22:00, a także we wtorek między 19:00 a 20:00 operator zachowuje wybór."
+    },
+    {
+      "at": "2026-09-10T18:01:15.147Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Jutro między 09:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW, co sprawi, że operator może ogłosić przywołanie, a saldo straci możliwość jego pominięcia.",
+      "body": "W tę dobę prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 09:00 a 10:00 oraz między 11:00 a 13:00.",
+      "outlook": "Dziś przywołanie nie nadejdzie, ponieważ na ogłoszenie jest już za późno, natomiast w poniedziałek 14 września i wtorek 15 września oraz w środę 16 września sytuacja rozwija się spokojniej, choć w poniedziałek i wtorek rezerwa nie pokrywa wymaganego poziomu, a saldo wymiany nie jest jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-10T18:01:15.147Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Jutro w godzinach 09:00-10:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a próg ten nie pozwala mu już go pominąć.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W poniedziałek 14 września i wtorek 15 września margines miejscami spada poniżej wymaganego poziomu, a w środę 16 września nic nie zapowiada przywołania w całym dobowym okresie."
     }
   ]
 }
