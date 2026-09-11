@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-08T19:01:15.417Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Przywołanie wchodzi w grę, a w piątek między 18:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza na piątek pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W poniedziałek 14 września rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania, podobnie jak w pozostałych dniach, podczas gdy jutro i w czwartek między 19:00 a 21:00 operator ma wybór."
-    },
-    {
       "at": "2026-09-08T19:15:46.551Z",
       "prompt": 53,
       "accepted": false,
@@ -2470,6 +2461,14 @@
       "headline": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza pogarsza się w poniedziałek 14 września. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "W poniedziałek 14 września między 07:00 a 09:00 nadwyżka spada poniżej progu 1100 MW, a operator może ogłosić przywołanie; w pozostałych dniach rezerwa pokrywa wymagany poziom lub nic jej nie zapowiada."
+    },
+    {
+      "at": "2026-09-11T18:15:43.925Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W poniedziałek 14 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 15 września oraz w środę 16 września i czwartek 17 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa pokrywa wymagany poziom."
     }
   ]
 }
