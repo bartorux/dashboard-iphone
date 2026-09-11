@@ -2102,6 +2102,23 @@
       "headline": "Dziś między 09:00 a 12:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a poniżej tego progu nie ma już wyboru, który pozwalałby je pominąć.",
       "body": "Margines wypada poniżej typowego zakresu przez dwanaście godzin, a Kompas Energetyczny PSE wskazuje zalecane oszczędzanie między 07:00 a 09:00, 10:00 a 11:00 oraz 12:00 a 18:00, a także wymagane ograniczenie poboru między 09:00 a 10:00 i 11:00 a 12:00. Na ogłoszenie między 12:00 a 20:00 oraz 21:00 a 22:00 jest jeszcze czas, bo do tych godzin zostało ponad osiem godzin.",
       "outlook": "W poniedziałek 14 września między 07:00 a 10:00 i 17:00 a 22:00 oraz we wtorek 15 września między 07:00 a 08:00 i 18:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka trzyma się powyżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-11T05:13:04.011Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "Dziś między 16:00 a 19:00 operator może ogłosić przywołanie, ale nadwyżka powyżej progu 1100 MW daje mu wybór.",
+      "body": "Margines spada poniżej typowego pasma przez jedenaście godzin z powodu poziomu rezerwy poniżej normy. Ogłoszenie może jeszcze nadejść między 16:00 a 19:00 oraz od 21:00 do 22:00.",
+      "outlook": "W poniedziałek 14 września i we wtorek 15 września między 07:00 a 10:00 oraz od 17:00 do 22:00 przywołanie również wchodzi w grę, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-11T05:13:04.011Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Dziś między 16:00 a 19:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka przekracza próg 1100 MW.",
+      "body": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez jedenaście godzin. Na ogłoszenie w tych godzinach jest jeszcze za wcześnie albo w sam raz, bo do części z nich zostało ponad osiem godzin.",
+      "outlook": "W poniedziałek 14 września i wtorek 15 września rezerwa nie pokryje wymaganego poziomu, a w środę 16 września oraz czwartek 17 września nic nie zapowiada przywołania."
     }
   ]
 }
