@@ -3,15 +3,6 @@
     {
       "at": "2026-09-08T19:15:46.551Z",
       "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W najbliższych dniach w godzinach wieczornych nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "Najciężej będzie o 20:00, bo zapotrzebowanie rośnie ponad normę, a produkcja z fotowoltaiki spada poniżej normy. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek margines obniży się między 19:00 a 21:00, w piątek przywołanie wchodzi w grę w szerszym przedziale między 07:00 a 22:00, a w pozostałe doby nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-08T19:15:46.551Z",
-      "prompt": 53,
       "accepted": true,
       "headline": "W najbliższych dniach operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 20:00 a 21:00.",
       "body": "Zapotrzebowanie przewyższa normę, a fotowoltaika jej nie dotrzymuje. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -2469,6 +2460,14 @@
       "headline": "W poniedziałek 14 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 15 września oraz w środę 16 września i czwartek 17 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa pokrywa wymagany poziom."
+    },
+    {
+      "at": "2026-09-11T18:31:02.328Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W poniedziałek 14 września w godzinach 07:00-09:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a w pozostałych godzinach ma wybór.",
+      "body": "Prognoza pogarsza się w poniedziałek 14 września. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało ponad osiem godzin, przy czym saldo wymiany na tę dobę nie jest jeszcze zaplanowane, więc rezerwa może się zmienić.",
+      "outlook": "We wtorek 15 września w godzinach 07:00-09:00 i 17:00-21:00 oraz w środę 16 września w godzinach 19:00-21:00 operator może ogłosić przywołanie, ale ma wybór, natomiast w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
