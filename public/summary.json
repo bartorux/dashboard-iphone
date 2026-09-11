@@ -1,8 +1,8 @@
 {
-  "headline": "W godzinach 09:00-10:00 dziś nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, straciwszy możliwość jego pominięcia.",
-  "body": "Dziś margines obniżył się poniżej typowego zakresu w ciągu dziesięciu godzin, a Kompas Energetyczny PSE wymaga oszczędzania między 06:00 a 13:00. Ogłoszenie może jeszcze nadejść w godzinach 12:00-14:00 oraz 16:00-18:00.",
-  "outlook": "W poniedziałek 14 września i wtorek 15 września rezerwa nie pokrywa wymaganego poziomu, a w środę 16 września i czwartek 17 września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-11T01:30:54.388Z",
+  "headline": "Dziś o 09:00 rezerwa spadnie najgłębiej ze wszystkich dni, a nadwyżka spadnie poniżej progu 1100 MW w godzinach 08:00-13:00.",
+  "body": "W godzinach 08:00-13:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej poziomu, który pozwalał mu je pominąć. Kompas Energetyczny PSE zaleca oszczędzanie między 08:00 a 09:00, wymaga ograniczenia poboru od 09:00 do 10:00, zaleca oszczędzanie między 10:00 a 11:00, wymaga ograniczenia poboru od 11:00 do 12:00 oraz zaleca oszczędzanie między 12:00 a 13:00.",
+  "outlook": "W poniedziałek 14 września i wtorek 15 września rezerwa również nie pokryje wymaganego poziomu, a w środę 16 września oraz czwartek 17 września nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-11T01:45:42.697Z",
   "dates": [
     "2026-09-11",
     "2026-09-14",
@@ -10,6 +10,6 @@
     "2026-09-16",
     "2026-09-17"
   ],
-  "assessment": "2026-09-11|R|high|-1000|09:00|3|10|0|moderate:07:00-09:00,high:09:00-10:00,moderate:10:00-11:00,high:11:00-12:00,moderate:12:00-14:00,moderate:16:00-18:00|K2:06:00-13:00|-;2026-09-14|R|moderate|-1300|20:00|0|8|6|moderate:07:00-10:00,moderate:17:00-22:00||X;2026-09-15|R|moderate|-600|19:00|2|1|13|moderate:07:00-08:00,moderate:18:00-21:00||X;2026-09-16|R|none|1000|20:00|0|0|22|||X;2026-09-17|R|none|1200|19:00|0|0|24|||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
+  "assessment": "2026-09-11|R|high|-1600|09:00|3|10|0|moderate:07:00-08:00,high:08:00-13:00,moderate:13:00-14:00,moderate:16:00-18:00|K2:08:00-09:00,K3:09:00-10:00,K2:10:00-11:00,K3:11:00-12:00,K2:12:00-13:00|-;2026-09-14|R|moderate|-1300|20:00|0|8|6|moderate:07:00-10:00,moderate:17:00-22:00||X;2026-09-15|R|moderate|-600|19:00|2|1|13|moderate:07:00-08:00,moderate:18:00-21:00||X;2026-09-16|R|none|1000|20:00|0|0|22|||X;2026-09-17|R|none|1200|19:00|0|0|24|||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
   "model": "gemini-3.5-flash-lite"
 }
