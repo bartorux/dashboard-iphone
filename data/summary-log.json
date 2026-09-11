@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-08T20:01:14.251Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W najbliższych godzinach nic nie zapowiada przywołania, ale jutro między 20:00 a 21:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Jutro zapotrzebowanie przewyższy normę, a fotowoltaika spadnie poniżej normy, co sprawi, że najniższy margines przypadnie na godzinę 20:00. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W czwartek margines miejscami nie pokryje wymaganego poziomu, w piątek rezerwa nie uwzględnia jeszcze salda wymiany, natomiast w poniedziałek 14 września rezerwa w pełni pokrywa wymagany poziom."
-    },
-    {
       "at": "2026-09-08T20:15:44.572Z",
       "prompt": 53,
       "accepted": true,
@@ -2469,6 +2461,14 @@
       "headline": "W poniedziałek 14 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść do tych godzin, ponieważ do ich nadejścia zostało jeszcze ponad osiem godzin.",
       "outlook": "W poniedziałek 14 września saldo wymiany transgranicznej nie jest jeszcze zaplanowane, więc rezerwa może się zmienić, gdy plan dojdzie dzień wcześniej około 13:00, a we wtorek 15 września, środę 16 września i czwartek 17 września operator może ogłosić przywołanie, ale ma wybór, bo nadwyżka trzyma się powyżej progu 1100 MW."
+    },
+    {
+      "at": "2026-09-11T19:30:58.861Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W poniedziałek i wtorek operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada.",
+      "body": "Prognoza na poniedziałek 14 września pogarsza się. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 15 września między 07:00 a 09:00 oraz 17:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW, dając operatorowi wybór, podczas gdy w pozostałe dni okresu nic nie zapowiada przywołania."
     }
   ]
 }
