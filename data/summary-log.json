@@ -2144,6 +2144,23 @@
       "headline": "Między 16:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka utrzymuje się powyżej progu 1100 MW, co daje operatorowi wybór w sprawie ogłoszenia przywołania.",
       "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "W poniedziałek 14 września między 19:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, a we wtorek 15 września prognoza jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie; w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-11T06:01:05.415Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "W poniedziałek 14 września o 20:00 rezerwa spadnie najmocniej, a nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a poziom ten odebrał mu możliwość jego pominięcia.",
+      "body": "W poniedziałek 14 września saldo wymiany nie jest jeszcze zaplanowane, więc rezerwa liczy się bez importu i eksportu i zmieni się po dojściu planu. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 15 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie, a w środę i czwartek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-11T06:01:05.415Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W poniedziałek 14 września o 20:00 rezerwa osiągnie najniższy margines, a nadwyżka spadnie poniżej progu 1100 MW, przez co operator może ogłosić przywołanie bez możliwości pominięcia.",
+      "body": "Dziś między 16:00 a 20:00 oraz 21:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka utrzymuje się powyżej progu 1100 MW, pozostawiając operatorowi wybór. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 15 września rezerwa miejscami nie pokryje wymaganego poziomu, a saldo wymiany nie zostało jeszcze zaplanowane. W środę i czwartek nic nie zapowiada przywołania."
     }
   ]
 }
