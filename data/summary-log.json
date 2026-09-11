@@ -2291,6 +2291,23 @@
       "headline": "Między 16:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez trzy godziny, a Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 18:00. Na ogłoszenie dla najbliższych godzin jest już za późno, natomiast ogłoszenie dla godziny 21:00 i 22:00 może jeszcze nadejść.",
       "outlook": "W poniedziałek 14 września nadwyżka spada poniżej progu 1100 MW między 07:00 a 08:00 oraz od 19:00 do 21:00, saldo wymiany nie jest jeszcze zaplanowane, a prognoza pogarsza się. We wtorek 15 września nadwyżka utrzymuje się powyżej progu 1100 MW od 07:00 do 09:00 oraz między 17:00 a 22:00, a w środa 16 września i czwartek 17 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-11T10:15:42.259Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Między 16:00 a 19:00 oraz od 21:00 do 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez trzy godziny, a Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 18:00. Na ogłoszenie między 16:00 a 19:00 jest już za późno, natomiast ogłoszenie dla godzin 21:00-22:00 może jeszcze nadejść.",
+      "outlook": "W poniedziałek 14 września i we wtorek 15 września rezerwa miejscami nie pokrywa wymaganego poziomu, a w środę 16 września i czwartek 17 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-11T10:15:42.259Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Między 16:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni. Na ogłoszenie jest już za późno.",
+      "outlook": "W poniedziałek 14 września o 07:00-08:00 nadwyżka spadnie poniżej progu 1100 MW, w kolejnych godzinach tego dnia oraz we wtorek 15 września rezerwa również nie pokryje wymaganego poziomu, natomiast w środę 16 września i czwartek 17 września nic nie zapowiada przywołania."
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
-  "headline": "W najbliższych dniach operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w poniedziałek 14 września między 07:00 a 08:00.",
-  "body": "W poniedziałek 14 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-  "outlook": "We wtorek 15 września między 07:00 a 09:00 oraz między 17:00 a 22:00 nadwyżka utrzymuje się powyżej progu 1100 MW i operator ma wybór, natomiast w środę 16 września i czwartek 17 września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-11T09:59:32.721Z",
+  "headline": "Między 16:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni. Na ogłoszenie jest już za późno.",
+  "outlook": "W poniedziałek 14 września o 07:00-08:00 nadwyżka spadnie poniżej progu 1100 MW, w kolejnych godzinach tego dnia oraz we wtorek 15 września rezerwa również nie pokryje wymaganego poziomu, natomiast w środę 16 września i czwartek 17 września nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-11T10:15:42.259Z",
   "dates": [
     "2026-09-11",
     "2026-09-14",
@@ -10,6 +10,6 @@
     "2026-09-16",
     "2026-09-17"
   ],
-  "assessment": "2026-09-11|R|moderate|-500|17:00|2|4|0|moderate:16:00-19:00,moderate:21:00-22:00|K2:16:00-18:00|-;2026-09-14|R|high|-2300|20:00|2|12|2|high:07:00-08:00,moderate:08:00-10:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-15|R|moderate|-1300|19:00|0|5|9|moderate:07:00-09:00,moderate:17:00-22:00||X;2026-09-16|R|none|200|19:00|2|0|15|||X;2026-09-17|R|none|700|20:00|0|0|19|||X#-/below/prognoza pogarsza się#v53",
+  "assessment": "2026-09-11|R|moderate|-500|17:00|2|3|0|moderate:16:00-19:00,moderate:21:00-22:00|K2:16:00-18:00|-;2026-09-14|R|high|-2200|20:00|2|10|3|high:07:00-08:00,moderate:08:00-10:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-15|R|moderate|-1300|19:00|1|6|9|moderate:07:00-09:00,moderate:17:00-21:00||X;2026-09-16|R|none|200|19:00|2|0|15|||X;2026-09-17|R|none|800|20:00|0|0|20|||X#-/below/prognoza pogarsza się#v53",
   "model": "gemini-3.5-flash-lite"
 }
