@@ -2308,6 +2308,24 @@
       "headline": "Między 16:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni. Na ogłoszenie jest już za późno.",
       "outlook": "W poniedziałek 14 września o 07:00-08:00 nadwyżka spadnie poniżej progu 1100 MW, w kolejnych godzinach tego dnia oraz we wtorek 15 września rezerwa również nie pokryje wymaganego poziomu, natomiast w środę 16 września i czwartek 17 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-11T10:30:53.632Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Między 17:00 a 19:00 margines spadnie poniżej zera, a nadwyżka utrzyma się powyżej progu 1100 MW. Operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Margines osiągnie najniższy punkt o 17:00. Na ogłoszenie przywołania dla tych godzin jest już za późno, jednak między 21:00 a 22:00 ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 14 września prognoza pogarsza się, a saldo wymiany na tę dobę nie jest jeszcze zaplanowane, natomiast we wtorek 15 września margines również spadnie poniżej zera, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-11T10:30:53.632Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Między 17:00 a 19:00 margines spada poniżej zera, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, choć nie musi.",
+      "body": "W godzinach 21:00-22:00 rezerwa również nie pokrywa wymaganego poziomu, a nadwyżka pozostaje powyżej progu 1100 MW. Ogłoszenie może jeszcze nadejść do tych godzin.",
+      "outlook": "W poniedziałek 14 września prognoza pogarsza się, a saldo wymiany nie jest jeszcze zaplanowane, natomiast we wtorek 15 września rezerwa nie pokrywa wymaganego poziomu w wyznaczonych godzinach, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
