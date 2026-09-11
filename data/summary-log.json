@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-08T18:15:45.367Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "W piątek nadwyżka spadła poniżej progu 1100 MW w godzinach 18:00-21:00, co oznacza, że operator może ogłosić przywołanie, a w pozostałe dni wchodzi ono w grę, dopóki nadwyżka trzyma się powyżej tego progu.",
-      "body": "Prognoza pogarsza się w piątek, a saldo wymiany nie jest jeszcze zaplanowane, więc rezerwa może się zmienić w obie strony. Ogłoszenie może jeszcze nadejść do godzin wieczornych.",
-      "outlook": "W poniedziałek 14 września rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania, podobnie jak w pozostałych dniach poza wyznaczonymi godzinami."
-    },
-    {
       "at": "2026-09-08T18:30:58.984Z",
       "prompt": 53,
       "accepted": true,
@@ -2469,6 +2460,14 @@
       "headline": "Margines w wielu godzinach wypada poniżej typowego zakresu z ostatnich trzydziestu dni, a w poniedziałek 14 września nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "W poniedziałek 14 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 22:00 a 00:00.",
       "outlook": "Wtorek 15 września przynosi godziny z wyborem operatora między 07:00 a 09:00 oraz 17:00 a 21:00, podczas gdy pozostałe dni upływają spokojnie bez zapowiedzi przywołania."
+    },
+    {
+      "at": "2026-09-11T17:31:02.514Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W najbliższych dniach margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza pogarsza się w poniedziałek 14 września. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "We wtorek 15 września między 07:00 a 09:00 oraz 17:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, a saldo wymiany transgranicznej dla tego dnia nie jest jeszcze zaplanowane, natomiast w środę 16 września i czwartek 17 września nic nie zapowiada przywołania."
     }
   ]
 }
