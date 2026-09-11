@@ -2169,6 +2169,23 @@
       "headline": "W poniedziałek 14 września w godzinach 19:00-21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a jego wykonanie może jeszcze nadejść.",
       "body": "We wtorek 15 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę i czwartek nic nie zapowiada przywołania, a dzisiaj między 16:00 a 19:00 oraz 21:00 a 22:00 operator może ogłosić przywołanie i jego ogłoszenie może jeszcze nadejść."
+    },
+    {
+      "at": "2026-09-11T06:30:59.894Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "W poniedziałek 14 września o godzinę 20:00 opiera się najgłębszy niedobór ze wszystkich dni, a nadwyżka spada poniżej progu 1100 MW, przez co operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez wiatr poniżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W poniedziałek 14 września saldo wymiany transgranicznej nie jest jeszcze zaplanowane, a rezerwa liczy się bez importu i eksportu. Dziś i we wtorek 15 września rezerwa nie pokrywa wymaganego poziomu, nadwyżka trzyma się powyżej progu 1100 MW, a operator ma wybór, co zrobi. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 13:00 a 18:00, natomiast w środę 16 września i czwartek 17 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-11T06:30:59.894Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W poniedziałek 14 września o 20:00 nadwyżka spadła poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
+      "body": "W poniedziałek 14 września saldo wymiany transgranicznej jeszcze nie doszło, więc rezerwa liczy się bez importu i eksportu. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek między 13:00 a 14:00, 16:00 a 19:00 oraz 21:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, natomiast w środę i czwartek nic nie zapowiada przywołania."
     }
   ]
 }
