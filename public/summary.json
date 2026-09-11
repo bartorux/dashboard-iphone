@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a nadwyżka w godzinach 09:00-10:00 spada poniżej progu 1100 MW.",
-  "body": "Margines wypada poniżej typowego zakresu przez dziesięć godzin, a najniższa wartość występuje o 09:00. Na ogłoszenie w najgorszych godzinach jest już za późno, bo do wyznaczonego czasu zostało mniej niż osiem godzin.",
-  "outlook": "W poniedziałek 14 września w godzinach 07:00-10:00 oraz 17:00-22:00 rezerwa nie pokrywa wymaganego poziomu, a we wtorek 15 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie, natomiast w środę 16 września i czwartek 17 września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-11T02:15:46.093Z",
+  "headline": "Margines w kraju leży dziś wyraźnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
+  "body": "Margines spada poniżej normy przez jedenaście godzin. Na ogłoszenie we wskazanych godzinach jest już za późno.",
+  "outlook": "W poniedziałek 14 września między 07:00 a 10:00 oraz 17:00 a 22:00 operator może ogłosić przywołanie, przy czym saldo wymiany na tę dobę nie jest jeszcze zaplanowane, a w pozostałe dni rezerwa utrzymuje się bezpiecznie powyżej wymaganych poziomów.",
+  "generatedAt": "2026-09-11T02:30:53.992Z",
   "dates": [
     "2026-09-11",
     "2026-09-14",
@@ -10,6 +10,6 @@
     "2026-09-16",
     "2026-09-17"
   ],
-  "assessment": "2026-09-11|R|high|-1300|09:00|3|10|0|moderate:07:00-09:00,high:09:00-10:00,moderate:10:00-11:00,high:11:00-13:00,moderate:13:00-14:00,moderate:16:00-18:00|K2:08:00-09:00,K3:09:00-10:00,K2:10:00-11:00,K3:11:00-12:00,K2:12:00-13:00|-;2026-09-14|R|moderate|-1300|20:00|0|6|6|moderate:07:00-10:00,moderate:17:00-22:00||X;2026-09-15|R|moderate|-500|19:00|2|1|13|moderate:07:00-08:00,moderate:18:00-21:00||X;2026-09-16|R|none|1000|20:00|0|0|22|||X;2026-09-17|R|none|1500|19:00|0|0|24|||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
+  "assessment": "2026-09-11|R|high|-1300|09:00|3|11|0|moderate:07:00-09:00,high:09:00-10:00,moderate:10:00-11:00,high:11:00-13:00,moderate:13:00-14:00,moderate:16:00-18:00|K2:06:00-09:00,K3:09:00-10:00,K2:10:00-11:00,K3:11:00-12:00,K2:12:00-14:00|-;2026-09-14|R|moderate|-1300|20:00|0|6|6|moderate:07:00-10:00,moderate:17:00-22:00||X;2026-09-15|R|moderate|-500|19:00|2|1|13|moderate:07:00-08:00,moderate:18:00-21:00||X;2026-09-16|R|none|1000|20:00|0|0|22|||X;2026-09-17|R|none|1500|19:00|0|0|24|||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
   "model": "gemini-3.5-flash-lite"
 }
