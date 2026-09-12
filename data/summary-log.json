@@ -1,39 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-09T04:30:55.055Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Dziś między 20:00 a 21:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, do tych godzin zostało ponad osiem godzin, a Kompas Energetyczny PSE zaleca oszczędzanie.",
-      "outlook": "Jutro operator może ogłosić przywołanie między 19:00 a 21:00, w piątek także wchodzi ono w grę od 07:00 do 22:00, natomiast w poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-09T04:45:45.444Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "Dziś, jutro i w piątek rezerwa nie pokrywa wymaganego poziomu, a operator może ogłosić przywołanie, przy czym w piątek nadwyżka dodatkowo spada poniżej progu 1100 MW w godzinach 07:00-08:00 oraz 17:00-22:00.",
-      "body": "Prognoza pogarsza się w piątek, a saldo wymiany na ten dzień nie jest jeszcze zaplanowane, więc rezerwa może się zmienić w obie strony po dojściu planu. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania, mimo że saldo wymiany dla obu tych dni nie jest jeszcze zaplanowane, a w pozostałe dni w wyznaczonych godzinach rezerwa nie pokrywa wymaganego poziomu."
-    },
-    {
-      "at": "2026-09-09T04:45:45.444Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-08:00.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania, a w pozostałe dni rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW."
-    },
-    {
-      "at": "2026-09-09T05:01:03.060Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Dziś między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Margines przebywa powyżej typowego zakresu z ostatnich trzydziestu dni przez siedem godzin. Kompas Energetyczny PSE zaleca oszczędzanie między 20:00 a 21:00, a ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 20:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, w piątek nadwyżka w godzinach 18:00-21:00 spada poniżej tego progu, natomiast w poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-09T05:15:41.048Z",
       "prompt": 53,
       "accepted": true,
@@ -2470,6 +2437,14 @@
       "headline": "W poniedziałek 14 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 10:00.",
       "body": "Prognoza pogarsza się w poniedziałek 14 września. Do wskazanych godzin pozostało wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek i wtorek rezerwa spada poniżej progu 1100 MW, podczas gdy w środę i czwartek nadwyżka trzyma się powyżej tej granicy, a w piątek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-12T05:01:11.843Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W poniedziałek 14 września w godzinach 07:00-10:00 oraz 17:00-22:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza na poniedziałek 14 września pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 15 września w godzinach 07:00-09:00, 17:00-21:00 i 21:00-22:00 operator ma wybór, w środę 16 września i czwartek 17 września w godzinach 19:00-21:00 również zachowuje swobodę decyzji, natomiast w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
