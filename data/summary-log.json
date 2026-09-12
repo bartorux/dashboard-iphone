@@ -2368,6 +2368,24 @@
       "headline": "W poniedziałek 14 września o 19:00 rezerwa osiągnie najniższy punkt, a nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
       "body": "W piątek 18 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 15 września, w środę 16 września i w czwartek 17 września operator zachowuje wybór w części godzin, podczas gdy w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-12T16:31:09.958Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "W poniedziałek 14 września o godzinie 19:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "W piątek 18 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 15 września między 07:00 a 08:00, 17:00 a 19:00 oraz 21:00 a 22:00, w środę 16 września między 18:00 a 21:00, w czwartek 17 września między 18:00 a 21:00 oraz w piątek 18 września między 19:00 a 21:00 operator ma wybór, a w pozostałych dniach Kompas Energetyczny PSE nie wnosi innych sygnałów."
+    },
+    {
+      "at": "2026-09-12T16:31:09.958Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "W poniedziałek 14 września o 19:00 margines spadnie do najniższego poziomu ze wszystkich dni, a nadwyżka spadnie poniżej progu 1100 MW, co sprawi, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "W piątek 18 września prognoza jeszcze się ustala, a rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 14 września, wtorek 15 września, środę 16 września, czwartek 17 września oraz piątek 18 września występują godziny, w których operator może ogłosić przywołanie, podczas gdy w pozostałych dniach nic nie zapowiada przywołania, a w Kompasie Energetycznym PSE na dzisiaj obowiązuje zalecane oszczędzanie między 19:00 a 20:00."
     }
   ]
 }
