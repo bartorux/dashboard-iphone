@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-09T14:01:21.178Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś, jutro, w piątek i poniedziałek 14 września operator może ogłosić przywołanie.",
-      "body": "Prognoza na jutro jeszcze się ustala, bo raz pokrywa wymagane minimum, a raz nie. Ogłoszenie może jeszcze nadejść w godzinach popołudniowych i wieczornych.",
-      "outlook": "We wtorek 15 września nic nie zapowiada przywołania, a w pozostałe dni rezerwa nie pokrywa wymaganego poziomu."
-    },
-    {
-      "at": "2026-09-09T14:01:21.178Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
-      "body": "Prognoza na jutro jeszcze się ustala. Ogłoszenie może jeszcze nadejść w piątek między 07:00 a 22:00.",
-      "outlook": "We wtorek 15 września nic nie zapowiada przywołania, a w pozostałych dniach operator może ogłosić przywołanie między 16:00 a 21:00."
-    },
-    {
       "at": "2026-09-09T14:15:48.026Z",
       "prompt": 53,
       "accepted": true,
@@ -2376,6 +2359,14 @@
       "headline": "W poniedziałek 14 września operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 08:00-09:00.",
       "body": "Prognoza pogarsza się w poniedziałek 14 września. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 15 września, środę 16 września i czwartek 17 września operator może ogłosić przywołanie, natomiast w piątek 18 września nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-12T14:15:41.484Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W poniedziałek 14 września nadwyżka spadła poniżej progu 1100 MW między 08:00 a 09:00 oraz 19:00 a 21:00, więc operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "Prognoza na poniedziałek 14 września pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 15 września nadwyżka również spadnie poniżej progu 1100 MW w godzinach 07:00-08:00 oraz 19:00-20:00, w środę 16 września i czwartek 17 września operator zachowa wybór między 18:00 a 21:00, natomiast w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
