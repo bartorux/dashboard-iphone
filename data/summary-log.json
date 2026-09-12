@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-09T05:30:53.988Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Dziś między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Margines przekracza typowy zakres z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE na tę dobę wskazuje zalecane oszczędzanie między 20:00 a 21:00.",
-      "outlook": "Jutro między 20:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu, a w piątek od 07:00 do 09:00 oraz od 16:00 do 22:00 nadwyżka spada poniżej progu 1100 MW, podczas gdy w poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-09T05:45:40.122Z",
       "prompt": 53,
       "accepted": true,
@@ -2454,6 +2446,14 @@
       "headline": "W poniedziałek 14 września w godzinach 07:00-10:00 nadwyżka spadła poniżej progu 1100 MW, przez co operator może ogłosić przywołanie, straciwszy możliwość jego pominięcia.",
       "body": "W poniedziałek 14 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin. Saldo wymiany transgranicznej na tę dobę nie jest jeszcze zaplanowane.",
       "outlook": "W poniedziałek 14 września i we wtorek 15 września nadwyżka w wybranych godzinach spada poniżej progu 1100 MW, podczas gdy w pozostałych dniach rezerwa pozostaje bezpieczna."
+    },
+    {
+      "at": "2026-09-12T05:30:54.789Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W poniedziałek 14 września nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin zostało jeszcze ponad osiem godzin, a dla poniedziałku 14 września saldo wymiany transgranicznej nie jest jeszcze zaplanowane.",
+      "outlook": "Wtorkowy margines spada w godzinach 19:00-21:00 poniżej progu 1100 MW, w środę i czwartek nadwyżka w godzinach 19:00-21:00 trzyma się powyżej progu 1100 MW, natomiast w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
