@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-09T01:30:57.615Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "W piątek między 18:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a w pozostałych godzinach i dniach ma taki wybór lub nic go nie zapowiada.",
-      "body": "W piątek prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania, natomiast dziś i jutro między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka przekracza próg 1100 MW."
-    },
-    {
-      "at": "2026-09-09T01:30:57.615Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W piątek między 18:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a w innych godzinach ma wybór.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 14 września i wtorek 15 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa miejscami nie pokrywa wymaganego poziomu."
-    },
-    {
       "at": "2026-09-09T01:45:38.757Z",
       "prompt": 53,
       "accepted": false,
@@ -2470,6 +2453,24 @@
       "headline": "W poniedziałek 14 września o godzinie 20:00 rezerwa osiąga najniższy margines w całym okresie, spadając poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania bez ograniczeń.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Saldo wymiany transgranicznej na poniedziałek 14 września nie jest jeszcze zaplanowane.",
       "outlook": "Wtorek 15 września przynosi spadki między 07:00 a 09:00 oraz między 17:00 a 22:00, w środę 16 września rezerwa obniża się między 19:00 a 21:00, w czwartek 17 września podobnie między 19:00 a 21:00, a w piątek 18 września między 19:00 a 20:00, podczas gdy w pozostałe dni i godziny nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-12T01:30:55.905Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W poniedziałek 14 września o godzinie 20:00 rezerwa osiągnie najniższy margines, a nadwyżka w systemie spadnie poniżej progu 1100 MW.",
+      "body": "W poniedziałek 14 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Saldo wymiany transgranicznej dla tej doby nie jest jeszcze zaplanowane, więc rezerwa liczy się bez importu i eksportu.",
+      "outlook": "We wtorek 15 września między 07:00 a 09:00 oraz 17:00 a 22:00 nadwyżka spada poniżej progu 1100 MW, a w środę 16 września, czwartek 17 września i piątek 18 września nadwyżka trzyma się powyżej tego progu w wyznaczonych godzinach wieczornych."
+    },
+    {
+      "at": "2026-09-12T01:30:55.905Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W poniedziałek 14 września o godzinie 20:00 rezerwa osiągnie najniższy margines, a nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Prognoza na poniedziałek 14 września pogarsza się. Ogłoszenie może jeszcze nadejść. Saldo wymiany na tę dobę nie jest jeszcze zaplanowane.",
+      "outlook": "We wtorek 15 września między 07:00 a 09:00 oraz od 17:00 do 22:00 nadwyżka utrzyma się powyżej progu 1100 MW, a w środę 16 września, czwartek 17 września i piątek 18 września operator zyska wybór w wyznaczonych godzinach wieczornych."
     }
   ]
 }
