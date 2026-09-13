@@ -1,32 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-10T12:15:42.190Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Dzisiejsza rezerwa spada poniżej typowego zakresu z ostatnich trzydziestu dni, a nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść między 07:00 a 10:00 oraz między 17:00 a 21:00.",
-      "outlook": "W poniedziałek 14 września między 07:00 a 10:00 oraz między 17:00 a 22:00, we wtorek 15 września między 07:00 a 08:00 oraz między 17:00 a 21:00, a także dzisiaj między 17:00 a 18:00 i między 19:00 a 22:00 operator może ogłosić przywołanie, a w środę 16 września nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-10T12:30:58.734Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się jutro. Ogłoszenie może jeszcze nadejść w godzinach 07:00-10:00 oraz 17:00-21:00.",
-      "outlook": "Operator może ogłosić przywołanie dziś między 17:00 a 18:00 oraz od 19:00 do 22:00, jutro między 07:00 a 10:00 i od 17:00 do 21:00, w poniedziałek 14 września w godzinach 07:00-10:00 oraz 17:00-22:00, a także we wtorek 15 września między 07:00 a 09:00 i od 17:00 do 21:00, natomiast w środę 16 września nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-10T12:30:58.734Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się jutro. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 10:00 oraz od 17:00 do 21:00.",
-      "outlook": "Operator może ogłosić przywołanie dzisiaj między 17:00 a 18:00 oraz od 19:00 do 22:00, jutro w godzinach od 07:00 do 10:00 i od 17:00 do 21:00, w poniedziałek 14 września od 07:00 do 10:00 oraz między 17:00 a 22:00, a także we wtorek 15 września w godzinach od 07:00 do 09:00 i od 17:00 do 21:00, podczas gdy w środę 16 września nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-10T12:45:50.880Z",
       "prompt": 53,
       "accepted": true,
@@ -2408,6 +2382,14 @@
       "headline": "Marginesy są wyraźnie niższe niż zwykle o tej porze na tle ostatnich trzydziestu dni, a jutro między 19:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Zapotrzebowanie wzrośnie powyżej normy, a fotowoltaika spadnie poniżej normy. Ogłoszenie może jeszcze nadejść, bo do wskazanych godzin zostało ponad osiem godzin.",
       "outlook": "We wtorek 15 września przywołanie również wchodzi w grę, natomiast w środę 16 września, czwartek 17 września i piątek 18 września rezerwa nie pokryje wymaganego poziomu, choć nadwyżka utrzyma się powyżej progu 1100 MW."
+    },
+    {
+      "at": "2026-09-13T12:45:40.908Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Marginesy w najbliższych dniach miejscami odbiegają od normy, a nadwyżka jutro między 19:00 a 20:00 spadła poniżej progu 1100 MW, dając operatorowi pełne prawo do przywołania.",
+      "body": "Zapotrzebowanie przewyższa normę, fotowoltaika niedomaga, a ubytki utrzymują się poniżej typowych wielkości, co sprawia, że najciaśniejszy moment przypada akurat na te godziny. Ogłoszenie może jeszcze nadejść, ponieważ do wyznaczonego czasu zostało ponad osiem godzin.",
+      "outlook": "We wtorek operator może ogłosić przywołanie między 07:00 a 08:00 oraz 19:00 a 21:00, w środę i czwartek między 18:00 a 21:00, a w piątek między 07:00 a 08:00 oraz 17:00 a 21:00, natomiast dzisiaj nic nie zapowiada przywołania."
     }
   ]
 }
