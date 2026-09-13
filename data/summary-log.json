@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-10T06:15:43.524Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Między 19:00 a 20:00 rezerwa osiągnie najniższy punkt, a operator zyska uprawnienie do ogłoszenia przywołania.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "Dziś ogłoszenie może nadejść między 19:00 a 22:00, w poniedziałek 14 września między 19:00 a 21:00, a we wtorek 15 września oraz w środę 16 września nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-10T06:31:01.306Z",
       "prompt": 53,
       "accepted": true,
@@ -2364,6 +2356,24 @@
       "headline": "We wtorek 15 września o 19:00 margines spadnie najniżej w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW, przez co operator może ogłosić przywołanie bez pomijania tej możliwości.",
       "body": "Margines o 20:00 jest niższy niż zwykle o tej porze na tle ostatnich trzydziestu dni, bo rezerwa nie pokrywa wymaganego poziomu, a nadwyżka spada poniżej progu 1100 MW. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
       "outlook": "We wtorek 15 września, w środę 16 września, we czwartek 17 września oraz w piątek 18 września saldo wymiany transgranicznej nie jest jeszcze zaplanowane, natomiast w pozostałych dniach rezerwa pokrywa wymagany poziom lub wypada poza godzinami ogłaszania przywołań."
+    },
+    {
+      "at": "2026-09-13T06:30:54.492Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Wtorek 15 września o 19:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW. Operator może ogłosić przywołanie, a nadwyżka spadła poniżej poziomu, który pozwalał mu je pominąć.",
+      "body": "Jutro zapotrzebowanie wzrośnie powyżej normy, a fotowoltaika spadnie poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do wyznaczonych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 15 września i piątek 18 września operator również może ogłosić przywołanie, w środę 16 września i czwartek 17 września ma w tym zakresie wybór, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-13T06:30:54.492Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Wtorek 15 września o 19:00 margines spadnie do najniższego poziomu ze wszystkich dni i osiągnie wartość ujemną, a nadwyżka spadnie poniżej progu 1100 MW, przez co operator może ogłosić przywołanie.",
+      "body": "Wtorek 15 września o 19:00 margines spadnie najbardziej ze wszystkich dób z powodu zapotrzebowania powyżej normy i fotowoltaiki poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "We wtorek 15 września, a także jutro i w piątek 18 września w wyznaczonych godzinach nadwyżka spada poniżej progu 1100 MW i operator może ogłosić przywołanie, natomiast w środę 16 września i czwartek 17 września nadwyżka trzyma się powyżej tego progu i operator ma wybór."
     }
   ]
 }
