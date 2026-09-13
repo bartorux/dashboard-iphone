@@ -2464,6 +2464,24 @@
       "headline": "Margines utrzymuje się poniżej normy z ostatnich trzydziestu dni przez osiem godzin.",
       "body": "Prognoza poprawia się. Do tych godzin ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek, środę, czwartek i piątek operator ma wybór i nadwyżka trzyma się powyżej progu 1100 MW w wyznaczonych porach, podczas gdy w pozostałym okresie rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-13T23:01:07.077Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Wtorek 15 września przynosi najniższy margines, a nadwyżka spada poniżej progu 1100 MW w godzinach 19:00-20:00, co pozwala operatorowi na ogłoszenie przywołania bez ograniczeń progu.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść w godzinach 09:00-11:00, 11:00-12:00, 12:00-13:00 i 19:00-21:00, natomiast między 07:00 i 09:00 na ogłoszenie jest już za późno.",
+      "outlook": "We wtorek 15 września oraz w czwartek 17 września margines spada poniżej wymaganego poziomu także w innych godzinach, a w środę 16 września i piątek 18 września rezerwa nie pokrywa wymaganego poziomu w godzinach wieczornych."
+    },
+    {
+      "at": "2026-09-13T23:01:07.077Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Wtorek 15 września przynosi najniższy margines, a nadwyżka spada poniżej progu 1100 MW w godzinach 19:00-20:00, co daje operatorowi pełne prawo do ogłoszenia przywołania.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść dla godzin 09:00-11:00, 11:00-12:00, 12:00-13:00 i 19:00-21:00.",
+      "outlook": "We wtorek 15 września oraz w czwartek 17 września margines spada w wyznaczonych godzinach poniżej wymaganego poziomu, w środę 16 września i piątek 18 września operator zachowuje wybór, a w pozostałych dniach okresu nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie między 06:00 a 12:00 oraz między 19:00 a 20:00."
     }
   ]
 }
