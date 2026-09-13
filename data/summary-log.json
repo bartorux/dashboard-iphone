@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-10T19:15:46.063Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Przywołanie wchodzi w grę, a nadwyżka spadła poniżej progu 1100 MW w godzinach 09:00-10:00.",
-      "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 14 września i wtorek 15 września margines jest w niektórych godzinach ujemny, natomiast w środę 16 września nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-10T19:31:01.241Z",
       "prompt": 53,
       "accepted": true,
@@ -2432,6 +2424,24 @@
       "headline": "Jutro w godzinach od 07:00 do 12:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Najniższy margines o 11:00 spadnie z powodu fotowoltaiki poniżej normy oraz zapotrzebowania powyżej normy. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 15 września między 07:00 a 08:00 oraz między 19:00 a 20:00 nadwyżka również spadnie poniżej progiem 1100 MW, natomiast w pozostałych dniach nadwyżka utrzyma się powyżej niego."
+    },
+    {
+      "at": "2026-09-13T19:30:56.806Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Jutro w godzinach 07:00-12:00 nadwyżka spadnie poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
+      "body": "Fotowoltaika spadnie poniżej normy, a zapotrzebowanie wzrośnie ponad normę, przez co godzina 11:00 przyniesie najniższy margines. Ogłoszenie może jeszcze nadejść, ponieważ do wyznaczonych godzin zostało ponad osiem godzin. Kompas Energetyczny PSE zaleca oszczędzanie poboru między 07:00 a 12:00 oraz 19:00 a 20:00.",
+      "outlook": "We wtorek 15 września przywołanie wchodzi w grę między 07:00 a 08:00 oraz 19:00 a 20:00, w środę 16 września, czwartek 17 września i piątek 18 września marginesy pozostają wąskie w godzinach wieczornych, natomiast dzisiaj nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-13T19:30:56.806Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Jutro w godzinach 07:00-12:00 nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie.",
+      "body": "Fotowoltaika wypada poniżej normy, zapotrzebowanie rośnie powyżej normy, a margines osiąga najniższy poziom o 11:00. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 15 września przywołanie wchodzi w grę w godzinach 07:00-09:00 i 17:00-22:00, w środę 16 września między 18:00 a 21:00 (gdzie rezerwa liczy się bez salda wymiany, które nie jest jeszcze zaplanowane), w czwartek 17 września od 18:00 do 21:00 (także bez zaplanowanego salda wymiany), a w piątek 18 września między 19:00 a 20:00 (również bez salda wymiany), natomiast dzisiejsza doba upływa spokojnie bez zapowiedzi przywołania, a Kompas Energetyczny PSE zaleca oszczędzanie jutro w godzinach 07:00-12:00 oraz 19:00-20:00."
     }
   ]
 }
