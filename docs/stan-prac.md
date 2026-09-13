@@ -78,11 +78,15 @@ w obu stanach otwarte słowami „operator może ogłosić przywołanie".
 
 ## Gotowa praca, która czeka na wyjęcie
 
-Gałąź **`feat/gest-sledzacy-palec`** jest lokalna i nigdzie nie wypchnięta. Commit `8ed629c` zawiera
-odrzucone przeciąganie palcem — decyzja stoi — ale w tym samym commicie siedzą cztery naprawy, które
-z gestem nie mają nic wspólnego: brak obsługi `touchcancel`, nasłuchy zdejmowane co klatkę, sztuczna
-sekunda kręciołka, i wyciszenie ruchu niesięgające wykresów. Wyjęcie: cofnąć `App.tsx`
-i `gestureMath.ts`, zostawić `useTouchGestures.ts`, `PullToRefresh.tsx` i `chart/shared.tsx`.
+**Gałąź `feat/gest-sledzacy-palec` — usunięta 13.09.2026, nie miała już nic do oddania.**
+Trzymała odrzucone przeciąganie palcem (decyzja stoi) i cztery naprawy, które z gestem nie miały nic
+wspólnego. Przed usunięciem sprawdzono każdą z nich w kodzie na `react`: `touchcancel` jest
+obsłużony i zdejmowany wraz z resztą nasłuchów (`useTouchGestures.ts`), nasłuchy rejestruje jeden
+efekt zależny od zapamiętanych callbacków, kręciołek ma **minimum widoczności liczone od startu**
+zamiast płaskiej sekundy po powrocie danych (komentarz w kodzie opisuje dokładnie tamtą wadę:
+„used to wait a flat second AFTER the data had already arrived"), a wyciszenie ruchu sięga wykresów
+przez `useChartAnimationMs` w `chart/shared.tsx`. Wszystkie weszły niezależnie przez sierpień
+i wrzesień. Gałąź była wyłącznie lokalna, nigdy nie wypchnięta.
 
 **(Nieaktualne od 05.09.2026 — patrz sprostowanie pod tym akapitem.)** Gałąź **`proto/alerty`** (commit `fda68b7`, wypchnięta na origin) trzyma **oś doby w bloku alertów** —
 pasek 24 godzin z oknami alertowymi na swoich miejscach, pod nim najostrzejsze okno w pełni, niżej
@@ -437,9 +441,13 @@ testy dla siedmiu hooków — `useOnlineStatus`, `usePersistentFlag`, `useTheme`
 **Odłożone dalej, z powodem:**
 - walidator liczb słownych — leży w walidacji tekstu modelu, a lista słów-liczb odrzucałaby zwykłe
   zdania; ryzyko dla tekstu na głównym ekranie.
-- `proto/alerty` — warunek osi (rozjazd toru alertów z polem wykresu) bez zmian, warunek wyjęcia
-  opisany wyżej wciąż obowiązuje.
-- gałąź `feat/gest-sledzacy-palec` — cztery naprawy do wyjęcia z commitu, osobna decyzja.
+- **automatyczne wciąganie prawdziwych przywołań z tabeli PSE** — zaproponowane 13.09.2026,
+  odłożone decyzją właściciela. Powód, dla którego wróci: dziś zdarzenia `real` wchodzą do rejestru
+  **wyłącznie ręcznie** (wszystkie cztery wpisano z ręki 07.09), więc przywołanie ogłoszone jutro nie
+  zostałoby przez system zauważone, a doba policzyłaby się jako cisza albo fałszywy alarm.
+
+Wykreślone z tej listy: `proto/alerty` — warunek osi rozwiązany i wdrożony 09.09.2026 (v3.79.0
+i v3.80.0); gałąź `feat/gest-sledzacy-palec` — usunięta 13.09.2026, patrz sekcja wyżej.
 
 **PAT do cron-job.org wygasa 28.09.2026.** Odnowienie leży po stronie właściciela; token nie trafia
 do czatu, repozytorium ani żadnego pliku.
@@ -472,6 +480,36 @@ pomiarem: 01.09 o 13:59 (dla 02.09), 06.09 o 13:19 (dla 07.09), 08.09 o 13:15 (d
 w oknie kilkunastu minut wokół 13:00.
 
 **Wciąż nie zmierzone:** RPD i RPM Gemini w nowym reżimie, HTTP 429 z API PSE.
+
+## Przegląd logów (13.09.2026) — reguła wystrzeliła pierwszy raz i się pomyliła
+
+**Maszyneria zdrowa.** 98 przebiegów generatora na 30 godzin, **zero nieudanych** w całej pobranej
+setce — poprawka zapisu z 09.09 (ponawianie, `merge=union` dla archiwów) trzyma. Mediana przebiegu
+57 s, maksimum 335 s. Trzej strażnicy codziennie zielono. Strona serwuje tekst sprzed kilkunastu
+minut; wdrożenie dzieje się **wewnątrz** przebiegu podsumowania, nie osobnym workflow — dlatego
+„Deploy to GitHub Pages" nie ma przebiegów od 09.09 i **to nie jest awaria**.
+
+**Pierwszy fałszywy alarm.** 09.09: cztery ekstrema na cztery — zapas −7 MW, dwell 21,5 h, margines
+D−1 −1008 MW, Kompas L2. Najciaśniejszy odczyt w całym archiwum. Właściciel wpisał przez formularz
+„u nas nic nie było", a tabela PSE potwierdza brak przywołania od 06.08. Bilans reguły: **1 alarm,
+0 trafień, 1 fałszywy alarm, 0 przeoczeń**. Reguły **nie ruszamy** — jeden przypadek negatywny to za
+mało na przestrajanie progów, i dokładnie tak samo wycofano kiedyś pasmo 1100–1200 MW.
+
+**Poprawka salda obroniła się przy okazji.** 07 i 08.09 wyglądały groźnie, dopóki nie doszedł plan
+wymiany; po nim spadły do zera ekstremów i rzeczywiście nic się nie stało. Bez niej narzędzie
+pomyliłoby się trzy razy zamiast raz.
+
+**Test 10.09 przy zerze ekstremów.** Bilans testów: 2 z 6 w ciasnych dobach. Regulamin („godzinę
+testu wybiera operator") trzyma się danych coraz mocniej; podstrona słusznie liczy je poza oceną.
+
+**Właściciel korzysta z formularza** — cztery obserwacje przez Issues w cztery doby (06, 09, 10,
+11.09), w tym doby ciche. To jest silnik całego badania i działa bez przypominania.
+
+**Pomiary po przejściu na kwadrans:** około 95 wywołań modelu dziennie wobec 54 przy kadencji
+godzinowej (jedna piąta limitu dobowego) — przy 15 minutach ocena przekracza próg zaokrąglenia
+prawie na każdym przebiegu. Archiwum prognozy 6,7 MB po trzynastu dniach, czyli **~15 MB
+miesięcznie**. Log prób modelu urósł do 202 kB po przejściu na okno 72 h (z 45 kB przy limicie
+72 wpisów) — zgodnie z projektem.
 
 ## Czego dzień nauczył
 
