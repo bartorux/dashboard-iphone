@@ -602,6 +602,114 @@ export function defaultDraftFor(days: DayStudy[]): string | null {
   return (withoutEntry ?? closed[0])?.date ?? null;
 }
 
+/** The tally the page never used to show: how the rule's verdicts break down
+ *  so far. Counts CLOSED days only — an open day's verdict is `otwarte`,
+ *  still provisional, and was never meant to answer "how did the rule do". */
+export interface Bilans {
+  /** trafienie + falszywy-alarm: every time the rule actually fired. */
+  alarmy: number;
+  trafienia: number;
+  falszywe: number;
+  przeoczenia: number;
+  cisza: number;
+  /** Kept apart from `alarmy`: a test's hour is the operator's own choice,
+   *  not a signal the rule can be judged against (see `Verdict.test`). */
+  testy: number;
+}
+
+/**
+ * Exported so a test can pin it: this is the one place that turns the
+ * per-day `verdict` column into the running score the owner asked for after
+ * 09.09 fired and got it wrong (four extremes, no call — a false alarm the
+ * table only showed one row at a time).
+ */
+export function bilans(days: DayStudy[]): Bilans {
+  const closed = days.filter((day) => !day.window.open);
+  const count = (verdict: Verdict) => closed.filter((day) => day.verdict === verdict).length;
+  const trafienia = count('trafienie');
+  const falszywe = count('falszywy-alarm');
+  return {
+    alarmy: trafienia + falszywe,
+    trafienia,
+    falszywe,
+    przeoczenia: count('przeoczenie'),
+    cisza: count('cisza'),
+    testy: count('test'),
+  };
+}
+
+/**
+ * Polish plural selection: singular for 1, the "few" form for numbers ending
+ * in 2-4 (except the 12-14 teens, which read like "many" — "12 razy" not
+ * "12 razów"), the "many" form for everything else, 0 included. One rule for
+ * every noun the balance sentence below inflects.
+ */
+function polishForm(n: number, forms: readonly [string, string, string]): string {
+  const [one, few, many] = forms;
+  if (n === 1) return one;
+  const lastDigit = n % 10;
+  const lastTwo = n % 100;
+  if (lastDigit >= 2 && lastDigit <= 4 && !(lastTwo >= 12 && lastTwo <= 14)) return few;
+  return many;
+}
+
+/** "0 razy" / "1 raz" / "2 razy" / "5 razy" / "22 razy" — the number and its
+ *  correctly inflected word together, so a call site never inflects by hand. */
+export function polishCount(n: number, forms: readonly [string, string, string]): string {
+  return `${n} ${polishForm(n, forms)}`;
+}
+
+const RAZY_FORMS = ['raz', 'razy', 'razy'] as const;
+const TRAFIENIE_FORMS = ['trafienie', 'trafienia', 'trafień'] as const;
+const FALSZYWY_ALARM_FORMS = ['fałszywy alarm', 'fałszywe alarmy', 'fałszywych alarmów'] as const;
+
+/**
+ * The sentence itself. "Przeoczeń" and "Testy" stay in one fixed form —
+ * genitive and nominative plural used as label words, the way a heading
+ * reads regardless of the number after it ("Wyników: 0" is fine Polish) —
+ * only the free-running clause about alarms needs real numeral agreement.
+ */
+function bilansSentence(counts: Bilans): string {
+  const opening =
+    counts.alarmy === 0
+      ? 'Reguła nie wystrzeliła jeszcze ani razu.'
+      : `Reguła wystrzeliła ${polishCount(counts.alarmy, RAZY_FORMS)}: ${polishCount(
+          counts.trafienia,
+          TRAFIENIE_FORMS
+        )}, ${polishCount(counts.falszywe, FALSZYWY_ALARM_FORMS)}.`;
+  return `${opening} Przeoczeń ${counts.przeoczenia}. Testy (${counts.testy}) liczone osobno, bo ich godzinę wybiera operator.`;
+}
+
+/**
+ * Sits between the method paragraph and "Przed nami": the running score the
+ * table itself never adds up. 09.09 is why this exists — four extremes,
+ * rule fired, and the owner's own register says nothing happened; a reader
+ * scanning rows one at a time had no way to see that as a miss rate.
+ *
+ * The percentile caveat below is not decorative: `Feature.percentile` ranks a
+ * day against every OTHER closed day, so a day judged mild today can read as
+ * extreme once a worse day joins the archive — the balance is a snapshot,
+ * never a closed tally, and saying so next to the numbers (not behind a
+ * hover, like the column hints above) is the only way this can be trusted at
+ * a glance instead of relied on as a scoreboard.
+ */
+function BilansSection({ days }: { days: DayStudy[] }) {
+  const counts = bilans(days);
+  return (
+    <section className="mt-4">
+      <h2 className="text-[0.875rem] font-semibold">Bilans</h2>
+      <p className="mt-1 max-w-prose text-[0.8125rem] text-text-secondary">
+        {bilansSentence(counts)}
+      </p>
+      <p className="mt-1 max-w-prose text-[0.8125rem] text-text-secondary">
+        Percentyle liczą się względem wszystkich zamkniętych dób, więc gdy archiwum rośnie,
+        werdykt doby sprzed tygodnia może się jeszcze zmienić. Bilans jest stanem na dziś, nie
+        zamkniętym rachunkiem.
+      </p>
+    </section>
+  );
+}
+
 /**
  * "Zapisz, co było": the owner's own way of writing to this page without a
  * backend or a token. It never posts anything itself — filling the form only
@@ -890,6 +998,8 @@ function Content({ data }: { data: BadanieFile }) {
         ekstremów na cztery. Testy są pokazywane, ale nie liczą się do trafień ani przeoczeń — ich
         godzinę wybiera operator niezależnie od stanu systemu.
       </p>
+
+      <BilansSection days={data.days} />
 
       {/* Ahead first: these are the rows that still change every hour and the
           only ones a forecast can act on. Settled days follow, and the quiet

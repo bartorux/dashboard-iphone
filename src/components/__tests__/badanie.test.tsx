@@ -1,8 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, within, waitFor } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
-import Badanie, { BADANIE_URL, ISSUES_URL, defaultDraftFor, defaultHourFor } from '../Badanie';
-import { BadanieFile } from '../../utils/badanieTypes';
+import Badanie, {
+  BADANIE_URL,
+  ISSUES_URL,
+  defaultDraftFor,
+  defaultHourFor,
+  bilans,
+  polishCount,
+} from '../Badanie';
+import { BadanieFile, DayStudy } from '../../utils/badanieTypes';
 import { signedMW } from '../../utils/format';
 
 /**
@@ -220,6 +227,35 @@ const FIXTURE: BadanieFile = {
     { date: '2026-09-02', hour: 20, kind: 'test', scope: 'unit', note: 'jedna jednostka wyłączona' },
   ],
 };
+
+/**
+ * A closed, otherwise-unremarkable day — every field `bilans`/`BilansSection`
+ * do not look at is filled with the same quiet values FIXTURE's 03.09 uses,
+ * so a test only has to spell out the one field it actually cares about
+ * (`verdict`, or `window.open` via the `open` override).
+ */
+function studyDay(date: string, verdict: DayStudy['verdict'], open = false): DayStudy {
+  return {
+    date,
+    window: { readAt: `${date}T10:00:00Z`, deadline: `${date}T10:00:00Z`, open },
+    worstHour: 20,
+    surplus: 3000,
+    required: 2000,
+    margin: 1000,
+    headroom: { value: 1900, percentile: 0.2, extreme: false },
+    dwell: { value: 0, percentile: 0.1, extreme: false },
+    eveMargin: { value: 800, percentile: 0.15, extreme: false },
+    compass: { level: 0, extreme: false, hours: [] },
+    extremeCount: 0,
+    tightHours: [],
+    event: null,
+    observation: null,
+    verdict,
+    readings: [[`${date}T10:00:00Z`, 3000, 2000]],
+    exchangePlanned: null,
+    exchangeArrivedAt: null,
+  };
+}
 
 /** Minimum shape read from the GitHub issues list by PendingIssues. */
 type IssueFixture = { number: number; title: string; html_url: string };
@@ -926,6 +962,133 @@ describe('Badanie', () => {
       expect(screen.queryByText('Zgłoszone, czeka na przeliczenie')).toBeNull();
       // The rest of the page is unaffected.
       expect(screen.getByText('02.09')).toBeInTheDocument();
+    });
+  });
+
+  describe('bilans', () => {
+    it('sorts every verdict into its own bucket', () => {
+      const days = [
+        studyDay('2026-09-06', 'trafienie'),
+        studyDay('2026-09-07', 'falszywy-alarm'),
+        studyDay('2026-09-08', 'przeoczenie'),
+        studyDay('2026-09-09', 'cisza'),
+        studyDay('2026-09-10', 'test'),
+      ];
+      expect(bilans(days)).toEqual({
+        alarmy: 2,
+        trafienia: 1,
+        falszywe: 1,
+        przeoczenia: 1,
+        cisza: 1,
+        testy: 1,
+      });
+    });
+
+    it('leaves an open day out of every bucket, even one carrying a settled-looking verdict', () => {
+      const days = [studyDay('2026-09-06', 'trafienie'), studyDay('2026-09-07', 'trafienie', true)];
+      expect(bilans(days)).toEqual({
+        alarmy: 1,
+        trafienia: 1,
+        falszywe: 0,
+        przeoczenia: 0,
+        cisza: 0,
+        testy: 0,
+      });
+    });
+
+    it('keeps "test" verdicts out of the alarm tally', () => {
+      const result = bilans([studyDay('2026-09-06', 'test'), studyDay('2026-09-07', 'test')]);
+      expect(result.testy).toBe(2);
+      expect(result.alarmy).toBe(0);
+      expect(result.trafienia).toBe(0);
+      expect(result.falszywe).toBe(0);
+    });
+
+    it('returns all zeros for an empty list', () => {
+      expect(bilans([])).toEqual({
+        alarmy: 0,
+        trafienia: 0,
+        falszywe: 0,
+        przeoczenia: 0,
+        cisza: 0,
+        testy: 0,
+      });
+    });
+
+    it('returns all zeros when every day is still open', () => {
+      const days = [studyDay('2026-09-06', 'trafienie', true), studyDay('2026-09-07', 'test', true)];
+      expect(bilans(days)).toEqual({
+        alarmy: 0,
+        trafienia: 0,
+        falszywe: 0,
+        przeoczenia: 0,
+        cisza: 0,
+        testy: 0,
+      });
+    });
+  });
+
+  describe('polishCount', () => {
+    const RAZY = ['raz', 'razy', 'razy'] as const;
+    const FALSZYWY_ALARM = ['fałszywy alarm', 'fałszywe alarmy', 'fałszywych alarmów'] as const;
+
+    it('inflects "raz" for 0, 1, 2, 5 and 22', () => {
+      expect(polishCount(0, RAZY)).toBe('0 razy');
+      expect(polishCount(1, RAZY)).toBe('1 raz');
+      expect(polishCount(2, RAZY)).toBe('2 razy');
+      expect(polishCount(5, RAZY)).toBe('5 razy');
+      expect(polishCount(22, RAZY)).toBe('22 razy');
+    });
+
+    it('inflects "fałszywy alarm" for 0, 1, 2, 5 and 22', () => {
+      expect(polishCount(0, FALSZYWY_ALARM)).toBe('0 fałszywych alarmów');
+      expect(polishCount(1, FALSZYWY_ALARM)).toBe('1 fałszywy alarm');
+      expect(polishCount(2, FALSZYWY_ALARM)).toBe('2 fałszywe alarmy');
+      expect(polishCount(5, FALSZYWY_ALARM)).toBe('5 fałszywych alarmów');
+      expect(polishCount(22, FALSZYWY_ALARM)).toBe('22 fałszywe alarmy');
+    });
+  });
+
+  describe('Bilans (section)', () => {
+    it('reports one alarm and zero hits for a fixture with one false alarm and one test day', async () => {
+      const fixture: BadanieFile = {
+        ...FIXTURE,
+        days: [studyDay('2026-09-06', 'falszywy-alarm'), studyDay('2026-09-07', 'test')],
+        observations: [],
+        events: [],
+      };
+      respondWith({ badanie: fixture });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      const section = screen.getByRole('heading', { name: 'Bilans' }).closest('section')!;
+      expect(within(section).getByText(/1 fałszywy alarm/)).toBeInTheDocument();
+      expect(within(section).getByText(/0 trafień/)).toBeInTheDocument();
+      expect(within(section).getByText(/Testy \(1\)/)).toBeInTheDocument();
+    });
+
+    it('shows the zero state when the rule has not fired yet', async () => {
+      const fixture: BadanieFile = {
+        ...FIXTURE,
+        days: [studyDay('2026-09-06', 'cisza')],
+        observations: [],
+        events: [],
+      };
+      respondWith({ badanie: fixture });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      const section = screen.getByRole('heading', { name: 'Bilans' }).closest('section')!;
+      expect(within(section).getByText(/nie wystrzeliła jeszcze ani razu/)).toBeInTheDocument();
+    });
+
+    it('always states that percentiles move as the archive grows, next to the numbers', async () => {
+      respondWith({ badanie: FIXTURE });
+      render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+
+      const section = screen.getByRole('heading', { name: 'Bilans' }).closest('section')!;
+      expect(within(section).getByText(/może się jeszcze zmienić/)).toBeInTheDocument();
     });
   });
 });
