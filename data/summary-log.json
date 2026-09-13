@@ -2327,6 +2327,24 @@
       "headline": "Wtorek 15 września o 19:00 przyniesie najniższy margines, a jutro między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW, co sprawi, że operator straci możliwość pominięcia przywołania.",
       "body": "Prognoza pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 15 września, w środę 16 września, w czwartek 17 września oraz w piątek 18 września rezerwa miejscami nie pokryje wymaganego poziomu, podczas gdy w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-13T02:01:09.355Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Marginesy trzymają się dziś w normie, ale w jutrzejszych godzinach od 07:00 do 10:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 15 września między 07:00 a 08:00 oraz od 19:00 do 21:00 nadwyżka również spadnie poniżej progu 1100 MW, a w pozostałych dniach roboczych od środy do piątku nadwyżka utrzyma się powyżej tego progu, choć rezerwa okresowo nie pokryje wymaganego poziomu. (Saldo wymiany na doby od wtorku do piątku nie jest jeszcze zaplanowane)."
+    },
+    {
+      "at": "2026-09-13T02:01:09.355Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Marginesy przez większość czasu mieszczą się w typowym zakresie z ostatnich trzydziestu dni, choć jutro w kilku godzinach nadwyżka spadnie poniżej progu 1100 MW i operator straci możliwość pominięcia przywołania.",
+      "body": "Prognoza na jutro pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 15 września nadwyżka również spadnie poniżej progu 1100 MW między 07:00 a 08:00 oraz 19:00 a 21:00, natomiast w środę 16 września, czwartek 17 września i piątek 18 września nadwyżka utrzyma się powyżej tego progu, dając operatorowi wybór w wyznaczonych godzinach."
     }
   ]
 }
