@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-10T19:01:12.562Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 09:00 a 10:00.",
-      "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 14 września między 07:00 a 10:00 oraz między 17:00 a 22:00, a także we wtorek 15 września między 19:00 a 20:00 operator ma wybór i może ogłosić przywołanie, natomiast w pozostałe dni i godziny nic go nie zapowiada."
-    },
-    {
       "at": "2026-09-10T19:15:46.063Z",
       "prompt": 53,
       "accepted": true,
@@ -2432,6 +2424,14 @@
       "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 12:00.",
       "body": "Fotowoltaika wypada poniżej normy, a zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 15 września między 07:00 a 22:00 operator może ogłosić przywołanie w wybranych godzinach, natomiast w środę 16 września, czwartek 17 września oraz piątek 18 września rezerwa miejscami nie pokrywa wymaganego poziomu przy zachowanym wyborze operatora, przy czym dla tych trzech dni saldo wymiany nie jest jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-13T19:15:40.538Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Jutro w godzinach od 07:00 do 12:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Najniższy margines o 11:00 spadnie z powodu fotowoltaiki poniżej normy oraz zapotrzebowania powyżej normy. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 15 września między 07:00 a 08:00 oraz między 19:00 a 20:00 nadwyżka również spadnie poniżej progiem 1100 MW, natomiast w pozostałych dniach nadwyżka utrzyma się powyżej niego."
     }
   ]
 }

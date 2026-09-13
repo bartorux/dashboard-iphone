@@ -1,8 +1,8 @@
 {
-  "headline": "Jutro między 07:00 a 12:00 nadwyżka w systemie spadła poniżej progu 1100 MW, poniżej poziomu, który pozwalał operatorowi przywołanie pominąć.",
-  "body": "Fotowoltaika spadła poniżej normy, a zapotrzebowanie wzrosło powyżej normy. Do tych godzin ogłoszenie może jeszcze nadejść.",
-  "outlook": "We wtorek 15 września przywołanie wchodzi w grę m.in. między 07:00 a 08:00 oraz 19:00 a 20:00, natomiast w pozostałe dni operator ma wybór lub rezerwa pokrywa wymagany poziom, przy czym w środę 16 września, czwartek 17 września oraz piątek 18 września saldo wymiany nie jest jeszcze zaplanowane.",
-  "generatedAt": "2026-09-13T18:45:38.914Z",
+  "headline": "Jutro w godzinach od 07:00 do 12:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
+  "body": "Najniższy margines o 11:00 spadnie z powodu fotowoltaiki poniżej normy oraz zapotrzebowania powyżej normy. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "We wtorek 15 września między 07:00 a 08:00 oraz między 19:00 a 20:00 nadwyżka również spadnie poniżej progiem 1100 MW, natomiast w pozostałych dniach nadwyżka utrzyma się powyżej niego.",
+  "generatedAt": "2026-09-13T19:15:40.538Z",
   "dates": [
     "2026-09-13",
     "2026-09-14",
@@ -11,6 +11,6 @@
     "2026-09-17",
     "2026-09-18"
   ],
-  "assessment": "2026-09-13|W|none|100|20:00|0|0|0|||-;2026-09-14|R|high|-1200|11:00|1|8|0|high:07:00-12:00,moderate:12:00-13:00,moderate:19:00-21:00|K2:07:00-12:00,K2:19:00-20:00|-;2026-09-15|R|high|-2300|19:00|0|8|4|high:07:00-08:00,moderate:08:00-09:00,moderate:17:00-19:00,high:19:00-20:00,moderate:20:00-22:00||-;2026-09-16|R|moderate|-1100|20:00|2|2|15|moderate:18:00-21:00||X;2026-09-17|R|moderate|-1100|20:00|4|1|15|moderate:18:00-21:00||X;2026-09-18|R|moderate|-100|19:00|1|0|15|moderate:19:00-21:00||X#PV poniżej normy, zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v53",
+  "assessment": "2026-09-13|W|none|400|21:00|0|0|0|||-;2026-09-14|R|high|-1300|11:00|1|9|0|high:07:00-12:00,moderate:12:00-13:00,moderate:19:00-21:00|K2:07:00-12:00,K2:19:00-20:00|-;2026-09-15|R|high|-2300|19:00|0|8|4|high:07:00-08:00,moderate:08:00-09:00,moderate:17:00-19:00,high:19:00-20:00,moderate:20:00-22:00||-;2026-09-16|R|moderate|-1000|20:00|1|1|15|moderate:18:00-21:00||X;2026-09-17|R|moderate|-1100|20:00|4|1|15|moderate:18:00-21:00||X;2026-09-18|R|moderate|-100|19:00|0|0|16|moderate:19:00-21:00||X#PV poniżej normy, zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v53",
   "model": "gemini-3.5-flash-lite"
 }
