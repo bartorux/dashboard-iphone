@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-10T16:31:01.374Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Jutro między 09:00 a 10:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a nadwyżka nie pozostawia mu wyboru pominięcia tej decyzji.",
-      "body": "Prognoza na ten dzień jeszcze się ustala, bo rezerwa raz pokrywa wymagane wartości, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin pozostało ponad osiem godzin.",
-      "outlook": "W poniedziałek 14 września operator również zachowuje wybór między 07:00 a 10:00 oraz od 17:00 do 22:00, natomiast wtorek 15 września oraz środa 16 września przebiegają spokojnie i nic tam nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-10T16:45:50.634Z",
       "prompt": 53,
       "accepted": true,
@@ -2411,6 +2403,23 @@
       "headline": "We wtorek 15 września o 19:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "PV spadnie poniżej normy, zapotrzebowanie wzrośnie ponad normy, a ubytki utrzymają się poniżej normy. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie w poniedziałek między 07:00 a 13:00 oraz między 19:00 a 20:00.",
       "outlook": "W poniedziałek, wtorek, środę, czwartek i piątek operator może ogłosić przywołanie, natomiast dzisiaj nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-13T16:45:39.659Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "W środę o 19:00 rezerwa spadnie najmocniej w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW w godzinach 07:00-22:00, co sprawi, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "Najniższy margines w tym dniu wynika z zapotrzebowania powyżej normy oraz fotoogniw poniżej normy. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek, środę, czwartek i piątek rezerwa również miejscami spadnie poniżej wymaganego poziomu, przy czym w środę, czwartek i piątek saldo wymiany nie jest jeszcze zaplanowane, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-13T16:45:39.659Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę o 19:00 rezerwa spadnie najmocniej w całym tygodniu, a w godzinach 07:00-22:00 operator może ogłosić przywołanie, gdyż nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Zapotrzebowanie wzrośnie powyżej normy, a instalacje fotowoltaiczne wyprodukują mniej energii niż zwykle. Do tych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek, środę, czwartek i piątek margines również miejscami spadnie poniżej wymaganego poziomu, pozostawiając operatorowi wybór, natomiast w weekend nic nie zapowiada przywołania."
     }
   ]
 }
