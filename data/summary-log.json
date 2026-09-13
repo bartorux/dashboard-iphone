@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-10T07:15:48.870Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Margines utrzymuje się poniżej typowego zakresu z ostatnich trzydziestu dni przez większość czasu w najbliższych dobach.",
-      "body": "Prognoza pogarsza się jutro. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 09:00 oraz od 15:00 do 22:00.",
-      "outlook": "W poniedziałek 14 września w godzinach od 17:00 do 18:00 oraz od 19:00 do 21:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
       "at": "2026-09-10T07:31:04.532Z",
       "prompt": 53,
       "accepted": true,
@@ -2375,6 +2367,23 @@
       "headline": "Nadchodzące doby przyniosą liczne godziny z marginesem poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 15 września między 07:00 a 09:00 oraz od 17:00 do 22:00 operator może ogłosić przywołanie, a w pozostałych dniach tygodnia sytuacja przebiega łagodniej."
+    },
+    {
+      "at": "2026-09-13T07:30:57.196Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Marginesy w większości godzin mieszczą się w typowym zakresie z ostatnich trzydziestu dni, choć jutro rezerwa spadnie poniżej wymaganego poziomu, a nadwyżka spadnie poniżej progu 1100 MW w godzinach 07:00:10:00, co sprawia, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 15 września między 07:00 a 08:00 oraz między 19:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, w środę 16 września, czwartek 17 września i piątek 18 września marginesy miejscami nie pokryją wymaganego poziomu, natomiast dzisiaj nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-13T07:30:57.196Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Marginesy w większości dni mieszczą się w typowym zakresie z ostatnich trzydziestu dni, choć jutro rezerwa spadnie poniżej normy przez jedenaście godzin.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 15 września, w środę 16 września, w czwartek 17 września oraz w piątek 18 września marginesy miejscami mocno się zwężą, natomiast dzisiaj nic nie zapowiada przywołania."
     }
   ]
 }
