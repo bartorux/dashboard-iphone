@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-10T18:45:46.255Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Jutro między 09:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 14 września między 07:00 a 10:00 oraz 17:00 a 22:00 rezerwa nie pokryje wymaganego poziomu przy zachowaniu wyboru operatora, natomiast w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-10T19:01:12.562Z",
       "prompt": 53,
       "accepted": true,
@@ -2422,6 +2414,24 @@
       "headline": "Jutro między 07:00 a 12:00 nadwyżka w systemie spadła poniżej progu 1100 MW, poniżej poziomu, który pozwalał operatorowi przywołanie pominąć.",
       "body": "Fotowoltaika spadła poniżej normy, a zapotrzebowanie wzrosło powyżej normy. Do tych godzin ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 15 września przywołanie wchodzi w grę m.in. między 07:00 a 08:00 oraz 19:00 a 20:00, natomiast w pozostałe dni operator ma wybór lub rezerwa pokrywa wymagany poziom, przy czym w środę 16 września, czwartek 17 września oraz piątek 18 września saldo wymiany nie jest jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-13T19:01:06.729Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 07:00 a 12:00.",
+      "body": "W wyznaczonych godzinach fotowoltaika spada poniżej normy, a zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 15 września przywołanie również wchodzi w grę między 07:00 a 08:00 oraz między 19:00 a 20:00, natomiast w środę 16 września, czwartek 17 września i piątek 18 września operator ma wybór."
+    },
+    {
+      "at": "2026-09-13T19:01:06.729Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 12:00.",
+      "body": "Fotowoltaika wypada poniżej normy, a zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 15 września między 07:00 a 22:00 operator może ogłosić przywołanie w wybranych godzinach, natomiast w środę 16 września, czwartek 17 września oraz piątek 18 września rezerwa miejscami nie pokrywa wymaganego poziomu przy zachowanym wyborze operatora, przy czym dla tych trzech dni saldo wymiany nie jest jeszcze zaplanowane."
     }
   ]
 }
