@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-10T17:15:43.612Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Margines spadł poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie, ale nie musi między 07:00 a 13:00.",
-      "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, do tych godzin zostało bowiem ponad osiem godzin.",
-      "outlook": "W poniedziałek czternastego września między 07:00 a 10:00 oraz między 17:00 a 22:00 operator również może ogłosić przywołanie, ale nie musi, natomiast we wtorek piętnastego września i w środę szesnastego września nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-10T17:31:06.802Z",
       "prompt": 53,
       "accepted": true,
@@ -2421,6 +2413,23 @@
       "headline": "Margines wypada poniżej normy z ostatnich trzydziestu dni przez pięć godzin jutro, siedem godzin we wtorek 15 września oraz trzy godziny w czwartek 17 września.",
       "body": "Prognoza pogarsza się we wtorek 15 września. Ogłoszenie może jeszcze nadejść, bo do wskazanych godzin zostało ponad osiem godzin.",
       "outlook": "We wtorek 15 września między 07:00 a 08:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW, podczas gdy w pozostałych dniach od jutra do piątku 18 września operator ma wybór, a nadwyżka utrzymuje się powyżej progu 1100 MW."
+    },
+    {
+      "at": "2026-09-13T17:30:58.004Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Margines w kraju odbiega od typowego zakresu z ostatnich trzydziestu dni przez cztery godziny jutro oraz siedem godzin we wtorek 15 września.",
+      "body": "We wtorek 15 września prognoza pogarsza się. Do wskazanych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 15 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-08:00, podczas gdy w pozostałych dniach rezerwa w poszczególnych godzinach nie pokrywa wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, a w środę, czwartek i piątek saldo wymiany nie zostało jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-13T17:30:58.004Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni przez cztery godziny w tym tygodniu.",
+      "body": "Prognoza pogarsza się we wtorek 15 września. Ogłoszenie może jeszcze nadejść w środę, czwartek i piątek.",
+      "outlook": "Wtorek 15 września przynosi najniższy margines, a w pozostałe dni doby przebiegają spokojnie poza wybranymi godzinami."
     }
   ]
 }
