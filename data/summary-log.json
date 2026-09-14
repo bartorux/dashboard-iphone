@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-11T11:15:42.791Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W poniedziałek 14 września o godzinie 19:00 margines spadnie do najniższego poziomu ze wszystkich dni, a operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza na poniedziałek 14 września pogarsza się. Ogłoszenie może jeszcze nadejść. Saldo wymiany na poniedziałek 14 września oraz wtorek 15 września nie jest jeszcze zaplanowane.",
-      "outlook": "W środę 16 września i czwartek 17 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa w wybranych godzinach nie pokrywa wymaganego poziomu."
-    },
-    {
       "at": "2026-09-11T11:30:56.520Z",
       "prompt": 53,
       "accepted": true,
@@ -2505,6 +2497,14 @@
       "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00 jutro.",
       "body": "Zapotrzebowanie wzrosło ponad normę, a wiatr spadł poniżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś przywołanie nie nadejdzie, w środę, czwartek i piątek operator ma wybór, a w pozostałym okresie nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-14T10:45:44.164Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Jutro między 07:00 a 09:00 nadwyżka w systemie spadła poniżej progu 1100 MW, poniżej poziomu, który pozwalał operatorowi przywołanie pominąć.",
+      "body": "Najniższy margines w tym dniu spadnie ze względu na to, że PV obniży się poniżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "Dzisiaj między 19:00 a 21:00 operator może ogłosić przywołanie, lecz w pozostałe dni tygodnia sytuacja wygląda podobnie, a saldo wymiany w środę, czwartek i piątek nie zostało jeszcze zaplanowane."
     }
   ]
 }
