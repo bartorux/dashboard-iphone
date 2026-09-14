@@ -72,6 +72,8 @@ import type { CallEvent, Observation } from '../src/utils/badanieTypes';
 import { observationsFromIssues } from '../src/utils/obserwacje';
 import type { IssueLike } from '../src/utils/obserwacje';
 import type { PSERawItem, PSECompassRawItem } from '../src/types';
+import { archiveLines, normalizeDay, pricesFile } from '../src/utils/ceny';
+import type { PricesFile } from '../src/utils/cenyTypes';
 import {
   PROMPT_VERSION,
   buildPrompt,
@@ -99,6 +101,30 @@ const archiveDir = resolve(root, 'data/pk5l-archiwum');
 const compassArchiveDir = resolve(root, 'data/kompas-archiwum');
 const badanieTarget = resolve(root, 'data/badanie.json');
 const eventsTarget = resolve(root, 'data/przywolania.json');
+const pricesTarget = resolve(root, 'public/ceny.json');
+const pricesArchiveDir = resolve(root, 'data/ceny-archiwum');
+// Deliberately in data/, never in public/: the deploy gate is keyed on
+// public/ceny.json changing (see summary.yml), and a read attempt on its own
+// is not a change worth publishing — only recording it here keeps the rate
+// limiter's own bookkeeping from ever touching the file a phone downloads.
+const pricesLastFetchTarget = resolve(root, 'data/ceny-last-fetch.json');
+
+/**
+ * Read once at startup rather than per-request: `package.json` does not
+ * change mid-run, and pradcast's own 403 on curl's default header (see the
+ * function below) is exactly the failure a static, wrong string would repeat
+ * on every one of the four daily requests instead of just being wrong once.
+ */
+const pkgVersion = (() => {
+  try {
+    const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')) as {
+      version?: string;
+    };
+    return typeof pkg.version === 'string' ? pkg.version : 'dev';
+  } catch {
+    return 'dev';
+  }
+})();
 
 interface SummaryFile extends Summary {
   /** When the text was written, so the card can show its age. */
@@ -263,6 +289,165 @@ function archiveCompass(rows: PSECompassRawItem[], at: Date): void {
     console.log(`Archiwum Kompasu: dopisano ${lines.length} wierszy do ${partition}.jsonl.`);
   } catch (error) {
     console.warn(`Archiwum Kompasu pominiete w tym przebiegu: ${String(error)}`);
+  }
+}
+
+/** Once an hour, whatever the job's own cadence — see `writePrices`. */
+const PRICES_MIN_INTERVAL_MS = 60 * 60 * 1000;
+
+/** How long one pradcast request may take before this day is given up on. */
+const PRADCAST_TIMEOUT_MS = 10_000;
+
+/**
+ * curl's default `User-Agent` gets a 403 from pradcast; a project name does
+ * not (checked live 14.09.2026). Built from `pkgVersion` so a release bump is
+ * the only thing that ever changes it.
+ */
+const PRADCAST_USER_AGENT = `pse-dashboard/${pkgVersion} (+https://github.com/bartorux/dashboard-iphone)`;
+
+function readExistingPrices(): PricesFile | null {
+  try {
+    const parsed = JSON.parse(readFileSync(pricesTarget, 'utf8')) as Partial<PricesFile>;
+    return Array.isArray(parsed.days) ? (parsed as PricesFile) : null;
+  } catch {
+    return null;
+  }
+}
+
+function readLastPricesFetch(): Date | null {
+  try {
+    const raw = JSON.parse(readFileSync(pricesLastFetchTarget, 'utf8')) as { at?: string };
+    if (typeof raw.at !== 'string') return null;
+    const parsed = new Date(raw.at);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * One day's prices from pradcast, or `null` on anything short of a usable
+ * answer — a timeout, a non-200, or a body `normalizeDay` does not trust.
+ * Every failure is this ONE day's alone: the caller still gets whatever other
+ * days succeeded, which is the whole point of asking day by day rather than
+ * as one request pradcast does not actually offer.
+ */
+async function fetchPradcastDay(date: string, apiKey: string | undefined) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), PRADCAST_TIMEOUT_MS);
+  try {
+    const headers: Record<string, string> = { 'User-Agent': PRADCAST_USER_AGENT };
+    // Anonymous access works today (checked live 14.09.2026); the header is
+    // added the moment the owner provisions PRADCAST_API_KEY, with nothing
+    // here to change on that day.
+    if (apiKey) headers['X-API-Key'] = apiKey;
+
+    const response = await fetch(`https://api.pradcast.pl/prices/date/${date}`, {
+      headers,
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      console.warn(`Ceny pradcast: doba ${date} — HTTP ${response.status}.`);
+      return null;
+    }
+
+    const day = normalizeDay(await response.json());
+    if (!day) console.warn(`Ceny pradcast: doba ${date} odrzucona przy walidacji odpowiedzi.`);
+    return day;
+  } catch (error) {
+    console.warn(`Ceny pradcast: doba ${date} pominieta — ${String(error)}.`);
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/**
+ * Writes public/ceny.json (day-ahead prices from pradcast.pl) and appends
+ * this run's confirmed days to data/ceny-archiwum/YYYY-MM.jsonl.
+ *
+ * Rate-limited to once an hour independently of the job's own cadence: the
+ * browser never calls pradcast directly (no CORS for this origin, so the
+ * generator is the only path), but a quarter-hourly job otherwise means a
+ * quarter-hourly call, and pradcast's own price for a business date does not
+ * move that often. The marker lives in data/, never in public/ceny.json
+ * itself — see `pricesLastFetchTarget` — so a quiet poll cannot touch the one
+ * file the deploy gate and the service worker both watch.
+ *
+ * Wrapped whole, like every archive above: a pradcast outage is a missing
+ * strip under the reserve chart, never a reason to fail the run that writes
+ * the actual product.
+ */
+async function writePrices(now: Date): Promise<void> {
+  try {
+    const existing = readExistingPrices();
+    const hasData = existing !== null && existing.days.length > 0;
+    const lastFetch = readLastPricesFetch();
+
+    if (hasData && lastFetch && now.getTime() - lastFetch.getTime() < PRICES_MIN_INTERVAL_MS) {
+      console.log('Ceny pradcast: ostatni odczyt mniej niz godzine temu — pomijam w tym przebiegu.');
+      return;
+    }
+
+    // Recorded before the fetch even starts, and regardless of how it turns
+    // out: the limiter above is about how often pradcast gets ASKED, not
+    // about whether the answer was any good.
+    mkdirSync(dirname(pricesLastFetchTarget), { recursive: true });
+    writeFileSync(pricesLastFetchTarget, `${JSON.stringify({ at: now.toISOString() })}\n`);
+
+    const apiKey = process.env.PRADCAST_API_KEY;
+    // Calendar dates, not `visibleBusinessDates`: that helper skips weekends
+    // because a call period is never declared on one, which has nothing to do
+    // with whether a day-ahead PRICE exists for it. Today through D+3 is
+    // exactly pradcast's own stated window (today and tomorrow confirmed,
+    // D+2/D+3 forecast).
+    const dates = [0, 1, 2, 3].map((offset) => formatDate(addDays(now, offset)));
+
+    const days = (
+      await Promise.all(dates.map((date) => fetchPradcastDay(date, apiKey)))
+    ).filter((day) => day !== null);
+
+    if (days.length === 0) {
+      console.warn('Ceny pradcast: żadna doba się nie powiodła — zostawiam poprzedni plik.');
+      return;
+    }
+
+    const file = pricesFile(days, existing, now);
+    const nextText = `${JSON.stringify(file, null, 2)}\n`;
+    const currentText = (() => {
+      try {
+        return readFileSync(pricesTarget, 'utf8');
+      } catch {
+        return null;
+      }
+    })();
+
+    if (nextText !== currentText) {
+      mkdirSync(dirname(pricesTarget), { recursive: true });
+      writeFileSync(pricesTarget, nextText);
+      console.log(`Ceny pradcast: zapisano public/ceny.json (${days.length} dob).`);
+    } else {
+      console.log('Ceny pradcast: bez zmian wobec poprzedniego pliku.');
+    }
+
+    const partitionPath = resolve(pricesArchiveDir, `${archivePartition(now)}.jsonl`);
+    let archiveText = '';
+    try {
+      archiveText = readFileSync(partitionPath, 'utf8');
+    } catch {
+      // First line ever for this partition.
+    }
+
+    const newLines = archiveLines(days, archiveText, now);
+    if (newLines.length > 0) {
+      mkdirSync(pricesArchiveDir, { recursive: true });
+      appendFileSync(partitionPath, `${newLines.join('\n')}\n`);
+      console.log(`Ceny pradcast: dopisano ${newLines.length} wierszy do archiwum cen.`);
+    } else {
+      console.log('Ceny pradcast: archiwum cen bez zmian.');
+    }
+  } catch (error) {
+    console.warn(`Ceny pradcast pominiete w tym przebiegu: ${String(error)}`);
   }
 }
 
@@ -629,6 +814,10 @@ try {
 // After both archives have taken this hour's rows, so the study sees them —
 // and before the first exit below, so a quiet day still gets re-scored.
 if (!dryRun) await writeBadanie(now);
+
+// Independent of the summary text entirely — a day with no facts to write
+// about (the exit right below) still has a price strip worth refreshing.
+if (!dryRun) await writePrices(now);
 
 const facts = buildFacts(
   points,
