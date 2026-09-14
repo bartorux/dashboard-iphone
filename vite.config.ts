@@ -39,6 +39,18 @@ export default defineConfig({
             },
           },
           {
+            // Same reasoning as summary.json above, and a separate cache entry
+            // for the same reason: two files written by the same generator, at
+            // different times, must not evict each other out of a shared slot.
+            urlPattern: /\/ceny\.json$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'ceny-cache',
+              expiration: { maxEntries: 1, maxAgeSeconds: 24 * 60 * 60 },
+              networkTimeoutSeconds: 5,
+            },
+          },
+          {
             urlPattern: /^https:\/\/api\.raporty\.pse\.pl/,
             handler: 'NetworkFirst',
             options: {
