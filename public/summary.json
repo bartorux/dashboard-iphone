@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
-  "body": "Prognoza dzisiaj poprawia się. Na ogłoszenie w tych godzinach jest już za późno.",
-  "outlook": "Przywołanie wchodzi w grę także jutro, w środę, czwartek i piątek.",
-  "generatedAt": "2026-09-14T04:15:42.569Z",
+  "headline": "Dziś operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
+  "body": "Prognoza na dziś poprawia się. Ogłoszenie może jeszcze nadejść między 19:00 a 21:00.",
+  "outlook": "Jutro, w środę, czwartek i piątek przywołanie również wchodzi w grę, natomiast w kolejnych godzinach i dniach rezerwa pokrywa wymagany poziom lub obowiązuje poza dniem roboczym.",
+  "generatedAt": "2026-09-14T04:30:57.378Z",
   "dates": [
     "2026-09-14",
     "2026-09-15",
@@ -10,6 +10,6 @@
     "2026-09-17",
     "2026-09-18"
   ],
-  "assessment": "2026-09-14|R|high|-900|11:00|1|8|0|high:07:00-09:00,moderate:09:00-11:00,high:11:00-12:00,moderate:12:00-13:00,moderate:19:00-21:00|K2:07:00-09:00,K2:10:00-12:00,K2:19:00-20:00|-;2026-09-15|R|high|-1400|19:00|1|4|10|high:07:00-08:00,moderate:08:00-09:00,moderate:18:00-19:00,high:19:00-21:00||-;2026-09-16|R|moderate|-800|20:00|0|0|15|moderate:18:00-21:00||X;2026-09-17|R|moderate|-1200|20:00|2|3|15|moderate:08:00-09:00,moderate:17:00-21:00||X;2026-09-18|R|moderate|-200|19:00|2|0|16|moderate:19:00-21:00||X#-/below/prognoza poprawia się#v53",
+  "assessment": "2026-09-14|R|high|-900|11:00|0|7|0|high:07:00-09:00,moderate:09:00-11:00,high:11:00-12:00,moderate:12:00-14:00,moderate:19:00-21:00|K2:07:00-09:00,K2:10:00-12:00,K2:19:00-20:00|-;2026-09-15|R|high|-1400|19:00|1|3|10|high:07:00-08:00,moderate:08:00-09:00,moderate:18:00-19:00,high:19:00-21:00||-;2026-09-16|R|moderate|-800|20:00|0|0|15|moderate:18:00-21:00||X;2026-09-17|R|moderate|-1300|20:00|2|3|15|moderate:08:00-09:00,moderate:17:00-21:00||X;2026-09-18|R|moderate|-200|19:00|2|0|16|moderate:19:00-21:00||X#-/below/prognoza poprawia się#v53",
   "model": "gemini-3.5-flash-lite"
 }
