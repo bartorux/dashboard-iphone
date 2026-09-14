@@ -3,15 +3,6 @@
     {
       "at": "2026-09-11T15:01:12.791Z",
       "prompt": 53,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "Dziś między 17:00 a 22:00 operator może ogłosić przywołanie, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc ma wybór, choć na ogłoszenie jest już za późno, bo do tych godzin pozostało mniej niż osiem godzin.",
-      "body": "W poniedziałek 14 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 14 września między 07:00 a 09:00 oraz od 18:00 do 21:00 nadwyżka spadła poniżej progu 1100 MW, a saldo wymiany dla tej doby nie jest jeszcze zaplanowane, natomiast w pozostałych dniach rezerwa pokrywa wymagany poziom lub nadwyżka daje operatorowi swobodę wyboru."
-    },
-    {
-      "at": "2026-09-11T15:01:12.791Z",
-      "prompt": 53,
       "accepted": true,
       "headline": "Dziś między 17:00 a 22:00 operator może ogłosić przywołanie, ale nadwyżka trzyma się powyżej progu 1100 MW, jednak na ogłoszenie jest już za późno.",
       "body": "W poniedziałek 14 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach 07:00-09:00, kiedy nadwyżka spadła poniżej progu 1100 MW, oraz w pozostałych godzinach, do których zostało jeszcze ponad osiem godzin.",
@@ -2507,6 +2498,14 @@
       "headline": "W środę operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00.",
       "body": "Prognoza w środę pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek i piątek saldo wymiany nie jest jeszcze zaplanowane, a w środę, czwartek i piątek margines ujemny występuje w kilku godzinach, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-14T13:30:59.950Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 20:00-21:00.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach 20:00-21:00.",
+      "outlook": "W czwartek i piątek saldo wymiany nie jest jeszcze zaplanowane, a w pozostałych dobach nic nie zapowiada przywołania."
     }
   ]
 }
