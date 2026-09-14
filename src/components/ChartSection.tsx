@@ -141,19 +141,17 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     }
 
     return (
-      <>
-        <ReserveChart
-          data={dayData}
-          orangeThreshold={orangeThreshold}
-          redThreshold={redThreshold}
-          currentHourLabel={currentHourLabel}
-        />
-        {/* Only when ceny.json actually covers the day on screen — pradcast
-            serves today through D+3, so a day further out (or a day the
-            fetch has not resolved for yet) simply gets no strip and no
-            placeholder in its place. See usePrices/PriceStrip. */}
-        {priceDay && <PriceStrip day={priceDay} />}
-      </>
+      <ReserveChart
+        data={dayData}
+        orangeThreshold={orangeThreshold}
+        redThreshold={redThreshold}
+        currentHourLabel={currentHourLabel}
+        /* Only when ceny.json actually covers the day on screen — pradcast
+           serves today through D+3, so a day further out (or a day the fetch
+           has not resolved for yet) simply gets no strip and no placeholder in
+           its place. See usePrices/PriceStrip. */
+        belowPlot={priceDay && <PriceStrip day={priceDay} />}
+      />
     );
   };
 

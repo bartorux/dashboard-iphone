@@ -62,7 +62,7 @@ const CONFIDENCE_LABEL: Record<'high' | 'medium' | 'low', string> = {
 
 /** Fixed rather than responsive to content: a strip this short exists to be
  *  glanced at under the reserve chart, not read on its own. */
-const STRIP_HEIGHT = 76;
+const STRIP_HEIGHT = 112;
 
 interface TooltipProps {
   active?: boolean;
@@ -209,7 +209,7 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
   if (day.hours.length !== 24) return null;
 
   return (
-    <figure className="m-0 mt-2">
+    <figure className="m-0 mt-3">
       <div className="flex items-baseline justify-between gap-2 px-1">
         <span className="text-[0.8125rem] font-semibold text-text">Cena energii</span>
         <span

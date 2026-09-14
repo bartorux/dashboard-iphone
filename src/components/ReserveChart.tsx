@@ -42,6 +42,9 @@ interface ReserveChartProps {
   orangeThreshold: number;
   redThreshold: number;
   currentHourLabel: string | null;
+  /** Drawn between the plot and the hourly table — the price strip, which
+   *  reads against this plot's hours and must not be pushed below the table. */
+  belowPlot?: React.ReactNode;
 }
 
 interface Row {
@@ -217,6 +220,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
   orangeThreshold,
   redThreshold,
   currentHourLabel,
+  belowPlot,
 }) => {
   const animationMs = useChartAnimationMs();
 
@@ -551,6 +555,8 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
           się w tabeli pod wykresem.
         </figcaption>
       </figure>
+
+      {belowPlot}
 
       <HourTable
         rows={rows}

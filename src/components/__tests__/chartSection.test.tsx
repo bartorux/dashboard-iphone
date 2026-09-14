@@ -184,6 +184,10 @@ describe('ChartSection', () => {
 
       expect(await screen.findByText('Cena energii')).toBeInTheDocument();
       expect(screen.getByText('potwierdzona · TGE')).toBeInTheDocument();
+      // Directly under the plot it is read against, not below the hourly table.
+      const strip = screen.getByText('Cena energii');
+      const table = screen.getByText('Tabela godzinowa');
+      expect(strip.compareDocumentPosition(table) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     });
 
     it('shows nothing at all when ceny.json has no entry for the day on screen', async () => {
