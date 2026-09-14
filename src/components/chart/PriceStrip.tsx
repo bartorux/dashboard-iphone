@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { PriceDay } from '../../utils/cenyTypes';
-import { niceScaleRange } from '../../utils/scale';
+import { NICE_STEPS, RangeScale } from '../../utils/scale';
 import { useChartColors } from '../../hooks/useChartColors';
 import {
   useChartAnimationMs,
@@ -59,6 +59,26 @@ const CONFIDENCE_LABEL: Record<'high' | 'medium' | 'low', string> = {
   medium: 'średnia',
   low: 'niska',
 };
+
+/**
+ * A coarser scale than niceScaleRange: that one wants four to seven ticks,
+ * which a strip this short cannot label, so Recharts silently dropped every
+ * other one — zero included (seen on live data 14.09.2026: 500 / 1500 / 2500).
+ * At most three intervals above zero, zero always on a tick. Below zero only
+ * when a price is: TGE does clear negative on sunny, windy weekends.
+ */
+export function priceScale(lo: number, hi: number): RangeScale {
+  const top = Math.max(hi, 0) * 1.05;
+  const bottom = Math.min(lo, 0) * 1.05;
+  const step =
+    NICE_STEPS.find((candidate) => Math.ceil((top - bottom) / candidate) <= 3) ??
+    Math.ceil((top - bottom) / 3);
+  const max = Math.max(1, Math.ceil(top / step)) * step;
+  const min = Math.floor(bottom / step) * step;
+  const ticks: number[] = [];
+  for (let tick = min; tick <= max; tick += step) ticks.push(tick);
+  return { min, max, ticks };
+}
 
 /** Fixed rather than responsive to content: a strip this short exists to be
  *  glanced at under the reserve chart, not read on its own. */
@@ -183,8 +203,8 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
       : rows.flatMap((row) => [row.bandTop, row.bandBottom]);
     const valid = values.filter((v): v is number => v !== null && Number.isFinite(v));
     return valid.length > 0
-      ? niceScaleRange(Math.min(...valid), Math.max(...valid))
-      : niceScaleRange(0, 1000);
+      ? priceScale(Math.min(...valid), Math.max(...valid))
+      : priceScale(0, 1000);
   }, [rows, confirmed]);
 
   const chipClass = confirmed

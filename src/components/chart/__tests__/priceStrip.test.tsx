@@ -17,7 +17,7 @@ vi.mock('recharts', async () => {
   };
 });
 import React from 'react';
-import PriceStrip, { PriceTooltip } from '../PriceStrip';
+import PriceStrip, { PriceTooltip, priceScale } from '../PriceStrip';
 import { PriceDay, PriceHour } from '../../../utils/cenyTypes';
 
 const confirmedHours: PriceHour[] = Array.from({ length: 24 }, (_, hour) => ({
@@ -153,5 +153,22 @@ describe('PriceTooltip', () => {
       <PriceTooltip active={false} confirmed payload={[{ payload: confirmedRow }]} />
     );
     expect(container).toBeEmptyDOMElement();
+  });
+});
+
+describe('priceScale', () => {
+  it.each([
+    // [lowest, highest, expected ticks] — live 14–17.09.2026 ranges included
+    [212, 2500, [0, 1000, 2000, 3000]],
+    [380, 2242, [0, 1000, 2000, 3000]],
+    [150, 1300, [0, 500, 1000, 1500]],
+    [0, 0, [0, 1]],
+    [-120, 900, [-500, 0, 500, 1000]],
+  ])('labels %s–%s as %j', (lo, hi, ticks) => {
+    const scale = priceScale(lo, hi);
+    expect(scale.ticks).toEqual(ticks);
+    expect(scale.min).toBe(ticks[0]);
+    expect(scale.max).toBe(ticks[ticks.length - 1]);
+    expect(scale.ticks).toContain(0);
   });
 });
