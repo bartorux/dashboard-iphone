@@ -3,15 +3,6 @@
     {
       "at": "2026-09-11T05:13:04.011Z",
       "prompt": 53,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Dziś między 16:00 a 19:00 operator może ogłosić przywołanie, ale nadwyżka powyżej progu 1100 MW daje mu wybór.",
-      "body": "Margines spada poniżej typowego pasma przez jedenaście godzin z powodu poziomu rezerwy poniżej normy. Ogłoszenie może jeszcze nadejść między 16:00 a 19:00 oraz od 21:00 do 22:00.",
-      "outlook": "W poniedziałek 14 września i we wtorek 15 września między 07:00 a 10:00 oraz od 17:00 do 22:00 przywołanie również wchodzi w grę, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-11T05:13:04.011Z",
-      "prompt": 53,
       "accepted": true,
       "headline": "Dziś między 16:00 a 19:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka przekracza próg 1100 MW.",
       "body": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez jedenaście godzin. Na ogłoszenie w tych godzinach jest jeszcze za wcześnie albo w sam raz, bo do części z nich zostało ponad osiem godzin.",
@@ -2504,6 +2495,14 @@
       "headline": "Dziś operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "Prognoza na dziś poprawia się. Ogłoszenie może jeszcze nadejść między 19:00 a 21:00.",
       "outlook": "Jutro, w środę, czwartek i piątek przywołanie również wchodzi w grę, natomiast w kolejnych godzinach i dniach rezerwa pokrywa wymagany poziom lub obowiązuje poza dniem roboczym."
+    },
+    {
+      "at": "2026-09-14T04:45:40.638Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Dziś operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 11:00 a 12:00.",
+      "body": "Prognoza poprawia się. Między 19:00 a 21:00 ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro między 07:00 a 08:00 oraz od 19:00 do 21:00 nadwyżka również spadnie poniżej progu 1100 MW, natomiast w środę, czwartek i piątek margines nie pokrywa wymaganego poziomu, lecz nadwyżka trzyma się powyżej tego progu."
     }
   ]
 }
