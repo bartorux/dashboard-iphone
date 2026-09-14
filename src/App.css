@@ -205,6 +205,27 @@
   --l-band-history: rgba(142, 142, 147, 0.18);
   --d-band-history: rgba(152, 152, 157, 0.22);
 
+  /* Day-ahead price strip under the reserve chart (usePrices / PriceStrip),
+     the "Morze" hue. The owner reviewed four candidate ranges on live data —
+     this one, a darker "Głębia", a desaturated "Szałwia" and a hueless
+     "Grafit" — and picked Morze as the only one that stays clear of the
+     reserve blue, the alarm/warn bands and the Kompas magenta at once; in
+     dark mode it also sits close to --ok, which is deliberate (a chart with
+     no status of its own borrowing the "nothing wrong here" green reads
+     better than fighting it for a new hue).
+
+     Confirmed days draw --series-price as a line; forecast days never get
+     that line — only --series-price-band's fill and
+     --series-price-band-edge's crisp top/bottom edges (PriceStrip, "T2"). The
+     owner's one hard requirement was that a prediction must never look like a
+     certainty, so the two states are drawn with genuinely different marks
+     rather than the same line style in a fainter tint. */
+  --l-series-price: #0f8a6a;         --d-series-price: #28a883;
+  --l-series-price-band: rgba(15, 138, 106, 0.20);
+  --d-series-price-band: rgba(40, 168, 131, 0.22);
+  --l-series-price-band-edge: rgba(15, 138, 106, 0.55);
+  --d-series-price-band-edge: rgba(40, 168, 131, 0.6);
+
   /* layout */
   --header-height: 3.5rem;
 
@@ -254,6 +275,9 @@
   --series-threshold: var(--l-series-threshold);
   --series-history: var(--l-series-history);
   --band-history: var(--l-band-history);
+  --series-price: var(--l-series-price);
+  --series-price-band: var(--l-series-price-band);
+  --series-price-band-edge: var(--l-series-price-band-edge);
   --oze: var(--l-oze);
   --oze-soft: var(--l-oze-soft);
 }
@@ -304,6 +328,9 @@
     --series-threshold: var(--d-series-threshold);
     --series-history: var(--d-series-history);
     --band-history: var(--d-band-history);
+    --series-price: var(--d-series-price);
+    --series-price-band: var(--d-series-price-band);
+    --series-price-band-edge: var(--d-series-price-band-edge);
     --oze: var(--d-oze);
     --oze-soft: var(--d-oze-soft);
   }
@@ -354,6 +381,9 @@
   --series-threshold: var(--d-series-threshold);
   --series-history: var(--d-series-history);
   --band-history: var(--d-band-history);
+  --series-price: var(--d-series-price);
+  --series-price-band: var(--d-series-price-band);
+  --series-price-band-edge: var(--d-series-price-band-edge);
   --oze: var(--d-oze);
   --oze-soft: var(--d-oze-soft);
 }
@@ -400,6 +430,12 @@
   /* CompassRows only — see the --l-compass/--d-compass comment above. */
   --color-compass: var(--compass);
   --color-compass-soft: var(--compass-soft);
+
+  /* PriceStrip only — see the --l-series-price/--d-series-price comment
+     above, next to the other chart series tokens. */
+  --color-series-price: var(--series-price);
+  --color-series-price-band: var(--series-price-band);
+  --color-series-price-band-edge: var(--series-price-band-edge);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Helvetica Neue", Arial, sans-serif;

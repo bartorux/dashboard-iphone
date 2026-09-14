@@ -4,8 +4,10 @@ import ReserveChart from './ReserveChart';
 import GenerationChart from './GenerationChart';
 import HistoryChart from './HistoryChart';
 import SegmentedControl from './SegmentedControl';
+import PriceStrip from './chart/PriceStrip';
 import { useHistory } from '../hooks/useHistory';
 import { useRedispatch } from '../hooks/useRedispatch';
+import { usePrices } from '../hooks/usePrices';
 import { CHART_BOX } from './chart/shared';
 
 type ChartView = 'reserve' | 'generation' | 'history';
@@ -60,6 +62,16 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     view === 'generation',
     dayData[0]?.businessDate ?? null
   );
+
+  /*
+   * Unconditional, like useSummary in App.tsx: ceny.json is one small file
+   * covering today through D+3, so there is no "only once a view opens"
+   * saving to be had the way there is for the 30-day history or a whole
+   * day's redispatch. Called here rather than threaded down from App as a
+   * prop because this card is the strip's only consumer.
+   */
+  const { prices } = usePrices();
+  const priceDay = prices?.days[0] ?? null;
 
   const active = VIEWS.find((entry) => entry.value === view) ?? VIEWS[0];
 
@@ -126,12 +138,19 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     }
 
     return (
-      <ReserveChart
-        data={dayData}
-        orangeThreshold={orangeThreshold}
-        redThreshold={redThreshold}
-        currentHourLabel={currentHourLabel}
-      />
+      <>
+        <ReserveChart
+          data={dayData}
+          orangeThreshold={orangeThreshold}
+          redThreshold={redThreshold}
+          currentHourLabel={currentHourLabel}
+        />
+        {/* Only when ceny.json actually covers the day on screen — pradcast
+            serves today through D+3, so a day further out (or a day the
+            fetch has not resolved for yet) simply gets no strip and no
+            placeholder in its place. See usePrices/PriceStrip. */}
+        {priceDay && <PriceStrip day={priceDay} />}
+      </>
     );
   };
 

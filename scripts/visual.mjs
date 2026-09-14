@@ -63,6 +63,16 @@ const compass = readFileSync(
   resolve(root, 'src/utils/__fixtures__/pse-pdgsz.json'),
   'utf8'
 );
+// Day-ahead prices (usePrices / PriceStrip) for the same frozen window: the
+// scene day itself (2026-08-04) confirmed, the next working day
+// (2026-08-05 — the same "tomorrow" tab kompas-light and ceny-prognoza-light
+// select via dayIndex) forecast. One fixture, both of PriceStrip's states,
+// so no scenario here can accidentally exercise only the confirmed line or
+// only the forecast band.
+const prices = readFileSync(
+  resolve(root, 'src/utils/__fixtures__/ceny-visual.json'),
+  'utf8'
+);
 
 /**
  * Antialiasing and font rendering wobble by a pixel between runs. This tolerance
@@ -132,6 +142,14 @@ const SCENARIOS = [
   // the whole feature would be unguarded by every scene here.
   { name: 'kompas-light', scheme: 'light', dayIndex: 1 },
   { name: 'kompas-monitor', scheme: 'light', monitor: true, dayIndex: 1 },
+  // PriceStrip's forecast state (ChartSection.tsx, under ReserveChart, in the
+  // "Rezerwa" view only): day 1 of ceny-visual.json above, the T2 band with
+  // no centre line. Every other scenario here sits on day 0 (2026-08-04),
+  // which is the strip's CONFIRMED line instead — so between this scene and
+  // any of those, both of PriceStrip's states are guarded pictorially.
+  // dayIndex, not a fixture swap, exactly like kompas-light: the same one
+  // ceny.json response backs every scenario in this file.
+  { name: 'ceny-prognoza-light', scheme: 'light', dayIndex: 1 },
 ];
 
 /**
@@ -219,6 +237,18 @@ for (const scenario of SCENARIOS) {
         // the card's eyebrow on the baseline says what the app will really say.
         dates: ['2026-08-04', '2026-08-05', '2026-08-06', '2026-08-07', '2026-08-10'],
       }),
+    });
+  });
+
+  // Same offline rule as summary.json above: the "no-data" scene proves the
+  // rest of the screen stands without this file either, so it must not get
+  // one.
+  await context.route('**/ceny.json', (route) => {
+    if (scenario.offline) return route.abort('failed');
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: prices,
     });
   });
 

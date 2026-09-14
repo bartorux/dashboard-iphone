@@ -1,0 +1,70 @@
+{
+  "changedAt": "2026-08-04T13:00:00+02:00",
+  "source": "pradcast.pl",
+  "days": [
+    {
+      "date": "2026-08-04",
+      "source": "confirmed",
+      "horizon": null,
+      "confidence": null,
+      "hours": [
+        { "hour": 0, "price": 512, "p10": null, "p90": null },
+        { "hour": 1, "price": 478, "p10": null, "p90": null },
+        { "hour": 2, "price": 455, "p10": null, "p90": null },
+        { "hour": 3, "price": 441, "p10": null, "p90": null },
+        { "hour": 4, "price": 460, "p10": null, "p90": null },
+        { "hour": 5, "price": 502, "p10": null, "p90": null },
+        { "hour": 6, "price": 611, "p10": null, "p90": null },
+        { "hour": 7, "price": 705, "p10": null, "p90": null },
+        { "hour": 8, "price": 588, "p10": null, "p90": null },
+        { "hour": 9, "price": 421, "p10": null, "p90": null },
+        { "hour": 10, "price": 312, "p10": null, "p90": null },
+        { "hour": 11, "price": 240, "p10": null, "p90": null },
+        { "hour": 12, "price": 205, "p10": null, "p90": null },
+        { "hour": 13, "price": 198, "p10": null, "p90": null },
+        { "hour": 14, "price": 236, "p10": null, "p90": null },
+        { "hour": 15, "price": 289, "p10": null, "p90": null },
+        { "hour": 16, "price": 368, "p10": null, "p90": null },
+        { "hour": 17, "price": 542, "p10": null, "p90": null },
+        { "hour": 18, "price": 861, "p10": null, "p90": null },
+        { "hour": 19, "price": 1324, "p10": null, "p90": null },
+        { "hour": 20, "price": 902, "p10": null, "p90": null },
+        { "hour": 21, "price": 601, "p10": null, "p90": null },
+        { "hour": 22, "price": 519, "p10": null, "p90": null },
+        { "hour": 23, "price": 468, "p10": null, "p90": null }
+      ]
+    },
+    {
+      "date": "2026-08-05",
+      "source": "forecast",
+      "horizon": "D+1",
+      "confidence": "medium",
+      "hours": [
+        { "hour": 0, "price": 480, "p10": 400, "p90": 600 },
+        { "hour": 1, "price": 450, "p10": 370, "p90": 570 },
+        { "hour": 2, "price": 430, "p10": 350, "p90": 550 },
+        { "hour": 3, "price": 420, "p10": 340, "p90": 540 },
+        { "hour": 4, "price": 435, "p10": 350, "p90": 560 },
+        { "hour": 5, "price": 470, "p10": 380, "p90": 610 },
+        { "hour": 6, "price": 560, "p10": 430, "p90": 780 },
+        { "hour": 7, "price": 640, "p10": 480, "p90": 920 },
+        { "hour": 8, "price": 540, "p10": 410, "p90": 750 },
+        { "hour": 9, "price": 400, "p10": 300, "p90": 560 },
+        { "hour": 10, "price": 300, "p10": 200, "p90": 440 },
+        { "hour": 11, "price": 230, "p10": 120, "p90": 380 },
+        { "hour": 12, "price": 200, "p10": 90, "p90": 350 },
+        { "hour": 13, "price": 195, "p10": 85, "p90": 340 },
+        { "hour": 14, "price": 225, "p10": 110, "p90": 370 },
+        { "hour": 15, "price": 275, "p10": 150, "p90": 430 },
+        { "hour": 16, "price": 350, "p10": 210, "p90": 540 },
+        { "hour": 17, "price": 520, "p10": 320, "p90": 820 },
+        { "hour": 18, "price": 830, "p10": 500, "p90": 1350 },
+        { "hour": 19, "price": 1260, "p10": 700, "p90": 2400 },
+        { "hour": 20, "price": 870, "p10": 550, "p90": 1600 },
+        { "hour": 21, "price": 580, "p10": 400, "p90": 900 },
+        { "hour": 22, "price": 500, "p10": 360, "p90": 720 },
+        { "hour": 23, "price": 450, "p10": 340, "p90": 610 }
+      ]
+    }
+  ]
+}

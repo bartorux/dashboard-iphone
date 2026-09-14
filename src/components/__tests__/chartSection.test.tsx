@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ChartSection from '../ChartSection';
 import { makePoint } from '../../test/factories';
 import { visibleBusinessDates } from '../../utils/dayWindow';
+import { PricesFile } from '../../utils/cenyTypes';
 
 const dayData = Array.from({ length: 24 }, (_, hour) =>
   makePoint({
@@ -11,6 +12,53 @@ const dayData = Array.from({ length: 24 }, (_, hour) =>
     reserve: 2000 + hour * 10,
   })
 );
+
+// makePoint's own default — spelled out here once so the price fixtures
+// below can say plainly which day they do or do not cover.
+const DAY_ON_SCREEN = '2026-08-03';
+
+const pricesFor = (date: string): PricesFile => ({
+  changedAt: '2026-08-03T10:00:00Z',
+  source: 'pradcast.pl',
+  days: [
+    {
+      date,
+      source: 'confirmed',
+      horizon: null,
+      confidence: null,
+      hours: Array.from({ length: 24 }, (_, hour) => ({
+        hour,
+        price: 800 + hour,
+        p10: null,
+        p90: null,
+      })),
+    },
+  ],
+});
+
+/**
+ * Every call in this file's default fetch mock resolves the same generic PSE
+ * shape regardless of URL — {@link ChartSection}'s own `usePrices()` call
+ * asks for ceny.json alongside it, gets that same shape back, fails
+ * usePrices' validation (no `days`, no `changedAt`) and quietly resolves to
+ * "no prices", exactly like a 404 would. `pricesFor`/`callsTo` below are for
+ * the tests that need to control what ceny.json actually answers.
+ */
+function mockFetch(cenyResponse: unknown = { value: [] }) {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((input: RequestInfo | URL) => {
+      const url = decodeURIComponent(String(input));
+      const body = url.includes('ceny.json') ? cenyResponse : { value: [] };
+      return Promise.resolve({ ok: true, json: async () => body });
+    })
+  );
+}
+
+const callsTo = (substring: string) =>
+  vi.mocked(fetch).mock.calls.filter(([url]) =>
+    decodeURIComponent(String(url)).includes(substring)
+  );
 
 function renderSection() {
   return render(
@@ -29,10 +77,7 @@ function renderSection() {
 describe('ChartSection', () => {
   beforeEach(() => {
     localStorage.clear();
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ ok: true, json: async () => ({ value: [] }) })
-    );
+    mockFetch();
   });
 
   afterEach(() => vi.unstubAllGlobals());
@@ -66,21 +111,20 @@ describe('ChartSection', () => {
   it('does not fetch history until the comparison is opened', async () => {
     renderSection();
 
-    // Whoever never opens the comparison never pays for the transfer
-    expect(fetch).not.toHaveBeenCalled();
+    // Whoever never opens the comparison never pays for the transfer. ceny.json
+    // (usePrices, unconditional — see ChartSection's own comment) is allowed
+    // to have been asked for already; only the history endpoint is gated.
+    expect(callsTo('business_date ge')).toHaveLength(0);
 
     fireEvent.click(screen.getByRole('tab', { name: 'Na tle 30 dni' }));
 
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-    expect(decodeURIComponent(String(vi.mocked(fetch).mock.calls[0][0]))).toContain(
-      'business_date ge'
-    );
+    await waitFor(() => expect(callsTo('business_date ge')).toHaveLength(1));
   });
 
   it('does not fetch redispatch until the generation view is opened', async () => {
     renderSection();
 
-    expect(fetch).not.toHaveBeenCalled();
+    expect(callsTo('/poze-redoze?')).toHaveLength(0);
 
     fireEvent.click(screen.getByRole('tab', { name: 'Generacja' }));
 
@@ -95,11 +139,8 @@ describe('ChartSection', () => {
     // moment the view opens, so a later day switch finds its curtailment in
     // the cache instead of drawing the chart twice. See useRedispatch.
     const expected = new Set([...visibleBusinessDates(new Date()), '2026-08-03']);
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(expected.size));
-    const urls = vi
-      .mocked(fetch)
-      .mock.calls.map((call) => decodeURIComponent(String(call[0])));
-    expect(urls.every((u) => u.includes('/poze-redoze?'))).toBe(true);
+    await waitFor(() => expect(callsTo('/poze-redoze?')).toHaveLength(expected.size));
+    const urls = callsTo('/poze-redoze?').map((call) => decodeURIComponent(String(call[0])));
     expect(urls.some((u) => u.includes('/pdgobpkd?'))).toBe(false);
     for (const date of expected) {
       expect(urls.some((u) => u.includes(`business_date eq '${date}'`))).toBe(true);
@@ -134,5 +175,38 @@ describe('ChartSection', () => {
         .mocked(fetch)
         .mock.calls.some((call) => decodeURIComponent(String(call[0])).includes('pdgobpkd'))
     ).toBe(false);
+  });
+
+  describe('price strip', () => {
+    it('shows the price strip under the reserve view when ceny.json covers the day on screen', async () => {
+      mockFetch(pricesFor(DAY_ON_SCREEN));
+      renderSection();
+
+      expect(await screen.findByText('Cena energii')).toBeInTheDocument();
+      expect(screen.getByText('potwierdzona · TGE')).toBeInTheDocument();
+    });
+
+    it('shows nothing at all when ceny.json has no entry for the day on screen', async () => {
+      mockFetch(pricesFor('2026-08-09')); // any date other than DAY_ON_SCREEN
+      renderSection();
+
+      // Give the fetch a turn to resolve before asserting its absence.
+      await waitFor(() => expect(fetch).toHaveBeenCalled());
+      await new Promise((done) => setTimeout(done, 0));
+
+      expect(screen.queryByText('Cena energii')).not.toBeInTheDocument();
+    });
+
+    it('hides the strip outside the reserve view', async () => {
+      mockFetch(pricesFor(DAY_ON_SCREEN));
+      renderSection();
+      await screen.findByText('Cena energii');
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Generacja' }));
+      expect(screen.queryByText('Cena energii')).not.toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Na tle 30 dni' }));
+      expect(screen.queryByText('Cena energii')).not.toBeInTheDocument();
+    });
   });
 });
