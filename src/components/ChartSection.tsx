@@ -71,7 +71,10 @@ const ChartSection: React.FC<ChartSectionProps> = ({
    * prop because this card is the strip's only consumer.
    */
   const { prices } = usePrices();
-  const priceDay = prices?.days[0] ?? null;
+  // Matched by date, never by position: days[0] is today, and a reader who
+  // switched to tomorrow must not see today's prices under tomorrow's reserve.
+  const shownDate = dayData[0]?.businessDate ?? null;
+  const priceDay = prices?.days.find((day) => day.date === shownDate) ?? null;
 
   const active = VIEWS.find((entry) => entry.value === view) ?? VIEWS[0];
 

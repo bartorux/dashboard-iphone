@@ -61,8 +61,7 @@ const CONFIDENCE_LABEL: Record<'high' | 'medium' | 'low', string> = {
 };
 
 /** Fixed rather than responsive to content: a strip this short exists to be
- *  glanced at under the reserve chart, not read on its own — see the owner's
- *  "Miejsce A" decision in the task this file implements. */
+ *  glanced at under the reserve chart, not read on its own. */
 const STRIP_HEIGHT = 76;
 
 interface TooltipProps {

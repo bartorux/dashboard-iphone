@@ -197,6 +197,21 @@ describe('ChartSection', () => {
       expect(screen.queryByText('Cena energii')).not.toBeInTheDocument();
     });
 
+    it('picks the day on screen by date, not the first day in the file', async () => {
+      const today = pricesFor('2026-08-02').days[0];
+      const shown = {
+        ...pricesFor(DAY_ON_SCREEN).days[0],
+        source: 'forecast' as const,
+        horizon: 'D+2' as const,
+        confidence: 'low' as const,
+      };
+      mockFetch({ ...pricesFor(DAY_ON_SCREEN), days: [today, shown] });
+      renderSection();
+
+      expect(await screen.findByText('prognoza D+2 · pewność niska')).toBeInTheDocument();
+      expect(screen.queryByText('potwierdzona · TGE')).not.toBeInTheDocument();
+    });
+
     it('hides the strip outside the reserve view', async () => {
       mockFetch(pricesFor(DAY_ON_SCREEN));
       renderSection();

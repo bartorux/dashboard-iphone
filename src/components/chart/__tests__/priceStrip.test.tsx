@@ -76,6 +76,16 @@ describe('PriceStrip', () => {
     expect(lineCurves(container)).toHaveLength(2);
     expect(areaCurves(container)).toHaveLength(1);
     expect(getByText('prognoza D+2 · pewność niska')).toBeInTheDocument();
+
+    // Counting is not enough: a series fed only nulls still renders its
+    // element, just with nothing in it. Both edges must actually be drawn,
+    // and in the band's edge colour, never in the confirmed line's.
+    const confirmedStroke = lineCurves(render(<PriceStrip day={confirmedDay} />).container)[0]
+      .getAttribute('stroke');
+    for (const curve of lineCurves(container)) {
+      expect(curve.getAttribute('d')).toMatch(/\d/);
+      expect(curve.getAttribute('stroke')).not.toBe(confirmedStroke);
+    }
   });
 
   it('translates every confidence level', () => {
