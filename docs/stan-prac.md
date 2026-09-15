@@ -626,6 +626,23 @@ alertami i Kompasem lewa kolumna jest wyższa (scena `szeroki-2560`: ~190 px prz
 **Otwarte:** w Safari na Macu poniżej 2000 px rozmiar główny to nadal 13 px (w Chrome 16), więc
 laptop i 1920 px wyglądają o ~20% mniej, a trzy kolumny wchodzą od ~1430 px. Do decyzji właściciela.
 
+## Słupki godzinowe cen (15.09.2026, v3.85.0)
+
+Właściciel: odcień ceny z v3.83 „zlewa się kompletnie". Przyczyna: dwa stopnie barwy na linii 2 px — za
+mało powierzchni i za mała rozpiętość. Cztery warianty narysowane na cenach z 15–17.09 (obecny, słupki,
+linia z wypełnieniem, linia z paskiem koloru); wybrane **słupki godzinowe** („rekomendacja kozak").
+
+- **Doba potwierdzona:** 24 słupki, każdy przez całą godzinę (cena dotyczy 19:00–20:00), w kolorze swojej
+  ceny. Skala **pięciostopniowa**, bezwzględna: stopień 0 = 250 zł/MWh, 4 = 1500+ (`--series-price-0..4`,
+  `rampAt` w `PriceStrip.tsx`). W ciemnym motywie droższe = jaśniejsze.
+- **Prognoza:** bez słupków — pasmo p10–p90 wypełnione tą samą skalą (krycie 0,75), krawędzie od stopnia 2
+  w górę, gradient w układzie wykresu (`userSpaceOnUse`), więc kolor na danej wysokości = kolor tej ceny.
+- **Dlaczego nie `<Bar>` z Recharts:** seria słupkowa przełącza oś kategorii na skalę pasmową i przesuwa
+  godziny na środek przedziału — pasek rozjechałby się z wykresem rezerwy. Słupki rysuje `PriceShading`
+  z `usePlotArea()`: godzina h zaczyna się dokładnie w h/24 pola. Dymek zasila niewidoczna linia.
+- Mutacje: 8 sond, dwie przeżyły pierwsze podejście (przesunięcie o pół godziny, pełna wysokość) — test
+  sprawdza teraz lewy/prawy brzeg pola i stanie na linii zera.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
