@@ -11,7 +11,7 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { PSEDataPoint } from '../types';
-import { niceScale } from '../utils/scale';
+import { niceScale, niceScaleRange } from '../utils/scale';
 import { classifyMargin } from '../utils/dataTransform';
 import { useChartColors } from '../hooks/useChartColors';
 import { STATUS_TEXT, marginLabel } from '../utils/status';
@@ -260,9 +260,25 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
     const valid = values.filter(
       (v): v is number => v !== null && Number.isFinite(v)
     );
+    const top = valid.length > 0 ? Math.max(...valid) : NaN;
+    const reserves = rows
+      .map((row) => row.reserve)
+      .filter((v): v is number => v !== null && Number.isFinite(v));
+    const lowest = reserves.length > 0 ? Math.min(...reserves) : 0;
+
+    /*
+     * Below zero only when the reserve itself goes there. The axis used to be
+     * pinned at [0, max] regardless, so on such a day Recharts quietly
+     * stretched the plot downwards on its own: no label under 0, and the alarm
+     * band — anchored at 0 — ended in a hard edge across the middle of the red
+     * zone (owner, 15.09.2026, on 17.09). niceScaleRange is the scale the
+     * generation and history views already use for negative values; ordinary
+     * days keep niceScale, so none of them moves by a pixel.
+     */
+    if (lowest < 0) return niceScaleRange(lowest, top);
     // niceScale keeps every axis label on a round number and copes with an
     // empty set, where Math.max() would hand back -Infinity.
-    return niceScale(valid.length > 0 ? Math.max(...valid) : NaN);
+    return { min: 0, ...niceScale(top) };
   }, [rows]);
 
   const ticks = useMemo(() => hourTicks(rows.map((row) => row.key)), [rows]);
@@ -274,7 +290,19 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
    * override, an alert hour at 23:00 would paint its dot twice, once on the
    * real point and once on the synthetic one at the new right edge.
    */
-  const chartRows = useMemo(() => withDayEnd(rows, { alert: null }), [rows]);
+  const chartRows = useMemo(
+    () =>
+      withDayEnd(
+        // The alarm band has no floor of its own — it runs to the bottom of
+        // the plot, which is 0 on an ordinary day and below it on a day the
+        // reserve goes negative. See `scale`.
+        rows.map((row) =>
+          row.zoneAlarm ? { ...row, zoneAlarm: [scale.min, row.zoneAlarm[1]] as [number, number] } : row
+        ),
+        { alert: null }
+      ),
+    [rows, scale.min]
+  );
 
   /*
    * An SVG gradient is addressed by a document-wide id, and a hard-coded one is
@@ -365,7 +393,7 @@ const ReserveChart: React.FC<ReserveChartProps> = ({
             />
 
             <YAxis
-              domain={[0, scale.max]}
+              domain={[scale.min, scale.max]}
               ticks={scale.ticks}
               tick={{ fontSize: AXIS_FONT_SIZE, fill: colors.axis }}
               tickFormatter={formatMW}

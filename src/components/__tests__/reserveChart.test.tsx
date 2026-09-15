@@ -21,7 +21,7 @@ import React from 'react';
 import ReserveChart, { ReserveTooltip } from '../ReserveChart';
 import { makePoint } from '../../test/factories';
 import { formatMW } from '../../utils/format';
-import { niceScale } from '../../utils/scale';
+import { niceScale, niceScaleRange } from '../../utils/scale';
 import { axisWidthFor, CHART_MARGIN } from '../chart/shared';
 
 const pad = (h: number) => String(h).padStart(2, '0');
@@ -508,5 +508,28 @@ describe('ReserveChart — doba pełna na osi (h/24, nie h/23)', () => {
     // day's reserve values top out at 5000 MW (see the module-level fixture).
     const expected = niceScale(5000);
     expect(gridLines).toHaveLength(expected.ticks.length);
+  });
+  /*
+   * A day whose reserve goes negative (17.09.2026 did). The axis must reach
+   * below zero with labels of its own, and the alarm band must run all the way
+   * down to the new floor instead of stopping in a hard edge at 0.
+   */
+  it('extends the axis and the alarm band below zero when the reserve goes negative', () => {
+    const negative = day.map((point, hour) => ({ ...point, reserve: hour === 19 ? -700 : 5000 }));
+    const { container } = render(
+      <ReserveChart data={negative} orangeThreshold={500} redThreshold={300} currentHourLabel={null} />
+    );
+
+    const expected = niceScaleRange(-700, 5000);
+    expect(expected.min).toBeLessThan(0);
+    const gridYs = [...container.querySelectorAll('.recharts-cartesian-grid-horizontal line')].map(
+      (line) => Number(line.getAttribute('y1'))
+    );
+    expect(gridYs).toHaveLength(expected.ticks.length);
+
+    const pairs = [...(container.querySelector('.recharts-area-area')?.getAttribute('d') ?? '')
+      .matchAll(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g)].map((m) => Number(m[2]));
+    // The band's lowest point sits on the lowest grid line, i.e. the plot floor.
+    expect(Math.max(...pairs)).toBeCloseTo(Math.max(...gridYs), 0);
   });
 });
