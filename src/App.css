@@ -549,7 +549,16 @@
  * setting is never shrunk back. Below 125rem nothing here applies.
  */
 @media (min-width: 125rem) {
-  html {
+  /*
+   * :root, not html. The Base section below sets `font: -apple-system-body` on
+   * html (Dynamic Type), and that shorthand resets font-size. Chromium does not
+   * know the keyword and drops the declaration, so an `html` rule here worked
+   * there; Safari does know it, and on macOS it resolves to 13px — which, coming
+   * later in the file, silently won (owner's 27-inch Safari, 15.09.2026: page
+   * unchanged, measured 13px root in WebKit). :root outranks html by
+   * specificity, whatever the order.
+   */
+  :root {
     font-size: clamp(100%, calc((100vw - 4rem) / 120), 150%);
   }
 }
