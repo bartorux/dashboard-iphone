@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-12T12:15:41.653Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W poniedziałek 14 września nadwyżka spadła poniżej progu 1100 MW w godzinach 08:00-09:00, co oznacza, że operator może ogłosić przywołanie, a spadła poniżej poziomu, który pozwalał mu je pominąć.",
-      "body": "Prognoza na poniedziałek 14 września pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 15 września rezerwa liczy się bez salda wymiany, a w pozostałych dniach od środy 16 września do piątku 18 września nic nie zapowiada przywołania w większości godzin."
-    },
-    {
-      "at": "2026-09-12T12:30:58.304Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W poniedziałek i wtorek rezerwa spada poniżej wymaganego poziomu, a nadwyżka obniża się poniżej progu 1100 MW w wybranych godzinach, co daje operatorowi prawo do ogłoszenia przywołania.",
-      "body": "Prognoza pogarsza się w poniedziałek 14 września. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę i czwartek rezerwa nie pokrywa wymaganego poziomu, a w piątek i w dniach wolnych nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-12T12:45:44.166Z",
       "prompt": 53,
       "accepted": true,
@@ -2495,6 +2479,24 @@
       "headline": "W czwartek o 19:00 margines spadnie najniżej ze wszystkich dni, a nadwyżka w systemie spadnie poniżej progu 1100 MW.",
       "body": "Prognoza na czwartek pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek i piątek między 07:00 a 09:00 oraz między 16:00 a 22:00 rezerwa nie pokryje wymaganego poziomu, natomiast przez pozostały czas oraz w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-15T11:45:41.881Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W czwartek o godzinie 19:00 margines spadnie najniżej w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW w godzinach 07:00-09:00.",
+      "body": "W czwartek prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W piątek rezerwa również nie pokryje wymaganego poziomu w wyznaczonych godzinach, natomiast dzisiaj, jutro i w poniedziałek 21 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-15T11:45:41.881Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W czwartek o 19:00 margines spadnie do najniższego poziomu i nadwyżka osunie się poniżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek rezerwa również nie pokryje wymaganego poziomu w podanych godzinach, a pozostałe dni przebiegną spokojnie."
     }
   ]
 }
