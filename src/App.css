@@ -544,9 +544,9 @@
  * the 24-hour curves out (see the 96rem note above), so the whole rem-based
  * page grows instead — text, gutters, charts, the axis width (axisWidthFor
  * reads the root size) — until 120rem fills the width less a 2rem gutter on
- * each side. Capped at 150%: past that it reads as a poster, not a screen.
- * Floored at 100%, which is the reader's own default, so an enlarged text
- * setting is never shrunk back. Below 125rem nothing here applies.
+ * each side — or until the page no longer fits the window's height, whichever
+ * comes first (see the rule itself). Capped at 1.5rem: past that it reads as a
+ * poster, not a screen. Below 125rem nothing here applies.
  */
 @media (min-width: 125rem) {
   /*
@@ -558,8 +558,17 @@
    * unchanged, measured 13px root in WebKit). :root outranks html by
    * specificity, whatever the order.
    */
+  /*
+   * Bounded by height as well as width (owner, 15.09.2026, 27-inch Safari:
+   * "teraz trzeba scrollować, ze skrajności w skrajność"). Width alone took a
+   * 2560 x 1300 window to 20.8px and ~300px of scrolling; measured in WebKit
+   * on live data, the page stops fitting between 15 and 16px there, i.e. at
+   * about innerHeight / 84. /86 leaves room for an extra alert row. The floor
+   * is 13px — what Safari on macOS used before this rule existed — so a wide
+   * but short window never ends up smaller than it was.
+   */
   :root {
-    font-size: clamp(100%, calc((100vw - 4rem) / 120), 150%);
+    font-size: max(13px, min(calc((100vw - 4rem) / 120), calc(100vh / 86), 1.5rem));
   }
 }
 
