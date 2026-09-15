@@ -5,15 +5,6 @@
       "prompt": 53,
       "accepted": false,
       "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "W poniedziałek 14 września i wtorek 15 września nadwyżka w systemie spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez pomijania, natomiast w pozostałe dni ma wybór lub nic nie zapowiada przywołania.",
-      "body": "W poniedziałek 14 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 15 września saldo wymiany nie jest jeszcze zaplanowane, a przywołanie wchodzi w grę także w środę 16 września i czwartek 17 września, podczas gdy w pozostałe dni i okresy nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-12T14:31:00.819Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
       "headline": "W poniedziałek 14 września i wtorek 15 września nadwyżka w systemie spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bezwarunkowo, a w pozostałych dniach roboczych ma wybór, ponieważ nadwyżka trzyma się powyżej tego poziomu.",
       "body": "Prognoza na poniedziałek 14 września pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "We wtorek 15 września saldo wymiany nie jest jeszcze zaplanowane, a w środę i czwartek margines miejscami nie pokrywa wymaganego poziomu, podczas gdy w piątek 18 września nic nie zapowiada przywołania."
@@ -2497,6 +2488,14 @@
       "headline": "W czwartek między 07:00 a 09:00 nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek między 07:00 a 22:00 rezerwa również spada, natomiast w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-15T14:01:13.027Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W najbliższych dniach przywołanie wchodzi w grę, a operator może je ogłosić, gdyż w czwartek i piątek nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza na czwartek pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin pozostało ponad osiem godzin.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, a w pozostałe dni okresu rezerwa pokrywa wymagany poziom i pozostaje bezpieczna."
     }
   ]
 }
