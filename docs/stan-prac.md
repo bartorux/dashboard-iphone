@@ -560,6 +560,37 @@ sceny monitorowe.
 przejęty i dokończony ręcznie; wyłapane przy tym dwa błędy: pasek brał zawsze pierwszą dobę z pliku
 i leżał pod tabelą godzinową zamiast pod wykresem.
 
+## Odcień ceny, duże ekrany, rezerwa pod zerem (15.09.2026, v3.83.0)
+
+**Jednostka w nagłówku.** „Cena energii (zł/MWh)", tak jak „Rezerwa mocy (MW)" — etykieta nad polem
+wykresu wyglądała na zabłąkaną. Przy dużym tekście etykieta prognozy przechodzi pod tytuł.
+
+**Odcień „Morze" według ceny.** Właściciel porównał z pradcast.pl, który koloruje godziny od zieleni
+do czerwieni. Przyjęty wariant: **jeden odcień**, jaśniej tanio, intensywniej drogo — bez czerwieni,
+bo czerwień i żółć znaczą w tej samej karcie Alarm i Uwaga. Skala **bezwzględna**: ≤ 250 zł/MWh
+najjaśniej, ≥ 1500 najmocniej (`PRICE_SHADE_LOW/HIGH` w `PriceStrip.tsx`). Tokeny
+`--series-price-low/high`; tani koniec ~3:1 do tła (jasny 3,0, ciemny 3,3). W ciemnym motywie
+„drogo" jest jaśniej, stąd podpis „intensywniej = drożej", nie „ciemniej". Gradient SVG mapuje się na
+obrys każdego znaku osobno, więc stopnie liczone są w kotwicach wewnątrz zakresu; płaski zakres
+dostaje kolor jednolity (gradient na obrysie o zerowej wysokości nic nie maluje).
+
+**Duże ekrany.** Zrzut właściciela z 27 cali: trzy kolumny w środkowych ~60% szerokości, etykiety
+11 px. Powyżej 125rem (2000 px) rośnie rozmiar główny strony:
+`clamp(100%, (100vw − 4rem) / 120, 150%)` — cała strona w rem skaluje się razem, łącznie z szerokością
+osi (`axisWidthFor` czyta rozmiar główny) i paskiem cen (wysokość w rem). Poniżej 2000 px bez zmian.
+Scena `szeroki-2560` w strażniku. Znane: przeciągnięcie okna przez 2000 px aktualizuje szerokość osi
+dopiero przy następnym renderze wykresu. Pusty dół prawych kolumn — osobny temat, nieruszany.
+
+**Rezerwa pod zerem.** Oś była przypięta do [0, max]; przy ujemnej rezerwie (17.09: −800 MW) Recharts
+sam rozciągał wykres w dół bez etykiet, a pasmo alarmu kończyło się ostrą krawędzią na zerze. Teraz
+tylko w takie doby `niceScaleRange`, pasmo alarmu sięga dna wykresu. Zwykłe doby nadal `niceScale` —
+bez zmiany o piksel. Mutacja przywracająca `domain={[0, max]}` przeżywa, bo jest równoważna (Recharts
+i tak rozszerza domenę do etykiet); pilnowane są skala i dno pasma.
+
+**Wzorce wizualne:** sceny z paskiem skasowane i zapisane od nowa (zmiana palety). Przy równoległym
+buildzie pięć niezwiązanych testów padło na limicie 10 s, a scena prognozy zgubiła kartę OZE —
+powtórka bez obciążenia czysta. Wniosek: testów i strażnika nie puszczać razem z buildem.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
