@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-12T21:01:32.599Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W poniedziałek 14 września o godzinę 19:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 15 września między 07:00 a 09:00 oraz od 17:00 do 22:00 nadwyżka trzyma się powyżej progu 1100 MW, a w kolejne dni aż do piątku 18 września operator w wybranych godzinach ma wybór co do ogłoszenia przywołania, przy czym dla wszystkich tych dób saldo wymiany nie zostało jeszcze zaplanowane."
-    },
-    {
       "at": "2026-09-12T22:01:11.700Z",
       "prompt": 53,
       "accepted": false,
@@ -2494,6 +2486,14 @@
       "headline": "W czwartek o 19:00 margines spadnie do najniższego poziomu, a nadwyżka spadnie poniżej progu 1100 MW, co sprawi, że operator może ogłosić przywołanie.",
       "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie w czwartek i piątek może jeszcze nadejść, ponieważ do wskazanych godzin zostało ponad osiem godzin.",
       "outlook": "W czwartek między 07:00 a 09:00 oraz od 17:00 do 22:00, a także w piątek między 07:00 a 08:00 i od 17:00 do 22:00 nadwyżka spadnie poniżej progu 1100 MW, natomiast w pozostałych wyznaczonych godzinach tych dni operator zachowa wybór, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-15T21:15:47.726Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W czwartek o 19:00 margines spadnie do najniższego poziomu w całym okresie, a w godzinach 07:00-09:00 nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Prognoza jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin w czwartek i piątek ogłoszenie może jeszcze nadejść, ponieważ do ich nadejścia pozostało ponad osiem godzin.",
+      "outlook": "W piątek przywołanie również wejdzie w grę między 07:00 a 08:00 oraz od 16:00 do 22:00, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
