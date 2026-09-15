@@ -82,7 +82,12 @@ export function priceScale(lo: number, hi: number): RangeScale {
 
 /** Fixed rather than responsive to content: a strip this short exists to be
  *  glanced at under the reserve chart, not read on its own. */
-const STRIP_HEIGHT = 112;
+const STRIP_HEIGHT = 104;
+
+/** CHART_MARGIN's left/right untouched — those pin the hours under the reserve
+ *  chart. Only the top shrinks: the strip has no "teraz" label and, since the
+ *  unit moved into the heading, nothing else to hold room for above the plot. */
+const STRIP_MARGIN = { ...CHART_MARGIN, top: 10 };
 
 interface TooltipProps {
   active?: boolean;
@@ -230,8 +235,13 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
 
   return (
     <figure className="m-0 mt-3">
-      <div className="flex items-baseline justify-between gap-2 px-1">
-        <span className="text-[0.8125rem] font-semibold text-text">Cena energii</span>
+      <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 px-1">
+        {/* Unit in the heading, the way the card title reads "Rezerwa mocy (MW)" —
+            a label floating over the plot looked stray (owner, 15.09.2026). */}
+        <span className="whitespace-nowrap text-[0.8125rem] font-semibold text-text">
+          Cena energii{' '}
+          <span className="text-[0.6875rem] font-normal text-text-tertiary">(zł/MWh)</span>
+        </span>
         <span
           className={`shrink-0 rounded-full px-2 py-0.5 text-[0.6875rem] font-medium ${chipClass}`}
         >
@@ -239,19 +249,9 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
         </span>
       </div>
 
-      <div className="relative mt-1" ref={ref} {...handlers}>
-        {/* Unit above the field, not on it — same spot the reference mock
-            (propozycje-ceny.html's `axes()`) places it, left-aligned with
-            where the Y-axis tick labels start. */}
-        <span
-          className="pointer-events-none absolute text-[0.625rem]"
-          style={{ left: axisWidthFor(), top: 0, color: colors.axis }}
-        >
-          zł/MWh
-        </span>
-
+      <div className="mt-1" ref={ref} {...handlers}>
         <ResponsiveContainer width="100%" height={STRIP_HEIGHT}>
-          <ComposedChart data={chartRows} margin={CHART_MARGIN}>
+          <ComposedChart data={chartRows} margin={STRIP_MARGIN}>
             <CartesianGrid vertical={false} stroke={colors.grid} />
 
             <XAxis
