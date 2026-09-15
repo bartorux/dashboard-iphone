@@ -1,8 +1,8 @@
 {
-  "headline": "Czwartek przynosi spadek nadwyżki poniżej progu 1100 MW w godzinach 18:00-21:00, co otwiera operatorowi drogę do ogłoszenia przywołania bez możliwości jego pominięcia.",
-  "body": "W czwartek prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Saldo wymiany na tę dobę nie jest jeszcze zaplanowane, więc rezerwa może się zmienić, gdy plan dojdzie dzień wcześniej około 13:00.",
-  "outlook": "W środę, piątek oraz w poniedziałek 21 września przywołanie również wchodzi w grę, natomiast dziś nic go nie zapowiada.",
-  "generatedAt": "2026-09-15T04:30:51.114Z",
+  "headline": "Operator może ogłosić przywołanie jutro, w czwartek i w piątek, ponieważ nadwyżka w systemie spadła poniżej progu 1100 MW.",
+  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do godzin objętych przywołaniem zostało ponad osiem godzin.",
+  "outlook": "Dziś i w poniedziałek 21 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa nie pokrywa wymaganego poziomu w wyznaczonych porach wieczornych.",
+  "generatedAt": "2026-09-15T04:45:44.185Z",
   "dates": [
     "2026-09-15",
     "2026-09-16",
@@ -10,6 +10,6 @@
     "2026-09-18",
     "2026-09-21"
   ],
-  "assessment": "2026-09-15|R|none|100|08:00|1|0|8|||-;2026-09-16|R|moderate|-700|19:00|1|0|18|moderate:19:00-21:00||-;2026-09-17|R|high|-2900|20:00|1|7|5|moderate:07:00-09:00,moderate:17:00-18:00,high:18:00-21:00,moderate:21:00-22:00||X;2026-09-18|R|high|-1900|20:00|1|7|13|moderate:07:00-09:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-21|R|none|500|19:00|0|0|21|||X#-/below/prognoza pogarsza się#v53",
+  "assessment": "2026-09-15|R|none|0|08:00|2|0|8|||-;2026-09-16|R|high|-1000|20:00|0|1|17|moderate:18:00-20:00,high:20:00-21:00||-;2026-09-17|R|high|-3100|20:00|0|7|5|moderate:07:00-10:00,moderate:17:00-18:00,high:18:00-21:00,moderate:21:00-22:00||X;2026-09-18|R|high|-2200|20:00|0|7|9|moderate:07:00-09:00,moderate:16:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X;2026-09-21|R|none|500|19:00|0|0|21|||X#-/typical/prognoza pogarsza się#v53",
   "model": "gemini-3.5-flash-lite"
 }
