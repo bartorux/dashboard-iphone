@@ -651,6 +651,45 @@ godzin — prawa połowa słupka 19:00 pokazywała 20:00. Doba potwierdzona ma t
 (`fineRows`, pełne godziny zachowują klucz, więc siatka i etykiety bez zmian), błąd ≤ 2,5 min.
 Sprawdzone w Chromium i WebKit: kursor na 85% słupka 19:00 → obwódka 19, dymek 19:00–20:00.
 
+## Pasek u góry i ustawienia (15.09.2026, v3.86.0)
+
+Właściciel: „ustawienia są lekki pazdzież oraz ten pasek u góry". Agent projektowy (Opus) zrobił
+diagnozę na żywych danych i po trzy warianty; właściciel wybrał rekomendacje i kazał wdrażać bez
+akceptacji. Wdrożenie: dwóch agentów (Opus) w osobnych worktree, scalanie ręczne. Punkt powrotu:
+`v3.85.1-przed-ustawieniami` (gałąź, tag, archiwum — sprawdzone).
+
+**Błędy znalezione w diagnozie (nie gust):**
+- Pasek miał `sticky`, ale rodzic `overflow-x-hidden` to psuł — po przewinięciu pasek i zębatka znikały.
+  Teraz `overflow-x: clip` (z `@supports`; Safari < 16 zostaje przy hidden).
+- Zębatka biała na zielonym/pomarańczowym; kropka połączenia tego samego koloru we wszystkich stanach.
+- Ładowanie mówiło trzy razy „Brak danych"; błąd — trzy razy to samo.
+- Ustawienia rozwijały się w pulpicie (spychały go o 377 px), dwa sposoby zapisu, „Reset" bez treści.
+
+**Pasek (wariant A):** półprzezroczysty materiał (`--material`, `--material-solid`), kolor statusu tylko
+w kapsułce i linii 3 px pod paskiem, zębatka w kolorze akcentu, opis zawsze „Najbliższe godziny…".
+Ładowanie: szara kapsuła ze spinnerem; błąd: „Offline · Brak połączenia z PSE" z „Ponów".
+`prefers-reduced-transparency` i `prefers-contrast: more` → pełna powierzchnia. `theme-color`: dwa
+metatagi pod motyw systemowy, ręczny motyw nadpisuje. Treść paska wyrównana z kartami (zmierzone).
+
+**Ustawienia (wariant 1):** poniżej 48rem arkusz od dołu (przyciemnienie, pulpit się cofa, przeciąganie
+w dół ze sprężyną i rzutem, Gotowe / Escape / stuknięcie w tło); od 48rem panel boczny 28rem pod
+paskiem, bez przyciemnienia, pulpit się nie przesuwa. Kolejność: progi marginesu (≤, skala z bieżącym
+marginesem) → wygląd → aplikacja (przywrócenie 500 i 300 MW, „Jak dodać do ekranu głównego", wersja).
+Zapis automatyczny: po 700 ms bez pisania albo po opuszczeniu pola; błąd pod polem. Walidacja ostrzejsza
+(tylko cyfry, Uwaga > Alarm); `useSettings` przepuszczał `NaN` i gubił jeden z dwóch zapisów w jednym
+takcie — naprawione. Usunięte `NotificationBanner` i `InstallButton` (nic już z nich nie korzysta).
+
+**Scalanie:** konflikt w `App.css` zostawił niezamknięty `@media (prefers-contrast: more)` — wspólny `}`
+po konflikcie zamykał blok ustawień. Wyłapane przy przeglądzie, nie przez build (Lightning CSS
+nie zgłosił błędu). Brama po scaleniu: 1167 testów w 80 plikach.
+
+**Strażnik wizualny:** wszystkie wzorce przepisane. Po przebudowie oczekiwanie po wczytaniu 700 ms
+czasem łapało nienarysowaną serię — podniesione do 1200 ms, po przełączeniu dnia 900 ms. Znane:
+`tomorrow-light` raz na kilka przebiegów daje 0,603% różnicy (zawsze tę samą), do zbadania.
+
+**Nie sprawdzone:** prawdziwy iPhone (rozmycie, cofanie pulpitu, obszar pod wycięciem), VoiceOver,
+Windows, gest przeciągania w WebKit.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
