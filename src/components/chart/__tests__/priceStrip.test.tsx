@@ -20,8 +20,7 @@ import React from 'react';
 import PriceStrip, {
   PriceTooltip,
   priceScale,
-  shadeAt,
-  shadeStops,
+  rampAt,
   PRICE_SHADE_HIGH,
   PRICE_SHADE_LOW,
 } from '../PriceStrip';
@@ -58,8 +57,9 @@ const forecastDay: PriceDay = {
 };
 
 // useChartColors falls back to these when jsdom has no stylesheet to read.
-const LOW = '#3fa587';
-const HIGH = '#084f3d';
+const RAMP = ['#d3f0e5', '#94d6be', '#46ab8b', '#177559', '#07402f'];
+
+const bars = (container: HTMLElement) => [...container.querySelectorAll('rect[data-price-hour]')];
 
 /** The <stop>s of the gradient a `url(#id)` paint points at. */
 const gradientStops = (container: HTMLElement, paint: string | null) => {
@@ -76,47 +76,77 @@ const areaCurves = (container: HTMLElement) => [
 ];
 
 describe('PriceStrip', () => {
-  it('draws a confirmed day as one line and no band', () => {
+  it('draws a confirmed day as 24 hourly bars and no band', () => {
     const { container, getByText } = render(<PriceStrip day={confirmedDay} />);
 
-    expect(lineCurves(container)).toHaveLength(1);
+    expect(bars(container)).toHaveLength(24);
     expect(areaCurves(container)).toHaveLength(0);
+    // The one line there is only feeds the tooltip — it must never show.
+    expect(lineCurves(container).map((curve) => curve.getAttribute('stroke'))).toEqual(['none']);
     expect(getByText('potwierdzona · TGE')).toBeInTheDocument();
   });
 
-  it('draws a forecast day as a band with two edges and never a centre line', () => {
+  it('colours each bar by its own price and spans the whole hour, in order', () => {
+    const { container } = render(<PriceStrip day={confirmedDay} />);
+    const all = bars(container);
+    // confirmedDay runs 800 + 10·hour zł/MWh.
+    all.forEach((bar, hour) => expect(bar.getAttribute('fill')).toBe(rampAt(800 + hour * 10, RAMP)));
+    const xs = all.map((bar) => Number(bar.getAttribute('x')));
+    const width = Number(all[0].getAttribute('width'));
+    const step = xs[1] - xs[0];
+    expect(width).toBeGreaterThan(step * 0.8);
+    expect(width).toBeLessThan(step);
+    xs.forEach((x, hour) => expect(x).toBeCloseTo(xs[0] + hour * step, 3));
+    // A dearer hour stands taller: its top sits higher on the plot.
+    expect(Number(all[23].getAttribute('y'))).toBeLessThan(Number(all[0].getAttribute('y')));
+
+    // Hour 0 starts at the plot's left edge and hour 23 ends at its right one —
+    // the same grid the reserve chart's hours sit on — and every bar stands on
+    // the zero line, which is the plot's lowest grid line here.
+    const grid = [...container.querySelectorAll('.recharts-cartesian-grid-horizontal line')];
+    const left = Number(grid[0].getAttribute('x1'));
+    const right = Number(grid[0].getAttribute('x2'));
+    const zero = Math.max(...grid.map((line) => Number(line.getAttribute('y1'))));
+    expect(xs[0] - left).toBeLessThan(1);
+    expect(right - (xs[23] + width)).toBeLessThan(1);
+    expect(right - (xs[23] + width)).toBeGreaterThanOrEqual(0);
+    for (const bar of all) {
+      expect(Number(bar.getAttribute('y')) + Number(bar.getAttribute('height'))).toBeCloseTo(zero, 3);
+    }
+  });
+
+  it('draws a forecast day as a band with two edges, no bars and never a centre line', () => {
     const { container, getByText } = render(<PriceStrip day={forecastDay} />);
 
     // Exactly the band's own top and bottom edge — a middle "consensus" line
     // would show up as a third .recharts-line-curve here, which is precisely
     // the T2 requirement this asserts: a prediction must never draw like a
     // certainty.
+    expect(bars(container)).toHaveLength(0);
     expect(lineCurves(container)).toHaveLength(2);
     expect(areaCurves(container)).toHaveLength(1);
     expect(getByText('prognoza D+2 · pewność niska')).toBeInTheDocument();
 
-    // Counting is not enough: a series fed only nulls still renders its
-    // element, just with nothing in it. Both edges must actually be drawn,
-    // each with its own translucent gradient — never the confirmed line's
-    // opaque one.
+    const fill = gradientStops(container, areaCurves(container)[0].getAttribute('fill'));
+    expect(fill.map((stop) => stop.getAttribute('stop-color'))).toEqual(RAMP);
+    for (const stop of fill) expect(Number(stop.getAttribute('stop-opacity'))).toBeLessThan(1);
+
+    // Both edges drawn, opaque, and from the ramp's deeper end only.
     for (const curve of lineCurves(container)) {
       expect(curve.getAttribute('d')).toMatch(/\d/);
-      const opacities = gradientStops(container, curve.getAttribute('stroke')).map((stop) =>
-        Number(stop.getAttribute('stop-opacity'))
-      );
-      expect(opacities.length).toBeGreaterThan(0);
-      for (const opacity of opacities) expect(opacity).toBeLessThan(1);
+      const edge = gradientStops(container, curve.getAttribute('stroke'));
+      expect(edge.map((stop) => stop.getAttribute('stop-color'))).toEqual(RAMP.slice(2));
+      for (const stop of edge) expect(Number(stop.getAttribute('stop-opacity'))).toBe(1);
     }
   });
 
-  it('shades a confirmed line by price: deepest at its peak, lightest at its trough', () => {
-    const { container } = render(<PriceStrip day={confirmedDay} />);
-    const [line] = lineCurves(container);
-    const stops = gradientStops(container, line.getAttribute('stroke'));
-    // confirmedDay runs 800..1030 zł/MWh, top of the box first.
-    expect(stops[0].getAttribute('stop-color')).toBe(shadeAt(1030, LOW, HIGH));
-    expect(stops[stops.length - 1].getAttribute('stop-color')).toBe(shadeAt(800, LOW, HIGH));
-    for (const stop of stops) expect(Number(stop.getAttribute('stop-opacity'))).toBe(1);
+  it('lays the band gradient out in absolute price, not per band', () => {
+    const { container } = render(<PriceStrip day={forecastDay} />);
+    const id = /^url\(#(.+)\)$/.exec(areaCurves(container)[0].getAttribute('fill') ?? '')?.[1];
+    const gradient = container.querySelector(`[id="${id}"]`);
+    expect(gradient?.getAttribute('gradientUnits')).toBe('userSpaceOnUse');
+    // 1500 zł/MWh sits above 250 on the plot, so y2 < y1.
+    expect(Number(gradient?.getAttribute('y2'))).toBeLessThan(Number(gradient?.getAttribute('y1')));
   });
 
   it('translates every confidence level', () => {
@@ -204,36 +234,24 @@ describe('priceScale', () => {
   });
 });
 
-describe('price shade', () => {
-  it('clamps to the two ends outside the anchors and mixes between them', () => {
-    expect(shadeAt(PRICE_SHADE_LOW - 500, LOW, HIGH)).toBe(LOW);
-    expect(shadeAt(PRICE_SHADE_HIGH + 900, LOW, HIGH)).toBe(HIGH);
-    const middle = shadeAt((PRICE_SHADE_LOW + PRICE_SHADE_HIGH) / 2, LOW, HIGH);
-    expect(middle).not.toBe(LOW);
-    expect(middle).not.toBe(HIGH);
-    // #3f→#08 red channel, halfway ≈ #24
-    expect(middle.slice(1, 3)).toBe('24');
+describe('rampAt', () => {
+  it('clamps to the palest and deepest step outside the anchors', () => {
+    expect(rampAt(PRICE_SHADE_LOW - 500, RAMP)).toBe(RAMP[0]);
+    expect(rampAt(PRICE_SHADE_HIGH + 900, RAMP)).toBe(RAMP[4]);
   });
 
-  it('places a stop wherever an anchor falls inside the span, so the shade is exact at every height', () => {
-    const stops = shadeStops(800, 2500, LOW, HIGH);
-    expect(stops.map((stop) => stop.offset)).toEqual([0, (2500 - 1500) / 1700, 1]);
-    expect(stops[0].color).toBe(HIGH);
-    expect(stops[1].color).toBe(HIGH);
-    expect(stops[2].color).toBe(shadeAt(800, LOW, HIGH));
+  it('lands exactly on each step at evenly spaced prices', () => {
+    const span = PRICE_SHADE_HIGH - PRICE_SHADE_LOW;
+    RAMP.forEach((color, i) => expect(rampAt(PRICE_SHADE_LOW + (span * i) / 4, RAMP)).toBe(color));
   });
 
-  it('spans both anchors on a day running from cheap to dear', () => {
-    const stops = shadeStops(100, 2000, LOW, HIGH);
-    expect(stops.map((stop) => stop.color)).toEqual([HIGH, HIGH, LOW, LOW]);
-    expect(stops.map((stop) => stop.offset)).toEqual([0, 500 / 1900, 1750 / 1900, 1]);
+  it('mixes between neighbouring steps, not across the whole ramp', () => {
+    const span = PRICE_SHADE_HIGH - PRICE_SHADE_LOW;
+    // Halfway between step 0 (#d3…) and step 1 (#94…): red channel ≈ #b4.
+    expect(rampAt(PRICE_SHADE_LOW + span / 8, RAMP).slice(1, 3)).toBe('b4');
   });
 
-  it('gives no gradient to a flat span, which SVG would not paint at all', () => {
-    expect(shadeStops(900, 900, LOW, HIGH)).toEqual([]);
-  });
-
-  it('falls back to the deep end when a token is not plain hex', () => {
-    expect(shadeAt(300, 'rgb(1,2,3)', HIGH)).toBe(HIGH);
+  it('falls back to the deepest step when a token is not plain hex', () => {
+    expect(rampAt(300, ['rgb(1,2,3)', ...RAMP.slice(1)])).toBe(RAMP[4]);
   });
 });

@@ -214,21 +214,22 @@
      no status of its own borrowing the "nothing wrong here" green reads
      better than fighting it for a new hue).
 
-     Shade follows the price (owner, 15.09.2026, after comparing with
-     pradcast.pl's own colour scale): one hue only, lighter where energy is
-     cheap, deeper where it is dear — never pradcast's green-to-red traffic
-     light, because red and yellow already mean Alarm / Uwaga in this same
-     card. PriceStrip interpolates between the two ends by absolute price
-     (PRICE_SHADE_LOW..HIGH), so an expensive evening is dark on every day.
-     The cheap end holds ~3:1 against its surface (light 3.0, dark 3.3) so
-     the line never fades out; in dark mode "dear" is the brighter end.
+     Shade follows the price, on five steps from near-surface to deep
+     (owner, 15.09.2026: two steps "zlewa się to kompletnie"; picked the
+     hourly-bars variant from four drawn on live prices). One hue only, never
+     pradcast's green-to-red traffic light — red and yellow already mean Alarm
+     and Uwaga in this card. PriceStrip maps step 0 to 250 zł/MWh and step 4
+     to 1500+, absolute, so a dear evening is deep on every day. In dark mode
+     "dear" is the bright end.
 
-     Confirmed days draw the shade as a line; forecast days never get that
-     line — only a translucent fill of the same shade and its top/bottom
-     edges (PriceStrip, "T2"). The owner's one hard requirement was that a
-     prediction must never look like a certainty. */
-  --l-series-price-low: #3fa587;     --d-series-price-low: #237a64;
-  --l-series-price-high: #084f3d;    --d-series-price-high: #6fe0bb;
+     Confirmed days: one bar per hour in its price's step. Forecast days: no
+     bars — only a band filled with the same ramp and edged from step 2 up
+     (PriceStrip, "T2"): a prediction must never look like a certainty. */
+  --l-series-price-0: #d3f0e5;       --d-series-price-0: #17332c;
+  --l-series-price-1: #94d6be;       --d-series-price-1: #1f5e4b;
+  --l-series-price-2: #46ab8b;       --d-series-price-2: #2a9573;
+  --l-series-price-3: #177559;       --d-series-price-3: #58cfa5;
+  --l-series-price-4: #07402f;       --d-series-price-4: #b8f7df;
 
   /* layout */
   --header-height: 3.5rem;
@@ -279,8 +280,11 @@
   --series-threshold: var(--l-series-threshold);
   --series-history: var(--l-series-history);
   --band-history: var(--l-band-history);
-  --series-price-low: var(--l-series-price-low);
-  --series-price-high: var(--l-series-price-high);
+  --series-price-0: var(--l-series-price-0);
+  --series-price-1: var(--l-series-price-1);
+  --series-price-2: var(--l-series-price-2);
+  --series-price-3: var(--l-series-price-3);
+  --series-price-4: var(--l-series-price-4);
   --oze: var(--l-oze);
   --oze-soft: var(--l-oze-soft);
 }
@@ -331,8 +335,11 @@
     --series-threshold: var(--d-series-threshold);
     --series-history: var(--d-series-history);
     --band-history: var(--d-band-history);
-    --series-price-low: var(--d-series-price-low);
-    --series-price-high: var(--d-series-price-high);
+    --series-price-0: var(--d-series-price-0);
+    --series-price-1: var(--d-series-price-1);
+    --series-price-2: var(--d-series-price-2);
+    --series-price-3: var(--d-series-price-3);
+    --series-price-4: var(--d-series-price-4);
     --oze: var(--d-oze);
     --oze-soft: var(--d-oze-soft);
   }
@@ -383,8 +390,11 @@
   --series-threshold: var(--d-series-threshold);
   --series-history: var(--d-series-history);
   --band-history: var(--d-band-history);
-  --series-price-low: var(--d-series-price-low);
-  --series-price-high: var(--d-series-price-high);
+  --series-price-0: var(--d-series-price-0);
+  --series-price-1: var(--d-series-price-1);
+  --series-price-2: var(--d-series-price-2);
+  --series-price-3: var(--d-series-price-3);
+  --series-price-4: var(--d-series-price-4);
   --oze: var(--d-oze);
   --oze-soft: var(--d-oze-soft);
 }
@@ -434,8 +444,11 @@
 
   /* PriceStrip only — see the --l-series-price/--d-series-price comment
      above, next to the other chart series tokens. */
-  --color-series-price-low: var(--series-price-low);
-  --color-series-price-high: var(--series-price-high);
+  --color-series-price-0: var(--series-price-0);
+  --color-series-price-1: var(--series-price-1);
+  --color-series-price-2: var(--series-price-2);
+  --color-series-price-3: var(--series-price-3);
+  --color-series-price-4: var(--series-price-4);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Helvetica Neue", Arial, sans-serif;

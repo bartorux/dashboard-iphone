@@ -8,6 +8,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  usePlotArea,
 } from 'recharts';
 import { PriceDay } from '../../utils/cenyTypes';
 import { NICE_STEPS, RangeScale } from '../../utils/scale';
@@ -90,9 +91,11 @@ export function priceScale(lo: number, hi: number): RangeScale {
 export const PRICE_SHADE_LOW = 250;
 export const PRICE_SHADE_HIGH = 1500;
 
-/** Translucency of the forecast band's fill and of its two edges. */
-const BAND_FILL_OPACITY = 0.26;
-const BAND_EDGE_OPACITY = 0.7;
+/**
+ * The forecast band's fill. Its edges are opaque — a band is a range, and its
+ * boundary is what the reader measures against.
+ */
+const BAND_FILL_OPACITY = 0.75;
 
 function parseHex(color: string): [number, number, number] | null {
   const match = /^#([0-9a-f]{6})$/i.exec(color.trim());
@@ -101,40 +104,97 @@ function parseHex(color: string): [number, number, number] | null {
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
-/** The shade for one price, mixed between the two token colours. */
-export function shadeAt(price: number, low: string, high: string): string {
-  const a = parseHex(low);
-  const b = parseHex(high);
+/**
+ * Colour of one price on a ramp of evenly spaced stops from PRICE_SHADE_LOW
+ * (first stop) to PRICE_SHADE_HIGH (last), clamped beyond both. Five stops
+ * from near-surface to deep, because two (v3.84) differed too little to read
+ * on a 2px line — "zlewa się to kompletnie" (owner, 15.09.2026).
+ */
+export function rampAt(price: number, stops: readonly string[]): string {
+  const parsed = stops.map(parseHex);
+  const last = stops[stops.length - 1];
   // A token that is not plain hex cannot be mixed; the deep end still reads.
-  if (!a || !b) return high;
-  const t = Math.min(1, Math.max(0, (price - PRICE_SHADE_LOW) / (PRICE_SHADE_HIGH - PRICE_SHADE_LOW)));
-  const mixed = a.map((channel, i) => Math.round(channel + (b[i] - channel) * t));
+  if (parsed.length < 2 || parsed.some((stop) => stop === null)) return last;
+  const t =
+    Math.min(1, Math.max(0, (price - PRICE_SHADE_LOW) / (PRICE_SHADE_HIGH - PRICE_SHADE_LOW))) *
+    (parsed.length - 1);
+  const i = Math.min(parsed.length - 2, Math.floor(t));
+  const from = parsed[i] as [number, number, number];
+  const to = parsed[i + 1] as [number, number, number];
+  const mixed = from.map((channel, k) => Math.round(channel + (to[k] - channel) * (t - i)));
   return `#${mixed.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
 }
 
-export interface ShadeStop {
-  /** 0 at the top of the mark's own bounding box, 1 at its bottom. */
-  offset: number;
-  color: string;
+interface ShadingProps {
+  rows: Row[];
+  confirmed: boolean;
+  min: number;
+  max: number;
+  ramp: readonly string[];
+  fillId: string;
+  edgeId: string;
 }
 
 /**
- * Vertical gradient stops for a mark spanning prices lo..hi. SVG maps a
- * gradient onto each mark's own bounding box, so the stops are placed where
- * the absolute anchors fall inside that span — plus both ends, mixed — and the
- * browser's linear interpolation between stops then equals `shadeAt` at every
- * height. Empty when the span is flat: a gradient over a zero-height box
- * paints nothing at all, so the caller falls back to a solid colour.
+ * Drawn from inside the chart, off Recharts' own plot area, rather than as a
+ * <Bar>: a bar series switches the category axis to a band scale and moves
+ * every hour to the middle of its slot, which would pull this strip's hours
+ * off the reserve chart's above. Here hour h starts at exactly h/24 of the
+ * plot, the same place withDayEnd puts it on the line charts.
+ *
+ * Confirmed day: one bar per hour, spanning the whole hour (the price is for
+ * 19:00–20:00, not for the instant 19:00), coloured by its price — a block of
+ * colour instead of a thin line, so cheap and dear hours differ at a glance.
+ * Forecast day: no bars at all, only the gradients the band and its edges are
+ * painted with, laid out in plot coordinates so the shade at any height is
+ * the shade of that absolute price.
  */
-export function shadeStops(lo: number, hi: number, low: string, high: string): ShadeStop[] {
-  if (!(hi - lo >= 1)) return [];
-  const prices = [hi, PRICE_SHADE_HIGH, PRICE_SHADE_LOW, lo].filter(
-    (price, i, all) => price <= hi && price >= lo && all.indexOf(price) === i
+const PriceShading: React.FC<ShadingProps> = ({ rows, confirmed, min, max, ramp, fillId, edgeId }) => {
+  const plot = usePlotArea();
+  if (!plot || plot.width <= 0 || plot.height <= 0 || max <= min) return null;
+
+  const y = (value: number) => plot.y + (1 - (value - min) / (max - min)) * plot.height;
+
+  if (!confirmed) {
+    const edgeRamp = ramp.slice(2);
+    const gradient = (id: string, stops: readonly string[], opacity: number) => (
+      <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={0} x2={0} y1={y(PRICE_SHADE_LOW)} y2={y(PRICE_SHADE_HIGH)}>
+        {stops.map((color, i) => (
+          <stop key={i} offset={i / (stops.length - 1)} stopColor={color} stopOpacity={opacity} />
+        ))}
+      </linearGradient>
+    );
+    return (
+      <defs>
+        {gradient(fillId, ramp, BAND_FILL_OPACITY)}
+        {/* The palest steps vanish as a 1px stroke on the surface; edges start two in. */}
+        {gradient(edgeId, edgeRamp, 1)}
+      </defs>
+    );
+  }
+
+  const hour = plot.width / 24;
+  const gap = Math.min(0.6, hour * 0.05);
+  const base = y(Math.min(Math.max(0, min), max));
+  return (
+    <g className="price-bars">
+      {rows.map((row, h) =>
+        row.price === null ? null : (
+          <rect
+            key={row.key}
+            data-price-hour={h}
+            x={plot.x + h * hour + gap}
+            y={Math.min(base, y(row.price))}
+            width={Math.max(0, hour - 2 * gap)}
+            height={Math.abs(base - y(row.price))}
+            rx={Math.min(1.5, hour / 4)}
+            fill={rampAt(row.price, ramp)}
+          />
+        )
+      )}
+    </g>
   );
-  return prices
-    .sort((x, y) => y - x)
-    .map((price) => ({ offset: (hi - price) / (hi - lo), color: shadeAt(price, low, high) }));
-}
+};
 
 /** CHART_MARGIN's left/right untouched — those pin the hours under the reserve
  *  chart. Only the top shrinks: the strip has no "teraz" label and, since the
@@ -264,36 +324,14 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
       : priceScale(0, 1000);
   }, [rows, confirmed]);
 
-  /*
-   * One gradient per mark, because each is mapped onto that mark's own
-   * bounding box — the band's fill spans lowest p10..highest p90, each edge
-   * only its own percentile's range. See shadeStops. useId for the same
-   * document-wide-id reason as ReserveChart's alarm gradient.
-   */
+  const ramp = useMemo(
+    () => [colors.priceRamp0, colors.priceRamp1, colors.priceRamp2, colors.priceRamp3, colors.priceRamp4],
+    [colors.priceRamp0, colors.priceRamp1, colors.priceRamp2, colors.priceRamp3, colors.priceRamp4]
+  );
+  // useId for the same document-wide-id reason as ReserveChart's alarm gradient.
   const idBase = `price-${useId().replace(/:/g, '')}`;
-  const shades = useMemo(() => {
-    const span = (values: Array<number | null>) => {
-      const valid = values.filter((v): v is number => v !== null && Number.isFinite(v));
-      return valid.length > 0 ? [Math.min(...valid), Math.max(...valid)] as const : ([0, 0] as const);
-    };
-    const make = (key: string, values: Array<number | null>, opacity: number) => {
-      const [lo, hi] = span(values);
-      const stops = shadeStops(lo, hi, colors.priceLow, colors.priceHigh);
-      const id = `${idBase}-${key}`;
-      return {
-        id,
-        stops,
-        opacity,
-        paint: stops.length > 0 ? `url(#${id})` : shadeAt(hi, colors.priceLow, colors.priceHigh),
-      };
-    };
-    return {
-      line: make('line', rows.map((row) => row.price), 1),
-      fill: make('fill', rows.flatMap((row) => [row.bandBottom, row.bandTop]), BAND_FILL_OPACITY),
-      top: make('top', rows.map((row) => row.bandTop), BAND_EDGE_OPACITY),
-      bottom: make('bottom', rows.map((row) => row.bandBottom), BAND_EDGE_OPACITY),
-    };
-  }, [rows, colors.priceLow, colors.priceHigh, idBase]);
+  const fillId = `${idBase}-fill`;
+  const edgeId = `${idBase}-edge`;
 
   const chipClass = confirmed
     ? 'bg-ok-soft text-ok-text'
@@ -340,22 +378,15 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
           <ComposedChart data={chartRows} margin={STRIP_MARGIN}>
             <CartesianGrid vertical={false} stroke={colors.grid} />
 
-            <defs>
-              {(confirmed ? [shades.line] : [shades.fill, shades.top, shades.bottom])
-                .filter((shade) => shade.stops.length > 0)
-                .map((shade) => (
-                  <linearGradient key={shade.id} id={shade.id} x1="0" y1="0" x2="0" y2="1">
-                    {shade.stops.map((stop) => (
-                      <stop
-                        key={stop.offset}
-                        offset={stop.offset}
-                        stopColor={stop.color}
-                        stopOpacity={shade.opacity}
-                      />
-                    ))}
-                  </linearGradient>
-                ))}
-            </defs>
+            <PriceShading
+              rows={rows}
+              confirmed={confirmed}
+              min={scale.min}
+              max={scale.max}
+              ramp={ramp}
+              fillId={fillId}
+              edgeId={edgeId}
+            />
 
             <XAxis
               dataKey="key"
@@ -388,19 +419,16 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
             />
 
             {confirmed ? (
+              /* Invisible: the bars are drawn by PriceShading. This series only
+                 gives the tooltip its row for the hour under the pointer. */
               <Line
                 type="monotone"
                 dataKey="price"
-                stroke={shades.line.paint}
-                strokeWidth={2}
+                stroke="none"
                 dot={false}
                 connectNulls={false}
-                animationDuration={animationMs}
-                activeDot={
-                  tooltipActive === false
-                    ? false
-                    : { r: 4, fill: colors.priceHigh, stroke: colors.surface, strokeWidth: 2 }
-                }
+                isAnimationActive={false}
+                activeDot={false}
               />
             ) : (
               <>
@@ -411,8 +439,8 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
                   type="monotone"
                   dataKey="band"
                   stroke="none"
-                  fill={shades.fill.paint}
-                  fillOpacity={shades.fill.stops.length > 0 ? 1 : BAND_FILL_OPACITY}
+                  fill={`url(#${fillId})`}
+                  fillOpacity={1}
                   connectNulls={false}
                   animationDuration={animationMs}
                   activeDot={false}
@@ -420,8 +448,7 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
                 <Line
                   type="monotone"
                   dataKey="bandTop"
-                  stroke={shades.top.paint}
-                  strokeOpacity={shades.top.stops.length > 0 ? 1 : BAND_EDGE_OPACITY}
+                  stroke={`url(#${edgeId})`}
                   strokeWidth={1}
                   dot={false}
                   connectNulls={false}
@@ -431,8 +458,7 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
                 <Line
                   type="monotone"
                   dataKey="bandBottom"
-                  stroke={shades.bottom.paint}
-                  strokeOpacity={shades.bottom.stops.length > 0 ? 1 : BAND_EDGE_OPACITY}
+                  stroke={`url(#${edgeId})`}
                   strokeWidth={1}
                   dot={false}
                   connectNulls={false}
