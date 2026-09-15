@@ -1,14 +1,18 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { render, fireEvent } from '@testing-library/react';
 
 /*
  * Same fix as reserveChart.test.tsx: jsdom reports every element as zero by
  * zero, so ResponsiveContainer would otherwise render nothing to assert on.
  */
+/** What Recharts reports as the hovered row; jsdom cannot move a pointer over a plot. */
+const hover = vi.hoisted(() => ({ label: undefined as string | undefined }));
+
 vi.mock('recharts', async () => {
   const real = await vi.importActual<typeof import('recharts')>('recharts');
   return {
     ...real,
+    useActiveTooltipLabel: () => hover.label,
     ResponsiveContainer: ({ children }: { children: React.ReactNode }) =>
       React.cloneElement(children as React.ReactElement<{ width: number; height: number }>, {
         width: 800,
@@ -21,6 +25,8 @@ import PriceStrip, {
   PriceTooltip,
   priceScale,
   rampAt,
+  fineRows,
+  hourOfLabel,
   PRICE_SHADE_HIGH,
   PRICE_SHADE_LOW,
 } from '../PriceStrip';
@@ -149,6 +155,56 @@ describe('PriceStrip', () => {
     expect(Number(gradient?.getAttribute('y2'))).toBeLessThan(Number(gradient?.getAttribute('y1')));
   });
 
+  describe('hovered hour', () => {
+    afterEach(() => {
+      hover.label = undefined;
+    });
+
+    const ring = (container: HTMLElement) => container.querySelector('rect[data-price-active]');
+
+    it('rings the bar under the pointer, like the OZE strip, and nothing else', () => {
+      const { container, rerender } = render(<PriceStrip day={confirmedDay} />);
+      expect(ring(container)).toBeNull();
+
+      // 07:40 is the right half of the 07:00 bar — still that bar, not 08:00.
+      hover.label = '07:40';
+      rerender(<PriceStrip day={{ ...confirmedDay }} />);
+      const marked = ring(container);
+      expect(marked?.getAttribute('data-price-active')).toBe('7');
+      expect(marked?.getAttribute('fill')).toBe('none');
+
+      const bar = bars(container)[7];
+      const x = Number(bar.getAttribute('x'));
+      const w = Number(bar.getAttribute('width'));
+      const rx = Number(marked?.getAttribute('x'));
+      const rw = Number(marked?.getAttribute('width'));
+      // Just outside the bar on both sides, clear of it by a small gap.
+      expect(rx).toBeLessThan(x - 1);
+      expect(rx + rw).toBeGreaterThan(x + w + 1);
+      expect(rx + rw - (x + w)).toBeLessThan(4);
+    });
+
+    it('drops the ring when a touch reader closes the tooltip, and brings it back on the next tap', () => {
+      hover.label = '07:40';
+      const { container } = render(<PriceStrip day={confirmedDay} />);
+      const strip = container.querySelector('.price-strip-h') as HTMLElement;
+
+      // First touch hands the tooltip to useDismissibleTooltip, closed.
+      fireEvent.touchStart(strip, { touches: [{ clientX: 10, clientY: 10 }] });
+      expect(ring(container)).toBeNull();
+
+      // A tap (no movement) opens it — and the ring with it.
+      fireEvent.touchEnd(strip);
+      expect(ring(container)).not.toBeNull();
+    });
+
+    it('never rings anything on a forecast day, which has no bars', () => {
+      hover.label = '19:00';
+      const { container } = render(<PriceStrip day={forecastDay} />);
+      expect(ring(container)).toBeNull();
+    });
+  });
+
   it('translates every confidence level', () => {
     const { getByText } = render(
       <PriceStrip day={{ ...forecastDay, confidence: 'medium' }} />
@@ -209,6 +265,17 @@ describe('PriceTooltip', () => {
     expect(queryByText(/1240/)).not.toBeInTheDocument();
   });
 
+  it('names the hour block, not the five-minute row, on a confirmed day', () => {
+    const { getByText } = render(
+      <PriceTooltip
+        active
+        confirmed
+        payload={[{ payload: { ...confirmedRow, key: '19:35', hourLabel: '19:00' } }]}
+      />
+    );
+    expect(getByText('19:00–20:00')).toBeInTheDocument();
+  });
+
   it('renders nothing while inactive', () => {
     const { container } = render(
       <PriceTooltip active={false} confirmed payload={[{ payload: confirmedRow }]} />
@@ -231,6 +298,42 @@ describe('priceScale', () => {
     expect(scale.min).toBe(ticks[0]);
     expect(scale.max).toBe(ticks[ticks.length - 1]);
     expect(scale.ticks).toContain(0);
+  });
+});
+
+describe('fineRows and hourOfLabel', () => {
+  const hourly = confirmedHours.map((h) => ({
+    key: `${String(h.hour).padStart(2, '0')}:00`,
+    endLabel: `${String((h.hour + 1) % 24).padStart(2, '0')}:00`,
+    price: h.price,
+    band: null,
+    bandTop: null,
+    bandBottom: null,
+  }));
+
+  it('gives every hour twelve rows, keeps the full-hour keys and names the block', () => {
+    const fine = fineRows(hourly);
+    expect(fine).toHaveLength(24 * 12);
+    expect(new Set(fine.map((row) => row.key)).size).toBe(fine.length);
+    // Full hours sit at every 12th row, so the hour grid is untouched.
+    fine.forEach((row, i) => {
+      const hour = Math.floor(i / 12);
+      expect(row.hourLabel).toBe(hourly[hour].key);
+      expect(row.price).toBe(hourly[hour].price);
+      if (i % 12 === 0) expect(row.key).toBe(hourly[hour].key);
+    });
+    expect(fine[12 * 19 + 7].key).toBe('19:35');
+  });
+
+  it.each([
+    ['19:35', 19],
+    ['19:00', 19],
+    ['00:05', 0],
+    ['24:00', 23],
+    [undefined, null],
+    ['x', null],
+  ])('reads %s as hour %s', (label, hour) => {
+    expect(hourOfLabel(label)).toBe(hour);
   });
 });
 

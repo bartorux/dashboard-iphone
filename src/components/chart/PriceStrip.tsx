@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   usePlotArea,
+  useActiveTooltipLabel,
 } from 'recharts';
 import { PriceDay } from '../../utils/cenyTypes';
 import { NICE_STEPS, RangeScale } from '../../utils/scale';
@@ -50,6 +51,9 @@ interface Row {
    *  over the fill — same split as ReserveChart's alarmTop/warnTop. */
   bandTop: number | null;
   bandBottom: number | null;
+  /** Set on the sub-hour rows of a confirmed day (see `fineRows`): the hour
+   *  block this instant belongs to, which is what the tooltip names. */
+  hourLabel?: string;
 }
 
 const PRICE_FMT = new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 });
@@ -125,6 +129,39 @@ export function rampAt(price: number, stops: readonly string[]): string {
   return `#${mixed.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
 }
 
+/** Sub-hour resolution of a confirmed day's hover rows. */
+const MINUTES_PER_ROW = 5;
+
+/**
+ * A confirmed day's bars span whole hours, but Recharts picks the tooltip row
+ * nearest the pointer — with one row per hour, at the hour's START, a pointer
+ * over the right half of the 19:00 bar would already read 20:00. So the
+ * confirmed plot gets a row every 5 minutes, each carrying its hour block, and
+ * "nearest row" can never be more than 2.5 minutes off the bar under the
+ * pointer. Every full-hour row keeps its "HH:00" key, so the axis ticks and
+ * the hour grid stay exactly where they were; withDayEnd still closes at 24:00.
+ */
+export function fineRows(rows: readonly Row[]): Row[] {
+  return rows.flatMap((row) =>
+    Array.from({ length: 60 / MINUTES_PER_ROW }, (_, i) => {
+      const minute = i * MINUTES_PER_ROW;
+      return {
+        ...row,
+        key: minute === 0 ? row.key : `${row.key.slice(0, 3)}${String(minute).padStart(2, '0')}`,
+        hourLabel: row.key,
+      };
+    })
+  );
+}
+
+/** The hour block a tooltip label points at: "19:35" → 19, the closing "24:00" → 23. */
+export function hourOfLabel(label: unknown): number | null {
+  if (typeof label !== 'string') return null;
+  if (label === '24:00') return 23;
+  const hour = Number.parseInt(label.slice(0, 2), 10);
+  return Number.isInteger(hour) && hour >= 0 && hour <= 23 ? hour : null;
+}
+
 interface ShadingProps {
   rows: Row[];
   confirmed: boolean;
@@ -133,6 +170,12 @@ interface ShadingProps {
   ramp: readonly string[];
   fillId: string;
   edgeId: string;
+  /** Colour of the hovered bar's ring — the page's text colour, as on the OZE strip. */
+  ringColor: string;
+  /** Gap between bar and ring, so the ring reads against even the deepest bar. */
+  surfaceColor: string;
+  /** false once a touch reader has dismissed the tooltip; the ring goes with it. */
+  showActive: boolean;
 }
 
 /**
@@ -149,8 +192,20 @@ interface ShadingProps {
  * painted with, laid out in plot coordinates so the shade at any height is
  * the shade of that absolute price.
  */
-const PriceShading: React.FC<ShadingProps> = ({ rows, confirmed, min, max, ramp, fillId, edgeId }) => {
+const PriceShading: React.FC<ShadingProps> = ({
+  rows,
+  confirmed,
+  min,
+  max,
+  ramp,
+  fillId,
+  edgeId,
+  ringColor,
+  surfaceColor,
+  showActive,
+}) => {
   const plot = usePlotArea();
+  const activeHour = hourOfLabel(useActiveTooltipLabel());
   if (!plot || plot.width <= 0 || plot.height <= 0 || max <= min) return null;
 
   const y = (value: number) => plot.y + (1 - (value - min) / (max - min)) * plot.height;
@@ -192,6 +247,42 @@ const PriceShading: React.FC<ShadingProps> = ({ rows, confirmed, min, max, ramp,
           />
         )
       )}
+      {/*
+        Hovered bar: a ring, the way the OZE strip marks the hour being read —
+        instead of the dashed cursor line, which on a bar chart cut the bar in
+        two. Drawn just outside the bar, so a cheap midday bar a few pixels
+        tall still shows it.
+      */}
+      {showActive && activeHour !== null && rows[activeHour]?.price != null && (() => {
+        const price = rows[activeHour].price as number;
+        const left = plot.x + activeHour * hour + gap;
+        const width = Math.max(0, hour - 2 * gap);
+        const top = Math.min(base, y(price));
+        const height = Math.abs(base - y(price));
+        // A surface-coloured gap first, then the ring: without the gap a dark
+        // ring on the deepest bars (the dear evening, exactly the hour people
+        // hover) all but merged into the bar.
+        const outline = (inset: number, color: string, stroke: number, active?: number) => (
+          <rect
+            data-price-active={active}
+            x={left - inset}
+            y={top - inset}
+            width={width + 2 * inset}
+            height={height + 2 * inset}
+            rx={Math.min(2.5, hour / 3) + inset / 2}
+            fill="none"
+            stroke={color}
+            strokeWidth={stroke}
+            pointerEvents="none"
+          />
+        );
+        return (
+          <>
+            {outline(1, surfaceColor, 2)}
+            {outline(2.75, ringColor, 1.5, activeHour)}
+          </>
+        );
+      })()}
     </g>
   );
 };
@@ -213,7 +304,7 @@ interface TooltipProps {
 export const PriceTooltip: React.FC<TooltipProps> = ({ active, payload, confirmed }) => {
   if (!active || !payload?.length) return null;
   const row = payload[0].payload;
-  const hourKey = tooltipHourKey(row.key);
+  const hourKey = row.hourLabel ?? tooltipHourKey(row.key);
 
   if (confirmed) {
     if (row.price === null) {
@@ -312,7 +403,7 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
   const ticks = useMemo(() => hourTicks(rows.map((row) => row.key)), [rows]);
 
   // Same closing-row trick as ReserveChart's chartRows — see withDayEnd.
-  const chartRows = useMemo(() => withDayEnd(rows), [rows]);
+  const chartRows = useMemo(() => withDayEnd(confirmed ? fineRows(rows) : rows), [rows, confirmed]);
 
   const scale = useMemo(() => {
     const values = confirmed
@@ -386,6 +477,9 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
               ramp={ramp}
               fillId={fillId}
               edgeId={edgeId}
+              ringColor={colors.text}
+              surfaceColor={colors.surface}
+              showActive={tooltipActive !== false}
             />
 
             <XAxis
@@ -415,7 +509,9 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
             <Tooltip
               active={tooltipActive}
               content={<PriceTooltip confirmed={confirmed} />}
-              cursor={{ stroke: colors.axis, strokeDasharray: '3 3' }}
+              /* Bars mark the hovered hour with a ring (PriceShading); only the
+                 forecast band, which has no bars, keeps the vertical line. */
+              cursor={confirmed ? false : { stroke: colors.axis, strokeDasharray: '3 3' }}
             />
 
             {confirmed ? (

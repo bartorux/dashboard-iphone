@@ -16,6 +16,8 @@ const TOKENS = {
   // measured against, not itself something being read.
   axis: '--axis',
   surface: '--surface',
+  /** Hover ring on the price bars, matching the OZE strip's ring-text. */
+  text: '--text',
   alarm: '--alarm',
   accent: '--accent',
   bandAlarm: '--band-alarm',
@@ -79,6 +81,7 @@ const FALLBACK: ChartColors = {
   threshold: '#5856d6',
   history: '#8e8e93',
   bandHistory: 'rgba(142,142,147,0.18)',
+  text: '#000000',
   priceRamp0: '#d3f0e5',
   priceRamp1: '#94d6be',
   priceRamp2: '#46ab8b',
