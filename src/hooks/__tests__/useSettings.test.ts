@@ -107,3 +107,49 @@ describe('useSettings — threshold bounds', () => {
     expect(result.current.settings.redThreshold).toBe(0);
   });
 });
+
+describe('useSettings — saves from the settings panel', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('keeps both of two saves made in the same tick', () => {
+    // Closing the panel can flush both pending fields at once. Merged over the
+    // render's copy, the second save put back the value the first replaced.
+    const { result } = renderHook(() => useSettings());
+
+    act(() => {
+      result.current.saveSettings({ orangeThreshold: 900 });
+      result.current.saveSettings({ redThreshold: 600 });
+    });
+
+    expect(result.current.settings.orangeThreshold).toBe(900);
+    expect(result.current.settings.redThreshold).toBe(600);
+  });
+
+  it('refuses a value that is not a whole number', () => {
+    const { result } = renderHook(() => useSettings());
+    let nan: string | null = null;
+    let fraction: string | null = null;
+
+    act(() => {
+      nan = result.current.saveSettings({ orangeThreshold: Number.NaN });
+      fraction = result.current.saveSettings({ redThreshold: 250.5 });
+    });
+
+    expect(nan).toMatch(/Uwaga/);
+    expect(fraction).toMatch(/Alarm/);
+    expect(result.current.settings).toMatchObject({ orangeThreshold: 500, redThreshold: 300 });
+  });
+
+  it('bases a save after a reset on the defaults', () => {
+    const { result } = renderHook(() => useSettings());
+
+    act(() => {
+      result.current.saveSettings({ orangeThreshold: 900 });
+      result.current.resetSettings();
+      result.current.saveSettings({ redThreshold: 250 });
+    });
+
+    expect(result.current.settings.orangeThreshold).toBe(500);
+    expect(result.current.settings.redThreshold).toBe(250);
+  });
+});

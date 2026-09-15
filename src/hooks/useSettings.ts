@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Settings } from '../types';
 import {
   DEFAULT_ORANGE_THRESHOLD,
@@ -86,21 +86,34 @@ interface UseSettingsReturn {
 
 export function useSettings(): UseSettingsReturn {
   const [settings, setSettings] = useState<Settings>(loadFromStorage);
+  /*
+   * The latest accepted settings, read by saveSettings instead of the render's
+   * `settings`. The panel saves each field on its own, and closing it can flush
+   * both pending fields in the same tick — merged over the render's copy, the
+   * second save would put back the value the first had just replaced.
+   */
+  const latestRef = useRef(settings);
 
   const saveSettings = useCallback(
     (newSettings: Partial<Settings>): string | null => {
-      const merged = { ...settings, ...newSettings };
+      const merged = { ...latestRef.current, ...newSettings };
 
       // Rejected rather than clamped: silently replacing what someone typed is
       // worse than declining it. Names match the form fields — the message used
       // to speak of colours that the interface has not shown since the redesign.
+      //
+      // Whole numbers only. NaN used to slip through: every comparison with it
+      // is false, so none of the range checks below ever fired. The panel no
+      // longer sends one, but this is the last gate before storage.
       if (
+        !Number.isInteger(merged.redThreshold) ||
         merged.redThreshold < RED_THRESHOLD_MIN ||
         merged.redThreshold > RED_THRESHOLD_MAX
       ) {
         return `Próg Alarm: od ${RED_THRESHOLD_MIN} do ${RED_THRESHOLD_MAX} MW`;
       }
       if (
+        !Number.isInteger(merged.orangeThreshold) ||
         merged.orangeThreshold < RED_THRESHOLD_MIN + 1 ||
         merged.orangeThreshold > ORANGE_THRESHOLD_MAX
       ) {
@@ -110,14 +123,16 @@ export function useSettings(): UseSettingsReturn {
         return 'Próg Alarm musi być niższy niż Uwaga';
       }
 
+      latestRef.current = merged;
       setSettings(merged);
       saveToStorage(merged);
       return null; // no error
     },
-    [settings]
+    []
   );
 
   const resetSettings = useCallback(() => {
+    latestRef.current = { ...DEFAULT_SETTINGS };
     setSettings({ ...DEFAULT_SETTINGS });
     saveToStorage({ ...DEFAULT_SETTINGS });
   }, []);
