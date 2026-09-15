@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-12T17:01:10.528Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "W poniedziałek 14 września rezerwa spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez dwanaście godzin, a nadwyżka w systemie miejscami spadnie poniżej progu 1100 MW, poniżej poziomu, który pozwalał operatorowi przywołanie pominąć.",
-      "body": "W piątek osiemnastego września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin minie ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, czwartek i piątek margines również ujemnie zaskoczy w pojedynczych godzinach, natomiast w pozostałych dniach rezerwa utrzyma się powyżej wymaganych poziomów."
-    },
-    {
-      "at": "2026-09-12T17:01:10.528Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Marginesy w większości dni wypadają poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "W piątek 18 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin z ograniczeniami zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 14 września między 07:00 a 10:00 oraz 18:00 a 22:00 nadwyżka spada poniżej progu 1100 MW, we wtorek 15 września sytuacja dotyczy godzin 07:00 a 08:00 oraz 19:00 a 21:00, w środę 16 września między 18:00 a 21:00 nadwyżka trzyma się powyżej tego progu, w czwartek 17 września podobny stan występuje między 18:00 a 21:00, a w piątek 18 września między 19:00 a 21:00."
-    },
-    {
       "at": "2026-09-12T17:15:48.358Z",
       "prompt": 53,
       "accepted": true,
@@ -2460,6 +2442,14 @@
       "headline": "W czwartek i piątek marginesy miejscami mocno odbiegają od normy, bo w wielu godzinach rezerwa spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza pogarsza się w czwartek. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek dwudziestego pierwszego września oraz w pozostałych dniach nic nie zapowiada przywołania, a rezerwa pokrywa wymagany poziom."
+    },
+    {
+      "at": "2026-09-15T17:15:45.700Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W czwartek margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza pogarsza się w czwartek. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W czwartek i piątek operator może ogłosić przywołanie, natomiast w pozostałe dni nic go nie zapowiada."
     }
   ]
 }
