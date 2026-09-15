@@ -214,17 +214,21 @@
      no status of its own borrowing the "nothing wrong here" green reads
      better than fighting it for a new hue).
 
-     Confirmed days draw --series-price as a line; forecast days never get
-     that line — only --series-price-band's fill and
-     --series-price-band-edge's crisp top/bottom edges (PriceStrip, "T2"). The
-     owner's one hard requirement was that a prediction must never look like a
-     certainty, so the two states are drawn with genuinely different marks
-     rather than the same line style in a fainter tint. */
-  --l-series-price: #0f8a6a;         --d-series-price: #28a883;
-  --l-series-price-band: rgba(15, 138, 106, 0.20);
-  --d-series-price-band: rgba(40, 168, 131, 0.22);
-  --l-series-price-band-edge: rgba(15, 138, 106, 0.55);
-  --d-series-price-band-edge: rgba(40, 168, 131, 0.6);
+     Shade follows the price (owner, 15.09.2026, after comparing with
+     pradcast.pl's own colour scale): one hue only, lighter where energy is
+     cheap, deeper where it is dear — never pradcast's green-to-red traffic
+     light, because red and yellow already mean Alarm / Uwaga in this same
+     card. PriceStrip interpolates between the two ends by absolute price
+     (PRICE_SHADE_LOW..HIGH), so an expensive evening is dark on every day.
+     The cheap end holds ~3:1 against its surface (light 3.0, dark 3.3) so
+     the line never fades out; in dark mode "dear" is the brighter end.
+
+     Confirmed days draw the shade as a line; forecast days never get that
+     line — only a translucent fill of the same shade and its top/bottom
+     edges (PriceStrip, "T2"). The owner's one hard requirement was that a
+     prediction must never look like a certainty. */
+  --l-series-price-low: #3fa587;     --d-series-price-low: #237a64;
+  --l-series-price-high: #084f3d;    --d-series-price-high: #6fe0bb;
 
   /* layout */
   --header-height: 3.5rem;
@@ -275,9 +279,8 @@
   --series-threshold: var(--l-series-threshold);
   --series-history: var(--l-series-history);
   --band-history: var(--l-band-history);
-  --series-price: var(--l-series-price);
-  --series-price-band: var(--l-series-price-band);
-  --series-price-band-edge: var(--l-series-price-band-edge);
+  --series-price-low: var(--l-series-price-low);
+  --series-price-high: var(--l-series-price-high);
   --oze: var(--l-oze);
   --oze-soft: var(--l-oze-soft);
 }
@@ -328,9 +331,8 @@
     --series-threshold: var(--d-series-threshold);
     --series-history: var(--d-series-history);
     --band-history: var(--d-band-history);
-    --series-price: var(--d-series-price);
-    --series-price-band: var(--d-series-price-band);
-    --series-price-band-edge: var(--d-series-price-band-edge);
+    --series-price-low: var(--d-series-price-low);
+    --series-price-high: var(--d-series-price-high);
     --oze: var(--d-oze);
     --oze-soft: var(--d-oze-soft);
   }
@@ -381,9 +383,8 @@
   --series-threshold: var(--d-series-threshold);
   --series-history: var(--d-series-history);
   --band-history: var(--d-band-history);
-  --series-price: var(--d-series-price);
-  --series-price-band: var(--d-series-price-band);
-  --series-price-band-edge: var(--d-series-price-band-edge);
+  --series-price-low: var(--d-series-price-low);
+  --series-price-high: var(--d-series-price-high);
   --oze: var(--d-oze);
   --oze-soft: var(--d-oze-soft);
 }
@@ -433,9 +434,8 @@
 
   /* PriceStrip only — see the --l-series-price/--d-series-price comment
      above, next to the other chart series tokens. */
-  --color-series-price: var(--series-price);
-  --color-series-price-band: var(--series-price-band);
-  --color-series-price-band-edge: var(--series-price-band-edge);
+  --color-series-price-low: var(--series-price-low);
+  --color-series-price-high: var(--series-price-high);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Helvetica Neue", Arial, sans-serif;
@@ -534,6 +534,23 @@
 @media (min-width: 110rem) {
   .content-width {
     max-width: 120rem;
+  }
+}
+
+/*
+ * Past 125rem (2000px) the page scales instead of spreading. Owner's 27-inch
+ * screenshot, 15.09.2026: the 120rem cap left the three columns in the middle
+ * ~60% of the glass with 11px axis labels. Widening the grid would only thin
+ * the 24-hour curves out (see the 96rem note above), so the whole rem-based
+ * page grows instead — text, gutters, charts, the axis width (axisWidthFor
+ * reads the root size) — until 120rem fills the width less a 2rem gutter on
+ * each side. Capped at 150%: past that it reads as a poster, not a screen.
+ * Floored at 100%, which is the reader's own default, so an enlarged text
+ * setting is never shrunk back. Below 125rem nothing here applies.
+ */
+@media (min-width: 125rem) {
+  html {
+    font-size: clamp(100%, calc((100vw - 4rem) / 120), 150%);
   }
 }
 

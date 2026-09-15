@@ -43,11 +43,10 @@ const TOKENS = {
   threshold: '--series-threshold',
   history: '--series-history',
   bandHistory: '--band-history',
-  /** PriceStrip's confirmed-day line. Never drawn for a forecast day — see
-   *  PriceStrip and the --l-series-price comment in App.css. */
-  price: '--series-price',
-  priceBand: '--series-price-band',
-  priceBandEdge: '--series-price-band-edge',
+  /** PriceStrip's shade range, cheap to dear — see the --l-series-price-low
+   *  comment in App.css. */
+  priceLow: '--series-price-low',
+  priceHigh: '--series-price-high',
 } as const;
 
 export type ChartColors = Record<keyof typeof TOKENS, string>;
@@ -77,9 +76,8 @@ const FALLBACK: ChartColors = {
   threshold: '#5856d6',
   history: '#8e8e93',
   bandHistory: 'rgba(142,142,147,0.18)',
-  price: '#0f8a6a',
-  priceBand: 'rgba(15,138,106,0.20)',
-  priceBandEdge: 'rgba(15,138,106,0.55)',
+  priceLow: '#3fa587',
+  priceHigh: '#084f3d',
 };
 
 function readColors(): ChartColors {

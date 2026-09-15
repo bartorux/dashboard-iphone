@@ -17,7 +17,14 @@ vi.mock('recharts', async () => {
   };
 });
 import React from 'react';
-import PriceStrip, { PriceTooltip, priceScale } from '../PriceStrip';
+import PriceStrip, {
+  PriceTooltip,
+  priceScale,
+  shadeAt,
+  shadeStops,
+  PRICE_SHADE_HIGH,
+  PRICE_SHADE_LOW,
+} from '../PriceStrip';
 import { PriceDay, PriceHour } from '../../../utils/cenyTypes';
 
 const confirmedHours: PriceHour[] = Array.from({ length: 24 }, (_, hour) => ({
@@ -50,6 +57,17 @@ const forecastDay: PriceDay = {
   hours: forecastHours,
 };
 
+// useChartColors falls back to these when jsdom has no stylesheet to read.
+const LOW = '#3fa587';
+const HIGH = '#084f3d';
+
+/** The <stop>s of the gradient a `url(#id)` paint points at. */
+const gradientStops = (container: HTMLElement, paint: string | null) => {
+  const id = /^url\(#(.+)\)$/.exec(paint ?? '')?.[1];
+  if (!id) return [];
+  return [...(container.querySelector(`[id="${id}"]`)?.querySelectorAll('stop') ?? [])];
+};
+
 const lineCurves = (container: HTMLElement) => [
   ...container.querySelectorAll('.recharts-line-curve'),
 ];
@@ -79,13 +97,26 @@ describe('PriceStrip', () => {
 
     // Counting is not enough: a series fed only nulls still renders its
     // element, just with nothing in it. Both edges must actually be drawn,
-    // and in the band's edge colour, never in the confirmed line's.
-    const confirmedStroke = lineCurves(render(<PriceStrip day={confirmedDay} />).container)[0]
-      .getAttribute('stroke');
+    // each with its own translucent gradient — never the confirmed line's
+    // opaque one.
     for (const curve of lineCurves(container)) {
       expect(curve.getAttribute('d')).toMatch(/\d/);
-      expect(curve.getAttribute('stroke')).not.toBe(confirmedStroke);
+      const opacities = gradientStops(container, curve.getAttribute('stroke')).map((stop) =>
+        Number(stop.getAttribute('stop-opacity'))
+      );
+      expect(opacities.length).toBeGreaterThan(0);
+      for (const opacity of opacities) expect(opacity).toBeLessThan(1);
     }
+  });
+
+  it('shades a confirmed line by price: deepest at its peak, lightest at its trough', () => {
+    const { container } = render(<PriceStrip day={confirmedDay} />);
+    const [line] = lineCurves(container);
+    const stops = gradientStops(container, line.getAttribute('stroke'));
+    // confirmedDay runs 800..1030 zł/MWh, top of the box first.
+    expect(stops[0].getAttribute('stop-color')).toBe(shadeAt(1030, LOW, HIGH));
+    expect(stops[stops.length - 1].getAttribute('stop-color')).toBe(shadeAt(800, LOW, HIGH));
+    for (const stop of stops) expect(Number(stop.getAttribute('stop-opacity'))).toBe(1);
   });
 
   it('translates every confidence level', () => {
@@ -97,7 +128,7 @@ describe('PriceStrip', () => {
 
   it('names the source under the strip', () => {
     const { getByText } = render(<PriceStrip day={confirmedDay} />);
-    expect(getByText('ceny: pradcast.pl')).toBeInTheDocument();
+    expect(getByText(/^ceny: pradcast\.pl/)).toBeInTheDocument();
   });
 
   it.each([
@@ -170,5 +201,39 @@ describe('priceScale', () => {
     expect(scale.min).toBe(ticks[0]);
     expect(scale.max).toBe(ticks[ticks.length - 1]);
     expect(scale.ticks).toContain(0);
+  });
+});
+
+describe('price shade', () => {
+  it('clamps to the two ends outside the anchors and mixes between them', () => {
+    expect(shadeAt(PRICE_SHADE_LOW - 500, LOW, HIGH)).toBe(LOW);
+    expect(shadeAt(PRICE_SHADE_HIGH + 900, LOW, HIGH)).toBe(HIGH);
+    const middle = shadeAt((PRICE_SHADE_LOW + PRICE_SHADE_HIGH) / 2, LOW, HIGH);
+    expect(middle).not.toBe(LOW);
+    expect(middle).not.toBe(HIGH);
+    // #3f→#08 red channel, halfway ≈ #24
+    expect(middle.slice(1, 3)).toBe('24');
+  });
+
+  it('places a stop wherever an anchor falls inside the span, so the shade is exact at every height', () => {
+    const stops = shadeStops(800, 2500, LOW, HIGH);
+    expect(stops.map((stop) => stop.offset)).toEqual([0, (2500 - 1500) / 1700, 1]);
+    expect(stops[0].color).toBe(HIGH);
+    expect(stops[1].color).toBe(HIGH);
+    expect(stops[2].color).toBe(shadeAt(800, LOW, HIGH));
+  });
+
+  it('spans both anchors on a day running from cheap to dear', () => {
+    const stops = shadeStops(100, 2000, LOW, HIGH);
+    expect(stops.map((stop) => stop.color)).toEqual([HIGH, HIGH, LOW, LOW]);
+    expect(stops.map((stop) => stop.offset)).toEqual([0, 500 / 1900, 1750 / 1900, 1]);
+  });
+
+  it('gives no gradient to a flat span, which SVG would not paint at all', () => {
+    expect(shadeStops(900, 900, LOW, HIGH)).toEqual([]);
+  });
+
+  it('falls back to the deep end when a token is not plain hex', () => {
+    expect(shadeAt(300, 'rgb(1,2,3)', HIGH)).toBe(HIGH);
   });
 });

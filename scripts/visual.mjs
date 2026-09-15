@@ -150,6 +150,9 @@ const SCENARIOS = [
   // dayIndex, not a fixture swap, exactly like kompas-light: the same one
   // ceny.json response backs every scenario in this file.
   { name: 'ceny-prognoza-light', scheme: 'light', dayIndex: 1 },
+  // 2560px: the only scene past 125rem, where the whole page scales up (see
+  // the last content-width rule in App.css). Nothing at 1920 can see it.
+  { name: 'szeroki-2560', scheme: 'light', wide: true },
 ];
 
 /**
@@ -160,6 +163,13 @@ const SCENARIOS = [
  */
 const MONITOR = {
   viewport: { width: 1920, height: 1080 },
+  isMobile: false,
+  hasTouch: false,
+};
+
+/** A 27-inch 1440p screen at 100%: past 125rem, where the page scales. */
+const WIDE = {
+  viewport: { width: 2560, height: 1440 },
   isMobile: false,
   hasTouch: false,
 };
@@ -192,7 +202,7 @@ let written = 0;
 
 for (const scenario of SCENARIOS) {
   const context = await browser.newContext({
-    ...(scenario.laptop ? LAPTOP : scenario.monitor ? MONITOR : devices['iPhone 15 Pro']),
+    ...(scenario.wide ? WIDE : scenario.laptop ? LAPTOP : scenario.monitor ? MONITOR : devices['iPhone 15 Pro']),
     // Baselines are stored at 1x: layout regressions show up identically while
     // the committed PNGs stay a fraction of the size of 3x captures.
     deviceScaleFactor: 1,
