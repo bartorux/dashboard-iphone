@@ -511,6 +511,55 @@ prawie na każdym przebiegu. Archiwum prognozy 6,7 MB po trzynastu dniach, czyli
 miesięcznie**. Log prób modelu urósł do 202 kB po przejściu na okno 72 h (z 45 kB przy limicie
 72 wpisów) — zgodnie z projektem.
 
+## Ceny energii pod wykresem rezerwy (15.09.2026, v3.82.0)
+
+**Co jest na ekranie.** W widoku „Rezerwa", między wykresem a tabelą godzinową, pasek „Cena energii"
+na tej samej osi doby. Doba **potwierdzona** (fiksing TGE) — linia ciągła i etykieta „potwierdzona ·
+TGE". Doba **prognozowana** — **samo pasmo 10–90 %, bez linii środkowej** i etykieta „prognoza D+n ·
+pewność …"; dymek też podaje zakres, nie liczbę. Kolor „Morze" (`--series-price*` w `App.css`).
+Doba dobierana **po dacie**, nie po pozycji w pliku. Doba 23- lub 25-godzinna (zmiana czasu) nie
+dostaje paska — lepszy brak niż godzina w złej kolumnie.
+
+**Dlaczego pasmo zamiast linii.** 14.09 potwierdzona cena na 15.09 o 19:00 wyniosła 2242 zł/MWh, a
+środek prognozy dla podobnego wieczoru ~1240 przy pasmie 695–2603. Linia środkowa podsunęłaby
+spokojny wieczór dokładnie tam, gdzie czytelnik patrzy.
+
+**Skąd dane.** `api.pradcast.pl/prices/date/{data}`, doby od dziś do D+3. Przeglądarka nie może
+pytać pradcast sama (brak CORS), więc pobiera generator (`writePrices` w `scripts/summary.ts`): nie
+częściej niż raz na godzinę (znacznik `data/ceny-last-fetch.json`), w cichym `try/catch`, z
+`User-Agent` projektu (domyślny UA curla dostaje 403). Wynik: `public/ceny.json` — `changedAt`
+zmienia się tylko przy zmianie danych, więc cichy odczyt nie wyzwala wdrożenia. Doby potwierdzone
+trafiają do `data/ceny-archiwum/RRRR-MM.jsonl`, bo pradcast trzyma historię godzinową tylko ~tydzień.
+
+**Klucz.** Kod działa anonimowo; sekret `PRADCAST_API_KEY` (Actions) dodaje się nagłówkiem
+`X-API-Key`, gdy tylko istnieje. Klucz nigdy w repozytorium, pliku ani czacie.
+
+**Licencja.** Regulamin pradcast §6 wymaga zgody na użycie komercyjne. Decyzja właściciela z 14.09:
+projekt prywatny i niekomercyjny. Pod paskiem dopisek o źródle.
+
+**Ceny a przywołania — odpowiedź z danych: nie odróżniają.** Percentyl szczytu wieczornego 17–22
+wśród 76 dni roboczych lata: przywołania 0,83–0,92, fałszywy alarm 09.09 **0,79**, test 10.09
+**0,93**. Kolumna „szczyt ceny 17–22" na podstronie badania **odłożona**, aż archiwum się uzbiera.
+
+**Znane, nieruszane:**
+- generator liczy daty w UTC — między 00:00 a 02:00 czasu polskiego „dziś" to wczoraj (dotyczy też
+  cen; istniało wcześniej);
+- deduplikacja archiwum cen patrzy tylko na bieżącą partycję miesiąca — na przełomie miesiąca możliwy
+  nieszkodliwy duplikat;
+- skala paska: szczyt powyżej ~2860 zł/MWh przeskakuje od razu do 4000 (okrągłe tysiące wygrały z
+  gęstością — obejrzane i zaakceptowane);
+- kontrast błękitu rezerwy z indygo progu (ΔE 10,8 w jasnym, 5,7 CVD w ciemnym) ratuje przerywana
+  linia progu.
+
+**Wzorce wizualne** przepisane dwa razy, osobnymi commitami: raz za pasek (wyższe strony, nowa scena
+`ceny-prognoza-light`), raz za aktualizację do macOS 27 (wygładzanie pogrubionego tekstu, układ bez
+zmian). Etykiet osi cen w jsdom nie da się sprawdzić testem (brak pomiaru tekstu) — pilnują ich
+sceny monitorowe.
+
+**Agent od paska zatrzymał się w połowie** (drugi raz w projekcie, pierwszy przy osi doby) — szkic
+przejęty i dokończony ręcznie; wyłapane przy tym dwa błędy: pasek brał zawsze pierwszą dobę z pliku
+i leżał pod tabelą godzinową zamiast pod wykresem.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
