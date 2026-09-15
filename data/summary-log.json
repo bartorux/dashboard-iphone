@@ -3,15 +3,6 @@
     {
       "at": "2026-09-12T22:01:11.700Z",
       "prompt": 53,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "W poniedziałek 14 września margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a nadwyżka ulega obniżeniu poniżej progu 1100 MW w godzinach 07:00-10:00, co sprawia, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "Prognoza na poniedziałek 14 września pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin pozostało ponad osiem godzin.",
-      "outlook": "We wtorek 15 września saldo wymiany nie zostało jeszcze zaplanowane, a w kolejnych dniach od środy 16 września do piątku 18 września nadwyżka utrzymuje się powyżej progu 1100 MW, dając operatorowi wybór przywołania."
-    },
-    {
-      "at": "2026-09-12T22:01:11.700Z",
-      "prompt": 53,
       "accepted": true,
       "headline": "W poniedziałek 14 września margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie, gdyż nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
@@ -2494,6 +2485,14 @@
       "headline": "W czwartek o 19:00 margines spadnie do najniższego poziomu w całym okresie, a w godzinach 07:00-09:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin w czwartek i piątek ogłoszenie może jeszcze nadejść, ponieważ do ich nadejścia pozostało ponad osiem godzin.",
       "outlook": "W piątek przywołanie również wejdzie w grę między 07:00 a 08:00 oraz od 16:00 do 22:00, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-15T21:44:03.757Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W czwartek o 19:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "W czwartek margines spadnie poniżej wymaganego poziomu przez dziesięć godzin. Do wyznaczonych godzin w czwartek i piątek ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek margines również spadnie poniżej wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
