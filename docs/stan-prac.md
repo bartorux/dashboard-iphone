@@ -617,6 +617,12 @@ Poprawka: reguła na `:root` (wyższa specyficzność). WebKit 2560 px: 20,8 px,
 **Wniosek:** zmiany zależne od rozmiaru głównego sprawdzać także w WebKit — Playwright ma go
 zainstalowanego od 15.09 (`npx playwright install webkit`).
 
+**v3.84.2 — powiększenie ograniczone wysokością.** Po v3.84.1 na 27 calach trzeba było przewijać ~300 px
+(„ze skrajności w skrajność"). Pomiar w WebKit na żywych danych: przy 2560 × 1300 strona mieści się do
+15 px, od 16 px już nie — ok. `innerHeight / 84`. Reguła: `max(13px, min((100vw − 4rem) / 120, 100vh / 86,
+1.5rem))`. Wynik: 2560 × 1300 → 15,1 px, 2560 × 1440 → 16,7 px, oba bez przewijania. Znane: w dni z wieloma
+alertami i Kompasem lewa kolumna jest wyższa (scena `szeroki-2560`: ~190 px przewijania przy 1440).
+
 **Otwarte:** w Safari na Macu poniżej 2000 px rozmiar główny to nadal 13 px (w Chrome 16), więc
 laptop i 1920 px wyglądają o ~20% mniej, a trzy kolumny wchodzą od ~1430 px. Do decyzji właściciela.
 
