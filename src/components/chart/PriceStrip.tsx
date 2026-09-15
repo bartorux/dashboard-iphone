@@ -20,7 +20,6 @@ import {
   TooltipRow,
   axisWidthFor,
   hourTicks,
-  rootFontPx,
   shortHour,
   tooltipHourKey,
   useDismissibleTooltip,
@@ -80,11 +79,6 @@ export function priceScale(lo: number, hi: number): RangeScale {
   for (let tick = min; tick <= max; tick += step) ticks.push(tick);
   return { min, max, ticks };
 }
-
-/** Fixed rather than responsive to content: a strip this short exists to be
- *  glanced at under the reserve chart, not read on its own. In rem, so it grows
- *  with the page on a wide screen instead of flattening (App.css, 125rem). */
-const STRIP_HEIGHT_REM = 6.5;
 
 /**
  * Shade by absolute price, zł/MWh: at or below LOW the lightest shade, at or
@@ -338,8 +332,11 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
         </span>
       </div>
 
-      <div className="mt-1" ref={ref} {...handlers}>
-        <ResponsiveContainer width="100%" height={Math.round(STRIP_HEIGHT_REM * rootFontPx())}>
+      {/* Height lives in App.css (.price-strip-h): short on a phone, where it is
+          glanced at under the reserve chart, taller from 80rem up, where a
+          6.5rem strip under a half-screen chart read flat (owner, 15.09.2026). */}
+      <div className="price-strip-h mt-1" ref={ref} {...handlers}>
+        <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={chartRows} margin={STRIP_MARGIN}>
             <CartesianGrid vertical={false} stroke={colors.grid} />
 

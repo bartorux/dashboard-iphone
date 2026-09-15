@@ -91,7 +91,7 @@ export const CHART_MARGIN = { top: 18, right: 10, bottom: 4, left: 0 };
  * Everything else scales through rem, but Recharts wants the axis width as a
  * number, so this is the one place that has to know what a rem is worth.
  */
-export function rootFontPx(): number {
+function rootFontPx(): number {
   if (typeof window === 'undefined') return 16;
   const size = parseFloat(
     window.getComputedStyle(document.documentElement).fontSize

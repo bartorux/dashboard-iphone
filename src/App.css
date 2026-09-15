@@ -584,6 +584,27 @@
   }
 }
 
+/*
+ * Price strip under the reserve chart (PriceStrip). 6.5rem on a phone. From
+ * 80rem up the reserve chart takes half the screen height, and the strip at
+ * 6.5rem read as a flat line under it (owner, 15.09.2026) — so there it
+ * follows the viewport too, about a quarter of the chart above it, within
+ * 6.5–11rem. rem throughout, so the 125rem page scaling grows it as well.
+ */
+.price-strip-h {
+  height: 6.5rem;
+}
+@media (min-width: 80rem) {
+  .price-strip-h {
+    height: clamp(6.5rem, 14vh, 11rem);
+  }
+  @supports (height: 1dvh) {
+    .price-strip-h {
+      height: clamp(6.5rem, 14dvh, 11rem);
+    }
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Base
    --------------------------------------------------------------------------- */
