@@ -124,8 +124,31 @@ const MAX_TICK_LABEL_LENGTH = 6;
  * an 11px label clipped the axis outright once the reader enlarged their
  * text — the chart grew, the room for its numbers did not.
  */
+/**
+ * Phone width. Only there does the Y column shrink — see `axisWidthFor`.
+ */
+function chartIsNarrow(): boolean {
+  return (
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(max-width: 47.99rem)').matches
+  );
+}
+
+/**
+ * On a phone every pixel of width is plot. The widest label PSE produces
+ * ("25 000") measures ~38px at the 11px tick size; with Recharts' own 8px
+ * offset from the plot that is 46px, and the column is 42 — the first 4px of
+ * the longest label hang into the card's 12px padding (App.css lets the SVG
+ * overflow there), which a 4-digit label on an ordinary day never reaches.
+ * The owner rejected labels inside the plot on 15.09.2026: this is the
+ * narrow-column alternative, worth ~15px of curve.
+ */
+const NARROW_AXIS_WIDTH_PX = 42;
+
 export function axisWidthFor(): number {
   const scale = rootFontPx() / 16;
+  if (chartIsNarrow()) return Math.ceil(NARROW_AXIS_WIDTH_PX * scale);
   // ~6.5px per character at the default size, plus tick margin and breathing room
   return Math.ceil(MAX_TICK_LABEL_LENGTH * 6.5 * scale) + Math.ceil(18 * scale);
 }

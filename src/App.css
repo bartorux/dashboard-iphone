@@ -605,6 +605,17 @@
   }
 }
 
+/*
+ * Phone: the Y axis column is narrower than its longest label (axisWidthFor in
+ * chart/shared.tsx), so that label may hang a few px into the card padding.
+ * An inline SVG clips to its own box by default; this lets it show there.
+ */
+@media (max-width: 47.99rem) {
+  .recharts-surface {
+    overflow: visible;
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Base
    --------------------------------------------------------------------------- */
