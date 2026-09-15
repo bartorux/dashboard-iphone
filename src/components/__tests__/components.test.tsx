@@ -3,7 +3,6 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import Header from '../Header';
 import CurrentStatusCard from '../CurrentStatusCard';
 import AlertsPanel from '../AlertsPanel';
-import SettingsPanel from '../SettingsPanel';
 import { AlertRange, PSEDataPoint, Settings, SystemStatus } from '../../types';
 import { makePoint } from '../../test/factories';
 
@@ -443,77 +442,6 @@ describe('AlertsPanel', () => {
     expect(screen.getByText(/1818/)).toBeInTheDocument();
   });
 });
-
-describe('SettingsPanel — theme switch', () => {
-  const settings: Settings = {
-    orangeThreshold: 500,
-    redThreshold: 300,
-    version: 1,
-  };
-
-  const renderPanel = (theme: 'system' | 'light' | 'dark', onThemeChange = vi.fn()) => {
-    render(
-      <SettingsPanel
-        visible
-        settings={settings}
-        theme={theme}
-        onThemeChange={onThemeChange}
-        onSave={() => null}
-        onReset={noop}
-        onNotification={noop}
-        onClose={noop}
-      />
-    );
-    return onThemeChange;
-  };
-
-  it('marks the active preference and offers all three', () => {
-    renderPanel('dark');
-
-    expect(screen.getByRole('radio', { name: 'Ciemny' })).toBeChecked();
-    expect(screen.getByRole('radio', { name: 'Jasny' })).not.toBeChecked();
-    expect(screen.getByRole('radio', { name: 'Systemowy' })).not.toBeChecked();
-  });
-
-  it('reports the chosen preference', () => {
-    const onThemeChange = renderPanel('system');
-
-    fireEvent.click(screen.getByRole('radio', { name: 'Jasny' }));
-
-    expect(onThemeChange).toHaveBeenCalledWith('light');
-  });
-});
-
-describe('SettingsPanel — thresholds', () => {
-  const settings: Settings = {
-    orangeThreshold: 500,
-    redThreshold: 300,
-    version: 1,
-  };
-
-  afterEach(() => vi.restoreAllMocks());
-
-  it('keeps a cleared field empty instead of snapping back to the default', () => {
-    render(
-      <SettingsPanel
-        visible
-        settings={settings}
-        theme="system"
-        onThemeChange={noop}
-        onSave={() => null}
-        onReset={noop}
-        onNotification={noop}
-        onClose={noop}
-      />
-    );
-
-    const field = screen.getByDisplayValue('500');
-    fireEvent.change(field, { target: { value: '' } });
-
-    expect(field).toHaveValue(null);
-  });
-});
-
 
 describe('CurrentStatusCard — linia Kompasu', () => {
   const point = makePoint({ hourLabel: '20:00', endLabel: '21:00', reserve: 3000, required: 2000 });

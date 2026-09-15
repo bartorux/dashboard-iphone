@@ -11,9 +11,7 @@ import RenewableMixCard from './components/RenewableMixCard';
 import AlertsPanel from './components/AlertsPanel';
 import SettingsPanel from './components/SettingsPanel';
 import PullToRefresh from './components/PullToRefresh';
-import NotificationBanner from './components/NotificationBanner';
 import OfflineIndicator from './components/OfflineIndicator';
-import InstallButton from './components/InstallButton';
 import { RefreshIcon } from './components/icons';
 import { useRefreshButton } from './hooks/useRefreshButton';
 import { usePSEData } from './hooks/usePSEData';
@@ -35,6 +33,7 @@ import {
   hasReadings,
 } from './utils/dataTransform';
 import { compassRanges } from './utils/compass';
+import { version as appVersion } from '../package.json';
 import { DayOffset } from './types';
 import { formatDate } from './utils/dateHelpers';
 import { dayLabel, visibleDayOffsets } from './utils/dayWindow';
@@ -88,8 +87,6 @@ function App() {
   const browserOnline = useOnlineStatus();
 
   const [settingsVisible, setSettingsVisible] = useState(false);
-  const [notification, setNotification] = useState<string | null>(null);
-  const [notificationKey, setNotificationKey] = useState(0);
   const [clockTick, setClockTick] = useState(0);
 
   // Recomputed on the tick so the summary ages out on its own, without a reload.
@@ -235,6 +232,14 @@ function App() {
     [currentPoint, orangeThreshold, redThreshold]
   );
 
+  /* The scale in the settings marks the same figure the status card shows. */
+  const currentMargin =
+    currentPoint && currentPoint.reserve !== null && currentPoint.required !== null
+      ? currentPoint.reserve - currentPoint.required
+      : null;
+
+  const closeSettings = useCallback(() => setSettingsVisible(false), []);
+
   const headerStatus = useMemo(
     () => getUpcomingStatus(allData, orangeThreshold, redThreshold),
     [allData, orangeThreshold, redThreshold, clockTick]
@@ -252,24 +257,10 @@ function App() {
     }
   }, [horizonAlertCount]);
 
-  const showNotification = useCallback((message: string) => {
-    setNotification(message);
-    setNotificationKey((key) => key + 1);
-  }, []);
-
   const handleSwitchDay = useCallback(
     (offset: DayOffset) => switchDay(offset),
     [switchDay]
   );
-
-  const handleShowInstructions = useCallback(() => {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    showNotification(
-      isIOS
-        ? 'Safari: Udostępnij → Dodaj do ekranu głównego'
-        : 'Menu przeglądarki → Dodaj do ekranu głównego'
-    );
-  }, [showNotification]);
 
   /*
    * Showing cached figures while the first fetch of the session is still in
@@ -322,8 +313,6 @@ function App() {
    */
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden supports-[overflow:clip]:overflow-x-clip bg-bg">
-      <NotificationBanner key={notificationKey} message={notification} />
-
       <Header
         status={headerStatus}
         connection={connection}
@@ -340,15 +329,26 @@ function App() {
           isReady={isReady}
         />
 
+        {/*
+          A sheet on a phone, a side panel from 48rem — rendered into <body>,
+          so where it sits in this tree does not matter. Every valid change
+          saves as it is made, so closing it confirms nothing and discards
+          nothing. The install offer and the version live in it now, which is
+          why the foot of the page keeps only the refresh button.
+        */}
         <SettingsPanel
-          visible={settingsVisible}
+          open={settingsVisible}
+          onClose={closeSettings}
           settings={settings}
-          theme={themePreference}
-          onThemeChange={setTheme}
           onSave={saveSettings}
           onReset={resetSettings}
-          onNotification={showNotification}
-          onClose={() => setSettingsVisible(false)}
+          theme={themePreference}
+          onThemeChange={setTheme}
+          currentMargin={currentMargin}
+          installableState={installableState}
+          isInstalled={isInstalled}
+          onInstall={install}
+          version={appVersion}
         />
 
         {/*
@@ -510,13 +510,6 @@ function App() {
                 {isLoading ? 'Odświeżanie…' : 'Odśwież'}
               </button>
             )}
-
-            <InstallButton
-              installableState={installableState}
-              isInstalled={isInstalled}
-              onInstall={install}
-              onShowInstructions={handleShowInstructions}
-            />
 
           </div>
         </div>
