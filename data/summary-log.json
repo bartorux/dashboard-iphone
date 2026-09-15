@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-12T08:01:05.835Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W poniedziałek 14 września nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00, co oznacza, że operator może ogłosić przywołanie, a poniżej tego progu stracił możliwość jego pominięcia.",
-      "body": "Prognoza na poniedziałek 14 września pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 15 września nadwyżka również spada poniżej progu 1100 MW między 19:00 a 21:00, podczas gdy w pozostałe dni okresu rezerwa pokrywa wymagany poziom lub operator zachowuje wybór."
-    },
-    {
       "at": "2026-09-12T09:01:08.851Z",
       "prompt": 53,
       "accepted": true,
@@ -2455,6 +2447,23 @@
       "headline": "Margines wypada poniżej typowego zakresu z ostatnich dni jutro oraz w czwartek i piątek.",
       "body": "Prognoza pogarsza się jutro. Ogłoszenie może jeszcze nadejść, do wskazanych godzin pozostało ponad osiem godzin.",
       "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, a w pozostałe dni rezerwa utrzymuje się w normie."
+    },
+    {
+      "at": "2026-09-15T08:15:42.923Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "W czwartek i piątek nadwyżka spadnie poniżej progu 1100 MW między 07:00 a 10:00 oraz między 16:00 a 22:00, co sprawi, że operator straci możliwość pominięcia przywołania.",
+      "body": "Prognoza pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę operator może ogłosić przywołanie między 18:00 a 21:00, natomiast w poniedziałek 21 września oraz w dzisiejszych i przyszły poniedziałkowych godzinach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-15T08:15:42.923Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W czwartek i piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach od 07:00 do 09:00 i od 17:00 do 22:00.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W środę operator może ogłosić przywołanie między 18:00 a 21:00, podczas gdy dzisiaj oraz w poniedziałek 21 września nic nie zapowiada przywołania."
     }
   ]
 }
