@@ -60,8 +60,10 @@
   /* App bar material (.app-bar). The translucent value lets content scroll
      under the bar with a blur, like an iOS navigation bar. The solid value is
      that same material composited over --bg at the top of the page — what the
-     bar actually looks like at rest — and serves where the bar cannot be
-     translucent: reduced transparency and increased contrast.
+     bar actually looks like at rest — and serves three places that cannot be
+     translucent: reduced transparency, increased contrast, and the browser's
+     own chrome through <meta name="theme-color"> (THEME_COLOR in
+     useThemeColorMeta.ts and index.html, which a test holds equal to these).
      Light: 0.82 x (249,249,251) + 0.18 x #f2f2f7 = #f8f8fa.
      Dark:  0.82 x (22,22,24) + 0.18 x #000 = #121214. */
   --l-material: rgba(249, 249, 251, 0.82);

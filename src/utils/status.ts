@@ -42,14 +42,6 @@ export const STATUS_SOFT_BG: Record<SystemStatus, string> = {
   unknown: 'bg-surface-2',
 };
 
-/** Raw values for `<meta name="theme-color">`, which cannot take a CSS variable. */
-export const STATUS_THEME_COLOR: Record<SystemStatus, string> = {
-  ok: '#34c759',
-  warn: '#ff9500',
-  alarm: '#ff3b30',
-  unknown: '#8e8e93',
-};
-
 /**
  * Word printed directly BESIDE a signed margin figure — AlertsPanel's row
  * label, ReserveTooltip's per-hour badge. Deliberately not STATUS_LABEL: that

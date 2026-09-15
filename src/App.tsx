@@ -240,7 +240,8 @@ function App() {
     [allData, orangeThreshold, redThreshold, clockTick]
   );
 
-  useThemeColorMeta(headerStatus);
+  // The bar's surface, not its status: see the hook.
+  useThemeColorMeta(themePreference);
 
   useEffect(() => {
     if (!('setAppBadge' in navigator)) return;

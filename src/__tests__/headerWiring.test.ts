@@ -38,4 +38,9 @@ describe('Pasek — okablowanie w App', () => {
   it('przekazuje ponowienie do paska jako pełne odświeżenie', () => {
     expect(extractJsxTag(appSrc, '<Header')).toContain('onRetry={refreshAll}');
   });
+
+  it('theme-color idzie za motywem, a nie za statusem', () => {
+    expect(appSrc).toContain('useThemeColorMeta(themePreference)');
+    expect(appSrc).not.toMatch(/useThemeColorMeta\(headerStatus\)/);
+  });
 });
