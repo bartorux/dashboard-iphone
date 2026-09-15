@@ -21,24 +21,13 @@ export const STATUS_DESCRIPTION: Record<SystemStatus, string> = {
   ok: 'Najbliższe godziny w normie',
   warn: 'Najbliższe godziny przy progu',
   alarm: 'Najbliższe godziny poniżej progu',
-  unknown: 'Brak danych do oceny',
+  unknown: 'Najbliższe godziny bez odczytów',
 };
 
 /**
  * Class maps are written out in full so Tailwind's scanner sees every literal.
  * Composing them (`bg-${status}`) would silently drop the utilities at build time.
  */
-export const STATUS_HEADER_BG: Record<SystemStatus, string> = {
-  ok: 'bg-ok',
-  warn: 'bg-warn',
-  alarm: 'bg-alarm',
-  // Not bg-text-tertiary: that token is re-stepped for body-text legibility
-  // (etap 2, naprawa D) and no longer holds the value Header's black-ink
-  // contrast (naprawa C) was verified against on light mode. --status-unknown
-  // is pinned at #8e8e93 in both themes, same as STATUS_THEME_COLOR below.
-  unknown: 'bg-status-unknown',
-};
-
 export const STATUS_TEXT: Record<SystemStatus, string> = {
   ok: 'text-ok-text',
   warn: 'text-warn-text',

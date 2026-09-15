@@ -296,13 +296,18 @@ function App() {
    * and blanking them mid-read is the anti-pattern this exists to avoid.
    */
 
+  /*
+   * The header's second line only: when the figures on screen were fetched.
+   * What is happening (loading, offline) is the first line's job — Header
+   * words it once — so this never repeats it, and stays empty rather than
+   * restating "no data" when there is no time to give.
+   */
+  const lastFetched = lastUpdate ? `Ostatnie dane z ${lastUpdate}` : '';
   const connectionText = {
-    loading: 'Pobieranie danych…',
-    error: 'Brak danych z PSE',
-    cached: lastUpdate ? `Dane z ${lastUpdate}` : 'Dane z pamięci',
-    online: lastUpdate
-      ? `Zaktualizowano ${lastUpdate}`
-      : 'Połączono',
+    loading: lastFetched,
+    error: lastFetched,
+    cached: lastFetched || 'Dane z pamięci',
+    online: lastUpdate ? `Zaktualizowano ${lastUpdate}` : '',
   }[connection];
 
   /*
@@ -323,6 +328,7 @@ function App() {
         connection={connection}
         connectionText={connectionText}
         onToggleSettings={() => setSettingsVisible((visible) => !visible)}
+        onRetry={refreshAll}
       />
 
       <main className="content-width relative flex-1 overflow-x-hidden supports-[overflow:clip]:overflow-x-clip pb-6">

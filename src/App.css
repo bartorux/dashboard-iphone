@@ -48,15 +48,25 @@
      read, so it stays exactly where it was. Verified by screenshot (etap 2
      baselines): no chart pixel differs from the pre-D captures. */
   --l-axis: #8e8e93;            --d-axis: #8e8e93;
-  /* Header's "unknown" bar background only. It used to alias text-tertiary
+  /* Header's "unknown" status colour only - once the whole bar's background,
+     now the dot in its neutral capsule. It used to alias text-tertiary
      directly, which happened to work only because the two started out equal
      (#8e8e93); re-stepping text-tertiary for body-text legibility above
      dropped light mode to #6e6e73, and black ink on THAT (etap 2, naprawa C)
-     falls to 4.14:1 - under the floor the header fix promised. Split out and
-     pinned at the value both were verified against, the same way
-     STATUS_THEME_COLOR already hardcodes '#8e8e93' for this same status
-     independent of the token. */
+     fell to 4.14:1. Split out and pinned at the value it was verified
+     against, so the grey that means "unknown" never moves with body text. */
   --l-status-unknown: #8e8e93;  --d-status-unknown: #8e8e93;
+
+  /* App bar material (.app-bar). The translucent value lets content scroll
+     under the bar with a blur, like an iOS navigation bar. The solid value is
+     that same material composited over --bg at the top of the page — what the
+     bar actually looks like at rest — and serves where the bar cannot be
+     translucent: reduced transparency and increased contrast.
+     Light: 0.82 x (249,249,251) + 0.18 x #f2f2f7 = #f8f8fa.
+     Dark:  0.82 x (22,22,24) + 0.18 x #000 = #121214. */
+  --l-material: rgba(249, 249, 251, 0.82);
+  --d-material: rgba(22, 22, 24, 0.82);
+  --l-material-solid: #f8f8fa;  --d-material-solid: #121214;
 
   /* semantic - `-text` variants carry enough contrast to sit on the surface,
      `-soft` variants are backgrounds only */
@@ -247,6 +257,8 @@
   --text-tertiary: var(--l-text-tertiary);
   --axis: var(--l-axis);
   --status-unknown: var(--l-status-unknown);
+  --material: var(--l-material);
+  --material-solid: var(--l-material-solid);
   --on-accent: #ffffff;
   --ok: var(--l-ok);
   --ok-text: var(--l-ok-text);
@@ -303,6 +315,8 @@
     --text-tertiary: var(--d-text-tertiary);
     --axis: var(--d-axis);
     --status-unknown: var(--d-status-unknown);
+    --material: var(--d-material);
+    --material-solid: var(--d-material-solid);
     --ok: var(--d-ok);
     --ok-text: var(--d-ok-text);
     --ok-soft: var(--d-ok-soft);
@@ -358,6 +372,8 @@
   --text-tertiary: var(--d-text-tertiary);
   --axis: var(--d-axis);
   --status-unknown: var(--d-status-unknown);
+  --material: var(--d-material);
+  --material-solid: var(--d-material-solid);
   --ok: var(--d-ok);
   --ok-text: var(--d-ok-text);
   --ok-soft: var(--d-ok-soft);
@@ -412,11 +428,15 @@
   --color-text-tertiary: var(--text-tertiary);
   --color-on-accent: var(--on-accent);
 
-  /* Header's "unknown" status bar only — see the --l-status-unknown comment
-     above. Not text-tertiary: that one is retuned for body-text legibility
-     and no longer holds the value the header's black-ink contrast (etap 2,
-     naprawa C) was verified against. */
+  /* Header's "unknown" status dot only — see the --l-status-unknown comment
+     above. Not text-tertiary: that one is retuned for body-text legibility. */
   --color-status-unknown: var(--status-unknown);
+
+  /* App bar material — see the --l-material comment above. .app-bar in this
+     file is the main consumer; the utilities exist so nothing else has to
+     hard-code the bar's surface. */
+  --color-material: var(--material);
+  --color-material-solid: var(--material-solid);
 
   --color-ok: var(--ok);
   --color-ok-text: var(--ok-text);
@@ -688,7 +708,7 @@ body {
    @layer utilities, declared after base, and per the Cascade Layers spec a
    named layer always loses to unlayered CSS regardless of specificity. Left
    unlayered, this blanket rule would have outranked components' own explicit
-   transition utilities - Header's transition-colors duration-500 among them -
+   transition utilities - PullToRefresh's duration-[160ms] arrow among them -
    forcing every one of them down to this 250ms regardless of what they ask
    for. Inside @layer base it only applies where nothing more specific opts
    in, which is the point: a quiet default, not a floor nothing can rise above. */
@@ -734,6 +754,62 @@ body {
   min-height: 0;
 }
 
+/* App bar (Header). A translucent material over the page, with the status
+   colour only in a 3px line along its bottom edge and in the capsule inside.
+
+   box-shadow rather than border-bottom for both lines: an inset shadow draws
+   over the bar's own box, so going from the 1px separator to the 3px status
+   line never changes the bar's height by a pixel (NotificationBanner is
+   positioned from --header-height).
+
+   Unlayered, like .offline-indicator below and for the same reason: this
+   `transition` must fully replace the @layer base default, so it restates the
+   three colour properties that default carries. 500ms on the line is the
+   bar's old status crossfade, kept for the part that still changes colour. */
+.app-bar {
+  background-color: var(--material);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: inset 0 -1px 0 var(--separator);
+  transition:
+    box-shadow 500ms ease,
+    background-color 250ms ease,
+    color 250ms ease,
+    border-color 250ms ease;
+}
+
+.app-bar[data-status="ok"] {
+  box-shadow: inset 0 -3px 0 var(--ok);
+}
+.app-bar[data-status="warn"] {
+  box-shadow: inset 0 -3px 0 var(--warn);
+}
+.app-bar[data-status="alarm"] {
+  box-shadow: inset 0 -3px 0 var(--alarm);
+}
+
+/* Reduce transparency: the same colour the bar has at rest, solid, no blur -
+   so the setting changes legibility over scrolled content, not the look. */
+@media (prefers-reduced-transparency: reduce) {
+  .app-bar {
+    background-color: var(--material-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Increase contrast: solid as above, and the neutral bottom edge becomes a
+   defined line instead of a 18%-alpha hairline. The status rules above keep
+   their 3px line: the attribute selector outranks this one. */
+@media (prefers-contrast: more) {
+  .app-bar {
+    background-color: var(--material-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: inset 0 -1px 0 var(--text-tertiary);
+  }
+}
+
 /* Offline indicator: slides up from behind the bottom edge on the way in.
    Exit stays instant - the bar is removed from the DOM the moment the
    connection returns, and that moment is not worth choreographing.
@@ -748,7 +824,7 @@ body {
    whatever `transition` the cascade would otherwise hand this element. Left
    at just opacity and transform, that would have silently dropped the
    250ms colour crossfade the `@layer base` default gives every element on
-   a theme switch - the same failure the Header comment warns about, just
+   a theme switch - the same failure the @layer base comment warns about, just
    arrived at unlayered instead of through a layer conflict. Restating the
    three colour properties here keeps that crossfade, alongside the new
    entrance motion. */

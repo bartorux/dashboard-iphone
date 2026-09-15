@@ -38,11 +38,11 @@ function extractCall(src: string, marker: string): string {
 }
 
 describe('Kompas nie dotyka trzech niezaleznych sygnalow', () => {
-  it('nie zmienia koloru paska naglowka (getUpcomingStatus / STATUS_HEADER_BG)', () => {
+  it('nie zmienia koloru statusu w pasku naglowka (getUpcomingStatus / kapsula i linia)', () => {
     const block = extractCall(appSrc, 'const headerStatus = useMemo(');
     expect(block).not.toMatch(/compass/i);
-    // Header.tsx itself — the component that actually paints STATUS_HEADER_BG
-    // — must not know the word either.
+    // Header.tsx itself — the component that paints the status capsule and
+    // the line under the bar — must not know the word either.
     expect(headerSrc).not.toMatch(/compass/i);
   });
 
