@@ -318,11 +318,17 @@ for (const scenario of SCENARIOS) {
   // landing and React committing it. `pierwsze-ladowanie` overrides this to
   // ~500ms so the shot lands while its 5s-delayed fetch is still in flight,
   // rather than after the default wait has outlasted it.
-  await page.waitForTimeout(scenario.waitAfterLoad ?? 700);
+  // 1200, up from 700: after the v3.86.0 header and settings rebuild a capture
+  // at 700 occasionally caught one chart series still unrendered (a 0.3–0.6%
+  // diff on the curves, a different scene each run).
+  await page.waitForTimeout(scenario.waitAfterLoad ?? 1200);
 
   if (scenario.dayIndex !== undefined) {
     await page.getByRole('tab').nth(scenario.dayIndex).click();
-    await page.waitForTimeout(300);
+    // Past the chart's 450ms redraw with room to spare: 300ms was enough until
+    // the header became a blurred material (v3.86.0), after which the three
+    // day-switch scenes caught the curves mid-animation about one run in two.
+    await page.waitForTimeout(900);
   }
   if (scenario.view) {
     await page.getByRole('tab', { name: scenario.view }).click();
