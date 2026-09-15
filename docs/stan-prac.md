@@ -690,6 +690,26 @@ czasem łapało nienarysowaną serię — podniesione do 1200 ms, po przełącze
 **Nie sprawdzone:** prawdziwy iPhone (rozmycie, cofanie pulpitu, obszar pod wycięciem), VoiceOver,
 Windows, gest przeciągania w WebKit.
 
+## „Na tle 30 dni": dni robocze z roboczymi (15.09.2026, v3.86.1)
+
+Pytanie właściciela, jak liczone jest pasmo, ujawniło niezgodność: opis pod „?" twierdził, że dni robocze
+i wolne mają osobne pasma, a kod wrzucał wszystkie 30 dni kalendarzowych do jednego koszyka. Teraz
+`sameDayKind` (`utils/history.ts`): dzień roboczy porównywany jest z dniami roboczymi, weekend i święto
+(`isWorkingDay` z `callPeriod.ts`) — z dniami wolnymi. Opis podaje liczbę dni, na których stoi pasmo.
+
+**Na żywych danych, 15.09 (wtorek), 19:00:** mediana −19 → −120 MW, górna granica pasma +1085 → +701 MW.
+Weekendy zawyżały górę pasma o ~400 MW; dzisiejsze +965 MW wypadało „typowo", a na tle dni roboczych
+jest powyżej typowego zakresu.
+
+**Jak liczone (dla przyszłych pytań):** okno to 30 dób od dziś −30 do wczoraj, kroczące raz na dobę,
+niezależne od wybranej zakładki; pamięć przeglądarki do północy. Dla każdej godziny: margines
+(rezerwa − wymagana) z każdej doby → p10 / mediana / p90, minimum 3 próbki. API PSE trzyma tylko
+ostatnią wersję planu, więc historia to **ostateczne** plany tamtych dób, a linia wybranego dnia —
+bieżąca prognoza.
+
+Strażnik wizualny tej zmiany nie widzi (jego historia nie różnicuje dni) — pilnują testy jednostkowe
+i 5 sond mutacyjnych.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
