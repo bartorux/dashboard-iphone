@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-12T18:01:14.296Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W poniedziałek 14 września nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "Margines pozostaje poniżej typowego zakresu z ostatnich trzydziestu dni przez trzynaście godzin. Do tych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 15 września, w środę 16 września, w czwartek 17 września oraz w piątek 18 września rezerwa również nie pokrywa wymaganego poziomu, przy czym saldo wymiany transgranicznej dla tych dób nie zostało jeszcze zaplanowane."
-    },
-    {
       "at": "2026-09-12T18:30:58.770Z",
       "prompt": 53,
       "accepted": true,
@@ -2460,6 +2452,14 @@
       "headline": "W czwartek między 07:00 a 09:00 oraz od 17:00 do 22:00, a także w piątek od 07:00 do 08:00 i od 17:00 do 22:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a w pozostałych wskazanych godzinach tych dni ma wybór.",
       "body": "W czwartek margines spada poniżej typowego zakresu przez dziesięć godzin, a w piątek przez osiem godzin. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "Pozostałe dni nie niosą takich ograniczeń, a w czwartkowy i piątkowy sposób wyróżnia się też jutrzejszy dzień, dla którego prognoza jeszcze się ustala."
+    },
+    {
+      "at": "2026-09-15T18:15:44.775Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W czwartek między 07:00 a 09:00 oraz od 17:00 do 22:00 nadwyżka spadła poniżej progu 1100 MW, a rezerwa nie pokrywa wymaganego poziomu.",
+      "body": "W czwartek margines spada poniżej typowego zakresu przez dziesięć godzin, bo rezerwa nie pokrywa wymaganej wartości. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek między 07:00 a 08:00 oraz od 17:00 do 22:00 operator może ogłosić przywołanie, przy czym rezerwa dla tej doby liczy się na ten moment bez uwzględnienia planu salda wymiany, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
