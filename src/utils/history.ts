@@ -1,4 +1,5 @@
 import { PSEDataPoint } from '../types';
+import { isWorkingDay } from './callPeriod';
 
 export interface HourDistribution {
   /** Start of the block, e.g. "19:00". */
@@ -69,6 +70,25 @@ export function marginDistribution(
       };
     })
     .sort((a, b) => a.hourLabel.localeCompare(b.hourLabel));
+}
+
+/**
+ * Past days of the same kind as `businessDate`: working days for a working
+ * day, days off (weekends and public holidays, per isWorkingDay) for a day
+ * off. Demand on a Sunday or a holiday sits far below a weekday's, so a
+ * single band over all thirty calendar days was wider and shifted against
+ * what a working day actually looks like — and call periods are only ever
+ * announced on working days. The chart's own help text had claimed this split
+ * long before the code did it (owner caught it, 15.09.2026).
+ */
+export function sameDayKind(points: PSEDataPoint[], businessDate: string): PSEDataPoint[] {
+  const working = isWorkingDay(businessDate);
+  return points.filter((point) => isWorkingDay(point.businessDate) === working);
+}
+
+/** Distinct business dates in a set of points — how many days a band rests on. */
+export function dayCount(points: PSEDataPoint[]): number {
+  return new Set(points.map((point) => point.businessDate)).size;
 }
 
 /** Where today's value sits inside the historical spread for the same hour. */

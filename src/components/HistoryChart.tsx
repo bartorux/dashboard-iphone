@@ -12,7 +12,8 @@ import {
 } from 'recharts';
 import { PSEDataPoint } from '../types';
 import { niceScaleRange } from '../utils/scale';
-import { marginDistribution, standingFor } from '../utils/history';
+import { dayCount, marginDistribution, sameDayKind, standingFor } from '../utils/history';
+import { isWorkingDay } from '../utils/callPeriod';
 import { useChartColors } from '../hooks/useChartColors';
 import { HistoryState } from '../hooks/useHistory';
 import {
@@ -167,7 +168,15 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
   const colors = useChartColors();
   const { ref, handlers, tooltipActive } = useDismissibleTooltip();
 
-  const distribution = useMemo(() => marginDistribution(history), [history]);
+  // The selected day decides which past days it is compared with — see sameDayKind.
+  const selectedDate = dayData.find((point) => point.businessDate)?.businessDate ?? null;
+  const working = selectedDate === null ? true : isWorkingDay(selectedDate);
+  const comparable = useMemo(
+    () => (selectedDate === null ? history : sameDayKind(history, selectedDate)),
+    [history, selectedDate]
+  );
+  const comparableDays = useMemo(() => dayCount(comparable), [comparable]);
+  const distribution = useMemo(() => marginDistribution(comparable), [comparable]);
 
   const rows = useMemo<Row[]>(() => {
     const todayByHour = new Map<string, number>();
@@ -294,14 +303,16 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
              */
             info: [
               'Porównuje margines wybranego dnia — dostępną rezerwę minus ' +
-                'wymaganą — z tym, co o tej samej godzinie było przez ostatnie ' +
-                `${days} dni.`,
+                'wymaganą — z tym, co o tej samej godzinie było w ' +
+                (working
+                  ? `dni robocze z ostatnich ${days} dni (${comparableDays}).`
+                  : `weekendy i święta z ostatnich ${days} dni (${comparableDays}).`),
               'Pasmo to zakres, w którym mieściło się 80% tych dni. Linia poza ' +
                 'pasmem znaczy, że godzina jest nietypowa dla tej pory.',
               'Czy rezerwa wystarcza, to osobna sprawa — widać ją po tym, czy ' +
                 'linia jest powyżej zera.',
-              'Dni robocze i wolne mają osobne pasma, bo w weekend ' +
-                'zapotrzebowanie jest dużo niższe.',
+              'Dzień roboczy porównywany jest tylko z dniami roboczymi, a weekend ' +
+                'i święto — z dniami wolnymi, bo wtedy zapotrzebowanie jest dużo niższe.',
             ],
           },
         ]}

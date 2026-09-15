@@ -53,7 +53,9 @@ const thirtyDayHistory: PSEDataPoint[] = ['2026-07-01', '2026-07-02', '2026-07-0
 
 const todayData: PSEDataPoint[] = Array.from({ length: 24 }, (_, hour) =>
   makePoint({
-    businessDate: '2026-08-01',
+    // A Monday: the history above is three working days, and a working day is
+    // only ever compared with working days (sameDayKind).
+    businessDate: '2026-08-03',
     hourLabel: `${pad(hour)}:00`,
     endLabel: `${pad((hour + 1) % 24)}:00`,
     reserve: 3500,
@@ -330,5 +332,61 @@ describe('HistoryChart — doba pełna na osi (h/24, nie h/23)', () => {
     // `todayData`'s margin is a flat 1500.
     const expected = niceScaleRange(1000, 1500);
     expect(gridLines).toHaveLength(expected.ticks.length);
+  });
+});
+
+describe('HistoryChart — dni robocze z roboczymi, wolne z wolnymi', () => {
+  const day = (businessDate: string, margin: number) =>
+    Array.from({ length: 24 }, (_, hour) =>
+      makePoint({
+        businessDate,
+        hourLabel: `${pad(hour)}:00`,
+        endLabel: `${pad((hour + 1) % 24)}:00`,
+        reserve: 2000 + margin,
+        required: 2000,
+      })
+    );
+  // Wed–Fri at +1000 MW, Sat/Sun/Sat at +5000 MW: the two bands cannot overlap,
+  // so the tooltip's median tells at once which set the chart used.
+  const mixed = [
+    ...day('2026-07-01', 1000),
+    ...day('2026-07-02', 1000),
+    ...day('2026-07-03', 1000),
+    ...day('2026-07-04', 5000),
+    ...day('2026-07-05', 5000),
+    ...day('2026-07-11', 5000),
+  ];
+
+  const medianAt19 = (selected: string) => {
+    const { container } = render(
+      <HistoryChart
+        dayData={day(selected, 0)}
+        dayLabel="x"
+        days={30}
+        history={mixed}
+        state="ready"
+        onRetry={vi.fn()}
+      />
+    );
+    fireEvent.click(within(container).getByRole('button', { name: /Tabela godzinowa/ }));
+    const row = within(container).getAllByRole('row').find((r) => r.textContent?.startsWith('19:00'));
+    return row?.textContent ?? '';
+  };
+
+  it('compares a working day only with working days', () => {
+    // Monday 03.08.2026
+    expect(medianAt19('2026-08-03')).toContain(formatMW(1000));
+    expect(medianAt19('2026-08-03')).not.toContain(formatMW(5000));
+  });
+
+  it('compares a weekend day only with days off', () => {
+    // Saturday 01.08.2026
+    expect(medianAt19('2026-08-01')).toContain(formatMW(5000));
+    expect(medianAt19('2026-08-01')).not.toContain(formatMW(1000));
+  });
+
+  it('treats a public holiday as a day off', () => {
+    // Wednesday 11.11.2026, Independence Day: a weekday, but a day off.
+    expect(medianAt19('2026-11-11')).toContain(formatMW(5000));
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { marginDistribution, percentile, standingFor } from '../history';
+import { dayCount, marginDistribution, percentile, sameDayKind, standingFor } from '../history';
 import { makePoint } from '../../test/factories';
 
 const points = (hourLabel: string, margins: number[]) =>
@@ -122,5 +122,32 @@ describe('standingFor — both directions matter', () => {
     // ordinary, which is not what the chart shows
     expect(standingFor(1200, d)).toBe('above');
     expect(standingFor(50, d)).toBe('below');
+  });
+});
+
+describe('sameDayKind and dayCount', () => {
+  const at = (businessDate: string) => makePoint({ businessDate, hourLabel: '19:00' });
+  const history = [
+    at('2026-08-03'), // Mon
+    at('2026-08-04'), // Tue
+    at('2026-08-04'), // Tue, second row of the same day
+    at('2026-08-08'), // Sat
+    at('2026-08-09'), // Sun
+    at('2026-08-15'), // Sat and Assumption Day
+    at('2026-11-11'), // Wed, Independence Day
+  ];
+
+  it('keeps working days for a working day', () => {
+    const kept = sameDayKind(history, '2026-08-05').map((p) => p.businessDate);
+    expect(kept).toEqual(['2026-08-03', '2026-08-04', '2026-08-04']);
+  });
+
+  it('keeps weekends and holidays for a day off', () => {
+    const kept = sameDayKind(history, '2026-08-02').map((p) => p.businessDate);
+    expect(kept).toEqual(['2026-08-08', '2026-08-09', '2026-08-15', '2026-11-11']);
+  });
+
+  it('counts days, not rows', () => {
+    expect(dayCount(sameDayKind(history, '2026-08-05'))).toBe(2);
   });
 });
