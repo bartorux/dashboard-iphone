@@ -643,6 +643,14 @@ linia z wypełnieniem, linia z paskiem koloru); wybrane **słupki godzinowe** (�
 - Mutacje: 8 sond, dwie przeżyły pierwsze podejście (przesunięcie o pół godziny, pełna wysokość) — test
   sprawdza teraz lewy/prawy brzeg pola i stanie na linii zera.
 
+**v3.85.1 — najazd na słupek.** Pomysł właściciela: słupki jak w OZE, prognoza z linią. Doba potwierdzona:
+brak linii kursora, najechany słupek dostaje obwódkę w kolorze tekstu z odstępem w kolorze tła (bez
+odstępu ciemna obwódka ginęła na najciemniejszym, wieczornym słupku). Prognoza: linia kursora jak dotąd.
+Przy okazji naprawione: Recharts wybiera wiersz **najbliższy** kursorowi, a wiersze stały na początku
+godzin — prawa połowa słupka 19:00 pokazywała 20:00. Doba potwierdzona ma teraz wiersz co 5 minut
+(`fineRows`, pełne godziny zachowują klucz, więc siatka i etykiety bez zmian), błąd ≤ 2,5 min.
+Sprawdzone w Chromium i WebKit: kursor na 85% słupka 19:00 → obwódka 19, dymek 19:00–20:00.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
