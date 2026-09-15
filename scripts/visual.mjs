@@ -330,14 +330,21 @@ for (const scenario of SCENARIOS) {
   }
   if (scenario.settings) {
     await page.getByRole('button', { name: 'Ustawienia' }).click();
-    await page.waitForTimeout(300);
+    // The panel is drawn over the page now rather than inside it, and fades in
+    // over 200ms under reduced motion (driven from script, so the CSS rule
+    // that zeroes transitions does not shorten it).
+    await page.getByRole('dialog', { name: 'Ustawienia' }).waitFor();
+    await page.waitForTimeout(500);
   }
   if (scenario.expandTable) {
     await page.getByRole('button', { name: 'Tabela godzinowa' }).click();
     await page.waitForTimeout(300);
   }
 
-  const shot = await page.screenshot({ fullPage: true });
+  // Settings scenes capture the window, not the page. The panel is fixed to the
+  // viewport, and a full-page capture stretches the viewport to the page's
+  // height — a sheet several screens tall that no one ever sees.
+  const shot = await page.screenshot({ fullPage: !scenario.settings });
   const baselinePath = resolve(baselineDir, `${scenario.name}.png`);
 
   if (!existsSync(baselinePath)) {
