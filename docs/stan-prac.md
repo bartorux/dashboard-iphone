@@ -591,6 +591,21 @@ i tak rozszerza domenę do etykiet); pilnowane są skala i dno pasma.
 buildzie pięć niezwiązanych testów padło na limicie 10 s, a scena prognozy zgubiła kartę OZE —
 powtórka bez obciążenia czysta. Wniosek: testów i strażnika nie puszczać razem z buildem.
 
+## Wyższy pasek cen, węższa oś na telefonie (15.09.2026, v3.84.0)
+
+**Pasek cen na monitorze.** Od 80rem wysokość `clamp(6.5rem, 14vh, 11rem)` (klasa `.price-strip-h`
+w `App.css`) — ok. ćwierć wykresu rezerwy; przy 6.5rem pod wykresem na pół ekranu czytał się jak płaska
+kreska. Telefon bez zmian.
+
+**Oś Y na telefonie.** Właściciel: z lewej strony wykresów za dużo pustego miejsca. Prototyp z
+etykietami **wewnątrz** wykresu (jak Giełda w iOS, +57 px) — **odrzucony**: „słabo to wygląda"
+(etykiety nachodziły na krzywe). Wdrożona węższa kolumna: poniżej 48rem `axisWidthFor()` = 42 px
+zamiast 57 (najdłuższa etykieta „25 000" ≈ 38 px przy 11 px; do 4 px wchodzi w margines karty, stąd
+`.recharts-surface { overflow: visible }` tylko na telefonie). Pole wykresu i oś doby w alertach
+zaczynają się na 66 px (było 81) — zmierzone. Przy prototypie wyszło, że `mirror` w Recharts nie
+rezerwuje szerokości osi — gdyby wrócić do tego pomysłu, godziny trzeba przesuwać `padding` na osi X.
+Znane: po obrocie telefonu szerokość osi dopasuje się przy następnym renderze wykresu i alertów.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
