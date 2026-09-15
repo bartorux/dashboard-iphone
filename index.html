@@ -4,8 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="PSE Dashboard - Monitoring rezerw mocy KSE" />
-    <!-- Kept in sync with the current system status at runtime (useThemeColorMeta) -->
-    <meta name="theme-color" content="#0a84ff" />
+    <!-- The app bar's solid surface per theme (--l/--d-material-solid in App.css).
+         useThemeColorMeta rewrites both when a theme is forced in the settings. -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8f8fa" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121214" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <!-- `default` lets iOS tint the status bar from theme-color; `black-translucent`
          pushes content under the clock and ignores it. -->

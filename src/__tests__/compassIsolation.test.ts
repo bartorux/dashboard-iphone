@@ -10,7 +10,8 @@ import statusSrc from '../utils/status.ts?raw';
  * Kompas Energetyczny PSE is a new, independent signal (see AlertsPanel /
  * CompassRows). Three things it must never touch, no matter how it is wired
  * up next: the header bar's colour, the app badge count, and the installed
- * PWA's theme-color. All three are driven by margin-alert data alone today;
+ * PWA's theme-color. The first two are driven by margin-alert data alone
+ * today, theme-color by the colour theme alone;
  * these tests pin that fact as an assertion rather than a comment, so a
  * change that quietly folds the compass into any of them fails loudly here
  * instead of only showing up as an unrelated-looking pixel or count drift.
@@ -38,11 +39,11 @@ function extractCall(src: string, marker: string): string {
 }
 
 describe('Kompas nie dotyka trzech niezaleznych sygnalow', () => {
-  it('nie zmienia koloru paska naglowka (getUpcomingStatus / STATUS_HEADER_BG)', () => {
+  it('nie zmienia koloru statusu w pasku naglowka (getUpcomingStatus / kapsula i linia)', () => {
     const block = extractCall(appSrc, 'const headerStatus = useMemo(');
     expect(block).not.toMatch(/compass/i);
-    // Header.tsx itself — the component that actually paints STATUS_HEADER_BG
-    // — must not know the word either.
+    // Header.tsx itself — the component that paints the status capsule and
+    // the line under the bar — must not know the word either.
     expect(headerSrc).not.toMatch(/compass/i);
   });
 
@@ -51,7 +52,7 @@ describe('Kompas nie dotyka trzech niezaleznych sygnalow', () => {
     expect(block).not.toMatch(/compass/i);
   });
 
-  it('nie zmienia STATUS_THEME_COLOR', () => {
+  it('nie zmienia theme-color (useThemeColorMeta)', () => {
     expect(statusSrc).not.toMatch(/compass/i);
     expect(themeColorSrc).not.toMatch(/compass/i);
   });

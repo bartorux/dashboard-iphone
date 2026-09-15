@@ -4,111 +4,164 @@ import Header from '../Header';
 import CurrentStatusCard from '../CurrentStatusCard';
 import AlertsPanel from '../AlertsPanel';
 import SettingsPanel from '../SettingsPanel';
-import { AlertRange, PSEDataPoint, Settings } from '../../types';
+import { AlertRange, PSEDataPoint, Settings, SystemStatus } from '../../types';
 import { makePoint } from '../../test/factories';
 
 const noop = () => {};
 
 function renderHeader(
   connection: 'loading' | 'online' | 'cached' | 'error',
-  connectionText: string
+  connectionText: string,
+  status: SystemStatus = 'ok',
+  onRetry?: () => void
 ) {
   return render(
     <Header
-      status="ok"
+      status={status}
       connection={connection}
       connectionText={connectionText}
       onToggleSettings={noop}
+      onRetry={onRetry}
     />
   );
 }
 
 describe('Header', () => {
   it('never claims a live connection while showing cached data', () => {
-    renderHeader('cached', 'Dane z 20:15');
+    renderHeader('cached', 'Ostatnie dane z 20:15');
 
-    expect(screen.getByText('Dane z 20:15')).toBeInTheDocument();
-    expect(screen.queryByText(/Połączono/)).not.toBeInTheDocument();
-  });
-
-  it('shows the loading and error states', () => {
-    const { unmount } = renderHeader('loading', 'Pobieranie danych…');
-    expect(screen.getByText('Pobieranie danych…')).toBeInTheDocument();
-    unmount();
-
-    renderHeader('error', 'Brak danych z PSE');
-    expect(screen.getByText('Brak danych z PSE')).toBeInTheDocument();
+    expect(screen.getByText('Ostatnie dane z 20:15')).toBeInTheDocument();
+    expect(screen.queryByText(/Połączono|Zaktualizowano/)).not.toBeInTheDocument();
   });
 
   it('offers settings and nothing that only pretends to work', () => {
-    render(
-      <Header
-        status="alarm"
-        connection="online"
-        connectionText="Zaktualizowano 20:15"
-        onToggleSettings={noop}
-      />
-    );
+    renderHeader('online', 'Zaktualizowano 20:15', 'alarm', vi.fn());
 
     expect(screen.getByText('ALARM')).toBeInTheDocument();
     // The bell used to sit here toggling only its own icon: every caller passed
-    // force: true, so it silenced nothing.
+    // force: true, so it silenced nothing. "Ponów" appears only in the error
+    // state, where there is something to retry.
     expect(screen.getAllByRole('button')).toHaveLength(1);
     expect(screen.getByRole('button', { name: 'Ustawienia' })).toBeInTheDocument();
   });
 
-  // Etap 2, naprawa C: white text on --l-ok/--l-warn measured at 2.2:1 and on
-  // --l-alarm at 3.55:1 — both below the 4.5:1 floor for the 11-17px semibold
-  // text here. Ink is now three steps of black instead, with the bar's own
-  // background colour (STATUS_HEADER_BG) untouched — this only asserts on the
-  // text/dot classes, never on colour, since the fix must not move a pixel of
-  // the status colour itself.
-  (['ok', 'warn', 'alarm', 'unknown'] as const).forEach((status) => {
-    it(`inks the ${status} bar in black, not white, on the label/description/connection line`, () => {
-      const { container } = render(
-        <Header
-          status={status}
-          connection="online"
-          connectionText="Zaktualizowano 20:15"
-          onToggleSettings={noop}
-        />
-      );
+  // The bar used to stick in name only: see stickyHeader.test.ts for the parent.
+  it('sticks to the top of the viewport', () => {
+    const { container } = renderHeader('online', 'Zaktualizowano 20:15');
+    const header = container.querySelector('header')!;
+    expect(header.className).toMatch(/(^|\s)sticky(\s|$)/);
+    expect(header.className).toMatch(/(^|\s)top-0(\s|$)/);
+    expect(header.className).toMatch(/(^|\s)app-bar(\s|$)/);
+  });
 
-      const h1 = container.querySelector('h1')!;
-      expect(h1.className).toContain('text-black');
-      expect(h1.className).not.toContain('text-white');
+  describe('loading', () => {
+    it('looks like loading, not like a system state, and says so once', () => {
+      const { container } = renderHeader('loading', '', 'unknown');
+      const header = container.querySelector('header')!;
 
-      const description = screen.getByText(
-        status === 'ok'
-          ? 'Najbliższe godziny w normie'
-          : status === 'warn'
-            ? 'Najbliższe godziny przy progu'
-            : status === 'alarm'
-              ? 'Najbliższe godziny poniżej progu'
-              : 'Brak danych do oceny'
-      );
-      expect(description.className).toContain('text-black/85');
+      expect(screen.getByTestId('header-capsule')).toHaveTextContent('Ładowanie');
+      expect(screen.getByTestId('header-spinner')).toBeInTheDocument();
+      expect(screen.getByText('Pobieranie danych z PSE…')).toBeInTheDocument();
+      // The cold start used to read "Brak danych · Brak danych do oceny ·
+      // Pobieranie danych…" — three ways of saying one thing, two of them wrong.
+      expect(header.textContent).not.toMatch(/Brak danych/);
+      expect(header.textContent!.match(/Pobieranie/g)).toHaveLength(1);
+      expect(screen.queryByTestId('header-connection')).not.toBeInTheDocument();
+      expect(header.dataset.status).toBeUndefined();
+    });
 
-      const connectionLine = screen.getByText('Zaktualizowano 20:15').parentElement!;
-      expect(connectionLine.className).toContain('text-black/80');
+    it('does not colour a status computed from the cache before the fetch confirms it', () => {
+      const { container } = renderHeader('loading', 'Ostatnie dane z 20:15', 'warn');
 
-      const dot = connectionLine.querySelector('span')!;
-      expect(dot.className).toContain('bg-black/70');
-      expect(dot.className).not.toMatch(/bg-white/);
+      expect(container.querySelector('header')!.dataset.status).toBeUndefined();
+      expect(screen.queryByText('UWAGA')).not.toBeInTheDocument();
+      expect(screen.getByTestId('header-capsule').className).toContain('bg-surface-3');
+      expect(screen.getByText('Ostatnie dane z 20:15')).toBeInTheDocument();
     });
   });
 
-  it('keeps the settings icon white (inherited), which the ink fix deliberately does not touch', () => {
-    const { container } = render(
-      <Header
-        status="alarm"
-        connection="online"
-        connectionText="Zaktualizowano 20:15"
-        onToggleSettings={noop}
-      />
-    );
+  describe('error', () => {
+    it('looks like an error, says it once, and offers a retry that works', () => {
+      const onRetry = vi.fn();
+      const { container } = renderHeader('error', '', 'unknown', onRetry);
+      const header = container.querySelector('header')!;
 
-    expect(container.querySelector('header')!.className).toContain('text-white');
+      expect(screen.getByTestId('header-capsule')).toHaveTextContent('Offline');
+      expect(screen.getByText('Brak połączenia z PSE')).toBeInTheDocument();
+      expect(header.textContent).not.toMatch(/Brak danych/);
+      expect(header.textContent!.match(/połączenia/g)).toHaveLength(1);
+      expect(header.dataset.status).toBeUndefined();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Ponów' }));
+      expect(onRetry).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps the time of the last figures beside the retry when there is one', () => {
+      renderHeader('error', 'Ostatnie dane z 20:15', 'unknown', noop);
+
+      const line = screen.getByTestId('header-connection');
+      expect(line).toHaveTextContent('Ostatnie dane z 20:15');
+      expect(within(line).getByRole('button', { name: 'Ponów' })).toBeInTheDocument();
+    });
+  });
+
+  describe('capsule', () => {
+    const cases = [
+      ['ok', 'OK', 'Najbliższe godziny w normie', 'bg-ok-soft', 'text-ok-text', 'bg-ok'],
+      ['warn', 'UWAGA', 'Najbliższe godziny przy progu', 'bg-warn-soft', 'text-warn-text', 'bg-warn'],
+      ['alarm', 'ALARM', 'Najbliższe godziny poniżej progu', 'bg-alarm-soft', 'text-alarm-text', 'bg-alarm'],
+    ] as const;
+
+    cases.forEach(([status, label, description, soft, text, dot]) => {
+      it(`carries the ${status} colour in the capsule and the line only, and names the horizon`, () => {
+        const { container } = renderHeader('online', 'Zaktualizowano 20:15', status);
+        const header = container.querySelector('header')!;
+        const capsule = screen.getByTestId('header-capsule');
+
+        expect(capsule).toHaveTextContent(label);
+        expect(capsule.className).toContain(soft);
+        expect(capsule.className).toContain(text);
+        expect(capsule.querySelector('span')!.className).toContain(dot);
+        // The line under the bar (.app-bar[data-status] in App.css).
+        expect(header.dataset.status).toBe(status);
+        // The bar itself carries no status fill any more.
+        expect(header.className).not.toMatch(/\bbg-(ok|warn|alarm|status-unknown)\b/);
+        // The bar speaks about the next hours, not the hour in the card below.
+        expect(screen.getByText(description)).toBeInTheDocument();
+        expect(description).toMatch(/^Najbliższe godziny/);
+      });
+    });
+
+    it('stays neutral, with no status line, when the next hours cannot be judged', () => {
+      const { container } = renderHeader('online', 'Zaktualizowano 20:15', 'unknown');
+
+      expect(container.querySelector('header')!.dataset.status).toBeUndefined();
+      expect(screen.getByTestId('header-capsule').className).toContain('bg-surface-3');
+      expect(screen.getByText('Najbliższe godziny bez odczytów')).toBeInTheDocument();
+    });
+  });
+
+  describe('connection mark', () => {
+    it('marks cached figures with the offline icon', () => {
+      renderHeader('cached', 'Ostatnie dane z 20:15');
+      expect(screen.getByTestId('header-connection').querySelector('svg')).not.toBeNull();
+    });
+
+    it('shows no mark at all while online', () => {
+      renderHeader('online', 'Zaktualizowano 20:15');
+      const line = screen.getByTestId('header-connection');
+      expect(line.querySelector('svg')).toBeNull();
+      expect(line.querySelector('.rounded-full')).toBeNull();
+    });
+  });
+
+  it('draws the settings icon in the accent colour in every state', () => {
+    (['loading', 'online', 'cached', 'error'] as const).forEach((connection) => {
+      const { unmount } = renderHeader(connection, '', 'alarm', noop);
+      const gear = screen.getByRole('button', { name: 'Ustawienia' });
+      expect(gear.className).toMatch(/(^|\s)text-accent(\s|$)/);
+      unmount();
+    });
   });
 });
 

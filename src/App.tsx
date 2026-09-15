@@ -240,7 +240,8 @@ function App() {
     [allData, orangeThreshold, redThreshold, clockTick]
   );
 
-  useThemeColorMeta(headerStatus);
+  // The bar's surface, not its status: see the hook.
+  useThemeColorMeta(themePreference);
 
   useEffect(() => {
     if (!('setAppBadge' in navigator)) return;
@@ -296,17 +297,31 @@ function App() {
    * and blanking them mid-read is the anti-pattern this exists to avoid.
    */
 
+  /*
+   * The header's second line only: when the figures on screen were fetched.
+   * What is happening (loading, offline) is the first line's job — Header
+   * words it once — so this never repeats it, and stays empty rather than
+   * restating "no data" when there is no time to give.
+   */
+  const lastFetched = lastUpdate ? `Ostatnie dane z ${lastUpdate}` : '';
   const connectionText = {
-    loading: 'Pobieranie danych…',
-    error: 'Brak danych z PSE',
-    cached: lastUpdate ? `Dane z ${lastUpdate}` : 'Dane z pamięci',
-    online: lastUpdate
-      ? `Zaktualizowano ${lastUpdate}`
-      : 'Połączono',
+    loading: lastFetched,
+    error: lastFetched,
+    cached: lastFetched || 'Dane z pamięci',
+    online: lastUpdate ? `Zaktualizowano ${lastUpdate}` : '',
   }[connection];
 
+  /*
+   * `clip`, not `hidden`, on both boxes. `overflow-x: hidden` with the other
+   * axis left `visible` computes that axis to `auto`, which turns the box into
+   * a scroll container — and a sticky child sticks to its nearest scroll
+   * container, not to the viewport. The header then scrolled away with the
+   * page (measured: 2091px above the glass at the bottom). `clip` cuts the
+   * same overflow without creating a scroll container. Browsers without it
+   * (Safari < 16) keep `hidden`: no sticky bar there, but no sideways scroll.
+   */
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden bg-bg">
+    <div className="flex min-h-screen flex-col overflow-x-hidden supports-[overflow:clip]:overflow-x-clip bg-bg">
       <NotificationBanner key={notificationKey} message={notification} />
 
       <Header
@@ -314,9 +329,10 @@ function App() {
         connection={connection}
         connectionText={connectionText}
         onToggleSettings={() => setSettingsVisible((visible) => !visible)}
+        onRetry={refreshAll}
       />
 
-      <main className="content-width relative flex-1 overflow-x-hidden pb-6">
+      <main className="content-width relative flex-1 overflow-x-hidden supports-[overflow:clip]:overflow-x-clip pb-6">
         <PullToRefresh
           pullDistance={pullDistance}
           isRefreshing={isRefreshing}
