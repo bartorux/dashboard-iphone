@@ -231,6 +231,31 @@
   --l-series-price-3: #177559;       --d-series-price-3: #58cfa5;
   --l-series-price-4: #07402f;       --d-series-price-4: #b8f7df;
 
+  /* Settings sheet and side panel (SettingsPanel). The grouped-list recipe iOS
+     uses for its own settings: in light the sheet is the grey page and the
+     cells are white; in dark the sheet lifts to the card grey and the cells one
+     step above it, because a black sheet under black cells would lose the
+     grouping altogether. Aliased to existing surfaces rather than new hex, so
+     re-stepping a surface moves the sheet with it. */
+  --l-sheet-bg: var(--l-bg);              --d-sheet-bg: var(--d-surface);
+  --l-sheet-cell: var(--l-surface);       --d-sheet-cell: var(--d-surface-2);
+  /* The numeric field and stepper sitting inside a cell: one step off the cell
+     in each theme, so the field is visible without a border. */
+  --l-sheet-field: var(--l-surface-2);    --d-sheet-field: var(--d-surface-3);
+  /* Dim behind the phone sheet. Dark needs more of it: the same 28% on a
+     near-black page barely registers, and the sheet has to read as in front. */
+  --l-scrim: rgba(0, 0, 0, 0.28);         --d-scrim: rgba(0, 0, 0, 0.5);
+  /* What shows around the dashboard while it recedes behind the sheet. Black in
+     both themes, as on iOS: the receding page reads as a card lifted off the
+     glass, which a grey margin in light mode would not. */
+  --l-sheet-backdrop: #000000;            --d-sheet-backdrop: #000000;
+  /* Drag handle. iOS's translucent fill rather than a text grey, so it stays a
+     quiet mark on either sheet colour. */
+  --l-grabber: rgba(60, 60, 67, 0.3);     --d-grabber: rgba(235, 235, 245, 0.3);
+  /* Side panel's edge shadow on a monitor, where there is no scrim to separate
+     it from the dashboard it floats over. */
+  --l-panel-shadow: rgba(0, 0, 0, 0.12);  --d-panel-shadow: rgba(0, 0, 0, 0.5);
+
   /* layout */
   --header-height: 3.5rem;
 
@@ -287,6 +312,13 @@
   --series-price-4: var(--l-series-price-4);
   --oze: var(--l-oze);
   --oze-soft: var(--l-oze-soft);
+  --sheet-bg: var(--l-sheet-bg);
+  --sheet-cell: var(--l-sheet-cell);
+  --sheet-field: var(--l-sheet-field);
+  --scrim: var(--l-scrim);
+  --sheet-backdrop: var(--l-sheet-backdrop);
+  --grabber: var(--l-grabber);
+  --panel-shadow: var(--l-panel-shadow);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -342,6 +374,13 @@
     --series-price-4: var(--d-series-price-4);
     --oze: var(--d-oze);
     --oze-soft: var(--d-oze-soft);
+    --sheet-bg: var(--d-sheet-bg);
+    --sheet-cell: var(--d-sheet-cell);
+    --sheet-field: var(--d-sheet-field);
+    --scrim: var(--d-scrim);
+    --sheet-backdrop: var(--d-sheet-backdrop);
+    --grabber: var(--d-grabber);
+    --panel-shadow: var(--d-panel-shadow);
   }
 }
 
@@ -397,6 +436,13 @@
   --series-price-4: var(--d-series-price-4);
   --oze: var(--d-oze);
   --oze-soft: var(--d-oze-soft);
+  --sheet-bg: var(--d-sheet-bg);
+  --sheet-cell: var(--d-sheet-cell);
+  --sheet-field: var(--d-sheet-field);
+  --scrim: var(--d-scrim);
+  --sheet-backdrop: var(--d-sheet-backdrop);
+  --grabber: var(--d-grabber);
+  --panel-shadow: var(--d-panel-shadow);
 }
 
 @theme inline {
@@ -449,6 +495,15 @@
   --color-series-price-2: var(--series-price-2);
   --color-series-price-3: var(--series-price-3);
   --color-series-price-4: var(--series-price-4);
+
+  /* SettingsPanel only — see the --l-sheet-* comment above. */
+  --color-sheet-bg: var(--sheet-bg);
+  --color-sheet-cell: var(--sheet-cell);
+  --color-sheet-field: var(--sheet-field);
+  --color-scrim: var(--scrim);
+  --color-sheet-backdrop: var(--sheet-backdrop);
+  --color-grabber: var(--grabber);
+  --color-panel-shadow: var(--panel-shadow);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Helvetica Neue", Arial, sans-serif;
@@ -732,6 +787,114 @@ body {
 .collapsible > * {
   overflow: hidden;
   min-height: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Settings (SettingsPanel)
+
+   Only the frame lives here; every position and opacity that moves is written
+   by SettingsPanel frame by frame, which is why none of these rules carries a
+   transition. The base-layer colour crossfade still reaches them, so switching
+   the theme from inside the panel fades the panel with the page.
+   --------------------------------------------------------------------------- */
+
+/* Phone: dim and sheet above everything, header included. Outside #root (a
+   portal), so the dashboard can be scaled back without taking the sheet with
+   it. */
+.settings-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+
+.settings-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim);
+  opacity: 0;
+}
+
+.settings-sheet {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  /* Clear of the status bar, with a sliver of the receding page above. */
+  top: calc(env(safe-area-inset-top) + 0.75rem);
+  display: flex;
+  flex-direction: column;
+  background: var(--sheet-bg);
+  border-radius: 0.875rem 0.875rem 0 0;
+  outline: none;
+  will-change: transform;
+}
+
+/* Pulled up past the top the sheet rubber-bands, lifting its bottom edge; this
+   keeps glass from showing underneath while it does. */
+.settings-sheet::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  height: 50vh;
+  background: inherit;
+}
+
+/* The grabber and the title bar: the part that drags. `none`, so the browser
+   does not claim a vertical drag here for scrolling or zoom. */
+.settings-sheet-handle {
+  touch-action: none;
+}
+
+/* From 48rem: a panel on the right under the header, over the dashboard rather
+   than beside it, so no column moves when it opens. 28rem keeps a row as long
+   as it is on a phone. The width is capped by the window for the narrowest
+   case, a 48rem window. */
+.settings-side {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: calc(var(--header-height) + env(safe-area-inset-top));
+  z-index: 40;
+  width: min(28rem, 100vw);
+  display: flex;
+  flex-direction: column;
+  background: var(--sheet-bg);
+  box-shadow: -1px 0 0 var(--separator), -1.5rem 0 3rem var(--panel-shadow);
+  outline: none;
+  will-change: transform;
+}
+
+.settings-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 2rem);
+}
+
+/* Around the dashboard while it recedes: see --l-sheet-backdrop. Set only for
+   the length of the sheet's presence, on both, because body paints over html. */
+html[data-settings-sheet],
+html[data-settings-sheet] body {
+  background: var(--sheet-backdrop);
+}
+
+/* Inset hairline between cells, starting where the text does, as in iOS lists.
+   A pseudo-element rather than a border so the line can stop short of the
+   leading edge. Works across a row hidden at a breakpoint: the first row of a
+   group is never one of those. */
+.sheet-group > * + * {
+  position: relative;
+}
+
+.sheet-group > * + *::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 1rem;
+  height: 1px;
+  background: var(--separator);
 }
 
 /* Offline indicator: slides up from behind the bottom edge on the way in.
