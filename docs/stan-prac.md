@@ -606,6 +606,20 @@ zaczynają się na 66 px (było 81) — zmierzone. Przy prototypie wyszło, że 
 rezerwuje szerokości osi — gdyby wrócić do tego pomysłu, godziny trzeba przesuwać `padding` na osi X.
 Znane: po obrocie telefonu szerokość osi dopasuje się przy następnym renderze wykresu i alertów.
 
+## Duże ekrany w Safari (15.09.2026, v3.84.1)
+
+Właściciel: na 27 calach w Safari „bez zmian" mimo v3.83.0; `innerWidth` = 2560. W WebKit (Playwright)
+rozmiar główny wynosił **13 px**: `html { font: -apple-system-body }` z sekcji Base (Dynamic Type dla
+iOS) stoi w pliku po regule 125rem i skrót `font` zeruje `font-size`. Chromium nie zna słowa kluczowego
+i porzuca deklarację — dlatego strażnik i moje zrzuty (Chromium) pokazywały działające skalowanie.
+Poprawka: reguła na `:root` (wyższa specyficzność). WebKit 2560 px: 20,8 px, treść 2496 px.
+
+**Wniosek:** zmiany zależne od rozmiaru głównego sprawdzać także w WebKit — Playwright ma go
+zainstalowanego od 15.09 (`npx playwright install webkit`).
+
+**Otwarte:** w Safari na Macu poniżej 2000 px rozmiar główny to nadal 13 px (w Chrome 16), więc
+laptop i 1920 px wyglądają o ~20% mniej, a trzy kolumny wchodzą od ~1430 px. Do decyzji właściciela.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
