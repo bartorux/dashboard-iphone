@@ -268,6 +268,9 @@ const PriceStrip: React.FC<PriceStripProps> = ({ day }) => {
             <YAxis
               domain={[scale.min, scale.max]}
               ticks={scale.ticks}
+              /* Every tick, always: priceScale already keeps them to four, and
+                 Recharts' default collision pass dropped zero on a monitor. */
+              interval={0}
               tick={{ fontSize: AXIS_FONT_SIZE, fill: colors.axis }}
               tickFormatter={formatPrice}
               tickLine={false}
