@@ -1,31 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-13T21:01:15.624Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "We wtorek 15 września o 19:00 margines spadnie do najniższego poziomu ze wszystkich dni i przekroczy próg 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 15 września, a także w środę 16 września, czwartek 17 września i piątek 18 września w wyznaczonych godzinach rezerwa nie pokryje wymaganego poziomu, podczas gdy dzisiaj nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-13T21:01:15.624Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "We wtorek 15 września o 19:00 margines spadnie do najniższego poziomu ze wszystkich dni i operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 15 września oraz w środę 16 września, w czwartek 17 września i w piątek 18 września operator również może ogłosić przywołanie w poszczególnych godzinach, natomiast dzisiaj nic nie zapowiada przywołania, przy czym saldo wymiany na tę dobę nie jest jeszcze zaplanowane."
-    },
-    {
-      "at": "2026-09-13T21:15:42.918Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "We wtorek 15 września o 19:00 nadwyżka spadła poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-      "body": "Prognoza poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro, we wtorek 15 września, w środę 16 września, w czwartek 17 września oraz w piątek 18 września w wybranych godzinach rezerwa nie pokrywa wymaganego poziomu, podczas gdy dzisiaj nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-13T21:30:54.930Z",
       "prompt": 53,
       "accepted": false,
@@ -2359,6 +2334,14 @@
       "headline": "Między 19:00 a 21:00 nadwyżka w systemie spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a jego decyzja pozostaje otwarta.",
       "body": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez jedną godzinę. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek między 19:00 a 21:00 nadwyżka również spadnie poniżej progu 1100 MW, we wtorek 22 września między 07:00 a 08:00 oraz 19:00 a 20:00 rezerwa nie pokryje wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-16T21:15:44.142Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W piątek między 19:00 a 21:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a próg ten pozwala mu pominąć przywołanie w pozostałych godzinach.",
+      "body": "Margines wypada poniżej typowego zakresu w siedmiu godzinach. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 21 września prognoza jeszcze się ustala, a w pozostałych dniach rezerwa pokrywa wymagany poziom lub nadwyżka utrzymuje operatora w stanie wyboru."
     }
   ]
 }
