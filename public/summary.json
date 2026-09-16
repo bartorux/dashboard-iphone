@@ -1,8 +1,8 @@
 {
-  "headline": "Operator może ogłosić przywołanie jutro między 19:00 a 21:00, bo nadwyżka spadła poniżej progu 1100 MW.",
-  "body": "Margines spadnie poniżej typowego zakresu przez cztery godziny, a Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 21:00. Ogłoszenie może jeszcze nadejść, bo do wskazanych godzin zostało ponad osiem godzin.",
-  "outlook": "Dzisiaj i w piątek ogłoszenie również wchodzi w grę, we wtorek 22 września margines spadnie poniżej wymaganego poziomu między 07:00 a 08:00, natomiast w poniedziałek 21 września prognoza jeszcze się ustala.",
-  "generatedAt": "2026-09-16T19:30:56.239Z",
+  "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00.",
+  "body": "W poniedziałek 21 września prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może nadejść.",
+  "outlook": "We wtorek 22 września oraz w piątek margines spada miejscami poniżej wymaganego poziomu, podczas gdy w pozostałe dni nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-16T20:01:06.578Z",
   "dates": [
     "2026-09-16",
     "2026-09-17",
@@ -10,6 +10,6 @@
     "2026-09-21",
     "2026-09-22"
   ],
-  "assessment": "2026-09-16|R|moderate|-600|21:00|0|1|0|moderate:21:00-22:00||-;2026-09-17|R|high|-1400|19:00|0|4|0|moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00|K2:18:00-21:00|-;2026-09-18|R|high|-2400|19:00|0|7|11|moderate:07:00-09:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00||-;2026-09-21|R|none|900|19:00|0|0|23|||X;2026-09-22|R|moderate|-600|07:00|2|1|16|moderate:07:00-08:00||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
+  "assessment": "2026-09-16|R|none|-100|22:00|0|0|0|||-;2026-09-17|R|high|-1300|19:00|1|1|0|moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00|K2:18:00-21:00|-;2026-09-18|R|high|-2400|19:00|0|7|11|moderate:07:00-09:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00||-;2026-09-21|R|none|1600|19:00|0|0|24|||X;2026-09-22|R|moderate|-600|07:00|2|1|14|moderate:07:00-08:00,moderate:19:00-20:00||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
   "model": "gemini-3.5-flash-lite"
 }
