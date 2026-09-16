@@ -1,32 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-13T19:30:56.806Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Jutro w godzinach 07:00-12:00 nadwyżka spadnie poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
-      "body": "Fotowoltaika spadnie poniżej normy, a zapotrzebowanie wzrośnie ponad normę, przez co godzina 11:00 przyniesie najniższy margines. Ogłoszenie może jeszcze nadejść, ponieważ do wyznaczonych godzin zostało ponad osiem godzin. Kompas Energetyczny PSE zaleca oszczędzanie poboru między 07:00 a 12:00 oraz 19:00 a 20:00.",
-      "outlook": "We wtorek 15 września przywołanie wchodzi w grę między 07:00 a 08:00 oraz 19:00 a 20:00, w środę 16 września, czwartek 17 września i piątek 18 września marginesy pozostają wąskie w godzinach wieczornych, natomiast dzisiaj nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-13T19:30:56.806Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Jutro w godzinach 07:00-12:00 nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "Fotowoltaika wypada poniżej normy, zapotrzebowanie rośnie powyżej normy, a margines osiąga najniższy poziom o 11:00. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 15 września przywołanie wchodzi w grę w godzinach 07:00-09:00 i 17:00-22:00, w środę 16 września między 18:00 a 21:00 (gdzie rezerwa liczy się bez salda wymiany, które nie jest jeszcze zaplanowane), w czwartek 17 września od 18:00 do 21:00 (także bez zaplanowanego salda wymiany), a w piątek 18 września między 19:00 a 20:00 (również bez salda wymiany), natomiast dzisiejsza doba upływa spokojnie bez zapowiedzi przywołania, a Kompas Energetyczny PSE zaleca oszczędzanie jutro w godzinach 07:00-12:00 oraz 19:00-20:00."
-    },
-    {
-      "at": "2026-09-13T19:45:39.420Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Jutro nadwyżka spadnie poniżej progu 1100 MW, poniżej którego operator traci możliwość pominięcia przywołania.",
-      "body": "Margines spadnie między 07:00 a 12:00 z powodu mniejszej generacji źródeł fotowoltaicznych oraz wyższego zapotrzebowania, choć ubytki utrzymają się poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 15 września przywołanie również wchodzi w grę, natomiast w środę 16 września, czwartek 17 września oraz piątek 18 września operator zachowuje wybór."
-    },
-    {
       "at": "2026-09-13T20:01:17.729Z",
       "prompt": 53,
       "accepted": true,
@@ -2343,6 +2317,24 @@
       "headline": "Operator może ogłosić przywołanie jutro między 19:00 a 21:00, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Margines spadnie poniżej typowego zakresu przez cztery godziny, a Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 21:00. Ogłoszenie może jeszcze nadejść, bo do wskazanych godzin zostało ponad osiem godzin.",
       "outlook": "Dzisiaj i w piątek ogłoszenie również wchodzi w grę, we wtorek 22 września margines spadnie poniżej wymaganego poziomu między 07:00 a 08:00, natomiast w poniedziałek 21 września prognoza jeszcze się ustala."
+    },
+    {
+      "at": "2026-09-16T19:45:45.035Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Operator może ogłosić przywołanie między 19:00 a 21:00.",
+      "body": "Margines spada poniżej typowego zakresu w ciągu jednej godziny. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 21:00.",
+      "outlook": "W piątek operator może ogłosić przywołanie między 19:00 a 21:00, a we wtorek 22 września nadwyżka trzyma się powyżej progu 1100 MW o 07:00 i 19:00; w poniedziałek 21 września prognoza jeszcze się ustala, natomiast dzisiaj na ogłoszenie jest już za późno."
+    },
+    {
+      "at": "2026-09-16T19:45:45.035Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Operator może ogłosić przywołanie między 19:00 a 21:00.",
+      "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "Jutro i w piątek nadwyżka spada poniżej progu 1100 MW w godzinach wieczornych, natomiast w poniedziałek 21 września i wtorek 22 września saldo wymiany nie jest jeszcze zaplanowane. Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 21:00."
     }
   ]
 }
