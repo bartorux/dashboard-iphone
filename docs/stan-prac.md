@@ -710,6 +710,12 @@ bieżąca prognoza.
 Strażnik wizualny tej zmiany nie widzi (jego historia nie różnicuje dni) — pilnują testy jednostkowe
 i 5 sond mutacyjnych.
 
+**v3.86.2 — data z zakładki, nie z danych.** Przegląd kodu (/code-review) wyłapał: rodzaj dnia brany był
+z `dayData[0].businessDate`. Gdy plan wybranego dnia nie był jeszcze pobrany lub opublikowany, daty nie
+było — pasmo liczyło się ze wszystkich 30 dni, a opis dalej twierdził „dni robocze (30)". Teraz `App`
+przekazuje `businessDate` wybranej zakładki (dziś + przesunięcie) do `ChartSection` i `HistoryChart`
+(i do paska cen). Test dnia bez danych + sonda mutacyjna.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś

@@ -71,6 +71,7 @@ const renderChart = (history: PSEDataPoint[], state: 'ready' | 'error') =>
   render(
     <HistoryChart
       dayData={[makePoint({ hourLabel: '19:00', reserve: 3000, required: 2000 })]}
+      businessDate="2026-08-03"
       dayLabel="Dziś"
       days={30}
       history={history}
@@ -116,6 +117,7 @@ describe('HistoryChart — siatka i linia zera', () => {
     const { container } = render(
       <HistoryChart
         dayData={todayData}
+        businessDate="2026-08-03"
         dayLabel="Dziś"
         days={30}
         history={thirtyDayHistory}
@@ -137,6 +139,7 @@ describe('HistoryChart — siatka i linia zera', () => {
     render(
       <HistoryChart
         dayData={todayData}
+        businessDate="2026-08-03"
         dayLabel="Dziś"
         days={30}
         history={thirtyDayHistory}
@@ -188,6 +191,7 @@ describe('HistoryChart — tabela godzinowa zgadza się z dymkiem', () => {
     const { getByRole, container } = render(
       <HistoryChart
         dayData={todayData}
+        businessDate="2026-08-03"
         dayLabel="Dziś"
         days={30}
         history={thirtyDayHistory}
@@ -216,6 +220,7 @@ describe('HistoryChart — doba pełna na osi (h/24, nie h/23)', () => {
     const { container } = render(
       <HistoryChart
         dayData={todayData}
+        businessDate="2026-08-03"
         dayLabel="Dziś"
         days={30}
         history={thirtyDayHistory}
@@ -242,6 +247,7 @@ describe('HistoryChart — doba pełna na osi (h/24, nie h/23)', () => {
     const { container } = render(
       <HistoryChart
         dayData={todayData}
+        businessDate="2026-08-03"
         dayLabel="Dziś"
         days={30}
         history={thirtyDayHistory}
@@ -260,6 +266,7 @@ describe('HistoryChart — doba pełna na osi (h/24, nie h/23)', () => {
     const { getByRole, container } = render(
       <HistoryChart
         dayData={todayData}
+        businessDate="2026-08-03"
         dayLabel="Dziś"
         days={30}
         history={thirtyDayHistory}
@@ -319,6 +326,7 @@ describe('HistoryChart — doba pełna na osi (h/24, nie h/23)', () => {
     const { container } = render(
       <HistoryChart
         dayData={todayData}
+        businessDate="2026-08-03"
         dayLabel="Dziś"
         days={30}
         history={thirtyDayHistory}
@@ -357,10 +365,11 @@ describe('HistoryChart — dni robocze z roboczymi, wolne z wolnymi', () => {
     ...day('2026-07-11', 5000),
   ];
 
-  const medianAt19 = (selected: string) => {
+  const medianAt19 = (selected: string, withData = true) => {
     const { container } = render(
       <HistoryChart
-        dayData={day(selected, 0)}
+        dayData={withData ? day(selected, 0) : []}
+        businessDate={selected}
         dayLabel="x"
         days={30}
         history={mixed}
@@ -383,6 +392,15 @@ describe('HistoryChart — dni robocze z roboczymi, wolne z wolnymi', () => {
     // Saturday 01.08.2026
     expect(medianAt19('2026-08-01')).toContain(formatMW(5000));
     expect(medianAt19('2026-08-01')).not.toContain(formatMW(1000));
+  });
+
+  it('uses the tab\'s date even before a single row of that day has arrived', () => {
+    // Saturday with no plan published yet: still the days-off band, not all
+    // thirty calendar days mixed.
+    expect(medianAt19('2026-08-01', false)).toContain(formatMW(5000));
+    expect(medianAt19('2026-08-01', false)).not.toContain(formatMW(1000));
+    // …and a working day with no rows gets the working-days band.
+    expect(medianAt19('2026-08-03', false)).toContain(formatMW(1000));
   });
 
   it('treats a public holiday as a day off', () => {

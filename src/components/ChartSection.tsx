@@ -22,6 +22,8 @@ const VIEWS: { value: ChartView; label: string; title: string }[] = [
 
 interface ChartSectionProps {
   dayData: PSEDataPoint[];
+  /** "YYYY-MM-DD" of the selected tab, present even while dayData is still empty. */
+  businessDate: string;
   /** Which of the three days is on screen — the views label themselves with it. */
   dayLabel: string;
   orangeThreshold: number;
@@ -46,6 +48,7 @@ interface ChartSectionProps {
  */
 const ChartSection: React.FC<ChartSectionProps> = ({
   dayData,
+  businessDate,
   dayLabel,
   orangeThreshold,
   redThreshold,
@@ -73,7 +76,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   const { prices } = usePrices();
   // Matched by date, never by position: days[0] is today, and a reader who
   // switched to tomorrow must not see today's prices under tomorrow's reserve.
-  const shownDate = dayData[0]?.businessDate ?? null;
+  const shownDate = businessDate;
   const priceDay = prices?.days.find((day) => day.date === shownDate) ?? null;
 
   const active = VIEWS.find((entry) => entry.value === view) ?? VIEWS[0];
@@ -103,6 +106,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
         <HistoryChart
           dayLabel={dayLabel}
           dayData={dayData}
+          businessDate={businessDate}
           history={history.points}
           state={history.state}
           days={HISTORY_DAYS}

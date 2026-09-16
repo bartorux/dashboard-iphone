@@ -35,7 +35,7 @@ import {
 import { compassRanges } from './utils/compass';
 import { version as appVersion } from '../package.json';
 import { DayOffset } from './types';
-import { formatDate } from './utils/dateHelpers';
+import { addDays, formatDate } from './utils/dateHelpers';
 import { dayLabel, visibleDayOffsets } from './utils/dayWindow';
 import { isEnergyDay } from './utils/energyDay';
 import { exchangePlanned } from './utils/exchangePlan';
@@ -110,6 +110,14 @@ function App() {
    */
   const todayKey = formatDate(now);
   const dayOffsets = useMemo(() => visibleDayOffsets(new Date()), [todayKey]);
+  // The tab's own date, known before a single row of its plan has arrived —
+  // unlike dayData[0].businessDate, which is absent until PSE publishes.
+  const selectedBusinessDate = useMemo(
+    () => formatDate(addDays(new Date(), currentDayOffset)),
+    // todayKey rolls it over at midnight, like dayOffsets above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [todayKey, currentDayOffset]
+  );
 
   /** One place along the list. Adding 1 to an offset would land on a skipped day. */
   const stepDay = useCallback(
@@ -448,6 +456,7 @@ function App() {
 
             <ChartSection
               dayData={dayData}
+              businessDate={selectedBusinessDate}
               dayLabel={dayLabel(currentDayOffset)}
               orangeThreshold={orangeThreshold}
               redThreshold={redThreshold}

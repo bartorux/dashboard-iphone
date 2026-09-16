@@ -41,6 +41,13 @@ interface HistoryChartProps {
   /** Name of the day being compared — the chart also serves Jutro and Pojutrze. */
   dayLabel: string;
   dayData: PSEDataPoint[];
+  /**
+   * "YYYY-MM-DD" of the selected tab. Decides which past days the band is
+   * built from, so it must not come from dayData: before PSE publishes a
+   * day's plan dayData is empty, and the band used to fall back to all thirty
+   * calendar days while the help text still said "dni robocze".
+   */
+  businessDate: string;
   history: PSEDataPoint[];
   state: HistoryState;
   days: number;
@@ -158,6 +165,7 @@ const HISTORY_COLUMNS: HourColumn<Row>[] = [
 const HistoryChart: React.FC<HistoryChartProps> = ({
   dayLabel,
   dayData,
+  businessDate,
   history,
   state,
   days,
@@ -169,12 +177,8 @@ const HistoryChart: React.FC<HistoryChartProps> = ({
   const { ref, handlers, tooltipActive } = useDismissibleTooltip();
 
   // The selected day decides which past days it is compared with — see sameDayKind.
-  const selectedDate = dayData.find((point) => point.businessDate)?.businessDate ?? null;
-  const working = selectedDate === null ? true : isWorkingDay(selectedDate);
-  const comparable = useMemo(
-    () => (selectedDate === null ? history : sameDayKind(history, selectedDate)),
-    [history, selectedDate]
-  );
+  const working = isWorkingDay(businessDate);
+  const comparable = useMemo(() => sameDayKind(history, businessDate), [history, businessDate]);
   const comparableDays = useMemo(() => dayCount(comparable), [comparable]);
   const distribution = useMemo(() => marginDistribution(comparable), [comparable]);
 

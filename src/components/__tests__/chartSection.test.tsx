@@ -64,6 +64,7 @@ function renderSection() {
   return render(
     <ChartSection
       dayData={dayData}
+      businessDate={DAY_ON_SCREEN}
       dayLabel="Dziś"
       orangeThreshold={500}
       redThreshold={300}
@@ -156,6 +157,7 @@ describe('ChartSection', () => {
     render(
       <ChartSection
         dayData={dayData}
+        businessDate={DAY_ON_SCREEN}
         dayLabel="Dziś"
         orangeThreshold={500}
         redThreshold={300}
