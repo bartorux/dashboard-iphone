@@ -636,6 +636,36 @@
 }
 
 /*
+ * The dashboard grid itself, which App.tsx used to carry as a string of
+ * Tailwind arbitrary values. Moved here for one reason: the column width is the
+ * chart's own height times 1.6, and that height is --chart-vh a few rules
+ * above. As a compiled class it could only be held in step by eye.
+ *
+ * Below 80rem this class declares nothing at all, so the phone keeps the single
+ * column its source order gives it — the same guarantee .content-width relies
+ * on, and a stronger one than comparing screenshots afterwards.
+ */
+@media (min-width: 80rem) {
+  .dash-grid {
+    display: grid;
+    grid-template-columns: minmax(0, calc(var(--chart-vh) * 1.6vh)) 28rem;
+    grid-template-rows: auto auto 1fr;
+    align-items: start;
+    justify-content: center;
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 110rem) {
+  .dash-grid {
+    grid-template-columns:
+      minmax(0, calc(var(--chart-vh) * 1.6vh))
+      minmax(24rem, 30rem)
+      minmax(24rem, 30rem);
+  }
+}
+
+/*
  * Past 125rem (2000px) the page scales instead of spreading. Owner's 27-inch
  * screenshot, 15.09.2026: the 120rem cap left the three columns in the middle
  * ~60% of the glass with 11px axis labels. Widening the grid would only thin
@@ -681,22 +711,32 @@
  * the vh rule as the fallback for the browsers dvh does not reach, rather than
  * replacing it outright.
  */
+/*
+ * One number for both: the chart's height, and the width of the column it sits
+ * in (.dash-grid below, which is that height times 1.6). They were two literals
+ * in two files — 52vh here and `calc(52vh*1.6)` in a Tailwind class in App.tsx —
+ * kept in step by eye, with a comment there asking the next reader to do the
+ * same. A variable removes the asking.
+ *
+ * Unitless on purpose, so the same number can be multiplied into vh here and
+ * into vh in a grid template there.
+ */
+:root {
+  --chart-vh: 45;
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --chart-vh: 52;
+  }
+}
+
 .chart-box-h {
-  height: 45vh;
+  height: calc(var(--chart-vh) * 1vh);
 }
 @supports (height: 1dvh) {
   .chart-box-h {
-    height: 45dvh;
-  }
-}
-@media (min-width: 80rem) {
-  .chart-box-h {
-    height: 52vh;
-  }
-  @supports (height: 1dvh) {
-    .chart-box-h {
-      height: 52dvh;
-    }
+    height: calc(var(--chart-vh) * 1dvh);
   }
 }
 

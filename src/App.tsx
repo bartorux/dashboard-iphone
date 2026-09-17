@@ -441,15 +441,14 @@ function App() {
           alerts sit in it too, and a chart narrower than the panel beneath it
           would read as a mistake.
 
-          `calc(52vh*1.6)` below is deliberately vh, not dvh, unlike
-          .chart-box-h in App.css which the 52vh figure is copied from. This is
-          a Tailwind arbitrary value compiled at build time, and dvh inside
-          `grid-template-columns` is not the risk it would be for a plain
-          height — the risk is a TYPO or an unsupported unit here, which
-          invalidates the whole `grid-template-columns` declaration (not just
-          this one value) and collapses the layout to a single column with no
-          visible error. Leave this expression alone; keep it in lockstep with
-          .chart-box-h by eye if that value ever changes again.
+          The expression itself now lives in `.dash-grid` in App.css, next to
+          .chart-box-h and reading the same `--chart-vh`, so the two can no
+          longer drift: the height is `calc(var(--chart-vh)*1dvh)` and the
+          column `calc(var(--chart-vh)*1.6vh)`. It stayed `vh` there, not dvh,
+          deliberately — the risk in `grid-template-columns` is a TYPO or an
+          unsupported unit, which invalidates the whole declaration (not just
+          that value) and collapses the layout to a single column with no
+          visible error.
         */}
         {/*
           And a third column above 110rem (1760px).
@@ -469,7 +468,7 @@ function App() {
           09.09.2026 was rejected by the owner ("od 24 cali w górę"); see the
           matching .content-width block in App.css for why 110/120rem.
         */}
-        <div className="xl:grid xl:grid-cols-[minmax(0,calc(52vh*1.6))_28rem] xl:grid-rows-[auto_auto_1fr] xl:items-start xl:justify-center xl:gap-4 min-[110rem]:grid-cols-[minmax(0,calc(52vh*1.6))_minmax(24rem,30rem)_minmax(24rem,30rem)]">
+        <div className="dash-grid">
           <div className="xl:col-start-2 xl:row-start-1">
             {/* The figure people open the app for comes first; the prose explains
                 it afterwards. Both stay above the day tabs. */}
