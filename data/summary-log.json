@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-14T22:15:45.463Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W czwartek i piątek marginesy w wielu godzinach odbiegają od typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "W czwartek prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, czwartek i piątek margines miejscami nie pokrywa wymaganego poziomu, a jutro nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-14T22:45:40.936Z",
       "prompt": 53,
       "accepted": true,
@@ -2342,6 +2334,24 @@
       "headline": "Margines wypada w części godzin poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 18:00 a 22:00.",
       "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, natomiast we wtorek 22 września i w środę 23 września operator może ogłosić przywołanie w godzinach porannych oraz między 17:00 a 22:00."
+    },
+    {
+      "at": "2026-09-17T22:31:01.827Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "W najbliższych dniach rezerwa miejscami odbiega od normy z ostatnich trzydziestu dni.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 18:00 a 22:00.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, natomiast we wtorek 22 września między 07:00 a 09:00 oraz 17:00 a 22:00 i w środę 23 września między 07:00 a 09:00 oraz 17:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, przy czym saldo wymiany na te trzy doby nie jest jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-17T22:31:01.827Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Margines bywa poniżej typowego zakresu z ostatnich trzydziestu dni, a w wybranych godzinach rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 18:00 a 22:00.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, natomiast we wtorek 22 września między 07:00 a 09:00 oraz 17:00 a 22:00 operator może ogłosić przywołanie, a w środę 23 września sytuacja wygląda podobnie w godzinach 07:00 a 09:00 oraz 17:00 a 22:00."
     }
   ]
 }
