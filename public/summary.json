@@ -1,8 +1,8 @@
 {
   "headline": "Dziś między 18:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Najniższy margines występuje o 19:00, ponieważ fotowoltaika spada poniżej normy. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało ponad osiem godzin, a Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 20:00.",
-  "outlook": "Jutro między 19:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałych dniach ujętych w zestawieniu przywołanie również wchodzi w grę lub margines bywa wąski.",
-  "generatedAt": "2026-09-17T05:01:05.240Z",
+  "body": "W godzinach 19:00-20:00 obowiązuje Kompas Energetyczny PSE ze wskazaniem na zalecane oszczędzanie. Do tych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "Jutro między 19:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, natomiast we wtorek 22 września oraz środę 23 września margines obniża się w wybranych godzinach.",
+  "generatedAt": "2026-09-17T05:15:40.885Z",
   "dates": [
     "2026-09-17",
     "2026-09-18",
@@ -10,6 +10,6 @@
     "2026-09-22",
     "2026-09-23"
   ],
-  "assessment": "2026-09-17|R|moderate|-500|19:00|1|0|0|moderate:18:00-22:00|K2:19:00-20:00|-;2026-09-18|R|high|-1500|19:00|0|3|14|moderate:07:00-08:00,moderate:17:00-19:00,high:19:00-21:00,moderate:21:00-22:00||-;2026-09-21|R|none|1800|19:00|0|0|24|||X;2026-09-22|R|moderate|-300|19:00|2|1|14|moderate:07:00-08:00,moderate:19:00-20:00||X;2026-09-23|R|moderate|-600|07:00|3|1|15|moderate:07:00-08:00,moderate:17:00-18:00,moderate:19:00-20:00||X#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v53",
+  "assessment": "2026-09-17|R|moderate|-600|19:00|1|0|0|moderate:18:00-22:00|K2:19:00-20:00|-;2026-09-18|R|high|-1200|19:00|3|1|15|moderate:18:00-19:00,high:19:00-21:00||-;2026-09-21|R|none|1800|19:00|0|0|24|||X;2026-09-22|R|moderate|-300|19:00|2|1|14|moderate:07:00-08:00,moderate:19:00-20:00||X;2026-09-23|R|moderate|-700|07:00|1|2|14|moderate:07:00-09:00,moderate:17:00-18:00,moderate:19:00-20:00||X#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v53",
   "model": "gemini-3.5-flash-lite"
 }
