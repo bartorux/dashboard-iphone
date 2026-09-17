@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-14T08:05:55.865Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W jutrzejszy wtorek nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00 i 18:00-21:00, co oznacza, że operator może ogłosić przywołanie, a poziom ten nie pozwala mu go pominąć.",
-      "body": "Zapotrzebowanie rośnie ponad normę, a wiatr wieje poniżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W dzisiejszym dniu między 19:00 a 21:00 oraz w środę, czwartek i piątek margines spada poniżej wymaganej wartości, ale nadwyżka trzyma się powyżej progu 1100 MW, dając operatorowi wybór, natomiast w pozostałe dni i godziny nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-14T08:15:49.716Z",
       "prompt": 53,
       "accepted": true,
@@ -2211,6 +2203,23 @@
       "headline": "Jutro między 18:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a jego uprawnienia nie są już ograniczone tym progiem.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś między 18:00 a 22:00 oraz we wtorek i środę rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka trzyma się powyżej progu 1100 MW, pozostawiając operatorowi wybór, natomiast w poniedziałek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-17T08:15:43.921Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W środę operator może ogłosić przywołanie w wyznaczonych godzinach, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 08:00, natomiast w poniedziałek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-17T08:15:43.921Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę operator może ogłosić przywołanie między 07:00 a 09:00 oraz 17:00 a 22:00, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Do tych godzin ogłoszenie może jeszcze nadejść, ponieważ do wyznaczonego czasu zostało ponad osiem godzin.",
+      "outlook": "We wtorek, środę oraz w kolejnych dniach sytuacja wygląda podobnie, podczas gdy w poniedziałek nic nie zapowiada przywołania."
     }
   ]
 }
