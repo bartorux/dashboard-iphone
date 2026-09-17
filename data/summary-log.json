@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-14T22:01:15.160Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "stopniuje to, czego fakty nie stopniują",
-      "headline": "Środowy i czwartkowy margines rezerwy mocno odbiega od normy z ostatnich trzydziestu dni.",
-      "body": "W środę rezerwa nie pokrywa wymaganego poziomu, a operator może ogłosić przywołanie, choć nadwyżka pozostaje powyżej progu 1100 MW między 18:00 a 22:00. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek prognoza pogarsza się, a saldo wymiany transgranicznej nie jest jeszcze zaplanowane."
-    },
-    {
-      "at": "2026-09-14T22:01:15.160Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W czwartek rezerwa osiąga najniższy poziom w całym okresie, a nadwyżka spada poniżej progu 1100 MW między 18:00 a 21:00, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "Prognoza pogarsza się w czwartek. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, czwartek i piątek margines spada poniżej wymaganego poziomu, podczas gdy w pozostałych dniach rezerwa pokrywa wymagane wartości."
-    },
-    {
       "at": "2026-09-14T22:15:45.463Z",
       "prompt": 53,
       "accepted": true,
@@ -2341,6 +2324,24 @@
       "headline": "Margines bywa poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie, ale nie musi w godzinach 18:00-22:00.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, natomiast we wtorek 22 września i środę 23 września saldo wymiany nie jest jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-17T22:15:39.599Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni przez większą część doby, a operator może ogłosić przywołanie w wyznaczonych godzinach.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 18:00 a 22:00, podczas gdy na ogłoszenie na godziny 07:00-08:00 jest już za późno.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, natomiast we wtorek 22 września i w środę 23 września operator może ogłosić przywołanie między 07:00 a 09:00 oraz między 17:00 a 22:00."
+    },
+    {
+      "at": "2026-09-17T22:15:39.599Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Margines wypada w części godzin poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 18:00 a 22:00.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, natomiast we wtorek 22 września i w środę 23 września operator może ogłosić przywołanie w godzinach porannych oraz między 17:00 a 22:00."
     }
   ]
 }
