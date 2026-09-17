@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-14T14:01:16.366Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W najbliższych dniach w godzinach wieczornych operator może ogłosić przywołanie, a nadwyżka w systemie miejscami spada poniżej progu 1100 MW.",
-      "body": "Prognoza na czwartek pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 20:00 dzisiaj.",
-      "outlook": "W środę, czwartek i piątek rezerwa miejscami nie pokrywa wymaganego poziomu, podczas gdy w pozostałych dób nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-14T14:15:52.403Z",
       "prompt": 53,
       "accepted": true,
@@ -2247,6 +2238,14 @@
       "headline": "Operator może ogłosić przywołanie między 07:00 a 08:00.",
       "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś, jutro, we wtorek 22 września oraz w środę 23 września występują godziny z możliwością przywołania, natomiast w poniedziałek 21 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-17T14:15:40.297Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Dziś, jutro, we wtorek i środę operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść w godzinach 07:00-08:00.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa miejscami nie pokrywa wymaganego poziomu."
     }
   ]
 }
