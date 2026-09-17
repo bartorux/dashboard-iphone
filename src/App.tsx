@@ -10,6 +10,8 @@ import TrendsSection from './components/TrendsSection';
 import RenewableMixCard from './components/RenewableMixCard';
 import AlertsPanel from './components/AlertsPanel';
 import SettingsPanel from './components/SettingsPanel';
+import NewsCard from './components/news/NewsCard';
+import NewsSheet from './components/news/NewsSheet';
 import PullToRefresh from './components/PullToRefresh';
 import OfflineIndicator from './components/OfflineIndicator';
 import { RefreshIcon } from './components/icons';
@@ -24,6 +26,10 @@ import { useInstallPrompt } from './hooks/useInstallPrompt';
 import { useThemeColorMeta } from './hooks/useThemeColorMeta';
 import { useTheme } from './hooks/useTheme';
 import { useSummary } from './hooks/useSummary';
+import { useNews } from './hooks/useNews';
+import { useNewsSeen } from './hooks/useNewsSeen';
+import { useMediaQuery } from './hooks/useMediaQuery';
+import { newsFreshness } from './utils/news';
 import {
   buildAlertRanges,
   classifyMargin,
@@ -93,15 +99,29 @@ function App() {
   const now = useMemo(() => new Date(), [clockTick]);
   const { summary, refresh: refreshSummary } = useSummary(now);
 
+  /*
+   * "Z branży": industry headlines, desktop only. The card lists two (four
+   * from 110rem) and opens the side panel with the rest; the panel and the
+   * settings share one place on screen, so opening either closes the other.
+   * Closing the panel is what marks headlines as seen — see useNewsSeen.
+   */
+  const { news, refresh: refreshNews } = useNews();
+  const { isNew: isNewsNew, markRead: markNewsRead, markSeen: markNewsSeen } = useNewsSeen();
+  const newsWide = useMediaQuery('(min-width: 110rem)');
+  const [newsOpen, setNewsOpen] = useState(false);
+  const [newsHighlight, setNewsHighlight] = useState<string | null>(null);
+  const newsState = news ? newsFreshness(news, now) : 'expired';
+
   /** Asking for fresh data means all of it, not only the figures. */
   // Hidden in a plain desktop browser, where F5 does the same — see the hook.
   const showRefreshButton = useRefreshButton();
 
   const refreshAll = useCallback(async () => {
     refreshSummary();
+    refreshNews();
     refreshCompass();
     await refreshData();
-  }, [refreshData, refreshSummary, refreshCompass]);
+  }, [refreshData, refreshSummary, refreshNews, refreshCompass]);
 
   /*
    * The days on offer, recomputed only when the calendar day turns over rather
@@ -248,6 +268,23 @@ function App() {
 
   const closeSettings = useCallback(() => setSettingsVisible(false), []);
 
+  const openNews = useCallback((itemId: string | null) => {
+    setSettingsVisible(false);
+    setNewsHighlight(itemId);
+    setNewsOpen(true);
+  }, []);
+
+  const closeNews = useCallback(() => {
+    setNewsOpen(false);
+    setNewsHighlight(null);
+    markNewsSeen();
+  }, [markNewsSeen]);
+
+  // The gear opens the settings over an open news panel: the news panel goes.
+  useEffect(() => {
+    if (settingsVisible && newsOpen) closeNews();
+  }, [settingsVisible, newsOpen, closeNews]);
+
   const headerStatus = useMemo(
     () => getUpcomingStatus(allData, orangeThreshold, redThreshold),
     [allData, orangeThreshold, redThreshold, clockTick]
@@ -359,6 +396,18 @@ function App() {
           version={appVersion}
         />
 
+        {news && (
+          <NewsSheet
+            open={newsOpen}
+            news={news}
+            now={now}
+            isNew={isNewsNew}
+            highlightId={newsHighlight}
+            onClose={closeNews}
+            onArticleOpen={markNewsRead}
+          />
+        )}
+
         {/*
           One column up to 80rem, two above it.
 
@@ -445,6 +494,24 @@ function App() {
             {isEnergyDay(now) && <EnergyDayCard />}
 
             {summary && <SummaryCard summary={summary} now={now} />}
+
+            {/*
+              Under the analysis, in the same cell, from 80rem only (the card
+              hides itself below). On a laptop this column is full, so the
+              card pushes the renewables and trends down by its own height;
+              from 110rem it fills the empty glass the third column left here.
+            */}
+            {news && newsState !== 'expired' && (
+              <NewsCard
+                news={news}
+                now={now}
+                variant={newsWide ? 'monitor' : 'laptop'}
+                stale={newsState === 'stale'}
+                isNew={isNewsNew}
+                activeId={newsOpen ? newsHighlight : null}
+                onOpen={openNews}
+              />
+            )}
           </div>
 
           <div className="xl:col-start-1 xl:row-start-1 xl:row-span-3">

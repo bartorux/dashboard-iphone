@@ -80,9 +80,9 @@ jobs:
       # deliberately triggers no further workflow, so `deploy.yml` never sees it.
       # Delivery is the job below, which runs only when this step changed something.
       #
-      # Everything under data/ rides along in the commit, but only summary.json
-      # and ceny.json publish — the two files under public/, the only ones a
-      # phone ever downloads. The forecast log and the text log are written
+      # Everything under data/ rides along in the commit, but only summary.json,
+      # ceny.json and news.json publish — the files under public/, the only ones
+      # a phone ever downloads. The forecast log and the text log are written
       # most hours and are read by nothing but the next run of this script and
       # a person going back over a day of drafts; letting either trigger the
       # deploy would rebuild the site — and churn the service worker on every
@@ -94,6 +94,7 @@ jobs:
           # ever, and `git diff` says nothing about a file git has not seen.
           summary_changed=$([ -n "$(git status --porcelain -- public/summary.json)" ] && echo yes || echo no)
           prices_changed=$([ -n "$(git status --porcelain -- public/ceny.json)" ] && echo yes || echo no)
+          news_changed=$([ -n "$(git status --porcelain -- public/news.json)" ] && echo yes || echo no)
           log_changed=$([ -n "$(git status --porcelain -- data)" ] && echo yes || echo no)
 
           # `changed` is written exactly once, on whichever path the step takes,
@@ -101,27 +102,31 @@ jobs:
           # setting it early would publish a commit that failed to leave here. If
           # this step dies the output stays unset, which reads as false — the safe
           # direction.
-          if [ "$summary_changed" = no ] && [ "$prices_changed" = no ] && [ "$log_changed" = no ]; then
+          if [ "$summary_changed" = no ] && [ "$prices_changed" = no ] && [ "$news_changed" = no ] && [ "$log_changed" = no ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "Ani podsumowanie, ani ceny, ani log sie nie zmienily — nie commituje."
+            echo "Ani podsumowanie, ani ceny, ani wiadomosci, ani log sie nie zmienily — nie commituje."
             exit 0
           fi
 
-          if [ "$summary_changed" = no ] && [ "$prices_changed" = no ]; then
+          # Komunikat sklada sie z tego, co sie zmienilo w public/: "Odswiez
+          # podsumowanie", "Odswiez ceny i wiadomosci" itd.
+          czesci=""
+          [ "$summary_changed" = yes ] && czesci="podsumowanie"
+          [ "$prices_changed" = yes ] && czesci="${czesci:+$czesci, }ceny"
+          [ "$news_changed" = yes ] && czesci="${czesci:+$czesci, }wiadomosci"
+          if [ -z "$czesci" ]; then
             echo "Ruszyly sie tylko logi — commituje bez publikacji."
             wiadomosc="Zapisz przebieg podsumowania"
-          elif [ "$summary_changed" = yes ] && [ "$prices_changed" = yes ]; then
-            wiadomosc="Odswiez podsumowanie i ceny"
-          elif [ "$prices_changed" = yes ]; then
-            wiadomosc="Odswiez ceny"
           else
-            wiadomosc="Odswiez podsumowanie"
+            # Ostatni przecinek zamienia sie w " i ": "podsumowanie, ceny i wiadomosci".
+            wiadomosc="Odswiez $(echo "$czesci" | sed -E 's/, ([^,]*)$/ i \1/')"
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ -f public/summary.json ]; then git add public/summary.json; fi
           if [ -f public/ceny.json ]; then git add public/ceny.json; fi
+          if [ -f public/news.json ]; then git add public/news.json; fi
           if [ -d data ]; then git add data; fi
           git commit -m "$wiadomosc"
 
@@ -172,7 +177,7 @@ jobs:
             exit 1
           fi
 
-          if [ "$summary_changed" = yes ] || [ "$prices_changed" = yes ]; then
+          if [ "$summary_changed" = yes ] || [ "$prices_changed" = yes ] || [ "$news_changed" = yes ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"

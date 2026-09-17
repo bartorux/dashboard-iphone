@@ -1,0 +1,45 @@
+{
+  "comment": "Headlines for the visual guard only, written by hand in the shape scripts/news.ts produces. Dates sit around the frozen clock of scripts/visual.mjs (2026-08-04 12:00 +02:00) so every group falls inside its own window; generatedAt is stamped by the runner. Titles are invented, at the lengths the real feeds produce — one over 120 characters, so the panel's two-line clamp and the card's truncation are both guarded.",
+  "groups": [
+    {
+      "id": "sieci",
+      "label": "Sieci",
+      "items": [
+        { "id": "f0000001", "title": "Komunikat OSP dotyczący zawieszenia procesu Jednolitego łączenia Rynków Dnia Bieżącego w dniu 11.08.2026", "url": "https://www.pse.pl/-/komunikat-osp-sidc-11-08", "source": "PSE", "publishedAt": "2026-08-04T09:39:00.000Z" },
+        { "id": "f0000002", "title": "Komunikat dotyczący prawa do rekompensaty za redysponowanie nierynkowe instalacji fotowoltaicznych w dniach 28, 29 i 30 lipca 2026", "url": "https://www.pse.pl/-/rekompensata-pv-lipiec", "source": "PSE", "publishedAt": "2026-08-04T06:55:00.000Z" },
+        { "id": "f0000003", "title": "Przebudowa linii 400 kV z opóźnieniem. Inwestor wskazuje na spory gruntowe", "url": "https://wysokienapiecie.pl/000001-przebudowa-linii-400-kv/", "source": "Wysokie Napięcie", "publishedAt": "2026-08-03T14:20:00.000Z" },
+        { "id": "f0000004", "title": "Nowa stacja elektroenergetyczna pod Poznaniem z pozwoleniem na budowę", "url": "https://www.cire.pl/artykuly/000001-nowa-stacja", "source": "CIRE", "publishedAt": "2026-08-03T08:00:00.000Z" },
+        { "id": "f0000005", "title": "Operator publikuje plan wyłączeń serwisowych na czwarty kwartał", "url": "https://www.pse.pl/-/plan-wylaczen-q4", "source": "PSE", "publishedAt": "2026-08-02T12:10:00.000Z" }
+      ]
+    },
+    {
+      "id": "regulacje",
+      "label": "Regulacje",
+      "items": [
+        { "id": "f0000011", "title": "Prezes URE zatwierdził taryfy dla operatorów systemów dystrybucyjnych na drugie półrocze", "url": "https://www.ure.gov.pl/pl/urzad/000001,Taryfy.html", "source": "URE", "publishedAt": "2026-08-04T07:00:00.000Z" },
+        { "id": "f0000012", "title": "Konsultacje projektu karty aktualizacji instrukcji ruchu i eksploatacji sieci przesyłowej", "url": "https://www.pse.pl/-/konsultacje-iriesp", "source": "PSE", "publishedAt": "2026-08-03T11:29:00.000Z" },
+        { "id": "f0000013", "title": "Rozporządzenie o rynku mocy w Dzienniku Ustaw. Zmiany wchodzą od października", "url": "https://www.cire.pl/artykuly/000002-rozporzadzenie", "source": "CIRE", "publishedAt": "2026-07-30T09:15:00.000Z" },
+        { "id": "f0000014", "title": "URE przypomina o terminie sprawozdań rocznych dla wytwórców", "url": "https://www.ure.gov.pl/pl/urzad/000002,Sprawozdania.html", "source": "URE", "publishedAt": "2026-07-24T13:45:00.000Z" }
+      ]
+    },
+    {
+      "id": "energetyka",
+      "label": "Energetyka",
+      "items": [
+        { "id": "f0000021", "title": "Blok węglowy wraca z remontu przed terminem. Operator potwierdza dostępność", "url": "https://energetyka24.com/000001-blok-wraca-z-remontu", "source": "Energetyka24", "publishedAt": "2026-08-04T09:12:00.000Z" },
+        { "id": "f0000022", "title": "Magazyn energii o moc 200 MW z decyzją środowiskową", "url": "https://www.cire.pl/artykuly/000003-magazyn-energii", "source": "CIRE", "publishedAt": "2026-08-04T08:00:00.000Z" },
+        { "id": "f0000023", "title": "Spółka energetyczna podała wyniki za drugi kwartał. Zysk wyższy od prognoz", "url": "https://www.wnp.pl/energia/000001-wyniki-kwartalne.html", "source": "wnp.pl", "publishedAt": "2026-08-04T06:30:00.000Z" },
+        { "id": "f0000024", "title": "Elektryfikacja ciepłownictwa przyspiesza. Rośnie rola kotłów elektrycznych", "url": "https://wysokienapiecie.pl/000002-elektryfikacja-cieplownictwa/", "source": "Wysokie Napięcie", "publishedAt": "2026-08-03T07:00:00.000Z" }
+      ]
+    },
+    {
+      "id": "paliwa",
+      "label": "Paliwa i gaz",
+      "items": [
+        { "id": "f0000031", "title": "Zapasy gazu w magazynach blisko pełna. Operator podaje bilans tygodnia", "url": "https://www.cire.pl/artykuly/000004-zapasy-gazu", "source": "CIRE", "publishedAt": "2026-08-04T10:00:00.000Z" },
+        { "id": "f0000032", "title": "Hurtowe ceny paliw w dół drugi tydzień z rzędu", "url": "https://energetyka24.com/000002-ceny-paliw", "source": "Energetyka24", "publishedAt": "2026-08-04T05:40:00.000Z" },
+        { "id": "f0000033", "title": "Rurociąg wraca do pracy po przeglądzie", "url": "https://www.wnp.pl/energia/000002-rurociag.html", "source": "wnp.pl", "publishedAt": "2026-08-02T15:05:00.000Z" }
+      ]
+    }
+  ]
+}

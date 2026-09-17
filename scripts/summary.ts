@@ -74,6 +74,8 @@ import type { IssueLike } from '../src/utils/obserwacje';
 import type { PSERawItem, PSECompassRawItem } from '../src/types';
 import { archiveLines, normalizeDay, pricesFile } from '../src/utils/ceny';
 import type { PricesFile } from '../src/utils/cenyTypes';
+import { readNewsFile } from '../src/utils/news';
+import { collectNews } from './news';
 import {
   PROMPT_VERSION,
   buildPrompt,
@@ -108,6 +110,9 @@ const pricesArchiveDir = resolve(root, 'data/ceny-archiwum');
 // is not a change worth publishing — only recording it here keeps the rate
 // limiter's own bookkeeping from ever touching the file a phone downloads.
 const pricesLastFetchTarget = resolve(root, 'data/ceny-last-fetch.json');
+const newsTarget = resolve(root, 'public/news.json');
+// In data/ for the same reason as the prices marker above.
+const newsLastFetchTarget = resolve(root, 'data/news-last-fetch.json');
 
 /**
  * Read once at startup rather than per-request: `package.json` does not
@@ -448,6 +453,62 @@ async function writePrices(now: Date): Promise<void> {
     }
   } catch (error) {
     console.warn(`Ceny pradcast pominiete w tym przebiegu: ${String(error)}`);
+  }
+}
+
+/** Feeds are read at most this often; the card says "stan HH:MM", and headlines do not move by the quarter hour. */
+const NEWS_MIN_INTERVAL_MS = 2 * 60 * 60 * 1000;
+
+/**
+ * Writes public/news.json — industry headlines for the "Z branży" card.
+ *
+ * Every two hours, not every run: each write changes public/ and so rebuilds
+ * the site, and nine outside servers do not need asking four times an hour.
+ * The marker is written before the feeds are read, like the prices one, so a
+ * run that dies half-way still counts as having asked.
+ *
+ * A run where every feed failed leaves the previous file in place; the card
+ * then ages into "nieaktualne" on its own and disappears after twelve hours.
+ */
+async function writeNews(now: Date): Promise<void> {
+  try {
+    const lastFetch = (() => {
+      try {
+        const raw = JSON.parse(readFileSync(newsLastFetchTarget, 'utf8')) as { at?: string };
+        const parsed = typeof raw.at === 'string' ? new Date(raw.at) : null;
+        return parsed && !Number.isNaN(parsed.getTime()) ? parsed : null;
+      } catch {
+        return null;
+      }
+    })();
+    const hasFile = (() => {
+      try {
+        return readNewsFile(JSON.parse(readFileSync(newsTarget, 'utf8'))) !== null;
+      } catch {
+        return false;
+      }
+    })();
+
+    if (hasFile && lastFetch && now.getTime() - lastFetch.getTime() < NEWS_MIN_INTERVAL_MS) {
+      console.log('Wiadomosci: ostatni odczyt mniej niz 2 h temu — pomijam w tym przebiegu.');
+      return;
+    }
+
+    mkdirSync(dirname(newsLastFetchTarget), { recursive: true });
+    writeFileSync(newsLastFetchTarget, `${JSON.stringify({ at: now.toISOString() })}\n`);
+
+    const file = await collectNews(now);
+    const count = file.groups.reduce((sum, group) => sum + group.items.length, 0);
+    if (count === 0) {
+      console.warn('Wiadomosci: zaden kanal nie dal wpisow — zostawiam poprzedni plik.');
+      return;
+    }
+
+    mkdirSync(dirname(newsTarget), { recursive: true });
+    writeFileSync(newsTarget, `${JSON.stringify(file, null, 2)}\n`);
+    console.log(`Wiadomosci: zapisano public/news.json (${count} naglowkow).`);
+  } catch (error) {
+    console.warn(`Wiadomosci pominiete w tym przebiegu: ${String(error)}`);
   }
 }
 
@@ -818,6 +879,10 @@ if (!dryRun) await writeBadanie(now);
 // Independent of the summary text entirely — a day with no facts to write
 // about (the exit right below) still has a price strip worth refreshing.
 if (!dryRun) await writePrices(now);
+
+// Unrelated to the summary as well, and for the same reason placed before the
+// early exit below.
+if (!dryRun) await writeNews(now);
 
 const facts = buildFacts(
   points,

@@ -257,6 +257,11 @@
   /* Dim behind the phone sheet. Dark needs more of it: the same 28% on a
      near-black page barely registers, and the sheet has to read as in front. */
   --l-scrim: rgba(0, 0, 0, 0.28);         --d-scrim: rgba(0, 0, 0, 0.5);
+  /* Dim under the header while the "Z branży" panel is open. Far lighter than
+     the phone's: the panel is side reading, the dashboard stays legible behind
+     it, and the header's status line is never under it at all. Dark needs
+     more for the same reason as above. */
+  --l-scrim-side: rgba(0, 0, 0, 0.12);    --d-scrim-side: rgba(0, 0, 0, 0.36);
   /* What shows around the dashboard while it recedes behind the sheet. Black in
      both themes, as on iOS: the receding page reads as a card lifted off the
      glass, which a grey margin in light mode would not. */
@@ -330,6 +335,7 @@
   --sheet-cell: var(--l-sheet-cell);
   --sheet-field: var(--l-sheet-field);
   --scrim: var(--l-scrim);
+  --scrim-side: var(--l-scrim-side);
   --sheet-backdrop: var(--l-sheet-backdrop);
   --grabber: var(--l-grabber);
   --panel-shadow: var(--l-panel-shadow);
@@ -394,6 +400,7 @@
     --sheet-cell: var(--d-sheet-cell);
     --sheet-field: var(--d-sheet-field);
     --scrim: var(--d-scrim);
+    --scrim-side: var(--d-scrim-side);
     --sheet-backdrop: var(--d-sheet-backdrop);
     --grabber: var(--d-grabber);
     --panel-shadow: var(--d-panel-shadow);
@@ -458,6 +465,7 @@
   --sheet-cell: var(--d-sheet-cell);
   --sheet-field: var(--d-sheet-field);
   --scrim: var(--d-scrim);
+  --scrim-side: var(--d-scrim-side);
   --sheet-backdrop: var(--d-sheet-backdrop);
   --grabber: var(--d-grabber);
   --panel-shadow: var(--d-panel-shadow);
@@ -948,6 +956,73 @@ body {
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-bottom: calc(env(safe-area-inset-bottom) + 2rem);
+}
+
+/* "Z branży" panel: the same side panel as the settings, over a light dim that
+   starts under the header, so the status line never dims. Opacity is written
+   per frame by NewsSheet, in step with the panel's position. */
+.news-scrim {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  top: calc(var(--header-height) + env(safe-area-inset-top));
+  z-index: 39;
+  background: var(--scrim-side);
+  opacity: 0;
+}
+
+/* Rows of the card. Press shows at once; hover only where there is a pointer
+   to hover with. The hairline is inset from the text, as in the settings
+   lists, and gives way next to a lit row. */
+.news-row {
+  position: relative;
+  transition: background-color 100ms ease;
+}
+
+.news-list > li + li > .news-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0.5rem;
+  height: 1px;
+  background: var(--separator);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .news-row:hover {
+    background: var(--surface-2);
+  }
+  /* The panel's cells are already surface-2 in dark; the field colour is one
+     step up in both themes. */
+  .news-sheet-row:hover {
+    background: var(--sheet-field);
+  }
+  .news-row:hover::before,
+  .news-list > li:hover + li > .news-row::before {
+    opacity: 0;
+  }
+}
+
+.news-row:active,
+.news-sheet-row:active {
+  background: var(--surface-3);
+  transition: none;
+}
+
+/* The row the open panel came from, and the same headline inside the panel. */
+.news-row[data-active="true"],
+.news-sheet-row[data-hit="true"] {
+  background: var(--accent-soft);
+}
+
+.news-row[data-active="true"]::before,
+.news-list > li:has(> .news-row[data-active="true"]) + li > .news-row::before {
+  opacity: 0;
+}
+
+.news-sheet-row {
+  transition: background-color 100ms ease;
 }
 
 /* Around the dashboard while it recedes: see --l-sheet-backdrop. Set only for

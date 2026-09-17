@@ -716,6 +716,78 @@ było — pasmo liczyło się ze wszystkich 30 dni, a opis dalej twierdził „d
 przekazuje `businessDate` wybranej zakładki (dziś + przesunięcie) do `ChartSection` i `HistoryChart`
 (i do paska cen). Test dnia bez danych + sonda mutacyjna.
 
+## Moduł „Z branży" (17.09.2026, v3.87.0)
+
+Wiadomości branżowe na komputerze: karta pod Analizą AI i panel z prawej, ten sam co Ustawienia.
+Telefon bez zmian — karta ma `hidden xl:block`, więc poniżej 80rem nie istnieje.
+
+**Dlaczego serwer, nie przeglądarka.** Prawie żaden kanał RSS nie wysyła nagłówków CORS, więc
+strona nie może ich czytać. Kanały czyta generator (`scripts/news.ts`), zapisuje
+`public/news.json` — dokładnie ta sama droga, którą chodzą ceny.
+
+**Co sprawdzone na żywych kanałach 17.09.** Dziewięć kanałów, wszystkie odpowiedziały 200:
+PSE Komunikaty OSP i Aktualności (Atom), URE, CIRE energetyka i gazownictwo, Wysokie Napięcie
+(pełny i kategoria „sieci"), Energetyka24, wnp.pl Energia.
+
+Pominięte i dlaczego: BiznesAlert i Rynek Infrastruktury blokują automaty w `robots.txt`;
+TGE, PAP i e-petrol nie mają publicznego kanału albo stawiają ścianę na boty; kanały URE 424
+i 497 to całe archiwum od 1998 (1,5 MB).
+
+**Reguły treści wzięte z tego, co naprawdę przyszło**, nie wymyślone:
+- wnp.pl „Energia" dało 17.09 pięć wpisów spoza branży na osiem (kurs dolara, rynek metali,
+  górnictwo w Kanadzie), więc wnp i Energetyka24 przechodzą przez filtr słów branżowych;
+- URE ma wpisy zatytułowane tylko „Komunikat" — pomijane, bo z tytułu nic nie wynika;
+- PSE opublikowało ten sam komunikat o zawieszeniu łączenia rynków 14.09 i 15.09 — z duplikatu
+  zostaje nowszy (klucz po znormalizowanym linku i tytule);
+- kropka na końcu tytułu spada, ale nie po skrócie: „w 2025 r." zostaje, bo pierwsza wersja
+  ucinała to do „w 2025 r";
+- okno 3 dni, dla Regulacji 14 (tam osiem wpisów sięga dwóch tygodni), najwyżej 8 na kategorię.
+
+**Parser napisany ręcznie, bez biblioteki.** `fast-xml-parser` pociągnął osiem pakietów
+(m.in. `anynum`, `is-unsafe`, `xml-naming`) do zadania z prawem zapisu do repozytorium, przy
+trzech zależnościach produkcyjnych całej aplikacji. Potrzebne są trzy pola z dziewięciu znanych
+kanałów, więc `src/utils/newsFeed.ts` czyta je sam, a fikstury to prawdziwe kanały z 17.09.
+
+**Data bez strefy to czas warszawski.** wnp.pl pisze „Thu, 17 Sep 2026 18:06:44" i ma na myśli
+18:06 w Polsce; przesunięcie liczone przez `Intl` dwukrotnie, żeby granica czasu letniego nie
+przestawiła godziny. CIRE deklaruje „GMT" i tego nie dało się potwierdzić — strona artykułu nie
+otwiera się bez przeglądarki. Jeśli godziny CIRE okażą się przesunięte o dwie godziny, to jest
+pierwsze miejsce do sprawdzenia.
+
+**Wygląd — pięć rund makiet z właścicielem** (artefakt „Karta »Z branży«"), przegląd UX/UI
+agentem ze skillami apple-design, emil-design-eng i animate. Odrzucone po drodze: zakładki
+kategorii (wyglądały jak przełącznik wykresu i chowały trzy czwarte treści), karta pod przyciskiem
+„Odśwież" (poza ekranem), przycisk „Z branży" w pasku („uruchamianie go jest z dupy"), odsunięcie
+pulpitu w lewo (ucina oś wykresu), znacznik „rynek mocy" (odrzucony w ostatniej rundzie).
+
+Przyjęte: karta pod Analizą AI (2 wiersze na laptopie, 4 na monitorze), panel z prawej, przy
+otwarciu **przygaszenie pulpitu pod paskiem** (12% w jasnym, 36% w ciemnym) o kryciu równym
+postępowi panelu. Ustawienia zostają bez przygaszenia — tam zmiana progu musi być od razu
+widoczna na wykresie; tu wiadomości są czytaniem obok i klik w przygaszenie zamyka panel, nie
+przełączając dnia pod spodem.
+
+**Panel ma własną pętlę ruchu**, nie hook wyjęty z `SettingsPanel`: tamten komponent obsługuje też
+arkusz na telefonie, przeciąganie i cofanie strony, a przeróbka go dla panelu otwieranego z karty
+na komputerze to ryzyko bez zysku. Wspólna jest fizyka (`sheetPhysics.ts`) i wartości sprężyn.
+
+**Czas w karcie to czas pobrania** („stan 19:49"), po 4 h dopisek „nieaktualne", po 12 h karta
+znika — jak Analiza AI. „Nowe od ostatniej wizyty" to licznik w nagłówku i pogrubienie tytułu,
+bez niebieskiej kropki: ten sam niebieski oznacza na wykresie linię „Dostępna" i znacznik „teraz".
+Wizyta kończy się **zamknięciem panelu**, nie zobaczeniem karty.
+
+**Zmierzone na żywych danych 17.09** (1920×1080): karta y 569–800, czyli mieści się nad dolną
+krawędzią; na laptopie 1536×982 y 611–738, też nad krawędzią (makieta zakładała 539–658 — realna
+Analiza AI jest wyższa). Przygaszenie potwierdzone pomiarem piksela: biel 255 → 224.
+
+**Strażnik wizualny:** dwie nowe sceny z otwartym panelem (`wiadomosci-laptop`,
+`wiadomosci-monitor`), wzorce scen komputerowych przepisane. Przy okazji: `generation-light`
+różniło się od swojego wzorca **także bez tej zmiany** — scena przewija stronę o 23 px, a zrzut
+całej strony inaczej składa przyklejony nagłówek. Sprawdzone porównaniem HEAD i zmian w osobnym
+worktree: piksel w piksel identyczne, więc wzorzec przepisany bez szukania winy w module.
+
+**Telefon to osobny etap.** Aplikacja ma gotowy wzorzec (arkusz od dołu, przygaszenie, cofnięcie
+strony), ale decyzja czeka na makietę.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś

@@ -51,6 +51,18 @@ export default defineConfig({
             },
           },
           {
+            // The third file from the same generator, in its own slot for the
+            // same reason. Offline, the card still shows its last headlines —
+            // with "nieaktualne" once they are old enough to need saying.
+            urlPattern: /\/news\.json$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'news-cache',
+              expiration: { maxEntries: 1, maxAgeSeconds: 24 * 60 * 60 },
+              networkTimeoutSeconds: 5,
+            },
+          },
+          {
             urlPattern: /^https:\/\/api\.raporty\.pse\.pl/,
             handler: 'NetworkFirst',
             options: {

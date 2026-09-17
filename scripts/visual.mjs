@@ -73,6 +73,13 @@ const prices = readFileSync(
   resolve(root, 'src/utils/__fixtures__/ceny-visual.json'),
   'utf8'
 );
+// Industry headlines (useNews / NewsCard / NewsSheet), dated around the frozen
+// clock. Stamped with `generatedAt` per scene below, like summary.json: the
+// card hides itself once the file is twelve hours old, and says "nieaktualne"
+// past four, so a fixed stamp would age the card out of every baseline.
+const news = JSON.parse(
+  readFileSync(resolve(root, 'src/utils/__fixtures__/news-visual.json'), 'utf8')
+);
 
 /**
  * Antialiasing and font rendering wobble by a pixel between runs. This tolerance
@@ -153,6 +160,14 @@ const SCENARIOS = [
   // 2560px: the only scene past 125rem, where the whole page scales up (see
   // the last content-width rule in App.css). Nothing at 1920 can see it.
   { name: 'szeroki-2560', scheme: 'light', wide: true },
+  // "Z branży" with its panel open: the dim under the header, the lit row in
+  // the card behind it, and the grouped list. Two widths because the panel
+  // covers different ground in each — the whole right column on a laptop, only
+  // the third column on a monitor — and because the card itself shows two rows
+  // there and four here (NewsCard's `variant`). Viewport captures, like the
+  // settings scenes, for the same reason.
+  { name: 'wiadomosci-laptop', scheme: 'light', laptop: true, newsPanel: true },
+  { name: 'wiadomosci-monitor', scheme: 'dark', monitor: true, newsPanel: true },
 ];
 
 /**
@@ -262,6 +277,19 @@ for (const scenario of SCENARIOS) {
     });
   });
 
+  // Same offline rule as the two files above.
+  await context.route('**/news.json', (route) => {
+    if (scenario.offline) return route.abort('failed');
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ...news,
+        generatedAt: new Date(clockFor(scenario).getTime() - 30 * 60 * 1000).toISOString(),
+      }),
+    });
+  });
+
   await context.route('**/api.raporty.pse.pl/**', async (route) => {
     if (scenario.offline) return route.abort('failed');
     // Every other scenario's fixtures resolve before the first frame anyone
@@ -342,6 +370,15 @@ for (const scenario of SCENARIOS) {
     await page.getByRole('dialog', { name: 'Ustawienia' }).waitFor();
     await page.waitForTimeout(500);
   }
+  if (scenario.newsPanel) {
+    // The first row of the card, not "Wszystkie": that is the path that also
+    // lights the row behind the panel and the headline inside it.
+    await page.locator('.news-row').first().click();
+    await page.getByRole('dialog', { name: 'Z branży' }).waitFor();
+    // Reduced motion here is a 200ms cross-fade driven from script, as in the
+    // settings panel — the CSS rule that zeroes transitions does not touch it.
+    await page.waitForTimeout(500);
+  }
   if (scenario.expandTable) {
     await page.getByRole('button', { name: 'Tabela godzinowa' }).click();
     await page.waitForTimeout(300);
@@ -350,7 +387,9 @@ for (const scenario of SCENARIOS) {
   // Settings scenes capture the window, not the page. The panel is fixed to the
   // viewport, and a full-page capture stretches the viewport to the page's
   // height — a sheet several screens tall that no one ever sees.
-  const shot = await page.screenshot({ fullPage: !scenario.settings });
+  // Panels are fixed to the viewport; a full-page capture would stretch it to
+  // the height of the whole page and show a panel several screens tall.
+  const shot = await page.screenshot({ fullPage: !scenario.settings && !scenario.newsPanel });
   const baselinePath = resolve(baselineDir, `${scenario.name}.png`);
 
   if (!existsSync(baselinePath)) {
