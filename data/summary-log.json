@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-14T17:31:02.378Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Dziś margines spada poniżej wymaganego poziomu między 19:00 a 21:00, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza na czwartek pogarsza się. Ogłoszenie może jeszcze nadejść między 18:00 a 21:00.",
-      "outlook": "Jutro nic nie zapowiada przywołania, natomiast w środę, czwartek i piątek marginesy miejscami nie pokrywają wymaganego poziomu."
-    },
-    {
       "at": "2026-09-14T17:46:03.310Z",
       "prompt": 53,
       "accepted": true,
@@ -2256,6 +2248,24 @@
       "headline": "Marginesy w kilku najbliższych dniach spadają miejscami poniżej typowego zakresu ostatnich trzydziestu dni.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "W poniedziałek nic nie zapowiada przywołania, a w pozostałe dni rezerwa kurczy się w wybranych godzinach porannych i wieczornych."
+    },
+    {
+      "at": "2026-09-17T17:44:15.947Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Margines spoczywa dzisiaj poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść w godzinach 19:00-21:00.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, a we wtorek 22 września oraz środę 23 września ogłoszenie może jeszcze nadejść w godzinach wieczornych."
+    },
+    {
+      "at": "2026-09-17T17:44:15.947Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Margines spada dziś poniżej typowego zakresu z ostatnich trzydziestu dni, a jutro operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 19:00 a 21:00.",
+      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść w godzinach 19:00 a 21:00, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W poniedziałek 21 września rezerwa bazuje na liczbach bez salda wymiany, natomiast we wtorek 22 września i środę 23 września operator zachowuje wybór co do ogłoszenia w godzinach porannych i wieczornych."
     }
   ]
 }
