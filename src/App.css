@@ -666,6 +666,115 @@
 }
 
 /*
+ * Which cards are on the page, and therefore which columns exist at all.
+ *
+ * Everything here is inside a media query on purpose. Below 80rem not one of
+ * these rules is declared, so no stored layout — however old, however odd — can
+ * reach the phone. That is the same guarantee .content-width above relies on,
+ * and a stronger one than comparing screenshots afterwards.
+ *
+ * Card wrappers are `display: contents` outside this block: they are not boxes
+ * there, so they cannot collapse a margin or add a gap that App.tsx's source
+ * order does not already have.
+ */
+[data-card] {
+  display: contents;
+}
+
+@media (min-width: 80rem) {
+  [data-card] {
+    display: block;
+  }
+
+  [data-card][data-hidden="true"] {
+    display: none;
+  }
+
+  /* Placement, formerly Tailwind classes on each cell. Here because the
+     [data-cols] variants below have to move the same cells, and one place
+     that decides where a cell goes is easier to trust than two. */
+  .dash-grid > [data-cell="chart"] {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+
+  .dash-grid > [data-cell="answer"] {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .dash-grid > [data-cell="readings"] {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .dash-grid > [data-cell="actions"] {
+    grid-column: 2;
+    grid-row: 3;
+    align-self: start;
+  }
+
+  /* A column whose every card is switched off stops being a column, rather
+     than standing there 28rem wide and empty. The refresh button is its own
+     cell precisely so it can move to whichever column is left — and with
+     nothing left, under the chart. */
+  .dash-grid[data-cols="readings"] > [data-cell="readings"] {
+    grid-row: 1;
+  }
+
+  .dash-grid[data-cols="readings"] > [data-cell="actions"] {
+    grid-row: 2;
+  }
+
+  .dash-grid[data-cols="none"] {
+    grid-template-columns: minmax(0, calc(var(--chart-vh) * 1.6vh));
+  }
+
+  .dash-grid[data-cols="none"] > [data-cell="chart"] {
+    grid-row: 1 / span 1;
+  }
+
+  .dash-grid[data-cols="none"] > [data-cell="actions"] {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
+@media (min-width: 110rem) {
+  .dash-grid > [data-cell="readings"] {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .dash-grid > [data-cell="actions"] {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  /* One group left: two columns, not three with a hole in the middle. */
+  .dash-grid[data-cols="answer"],
+  .dash-grid[data-cols="readings"] {
+    grid-template-columns:
+      minmax(0, calc(var(--chart-vh) * 1.6vh))
+      minmax(24rem, 30rem);
+  }
+
+  .dash-grid[data-cols="answer"] > [data-cell="actions"] {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .dash-grid[data-cols="readings"] > [data-cell="readings"] {
+    grid-column: 2;
+  }
+
+  .dash-grid[data-cols="readings"] > [data-cell="actions"] {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
+/*
  * Past 125rem (2000px) the page scales instead of spreading. Owner's 27-inch
  * screenshot, 15.09.2026: the 120rem cap left the three columns in the middle
  * ~60% of the glass with 11px axis labels. Widening the grid would only thin
@@ -729,10 +838,36 @@
   :root {
     --chart-vh: 52;
   }
+
+  /*
+   * The reader's own choice (Ustawienia → Układ), written on the root by
+   * useLayout. Only three values, named rather than free: a number in storage
+   * would promise that 57 works too, and every state here has to be one the
+   * visual guard can hold. The phone never sees this block, so its chart stays
+   * at the 45vh above whatever is stored.
+   */
+  :root[data-chart="compact"] {
+    --chart-vh: 45;
+  }
+
+  :root[data-chart="standard"] {
+    --chart-vh: 52;
+  }
+
+  :root[data-chart="tall"] {
+    --chart-vh: 60;
+    --chart-max: 42rem;
+  }
 }
 
 .chart-box-h {
   height: calc(var(--chart-vh) * 1vh);
+}
+@media (min-width: 80rem) {
+  /* Was xl:max-h-[36rem] in CHART_BOX; here so the tall setting can raise it. */
+  .chart-box-h {
+    max-height: var(--chart-max, 36rem);
+  }
 }
 @supports (height: 1dvh) {
   .chart-box-h {

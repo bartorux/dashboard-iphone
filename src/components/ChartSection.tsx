@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { usePersistentChoice } from '../hooks/usePersistentChoice';
 import { PSEDataPoint } from '../types';
 import ReserveChart from './ReserveChart';
 import GenerationChart from './GenerationChart';
@@ -10,7 +11,8 @@ import { useRedispatch } from '../hooks/useRedispatch';
 import { usePrices } from '../hooks/usePrices';
 import { CHART_BOX } from './chart/shared';
 
-type ChartView = 'reserve' | 'generation' | 'history';
+const VIEW_VALUES = ['reserve', 'generation', 'history'] as const;
+type ChartView = (typeof VIEW_VALUES)[number];
 
 const HISTORY_DAYS = 30;
 
@@ -56,7 +58,20 @@ const ChartSection: React.FC<ChartSectionProps> = ({
   isLoading,
   kseDemand,
 }) => {
-  const [view, setView] = useState<ChartView>('reserve');
+  /*
+   * Remembered, not reset to "Rezerwa" on every visit: which of the three a
+   * person reads is a standing habit, the same kind of choice as a collapsed
+   * card (see usePersistentFlag). It is not a setting — nothing in Ustawienia
+   * asks about it, the tabs themselves are the control.
+   *
+   * The cost, taken deliberately: a remembered "Na tle 30 dni" makes useHistory
+   * fetch on a cold start, where today it waits for that tab to be opened.
+   */
+  const [view, setView] = usePersistentChoice<ChartView>(
+    'chart-view',
+    VIEW_VALUES,
+    'reserve'
+  );
 
   // Fetched only once the comparison is actually opened
   const history = useHistory(view === 'history', HISTORY_DAYS);

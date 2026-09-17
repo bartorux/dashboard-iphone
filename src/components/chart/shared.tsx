@@ -276,8 +276,13 @@ export function tooltipHourKey(rowKey: string): string {
  * comment for why: vh on iOS Safari holds the address bar's height even after
  * it collapses on scroll, so the chart visibly grew every time the bar hid.
  */
-export const CHART_BOX =
-  'chart-box-h max-h-[22rem] min-h-[15rem] w-full md:max-h-[26rem] xl:max-h-[36rem]';
+/*
+ * The ceiling from 80rem up lives in App.css too, as --chart-max: it has to
+ * rise when the reader picks the tall chart, or "tall" would only widen the
+ * column (which is that height times 1.6) while the chart itself stayed at
+ * 36rem — measured at 1920x1080, where 60vh is 648px against a 576px cap.
+ */
+export const CHART_BOX = 'chart-box-h max-h-[22rem] min-h-[15rem] w-full md:max-h-[26rem]';
 
 export interface LegendItem {
   label: string;

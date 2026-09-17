@@ -4,6 +4,7 @@ import { useState } from 'react';
 import SettingsPanel, { SettingsPanelProps } from '../SettingsPanel';
 import { THRESHOLD_IDLE_MS } from '../SettingsContent';
 import { Settings } from '../../types';
+import { DEFAULT_LAYOUT } from '../../utils/layout';
 import { version as packageVersion } from '../../../package.json';
 
 const settings: Settings = { orangeThreshold: 500, redThreshold: 300, version: 1 };
@@ -22,6 +23,10 @@ function props(overrides: Partial<SettingsPanelProps> = {}): SettingsPanelProps 
     isInstalled: false,
     onInstall: vi.fn(() => Promise.resolve()),
     version: '9.9.9',
+    layout: DEFAULT_LAYOUT,
+    onToggleCard: vi.fn(),
+    onChartChange: vi.fn(),
+    onLayoutReset: vi.fn(),
     ...overrides,
   };
 }
@@ -71,11 +76,17 @@ describe('SettingsPanel — sheet on a phone', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('orders the sections thresholds, appearance, application', () => {
+  /*
+   * Layout sits second: thresholds decide what the screen says, the layout what
+   * it shows, and both are read far more often than the theme or the version.
+   * It is `hidden xl:block`, which jsdom does not apply — on a phone this
+   * heading is in the tree but never painted.
+   */
+  it('orders the sections thresholds, layout, appearance, application', () => {
     render(<SettingsPanel {...props()} />);
 
     const headings = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
-    expect(headings).toEqual(['Progi marginesu', 'Wygląd', 'Aplikacja']);
+    expect(headings).toEqual(['Progi marginesu', 'Układ (komputer)', 'Wygląd', 'Aplikacja']);
   });
 
   it('describes both thresholds as margin thresholds, inclusive', () => {

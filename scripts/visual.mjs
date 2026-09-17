@@ -168,6 +168,15 @@ const SCENARIOS = [
   // settings scenes, for the same reason.
   { name: 'wiadomosci-laptop', scheme: 'light', laptop: true, newsPanel: true },
   { name: 'wiadomosci-monitor', scheme: 'dark', monitor: true, newsPanel: true },
+  // Ustawienia → Układ (komputer): the section itself, with its preview. A
+  // viewport capture, like the other panel scenes.
+  { name: 'uklad-panel', scheme: 'light', monitor: true, settings: true, layoutSection: true },
+  // What the switches do to the page. Two cards off on a monitor, which also
+  // takes the third column away and moves the refresh button into the second;
+  // and the tall chart on a laptop, the width where it can actually widen its
+  // own column (at 1920 three columns leave it no room — see stan-prac).
+  { name: 'uklad-ukryte-monitor', scheme: 'light', monitor: true, layout: { hidden: ['mix', 'trends'] } },
+  { name: 'uklad-wysoki-laptop', scheme: 'light', laptop: true, layout: { chart: 'tall' } },
 ];
 
 /**
@@ -340,6 +349,21 @@ for (const scenario of SCENARIOS) {
     }, scenario.fontPx);
   }
 
+  // A layout is what the reader stored on their own machine, so it is seeded
+  // the same way: the key the app reads, written before the first paint.
+  if (scenario.layout) {
+    await page.addInitScript((layout) => {
+      try {
+        localStorage.setItem(
+          'pse-dashboard-layout',
+          JSON.stringify({ version: 1, chart: 'standard', hidden: [], ...layout })
+        );
+      } catch {
+        // A context without storage would simply show the default layout.
+      }
+    }, scenario.layout);
+  }
+
   await page.goto(url, { waitUntil: 'domcontentloaded' });
   // These waits are for the fetch and the render, not for any animation —
   // reducedMotion above turns those off, so what is left to wait for is data
@@ -378,6 +402,11 @@ for (const scenario of SCENARIOS) {
     // Reduced motion here is a 200ms cross-fade driven from script, as in the
     // settings panel — the CSS rule that zeroes transitions does not touch it.
     await page.waitForTimeout(500);
+  }
+  if (scenario.layoutSection) {
+    // The panel scrolls; the section sits below the thresholds.
+    await page.getByRole('heading', { name: 'Układ (komputer)' }).scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
   }
   if (scenario.expandTable) {
     await page.getByRole('button', { name: 'Tabela godzinowa' }).click();

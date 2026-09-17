@@ -30,6 +30,8 @@ import { useNews } from './hooks/useNews';
 import { useNewsSeen } from './hooks/useNewsSeen';
 import { useMediaQuery } from './hooks/useMediaQuery';
 import { newsFreshness } from './utils/news';
+import { useLayout } from './hooks/useLayout';
+import { columnsState, isCardHidden } from './utils/layout';
 import {
   buildAlertRanges,
   classifyMargin,
@@ -111,6 +113,17 @@ function App() {
   const [newsOpen, setNewsOpen] = useState(false);
   const [newsHighlight, setNewsHighlight] = useState<string | null>(null);
   const newsState = news ? newsFreshness(news, now) : 'expired';
+
+  /*
+   * Which cards the reader keeps on a computer, and how tall the chart is.
+   * Below 80rem none of it reaches the page: the rules that act on `data-card`
+   * live inside a media query, and the settings section that writes them is
+   * hidden. `data-cols` lets the grid drop a column nobody has anything in,
+   * rather than reserve 24–30rem of empty glass.
+   */
+  const { layout, toggle: toggleCard, setChart, reset: resetLayout } = useLayout();
+  const cols = columnsState(layout);
+  const cardHidden = (id: Parameters<typeof isCardHidden>[1]) => isCardHidden(layout, id);
 
   /** Asking for fresh data means all of it, not only the figures. */
   // Hidden in a plain desktop browser, where F5 does the same — see the hook.
@@ -394,6 +407,10 @@ function App() {
           isInstalled={isInstalled}
           onInstall={install}
           version={appVersion}
+          layout={layout}
+          onToggleCard={toggleCard}
+          onChartChange={setChart}
+          onLayoutReset={resetLayout}
         />
 
         {news && (
@@ -468,18 +485,20 @@ function App() {
           09.09.2026 was rejected by the owner ("od 24 cali w górę"); see the
           matching .content-width block in App.css for why 110/120rem.
         */}
-        <div className="dash-grid">
-          <div className="xl:col-start-2 xl:row-start-1">
+        <div className="dash-grid" data-cols={cols}>
+          <div data-cell="answer">
             {/* The figure people open the app for comes first; the prose explains
                 it afterwards. Both stay above the day tabs. */}
-            <CurrentStatusCard
-              point={currentPoint}
-              status={currentStatus}
-              isStale={isStale && hasData}
-              isLoading={firstLoad}
-              todayData={todayData}
-              compassNow={compassNow}
-            />
+            <div data-card="margin" data-hidden={cardHidden('margin')}>
+              <CurrentStatusCard
+                point={currentPoint}
+                status={currentStatus}
+                isStale={isStale && hasData}
+                isLoading={firstLoad}
+                todayData={todayData}
+                compassNow={compassNow}
+              />
+            </div>
 
             {/*
               Above the analysis, below the margin.
@@ -492,7 +511,9 @@ function App() {
               */}
             {isEnergyDay(now) && <EnergyDayCard />}
 
-            {summary && <SummaryCard summary={summary} now={now} />}
+            <div data-card="summary" data-hidden={cardHidden('summary')}>
+              {summary && <SummaryCard summary={summary} now={now} />}
+            </div>
 
             {/*
               Under the analysis, in the same cell, from 80rem only (the card
@@ -500,20 +521,22 @@ function App() {
               card pushes the renewables and trends down by its own height;
               from 110rem it fills the empty glass the third column left here.
             */}
-            {news && newsState !== 'expired' && (
-              <NewsCard
-                news={news}
-                now={now}
-                variant={newsWide ? 'monitor' : 'laptop'}
-                stale={newsState === 'stale'}
-                isNew={isNewsNew}
-                activeId={newsOpen ? newsHighlight : null}
-                onOpen={openNews}
-              />
-            )}
+            <div data-card="news" data-hidden={cardHidden('news')}>
+              {news && newsState !== 'expired' && (
+                <NewsCard
+                  news={news}
+                  now={now}
+                  variant={newsWide ? 'monitor' : 'laptop'}
+                  stale={newsState === 'stale'}
+                  isNew={isNewsNew}
+                  activeId={newsOpen ? newsHighlight : null}
+                  onOpen={openNews}
+                />
+              )}
+            </div>
           </div>
 
-          <div className="xl:col-start-1 xl:row-start-1 xl:row-span-3">
+          <div data-cell="chart">
             <DayNavigation
               offsets={dayOffsets}
               currentDay={currentDayOffset}
@@ -547,7 +570,7 @@ function App() {
           {/* Its own cell rather than part of the chart column: the tiles are
               small, and on a monitor they fill the space under the analysis that
               would otherwise sit empty beside a tall chart. */}
-          <div className="xl:col-start-2 xl:row-start-2 min-[110rem]:col-start-3 min-[110rem]:row-start-1">
+          <div data-cell="readings">
             {/*
               Today only, always — never the selected day. pdgobpkd (the
               source behind kseDemand) is published for the current business
@@ -556,22 +579,30 @@ function App() {
               everything else in this column. It renders nothing of its own
               accord once either input is missing — see the component.
             */}
-            <RenewableMixCard points={todayData} kseDemand={kseDemand} now={now} />
+            <div data-card="mix" data-hidden={cardHidden('mix')}>
+              <RenewableMixCard points={todayData} kseDemand={kseDemand} now={now} />
+            </div>
 
-            <TrendsSection
-              dayData={dayData}
-              todayData={todayData}
-              currentDayOffset={currentDayOffset}
-              orangeThreshold={orangeThreshold}
-              redThreshold={redThreshold}
-              isLoading={firstLoad}
-            />
+            <div data-card="trends" data-hidden={cardHidden('trends')}>
+              <TrendsSection
+                dayData={dayData}
+                todayData={todayData}
+                currentDayOffset={currentDayOffset}
+                orangeThreshold={orangeThreshold}
+                redThreshold={redThreshold}
+                isLoading={firstLoad}
+              />
+            </div>
           </div>
 
           {/* Under the right-hand column, where a full-width refresh button
               across a 24-inch monitor would be absurd. */}
+          {/* Its own cell, so hiding every card in a column takes the column
+              but never this button — see the [data-cols] rules in App.css,
+              which move it to whichever column is left. */}
           <div
-            className="mx-3 mt-3 space-y-2 xl:col-start-2 xl:row-start-3 xl:self-start min-[110rem]:col-start-3 min-[110rem]:row-start-2"
+            data-cell="actions"
+            className="mx-3 mt-3 space-y-2"
             style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
           >
             {showRefreshButton && (

@@ -788,6 +788,69 @@ worktree: piksel w piksel identyczne, więc wzorzec przepisany bez szukania winy
 **Telefon to osobny etap.** Aplikacja ma gotowy wzorzec (arkusz od dołu, przygaszenie, cofnięcie
 strony), ale decyzja czeka na makietę.
 
+## Układ kafli w Ustawieniach (17.09.2026, v3.88.0)
+
+Nowa sekcja „Układ (komputer)”: wysokość wykresu w trzech krokach i przełączniki widoczności
+pięciu kart. Telefon bez zmian.
+
+**Pomiar, który ukształtował całą funkcję.** Panel Ustawień (28rem przy prawej krawędzi) zakrywa
+w całości prawą kolumnę na 1536 px i trzecią kolumnę na 1920 px. Użytkownik **nie widzi**, co robi
+przełącznik w chwili przełączania. Dlatego podgląd układu w panelu nie jest ozdobą, tylko jedynym
+kanałem zwrotnym — i dlatego odpadło przeciąganie kafli: przeciągałoby się coś niewidocznego.
+
+**Etap 0, refaktor bez zmiany zachowania.** Szerokość kolumny wykresu to jego wysokość razy 1,6,
+ale wysokość siedziała w `App.css`, a mnożenie w klasie Tailwind w `App.tsx` — trzymane w zgodzie
+na oko, z komentarzem proszącym o to następnego czytelnika. Teraz obie liczby biorą się z
+`--chart-vh`, a siatka ma własną klasę `.dash-grid`. Dowód: strażnik wizualny bez różnicy na
+wszystkich 22 scenach.
+
+**Odpowiedź na pytanie właściciela „może za dużo dajemy do edycji”.** Z sześciu dołożonych
+pomysłów została jedna rzecz, i to bez żadnej kontrolki:
+- **zapamiętana zakładka wykresu** — to trwałość, nie ustawienie (nowy `usePersistentChoice`,
+  ten sam prymityw obsługuje krok wysokości wykresu);
+- **stała skala osi Y** odrzucona: sztywne 0–8000 MW obcina dane przy dużym wietrze;
+- **pasek cen wł./wył.** odłożone: dubluje dźwignię, którą już mamy (wysokość wykresu);
+- **kompas PSE wł./wył.** odrzucone: to jedyny wiersz mówiący głosem operatora;
+- **wyłączanie pojedynczych źródeł wiadomości** odrzucone: sześć przełączników, a efekt odwrotny
+  do zamierzonego — karta bierze po jednej pozycji z kategorii, więc wyłączenie serwisu robi pustą
+  pozycję;
+- **własna liczba wierszy w „Z branży”** odrzucona: dubluje regułę, która działa sama (laptop
+  pokazuje co innego niż monitor).
+
+**Twarda granica na przyszłość:** sekcja nie może przekroczyć 8 wierszy interaktywnych, a ostatni
+przełącznik musi być widoczny razem z podglądem przy oknie 982 px. Dziś sekcja ma 7 kontrolek.
+
+**Zmierzone na żywo (17.09).** Laptop 1536×982: 442/707, 511/817, 589/943 px (wysokość wykresu /
+szerokość kolumny) — dokładnie jak w planie. Monitor 1920×1080: 486/778, 562/896 oraz **648/896**
+przy „wysokim”. Ostatnia liczba to rzecz, której nie było widać na makiecie: **przy trzech
+kolumnach kolumna wykresu nie ma już miejsca, żeby się poszerzyć**, bo pozostałe dwie stoją na
+swoim maksimum 30rem. „Wysoki” podnosi wtedy tylko wysokość. Opis w ustawieniach mówi o tym wprost
+(„o ile zostaje na to miejsce”).
+
+**Górny limit wysokości wykresu podniesiony razem z wyborem.** `CHART_BOX` miał `xl:max-h-[36rem]`
+(576 px przy korzeniu 16 px), więc „wysoki” (648 px) był przycinany i poszerzał kolumnę, nie
+podnosząc wykresu — proporcja 1,6 przestawała się zgadzać. Limit przeniesiony do `App.css` jako
+`--chart-max` i przy „wysokim” wynosi 42rem.
+
+**Stany niemożliwe wykluczone brakiem kontrolki, nie walidacją.** Kolumny wykresu nie ma na
+liście, więc nie da się oderwać alertów od wykresu ani zostawić pustego ekranu. Jedyny zły stan,
+który dało się skonfigurować — pusta kolumna rezerwująca 24–30rem — jest zwijany przez `data-cols`
+na siatce. Przycisk „Odśwież” ma własną komórkę i wędruje do ostatniej widocznej kolumny, a przy
+wszystkich kartach ukrytych schodzi pod kolumnę wykresu.
+
+**Telefon gwarantowany konstrukcją, nie porównaniem zrzutów.** Wszystkie nowe reguły CSS stoją
+wyłącznie w `@media (min-width: 80rem)`, opakowania kart mają poza nim `display: contents`, a
+sekcja w ustawieniach `hidden xl:block`. Pilnuje tego test czytający `App.css?raw`. Dwanaście scen
+telefonu przeszło bez przepisywania wzorca — zmieniła się tylko scena `monitor-settings`, bo panel
+ma teraz nową sekcję.
+
+**Trwałość.** Osobny klucz `pse-dashboard-layout` (nie w `settings`, żeby uszkodzony układ nie
+pociągnął progów). Reguła odczytu jak w `useSettings`: zaciskaj, nie odrzucaj — nieznany
+identyfikator odpada, brakujący jest dopisywany z kanonicznej listy w kodzie jako widoczny, zła
+wersja i zły JSON dają domyślne. Dzięki temu karta dodana w przyszłej wersji pojawi się sama, bez
+migracji. „Przywróć układ” czyści wyłącznie ten klucz; zwinięcie kart i zapamiętana zakładka
+wykresu to nawyki czytania, nie układ.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś

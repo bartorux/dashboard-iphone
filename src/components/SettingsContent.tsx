@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { InstallableState, Settings } from '../types';
+import type { CardId, ChartSize, Layout as LayoutState } from '../utils/layout';
 import { ThemePreference } from '../hooks/useTheme';
 import SegmentedControl from './SegmentedControl';
+import { Group, SectionFooter, SectionHeader } from './settings/primitives';
+import LayoutSection from './settings/LayoutSection';
 import { ChevronDownIcon } from './icons';
 import { DEFAULT_ORANGE_THRESHOLD, DEFAULT_RED_THRESHOLD } from '../utils/constants';
 import { formatMW } from '../utils/format';
@@ -45,6 +48,11 @@ export interface SettingsContentProps {
   isInstalled: boolean;
   onInstall: () => Promise<void>;
   version: string;
+  /** Desktop layout: which cards are shown and how tall the chart is. */
+  layout: LayoutState;
+  onToggleCard: (id: CardId) => void;
+  onChartChange: (chart: ChartSize) => void;
+  onLayoutReset: () => void;
   /**
    * False from the moment the panel starts closing. A field left mid-edit is
    * then saved if valid and quietly dropped if not — an error appearing on a
@@ -54,35 +62,6 @@ export interface SettingsContentProps {
 }
 
 /* ------------------------------------------------------------------ layout */
-
-/** `first` sits right under the title bar, which already supplies the space above. */
-const SectionHeader: React.FC<{ id?: string; first?: boolean; children: React.ReactNode }> = ({
-  id,
-  first,
-  children,
-}) => (
-  <h3
-    id={id}
-    className={`px-8 pb-1.5 ${first ? 'pt-2' : 'pt-6'} text-[0.8125rem] font-normal uppercase tracking-[0.02em] text-text-secondary`}
-  >
-    {children}
-  </h3>
-);
-
-const SectionFooter: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <p className="px-8 pt-1.5 text-[0.8125rem] leading-snug text-text-secondary">{children}</p>
-);
-
-/** iOS inset-grouped list: rounded cells, hairlines inset from the leading edge (see .sheet-group). */
-const Group: React.FC<{ children: React.ReactNode; labelledBy?: string }> = ({ children, labelledBy }) => (
-  <div
-    role={labelledBy ? 'group' : undefined}
-    aria-labelledby={labelledBy}
-    className="sheet-group mx-4 overflow-hidden rounded-xl bg-sheet-cell"
-  >
-    {children}
-  </div>
-);
 
 /* -------------------------------------------------------------- thresholds */
 
@@ -427,6 +406,10 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
   isInstalled,
   onInstall,
   version,
+  layout,
+  onToggleCard,
+  onChartChange,
+  onLayoutReset,
   active,
 }) => {
   const thresholdsId = useId();
@@ -481,6 +464,13 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
         Margines to dostępna rezerwa minus wymagana. Progi zmieniają kolor paska, wykresu i listy
         alertów. Zmiany zapisują się same.
       </SectionFooter>
+
+      <LayoutSection
+        layout={layout}
+        onToggleCard={onToggleCard}
+        onChartChange={onChartChange}
+        onReset={onLayoutReset}
+      />
 
       <SectionHeader>Wygląd</SectionHeader>
       <Group>
