@@ -2239,6 +2239,23 @@
       "headline": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 22 września między 07:00 a 09:00 oraz między 17:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW i operator ma wybór, a w poniedziałek 21 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-17T17:30:59.186Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Marginesy spadają poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza poprawia się, a w godzinach 19:00-21:00 nadwyżka spada poniżej progu 1100 MW. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "We wtorek 22 września między 07:00 a 09:00 oraz 17:00 a 21:00 i w środę 23 września w tych samych przedziałach czasowych operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-17T17:30:59.186Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Marginesy w kilku najbliższych dniach spadają miejscami poniżej typowego zakresu ostatnich trzydziestu dni.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W poniedziałek nic nie zapowiada przywołania, a w pozostałe dni rezerwa kurczy się w wybranych godzinach porannych i wieczornych."
     }
   ]
 }
