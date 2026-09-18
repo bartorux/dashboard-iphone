@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-15T07:01:16.818Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Dzisiejsza rezerwa przekracza typowy zakres z ostatnich trzydziestu dni.",
-      "body": "Prognoza na jutro pogarsza się. Do wskazanych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek i piątek saldo wymiany transgranicznej nie jest jeszcze zaplanowane, a w poniedziałek 21 września nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-15T07:15:39.676Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Margines w dzisiejszej dobie przewyższa typowy zakres z ostatnich trzydziestu dni.",
-      "body": "Prognoza na jutro pogarsza się. Do wskazanych godzin pozostało wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek i piątek saldo wymiany nie jest jeszcze zaplanowane, a w poniedziałek dwudziestego pierwszego września rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-15T07:45:41.288Z",
       "prompt": 53,
       "accepted": true,
@@ -2495,6 +2479,23 @@
       "headline": "Marginesy spadają poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie między 18:00 a 22:00.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin, a Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 22:00.",
       "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, we wtorek 22 września, w środę 23 września i w czwartek 24 września operator może ogłosić przywołanie w godzinach porannych i popołudniowych, przy czym dla wszystkich tych trzech dni saldo wymiany transgranicznej nie jest jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-18T07:15:59.329Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W najbliższych dniach rezerwa kilkukrotnie spadnie poniżej typowego zakresu z ostatnich trzydziestu dni, a w najciaśniejszych godzinach nadwyżka osunie się poniżej progu 1100 MW.",
+      "body": "Prognoza na dziś poprawia się, a ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin zostało ponad osiem godzin. Kompas Energetyczny PSE wymaga zalecanego oszczędzania między 19:00 a 22:00.",
+      "outlook": "W poniedziałek nic nie zapowiada przywołania, natomiast we wtorek, środę i czwartek operator może ogłosić przywołanie w wyznaczonych godzinach, przy czym saldo wymiany na te trzy doby nie jest jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-18T07:15:59.329Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W najbliższych dniach rezerwa miejscami spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie w godzinach od 19:00 do 22:00.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek, środę i czwartek nadwyżka okresami spada poniżej progu 1100 MW, podczas gdy w poniedziałek nic nie zapowiada przywołania."
     }
   ]
 }
