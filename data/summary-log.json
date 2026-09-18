@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-15T06:45:45.287Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Jutro między 19:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, co odejmie operatorowi możliwość pominięcia przywołania.",
-      "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek między 07:00 a 09:00 oraz od 17:00 do 22:00, a także w piątek między 07:00 a 08:00 i od 17:00 do 22:00 nadwyżka również spadnie poniżej progu 1100 MW, natomiast w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-15T07:01:16.818Z",
       "prompt": 53,
       "accepted": true,
@@ -2485,6 +2477,24 @@
       "headline": "W czwartek 24 września między 07:00 a 08:00 rezerwa osiąga najniższy margines w całym okresie, a nadwyżka spada poniżej progu 1100 MW. Operator może ogłosić przywołanie, a nadwyżka spadła poniżej poziomu, który pozwalał mu je pominąć.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin, a Kompas Energetyczny PSE zaleca oszczędzanie między 19:00-22:00.",
       "outlook": "We wtorek 22 września oraz w środa 23 września i czwartek 24 września rezerwa w wybranych godzinach nie pokrywa wymaganego poziomu, podczas gdy w poniedziałek 21 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-18T07:01:10.448Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Margines spoczywa poniżej typowego zakresu z ostatnich trzydziestu dni, a dziś między 20:00 a 22:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, do wskazanych godzin zostało bowiem ponad osiem godzin.",
+      "outlook": "W poniedziałek nic nie zapowiada przywołania, natomiast we wtorek, środę i czwartek operator zachowuje uprawnienie do ogłoszenia przywołania w wyznaczonych godzinach, przy czym dla tych trzech dób saldo wymiany transgranicznej nie zostało jeszcze zaplanowane. Kompas Energetyczny PSE zaleca oszczędzanie energii między 19:00 a 22:00."
+    },
+    {
+      "at": "2026-09-18T07:01:10.448Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Marginesy spadają poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie między 18:00 a 22:00.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin, a Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 22:00.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, we wtorek 22 września, w środę 23 września i w czwartek 24 września operator może ogłosić przywołanie w godzinach porannych i popołudniowych, przy czym dla wszystkich tych trzech dni saldo wymiany transgranicznej nie jest jeszcze zaplanowane."
     }
   ]
 }
