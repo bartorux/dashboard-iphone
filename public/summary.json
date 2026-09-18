@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 18:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni przez jedną godzinę. Kompas Energetyczny PSE na tę dobę zaleca oszczędzanie między 19:00 a 21:00.",
-  "outlook": "W poniedziałek nic nie zapowiada przywołania, natomiast we wtorek, środę i czwartek rezerwa w wybranych godzinach nie pokrywa wymaganego poziomu, a salda wymiany na te doby nie są jeszcze zaplanowane.",
-  "generatedAt": "2026-09-18T09:15:43.014Z",
+  "headline": "Dziś między 18:00 a 22:00 margines spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, co pozwoli operatorowi zachować wybór w kwestii ogłoszenia przywołania.",
+  "body": "Dziś margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez jedną godzinę. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 20:00.",
+  "outlook": "We wtorek, środę i czwartek przywołanie wchodzi w grę, przy czym w poniedziałek nic nie zapowiada przywołania, a saldo wymiany na te trzy doby nie jest jeszcze zaplanowane.",
+  "generatedAt": "2026-09-18T09:30:58.062Z",
   "dates": [
     "2026-09-18",
     "2026-09-21",
@@ -10,6 +10,6 @@
     "2026-09-23",
     "2026-09-24"
   ],
-  "assessment": "2026-09-18|R|moderate|-700|20:00|1|1|0|moderate:18:00-22:00|K2:19:00-21:00|-;2026-09-21|R|none|800|20:00|0|0|23|||X;2026-09-22|R|moderate|-1500|19:00|0|7|8|moderate:07:00-09:00,moderate:17:00-22:00||X;2026-09-23|R|high|-3200|19:00|0|10|2|high:07:00-09:00,moderate:09:00-10:00,moderate:16:00-17:00,high:17:00-22:00||X;2026-09-24|R|high|-3400|07:00|0|10|0|high:07:00-09:00,moderate:09:00-10:00,moderate:16:00-17:00,high:17:00-18:00,moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X#-/below/prognoza pogarsza się#v53",
+  "assessment": "2026-09-18|R|moderate|-700|20:00|1|1|0|moderate:18:00-22:00|K2:19:00-20:00|-;2026-09-21|R|none|800|20:00|0|0|23|||X;2026-09-22|R|moderate|-1500|19:00|0|7|8|moderate:07:00-09:00,moderate:17:00-22:00||X;2026-09-23|R|high|-3200|19:00|0|10|2|high:07:00-09:00,moderate:09:00-10:00,moderate:16:00-17:00,high:17:00-22:00||X;2026-09-24|R|high|-3400|07:00|0|10|0|high:07:00-09:00,moderate:09:00-10:00,moderate:16:00-17:00,high:17:00-18:00,moderate:18:00-19:00,high:19:00-21:00,moderate:21:00-22:00||X#-/below/prognoza pogarsza się#v53",
   "model": "gemini-3.5-flash-lite"
 }
