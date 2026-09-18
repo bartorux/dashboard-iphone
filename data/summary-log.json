@@ -2449,6 +2449,24 @@
       "headline": "Między 19:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza dzisiaj poprawia się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 08:00 oraz między 18:00 a 22:00.",
       "outlook": "W poniedziałek nic nie zapowiada przywołania, we wtorek i środę operator może ogłosić przywołanie, ale nie musi, natomiast w czwartek między 07:00 a 08:00 nadwyżka spadła poniżej progu 1100 MW."
+    },
+    {
+      "at": "2026-09-18T01:15:40.325Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "W czwartek o 07:00 nadwyżka spadła poniżej progu 1100 MW, poniżej poziomu, który pozwalał operatorowi przywołanie pominąć, a w pozostałych napiętych godzinach operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE wymaga zalecanego oszczędzania między 07:00 a 08:00 oraz między 18:00 a 22:00.",
+      "outlook": "W poniedziałek nic nie zapowiada przywołania, natomiast we wtorek, środę oraz w czwartek operator zachowuje wybór w wyznaczonych godzinach, przy czym saldo wymiany transgranicznej dla tych dni nie jest jeszcze zaplanowane."
+    },
+    {
+      "at": "2026-09-18T01:15:40.325Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W czwartek 24 września między 07:00 a 08:00 rezerwa spadnie najmocniej w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW, który pozwalał operatorowi pominąć przywołanie.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, natomiast we wtorek 22 września, środę 23 września oraz czwartek 24 września operator może ogłosić przywołanie w godzinach porannych i wieczornych, choć ma wybór, bo nadwyżka trzyma się powyżej progu 1100 MW."
     }
   ]
 }
