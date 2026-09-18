@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-15T00:01:12.678Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W czwartek między 18:00 a 21:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się w czwartek. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek i piątek margines spada poniżej wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-15T00:15:44.899Z",
       "prompt": 53,
       "accepted": true,
@@ -2420,6 +2412,24 @@
       "headline": "Między 19:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, we wtorek 22 września, środę 23 września i czwartek 24 września operator może ogłosić przywołanie, przy czym dla tych trzech dni saldo wymiany transgranicznej nie jest jeszcze zaplanowane i rezerwa ulegnie zmianie."
+    },
+    {
+      "at": "2026-09-18T00:15:42.452Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Między 19:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść w godzinach wieczornych.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa miejscami wymaga uwagi operatora."
+    },
+    {
+      "at": "2026-09-18T00:15:42.452Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś między 19:00 a 22:00 nadwyżka w systemie spadła poniżej progu 1100 MW, co sprawia, że operator może ogłosić przywołanie, a wcześniejsze uprawnienie do pominięcia go już nie obowiązuje.",
+      "body": "Prognoza na dziś poprawia się. Ogłoszenie może jeszcze nadejść w godzinach wieczornych, do których zostało jeszcze ponad osiem godzin.",
+      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, natomiast we wtorek 22 września, w środę 23 września oraz w czwartek 24 września operator zachowuje wybór w wybranych godzinach porannych i popołudniowych, przy czym dla wszystkich tych trzech dni saldo wymiany transgranicznej nie zostało jeszcze zaplanowane."
     }
   ]
 }
