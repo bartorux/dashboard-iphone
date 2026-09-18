@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-15T11:45:41.881Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W czwartek o godzinie 19:00 margines spadnie najniżej w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW w godzinach 07:00-09:00.",
-      "body": "W czwartek prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "W piątek rezerwa również nie pokryje wymaganego poziomu w wyznaczonych godzinach, natomiast dzisiaj, jutro i w poniedziałek 21 września nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-15T11:45:41.881Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W czwartek o 19:00 margines spadnie do najniższego poziomu i nadwyżka osunie się poniżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek rezerwa również nie pokryje wymaganego poziomu w podanych godzinach, a pozostałe dni przebiegną spokojnie."
-    },
-    {
       "at": "2026-09-15T12:15:41.176Z",
       "prompt": 53,
       "accepted": false,
@@ -2515,6 +2497,14 @@
       "headline": "W czwartek 24 września o 07:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza w środę 23 września pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 20:00.",
       "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, a w pozostałe dni margines miejscami spadnie poniżej wymaganego poziomu."
+    },
+    {
+      "at": "2026-09-18T11:45:42.162Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę 23 września między 07:00 a 09:00 nadwyżka w systemie spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie i stracił możliwość jego pominięcia.",
+      "body": "Prognoza na środa 23 września pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 20:00.",
+      "outlook": "W poniedziałek 21 września saldo wymiany nie jest jeszcze zaplanowane, a we wtorek 22 września, w środę 23 września i w czwartek 24 września rezerwa miejscami nie pokrywa wymaganego poziomu, podczas gdy w pozostałym okresie nic nie zapowiada przywołania."
     }
   ]
 }
