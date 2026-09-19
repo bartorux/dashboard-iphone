@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-16T15:45:45.414Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Dziś między 17:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W piątek prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 21 września saldo wymiany nie jest jeszcze zaplanowane, a w pozostałych dniach margines miejscami spada poniżej wymaganego poziomu, przy czym we wtorek 22 września ogłoszenie może jeszcze nadejść między 07:00 a 09:00."
-    },
-    {
       "at": "2026-09-16T16:01:12.662Z",
       "prompt": 53,
       "accepted": true,
@@ -2540,6 +2532,14 @@
       "headline": "We wtorek 22 września nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-20:00, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
       "body": "Prognoza na poniedziałek 21 września jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 21 września oraz od środy 23 września do piątku 25 września rezerwa w części godzin nie pokrywa wymaganego poziomu, podczas gdy dzisiaj nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-19T08:30:59.084Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę 23 września między 07:00 a 09:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "W środę 23 września prognoza jeszcze się ustala — rezerwa raz pokrywa wymagany poziom, raz nie. Saldo wymiany na tę dobę nie jest jeszcze zaplanowane, więc rezerwa liczy się bez importu i eksportu.",
+      "outlook": "We wtorek 22 września, w środę 23 września i w czwartek 24 września rezerwa miejscami nie pokrywa wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
