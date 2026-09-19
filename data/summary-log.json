@@ -4,15 +4,6 @@
       "at": "2026-09-16T17:44:01.301Z",
       "prompt": 53,
       "accepted": false,
-      "reason": "godzina bez nazwy dnia",
-      "headline": "Marginesy spadły poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się, a ogłoszenie może jeszcze nadejść między 19:00 a 21:00.",
-      "outlook": "Jutro, w piątek i we wtorek 22 września pojawiają się godziny z przywołaniem w grę, podczas gdy pozostały okres przebiega spokojnie."
-    },
-    {
-      "at": "2026-09-16T17:44:01.301Z",
-      "prompt": 53,
-      "accepted": false,
       "reason": "jeden zakres godzin rozciągnięty na kilka dni",
       "headline": "Margines spędza część godzin poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza pogarsza się jutro. Ogłoszenie może jeszcze nadejść.",
@@ -2542,6 +2533,14 @@
       "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "W poniedziałek 21 września prognoza jeszcze się ustala i raz pokrywa wymagane wartości, a raz nie. Ogłoszenie może jeszcze nadejść, bo do wskazanych godzin pozostało ponad osiem godzin.",
       "outlook": "We wtorek 22 września, w środę 23 września oraz w czwartek 24 września rezerwa miejscami spada poniżej wymaganego poziomu, podczas gdy w pozostałe dni okresu nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-19T10:45:39.806Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę 23 września między 07:00 a 09:00 oraz między 17:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "W poniedziałek 21 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 22 września, w środę 23 września oraz w czwartek 24 września margines w wybranych godzinach nie pokrywa wymaganego poziomu, podczas gdy w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
