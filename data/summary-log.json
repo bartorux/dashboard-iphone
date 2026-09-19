@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-17T00:15:40.099Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Dziś między 18:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Między 19:00 a 20:00 obowiązuje Kompas Energetyczny PSE ze wskazaniem na zalecane oszczędzanie. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro operator może ogłosić przywołanie między 19:00 a 21:00, bo nadwyżka spadła poniżej progu 1100 MW, a w poniedziałek 21 września prognoza wciąż się ustala, podczas gdy we wtorek 22 września i środę 23 września margines spada poniżej wymaganego poziomu w pojedynczych godzinach porannych i wieczornych."
-    },
-    {
       "at": "2026-09-17T00:31:05.530Z",
       "prompt": 53,
       "accepted": true,
@@ -2540,6 +2531,14 @@
       "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "W poniedziałek 21 września prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie. Do wyznaczonych godzin w kolejnych dóbach zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Wtorek 22 września przynosi godziny z możliwością przywołania między 07:00 a 09:00 oraz 17:00 a 22:00, czwartek 24 września włącza je w godzinach 07:00-10:00 i 16:00-22:00, a pozostałe dni tego okresu nie zapowiadają przywołania."
+    },
+    {
+      "at": "2026-09-19T17:30:55.781Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę 23 września nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "W poniedziałek 21 września prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 22 września między 07:00 a 09:00 oraz od 17:00 do 22:00, w środę 23 września od 07:00 do 10:00 i między 16:00 a 22:00 oraz w czwartek 24 września w analogicznych przedziałach operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
