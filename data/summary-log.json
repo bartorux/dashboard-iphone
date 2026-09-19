@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-16T19:15:42.910Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Operator może ogłosić przywołanie jutro, a nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00.",
-      "body": "Margines spadnie poniżej typowego zakresu przez cztery godziny. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś margines spadnie poniżej normy przez jedną godzinę, a na ogłoszenie jest już za późno. W piątek margines spadnie przez siedem godzin, ogłoszenie może jeszcze nadejść, a Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 21:00. W poniedziałek 21 września prognoza jeszcze się ustala. We wtorek 22 września margines spadnie poniżej normy w godzinach 07:00-08:00, a ogłoszenie może jeszcze nadejść."
-    },
-    {
       "at": "2026-09-16T19:30:56.239Z",
       "prompt": 53,
       "accepted": true,
@@ -2538,6 +2529,14 @@
       "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "W poniedziałek 21 września prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do godzin wymagających uwagi zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 22 września między 07:00 a 09:00 oraz 17:00 a 22:00 margines jest ujemny, w czwartek 24 września o 07:00 rezerwa również nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-19T12:45:47.058Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Margines w kolejnych dniach mocno odbiega od typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "W poniedziałek 21 września prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do godzin z popołudniowych i porannych przedziałów zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 22 września, w środę 23 września oraz w czwartek 24 września rezerwa miejscami nie pokrywa wymaganego poziomu, podczas gdy w pozostałe dni i doby nic nie zapowiada przywołania."
     }
   ]
 }
