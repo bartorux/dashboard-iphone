@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-16T19:45:45.035Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Operator może ogłosić przywołanie między 19:00 a 21:00.",
-      "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "Jutro i w piątek nadwyżka spada poniżej progu 1100 MW w godzinach wieczornych, natomiast w poniedziałek 21 września i wtorek 22 września saldo wymiany nie jest jeszcze zaplanowane. Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 21:00."
-    },
-    {
       "at": "2026-09-16T20:01:06.578Z",
       "prompt": 53,
       "accepted": true,
@@ -2536,6 +2527,14 @@
       "headline": "W środę 23 września operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "W poniedziałek 21 września prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Wtorek 22 września, czwartek 24 września oraz piątek 25 września przynoszą godziny z wąskim marginesem lub z wyborem dla operatora, natomiast w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-19T13:45:40.061Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
+      "body": "W środę 23 września najniższy margines spadnie o 19:00, bo zapotrzebowanie znacznie przewyższy dostępną rezerwę. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W poniedziałek 21 września prognoza jeszcze się ustala, a w pozostałe dni okresu nic nie zapowiada przywołania."
     }
   ]
 }
