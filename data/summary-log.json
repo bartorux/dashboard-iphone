@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-18T01:30:52.339Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W czwartek o 07:00 nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "Prognoza na dziś poprawia się, a w godzinach 18:00-22:00 ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 08:00 oraz od 18:00 do 22:00.",
-      "outlook": "We wtorek, środę i czwartek nadwyżka trzyma się powyżej progu 1100 MW, podczas gdy w poniedziałek nic nie zapowiada przywołania, a saldo wymiany dla pozostałych dób nie zostało jeszcze zaplanowane."
-    },
-    {
       "at": "2026-09-18T02:45:47.655Z",
       "prompt": 53,
       "accepted": false,
@@ -2517,6 +2509,14 @@
       "headline": "W środę 23 września margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "Rezerwa w środę 23 września nie pokrywa wymaganego poziomu, a saldo wymiany transgranicznej na tę dobę nie jest jeszcze zaplanowane. Ogłoszenie może jeszcze nadejść, bo do wskazanych godzin pozostało ponad osiem godzin.",
       "outlook": "We wtorek 22 września, w środę 23 września oraz w czwartek 24 września operator może ogłosić przywołanie, natomiast w pozostałe dni nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-20T18:01:03.814Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę 23 września nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00 i operator może ogłosić przywołanie.",
+      "body": "Saldo wymiany na środę 23 września nie jest jeszcze zaplanowane, więc rezerwa liczy się bez importu i eksportu. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 22 września, w czwartek 24 września oraz w piątek 25 września rezerwa również spada miejscami poniżej wymagnego poziomu, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
