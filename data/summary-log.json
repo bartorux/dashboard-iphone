@@ -3,15 +3,6 @@
     {
       "at": "2026-09-18T06:15:43.625Z",
       "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Między 19:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza poprawia się. Do tych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek nic nie zapowiada przywołania, we wtorek i w środę oraz czwartek operator może ogłosić przywołanie w wyznaczonych godzinach."
-    },
-    {
-      "at": "2026-09-18T06:15:43.625Z",
-      "prompt": 53,
       "accepted": true,
       "headline": "Między 19:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka spada poniżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Do tych godzin ogłoszenie może jeszcze nadejść.",
@@ -2520,6 +2511,14 @@
       "headline": "W najbliższych godzinach operator może ogłosić przywołanie, a nadwyżka spadła poniżej próg 1100 MW między 07:00 a 09:00 w środę 23 września.",
       "body": "Prognoza w jutrzejszym dniu jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 22 września między 07:00 a 08:00 oraz od 19:00 do 21:00, w środę 23 września w wyznaczonych porach od 07:00 do 22:00, w czwartek 24 września od 07:00 do 22:00 oraz w piątek 25 września między 08:00 a 09:00 rezerwa nie pokrywa wymaganego poziomu, podczas gdy w pozostałym okresie nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-20T20:15:42.391Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 08:00.",
+      "body": "W środę 23 września rezerwa spadnie, a saldo wymiany transgranicznej nie doszło jeszcze na tę dobę. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 22 września między 07:00 a 08:00 oraz 19:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, natomiast w pozostałych dniach okresu rezerwa pokryje wymagany poziom."
     }
   ]
 }
