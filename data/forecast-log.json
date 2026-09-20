@@ -9006,6 +9006,47 @@
           "worstHour": "18:00"
         }
       ]
+    },
+    {
+      "at": "2026-09-20T01:15:39.444Z",
+      "days": [
+        {
+          "businessDate": "2026-09-20",
+          "worstMargin": null,
+          "averageMargin": null,
+          "worstHour": null
+        },
+        {
+          "businessDate": "2026-09-21",
+          "worstMargin": 1313,
+          "averageMargin": 5086,
+          "worstHour": "19:00"
+        },
+        {
+          "businessDate": "2026-09-22",
+          "worstMargin": -1544,
+          "averageMargin": 830,
+          "worstHour": "19:00"
+        },
+        {
+          "businessDate": "2026-09-23",
+          "worstMargin": -3806,
+          "averageMargin": -945,
+          "worstHour": "19:00"
+        },
+        {
+          "businessDate": "2026-09-24",
+          "worstMargin": -3582,
+          "averageMargin": -1105,
+          "worstHour": "07:00"
+        },
+        {
+          "businessDate": "2026-09-25",
+          "worstMargin": -35,
+          "averageMargin": 1403,
+          "worstHour": "17:00"
+        }
+      ]
     }
   ]
 }
