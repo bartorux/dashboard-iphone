@@ -4,15 +4,6 @@
       "at": "2026-09-17T11:15:41.409Z",
       "prompt": 53,
       "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "W środę 23 września o 07:00 rezerwa spada najgłębiej w całym okresie, lecz nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść między 07:00 a 09:00 oraz między 17:00 a 22:00.",
-      "outlook": "We wtorek 22 września oraz w środę 23 września operator ma wybór między 07:00 a 09:00 i między 17:00 a 22:00, podczas gdy w poniedziałek 21 września nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-17T11:15:41.409Z",
-      "prompt": 53,
-      "accepted": false,
       "reason": "pole headline dłuższe niż 200 znaków",
       "headline": "W środę 23 września o 07:00 rezerwa osiąga najniższy poziom w całym okresie, lecz nadwyżka utrzymuje się powyżej progu 1100 MW, co daje operatorowi prawo do ogłoszenia przywołania, ale go do tego nie zmusza.",
       "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść w godzinach 07:00-09:00 i 17:00-22:00.",
@@ -2536,6 +2527,14 @@
       "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza pogarsza się w środę 23 września. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Wtorek 22 września, czwartek 24 września i piątek 25 września przynoszą godziny z ujemnym marginesem, natomiast dzisiejsza doba oraz jutro nie zapowiadają przywołania."
+    },
+    {
+      "at": "2026-09-20T03:15:39.006Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00 i 17:00-22:00.",
+      "body": "Prognoza na tę dobę pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 22 września, w czwartek 24 września i w piątek 25 września rezerwa również spada miejscami poniżej wymaganego poziomu, podczas gdy w pozostałych dniach okresu nic nie zapowiada przywołania."
     }
   ]
 }
