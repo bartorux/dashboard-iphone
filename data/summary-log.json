@@ -4,15 +4,6 @@
       "at": "2026-09-17T12:15:43.182Z",
       "prompt": 53,
       "accepted": false,
-      "reason": "godzina bez nazwy dnia",
-      "headline": "W najbliższych dniach rezerwa momentami spada poniżej typowego zakresu z ostatnich trzydziestu dni, ale nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść w godzinach 07:00-09:00 oraz 17:00-22:00.",
-      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, a w pozostałe dni operator może je ogłosić, przy czym we wtorek 22 września i środę 23 września saldo wymiany nie jest jeszcze zaplanowane."
-    },
-    {
-      "at": "2026-09-17T12:15:43.182Z",
-      "prompt": 53,
-      "accepted": false,
       "reason": "pole headline dłuższe niż 200 znaków",
       "headline": "Dziś margines spada poniżej typowego pasma z ostatnich trzydziestu dni przez trzy godziny między 18:00 a 21:00, co daje operatorowi prawo do ogłoszenia przywołania, ale go do tego nie zmusza, przy czym na ogłoszenie jest już za późno, a między 18:00 a 19:00 obowiązuje Kompas Energetyczny PSE z zaleceniem oszczędzania.",
       "body": "Prognoza poprawia się jutro. Ogłoszenie może jeszcze nadejść.",
@@ -2533,6 +2524,14 @@
       "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "Prognoza na środę 23 września pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "We wtorek 22 września, w czwartek 24 września i w piątek 25 września rezerwa również nie pokrywa wymaganego poziomu w wybranych godzinach, natomiast w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-20T04:30:53.371Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
+      "body": "Prognoza na środy 23 września pogarsza się. Ogłoszenie może jeszcze nadejść, do tych godzin zostało bowiem ponad osiem godzin.",
+      "outlook": "We wtorek 22 września, w czwartek 24 września i w piątek 25 września operator także może ogłosić przywołanie, natomiast w pozostałe dni i godziny rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
     }
   ]
 }
