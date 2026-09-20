@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-17T19:45:41.013Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 19:00-21:00.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "We wtorek 22 września między 07:00 a 09:00 oraz między 17:00 a 22:00 i w środę 23 września między 07:00 a 09:00 oraz między 17:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-17T20:01:08.899Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Jutro między 19:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-      "body": "Prognoza poprawia się. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, we wtorek 22 września i środę 23 września operator zachowuje wybór, a w pozostałym okresie rezerwa pokrywa wymagany poziom."
-    },
-    {
       "at": "2026-09-17T20:15:41.376Z",
       "prompt": 53,
       "accepted": true,
@@ -2523,6 +2507,23 @@
       "headline": "W środę 23 września między 07:00 a 09:00 nadwyżka spadła poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
       "body": "Prognoza na środa 23 września pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 22 września, czwartek 24 września i piątek 25 września operator ma wybór i może ogłosić przywołanie, natomiast w pozostałe dni nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-20T12:01:11.759Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Marginesy przez większość czasu mieszczą się w typowym zakresie z ostatnich trzydziestu dni, choć w niektórych godzinach spadają poniżej normy.",
+      "body": "W środę 23 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 22 września między 07:00 a 09:00 oraz między 17:00 a 22:00, w środę 23 września między 07:00 a 10:00 i między 16:00 a 22:00, w czwartek 24 września między 07:00 a 11:00 i między 15:00 a 22:00 oraz w piątek 25 września między 18:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-20T12:01:11.759Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Marginesy przez większość czasu mieszczą się w typowym zakresie z ostatnich trzydziestu dni, ale w wybrane dni wchodzą głęboko poniżej normy.",
+      "body": "W środa 23 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do wyznaczonych godzin pozostało ponad osiem godzin.",
+      "outlook": "We wtorek 22 września, czwartek 24 września i piątek 25 września marginesy miejscami spadają poniżej wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
