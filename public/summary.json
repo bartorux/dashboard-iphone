@@ -1,8 +1,8 @@
 {
-  "headline": "W środę o godzinę 07:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
-  "body": "Margines spada poniżej typowego zakresu w ciągu jednej godziny. Na ogłoszenie pozostaje ponad osiem godzin.",
-  "outlook": "Dziś między 18:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a jutro między 19:00 a 20:00 ogłoszenie może jeszcze nadejść; w pozostałych dniach sytuacja jest zmienna, a w piątek prognoza wciąż się ustala.",
-  "generatedAt": "2026-09-21T16:45:41.052Z",
+  "headline": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+  "body": "W środę między 07:00 a 09:00 rezerwa spadnie, a nadwyżka spadnie poniżej progu 1100 MW. Ogłoszenie może jeszcze nadejść.",
+  "outlook": "W czwartek między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW, a w piątek prognoza jeszcze się ustala.",
+  "generatedAt": "2026-09-21T17:01:12.419Z",
   "dates": [
     "2026-09-21",
     "2026-09-22",
@@ -10,6 +10,6 @@
     "2026-09-24",
     "2026-09-25"
   ],
-  "assessment": "2026-09-21|R|moderate|-900|19:00|0|1|0|moderate:18:00-21:00|K2:19:00-21:00|-;2026-09-22|R|moderate|-300|19:00|2|1|8|moderate:19:00-20:00|K2:19:00-20:00|-;2026-09-23|R|high|-3200|19:00|0|10|3|high:07:00-09:00,moderate:09:00-10:00,moderate:16:00-17:00,high:17:00-22:00||-;2026-09-24|R|high|-3700|07:00|0|16|0|high:07:00-10:00,moderate:10:00-16:00,high:16:00-21:00,moderate:21:00-22:00||X;2026-09-25|R|none|100|09:00|7|1|10|||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
+  "assessment": "2026-09-21|R|moderate|-900|19:00|0|1|0|moderate:19:00-21:00|K2:19:00-21:00|-;2026-09-22|R|moderate|-300|19:00|2|1|7|moderate:19:00-20:00||-;2026-09-23|R|high|-3200|19:00|0|10|3|high:07:00-09:00,moderate:09:00-10:00,moderate:16:00-17:00,high:17:00-22:00||-;2026-09-24|R|high|-3700|07:00|0|16|0|high:07:00-10:00,moderate:10:00-16:00,high:16:00-21:00,moderate:21:00-22:00||X;2026-09-25|R|none|100|09:00|7|1|10|||X#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v53",
   "model": "gemini-3.5-flash-lite"
 }
