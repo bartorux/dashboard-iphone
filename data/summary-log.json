@@ -4,15 +4,6 @@
       "at": "2026-09-19T06:15:40.473Z",
       "prompt": 53,
       "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "We wtorek 22 września o godzinie 19:00 nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "W środę 23 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, w czwartek 24 września i piątek 25 września operator może ogłosić przywołanie między 07:00 a 10:00 oraz 16:00 a 22:00, a w pozostałych dniach rezerwa pokrywa wymagany poziom."
-    },
-    {
-      "at": "2026-09-19T06:15:40.473Z",
-      "prompt": 53,
-      "accepted": false,
       "reason": "pole outlook dłuższe niż 300 znaków",
       "headline": "We wtorek 22 września o 19:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie bez możliwości jego pominięcia.",
       "body": "W poniedziałek 21 września prognoza jeszcze się ustala. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -2495,6 +2486,14 @@
       "headline": "W środę operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek między 07:00 a 11:00 nadwyżka także trzyma się poniżej progu 1100 MW, a rezerwa w tej dobie liczy się bez salda wymiany, natomiast w pozostałych dniach rezerwa miejscami nie pokrywa wymaganego poziomu, lecz operator zachowuje wybór."
+    },
+    {
+      "at": "2026-09-21T23:15:42.672Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W czwartek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "W środę prognoza poprawia się. Do wskazanych godzin ogłoszenie może jeszcze nadejść.",
+      "outlook": "W śrubujący warunki czwartek oraz w piątek saldo wymiany nie jest jeszcze zaplanowane, a w jutrzejszy dzień i w pozostałych godzinach rezerwa faluje lub pokrywa wymagany poziom."
     }
   ]
 }
