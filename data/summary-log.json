@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-18T16:45:43.844Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę 23 września między 07:00 a 09:00 nadwyżka w systemie spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "Prognoza na środę 23 września pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE na dziś zaleca oszczędzanie między 20:00 a 21:00.",
-      "outlook": "We wtorek 22 września między 07:00 a 09:00 oraz 17:00 a 22:00 i w czwartek 24 września w wyznaczonych godzinach operator może ogłosić przywołanie, ale ma wybór, natomiast poniedziałek upływa spokojnie."
-    },
-    {
-      "at": "2026-09-18T16:45:43.844Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę 23 września między 07:00 a 09:00 nadwyżka w systemie spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "W środę 23 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE na dziś zaleca oszczędzanie w godzinach 20:00-21:00.",
-      "outlook": "W poniedziałek nic nie zapowiada przywołania, natomiast we wtorek, środę i czwartek operator zachowuje wybór lub musi liczyć się z przywołaniem w wybranych godzinach."
-    },
-    {
       "at": "2026-09-18T17:01:08.458Z",
       "prompt": 53,
       "accepted": false,
@@ -2505,6 +2488,24 @@
       "headline": "W środę operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
       "body": "W piątek prognoza jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść w kolejnych dobach, do których zostało ponad osiem godzin.",
       "outlook": "Dziś rezerwa pokrywa wymagany poziom, a w pozostałych dniach operator ma wybór albo nadwyżka spada poniżej progu."
+    },
+    {
+      "at": "2026-09-21T11:01:07.783Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W środę o godzinę siedemnastą margines spadnie do najniższego poziomu w całym okresie, a nadwyżka utrzyma się poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Prognoza na piątek jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do godzin objętych wyborem operatora zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro między 07:00 a 09:00 oraz od 19:00 do 21:00 operator ma wybór, w środę między 07:00 a 09:00 i od 17:00 do 22:00 oraz w czwartek w wyznaczonych godzinach nadwyżka spada poniżej progu 1100 MW, natomiast w pozostałych dniach rezerwa pokrywa wymagany poziom."
+    },
+    {
+      "at": "2026-09-21T11:01:07.783Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W czwartek między 07:00 a 08:00 rezerwa osiąga najniższy margines, a operator może ogłosić przywołanie, ponieważ nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "W piątek prognoza jeszcze się ustala, a rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i piątek marginesy w wyznaczonych godzinach spadają poniżej wymaganego poziomu, podczas gdy dzisiaj nic nie zapowiada przywołania."
     }
   ]
 }
