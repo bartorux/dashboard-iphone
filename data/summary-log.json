@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-18T14:45:44.947Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "Dziś, we wtorek 22 września, w środę 23 września i w czwartek 24 września operator może ogłosić przywołanie, przy czym rezerwa nie pokrywa wymaganego poziomu, a nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się w środę 23 września. Ogłoszenie może jeszcze nadejść w godzinach między 07:00 a 09:00 oraz między 17:00 a 22:00.",
-      "outlook": "W poniedziałek 21 września nic nie zapowiada przywołania, a w pozostałych dniach uważać trzeba na wskazane poranki i wieczory, pamiętając, że saldo wymiany transgranicznej dla tych dób jeszcze nie doszło."
-    },
-    {
       "at": "2026-09-18T15:01:14.900Z",
       "prompt": 53,
       "accepted": true,
@@ -2511,6 +2502,14 @@
       "headline": "W środę operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
       "body": "Prognoza w środę jeszcze się ustala i raz pokrywa wymagane wartości, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Poza środą margines bywa wąski również jutro, w czwartek oraz w piątek."
+    },
+    {
+      "at": "2026-09-21T07:45:37.529Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Margines w kraju często spada poniżej typowego poziomu z ostatnich trzydziestu dni, a w środę nadwyżka maleje poniżej progu 1100 MW w godzinach 07:00-09:00.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść dla godzin, do których zostało ponad osiem godzin.",
+      "outlook": "W środę, czwartek i piątek saldo wymiany nie jest jeszcze zaplanowane, a w pozostałych dniach rezerwa w niektórych godzinach nie pokrywa wymaganego poziomu."
     }
   ]
 }
