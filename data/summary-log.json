@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-18T21:45:49.226Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę 23 września między 07:00 a 09:00 nadwyżka w systemie spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a rezerwa nie pokrywa wymaganego poziomu.",
-      "body": "Prognoza na środę 23 września pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 22 września między 07:00 a 09:00 oraz 17:00 a 22:00, a także w czwartek 24 września w wyznaczonych godzinach nadwyżka utrzymuje się powyżej progu 1100 MW i operator ma wybór, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-18T22:01:11.841Z",
       "prompt": 53,
       "accepted": false,
@@ -2504,6 +2495,14 @@
       "headline": "Dziś między 18:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW, więc operator może ogłosić przywołanie, lecz nie musi.",
       "body": "Jutro między 19:00 a 20:00 rezerwa nie pokrywa wymaganej wielkości, a Kompas Energetyczny PSE wskazuje zalecane oszczędzanie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę i czwartek nadwyżka spada poniżej progu 1100 MW, natomiast w piątek prognoza jeszcze się ustala."
+    },
+    {
+      "at": "2026-09-21T16:15:41.078Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W środę o 19:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a rezerwa nie pokrywa wymaganego poziomu.",
+      "body": "W piątek prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek między 19:00 a 20:00 obowiązuje Kompas Energetyczny PSE ze wskazaniem na zalecane oszczędzanie, podczas gdy w pozostałe dni poza środą i czwartkiem nic nie zapowiada przywołania."
     }
   ]
 }
