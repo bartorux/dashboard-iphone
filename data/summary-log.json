@@ -6,15 +6,6 @@
       "accepted": false,
       "reason": "pole outlook dłuższe niż 300 znaków",
       "headline": "We wtorek 22 września o 19:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "Prognoza pogarsza się we wtorek 22 września. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 21 września między 19:00 a 21:00 oraz w piątek 25 września między 17:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a w środę 23 września i czwartek 24 września nadwyżka spada poniżej progu 1100 MW w licznych godzinach porannych i wieczornych, podczas gdy w pozostałe dni i godziny nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-19T06:01:10.845Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "We wtorek 22 września o 19:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie bez możliwości jego pominięcia.",
       "body": "Prognoza na wtorek 22 września pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 21 września między 19:00 a 21:00 oraz w piątek 25 września między 17:00 a 21:00 operator może ogłosić przywołanie, w środę 23 września między 07:00 a 22:00 oraz w czwartek 24 września między 07:00 a 22:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałe dni i godziny nic nie zapowiada przywołania."
     },
@@ -2497,6 +2488,14 @@
       "headline": "Margines spora część doby trzyma poza typowym pasmem z ostatnich trzydziestu dni.",
       "body": "Prognoza na środę poprawia się. Ogłoszenie może jeszcze nadejść w godzinach 07:00-09:00.",
       "outlook": "Jutro o 19:00-20:00 operator ma wybór, a w czwartek i piątek przywołanie wchodzi w grę w kilku godzinach."
+    },
+    {
+      "at": "2026-09-21T22:45:51.114Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Margines spada w tym tygodniu poniżej typowego zakresu w wielu godzinach, dając operatorowi uprawnienie do przywołania w kolejne dni.",
+      "body": "Prognoza na środę poprawia się. Ogłoszenie może jeszcze nadejść w środę między 07:00 a 09:00 oraz między 17:00 a 22:00.",
+      "outlook": "Jutro margines spadnie między 19:00 a 20:00, w czwartek nadwyżka spadnie poniżej progu 1100 MW między 07:00 a 10:00 oraz między 15:00 a 21:00, a w piątek operator zachowa wybór między 08:00 a 09:00 oraz między 17:00 a 18:00."
     }
   ]
 }
