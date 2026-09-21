@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-18T14:31:03.429Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Dziś, we wtorek 22 września, w środę 23 września oraz w czwartek 24 września operator może ogłosić przywołanie, podczas gdy w poniedziałek 21 września nic go nie zapowiada.",
-      "body": "W środę 23 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść dla godzin między 07:00 a 10:00 oraz między 16:00 a 22:00.",
-      "outlook": "We wtorek 22 września rezerwa spadnie poniżej wymaganego poziomu między 07:00 a 09:00 oraz między 17:00 a 22:00, w środę 23 września między 07:00 a 10:00 i między 16:00 a 22:00, a w czwartek 24 września między 07:00 a 10:00 i między 16:00 a 22:00, natomiast w pozostałe dni i godziny rezerwa pokrywa wymagany poziom lub obowiązują godziny poza ogłoszeniami."
-    },
-    {
-      "at": "2026-09-18T14:31:03.429Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś, we wtorek 22 września, w środę 23 września i w czwartek 24 września operator może ogłosić przywołanie, podczas gdy w poniedziałek 21 września nic go nie zapowiada.",
-      "body": "W środę 23 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 22 września między 07:00 a 09:00 oraz między 17:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, a saldo wymiany na tę dobę nie jest jeszcze zaplanowane, natomiast w pozostałe dni w wyznaczonych godzinach nadwyżka spada poniżej progu 1100 MW."
-    },
-    {
       "at": "2026-09-18T14:45:44.947Z",
       "prompt": 53,
       "accepted": false,
@@ -2512,6 +2494,24 @@
       "headline": "Margines w kolejnych dniach mocno się waha — w środę i czwartek spada poniżej typowego zakresu z ostatnich trzydziestu dni, a w piątek wraca do normy.",
       "body": "W środę saldo wymiany nie jest jeszcze zaplanowane, więc rezerwa liczy się bez importu i eksportu i zmieni się po dojściu planu. Do wyznaczonych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek przywołanie wchodzi w grę między 07:00 a 11:00 oraz między 15:00 a 22:00, natomiast w pozostałe dni okresu nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-21T07:15:44.550Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "„dodatkowy\" zamiast „dodatni\"",
+      "headline": "Margines w dużej części godzin wypada poza typowy zakres z ostatnich trzydziestu dni.",
+      "body": "Jutro prognoza jeszcze się ustala i rezerwa w niektórych godzinach nie pokrywa wymaganego poziomu. Do wyznaczonych godzin pozostało wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i piątek margines w wielu godzinach nie pokrywa wymaganego poziomu, a w środę i czwartek nadwyżka dodatkowo spada poniżej progu 1100 MW."
+    },
+    {
+      "at": "2026-09-21T07:15:44.550Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Marginesy w większości dni wyraźnie odbiegają od typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza jeszcze się ustala we wtorek, a w środę i czwartek saldo wymiany nie jest jeszcze zaplanowane, więc rezerwa liczy się bez importu i eksportu. Ogłoszenie może jeszcze nadejść w godzinach porannych i wieczornych, ponieważ do tych przedziałów zostało jeszcze ponad osiem godzin.",
+      "outlook": "W środę, czwartek i piątek operator może ogłosić przywołanie w wyznaczonych godzinach, natomiast dziś nic go nie zapowiada."
     }
   ]
 }
