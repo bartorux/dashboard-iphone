@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-19T04:15:40.529Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Wtorek 22 września przynosi godziny, w których nadwyżka spada poniżej progu 1100 MW i operator traci możliwość pominięcia przywołania.",
-      "body": "Prognoza pogarsza się we wtorek 22 września. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "W środę 23 września i czwartek 24 września nadwyżka również spada poniżej progu 1100 MW w części godzin, w piątek 25 września operator ma wybór w godzinach 18:00-20:00, a w pozostałe dni nic nie zapowiada przywołania. Saldo wymiany na dobę poniedziałku 21 września oraz kolejne dni nie jest jeszcze zaplanowane, więc rezerwa liczy się bez importu i eksportu i może się zmienić, gdy plan dojdzie dzień wcześniej około 13:00."
-    },
-    {
       "at": "2026-09-19T04:30:55.620Z",
       "prompt": 53,
       "accepted": true,
@@ -2500,6 +2491,14 @@
       "headline": "W środę operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
       "body": "W piątek prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Dzisiaj nic nie zapowiada przywołania, a w kolejne dni margines kurczy się w wybranych godzinach."
+    },
+    {
+      "at": "2026-09-21T20:15:44.583Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W najbliższych godzinach rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania, jednak w kolejnych dniach sytuacja się zmienia.",
+      "body": "W piątek prognoza jeszcze się ustala — raz pokrywa wymagane wartości, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek, środę i czwartek operator może ogłosić przywołanie, a w pozostałe dni okresu rezerwa nie budzi zastrzeżeń."
     }
   ]
 }
