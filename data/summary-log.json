@@ -3,15 +3,6 @@
     {
       "at": "2026-09-19T18:15:43.532Z",
       "prompt": 53,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "W środę 23 września operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach między 07:00 a 09:00 oraz między 17:00 a 22:00.",
-      "body": "W środę 23 września prognoza dla salda wymiany transgranicznej jeszcze nie doszła, więc rezerwa liczy się bez importu i eksportu i może się zmienić. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 22 września oraz w czwartek 24 września w wybranych godzinach między 07:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, podczas gdy w pozostałym okresie nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-19T18:15:43.532Z",
-      "prompt": 53,
       "accepted": true,
       "headline": "W środę 23 września nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00 i 17:00-22:00, co oznacza, że operator może ogłosić przywołanie bez względu na próg.",
       "body": "W środę 23 września prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -2481,6 +2472,14 @@
       "headline": "W czwartek operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00.",
       "body": "Godzina 17:00 wyróżnia się najniższym marginesem, ponieważ PV spada poniżej normy, a zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "W poniedziałek 28 września nic nie zapowiada przywołania, a w pozostałe dni rezerwa w niektórych godzinach nie pokrywa wymaganego poziomu."
+    },
+    {
+      "at": "2026-09-22T14:31:06.029Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W czwartek nadwyżka spadła poniżej progu 1100 MW, dając operatorowi pełną swobodę przywołania.",
+      "body": "Dziś margines ujemny dotyka godziny 19:00, ponieważ zapotrzebowanie przewyższa normę przy jednoczesnym spadku PV. Ogłoszenie może jeszcze nadejść w kolejnych dobach roboczych, o ile wyprzedzenie przekracza osiem godzin.",
+      "outlook": "Poza wskazanymi dniami, w poniedziałek 28 września rezerwa w pełni pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
     }
   ]
 }
