@@ -1,8 +1,8 @@
 {
-  "headline": "Przywołanie wchodzi w grę, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
-  "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
-  "outlook": "W środę i czwartek nadwyżka również spada poniżej progu 1100 MW, w piątek i poniedziałek operator zachowuje wybór, a w poniedziałek 28 września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-22T09:15:45.485Z",
+  "headline": "Operator może ogłosić przywołanie jutro w godzinach 07:00-09:00, bo nadwyżka spadła poniżej progu 1100 MW.",
+  "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 11:00 a 12:00 oraz między 19:00 a 20:00.",
+  "outlook": "W czwartek i piątek margines bywa ujemny, natomiast poniedziałek 28 września przynosi wyłącznie dodatnie wartości.",
+  "generatedAt": "2026-09-22T09:31:09.747Z",
   "dates": [
     "2026-09-22",
     "2026-09-23",
@@ -10,6 +10,6 @@
     "2026-09-25",
     "2026-09-28"
   ],
-  "assessment": "2026-09-22|R|moderate|-500|11:00|1|5|4|moderate:11:00-12:00,moderate:15:00-16:00,moderate:19:00-20:00|K2:11:00-12:00|-;2026-09-23|R|high|-3600|19:00|0|11|1|high:07:00-09:00,moderate:09:00-10:00,moderate:16:00-17:00,high:17:00-22:00||-;2026-09-24|R|high|-3500|19:00|0|17|0|high:07:00-10:00,moderate:10:00-15:00,high:15:00-22:00||X;2026-09-25|R|moderate|-1500|08:00|1|11|6|moderate:07:00-10:00,moderate:15:00-21:00||X;2026-09-28|R|none|1100|07:00|0|0|23|||X#-/below/prognoza poprawia się#v53",
+  "assessment": "2026-09-22|R|moderate|-500|11:00|2|5|4|moderate:11:00-12:00,moderate:19:00-20:00|K2:11:00-12:00,K2:19:00-20:00|-;2026-09-23|R|high|-3600|19:00|0|11|1|high:07:00-09:00,moderate:09:00-10:00,moderate:16:00-17:00,high:17:00-22:00||-;2026-09-24|R|high|-3500|19:00|0|17|0|high:07:00-10:00,moderate:10:00-15:00,high:15:00-22:00||X;2026-09-25|R|moderate|-1500|08:00|1|11|6|moderate:07:00-10:00,moderate:15:00-21:00||X;2026-09-28|R|none|900|07:00|0|0|23|||X#-/below/prognoza poprawia się#v53",
   "model": "gemini-3.5-flash-lite"
 }
