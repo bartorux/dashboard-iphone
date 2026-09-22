@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-19T17:45:42.907Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
-      "body": "W poniedziałek 21 września prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 22 września między 07:00 a 09:00 oraz od 17:00 do 22:00 margines dodatni nie pokrywa wymaganej wartości, w czwartek 24 września między 07:00 a 09:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałe dni i godziny nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-19T18:01:09.435Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę 23 września nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00 i operator może ogłosić przywołanie.",
-      "body": "W środę 23 września saldo wymiany na tę dobę nie jest jeszcze zaplanowane, więc rezerwa liczy się bez importu i eksportu. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 22 września o 19:00 oraz w czwartek 24 września o 07:00 margines również spada, podczas gdy w pozostałe dni okresu nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-19T18:12:11.129Z",
       "prompt": 53,
       "accepted": true,
@@ -2480,6 +2464,23 @@
       "headline": "W czwartek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek i poniedziałek rezerwa liczy się bez planu salda wymiany, a w pozostałe dni doby przynoszą godziny z nadwyżką poniżej progu 1100 MW."
+    },
+    {
+      "at": "2026-09-22T13:31:00.041Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W czwartek operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00 oraz 16:00-21:00.",
+      "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek i w środę operator również może ogłosić przywołanie w wyznaczonych godzinach, natomiast poniedziałek 28 września mija spokojnie i nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-22T13:31:00.041Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W czwartek operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00 oraz 16:00-21:00.",
+      "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek i w środę nadwyżka również spada poniżej progu 1100 MW w wybranych godzinach porannych, podczas gdy w poniedziałek 28 września nic nie zapowiada przywołania."
     }
   ]
 }
