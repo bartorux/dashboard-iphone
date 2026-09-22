@@ -1,14 +1,14 @@
 {
-  "headline": "W czwartek między 07:00 a 12:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
-  "body": "W czwartek zapotrzebowanie rośnie powyżej normy, a fotowoltaika spada poniżej normy. Ogłoszenie może jeszcze nadejść. Saldo wymiany na czwartek nie doszło jeszcze.",
-  "outlook": "W piątek i w poniedziałek 28 września rezerwa liczy się bez salda wymiany, a w piątek wymagany poziom pozostaje wstępny, natomiast jutro nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-22T23:01:46.478Z",
+  "headline": "W piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00 i 15:00-22:00.",
+  "body": "Saldo wymiany transgranicznej na tę dobę nie jest jeszcze zaplanowane, a wymagany poziom pozostaje wstępny. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+  "outlook": "W czwartek przywołanie wchodzi w grę między 07:00 a 11:00 oraz 15:00 a 22:00, natomiast jutro i w poniedziałek 28 września nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-22T23:15:47.260Z",
   "dates": [
     "2026-09-23",
     "2026-09-24",
     "2026-09-25",
     "2026-09-28"
   ],
-  "assessment": "2026-09-23|R|none|0|08:00|2|3|6|||-|-;2026-09-24|R|high|-3200|19:00|0|16|0|high:07:00-12:00,moderate:12:00-14:00,high:14:00-22:00||X|-;2026-09-25|R|high|-3600|17:00|0|16|0|high:07:00-10:00,moderate:10:00-15:00,high:15:00-22:00||X|P;2026-09-28|R|none|900|07:00|0|0|22|||X|P#zapotrzebowanie powyżej normy, PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v54",
+  "assessment": "2026-09-23|R|none|0|08:00|2|3|6|||-|-;2026-09-24|R|high|-3200|19:00|0|16|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-22:00||X|-;2026-09-25|R|high|-3700|17:00|0|16|0|high:07:00-10:00,moderate:10:00-15:00,high:15:00-22:00||X|P;2026-09-28|R|none|900|07:00|0|0|22|||X|P#zapotrzebowanie powyżej normy, PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v54",
   "model": "gemini-3.5-flash-lite"
 }
