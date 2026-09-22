@@ -4,15 +4,6 @@
       "at": "2026-09-19T14:45:42.078Z",
       "prompt": 53,
       "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę 23 września przywołanie wchodzi w grę, ponieważ nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
-      "body": "We wtorek 22 września prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, a raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 22 września, w środę 23 września i w czwartek 24 września operator może ogłosić przywołanie w wyznaczonych godzinach, natomiast pozostałe dni nie przynoszą takich sygnałów."
-    },
-    {
-      "at": "2026-09-19T14:45:42.078Z",
-      "prompt": 53,
-      "accepted": false,
       "reason": "okno ośmiu godzin opisane odwrotnie",
       "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
       "body": "W poniedziałek 21 września prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin minęło wymagane wyprzedzenie, więc ogłoszenie może jeszcze nadejść.",
@@ -2486,6 +2477,14 @@
       "headline": "Operator może ogłosić przywołanie jutro w godzinach 07:00-09:00, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 11:00 a 12:00 oraz między 19:00 a 20:00.",
       "outlook": "W czwartek i piątek margines bywa ujemny, natomiast poniedziałek 28 września przynosi wyłącznie dodatnie wartości."
+    },
+    {
+      "at": "2026-09-22T09:45:44.809Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
+      "body": "Prognoza jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek, piątek oraz w najbliższych dniach nadwyżka okresowo spada, natomiast poniedziałek 28 września mija bez przywołania."
     }
   ]
 }
