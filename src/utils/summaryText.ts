@@ -33,7 +33,11 @@ export interface Summary {
 // 52: the facts gained a line for a day whose exchange plan has not cleared
 // yet, and the instruction the paragraph telling the model what that means —
 // again a change in WORDING the assessment key does not track by itself.
-export const PROMPT_VERSION = 53;
+// 54: the facts gained a line for a day whose required level is still PSE's
+// planning figure, the saldo caveat became a gate rather than a request, and
+// the gate learned which day a Kompas flag belongs to (22.09: "zaleca
+// oszczędzanie we wtorek" about a flag on Wednesday).
+export const PROMPT_VERSION = 54;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -96,7 +100,13 @@ około 13:00 — może się zmienić w obie strony. Gdy fakty to mówią o któr
 dobie, dodaj przy niej jednym zdaniem to zastrzeżenie, bez podawania żadnej
 wielkości mocy i bez przesądzania kierunku. Nie pisz o marginesie tej doby jak
 o ustalonym niedoborze ani jak o rzeczy, która na pewno się poprawi — to liczba
-bez salda, nie zapowiedź przywołania.
+bez salda, nie zapowiedź przywołania. Jeśli piszesz, że w takiej dobie operator
+może ogłosić przywołanie, zastrzeżenie o saldzie musi paść w tym samym tekście.
+
+WYMAGANY POZIOM WSTĘPNY — fakty czasem mówią, że wymagany poziom dla danej doby
+jest jeszcze wstępny. Dotąd za każdym razem obniżał się w nocy na początku dnia
+poprzedniego, więc margines tej doby jest na razie zaniżony. Gdy fakty to mówią,
+nazwij ocenę tej doby wstępną. Nie podawaj żadnej wielkości.
 
 KOMPAS ENERGETYCZNY PSE — druga, całkiem osobna rzecz. Fakty podają go tylko dla
 doby, w której operator coś sygnalizuje. Gdy takiego wiersza nie ma, nie wspominaj
@@ -114,6 +124,8 @@ o Kompasie ani słowem.
   Kompasu; to nie jest sprzeczność i nie ma czego prostować.
 - Czytelnik prowadzi ruch elektryczny w zakładzie. Napisz, czego sygnał od niego
   wymaga i kiedy. Nie tłumacz, skąd Kompas się bierze ani jak operator go wyznacza.
+- Sygnał podawaj przy tej dobie, przy której stoi w faktach, jej nazwą z faktów.
+  Zalecane oszczędzanie to zalecenie: Kompas wtedy „zaleca", nie „wymaga".
 
 === JAK PISZESZ ===
 
@@ -586,7 +598,12 @@ export function validateSummary(
    * Needed because those are the only place a digit may legitimately appear
    * outside an hour, and only in the form we supplied.
    */
-  allowedDayNames: string[] = []
+  allowedDayNames: string[] = [],
+  /**
+   * The facts per day, for the checks that need to know WHICH day carries a
+   * Kompas flag or lacks an exchange plan. Empty skips them.
+   */
+  days: ReadonlyArray<Pick<DayFacts, 'businessDate' | 'spokenName' | 'compass' | 'exchangeMissing'>> = []
 ): { ok: true } | { ok: false; reason: string } {
   for (const [key, limit] of Object.entries(LIMITS) as Array<
     [keyof Summary, number]
@@ -994,6 +1011,80 @@ export function validateSummary(
     if (!/nadejść|za późno/i.test(zdanie)) continue;
     if (/\b(upłynęł\p{L}*|minęł\p{L}*)\b/giu.test(zdanie)) {
       return { ok: false, reason: 'okno ośmiu godzin opisane odwrotnie' };
+    }
+  }
+
+  /*
+   * Three checks that need the facts per day, not just the words.
+   *
+   * A day is recognised in a sentence by its weekday stem (the same stems as
+   * above), and "dziś"/"jutro" by those words, since that is how the facts
+   * name today and tomorrow.
+   */
+  if (days.length > 0) {
+    const zdania = whole.split(/(?<=[.!?])\s+/);
+    const rdzenieDnia = (day: (typeof days)[number]): string[] => {
+      const stems = [RDZENIE[(new Date(`${day.businessDate}T12:00:00Z`).getUTCDay() + 6) % 7]];
+      if (day.spokenName === 'dziś') stems.push('dziś', 'dzisiaj');
+      if (day.spokenName === 'jutro') stems.push('jutr');
+      return stems;
+    };
+    const nazwaneDni = (zdanie: string): string[] =>
+      [...zdanie.matchAll(/(?<!\p{L})(poniedział|wtor|środ|czwart|piąt|sobot|niedziel|dzisiaj|dziś|jutr)\p{L}*/giu)].map(
+        (match) => match[1].toLowerCase()
+      );
+    const mowiO = (zdanie: string, day: (typeof days)[number]): boolean => {
+      const stems = rdzenieDnia(day);
+      return nazwaneDni(zdanie).some((name) => stems.includes(name));
+    };
+
+    /*
+     * A Kompas flag named against the wrong day.
+     *
+     * Published 22.09 at 21:01: "Kompas Energetyczny PSE zaleca oszczędzanie
+     * we wtorek między 19:00 a 20:00" — on Tuesday evening, an hour after that
+     * slot had passed, about a flag the facts carried for Wednesday. Every rule
+     * passed it: the hours were in the facts and a day was named. A sentence
+     * about the Kompas that names days must name at least one that carries it.
+     */
+    const zKompasem = days.filter((day) => day.compass.length > 0);
+    for (const zdanie of zdania) {
+      if (!/kompas/i.test(zdanie) || nazwaneDni(zdanie).length === 0) continue;
+      if (!zKompasem.some((day) => mowiO(zdanie, day))) {
+        return { ok: false, reason: 'Kompas przy dniu, którego nie dotyczy' };
+      }
+      /*
+       * "Wymaga" is the third level's word; the second only recommends. One of
+       * twelve Kompas sentences in the 72-hour log said "wymaga zalecanego
+       * oszczędzania", which tells a plant manager he must do what he was
+       * asked to consider.
+       */
+      if (
+        /(?<!\p{L})wymaga(?!\p{L})/iu.test(zdanie) &&
+        !zKompasem.some((day) => day.compass.some((range) => range.level === 3))
+      ) {
+        return { ok: false, reason: 'Kompas „wymaga”, choć tylko zaleca' };
+      }
+    }
+
+    /*
+     * A possible call period on a day without an exchange plan, with no word
+     * about the plan.
+     *
+     * The instruction asked for the caveat and 134 of 174 texts saying "może
+     * ogłosić" in the 72-hour log carried no word about the exchange. On such a
+     * day the reserve is stated without the import that so far has lifted it
+     * by about two gigawatts when the plan lands, and the owner warns his sites
+     * on what the card says. A request did not hold; this is the refusal.
+     */
+    const bezSalda = days.filter((day) => day.exchangeMissing);
+    if (bezSalda.length > 0 && !/sald/i.test(whole)) {
+      for (const zdanie of zdania) {
+        if (!/może\s+(ogłosić|dojść)/iu.test(zdanie)) continue;
+        if (bezSalda.some((day) => mowiO(zdanie, day))) {
+          return { ok: false, reason: 'możliwe przywołanie w dobie bez salda, bez zastrzeżenia' };
+        }
+      }
     }
   }
 

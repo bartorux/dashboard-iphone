@@ -224,8 +224,8 @@ function FeatureCell({
  * flagged "(zmiana salda)": that is the moment worth noticing, not the
  * figure itself.
  *
- * A reading whose exchange is still the pre-market-clearing placeholder
- * (`!readingHasExchange`, see exchangePlan.ts) is tagged "przed saldem" and
+ * A reading taken while the day's exchange was still the pre-market-clearing
+ * placeholder (its `planned` flag, see `Reading`) is tagged "przed saldem" and
  * kept OUT of the warn-colour count: its low surplus is an artefact of the
  * forecast not having cleared yet — see `dwellFor` in badanie.ts, which
  * excludes the very same readings from the dwell run for the same reason —
@@ -235,11 +235,11 @@ function FeatureCell({
 function ReadingsList({ day, dwellFloorMw }: { day: DayStudy; dwellFloorMw: number }) {
   return (
     <ol className="space-y-1 py-2 pl-1 text-[0.8125rem]">
-      {day.readings.map(([readAt, surplus, required, exchange], index) => {
+      {day.readings.map(([readAt, surplus, required, exchange, planned], index) => {
         const isWindow = readAt === day.window.readAt;
         const margin = surplus - required;
         const currentExchange = exchange ?? null;
-        const hasExchange = readingHasExchange(currentExchange);
+        const hasExchange = planned ?? readingHasExchange(currentExchange);
         const belowFloor = surplus < dwellFloorMw && hasExchange;
         const previousExchange = index > 0 ? (day.readings[index - 1][3] ?? null) : null;
         const exchangeChanged = index > 0 && currentExchange !== previousExchange;
@@ -336,7 +336,7 @@ function formatTightHoursLine(day: DayStudy): string {
  * "Saldo doszło 08.09 13:15." when this day's own timeline recorded the
  * moment — `DayStudy.exchangeArrivedAt` — or "Saldo jeszcze nie doszło." when
  * it has not yet, told apart from "the day never carried a placeholder at
- * all" by the LAST reading's own exchange, exactly the same test
+ * all" by the LAST reading's `planned` flag, exactly the same test
  * `ReadingsList` already uses for its "przed saldem" tag. Neither line is
  * shown for a day with no readings at all, or one whose last reading always
  * had a real exchange (or none the archive could judge either way) with no
@@ -347,7 +347,7 @@ function formatExchangeArrivalLine(day: DayStudy): string | null {
     return `Saldo doszło ${formatLocalDateTime(day.exchangeArrivedAt)}.`;
   }
   const last = day.readings[day.readings.length - 1];
-  if (last && !readingHasExchange(last[3] ?? null)) {
+  if (last && !(last[4] ?? readingHasExchange(last[3] ?? null))) {
     return 'Saldo jeszcze nie doszło.';
   }
   return null;

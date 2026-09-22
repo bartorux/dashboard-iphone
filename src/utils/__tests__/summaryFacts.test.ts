@@ -1181,6 +1181,34 @@ function dayOfPlanned(businessDate: string, reserve: number, required = 2000) {
   );
 }
 
+describe('Wstępny wymagany poziom w faktach', () => {
+  // 22:30 UTC on 09.08 is already 00:30 on 10.08 in Warsaw: the required level
+  // for 11.08 has just come down, and 12.08 is the first day still provisional.
+  // By the UTC date, 11.08 would still count as two days ahead.
+  const PO_POLNOCY = new Date('2026-08-09T22:30:00Z');
+  const DNI = ['2026-08-10', '2026-08-11', '2026-08-12'];
+  const dane = () => DNI.flatMap((date) => dayOfPlanned(date, 5000));
+
+  it('flaguje doby od pojutrza według kalendarza warszawskiego, nie daty UTC', () => {
+    const facts = buildFacts(dane(), HISTORY_WITH_MIX, PO_POLNOCY, DNI);
+    expect(facts.map((day) => [day.businessDate, day.requiredProvisional])).toEqual([
+      ['2026-08-10', false],
+      ['2026-08-11', false],
+      ['2026-08-12', true],
+    ]);
+  });
+
+  it('mówi o tym modelowi jednym zdaniem, bez żadnej wielkości, i przenosi to do odcisku oceny', () => {
+    const facts = buildFacts(dane(), HISTORY_WITH_MIX, PO_POLNOCY, DNI);
+    const text = renderFacts(facts, 30);
+    const lines = text.split('\n').filter((line) => line.includes('wymagany poziom jest jeszcze wstępny'));
+    expect(lines).toHaveLength(1);
+    expect(lines[0]).not.toMatch(/\d/);
+    const dni = assessmentKey(facts).split('#')[0].split(';');
+    expect(dni.map((day) => day.split('|').pop())).toEqual(['-', '-', 'P']);
+  });
+});
+
 describe('Saldo wymiany w faktach', () => {
   it('flaguje dobę, której saldo wymiany jest płaskie przez całą dobę', () => {
     const facts = buildFacts(

@@ -16,24 +16,82 @@
  * a single reading jumping from 49 to 877 MW of reserve, −12 to 2941 MW of
  * exchange): a jump of 2–3 GW in one write.
  *
- * "Planned" is decided from the data, never from the clock: a day whose 24
- * hours all share one exchange value has not been planned yet. A real plan
- * varies hour by hour.
+ * "Planned" is decided from the data, never from the clock — by the size of
+ * the day's largest exchange, not by whether the hours differ. The first
+ * version asked for two different values, on the reading that the placeholder
+ * was one flat figure; from about 07.09 PSE began publishing a placeholder that
+ * varies by a few megawatts (24.09 as seen on 22.09: −9, −14, −17 and −18 MW),
+ * and the day passed for planned. The card then warned about Thursday's deficit
+ * with no word about the missing import.
  */
 export function exchangePlanned(points: ReadonlyArray<{ exchange: number | null }>): boolean {
-  const values = new Set<number>();
-  for (const point of points) {
-    if (point.exchange !== null && Number.isFinite(point.exchange)) values.add(point.exchange);
-  }
-  return values.size >= 2;
+  return exchangePeakMw(points) >= EXCHANGE_PLAN_MIN_PEAK_MW;
 }
 
 /**
- * The same question for ONE archived reading, which knows only its own hour's
- * exchange. The placeholder is small (0 or −12 MW) and a real evening-peak
- * exchange is thousands, so a magnitude test is the honest proxy; `null`
- * (rows archived before the column existed) is treated as planned, because
- * nothing can be said about them either way.
+ * Where the placeholder ends and a real plan begins, as the day's largest
+ * |exchange|.
+ *
+ * Measured on the September archive (22.09.2026): of 5114 readings taken
+ * before noon on D−1 — placeholder by construction — the largest day peak was
+ * 408 MW; of 1890 taken after 15:00 on D−1, with the plan in, the smallest was
+ * 1033 MW. The threshold sits in that gap. Should a real plan ever peak below
+ * it, the day reads as not yet planned — the cautious side, a caveat too many
+ * rather than a deficit shown as settled.
+ */
+export const EXCHANGE_PLAN_MIN_PEAK_MW = 700;
+
+function exchangePeakMw(points: ReadonlyArray<{ exchange: number | null }>): number {
+  let peak = 0;
+  for (const point of points) {
+    if (point.exchange !== null && Number.isFinite(point.exchange)) {
+      peak = Math.max(peak, Math.abs(point.exchange));
+    }
+  }
+  return peak;
+}
+
+/**
+ * The same question asked of the archive: was the day planned at the moment of
+ * each reading? Keyed by `readAt`.
+ *
+ * Answered for the WHOLE DAY as it stood at that moment — every hour's latest
+ * row at or before it — never from the one hour a reading happens to describe.
+ * A single hour cannot tell: a real plan swings through zero around midday and
+ * at night (the same measurement: 5423 of 18561 planned-day readings of hours
+ * 7–21 at 408 MW or less, 628 at 15 MW or less), while the placeholder now
+ * exceeds 15 MW on some hours (7746 of 67575 readings). The archive keeps a row
+ * only when a value changes, so a day's first reading carries all its hours and
+ * the state is complete from there on.
+ *
+ * A day whose rows carry no exchange at all (archived before the column
+ * existed) reads as planned, because nothing can be said about it either way.
+ */
+export function plannedByReading(
+  rows: ReadonlyArray<{ hour: number; readAt: string; exchange: number | null }>
+): Map<string, boolean> {
+  const byTime = [...rows].sort((a, b) => Date.parse(a.readAt) - Date.parse(b.readAt));
+  const state = new Map<number, number | null>();
+  const result = new Map<string, boolean>();
+  for (let index = 0; index < byTime.length; index++) {
+    const row = byTime[index];
+    state.set(row.hour, row.exchange);
+    const next = byTime[index + 1];
+    if (next && next.readAt === row.readAt) continue;
+    const known = [...state.values()].filter((value) => value !== null);
+    result.set(
+      row.readAt,
+      known.length === 0 || exchangePlanned(known.map((exchange) => ({ exchange })))
+    );
+  }
+  return result;
+}
+
+/**
+ * Fallback only, for a reading serialized before `plannedByReading` existed:
+ * the same question for ONE hour's exchange, which — see above — it cannot
+ * answer reliably. `null` (rows archived before the column existed) is
+ * treated as planned.
  */
 export const EXCHANGE_PLACEHOLDER_ABS_MW = 15;
 
@@ -57,12 +115,12 @@ export const EXCHANGE_ARRIVAL_OBSERVED_LOCAL = { earliest: '13:15', latest: '13:
 /**
  * The moment a day's readings first show a real exchange after having shown
  * only the placeholder — i.e. `readAt` of the first reading, in a series
- * ordered oldest first, that `readingHasExchange` AND that is preceded
- * somewhere earlier in the series by a reading that did not.
+ * ordered oldest first, that is `planned` (see `plannedByReading`) AND that is
+ * preceded somewhere earlier in the series by a reading that was not.
  *
  * `null` in two different situations that this function deliberately does not
- * tell apart (the caller does, from the day's own last reading — see
- * `readingHasExchange` on it): the day had a real exchange from its very
+ * tell apart (the caller does, from the day's own last reading and its
+ * `planned`): the day had a real exchange from its very
  * first reading (nothing ever arrived, because there was nothing to wait
  * for), or the day still shows only the placeholder and the transition has
  * not happened yet (nothing arrived YET). Both read as "no arrival moment to
@@ -73,11 +131,11 @@ export const EXCHANGE_ARRIVAL_OBSERVED_LOCAL = { earliest: '13:15', latest: '13:
  * practice so far.
  */
 export function exchangeArrivedAt(
-  readings: ReadonlyArray<{ readAt: string; exchange: number | null }>
+  readings: ReadonlyArray<{ readAt: string; planned: boolean }>
 ): string | null {
   let sawPlaceholder = false;
   for (const reading of readings) {
-    if (readingHasExchange(reading.exchange)) {
+    if (reading.planned) {
       if (sawPlaceholder) return reading.readAt;
     } else {
       sawPlaceholder = true;

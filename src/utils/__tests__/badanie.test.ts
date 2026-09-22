@@ -440,7 +440,7 @@ describe('tightHours', () => {
 });
 
 describe('readings carry plannedExchange', () => {
-  it('passes each reading\'s exchange through to `Reading[3]`, null when absent', () => {
+  it('passes each reading\'s exchange through to `Reading[3]`, null when absent, and the day flag to `Reading[4]`', () => {
     const rows: ArchiveRow[] = [
       row('2026-07-05', 15, 2000, 1000, '2026-07-05T00:00:00Z', '', -1200),
       row('2026-07-05', 15, 2100, 1000, '2026-07-05T01:00:00Z'), // no exchange given: null
@@ -450,8 +450,8 @@ describe('readings carry plannedExchange', () => {
     const [day] = studyDays(rows, [], [], now);
 
     expect(day.readings).toEqual([
-      ['2026-07-05T00:00:00Z', 2000, 1000, -1200],
-      ['2026-07-05T01:00:00Z', 2100, 1000, null],
+      ['2026-07-05T00:00:00Z', 2000, 1000, -1200, true],
+      ['2026-07-05T01:00:00Z', 2100, 1000, null, true],
     ]);
   });
 });
@@ -593,6 +593,42 @@ describe('dwell: a placeholder-exchange reading breaks the run', () => {
 
     expect(day.window.readAt).toBe('2026-09-09T01:00:00Z');
     expect(day.dwell.value).toBe(0);
+  });
+
+  it('judges the placeholder by the whole day: −17 MW on the target hour is still a placeholder while the day peaks at −9', () => {
+    const rows: ArchiveRow[] = [
+      // 24.09 as seen on 22.09: the placeholder is no longer one flat figure,
+      // and a one-hour test at 15 MW took −17 for a real exchange.
+      row('2026-09-09', 18, 1250, 1000, '2026-09-09T00:00:00Z', '', -9),
+      row('2026-09-09', 19, 1200, 1000, '2026-09-09T00:00:00Z', '', -17),
+      // The plan lands.
+      row('2026-09-09', 18, 1350, 1000, '2026-09-09T01:00:00Z', '', 3000),
+      row('2026-09-09', 19, 1300, 1000, '2026-09-09T01:00:00Z', '', 2200),
+      row('2026-09-09', 19, 1100, 1000, '2026-09-09T02:00:00Z', '', 2300),
+    ];
+    const now = new Date('2026-09-10T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.window.readAt).toBe('2026-09-09T02:00:00Z');
+    expect(day.dwell.value).toBe(1);
+    expect(day.readings.map((reading) => reading[4])).toEqual([false, true, true]);
+    expect(day.exchangeArrivedAt).toBe('2026-09-09T01:00:00Z');
+  });
+
+  it('keeps a planned day planned when the target hour itself passes through zero', () => {
+    const rows: ArchiveRow[] = [
+      row('2026-09-09', 18, 1250, 1000, '2026-09-09T00:00:00Z', '', 3100),
+      row('2026-09-09', 19, 1200, 1000, '2026-09-09T00:00:00Z', '', 0),
+      row('2026-09-09', 19, 1300, 1000, '2026-09-09T01:00:00Z', '', 5),
+      row('2026-09-09', 19, 1100, 1000, '2026-09-09T02:00:00Z', '', -3),
+    ];
+    const now = new Date('2026-09-10T00:00:00Z');
+
+    const [day] = studyDays(rows, [], [], now);
+
+    expect(day.dwell.value).toBe(2);
+    expect(day.readings.every((reading) => reading[4] === true)).toBe(true);
   });
 });
 

@@ -1055,7 +1055,7 @@ function judge(text: string): Proba<Summary> {
     };
   }
 
-  const verdict = validateSummary(parsed, allowedHours, allowedDayNames);
+  const verdict = validateSummary(parsed, allowedHours, allowedDayNames, facts);
   return verdict.ok
     ? { ok: true, summary: parsed }
     : { ok: false, summary: parsed, reason: verdict.reason };

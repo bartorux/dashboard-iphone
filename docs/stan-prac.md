@@ -851,6 +851,55 @@ wersja i zły JSON dają domyślne. Dzięki temu karta dodana w przyszłej wersj
 migracji. „Przywróć układ” czyści wyłącznie ten klucz; zwinięcie kart i zapamiętana zakładka
 wykresu to nawyki czytania, nie układ.
 
+## Saldo rozpoznawane po wielkości, walidator zna dni (22.09.2026, v3.89.0)
+
+**Skąd.** Właściciel po alarmie na jutro **uprzedza obiekty**, więc fałszywy alarm kosztuje pracę
+i zaufanie klientów; najbardziej przeszkadzają mu fałszywe alarmy i brak zaufania do werdyktu.
+Przypadek z 22.09, 21:01: karta AI „W czwartek i piątek operator może ogłosić przywołanie”
+(24.09 −1039 MW nadwyżki przy wymaganej 2960 MW), badanie dla tych dób 1 ekstremum z 4, pasek „OK”,
+odznaka 54 — cztery odpowiedzi o jednej dobie. Czwartek nie miał przy tym zdania o saldzie.
+
+**Błąd.** `exchangePlanned` uznawał dobę za zaplanowaną przy ≥ 2 różnych wartościach salda. Od około
+07.09 PSE publikuje dla D+2 wartość zastępczą, która **różni się o kilka megawatów między godzinami**
+(24.09: −9/−14/−17/−18 MW), zwykle od ok. 13:45 w D−2. Odtworzenie na archiwum, doby robocze
+09–24.09, ile z nich uchodziło za doby z saldem, choć saldo przychodzi dopiero ok. 13:15 w D−1:
+D−2 12:00 — 0 z 11 (zastępcza jeszcze płaska), **D−2 18:00 — 11 z 11, D−1 09:00 — 12 z 12, D−1 12:00 —
+12 z 12**. Zastrzeżenie o saldzie z v3.74 nie pojawiało się więc ani wieczorem, ani rano o „jutrze”
+— dokładnie wtedy, gdy właściciel decyduje. Po zmianie: 0 we wszystkich czterech chwilach.
+
+**Naprawa.** Doba ma plan, gdy największe |saldo| ≥ **700 MW** (`EXCHANGE_PLAN_MIN_PEAK_MW`): 5114
+odczytów sprzed południa D−1 — najwyżej 408 MW, 1890 odczytów po 15:00 D−1 — najmniej 1033 MW.
+W badaniu decyzja zapada **dla całej doby w chwili odczytu** (`plannedByReading`), bo jedna godzina
+myliła się w obie strony: 7746 z 67 575 odczytów godzin 7–21 bez planu miało |saldo| > 15 MW,
+a 628 z 18 561 z planem — ≤ 15 MW (prawdziwe saldo przechodzi przez zero w południe i w nocy).
+`badanie.json` niesie flagę jako piąty element odczytu; strona dla starszych plików wraca do testu
+godzinowego. **Werdykty minionych dób bez zmian** — przeliczone starym i nowym kodem na archiwum
+z 22.09 ze zdarzeniami z rejestru: 32 z 32 doby identyczne.
+
+**Wymagany poziom dla D+2 jest wstępny.** W każdej z 24 dób 31.08–23.09 wymagana rezerwa godzin 7–21
+spadła w pierwszym odczycie po północy na początku D−1, o 376–1071 MW (mediana 813). Fakty dostają dla
+dób ≥ 2 dni naprzód (kalendarz warszawski, nie data UTC) zdanie „wymagany poziom jest jeszcze
+wstępny… margines jest na razie zaniżony”, bez liczb; odcisk oceny ma znacznik `P`.
+
+**Walidator (prompt 54)** dostaje fakty dnia (`validateSummary(..., facts)`, pilnowane testem
+źródłowym `summaryGateWiring`) i odrzuca: Kompas przy dniu, którego flaga nie dotyczy (22.09: „we
+wtorek” o fladze na środę, godzinę po tym przedziale); „Kompas wymaga” przy stopniu 2 (1 z 12 zdań
+o Kompasie w logu); „może ogłosić” o dobie bez salda, gdy tekst nie ma słowa o saldzie (134 ze 174
+przyjętych tekstów z „może ogłosić” nie miało go wcale).
+
+**Sprawdzenie.** 1317 testów, 23 sondy mutacyjne — trzy przeżyły pierwsze podejście (brak sortowania
+odczytów, linia „Saldo jeszcze nie doszło”, reguła salda dla doby z planem) i dostały testy. Strażnik
+wizualny bez przepisywania wzorców; w dwóch przebiegach po jednej innej scenie z różnicą na samych
+liniach wykresu (`teraz-w-alercie` 0,363%, potem `kompas-light` 0,603%), równolegle chodził Playwright
+agenta w drugim drzewie — drgnięcie, nie zmiana. Na żywych danych 22.09 21:56: czwartek i piątek mają
+zdanie o saldzie.
+
+**Dalej (plan z 22.09):** v3.90.0 — ocena wstępna w interfejsie dla dób bez salda (wyciszone alerty,
+poza odznaką, zastrzeżenie nad wykresem), godziny po terminie ogłoszenia na „Dziś”, stabilny tekst AI;
+najpierw makiety. v3.91.0 — utrwalone werdykty badania (przed 12.10), percentyle z dni roboczych.
+Równolegle eksperyment „Z branży” na telefonie. Terminy: PAT cron-job.org do 28.09, strażnik kontraktu
+i archiwum przed zmianą czasu 25.10, 24.12 dniem wolnym przed 18.12.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś

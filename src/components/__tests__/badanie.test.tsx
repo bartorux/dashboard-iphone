@@ -623,6 +623,37 @@ describe('Badanie', () => {
     expect(details.textContent).not.toContain('Saldo doszło');
   });
 
+  it('judges "Saldo jeszcze nie doszło" by the day flag of the last reading, not its one-hour exchange', async () => {
+    // Last reading: a real plan passing through zero on this hour (the
+    // one-hour guess called that a placeholder), and a placeholder above
+    // 15 MW (the one-hour guess called that a plan).
+    const withLast = (last: readonly [string, number, number, number, boolean]): BadanieFile => ({
+      ...FIXTURE,
+      days: FIXTURE.days.map((day) =>
+        day.date === '2026-09-03'
+          ? { ...day, exchangeArrivedAt: null, readings: [last] as typeof day.readings }
+          : day
+      ),
+    });
+    const detailsOf03 = async (file: BadanieFile) => {
+      respondWith({ badanie: file });
+      const view = render(<Badanie />);
+      await screen.findByText('Badanie przywołań');
+      const button = screen.getByRole('button', { name: '03.09' });
+      fireEvent.click(button);
+      const text = document.getElementById(button.getAttribute('aria-controls')!)!.textContent;
+      view.unmount();
+      return text;
+    };
+
+    expect(await detailsOf03(withLast(['2026-09-03T10:00:00Z', 900, 2000, 0, true]))).not.toContain(
+      'Saldo jeszcze nie doszło'
+    );
+    expect(await detailsOf03(withLast(['2026-09-03T10:00:00Z', 900, 2000, -17, false]))).toContain(
+      'Saldo jeszcze nie doszło.'
+    );
+  });
+
   it('shows neither exchange-arrival line when the day never had a placeholder and never transitioned', async () => {
     respondWith({ badanie: FIXTURE });
     render(<Badanie />);
@@ -655,8 +686,9 @@ describe('Badanie', () => {
   });
 
   it('tags a reading whose exchange is still the placeholder "przed saldem", and keeps it out of the warn colour', async () => {
-    // Below dwellFloorMw (1500) AND carrying the −12 MW placeholder — the
-    // same shape `readingHasExchange` treats as "not yet planned" — so this
+    // Below dwellFloorMw (1500) AND carrying the −12 MW placeholder, in the
+    // older four-element form without the day flag — the fallback
+    // `readingHasExchange` treats it as "not yet planned" — so this
     // reading must read "przed saldem" and stay UNcoloured, unlike a genuine
     // below-floor reading (see the 02.09 case in the "expands a day..." test,
     // which has a real exchange and IS coloured).
@@ -680,6 +712,39 @@ describe('Badanie', () => {
     const item = within(details).getAllByRole('listitem')[0];
     expect(item.textContent).toContain('przed saldem');
     expect(item.className).not.toContain('text-warn-text');
+  });
+
+  it('follows the day flag in `Reading[4]` over the one-hour guess, both ways', async () => {
+    // A placeholder above 15 MW on this hour, but the day was still unplanned;
+    // then a real plan passing through zero on this hour. The one-hour test
+    // got both wrong.
+    const withDayFlag: BadanieFile = {
+      ...FIXTURE,
+      days: FIXTURE.days.map((day) =>
+        day.date === '2026-09-03'
+          ? {
+              ...day,
+              readings: [
+                ['2026-09-03T10:00:00Z', 900, 2000, -17, false],
+                ['2026-09-03T12:00:00Z', 900, 2000, 0, true],
+              ] as typeof day.readings,
+            }
+          : day
+      ),
+    };
+    respondWith({ badanie: withDayFlag });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const button = screen.getByRole('button', { name: '03.09' });
+    const detailsId = button.getAttribute('aria-controls')!;
+    fireEvent.click(button);
+
+    const [placeholder, planned] = within(document.getElementById(detailsId)!).getAllByRole('listitem');
+    expect(placeholder.textContent).toContain('przed saldem');
+    expect(placeholder.className).not.toContain('text-warn-text');
+    expect(planned.textContent).not.toContain('przed saldem');
+    expect(planned.className).toContain('text-warn-text');
   });
 
   it('marks an open day as open instead of showing a window time', async () => {

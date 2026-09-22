@@ -10,7 +10,7 @@ import type {
 } from './badanieTypes';
 import { NOTICE_HOURS } from './callPeriod';
 import { CALL_PERIOD_EXEMPTION_MW, HOUR_MS } from './constants';
-import { exchangeArrivedAt, exchangePlanned, readingHasExchange } from './exchangePlan';
+import { exchangeArrivedAt, exchangePlanned, plannedByReading } from './exchangePlan';
 
 /**
  * Retrospective study: what this tool's own archive said, by the regulatory
@@ -234,6 +234,36 @@ interface HourReading {
   required: number;
   /** Planned exchange, MW, negative = export — null when PSE reported none. */
   exchange: number | null;
+  /**
+   * Whether the DAY carried a real exchange plan at this reading — see
+   * `plannedByReading` in exchangePlan.ts. Never judged from `exchange` above:
+   * one hour cannot tell a placeholder from a plan passing through zero.
+   */
+  planned: boolean;
+}
+
+/**
+ * `plannedByReading` per business date, computed once per archive array: the
+ * lookups below walk the same rows for fifteen hours a day, three times over.
+ */
+const plannedCache = new WeakMap<readonly ArchiveRow[], Map<string, Map<string, boolean>>>();
+
+function plannedFor(rows: readonly ArchiveRow[], businessDate: string): Map<string, boolean> {
+  let byDate = plannedCache.get(rows);
+  if (!byDate) {
+    byDate = new Map();
+    plannedCache.set(rows, byDate);
+  }
+  let planned = byDate.get(businessDate);
+  if (!planned) {
+    planned = plannedByReading(
+      rows
+        .filter((row) => row[0] === businessDate)
+        .map((row) => ({ hour: row[1], readAt: row[5], exchange: row[6] ?? null }))
+    );
+    byDate.set(businessDate, planned);
+  }
+  return planned;
 }
 
 /**
@@ -245,6 +275,7 @@ interface HourReading {
  */
 function readingsOf(rows: readonly ArchiveRow[], businessDate: string, hour: number): HourReading[] {
   const readings: HourReading[] = [];
+  const planned = plannedFor(rows, businessDate);
   for (const row of rows) {
     if (row[0] !== businessDate || row[1] !== hour) continue;
     const readAtMs = Date.parse(row[5]);
@@ -255,6 +286,7 @@ function readingsOf(rows: readonly ArchiveRow[], businessDate: string, hour: num
       surplus: row[2],
       required: row[3],
       exchange: row[6] ?? null,
+      planned: planned.get(row[5]) ?? true,
     });
   }
   readings.sort((a, b) => a.readAtMs - b.readAtMs);
@@ -407,26 +439,27 @@ const nullFeature: Feature = { value: null, percentile: null, extreme: false };
  * quiet day also reads `0` here); the two are told apart by `surplus` /
  * `headroom`, never by this feature alone. Rounded to one decimal place.
  *
- * A reading whose exchange is still the pre-market-clearing placeholder (see
- * `readingHasExchange` in exchangePlan.ts) breaks the run exactly like a
- * reading AT OR ABOVE the floor does, and for the same reason it counts as
- * one when it IS below the floor: a deficit computed without the import that
- * later covers most of an evening gap is an artefact of the forecast not
- * having cleared yet, not a real state of the grid — so it must not glue two
- * genuine below-floor runs together, nor count as a genuine one on its own.
+ * A reading taken while the day's exchange was still the pre-market-clearing
+ * placeholder (`planned`, see `plannedByReading` in exchangePlan.ts) breaks
+ * the run exactly like a reading AT OR ABOVE the floor does, and for the same
+ * reason it counts as one when it IS below the floor: a deficit computed
+ * without the import that later covers most of an evening gap is an artefact
+ * of the forecast not having cleared yet, not a real state of the grid — so
+ * it must not glue two genuine below-floor runs together, nor count as a
+ * genuine one on its own.
  * This applies to the window reading itself too: a window reading with no
  * real exchange yet reads dwell `0`, the same as one at or above the floor.
  */
 function dwellFor(readingsAsc: HourReading[], windowIndex: number): number {
   const windowReading = readingsAsc[windowIndex];
-  if (windowReading.surplus >= DWELL_FLOOR_MW || !readingHasExchange(windowReading.exchange)) {
+  if (windowReading.surplus >= DWELL_FLOOR_MW || !windowReading.planned) {
     return 0;
   }
 
   let runStart = windowIndex;
   for (let index = windowIndex - 1; index >= 0; index--) {
     const reading = readingsAsc[index];
-    if (reading.surplus >= DWELL_FLOOR_MW || !readingHasExchange(reading.exchange)) break;
+    if (reading.surplus >= DWELL_FLOOR_MW || !reading.planned) break;
     runStart = index;
   }
 
@@ -574,7 +607,7 @@ function buildRawDay(
   }
 
   const { deadline, open, readingsAsc, windowIndex } = computeHourWindow(rows, businessDate, worstHour, now);
-  const readings: Reading[] = readingsAsc.map((r) => [r.readAt, r.surplus, r.required, r.exchange]);
+  const readings: Reading[] = readingsAsc.map((r) => [r.readAt, r.surplus, r.required, r.exchange, r.planned]);
   // Computed from the whole timeline, not just the window reading: the
   // transition from placeholder to real exchange can — and typically does —
   // happen well before the window (the window is the deadline reading, the

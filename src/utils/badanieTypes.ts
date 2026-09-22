@@ -41,18 +41,25 @@ export interface Feature {
 
 /**
  * One archived reading of the day's worst hour: [readAt ISO, surplus MW,
- * required MW, planned exchange MW]. Exchange is `null` when PSE published no
- * figure for that reading, and the fourth element is optional in the type
- * only so a reading serialized before this field existed still matches it —
- * every reading this module produces now carries one (possibly `null`).
- * Negative = export, positive = import, same sign convention as
+ * required MW, planned exchange MW, day planned]. Exchange is `null` when PSE
+ * published no figure for that reading, and the fourth element is optional in
+ * the type only so a reading serialized before this field existed still
+ * matches it — every reading this module produces now carries one (possibly
+ * `null`). Negative = export, positive = import, same sign convention as
  * `PSEDataPoint.exchange`.
+ *
+ * The fifth says whether the whole DAY carried a real exchange plan at that
+ * moment (`plannedByReading` in exchangePlan.ts) — the only reliable answer,
+ * since one hour's exchange cannot tell a placeholder from a plan passing
+ * through zero. Optional for the same reason as the fourth: a file written
+ * before it existed falls back to the one-hour guess on the page.
  */
 export type Reading = readonly [
   readAt: string,
   surplus: number,
   required: number,
   exchange?: number | null,
+  planned?: boolean,
 ];
 
 export type Verdict =

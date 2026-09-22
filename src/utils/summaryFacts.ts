@@ -149,6 +149,35 @@ export interface DayFacts {
    * figures themselves are still provisional.
    */
   exchangeMissing: boolean;
+  /**
+   * True for a day two or more calendar days ahead in Warsaw, whose required
+   * level is still PSE's planning figure.
+   *
+   * Measured on the archive (22.09.2026): in every one of 24 days from 31.08
+   * to 23.09 the required level of hours 7–21 dropped in the first reading
+   * after midnight at the start of D−1, by 376 to 1071 MW (median 813). A
+   * margin two days out is therefore computed against a requirement that has
+   * so far always come down — together with the missing exchange, the reason
+   * the card warned about days that were quiet by their own deadline. Clock-
+   * based where the exchange is data-based, because nothing in the figure
+   * itself marks it as provisional.
+   */
+  requiredProvisional: boolean;
+}
+
+const warsawDate = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/Warsaw',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+/** Whole calendar days from `now`'s Warsaw date to `businessDate`. */
+function warsawDaysAhead(businessDate: string, now: Date): number {
+  const today = warsawDate.format(now);
+  return Math.round(
+    (Date.parse(`${businessDate}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) / 86_400_000
+  );
 }
 
 /**
@@ -344,6 +373,7 @@ export function buildFacts(
         // something anyone can still act on.
         compass: compassRanges(compass.get(businessDate) ?? [], now),
         exchangeMissing: !exchangePlanned(points),
+        requiredProvisional: warsawDaysAhead(businessDate, now) >= 2,
       };
     });
 
@@ -513,6 +543,9 @@ export function assessmentKey(facts: DayFacts[]): string {
          * keep warning about a deficit the reserve no longer carries.
          */
         day.exchangeMissing ? 'X' : '-',
+        // Same reasoning: the required level comes down at midnight on D−1,
+        // and the line about it has to leave the text when it does.
+        day.requiredProvisional ? 'P' : '-',
       ].join('|')
     )
     .join(';');
@@ -756,6 +789,20 @@ export function renderFacts(facts: DayFacts[], days: number): string {
         '  saldo wymiany na tę dobę nie jest jeszcze zaplanowane — rezerwa jest ' +
           'podana bez importu i eksportu i może się zmienić o kilka gigawatów ' +
           'w obie strony, gdy plan dojdzie dzień wcześniej około 13:00'
+      );
+    }
+
+    /*
+     * Directional where the exchange line is not, because the measurement is:
+     * the required level came down in every day on record, never up. Still no
+     * figure — the validator refuses one — and no corrected margin: how far it
+     * drops varies by the hour, and a computed "real" margin would be a
+     * forecast of PSE's own planning.
+     */
+    if (day.requiredProvisional) {
+      lines.push(
+        '  wymagany poziom jest jeszcze wstępny — dotąd zawsze obniżał się w nocy ' +
+          'przed dniem poprzednim, więc margines jest na razie zaniżony'
       );
     }
 

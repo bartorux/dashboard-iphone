@@ -1116,6 +1116,89 @@ describe('validateSummary', () => {
   });
 });
 
+describe('validateSummary: fakty na dobę (Kompas, saldo)', () => {
+  /*
+   * The state of 22.09 at 21:01 — a Tuesday. Wednesday carries a Kompas flag
+   * 19:00-20:00; Thursday and Friday have no exchange plan yet.
+   */
+  type Dzien = NonNullable<Parameters<typeof validateSummary>[3]>[number];
+  const DNI: Dzien[] = [
+    { businessDate: '2026-09-22', spokenName: 'dziś', compass: [], exchangeMissing: false },
+    {
+      businessDate: '2026-09-23',
+      spokenName: 'jutro',
+      compass: [{ level: 2 as const, from: '19:00', to: '20:00', hours: 1 }],
+      exchangeMissing: false,
+    },
+    { businessDate: '2026-09-24', spokenName: 'czwartek', compass: [], exchangeMissing: true },
+    { businessDate: '2026-09-25', spokenName: 'piątek', compass: [], exchangeMissing: true },
+  ];
+  const GODZINY = new Set(['19:00', '20:00', '13:00']);
+  // Published verbatim on 22.09 at 21:01.
+  const OPUBLIKOWANY = {
+    headline: 'W czwartek i piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.',
+    body: 'W czwartek o 19:00 margines spada najniżej, bo zapotrzebowanie rośnie ponad normę, a produkcja z fotowoltaiki spada poniżej normy. Do tych godzin ogłoszenie może jeszcze nadejść.',
+    outlook: 'W pozostałe dni nic nie zapowiada przywołania, a Kompas Energetyczny PSE zaleca oszczędzanie we wtorek między 19:00 a 20:00.',
+  };
+  const sprawdz = (tekst: typeof OPUBLIKOWANY, dni: Dzien[] = DNI) => validateSummary(tekst, GODZINY, [], dni);
+
+  it('refuses the published text: the Kompas flag was named against Tuesday, not Wednesday', () => {
+    expect(sprawdz(OPUBLIKOWANY)).toEqual({ ok: false, reason: 'Kompas przy dniu, którego nie dotyczy' });
+  });
+
+  it('with the Kompas day corrected, still refuses a possible call period on a day without an exchange plan and no word about it', () => {
+    const outlook = OPUBLIKOWANY.outlook.replace('we wtorek', 'jutro');
+    expect(sprawdz({ ...OPUBLIKOWANY, outlook })).toEqual({
+      ok: false,
+      reason: 'możliwe przywołanie w dobie bez salda, bez zastrzeżenia',
+    });
+  });
+
+  it('passes once the caveat is there', () => {
+    const outlook = OPUBLIKOWANY.outlook.replace('we wtorek', 'jutro');
+    const body = `${OPUBLIKOWANY.body} Saldo wymiany na te doby jeszcze nie doszło, więc obraz może się zmienić.`;
+    expect(sprawdz({ ...OPUBLIKOWANY, body, outlook })).toEqual({ ok: true });
+  });
+
+  it('lets "może ogłosić" stand without a caveat when every day it names has its plan', () => {
+    const dni = DNI.map((day) => ({ ...day, exchangeMissing: false }));
+    const outlook = OPUBLIKOWANY.outlook.replace('we wtorek', 'jutro');
+    expect(sprawdz({ ...OPUBLIKOWANY, outlook }, dni)).toEqual({ ok: true });
+  });
+
+  it('asks for the caveat only where the sentence names a day without a plan', () => {
+    // Thursday has its plan; Friday does not, but the sentence says nothing about Friday.
+    const dni = DNI.map((day) => (day.businessDate === '2026-09-24' ? { ...day, exchangeMissing: false } : day));
+    const tekst = {
+      headline: 'W czwartek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.',
+      body: 'W czwartek o 19:00 margines spada najniżej.',
+      outlook: 'Kompas Energetyczny PSE zaleca oszczędzanie jutro między 19:00 a 20:00.',
+    };
+    expect(sprawdz(tekst, dni)).toEqual({ ok: true });
+  });
+
+  it('refuses "Kompas wymaga" for a level that only recommends, and allows it for the third level', () => {
+    const outlook = 'Kompas Energetyczny PSE wymaga jutro ograniczenia poboru między 19:00 a 20:00.';
+    const dni = DNI.map((day) => ({ ...day, exchangeMissing: false }));
+    expect(sprawdz({ ...OPUBLIKOWANY, outlook }, dni)).toEqual({ ok: false, reason: 'Kompas „wymaga”, choć tylko zaleca' });
+
+    const trzeci = dni.map((day) =>
+      day.compass.length ? { ...day, compass: [{ level: 3 as const, from: '19:00', to: '20:00', hours: 1 }] } : day
+    );
+    expect(sprawdz({ ...OPUBLIKOWANY, outlook }, trzeci)).toEqual({ ok: true });
+  });
+
+  it('leaves a Kompas sentence that names no day to the other rules', () => {
+    const outlook = 'Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 20:00.';
+    const dni = DNI.map((day) => ({ ...day, exchangeMissing: false }));
+    expect(sprawdz({ ...OPUBLIKOWANY, outlook }, dni)).toEqual({ ok: true });
+  });
+
+  it('skips all three checks when the caller passes no facts per day', () => {
+    expect(validateSummary(OPUBLIKOWANY, GODZINY)).toEqual({ ok: true });
+  });
+});
+
 describe('assessmentKey', () => {
   const day = (reserve: number) =>
     [19, 20].map((hour) => hourOn('2026-08-10', hour, { reserve, required: 2000 }));
