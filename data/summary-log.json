@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-19T18:30:56.197Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
-      "body": "W poniedziałek 21 września prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 22 września, w środę 23 września i w czwartek 24 września margines spada w wyznaczonych godzinach, natomiast dzisiaj, w poniedziałek 21 września i w piątek 25 września nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-19T18:45:39.305Z",
       "prompt": 53,
       "accepted": true,
@@ -2479,6 +2470,14 @@
       "headline": "W najbliższych dniach rezerwa miejscami spada poniżej typowego zakresu z ostatnich trzydziestu dni, a w czwartek nadwyżka spada poniżej próg 1100 MW w godzinach 07:00-11:00.",
       "body": "W czwartek zapotrzebowanie rośnie powyżej normy, a fotowoltaika spada poniżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek saldo wymiany nie jest jeszcze zaplanowane, a w poniedziałek 28 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-22T17:31:02.020Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "Czwartek przynosi najniższy margines na tle ostatnich trzydziestu dni, a rezerwa w czwartek i piątek nie pokrywa wymaganego poziomu.",
+      "body": "Margines o 19:00 w czwartek spada poniżej normy z powodu zapotrzebowania powyżej normy oraz fotowoltaiki poniżej normy. Ogłoszenie może jeszcze nadejść w czwartek i piątek, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W poniedziałek 28 września rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania, a w pozostałe dni rezerwa miejscami spada poniżej wymaganego poziomu."
     }
   ]
 }
