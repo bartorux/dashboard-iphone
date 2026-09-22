@@ -1,8 +1,8 @@
 {
-  "headline": "W czwartek między 07:00 a 11:00 nadwyżka w systemie spadła poniżej progu 1100 MW. Operator może ogłosić przywołanie, a nadwyżka spadła poniżej poziomu, który pozwalał mu je pominąć.",
-  "body": "W czwartek PV wypada poniżej normy, zapotrzebowanie rośnie powyżej normy, a ubytki trzymają się poniżej normy. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "W piątek przywołanie wchodzi w grę między 07:00 a 22:00, natomiast w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-22T20:01:08.690Z",
+  "headline": "W czwartek o 17:00 rezerwa spadnie, a nadwyżka spadnie poniżej progu 1100 MW.",
+  "body": "W czwartek o 17:00 PV spadnie poniżej normy, a zapotrzebowanie wzrośnie ponad normę. Do tych godzin ogłoszenie może jeszcze nadejść.",
+  "outlook": "W czwartek między 07:00 a 11:00 oraz w piątek w tych samych godzinach nadwyżka spadnie poniżej progu 1100 MW, podczas gdy w pozostałe dni nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-22T21:30:56.645Z",
   "dates": [
     "2026-09-22",
     "2026-09-23",
@@ -10,6 +10,6 @@
     "2026-09-25",
     "2026-09-28"
   ],
-  "assessment": "2026-09-22|R|none|1300|22:00|0|0|0|||-|-;2026-09-23|R|none|100|07:00|1|0|7||K2:19:00-20:00|-|-;2026-09-24|R|high|-4200|17:00|0|19|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-22:00||X|P;2026-09-25|R|high|-3600|08:00|0|16|0|high:07:00-10:00,moderate:10:00-15:00,high:15:00-22:00||X|P;2026-09-28|R|none|900|07:00|0|0|22|||X|P#PV poniżej normy, zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v54",
+  "assessment": "2026-09-22|R|none|1500|23:00|0|0|0|||-|-;2026-09-23|R|none|500|07:00|0|1|10|||-|-;2026-09-24|R|high|-4100|17:00|0|19|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-22:00||X|P;2026-09-25|R|high|-3700|08:00|0|16|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-22:00||X|P;2026-09-28|R|none|1200|07:00|0|0|23|||X|P#PV poniżej normy, zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v54",
   "model": "gemini-3.5-flash-lite"
 }
