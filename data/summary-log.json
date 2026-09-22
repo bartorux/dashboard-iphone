@@ -3,15 +3,6 @@
     {
       "at": "2026-09-19T20:15:42.021Z",
       "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
-      "body": "Prognoza na środę 23 września pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "We wtorek 22 września, w środę 23 września i w czwartek 24 września rezerwa nie pokrywa wymaganego poziomu w wyznaczonych godzinach, natomiast w pozostałe dni tygodnia nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-19T20:15:42.021Z",
-      "prompt": 53,
       "accepted": true,
       "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
       "body": "Prognoza na środę 23 września pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -2478,6 +2469,14 @@
       "headline": "W czwartek i piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "W czwartek zapotrzebowanie utrzymuje się powyżej normy, a fotowoltaika spada poniżej normy, przez co godzina 19:00 przynosi najniższy margines. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "W poniedziałek 28 września oraz w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-22T20:01:08.690Z",
+      "prompt": 54,
+      "accepted": true,
+      "headline": "W czwartek między 07:00 a 11:00 nadwyżka w systemie spadła poniżej progu 1100 MW. Operator może ogłosić przywołanie, a nadwyżka spadła poniżej poziomu, który pozwalał mu je pominąć.",
+      "body": "W czwartek PV wypada poniżej normy, zapotrzebowanie rośnie powyżej normy, a ubytki trzymają się poniżej normy. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek przywołanie wchodzi w grę między 07:00 a 22:00, natomiast w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
