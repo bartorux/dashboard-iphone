@@ -1,8 +1,8 @@
 {
-  "headline": "W czwartek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00 i 15:00-22:00.",
-  "body": "Prognoza jeszcze się ustala w czwartek, a rezerwa jest liczona bez importu i eksportu. Ogłoszenie może jeszcze nadejść.",
-  "outlook": "We wtorek, środę i w piątek operator również może ogłosić przywołanie, natomiast w poniedziałek 28 września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-22T08:01:06.272Z",
+  "headline": "W czwartek nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+  "body": "Prognoza na ten dzień poprawia się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+  "outlook": "W piątek i w poniedziałek 28 września rezerwa w niektórych godzinach pokrywa wymagany poziom, podczas gdy w pozostałe dni doby wymagają baczniejszej uwagi ze względu na wąskie marginesy.",
+  "generatedAt": "2026-09-22T08:15:45.022Z",
   "dates": [
     "2026-09-22",
     "2026-09-23",
@@ -10,6 +10,6 @@
     "2026-09-25",
     "2026-09-28"
   ],
-  "assessment": "2026-09-22|R|moderate|-900|10:00|1|4|3|moderate:10:00-12:00,moderate:19:00-20:00|K2:10:00-11:00|-;2026-09-23|R|high|-3600|19:00|0|11|3|high:07:00-09:00,moderate:09:00-10:00,moderate:16:00-17:00,high:17:00-22:00||-;2026-09-24|R|high|-3300|07:00|0|17|0|high:07:00-10:00,moderate:10:00-15:00,high:15:00-22:00||X;2026-09-25|R|moderate|-1000|08:00|0|5|8|moderate:07:00-10:00,moderate:16:00-21:00||X;2026-09-28|R|none|1100|07:00|0|0|22|||X#-/below/prognoza poprawia się#v53",
+  "assessment": "2026-09-22|R|moderate|-900|10:00|1|4|4|moderate:10:00-12:00,moderate:19:00-20:00|K2:10:00-11:00|-;2026-09-23|R|high|-3600|19:00|0|11|3|high:07:00-09:00,moderate:09:00-10:00,moderate:16:00-17:00,high:17:00-22:00||-;2026-09-24|R|high|-3200|19:00|0|17|0|high:07:00-10:00,moderate:10:00-16:00,high:16:00-22:00||X;2026-09-25|R|moderate|-1200|08:00|1|6|6|moderate:07:00-10:00,moderate:16:00-21:00||X;2026-09-28|R|none|1100|07:00|0|0|23|||X#-/below/prognoza poprawia się#v53",
   "model": "gemini-3.5-flash-lite"
 }
