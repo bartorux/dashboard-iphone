@@ -1,8 +1,8 @@
 {
-  "headline": "W czwartek między 07:00 a 10:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a spadła poniżej poziomu, który pozwalał mu je pominąć.",
-  "body": "W czwartek zapotrzebowanie utrzymuje się powyżej normy, a fotowoltaika spada poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
-  "outlook": "W piątek i czwartek rezerwa w części godzin nie pokrywa wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-22T18:31:05.582Z",
+  "headline": "W czwartek nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-11:00, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+  "body": "O godzinie 17:00 margines mocno spadnie przez fotowoltaikę poniżej normy oraz wysokie zapotrzebowanie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+  "outlook": "W piątek i czwartek sytuacja wymaga uwagi w wyznaczonych porach, natomiast w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-22T18:45:42.240Z",
   "dates": [
     "2026-09-22",
     "2026-09-23",
@@ -10,6 +10,6 @@
     "2026-09-25",
     "2026-09-28"
   ],
-  "assessment": "2026-09-22|R|none|500|20:00|0|0|0|||-;2026-09-23|R|none|200|07:00|1|0|7|||-;2026-09-24|R|high|-3800|19:00|0|19|0|high:07:00-10:00,moderate:10:00-15:00,high:15:00-22:00||-;2026-09-25|R|high|-3600|17:00|0|16|0|high:07:00-10:00,moderate:10:00-15:00,high:15:00-22:00||X;2026-09-28|R|none|800|07:00|0|0|22|||X#zapotrzebowanie powyżej normy, PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v53",
+  "assessment": "2026-09-22|R|none|500|20:00|0|0|0|||-;2026-09-23|R|none|200|07:00|1|0|7||K2:19:00-20:00|-;2026-09-24|R|high|-3900|17:00|0|19|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-22:00||-;2026-09-25|R|high|-3600|17:00|0|16|0|high:07:00-10:00,moderate:10:00-15:00,high:15:00-22:00||X;2026-09-28|R|none|800|07:00|0|0|22|||X#PV poniżej normy, zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v53",
   "model": "gemini-3.5-flash-lite"
 }
