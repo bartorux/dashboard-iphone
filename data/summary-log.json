@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-19T07:15:43.889Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Wtorek 22 września przynosi sytuację, w której nadwyżka spada poniżej progu 1100 MW między 19:00 a 20:00, więc operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "Prognoza na poniedziałek 21 września jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 22 września, w środę 23 września oraz w czwartek 24 września margines spada poniżej typowego zakresu w wielu godzinach, podczas gdy pozostałe dni upływają spokojnie bez zapowiedzi przywołania."
-    },
-    {
-      "at": "2026-09-19T07:45:41.858Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "Wtorek 22 września przynosi spadek nadwyżki poniżej progu 1100 MW między 19:00 a 20:00, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
-      "body": "Prognoza na poniedziałek 21 września jeszcze się ustala, bo rezerwa raz pokrywa wymagane wartości, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin pozostało ponad osiem godzin.",
-      "outlook": "We wtorek 22 września, środę 23 września, czwartek 24 września i piątek 25 września marginesy miejscami mocno spadają i dają operatorowi pole do ogłoszenia przywołania, podczas gdy pozostałe dni upokoją się bez takich niespodzianek."
-    },
-    {
       "at": "2026-09-19T08:01:09.768Z",
       "prompt": 53,
       "accepted": true,
@@ -2489,6 +2473,23 @@
       "headline": "W czwartek między 07:00 a 07:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść dla godzin między 07:00 a 09:00 oraz 17:00 a 22:00.",
       "outlook": "W poniedziałek 28 września nic nie zapowiada przywołania, a w pozostałe dni operator może ogłosić przywołanie."
+    },
+    {
+      "at": "2026-09-22T02:15:45.402Z",
+      "prompt": 53,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Dzisiejszy margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez sześć godzin.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść w godzinach od 17:00 do 22:00.",
+      "outlook": "Jutro między 07:00 a 09:00 oraz w czwartek i piątek przywołanie wchodzi w grę, natomiast w poniedziałek 28 września nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-22T02:15:45.402Z",
+      "prompt": 53,
+      "accepted": true,
+      "headline": "W najbliższych dniach margines silnie faluje i w wielu godzinach spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Dziś margines spada poniżej typowego pasma przez sześć godzin. Na ogłoszenie w godzinach między 19:00 a 21:00 jest jeszcze czas, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "Jutro operator może ogłosić przywołanie między 07:00 a 09:00, w czwartek margines liczymy bez zaplanowanego salda wymiany, w piątek i w poniedziałek 28 września sytuacja utrzymuje się w bezpiecznych granicach."
     }
   ]
 }
