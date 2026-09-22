@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-20T00:15:37.453Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
-      "body": "Prognoza na środę 23 września pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 22 września, w środę 23 września i w czwartek 24 września rezerwa miejscami nie pokrywa wymaganego poziomu, podczas gdy w pozostałych dniach okresu nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-20T00:45:41.980Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Wtorek 22 września oraz czwartek 24 września również przynoszą godziny z ujemnym marginesem, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-20T01:01:07.104Z",
       "prompt": 53,
       "accepted": true,
@@ -2484,6 +2468,24 @@
       "headline": "W czwartek i piątek marginesy mocno odstają od typowych wartości z ostatnich trzydziestu dni, a rezerwa nie pokrywa wymaganego poziomu.",
       "body": "W czwartek o 19:00 margines spadnie najniżej za sprawą zapotrzebowania powyżej normy oraz fotowoltaiki poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin, przy czym saldo wymiany na tę dobę oraz na piątek i poniedziałek 28 września nie jest jeszcze zaplanowane.",
       "outlook": "W czwartek między 07:00 a 13:00 oraz między 15:00 a 22:00, a w piątek między 07:00 a 10:00 i między 15:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, natomiast w pozostałych roboczych dniach okresu nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-22T22:15:44.450Z",
+      "prompt": 54,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "W czwartek między 07:00 a 12:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "W czwartek zapotrzebowanie przewyższa normę, a fotowoltaika jej nie dotrzymuje, przez co margines spada o 19:00 poniżej typowego poziomu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "Jutro oraz w poniedziałek 28 września nic nie zapowiada przywołania, natomiast w piątek między 07:00 a 10:00 operator może ogłosić przywołanie."
+    },
+    {
+      "at": "2026-09-22T22:15:44.450Z",
+      "prompt": 54,
+      "accepted": false,
+      "reason": "możliwe przywołanie w dobie bez salda, bez zastrzeżenia",
+      "headline": "W czwartek rezerwa spadnie w wielu godzinach poniżej wymaganego poziomu, a nadwyżka obniży się poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "W czwartek zapotrzebowanie urośnie ponad normę, a fotowoltaika spadnie poniżej normy. Do wyznaczonych godzin minie ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek i piątek margines ujemny dotknie odpowiednio kilkunastu godzin, w poniedziałek 28 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa zachowa się stabilnie."
     }
   ]
 }
