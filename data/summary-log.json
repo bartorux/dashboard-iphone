@@ -3,15 +3,6 @@
     {
       "at": "2026-09-19T23:45:42.783Z",
       "prompt": 53,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 22 września i czwartek 24 września operator ma wybór w wyznaczonych godzinach, natomiast w poniedziałek 21 września i piątek 25 września nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-19T23:45:42.783Z",
-      "prompt": 53,
       "accepted": true,
       "headline": "W środę 23 września w godzinach 07:00-09:00 i 17:00-22:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza na środę 23 września pogarsza się. Ogłoszenie może jeszcze nadejść. Saldo wymiany transgranicznej dla tej doby nie doszło, więc rezerwa liczy się bez importu i eksportu i zmieni się po dojściu planu.",
@@ -2484,6 +2475,14 @@
       "headline": "W czwartek o 17:00 rezerwa spadnie, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "W czwartek o 17:00 PV spadnie poniżej normy, a zapotrzebowanie wzrośnie ponad normę. Do tych godzin ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek między 07:00 a 11:00 oraz w piątek w tych samych godzinach nadwyżka spadnie poniżej progu 1100 MW, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-22T21:45:41.854Z",
+      "prompt": 54,
+      "accepted": true,
+      "headline": "W czwartek o 19:00 rezerwa najsilniej odbiega od normy z powodu zapotrzebowania powyżej normy oraz fotowoltaiki poniżej normy.",
+      "body": "Ocena czwartkowego marginesu pozostaje wstępna, a saldo wymiany transgranicznej dla tej doby jeszcze nie dołączyło. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin pozostało ponad osiem godzin.",
+      "outlook": "W czwartek między 07:00 a 11:00 oraz między 15:00 a 22:00, a także w piątek między 07:00 a 10:00 i między 15:00 a 22:00 nadwyżka spadła poniżej progu 1100 MW, w pozostałych godzinach tych dni operator ma wybór, a w pozostałe doby nic nie zapowiada przywołania."
     }
   ]
 }
