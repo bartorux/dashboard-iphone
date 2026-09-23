@@ -96,6 +96,9 @@ export interface NewsRow {
   group: NewsGroup;
 }
 
+/** Rows in the phone section (the "gora" variant of the experiment, see useNewsExperiment). */
+const PHONE_ROWS = 3;
+
 /**
  * What the card lists.
  *
@@ -105,8 +108,18 @@ export interface NewsRow {
  *
  * Monitor, four rows: the newest of each group, in reading order, skipping a
  * group with nothing in it.
+ *
+ * Phone, three rows and no list behind them: the newest from PSE and the
+ * newest from URE first (newer of the two on top), then the newest of
+ * everything else, with at most one from Paliwa i gaz. One per official source
+ * rather than every official item first: Regulacje keeps fourteen days, and
+ * the operator's and the regulator's older notices would otherwise fill all
+ * three rows for days while the day's news went unshown. The Paliwa cap
+ * because that group is the furthest from this dashboard and among the
+ * busiest: on 22.09 all eight of its places were filled within the day
+ * (fuel prices, refineries, LNG).
  */
-export function pickCardRows(file: NewsFile, variant: 'laptop' | 'monitor'): NewsRow[] {
+export function pickCardRows(file: NewsFile, variant: 'laptop' | 'monitor' | 'telefon'): NewsRow[] {
   if (variant === 'monitor') {
     return file.groups
       .filter((group) => group.items.length > 0)
@@ -117,6 +130,21 @@ export function pickCardRows(file: NewsFile, variant: 'laptop' | 'monitor'): New
     .flatMap((group) => group.items.map((item) => ({ item, group })))
     .sort((a, b) => Date.parse(b.item.publishedAt) - Date.parse(a.item.publishedAt));
   if (all.length === 0) return [];
+
+  if (variant === 'telefon') {
+    // `all` is newest first, so the first row of each official source is its newest.
+    const rows = all.filter(
+      (row, index) =>
+        isOfficialSource(row.item.source) && all.findIndex((other) => other.item.source === row.item.source) === index
+    );
+    for (const row of all) {
+      if (rows.length >= PHONE_ROWS) break;
+      if (rows.some((taken) => taken.item.id === row.item.id)) continue;
+      if (row.group.id === 'paliwa' && rows.some((taken) => taken.group.id === 'paliwa')) continue;
+      rows.push(row);
+    }
+    return rows.slice(0, PHONE_ROWS);
+  }
 
   const first = all[0];
   const sieci = file.groups.find((group) => group.id === 'sieci');

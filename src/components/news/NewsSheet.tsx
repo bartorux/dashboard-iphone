@@ -58,7 +58,6 @@ const NewsSheet: React.FC<NewsSheetProps> = ({ open, news, now, isNew, highlight
   const reduced = useMediaQuery(REDUCED_MOTION_QUERY);
   const titleId = useId();
   const [mounted, setMounted] = useState(open);
-  const [expanded, setExpanded] = useState<string | null>(null);
   const visible = open || mounted;
 
   const panelRef = useRef<HTMLDivElement>(null);
@@ -134,8 +133,8 @@ const NewsSheet: React.FC<NewsSheetProps> = ({ open, news, now, isNew, highlight
       lastTimeRef.current = null;
       if (closingRef.current) {
         closingRef.current = false;
+        // Unmounting the list also folds any group the reader opened.
         setMounted(false);
-        setExpanded(null);
       }
     },
     [paint]
@@ -249,31 +248,6 @@ const NewsSheet: React.FC<NewsSheetProps> = ({ open, news, now, isNew, highlight
 
   if (!visible || typeof document === 'undefined') return null;
 
-  const row = (item: NewsItem) => (
-    <a
-      key={item.id}
-      href={item.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      data-news-id={item.id}
-      data-hit={item.id === highlightId}
-      onClick={() => onArticleOpen(item.id)}
-      className="news-sheet-row grid grid-cols-[minmax(0,1fr)_auto] gap-x-2 px-4 py-2.5 text-left"
-    >
-      <span className={`line-clamp-2 text-[0.9375rem] leading-snug text-text ${isNew(item) ? 'font-semibold' : 'font-normal'}`}>
-        {item.title}
-      </span>
-      <span className="tnum whitespace-nowrap pt-0.5 text-[0.75rem] text-text-tertiary">{formatNewsTime(item.publishedAt, now)}</span>
-      <span className="col-span-2 mt-0.5 flex items-center gap-1 text-[0.75rem] text-text-tertiary">
-        <Source name={item.source} />
-        <svg aria-hidden viewBox="0 0 10 10" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3.5 2h4.5v4.5M8 2L2 8" />
-        </svg>
-        <span className="sr-only">(otwiera nową kartę)</span>
-      </span>
-    </a>
-  );
-
   return createPortal(
     <>
       <div ref={scrimRef} aria-hidden className="news-scrim" style={{ pointerEvents: open ? 'auto' : 'none' }} onClick={onClose} />
@@ -301,52 +275,112 @@ const NewsSheet: React.FC<NewsSheetProps> = ({ open, news, now, isNew, highlight
         </div>
 
         <div ref={bodyRef} className="settings-body">
-          {news.groups
-            .filter((group) => group.items.length > 0)
-            .map((group) => {
-              const headId = `${titleId}-${group.id}`;
-              const restId = `${titleId}-${group.id}-rest`;
-              const more = group.items.length > COLLAPSED_ROWS;
-              const isOpen = expanded === group.id;
-              return (
-                <section key={group.id} aria-labelledby={headId}>
-                  {/* Stays at the top while its own rows scroll under it, so a long
-                      open group never loses its name. Opaque, not a material. */}
-                  <div className="sticky top-0 z-[1] flex items-baseline justify-between bg-sheet-bg px-8 pb-1.5 pt-4">
-                    <h3 id={headId} className="text-[0.8125rem] font-semibold text-text-secondary">
-                      {`${group.label} · ${group.items.length}`}
-                    </h3>
-                    {more && (
-                      <button
-                        type="button"
-                        aria-expanded={isOpen}
-                        aria-controls={restId}
-                        onClick={() => setExpanded(isOpen ? null : group.id)}
-                        className="-mr-1 rounded-md px-1 text-[0.8125rem] text-accent-text active:opacity-60"
-                      >
-                        {isOpen ? 'Mniej' : `Wszystkie (${group.items.length})`}
-                      </button>
-                    )}
-                  </div>
-                  <div className="sheet-group mx-4 overflow-hidden rounded-xl bg-sheet-cell">
-                    {group.items.slice(0, COLLAPSED_ROWS).map(row)}
-                    {more && (
-                      <div id={restId} className="collapsible" data-collapsed={!isOpen} inert={!isOpen || undefined}>
-                        <div className="sheet-group">{group.items.slice(COLLAPSED_ROWS).map(row)}</div>
-                      </div>
-                    )}
-                  </div>
-                </section>
-              );
-            })}
-
-          <p className="px-8 pt-5 text-[0.75rem] leading-snug text-text-tertiary">
-            {`Źródła: ${sourcesOf(news).join(', ')} · pobrano ${formatClock(news.generatedAt)}`}
-          </p>
+          <NewsGroups
+            news={news}
+            now={now}
+            isNew={isNew}
+            highlightId={highlightId}
+            onArticleOpen={onArticleOpen}
+            idPrefix={titleId}
+          />
         </div>
       </div>
     </>,
     document.body
+  );
+};
+
+export interface NewsGroupsProps {
+  news: NewsFile;
+  now: Date;
+  isNew: (item: NewsItem) => boolean;
+  highlightId: string | null;
+  onArticleOpen: (id: string) => void;
+  /** Unique per panel; the group headings and their folded rows are named from it. */
+  idPrefix: string;
+}
+
+/**
+ * The grouped list inside the panel, and its footer.
+ *
+ * Its own component so the phone sheet of the experiment (ArkuszTelefon, see
+ * useNewsExperiment) shows the very same list rather than a copy that could
+ * drift from it while the variants are being tried. Which group is unfolded
+ * lives here: unmounting the list with its panel folds them all again.
+ */
+export const NewsGroups: React.FC<NewsGroupsProps> = ({ news, now, isNew, highlightId, onArticleOpen, idPrefix }) => {
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  const row = (item: NewsItem) => (
+    <a
+      key={item.id}
+      href={item.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-news-id={item.id}
+      data-hit={item.id === highlightId}
+      onClick={() => onArticleOpen(item.id)}
+      className="news-sheet-row grid grid-cols-[minmax(0,1fr)_auto] gap-x-2 px-4 py-2.5 text-left"
+    >
+      <span className={`line-clamp-2 text-[0.9375rem] leading-snug text-text ${isNew(item) ? 'font-semibold' : 'font-normal'}`}>
+        {item.title}
+      </span>
+      <span className="tnum whitespace-nowrap pt-0.5 text-[0.75rem] text-text-tertiary">{formatNewsTime(item.publishedAt, now)}</span>
+      <span className="col-span-2 mt-0.5 flex items-center gap-1 text-[0.75rem] text-text-tertiary">
+        <Source name={item.source} />
+        <svg aria-hidden viewBox="0 0 10 10" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3.5 2h4.5v4.5M8 2L2 8" />
+        </svg>
+        <span className="sr-only">(otwiera nową kartę)</span>
+      </span>
+    </a>
+  );
+
+  return (
+    <>
+      {news.groups
+        .filter((group) => group.items.length > 0)
+        .map((group) => {
+          const headId = `${idPrefix}-${group.id}`;
+          const restId = `${idPrefix}-${group.id}-rest`;
+          const more = group.items.length > COLLAPSED_ROWS;
+          const isOpen = expanded === group.id;
+          return (
+            <section key={group.id} aria-labelledby={headId}>
+              {/* Stays at the top while its own rows scroll under it, so a long
+                  open group never loses its name. Opaque, not a material. */}
+              <div className="sticky top-0 z-[1] flex items-baseline justify-between bg-sheet-bg px-8 pb-1.5 pt-4">
+                <h3 id={headId} className="text-[0.8125rem] font-semibold text-text-secondary">
+                  {`${group.label} · ${group.items.length}`}
+                </h3>
+                {more && (
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    aria-controls={restId}
+                    onClick={() => setExpanded(isOpen ? null : group.id)}
+                    className="-mr-1 rounded-md px-1 text-[0.8125rem] text-accent-text active:opacity-60"
+                  >
+                    {isOpen ? 'Mniej' : `Wszystkie (${group.items.length})`}
+                  </button>
+                )}
+              </div>
+              <div className="sheet-group mx-4 overflow-hidden rounded-xl bg-sheet-cell">
+                {group.items.slice(0, COLLAPSED_ROWS).map(row)}
+                {more && (
+                  <div id={restId} className="collapsible" data-collapsed={!isOpen} inert={!isOpen || undefined}>
+                    <div className="sheet-group">{group.items.slice(COLLAPSED_ROWS).map(row)}</div>
+                  </div>
+                )}
+              </div>
+            </section>
+          );
+        })}
+
+      <p className="px-8 pt-5 text-[0.75rem] leading-snug text-text-tertiary">
+        {`Źródła: ${sourcesOf(news).join(', ')} · pobrano ${formatClock(news.generatedAt)}`}
+      </p>
+    </>
   );
 };
 

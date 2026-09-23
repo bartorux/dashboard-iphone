@@ -77,6 +77,45 @@ describe('pickCardRows', () => {
   });
 });
 
+describe('pickCardRows — telefon (the experiment\'s section)', () => {
+  const ids = (value: NewsFile) => pickCardRows(value, 'telefon').map((row) => row.item.id);
+
+  it('the newest from PSE and from URE first, newer on top, then the newest of the rest', () => {
+    expect(ids(file())).toEqual(['r1', 's1', 'e1']);
+  });
+
+  it('an older notice from the same office waits behind the day\'s news', () => {
+    expect(ids(file({ sieci: [item('s1', '2026-09-17T09:39:00Z', 'PSE'), item('s2', '2026-09-17T08:00:00Z', 'PSE')] }))).toEqual([
+      'r1',
+      's1',
+      'e1',
+    ]);
+  });
+
+  it('a second notice newer than everything else still gets its row, once', () => {
+    const rows = ids(
+      file({ sieci: [item('s1', '2026-09-17T15:50:00Z', 'PSE'), item('s2', '2026-09-17T15:40:00Z', 'PSE')] })
+    );
+    expect(rows).toEqual(['s1', 'r1', 's2']);
+  });
+
+  it('takes at most one headline from Paliwa i gaz', () => {
+    const rows = ids(
+      file({
+        sieci: [],
+        regulacje: [],
+        energetyka: [item('e1', '2026-09-17T12:00:00Z'), item('e2', '2026-09-17T11:00:00Z')],
+        paliwa: [item('p1', '2026-09-17T15:59:00Z'), item('p2', '2026-09-17T15:58:00Z'), item('p3', '2026-09-17T15:57:00Z')],
+      })
+    );
+    expect(rows).toEqual(['p1', 'e1', 'e2']);
+  });
+
+  it('shows fewer rows rather than repeat one when the file is thin', () => {
+    expect(ids(file({ sieci: [], regulacje: [], energetyka: [item('e1', '2026-09-17T12:00:00Z')], paliwa: [] }))).toEqual(['e1']);
+  });
+});
+
 describe('formatNewsTime', () => {
   const now = new Date('2026-09-17T18:10:00+02:00');
 
