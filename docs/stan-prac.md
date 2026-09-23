@@ -904,6 +904,18 @@ mówi. Walidator zostaje przy dwóch regułach o Kompasie. Prompt 55. Pierwszy �
 v3.89.0: saldo na 24.09 doszło 23.09 o 13:15 i badanie zapisało to prawidłowo; po nim nadwyżka
 824 MW, wymagana spadła nocą z 2960 do 1953 MW — **3 ekstrema z 4**, pierwszy alarm reguły od 14.09.
 
+**v3.90.1 — model nie pisze już zastrzeżeń, które dopisuje kod (23.09).** Instrukcja z promptu 54
+kazała modelowi samemu pisać o saldzie i o wstępnym wymaganym poziomie; posłuszne odpowiedzi
+przekraczały 300 znaków w części dalszej (382 i 443) i były odrzucane. Prompt 56 mówi wprost, że
+zastrzeżenie dopisujemy sami. Druga przyczyna odrzuceń tego wieczoru — „w wyznaczonych godzinach” —
+nie pochodzi z instrukcji ani z faktów (sprawdzone), to nawyk modelu; odmowa zostaje.
+
+**Stabilny tekst AI — pomiar zamiast założenia (23.09).** Plan zakładał ~10 tekstów na dobę zamiast
+~70. Odtworzenie na historii `summary.json` (98 h, 288 tekstów): bez marginesu i z licznikami 0/1 —
+56 na dobę; poziom ryzyka, Kompas, saldo i godzina najgorszego marginesu — 40; sam poziom ryzyka,
+Kompas i saldo — 20. Poziomy naprawdę się ruszają przy odczytach co kwadrans, a rzadsze przepisywanie
+zostawiałoby w tekście nieaktualne godziny. Nie wdrożone; do decyzji razem z makietami v3.91.
+
 **Dalej (plan z 22.09):** v3.90.0 — ocena wstępna w interfejsie dla dób bez salda (wyciszone alerty,
 poza odznaką, zastrzeżenie nad wykresem), godziny po terminie ogłoszenia na „Dziś”, stabilny tekst AI;
 najpierw makiety. v3.91.0 — utrwalone werdykty badania (przed 12.10), percentyle z dni roboczych.

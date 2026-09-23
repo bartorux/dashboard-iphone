@@ -1167,6 +1167,15 @@ describe('validateSummary: fakty na dobę (Kompas)', () => {
   });
 });
 
+describe('instrukcja a zastrzeżenia pisane przez kod', () => {
+  it('nie każe modelowi pisać zastrzeżenia o saldzie ani o wstępnym poziomie — robi to withSaldoCaveat', () => {
+    // Obeying these requests pushed DALEJ past 300 characters on 23.09.
+    expect(INSTRUCTION).toContain('dopisujemy je do tekstu sami');
+    expect(INSTRUCTION).not.toMatch(/zastrzeżenie o saldzie musi paść/);
+    expect(INSTRUCTION).not.toMatch(/nazwij ocenę tej doby wstępną/);
+  });
+});
+
 describe('withSaldoCaveat', () => {
   type Dzien = Parameters<typeof withSaldoCaveat>[1][number];
   // 22.09 evening: Thursday and Friday at risk, neither with its exchange plan.

@@ -39,7 +39,10 @@ export interface Summary {
 // oszczędzanie we wtorek" about a flag on Wednesday).
 // 55: the exchange caveat is appended by code (`withSaldoCaveat`) instead of
 // refused for — refusing would have discarded half the runs.
-export const PROMPT_VERSION = 55;
+// 56: the instruction stops asking the model for the exchange and provisional
+// caveats the code now writes — obeying them had pushed DALEJ past its 300
+// characters (382 and 443 on 23.09) and got two runs refused.
+export const PROMPT_VERSION = 56;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -98,17 +101,15 @@ prawnych. Nadwyżka i próg 1100 MW to liczby, nie instytucje prawne.
 SALDO WYMIANY NIEZAPLANOWANE — fakty czasem mówią, że dla danej doby saldo
 wymiany transgranicznej jeszcze nie doszło. Rezerwa dla tej doby jest wtedy
 liczona BEZ importu i eksportu, więc po dodaniu planu — zwykle dzień wcześniej
-około 13:00 — może się zmienić w obie strony. Gdy fakty to mówią o którejś
-dobie, dodaj przy niej jednym zdaniem to zastrzeżenie, bez podawania żadnej
-wielkości mocy i bez przesądzania kierunku. Nie pisz o marginesie tej doby jak
+około 13:00 — może się zmienić w obie strony. Nie pisz o marginesie tej doby jak
 o ustalonym niedoborze ani jak o rzeczy, która na pewno się poprawi — to liczba
-bez salda, nie zapowiedź przywołania. Jeśli piszesz, że w takiej dobie operator
-może ogłosić przywołanie, zastrzeżenie o saldzie musi paść w tym samym tekście.
+bez salda, nie zapowiedź przywołania. Samego zastrzeżenia o saldzie nie pisz:
+dopisujemy je do tekstu sami, jednym stałym zdaniem.
 
 WYMAGANY POZIOM WSTĘPNY — fakty czasem mówią, że wymagany poziom dla danej doby
 jest jeszcze wstępny. Dotąd za każdym razem obniżał się w nocy na początku dnia
-poprzedniego, więc margines tej doby jest na razie zaniżony. Gdy fakty to mówią,
-nazwij ocenę tej doby wstępną. Nie podawaj żadnej wielkości.
+poprzedniego, więc margines tej doby jest na razie zaniżony. To kolejny powód,
+by nie pisać o niej jak o ustalonym niedoborze; osobnego zdania o tym nie dodawaj.
 
 KOMPAS ENERGETYCZNY PSE — druga, całkiem osobna rzecz. Fakty podają go tylko dla
 doby, w której operator coś sygnalizuje. Gdy takiego wiersza nie ma, nie wspominaj
