@@ -1,8 +1,8 @@
 {
-  "headline": "Operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 07:00 a 11:00.",
-  "body": "W tej dobie prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "W piątek przywołanie wchodzi w grę, a w poniedziałek 28 września oraz wtorek 29 września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-23T05:45:44.918Z",
+  "headline": "W piątek o 08:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a rezerwa nie pokrywa wymaganego poziomu.",
+  "body": "W piątek wymagany poziom jest jeszcze wstępny, a saldo wymiany transgranicznej dla tej doby jeszcze nie doszło. Ogłoszenie może jeszcze nadejść.",
+  "outlook": "Jutro operator może ogłosić przywołanie między 07:00 a 11:00 i między 15:00 a 22:00, w piątek między 07:00 a 11:00 i między 15:00 a 21:00, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-23T06:01:07.382Z",
   "dates": [
     "2026-09-23",
     "2026-09-24",
@@ -10,6 +10,6 @@
     "2026-09-28",
     "2026-09-29"
   ],
-  "assessment": "2026-09-23|R|none|200|08:00|1|0|6|||-|-;2026-09-24|R|high|-3200|17:00|0|16|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-22:00||X|-;2026-09-25|R|high|-3400|08:00|0|16|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-21:00,moderate:21:00-22:00||X|P;2026-09-28|R|none|700|07:00|0|0|21|||X|P;2026-09-29|R|none|1000|07:00|0|0|23|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v54",
+  "assessment": "2026-09-23|R|none|200|08:00|1|0|6|||-|-;2026-09-24|R|high|-3200|17:00|0|16|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-22:00||X|-;2026-09-25|R|high|-3400|08:00|0|16|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-21:00,moderate:21:00-22:00||X|P;2026-09-28|R|none|700|07:00|0|0|21|||X|P;2026-09-29|R|none|900|07:00|0|0|23|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v54",
   "model": "gemini-3.5-flash-lite"
 }
