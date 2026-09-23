@@ -81,6 +81,7 @@ import {
   buildPrompt,
   parseSummary,
   validateSummary,
+  withSaldoCaveat,
 } from '../src/utils/summaryText';
 import {
   addDays,
@@ -1073,7 +1074,8 @@ const wynik = await askWithRetry<Summary>(
 );
 
 if (!wynik.ok || !wynik.summary) giveUp(`Odrzucone: ${wynik.reason}`);
-const summary = wynik.summary;
+// The exchange caveat is ours, not the model's — see withSaldoCaveat.
+const summary = withSaldoCaveat(wynik.summary, facts);
 
 const file: SummaryFile = {
   ...summary,

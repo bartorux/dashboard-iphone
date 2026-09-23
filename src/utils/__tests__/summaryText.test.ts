@@ -6,6 +6,7 @@ import {
   parseSummary,
   swap,
   validateSummary,
+  withSaldoCaveat,
 } from '../summaryText';
 import { allowedHoursFor, assessmentKey, buildFacts } from '../summaryFacts';
 import type { CompassHour, CompassLevel } from '../compass';
@@ -1116,22 +1117,17 @@ describe('validateSummary', () => {
   });
 });
 
-describe('validateSummary: fakty na dobę (Kompas, saldo)', () => {
+describe('validateSummary: fakty na dobę (Kompas)', () => {
   /*
    * The state of 22.09 at 21:01 — a Tuesday. Wednesday carries a Kompas flag
-   * 19:00-20:00; Thursday and Friday have no exchange plan yet.
+   * 19:00-20:00.
    */
   type Dzien = NonNullable<Parameters<typeof validateSummary>[3]>[number];
   const DNI: Dzien[] = [
-    { businessDate: '2026-09-22', spokenName: 'dziś', compass: [], exchangeMissing: false },
-    {
-      businessDate: '2026-09-23',
-      spokenName: 'jutro',
-      compass: [{ level: 2 as const, from: '19:00', to: '20:00', hours: 1 }],
-      exchangeMissing: false,
-    },
-    { businessDate: '2026-09-24', spokenName: 'czwartek', compass: [], exchangeMissing: true },
-    { businessDate: '2026-09-25', spokenName: 'piątek', compass: [], exchangeMissing: true },
+    { businessDate: '2026-09-22', spokenName: 'dziś', compass: [] },
+    { businessDate: '2026-09-23', spokenName: 'jutro', compass: [{ level: 2, from: '19:00', to: '20:00', hours: 1 }] },
+    { businessDate: '2026-09-24', spokenName: 'czwartek', compass: [] },
+    { businessDate: '2026-09-25', spokenName: 'piątek', compass: [] },
   ];
   const GODZINY = new Set(['19:00', '20:00', '13:00']);
   // Published verbatim on 22.09 at 21:01.
@@ -1146,43 +1142,16 @@ describe('validateSummary: fakty na dobę (Kompas, saldo)', () => {
     expect(sprawdz(OPUBLIKOWANY)).toEqual({ ok: false, reason: 'Kompas przy dniu, którego nie dotyczy' });
   });
 
-  it('with the Kompas day corrected, still refuses a possible call period on a day without an exchange plan and no word about it', () => {
+  it('passes it once the Kompas is named against its own day', () => {
     const outlook = OPUBLIKOWANY.outlook.replace('we wtorek', 'jutro');
-    expect(sprawdz({ ...OPUBLIKOWANY, outlook })).toEqual({
-      ok: false,
-      reason: 'możliwe przywołanie w dobie bez salda, bez zastrzeżenia',
-    });
-  });
-
-  it('passes once the caveat is there', () => {
-    const outlook = OPUBLIKOWANY.outlook.replace('we wtorek', 'jutro');
-    const body = `${OPUBLIKOWANY.body} Saldo wymiany na te doby jeszcze nie doszło, więc obraz może się zmienić.`;
-    expect(sprawdz({ ...OPUBLIKOWANY, body, outlook })).toEqual({ ok: true });
-  });
-
-  it('lets "może ogłosić" stand without a caveat when every day it names has its plan', () => {
-    const dni = DNI.map((day) => ({ ...day, exchangeMissing: false }));
-    const outlook = OPUBLIKOWANY.outlook.replace('we wtorek', 'jutro');
-    expect(sprawdz({ ...OPUBLIKOWANY, outlook }, dni)).toEqual({ ok: true });
-  });
-
-  it('asks for the caveat only where the sentence names a day without a plan', () => {
-    // Thursday has its plan; Friday does not, but the sentence says nothing about Friday.
-    const dni = DNI.map((day) => (day.businessDate === '2026-09-24' ? { ...day, exchangeMissing: false } : day));
-    const tekst = {
-      headline: 'W czwartek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.',
-      body: 'W czwartek o 19:00 margines spada najniżej.',
-      outlook: 'Kompas Energetyczny PSE zaleca oszczędzanie jutro między 19:00 a 20:00.',
-    };
-    expect(sprawdz(tekst, dni)).toEqual({ ok: true });
+    expect(sprawdz({ ...OPUBLIKOWANY, outlook })).toEqual({ ok: true });
   });
 
   it('refuses "Kompas wymaga" for a level that only recommends, and allows it for the third level', () => {
     const outlook = 'Kompas Energetyczny PSE wymaga jutro ograniczenia poboru między 19:00 a 20:00.';
-    const dni = DNI.map((day) => ({ ...day, exchangeMissing: false }));
-    expect(sprawdz({ ...OPUBLIKOWANY, outlook }, dni)).toEqual({ ok: false, reason: 'Kompas „wymaga”, choć tylko zaleca' });
+    expect(sprawdz({ ...OPUBLIKOWANY, outlook })).toEqual({ ok: false, reason: 'Kompas „wymaga”, choć tylko zaleca' });
 
-    const trzeci = dni.map((day) =>
+    const trzeci = DNI.map((day) =>
       day.compass.length ? { ...day, compass: [{ level: 3 as const, from: '19:00', to: '20:00', hours: 1 }] } : day
     );
     expect(sprawdz({ ...OPUBLIKOWANY, outlook }, trzeci)).toEqual({ ok: true });
@@ -1190,12 +1159,62 @@ describe('validateSummary: fakty na dobę (Kompas, saldo)', () => {
 
   it('leaves a Kompas sentence that names no day to the other rules', () => {
     const outlook = 'Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 20:00.';
-    const dni = DNI.map((day) => ({ ...day, exchangeMissing: false }));
-    expect(sprawdz({ ...OPUBLIKOWANY, outlook }, dni)).toEqual({ ok: true });
+    expect(sprawdz({ ...OPUBLIKOWANY, outlook })).toEqual({ ok: true });
   });
 
-  it('skips all three checks when the caller passes no facts per day', () => {
+  it('skips the checks when the caller passes no facts per day', () => {
     expect(validateSummary(OPUBLIKOWANY, GODZINY)).toEqual({ ok: true });
+  });
+});
+
+describe('withSaldoCaveat', () => {
+  type Dzien = Parameters<typeof withSaldoCaveat>[1][number];
+  // 22.09 evening: Thursday and Friday at risk, neither with its exchange plan.
+  const DNI: Dzien[] = [
+    { businessDate: '2026-09-22', spokenName: 'dziś', exchangeMissing: false, risk: 'none' },
+    { businessDate: '2026-09-23', spokenName: 'jutro', exchangeMissing: false, risk: 'none' },
+    { businessDate: '2026-09-24', spokenName: 'czwartek', exchangeMissing: true, risk: 'high' },
+    { businessDate: '2026-09-25', spokenName: 'piątek', exchangeMissing: true, risk: 'high' },
+    { businessDate: '2026-09-28', spokenName: 'poniedziałek 28 września', exchangeMissing: true, risk: 'none' },
+  ];
+  // Published on 22.09 at 22:01 under prompt 54: the day in one sentence,
+  // "może ogłosić" in the next, "wchodzi w grę" further on — no word about the plan.
+  const V54 = {
+    headline: 'W czwartek między 07:00 a 11:00 nadwyżka w systemie spadła poniżej progu 1100 MW. Operator może ogłosić przywołanie, a nadwyżka spadła poniżej poziomu, który pozwalał mu je pominąć.',
+    body: 'W czwartek PV wypada poniżej normy, zapotrzebowanie rośnie powyżej normy, a ubytki trzymają się poniżej normy.',
+    outlook: 'W piątek przywołanie wchodzi w grę między 07:00 a 22:00, natomiast w pozostałe dni nic nie zapowiada przywołania.',
+  };
+
+  it('appends one sentence naming every day at risk without its plan that the text mentions', () => {
+    const wynik = withSaldoCaveat(V54, DNI);
+    expect(wynik.headline).toBe(V54.headline);
+    expect(wynik.outlook).toBe(V54.outlook);
+    expect(wynik.body).toBe(`${V54.body} Ocena na czwartek i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.`);
+  });
+
+  it('leaves the text alone when the model already spoke of the exchange', () => {
+    const tekst = { ...V54, outlook: `${V54.outlook} Saldo wymiany na te doby jeszcze nie doszło.` };
+    expect(withSaldoCaveat(tekst, DNI)).toBe(tekst);
+  });
+
+  it('says nothing about a day without its plan that the facts rate as calm, or that the text does not name', () => {
+    const tekst = {
+      headline: 'W poniedziałek 28 września nic nie zapowiada przywołania.',
+      body: '',
+      outlook: 'W pozostałe dni też nic nie zapowiada przywołania.',
+    };
+    expect(withSaldoCaveat(tekst, DNI)).toBe(tekst);
+  });
+
+  it('declines the day names it writes: środę, and the date and "jutro" as the facts spell them', () => {
+    const dni: Dzien[] = [
+      { businessDate: '2026-09-23', spokenName: 'jutro', exchangeMissing: true, risk: 'moderate' },
+      { businessDate: '2026-09-30', spokenName: 'środa 30 września', exchangeMissing: true, risk: 'high' },
+    ];
+    const tekst = { headline: 'Jutro i w środę 30 września operator może ogłosić przywołanie.', body: '', outlook: '' };
+    expect(withSaldoCaveat(tekst, dni).body).toBe(
+      'Ocena na jutro i środę 30 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.'
+    );
   });
 });
 

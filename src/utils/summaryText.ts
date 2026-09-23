@@ -34,10 +34,12 @@ export interface Summary {
 // yet, and the instruction the paragraph telling the model what that means —
 // again a change in WORDING the assessment key does not track by itself.
 // 54: the facts gained a line for a day whose required level is still PSE's
-// planning figure, the saldo caveat became a gate rather than a request, and
-// the gate learned which day a Kompas flag belongs to (22.09: "zaleca
+// planning figure, the saldo caveat briefly became a gate, and the gate
+// learned which day a Kompas flag belongs to (22.09: "zaleca
 // oszczędzanie we wtorek" about a flag on Wednesday).
-export const PROMPT_VERSION = 54;
+// 55: the exchange caveat is appended by code (`withSaldoCaveat`) instead of
+// refused for — refusing would have discarded half the runs.
+export const PROMPT_VERSION = 55;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -581,6 +583,77 @@ const LIMITS: Record<keyof Summary, number> = {
 
 const HOUR_PATTERN = /\b\d{1,2}:\d{2}\b/g;
 
+/** Weekday stems, Monday first — they survive every case ending a day name takes. */
+const WEEKDAY_STEMS = ['poniedział', 'wtor', 'środ', 'czwart', 'piąt', 'sobot', 'niedziel'];
+
+function weekdayIndex(businessDate: string): number {
+  return (new Date(`${businessDate}T12:00:00Z`).getUTCDay() + 6) % 7;
+}
+
+/** The stems a text may use for this day: its weekday, plus "dziś"/"jutro" when the facts call it that. */
+function stemsOf(day: Pick<DayFacts, 'businessDate' | 'spokenName'>): string[] {
+  const stems = [WEEKDAY_STEMS[weekdayIndex(day.businessDate)]];
+  if (day.spokenName === 'dziś') stems.push('dziś', 'dzisiaj');
+  if (day.spokenName === 'jutro') stems.push('jutr');
+  return stems;
+}
+
+/**
+ * Every day a piece of text names, as stems. A lookbehind rather than \b: in
+ * JavaScript \b is ASCII only, so there is no boundary before a Polish letter.
+ */
+function daysNamedIn(text: string): string[] {
+  return [
+    ...text.matchAll(/(?<!\p{L})(poniedział|wtor|środ|czwart|piąt|sobot|niedziel|dzisiaj|dziś|jutr)\p{L}*/giu),
+  ].map((match) => match[1].toLowerCase());
+}
+
+function names(text: string, day: Pick<DayFacts, 'businessDate' | 'spokenName'>): boolean {
+  const stems = stemsOf(day);
+  return daysNamedIn(text).some((name) => stems.includes(name));
+}
+
+/** "na czwartek", "na środę 30 września", "na jutro" — the accusative the caveat needs. */
+const ACCUSATIVE = ['poniedziałek', 'wtorek', 'środę', 'czwartek', 'piątek', 'sobotę', 'niedzielę'];
+
+function accusativeOf(day: Pick<DayFacts, 'businessDate' | 'spokenName'>): string {
+  if (day.spokenName === 'jutro' || day.spokenName === 'dziś') return day.spokenName;
+  const date = day.spokenName.split(' ').slice(1).join(' ');
+  return [ACCUSATIVE[weekdayIndex(day.businessDate)], date].filter(Boolean).join(' ');
+}
+
+/**
+ * The exchange caveat, written by code rather than requested from the model.
+ *
+ * Asked for in the instruction since v3.74, and measured on 22.09 with the
+ * exchange recognised correctly: 114 of 221 accepted texts named a day
+ * without its exchange plan in the same sentence as a possible call period
+ * and said nothing about the plan. Refusing them instead would have thrown
+ * away half the runs and left the card stale — worse than the missing
+ * sentence. So the sentence is appended here, only when the text names a day
+ * the facts rate as at risk AND lacking its plan, and only when the model did
+ * not already mention the exchange itself. The owner warns his sites on what
+ * this card says; a deficit on such a day has so far been lifted by about two
+ * gigawatts when the plan lands.
+ */
+export function withSaldoCaveat(
+  summary: Summary,
+  days: ReadonlyArray<Pick<DayFacts, 'businessDate' | 'spokenName' | 'exchangeMissing' | 'risk'>>
+): Summary {
+  const whole = `${summary.headline}\n${summary.body}\n${summary.outlook}`;
+  if (/sald/i.test(whole)) return summary;
+
+  const named = days.filter(
+    (day) => day.exchangeMissing && (day.risk === 'high' || day.risk === 'moderate') && names(whole, day)
+  );
+  if (named.length === 0) return summary;
+
+  const forms = named.map(accusativeOf);
+  const list = forms.length === 1 ? forms[0] : `${forms.slice(0, -1).join(', ')} i ${forms[forms.length - 1]}`;
+  const sentence = `Ocena na ${list} jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.`;
+  return { ...summary, body: summary.body.trim() ? `${summary.body.trim()} ${sentence}` : sentence };
+}
+
 /**
  * The one rule the whole design rests on: every figure the reader sees comes
  * from our own arithmetic. So the prose may carry no number at all, save an hour
@@ -601,9 +674,9 @@ export function validateSummary(
   allowedDayNames: string[] = [],
   /**
    * The facts per day, for the checks that need to know WHICH day carries a
-   * Kompas flag or lacks an exchange plan. Empty skips them.
+   * Kompas flag. Empty skips them.
    */
-  days: ReadonlyArray<Pick<DayFacts, 'businessDate' | 'spokenName' | 'compass' | 'exchangeMissing'>> = []
+  days: ReadonlyArray<Pick<DayFacts, 'businessDate' | 'spokenName' | 'compass'>> = []
 ): { ok: true } | { ok: false; reason: string } {
   for (const [key, limit] of Object.entries(LIMITS) as Array<
     [keyof Summary, number]
@@ -1015,28 +1088,11 @@ export function validateSummary(
   }
 
   /*
-   * Three checks that need the facts per day, not just the words.
-   *
-   * A day is recognised in a sentence by its weekday stem (the same stems as
-   * above), and "dziś"/"jutro" by those words, since that is how the facts
-   * name today and tomorrow.
+   * Two checks that need the facts per day, not just the words: which day
+   * carries a Kompas flag, and at what level.
    */
   if (days.length > 0) {
     const zdania = whole.split(/(?<=[.!?])\s+/);
-    const rdzenieDnia = (day: (typeof days)[number]): string[] => {
-      const stems = [RDZENIE[(new Date(`${day.businessDate}T12:00:00Z`).getUTCDay() + 6) % 7]];
-      if (day.spokenName === 'dziś') stems.push('dziś', 'dzisiaj');
-      if (day.spokenName === 'jutro') stems.push('jutr');
-      return stems;
-    };
-    const nazwaneDni = (zdanie: string): string[] =>
-      [...zdanie.matchAll(/(?<!\p{L})(poniedział|wtor|środ|czwart|piąt|sobot|niedziel|dzisiaj|dziś|jutr)\p{L}*/giu)].map(
-        (match) => match[1].toLowerCase()
-      );
-    const mowiO = (zdanie: string, day: (typeof days)[number]): boolean => {
-      const stems = rdzenieDnia(day);
-      return nazwaneDni(zdanie).some((name) => stems.includes(name));
-    };
 
     /*
      * A Kompas flag named against the wrong day.
@@ -1049,8 +1105,8 @@ export function validateSummary(
      */
     const zKompasem = days.filter((day) => day.compass.length > 0);
     for (const zdanie of zdania) {
-      if (!/kompas/i.test(zdanie) || nazwaneDni(zdanie).length === 0) continue;
-      if (!zKompasem.some((day) => mowiO(zdanie, day))) {
+      if (!/kompas/i.test(zdanie) || daysNamedIn(zdanie).length === 0) continue;
+      if (!zKompasem.some((day) => names(zdanie, day))) {
         return { ok: false, reason: 'Kompas przy dniu, którego nie dotyczy' };
       }
       /*
@@ -1064,26 +1120,6 @@ export function validateSummary(
         !zKompasem.some((day) => day.compass.some((range) => range.level === 3))
       ) {
         return { ok: false, reason: 'Kompas „wymaga”, choć tylko zaleca' };
-      }
-    }
-
-    /*
-     * A possible call period on a day without an exchange plan, with no word
-     * about the plan.
-     *
-     * The instruction asked for the caveat and 134 of 174 texts saying "może
-     * ogłosić" in the 72-hour log carried no word about the exchange. On such a
-     * day the reserve is stated without the import that so far has lifted it
-     * by about two gigawatts when the plan lands, and the owner warns his sites
-     * on what the card says. A request did not hold; this is the refusal.
-     */
-    const bezSalda = days.filter((day) => day.exchangeMissing);
-    if (bezSalda.length > 0 && !/sald/i.test(whole)) {
-      for (const zdanie of zdania) {
-        if (!/może\s+(ogłosić|dojść)/iu.test(zdanie)) continue;
-        if (bezSalda.some((day) => mowiO(zdanie, day))) {
-          return { ok: false, reason: 'możliwe przywołanie w dobie bez salda, bez zastrzeżenia' };
-        }
       }
     }
   }

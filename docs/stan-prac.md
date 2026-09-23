@@ -894,6 +894,16 @@ liniach wykresu (`teraz-w-alercie` 0,363%, potem `kompas-light` 0,603%), równol
 agenta w drugim drzewie — drgnięcie, nie zmiana. Na żywych danych 22.09 21:56: czwartek i piątek mają
 zdanie o saldzie.
 
+**v3.89.1 — zastrzeżenie o saldzie pisze kod (23.09).** Pierwszy tekst z promptem 54 ominął regułę:
+nazwa dnia w jednym zdaniu, „może ogłosić” w następnym, „wchodzi w grę” w dalszej części. Rozszerzenie
+reguły na całe pole odrzucałoby — zmierzone na logu z poprawnym rozpoznaniem salda — **122 z 221**
+przyjętych tekstów, czyli co drugi przebieg i nieaktualną kartę. Odrzucanie zastąpione dopiskiem:
+`withSaldoCaveat` dokleja do treści „Ocena na czwartek i piątek jest wstępna: saldo wymiany na te
+godziny jeszcze nie doszło.”, gdy tekst nazywa dobę z ryzykiem i bez planu salda, a sam o saldzie nie
+mówi. Walidator zostaje przy dwóch regułach o Kompasie. Prompt 55. Pierwszy żywy przypadek po
+v3.89.0: saldo na 24.09 doszło 23.09 o 13:15 i badanie zapisało to prawidłowo; po nim nadwyżka
+824 MW, wymagana spadła nocą z 2960 do 1953 MW — **3 ekstrema z 4**, pierwszy alarm reguły od 14.09.
+
 **Dalej (plan z 22.09):** v3.90.0 — ocena wstępna w interfejsie dla dób bez salda (wyciszone alerty,
 poza odznaką, zastrzeżenie nad wykresem), godziny po terminie ogłoszenia na „Dziś”, stabilny tekst AI;
 najpierw makiety. v3.91.0 — utrwalone werdykty badania (przed 12.10), percentyle z dni roboczych.
