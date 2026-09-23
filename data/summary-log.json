@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-21T03:01:08.263Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
-      "body": "W piątek prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek i piątek margines miejscami spada poniżej wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-21T03:30:57.191Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę i czwartek nadwyżka spadnie poniżej progu 1100 MW, co otwiera operatorowi drogę do przywołania, podczas gdy w piątek zachowa wybór.",
-      "body": "W piątek prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W środę, czwartek i piątek marginesy miejscami nie pokryją wymaganych poziomów, podczas gdy dzisiaj i jutro nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-21T03:45:40.568Z",
       "prompt": 53,
       "accepted": true,
@@ -2510,6 +2494,24 @@
       "headline": "Margines bywa poniżej typowego zakresu z ostatnich trzydziestu dni, a w piątek oraz we wtorek dwudziestego dziewiątego września nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 19:00 a 22:00.",
       "outlook": "W poniedziałek dwudziestego ósmego września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-23T22:15:46.006Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni przez dwie godziny.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść w godzinach 17:00-18:00.",
+      "outlook": "W piątek między 19:00 a 20:00 ogłoszenie może jeszcze nadejść, we wtorek 29 września w godzinach 07:00-08:00 również, a w poniedziałek 28 września nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-23T22:15:46.006Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 17:00 a 18:00.",
+      "outlook": "W piątek i we wtorek 29 września przywołanie wchodzi w grę między 19:00 a 20:00 oraz od 07:00 do 08:00, podczas gdy w poniedziałek 28 września nic go nie zapowiada."
     }
   ]
 }
