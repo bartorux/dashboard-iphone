@@ -910,6 +910,44 @@ najpierw makiety. v3.91.0 — utrwalone werdykty badania (przed 12.10), percenty
 Równolegle eksperyment „Z branży” na telefonie. Terminy: PAT cron-job.org do 28.09, strażnik kontraktu
 i archiwum przed zmianą czasu 25.10, 24.12 dniem wolnym przed 18.12.
 
+## „Z branży” na telefonie: trzy warianty pod parametrem (23.09.2026, v3.90.0)
+
+**Po co.** Dwanaście form wiadomości na telefonie odrzuconych na makietach; właściciel 22.09: wracamy
+do eksperymentu z 17.09. To, jak wejście „nosi się” przez dzień, nie wychodzi ze zrzutu, więc trzy
+warianty żyją w prawdziwej aplikacji, **włączane wyłącznie adresem**:
+
+- `?z-branzy=pasek` — ikona w pasku obok zębatki, otwiera arkusz od dołu (bez licznika);
+- `?z-branzy=dol` — stały pasek na dole, 48 px + obszar bezpieczny, „N nowe” albo „stan HH:MM”,
+  otwiera arkusz; strona dostaje 48 px odstępu, żeby „Odśwież” nie chował się pod paskiem;
+- `?z-branzy=gora` — trzy nagłówki pod Analizą AI, bez otwierania (najnowszy z PSE, z URE, potem
+  reszta, najwyżej jeden z Paliw i gazu); jako przeczytane oznacza je ukrycie strony;
+- `?z-branzy=brak` — powrót do stanu dzisiejszego.
+
+Wybór trzyma `sessionStorage` (przetrwa wyjście do artykułu, nie przetrwa zamknięcia karty). Od
+48rem hook zwraca zawsze `null` — komputer bez zmian. **Bez parametru żaden nowy komponent nie trafia
+do drzewa**: strażnik wizualny 25 z 25 scen bez przepisania wzorca (jeden przebieg z `history-light`
+0,58% — przesunięty przyklejony nagłówek przy scenie przewijającej, powtórka czysta).
+
+**Arkusz w wersji uproszczonej**: `.settings-layer`/`.settings-scrim`, przejście CSS zamiast sprężyny,
+przeciąganie uchwytu w dół, `#root` z `inert` i `aria-hidden`, `html { overflow: hidden }`, Gotowe /
+Escape / tło, powrót fokusu. Osłona dotyku na warstwie jest konieczna — bez niej pociągnięcie listy
+uruchamiało odświeżanie strony (sprawdzone przez usunięcie). Treść arkusza to te same grupy co panel
+na komputerze (`NewsGroups` wyjęte z `NewsSheet`, wygląd komputera bez zmian).
+
+**Testy**: po raz pierwszy render całej `App` w teście — `vitest.config.ts` dostał alias
+`virtual:pwa-register/react` na atrapę `src/test/pwaRegister.ts` (moduł istnieje tylko w buildzie
+z wtyczką PWA, a `vi.mock` nie działa przed rozwiązaniem importu). Produkcja używa prawdziwego modułu.
+1370 testów; 58 sond mutacyjnych, jedna przeżyła pierwsze podejście (zwolnienie `inert` przy
+odmontowaniu otwartego arkusza) i dostała test. Praca agenta w osobnym drzewie, przeniesiona na `react`
+jednym commitem po v3.89.1; punkt powrotu `v3.89.1-przed-z-branzy` (tag, gałąź, archiwum — sprawdzone).
+
+**Jak oceniać:** adres z parametrem otwarty raz w Safari na telefonie; każdy wariant przez kilka dni
+w zwykłym użyciu. Po decyzji zostaje jeden (dopracowany: sprężyna, sceny strażnika), dwa pozostałe
+i `useNewsExperiment` znikają. Jeśli żaden nie przekona — wszystkie trzy znikają, a telefon przestaje
+pobierać `news.json`. **Nie sprawdzone:** prawdziwy iPhone (dotyk w WebKit, obszar bezpieczny,
+rozmycie). Zauważone przy okazji: dwa niemal identyczne wpisy PSE (16:00 i 16:02, ten sam tytuł) —
+deduplikacja generatora, nie ta zmiana.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
