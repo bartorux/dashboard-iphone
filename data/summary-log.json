@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-20T19:15:40.087Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
-      "body": "Prognoza na wtorek 22 września jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Wtorek 22 września, środa 23 września oraz czwartek 24 września przynoszą godziny z ujemnym marginesem i możliwością przywołania, natomiast w pozostałych dniach nic go nie zapowiada."
-    },
-    {
       "at": "2026-09-20T19:30:53.013Z",
       "prompt": 53,
       "accepted": true,
@@ -2502,6 +2494,15 @@
       "headline": "Operator może ogłosić przywołanie między 07:00 a 09:00, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Jutro zapotrzebowanie przewyższy normę, a produkcja z fotowoltaiki spadnie poniżej normy. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 08:00.",
       "outlook": "Przywołanie wchodzi w grę także dziś, w piątek i we wtorek, natomiast w poniedziałek 28 września nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-23T16:15:51.069Z",
+      "prompt": 54,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "W piątek o 19:00 rezerwa spadnie najgłębiej w całym okresie, a nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "W piątek prognoza jest jeszcze wstępna i nie uwzględnia planu wymiany transgranicznej. Do podanych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i poniedziałek 28 września nic nie zapowiada przywołania, a w pozostałych dniach operator może ogłosić przywołanie między 07:00 a 09:00, między 17:00 a 18:00, między 19:00 a 22:00, a także we wtorek 29 września od 07:00 do 08:00 i w piątek od 07:00 do 11:00 oraz od 15:00 do 22:00, przy czym jutro Kompas Energetyczny PSE zaleca oszczędzanie od 07:00 do 08:00."
     }
   ]
 }
