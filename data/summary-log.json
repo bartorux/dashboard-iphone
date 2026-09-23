@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-20T04:01:07.236Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę 23 września operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00.",
-      "body": "W środę 23 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 22 września między 07:00 a 09:00 i od 17:00 do 22:00 oraz w czwartek 24 września między 07:00 a 10:00 i od 17:00 do 20:00 rezerwa nie pokrywa wymaganego poziomu, natomiast w piątek 25 września między 17:00 a 19:00 margines jest ujemny, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-20T04:15:40.283Z",
       "prompt": 53,
       "accepted": true,
@@ -2487,6 +2479,14 @@
       "headline": "Między 07:00 a 13:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
       "body": "PV spadło poniżej normy, a zapotrzebowanie wzrosło ponad normę. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Jutro i w piątek rezerwa nie pokrywa wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania. Saldo wymiany transgranicznej dla jutra i kolejnych dni nie jest jeszcze zaplanowane, a wymagany poziom w piątek i w poniedziałek 28 września pozostaje wstępny."
+    },
+    {
+      "at": "2026-09-23T01:01:11.590Z",
+      "prompt": 54,
+      "accepted": true,
+      "headline": "O godzinie 17:00 w piątek rezerwa spadnie najniżej w całym okresie, a nadwyżka utrzyma się poniżej progu 1100 MW, przez co operator może ogłosić przywołanie.",
+      "body": "W piątek pv spadnie poniżej normy, a zapotrzebowanie wzrośnie powyżej normy. Do wyznaczonych godzin wciąż zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść, przy czym saldo wymiany na tę dobę nie jest jeszcze zaplanowane, a wymagany poziom pozostaje wstępny.",
+      "outlook": "W poniedziałek 28 września i wtorek 29 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa chwilami mocno spadnie."
     }
   ]
 }
