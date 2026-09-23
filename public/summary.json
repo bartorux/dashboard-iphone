@@ -1,8 +1,8 @@
 {
-  "headline": "Między 07:00 a 12:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
-  "body": "W tych godzinach fotowoltaika spada poniżej normy, a zapotrzebowanie rośnie. Do wskazanego czasu ogłoszenie może jeszcze nadejść.",
-  "outlook": "W piątek oraz w najbliższych dniach rezerwa również spada, a w części z nich saldo wymiany transgranicznej nie jest jeszcze zaplanowane.",
-  "generatedAt": "2026-09-23T00:15:41.415Z",
+  "headline": "Między 07:00 a 12:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
+  "body": "PV wypada poniżej normy, a zapotrzebowanie rośnie powyżej normy, podczas gdy ubytki trzymają się poniżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+  "outlook": "W piątek między 07:00 a 21:00 nadwyżka również spada, a w pozostałe dni nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-23T00:45:43.375Z",
   "dates": [
     "2026-09-23",
     "2026-09-24",
@@ -10,6 +10,6 @@
     "2026-09-28",
     "2026-09-29"
   ],
-  "assessment": "2026-09-23|R|none|0|08:00|2|3|6|||-|-;2026-09-24|R|high|-3100|17:00|0|16|0|high:07:00-12:00,moderate:12:00-15:00,high:15:00-22:00||X|-;2026-09-25|R|high|-3700|17:00|0|16|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-22:00||X|P;2026-09-28|R|none|900|07:00|0|0|23|||X|P;2026-09-29|R|none|1000|07:00|0|0|23|||X|P#PV poniżej normy, zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v54",
+  "assessment": "2026-09-23|R|none|0|08:00|2|3|6|||-|-;2026-09-24|R|high|-3100|17:00|0|16|0|high:07:00-12:00,moderate:12:00-14:00,high:14:00-22:00||X|-;2026-09-25|R|high|-3600|17:00|0|16|0|high:07:00-11:00,moderate:11:00-15:00,high:15:00-21:00,moderate:21:00-22:00||X|P;2026-09-28|R|none|800|07:00|0|0|23|||X|P;2026-09-29|R|none|1000|07:00|0|0|23|||X|P#PV poniżej normy, zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v54",
   "model": "gemini-3.5-flash-lite"
 }
