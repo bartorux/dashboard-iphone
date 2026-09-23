@@ -1,8 +1,8 @@
 {
-  "headline": "Dzisiejsza rezerwa odbiega od typowych wartości z ostatnich trzydziestu dni.",
-  "body": "Prognoza na jutro spada poniżej normy przez zapotrzebowanie powyżej normy i spadek wydajności paneli fotowoltaicznych. Ogłoszenie może jeszcze nadejść w godzinach między 07:00 a 08:00.",
-  "outlook": "Jutro między 07:00 a 08:00 nadwyżka spada poniżej próg 1100 MW, a w piątek oraz we wtorek 29 września operator ma wybór, natomiast poniedziałek 28 września mija spokojnie.",
-  "generatedAt": "2026-09-23T17:45:43.919Z",
+  "headline": "W piątek operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+  "body": "Wymagany poziom dla tej doby jest jeszcze wstępny, a saldo wymiany nie doszło. Ogłoszenie może jeszcze nadejść.",
+  "outlook": "W piątek między 07:00 a 11:00 oraz między 15:00 a 22:00, jutro między 07:00 a 09:00 i między 19:00 a 21:00 oraz we wtorek 29 września między 07:00 a 08:00 operator ma wybór, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-23T18:15:41.509Z",
   "dates": [
     "2026-09-23",
     "2026-09-24",
@@ -10,6 +10,6 @@
     "2026-09-28",
     "2026-09-29"
   ],
-  "assessment": "2026-09-23|R|moderate|-700|20:00|0|0|0|moderate:19:00-22:00|K2:19:00-21:00|-|-;2026-09-24|R|high|-900|07:00|3|2|5|high:07:00-08:00,moderate:08:00-09:00,moderate:19:00-21:00|K2:07:00-08:00|-|-;2026-09-25|R|moderate|-1300|19:00|1|10|4|moderate:07:00-11:00,moderate:15:00-22:00||X|P;2026-09-28|R|none|200|19:00|1|0|18|||X|P;2026-09-29|R|moderate|-700|07:00|0|1|21|moderate:07:00-08:00||X|P#zapotrzebowanie powyżej normy, PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v54",
+  "assessment": "2026-09-23|R|moderate|-700|20:00|0|0|0|moderate:20:00-22:00|K2:20:00-21:00|-|-;2026-09-24|R|moderate|-800|07:00|2|2|4|moderate:07:00-09:00,moderate:19:00-21:00|K2:07:00-08:00|-|-;2026-09-25|R|moderate|-1200|19:00|1|10|4|moderate:07:00-11:00,moderate:15:00-22:00||X|P;2026-09-28|R|none|200|19:00|1|0|18|||X|P;2026-09-29|R|moderate|-800|07:00|0|1|20|moderate:07:00-08:00||X|P#zapotrzebowanie powyżej normy, PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v54",
   "model": "gemini-3.5-flash-lite"
 }
