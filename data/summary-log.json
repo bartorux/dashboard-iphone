@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-20T16:29:49.089Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "W środę 23 września między 07:00 a 09:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a spadła poniżej poziomu, który pozwalał mu je pominąć.",
-      "body": "W środa 23 września prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "We wtorek 22 września od 07:00 do 09:00 oraz od 17:00 do 21:00, w środa 23 września od 07:00 do 10:00 i od 16:00 do 22:00, w czwartek 24 września od 07:00 do 11:00 oraz od 15:00 do 22:00, a także w piątek 25 września od 18:00 do 19:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-20T16:29:49.089Z",
-      "prompt": 53,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "W środę 23 września między 07:00 a 09:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a próg ten nie pozwala mu go pominąć.",
-      "body": "Prognoza na środę 23 września pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 22 września od 07:00 do 09:00 oraz od 17:00 do 21:00, w środę 23 września od 07:00 do 10:00 i od 16:00 do 22:00, w czwartek 24 września od 07:00 do 11:00 i od 15:00 do 22:00 oraz w piątek 25 września od 18:00 do 19:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka trzyma się powyżej progu 1100 MW, dając operatorowi wybór, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-20T16:30:54.104Z",
       "prompt": 53,
       "accepted": false,
@@ -2502,6 +2484,24 @@
       "headline": "Jutro między 07:00 a 10:00 rezerwa spadnie, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza na dzisiaj jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek między 07:00 a 11:00 oraz między 16:00 a 22:00, a także we wtorek 29 września między 07:00 a 08:00 operator może ogłosić przywołanie, podczas gdy w pozostałe dni nic go nie zapowiada."
+    },
+    {
+      "at": "2026-09-23T12:15:50.760Z",
+      "prompt": 54,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Prognoza na jutro odbiega od typowych wartości z ostatnich trzydziestu dni, a w godzinach od 07:00 do 10:00 nadwyżka spada poniżej progu 1100 MW, przez co operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "W godzinach od 07:00 do 10:00 fotowoltaika spada poniżej normy, a zapotrzebowanie rośnie powyżej normy, podczas gdy ubytki trzymają się poniżej normy. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek oraz we wtorek 29 września rezerwa nie pokrywa wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-23T12:15:50.760Z",
+      "prompt": 54,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Prognoza na jutro odbiega od typowych wartości z ostatnich trzydziestu dni, a w godzinach od 07:00 do 10:00 nadwyżka spada poniżej progu 1100 MW, przez co operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "Najniższy margines przypada na godzinę 08:00, ponieważ fotowoltaika spada poniżej normy, zapotrzebowanie rośnie powyżej normy, a ubytki trzymają się poniżej normy. Do wyznaczonych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek oraz we wtorek 29 września operator ma wybór i może ogłosić przywołanie, przy czym dla obu tych dób saldo wymiany nie jest jeszcze zaplanowane, a wymagany poziom pozostaje wstępny, natomiast dzisiaj oraz w poniedziałek 28 września nic nie zapowiada przywołania."
     }
   ]
 }

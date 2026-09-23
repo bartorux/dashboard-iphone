@@ -1,47 +1,6 @@
 {
   "entries": [
     {
-      "at": "2026-09-20T12:15:44.074Z",
-      "days": [
-        {
-          "businessDate": "2026-09-20",
-          "worstMargin": null,
-          "averageMargin": null,
-          "worstHour": null
-        },
-        {
-          "businessDate": "2026-09-21",
-          "worstMargin": 1321,
-          "averageMargin": 3709,
-          "worstHour": "19:00"
-        },
-        {
-          "businessDate": "2026-09-22",
-          "worstMargin": -1331,
-          "averageMargin": 1006,
-          "worstHour": "19:00"
-        },
-        {
-          "businessDate": "2026-09-23",
-          "worstMargin": -3885,
-          "averageMargin": -922,
-          "worstHour": "19:00"
-        },
-        {
-          "businessDate": "2026-09-24",
-          "worstMargin": -3541,
-          "averageMargin": -1556,
-          "worstHour": "07:00"
-        },
-        {
-          "businessDate": "2026-09-25",
-          "worstMargin": -100,
-          "averageMargin": 1582,
-          "worstHour": "18:00"
-        }
-      ]
-    },
-    {
       "at": "2026-09-20T12:31:02.814Z",
       "days": [
         {
@@ -9604,6 +9563,41 @@
           "businessDate": "2026-09-29",
           "worstMargin": -1100,
           "averageMargin": 2733,
+          "worstHour": "07:00"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-23T12:15:50.760Z",
+      "days": [
+        {
+          "businessDate": "2026-09-23",
+          "worstMargin": 201,
+          "averageMargin": 1236,
+          "worstHour": "08:00"
+        },
+        {
+          "businessDate": "2026-09-24",
+          "worstMargin": -1767,
+          "averageMargin": -850,
+          "worstHour": "08:00"
+        },
+        {
+          "businessDate": "2026-09-25",
+          "worstMargin": -1415,
+          "averageMargin": -300,
+          "worstHour": "19:00"
+        },
+        {
+          "businessDate": "2026-09-28",
+          "worstMargin": 90,
+          "averageMargin": 2974,
+          "worstHour": "19:00"
+        },
+        {
+          "businessDate": "2026-09-29",
+          "worstMargin": -670,
+          "averageMargin": 3219,
           "worstHour": "07:00"
         }
       ]
