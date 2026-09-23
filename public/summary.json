@@ -1,14 +1,14 @@
 {
-  "headline": "Przez dwie godziny margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni, a przez jedną godzinę znajduje się powyżej niego.",
-  "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść między 17:00 a 18:00. Ocena na piątek i wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek między 19:00 a 20:00 oraz we wtorek 29 września między 07:00 a 08:00 ogłoszenie także może jeszcze nadejść, natomiast w poniedziałek 28 września nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-23T22:30:58.155Z",
+  "headline": "Jutro w godzinach 19:00-22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść. Ocena na piątek i wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W piątek i wtorek 29 września przywołanie wchodzi w grę odpowiednio między 19:00-20:00 oraz 07:00-08:00, podczas gdy w poniedziałek 28 września nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-23T23:01:17.958Z",
   "dates": [
     "2026-09-24",
     "2026-09-25",
     "2026-09-28",
     "2026-09-29"
   ],
-  "assessment": "2026-09-24|R|moderate|-800|07:00|1|2|1|moderate:07:00-09:00,moderate:17:00-18:00,moderate:19:00-22:00|K2:07:00-08:00|-|-;2026-09-25|R|moderate|-100|19:00|1|0|9|moderate:19:00-20:00||X|-;2026-09-28|R|none|900|19:00|0|0|21|||X|P;2026-09-29|R|moderate|-100|07:00|0|0|22|moderate:07:00-08:00||X|P#-/below/prognoza poprawia się#v56",
+  "assessment": "2026-09-24|R|moderate|-800|07:00|2|3|1|moderate:07:00-09:00,moderate:19:00-22:00|K2:07:00-08:00,K2:19:00-20:00|-|-;2026-09-25|R|moderate|-100|19:00|1|0|9|moderate:19:00-20:00||X|-;2026-09-28|R|none|900|17:00|0|0|21|||X|P;2026-09-29|R|moderate|-100|07:00|0|0|22|moderate:07:00-08:00||X|P#-/below/prognoza poprawia się#v56",
   "model": "gemini-3.5-flash-lite"
 }
