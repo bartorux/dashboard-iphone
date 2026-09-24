@@ -1,8 +1,8 @@
 {
-  "headline": "We wtorek 29 września rezerwa miejscami nie pokrywa wymaganego poziomu, lecz nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Prognoza dla wtorku 29 września jeszcze się ustala. Ogłoszenie może jeszcze nadejść w godzinach 07:00-08:00, bo do tego czasu zostało jeszcze ponad osiem godzin. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W środę 30 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa miejscami spada poniżej wymaganego poziomu.",
-  "generatedAt": "2026-09-24T18:15:42.851Z",
+  "headline": "Operator może ogłosić przywołanie między 20:00 a 21:00, ale nie musi, ponieważ nadwyżka utrzymuje się powyżej progu 1100 MW.",
+  "body": "Dziś rezerwa nie pokrywa wymaganego poziomu między 20:00 a 21:00. Do ogłoszenia jest już za późno, a Kompas Energetyczny PSE zaleca oszczędzanie w tych godzinach.",
+  "outlook": "Jutro operator również może ogłosić przywołanie między 20:00 a 21:00, a ogłoszenie może jeszcze nadejść, natomiast w kolejnych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-24T18:45:44.417Z",
   "dates": [
     "2026-09-24",
     "2026-09-25",
@@ -10,6 +10,6 @@
     "2026-09-29",
     "2026-09-30"
   ],
-  "assessment": "2026-09-24|R|moderate|-200|20:00|1|0|0|moderate:20:00-21:00|K2:20:00-21:00|-|-;2026-09-25|R|moderate|-300|20:00|3|0|0|moderate:08:00-09:00,moderate:19:00-21:00||-|-;2026-09-28|R|moderate|-200|19:00|0|0|17|moderate:17:00-18:00,moderate:19:00-20:00||X|P;2026-09-29|R|moderate|-1000|07:00|0|1|22|moderate:07:00-08:00||X|P;2026-09-30|R|none|2100|07:00|0|0|24|||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-24|R|moderate|-200|20:00|0|0|0|moderate:20:00-21:00|K2:20:00-21:00|-|-;2026-09-25|R|moderate|-100|20:00|4|0|0|moderate:20:00-21:00||-|-;2026-09-28|R|none|600|17:00|0|0|20|||X|P;2026-09-29|R|none|200|07:00|1|0|22|||X|P;2026-09-30|R|none|1100|07:00|0|0|23|||X|P#-/typical/-#v56",
   "model": "gemini-3.5-flash-lite"
 }
