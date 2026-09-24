@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 17:00 a 22:00 operator może ogłosić przywołanie, ale nadwyżka powyżej progu 1100 MW daje mu wybór.",
-  "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek 29 września między 07:00 a 08:00 rezerwa również nie pokryje wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-24T03:01:09.714Z",
+  "headline": "Dziś między 17:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+  "body": "Prognoza poprawia się, a Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 09:00 oraz między 19:00 a 20:00. Na ogłoszenie w godzinach 17:00-22:00 jest jeszcze czas, bo do tych godzin zostało ponad osiem godzin. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek 29 września między 07:00 a 08:00 operator również może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada.",
+  "generatedAt": "2026-09-24T03:30:51.848Z",
   "dates": [
     "2026-09-24",
     "2026-09-25",
@@ -10,6 +10,6 @@
     "2026-09-29",
     "2026-09-30"
   ],
-  "assessment": "2026-09-24|R|moderate|-700|08:00|1|3|0|moderate:07:00-09:00,moderate:17:00-22:00|K2:06:00-09:00,K2:19:00-20:00|-|-;2026-09-25|R|moderate|-200|19:00|1|0|9|moderate:19:00-20:00||X|-;2026-09-28|R|none|1100|17:00|0|0|21|||X|P;2026-09-29|R|moderate|-200|07:00|0|0|21|moderate:07:00-08:00||X|P;2026-09-30|R|none|1400|07:00|0|0|24|||X|P#-/below/prognoza poprawia się#v56",
+  "assessment": "2026-09-24|R|moderate|-800|08:00|1|3|0|moderate:07:00-09:00,moderate:17:00-22:00|K2:07:00-09:00,K2:19:00-20:00|-|-;2026-09-25|R|moderate|-200|19:00|2|0|9|moderate:19:00-20:00||X|-;2026-09-28|R|none|1000|17:00|0|0|21|||X|P;2026-09-29|R|moderate|-200|07:00|0|0|21|moderate:07:00-08:00||X|P;2026-09-30|R|none|1800|07:00|0|0|24|||X|P#-/below/prognoza poprawia się#v56",
   "model": "gemini-3.5-flash-lite"
 }
