@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 17:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Ocena na jutro jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "Jutro między 18:00 a 21:00 nadwyżka również trzyma się powyżej progu 1100 MW, a w poniedziałek, we wtorek i w środę nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-24T06:43:01.965Z",
+  "headline": "Dzisiejsza rezerwa spada poniżej wymaganego poziomu, lecz nadwyżka utrzymuje się powyżej progu 1100 MW, pozostawiając operatorowi wybór co do ogłoszenia przywołania.",
+  "body": "Jutro w godzinach od 07:00 do 10:00 nadwyżka spada poniżej progu 1100 MW, co uniemożliwia jej pominięcie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin. Ocena na jutro jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W poniedziałek 28 września, we wtorek 29 września oraz w środę 30 września nic nie zapowiada przywołania, choć we wtorek o godzinie 07:00 margines pozostaje wąski.",
+  "generatedAt": "2026-09-24T07:15:43.191Z",
   "dates": [
     "2026-09-24",
     "2026-09-25",
@@ -10,6 +10,6 @@
     "2026-09-29",
     "2026-09-30"
   ],
-  "assessment": "2026-09-24|R|moderate|-500|19:00|0|0|0|moderate:17:00-22:00|K2:19:00-20:00|-|-;2026-09-25|R|moderate|-600|19:00|5|0|7|moderate:18:00-21:00||X|-;2026-09-28|R|none|1200|17:00|0|0|22|||X|P;2026-09-29|R|none|200|07:00|1|0|21|||X|P;2026-09-30|R|none|1500|07:00|0|0|24|||X|P#-/typical/prognoza poprawia się#v56",
+  "assessment": "2026-09-24|R|moderate|-500|20:00|0|0|0|moderate:17:00-22:00|K2:19:00-20:00|-|-;2026-09-25|R|high|-1600|19:00|1|14|1|high:07:00-10:00,moderate:10:00-12:00,moderate:15:00-16:00,high:16:00-22:00||X|-;2026-09-28|R|none|1100|19:00|0|0|21|||X|P;2026-09-29|R|none|0|07:00|1|0|21|||X|P;2026-09-30|R|none|1700|07:00|0|0|24|||X|P#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v56",
   "model": "gemini-3.5-flash-lite"
 }
