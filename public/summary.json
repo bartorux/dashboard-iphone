@@ -1,8 +1,8 @@
 {
-  "headline": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni tylko przez jedną godzinę.",
-  "body": "Dziś rezerwa nie pokrywa wymaganego poziomu między 19:00 a 21:00, ale nadwyżka utrzymuje się powyżej progu 1100 MW. Na ogłoszenie przywołania jest już za późno. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek margines leży powyżej normy przez dwadzieścia godzin, a w poniedziałek, środę i pozostałych dniach rezerwa pokrywa wymagany poziom lub pozostaje stabilna.",
-  "generatedAt": "2026-09-24T12:53:12.672Z",
+  "headline": "We wtorek 29 września między 07:00 a 08:00 operator może ogłosić przywołanie, bo nadwyżka trzyma się powyżej progu 1100 MW, choć rezerwa nie pokrywa wymaganego poziomu.",
+  "body": "Prognoza na ten dzień jeszcze się ustala. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Dziś między 19:00 a 21:00 oraz jutro między 08:00 a 09:00 i między 19:00 a 21:00 operator również ma wybór, a w pozostałe dni nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-24T13:31:03.007Z",
   "dates": [
     "2026-09-24",
     "2026-09-25",
@@ -10,6 +10,6 @@
     "2026-09-29",
     "2026-09-30"
   ],
-  "assessment": "2026-09-24|R|moderate|-100|19:00|1|0|0|moderate:19:00-21:00||-|-;2026-09-25|R|moderate|-200|08:00|4|1|0|moderate:08:00-09:00,moderate:19:00-21:00||-|-;2026-09-28|R|none|100|19:00|3|0|19|||X|P;2026-09-29|R|moderate|-200|07:00|0|0|20|moderate:07:00-08:00||X|P;2026-09-30|R|none|800|07:00|0|0|23|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-24|R|moderate|-100|19:00|2|0|0|moderate:19:00-21:00||-|-;2026-09-25|R|moderate|-200|08:00|5|1|0|moderate:08:00-09:00,moderate:19:00-21:00||-|-;2026-09-28|R|none|100|19:00|3|0|19|||X|P;2026-09-29|R|moderate|-200|07:00|0|0|20|moderate:07:00-08:00||X|P;2026-09-30|R|none|800|07:00|0|0|23|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
