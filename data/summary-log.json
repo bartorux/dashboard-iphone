@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-21T06:30:54.344Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę o 19:00 nadwyżka spadła poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-      "body": "W czwartek saldo wymiany nie jest jeszcze zaplanowane, więc rezerwa liczy się bez importu i eksportu i zmieni się po dojściu planu. Ogłoszenie może jeszcze nadejść w godzinach wymagających uwagi.",
-      "outlook": "W piątek nic nie zapowiada przywołania, a w pozostałych dniach margines miejscami spada poniżej wymaganego poziomu."
-    },
-    {
-      "at": "2026-09-21T06:45:42.472Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W środę między 16:00 a 17:00 nadwyżka spadła poniżej 1100 MW, więc operator może ogłosić przywołanie.",
-      "body": "W środę margines spadł poniżej typowego zakresu z ostatnich trzydziestu dni przez siedem godzin, a saldo wymiany transgranicznej dla tej doby jeszcze nie doszło i rezerwa liczy się bez importu i eksportu. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś, jutro, w czwartek i piątek rezerwa pokrywa wymagany poziom lub operator zachowuje wybór, a w piątek nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-21T07:01:10.114Z",
       "prompt": 53,
       "accepted": true,
@@ -2517,6 +2501,24 @@
       "headline": "Między 07:00 a 08:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza na dziś poprawia się. Między 19:00 a 22:00 ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek między 07:00 a 08:00 ogłoszenie może jeszcze nadejść, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-24T00:45:41.311Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Między 07:00 a 08:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 17:00 a 22:00.",
+      "outlook": "W jutrzejszych godzinach od 19:00 do 20:00 oraz we wtorek między 07:00 a 08:00 operator ma wybór i ogłoszenie może jeszcze nadejść, natomiast w poniedziałek i środę nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-24T00:45:41.311Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "Kompas zespawany z przywołaniem",
+      "headline": "Dziś między 07:00 a 08:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a Kompas Energetyczny PSE zaleca oszczędzanie między 06:00 a 09:00 oraz między 19:00 a 20:00.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 17:00 a 22:00.",
+      "outlook": "Jutro między 19:00 a 20:00 oraz we wtorek 29 września między 07:00 a 08:00 ogłoszenie może jeszcze nadejść, natomiast w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
