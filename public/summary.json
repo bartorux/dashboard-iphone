@@ -1,8 +1,8 @@
 {
-  "headline": "Jutro między 07:00 a 09:00 oraz między 18:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez jedną godzinę. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek 29 września między 07:00 a 08:00 rezerwa również nie pokrywa wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-24T16:31:04.598Z",
+  "headline": "Margines spadł poniżej typowego zakresu z ostatnich trzydziestu dni tylko w jednej godzinie jutro.",
+  "body": "Jutro między 07:00 a 09:00 rezerwa nie pokryje wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek 29 września między 07:00 a 08:00 operator może ogłosić przywołanie, a w pozostałe dni nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-24T17:01:12.734Z",
   "dates": [
     "2026-09-24",
     "2026-09-25",
@@ -10,6 +10,6 @@
     "2026-09-29",
     "2026-09-30"
   ],
-  "assessment": "2026-09-24|R|none|100|20:00|3|0|0|||-|-;2026-09-25|R|moderate|-400|20:00|2|1|0|moderate:07:00-09:00,moderate:18:00-21:00|K2:19:00-21:00|-|-;2026-09-28|R|none|100|19:00|3|0|18|||X|P;2026-09-29|R|moderate|-300|07:00|0|0|19|moderate:07:00-08:00||X|P;2026-09-30|R|none|700|07:00|0|0|23|||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-24|R|moderate|-200|19:00|0|0|0|moderate:19:00-21:00||-|-;2026-09-25|R|moderate|-300|20:00|2|1|0|moderate:07:00-09:00,moderate:18:00-21:00||-|-;2026-09-28|R|none|400|17:00|0|0|20|||X|P;2026-09-29|R|moderate|-100|07:00|0|0|22|moderate:07:00-08:00||X|P;2026-09-30|R|none|1100|07:00|0|0|23|||X|P#-/typical/-#v56",
   "model": "gemini-3.5-flash-lite"
 }
