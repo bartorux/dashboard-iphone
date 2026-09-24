@@ -1,14 +1,14 @@
 {
-  "headline": "Margines w kraju spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-  "body": "Jutro w godzinach od 07:00 do 10:00 oraz od 18:00 do 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW. Operator może ogłosić przywołanie, jednak nie musi tego robić. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek dwudziestego dziewiątego września o godzinie 07:00 rezerwa również nie pokrywa wymaganej wartości, natomiast w poniedziałek i środę nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-24T22:30:56.623Z",
+  "headline": "Margines wypadł poniżej typowego zakresu z ostatnich trzydziestu dni tylko w jednej godzinie jutro.",
+  "body": "W środę dwadzieścia cztery godziny mają margines powyżej typowego zakresu. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 10:00 oraz od 18:00 do 22:00. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek o 07:00 prognoza jeszcze się ustala, a w poniedziałek i środę nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-24T22:45:40.907Z",
   "dates": [
     "2026-09-25",
     "2026-09-28",
     "2026-09-29",
     "2026-09-30"
   ],
-  "assessment": "2026-09-25|R|moderate|-600|19:00|1|1|0|moderate:07:00-10:00,moderate:18:00-22:00||-|-;2026-09-28|R|none|900|19:00|0|0|21|||X|P;2026-09-29|R|moderate|-200|07:00|0|0|21|moderate:07:00-08:00||X|P;2026-09-30|R|none|1200|07:00|0|0|23|||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-25|R|moderate|-600|19:00|1|1|0|moderate:07:00-10:00,moderate:18:00-22:00|K2:19:00-21:00|-|-;2026-09-28|R|none|900|19:00|0|0|21|||X|P;2026-09-29|R|moderate|-200|07:00|0|0|21|moderate:07:00-08:00||X|P;2026-09-30|R|none|1300|07:00|0|0|23|||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
