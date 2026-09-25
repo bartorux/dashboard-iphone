@@ -4,15 +4,6 @@
       "at": "2026-09-23T01:15:41.345Z",
       "prompt": 54,
       "accepted": false,
-      "reason": "godzina 09:00 spoza faktów",
-      "headline": "Między 08:00 a 09:00 rezerwa osiągnie najniższy punkt, a nadwyżka spadnie poniżej progu 1100 MW. Z tego powodu operator może ogłosić przywołanie.",
-      "body": "W piątek wymagany poziom jest jeszcze wstępny, a saldo wymiany dla tej doby nie doszło. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W poniedziałek 28 września oraz wtorek 29 września nic nie zapowiada przywołania, a w pozostałych dniach rezerwa miejscami spada poniżej wymaganego poziomu."
-    },
-    {
-      "at": "2026-09-23T01:15:41.345Z",
-      "prompt": 54,
-      "accepted": false,
       "reason": "możliwe przywołanie w dobie bez salda, bez zastrzeżenia",
       "headline": "O godzinie 08:00 jutro rezerwa spadnie, a nadwyżka w systemie spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie i minął poziom, który pozwalał mu je pominąć.",
       "body": "Między 07:00 a 14:00 PV spadnie poniżej normy, a zapotrzebowanie wzrośnie powyżej normy. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -2528,6 +2519,14 @@
       "headline": "We wtorek 29 września operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza na ten dzień jeszcze się ustala, a margines raz pokrywa wymagany poziom, raz nie. Do godzin między 07:00 a 08:00 oraz między 17:00 a 21:00 zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 28 września i w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-25T19:01:14.920Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W najbliższych dniach operator może ogłosić przywołanie, lecz nie musi.",
+      "body": "We wtorek 29 września rezerwa spadnie poniżej wymaganego poziomu z powodu zapotrzebowania powyżej normy oraz ubytków poniżej normy. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę 30 września przywołanie również wchodzi w grę, natomiast przez resztę tygodnia nic go nie zapowiada."
     }
   ]
 }
