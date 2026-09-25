@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 18:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-  "body": "W godzinach od 19:00 do 21:00 Kompas Energetyczny PSE zaleca oszczędzanie poboru. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek 29 września między 07:00 a 08:00 operator również ma wybór, a w pozostałych dniach tygodnia nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-25T10:31:01.971Z",
+  "headline": "We wtorek 29 września między 07:00 a 08:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+  "body": "Prognoza na wtorek 29 września jeszcze się ustala. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 29 września jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W poniedziałek 28 września, środę 30 września i czwartek 1 października nic nie zapowiada przywołania, a we wtorek 29 września między 19:00 a 20:00 operator również ma wybór.",
+  "generatedAt": "2026-09-25T11:01:12.705Z",
   "dates": [
     "2026-09-25",
     "2026-09-28",
@@ -10,6 +10,6 @@
     "2026-09-30",
     "2026-10-01"
   ],
-  "assessment": "2026-09-25|R|moderate|-600|20:00|1|0|0|moderate:18:00-22:00|K2:19:00-21:00|-|-;2026-09-28|R|none|700|19:00|0|0|22|||X|P;2026-09-29|R|moderate|0|07:00|1|0|18|moderate:07:00-08:00||X|P;2026-09-30|R|none|900|07:00|0|0|23|||X|P;2026-10-01|R|none|2600|07:00|0|0|24|||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-25|R|moderate|-500|19:00|1|1|0|moderate:18:00-22:00|K2:19:00-21:00|-|-;2026-09-28|R|none|500|19:00|0|0|20|||X|P;2026-09-29|R|moderate|-200|07:00|2|0|18|moderate:07:00-08:00,moderate:19:00-20:00||X|P;2026-09-30|R|none|700|07:00|0|0|23|||X|P;2026-10-01|R|none|2600|07:00|0|0|24|||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
