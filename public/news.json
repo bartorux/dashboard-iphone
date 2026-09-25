@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25T10:31:01.971Z",
+  "generatedAt": "2026-09-25T12:45:47.248Z",
   "groups": [
     {
       "id": "sieci",
@@ -46,6 +46,13 @@
       "id": "regulacje",
       "label": "Regulacje",
       "items": [
+        {
+          "id": "d04bb5fa",
+          "title": "Średnia cena energii elektrycznej na rynku konkurencyjnym w II kwartale 2026 roku",
+          "url": "https://www.ure.gov.pl/pl/urzad/informacje-ogolne/aktualnosci/13477,Srednia-cena-energii-elektrycznej-na-rynku-konkurencyjnym-w-II-kwartale-2026-rok.html",
+          "source": "URE",
+          "publishedAt": "2026-09-25T10:25:00.000Z"
+        },
         {
           "id": "1574e65d",
           "title": "Informacja nr 42/2026",
@@ -94,13 +101,6 @@
           "url": "https://www.pse.pl/-/mapre-podsumowanie-dialogu",
           "source": "PSE",
           "publishedAt": "2026-09-16T12:32:00.000Z"
-        },
-        {
-          "id": "b1c2e051",
-          "title": "Komunikat OIRE dotyczący wyników konsultacji projektu Karty aktualizacji nr CC/07/2026 IRiESP-OIRE",
-          "url": "https://www.pse.pl/-/komunikat-oire-dotyczacy-wynikow-konsultacji-projektu-karty-aktualizacji-nr-cc-07-2026-iriesp-oire",
-          "source": "PSE",
-          "publishedAt": "2026-09-15T13:29:00.000Z"
         }
       ]
     },
@@ -108,6 +108,20 @@
       "id": "energetyka",
       "label": "Energetyka",
       "items": [
+        {
+          "id": "30bf0cfd",
+          "title": "Fitch zmienił perspektywę ratingową Tauronu",
+          "url": "https://www.cire.pl/artykuly/serwis-informacyjny-cire-24/fitch-zmienil-perspektywe-ratingowa-tauronu?utm_source=rss&utm_campaign=rss&utm_medium=link",
+          "source": "CIRE",
+          "publishedAt": "2026-09-25T12:00:00.000Z"
+        },
+        {
+          "id": "920cb3d7",
+          "title": "Rozpoczynają budowę wielkiego magazynu energii. Ma być największy w Polsce",
+          "url": "https://www.wnp.pl/energia/rozpoczynaja-budowe-wielkiego-magazynu-energii-bedzie-najwiekszym-magazynem-bess-w-polsce,1102721.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-09-25T11:00:00.000Z"
+        },
         {
           "id": "788bf5d7",
           "title": "Rating Taurona na stabilnym poziomie. Nowa ocena agencji ratingowej",
@@ -144,20 +158,6 @@
           "publishedAt": "2026-09-25T06:07:07.000Z"
         },
         {
-          "id": "0f109adf",
-          "title": "Zmiany w polskiej kopalni. Efektem ma być więcej czasu na pracę przy ścianie",
-          "url": "https://www.wnp.pl/energia/kopalnia-bogdanka-wdraza-usprawnienia-efektem-ma-byc-wiecej-czasu-na-prace-przy-scianie,1102344.html",
-          "source": "wnp.pl",
-          "publishedAt": "2026-09-25T04:00:00.000Z"
-        },
-        {
-          "id": "31c794e3",
-          "title": "Rozwój fotowoltaiki w UE ma się dobrze, choć mogłoby być lepiej. Polska w czołówce",
-          "url": "https://www.wnp.pl/energia/rozwoj-fotowoltaiki-w-ue-ma-sie-dobrze-choc-mogloby-byc-lepiej-polska-w-czolowce,1102122.html",
-          "source": "wnp.pl",
-          "publishedAt": "2026-09-24T17:22:02.000Z"
-        },
-        {
           "id": "33c34d59",
           "title": "ORLEN partnerem głównym konferencji CIRE PowerUp",
           "url": "https://www.cire.pl/artykuly/serwis-informacyjny-cire-24/orlen-partnerem-glownym-konferencji-cire-powerup?utm_source=rss&utm_campaign=rss&utm_medium=link",
@@ -171,18 +171,39 @@
       "label": "Paliwa i gaz",
       "items": [
         {
+          "id": "8bf0e618",
+          "title": "Ruszyła pierwsza taka instalacja w Polsce. Może zastępować gaz z importu",
+          "url": "https://www.wnp.pl/energia/ruszyla-pierwsza-taka-instalacja-w-polsce-moze-zastepowac-gaz-z-importu,1102698.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-09-25T12:15:00.000Z"
+        },
+        {
+          "id": "0e60c2c6",
+          "title": "Kolejna rosyjska rafineria trafiona. Zełenski ostrzega Rosję przed „bolesną” zimą",
+          "url": "https://energetyka24.com/surowce/ropa/kolejna-rosyjska-rafineria-trafiona-zelenski-ostrzega-rosje-przed-bolesna-zima",
+          "source": "Energetyka24",
+          "publishedAt": "2026-09-25T11:19:47.000Z"
+        },
+        {
+          "id": "de7b45e6",
+          "title": "Benzyna droższa o 123 zł. Orlen zdecydował ws. cen paliw",
+          "url": "https://www.wnp.pl/energia/benzyna-drozsza-o-123-zl-orlen-zdecydowal-ws-cen-paliw,1102742.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-09-25T11:01:36.000Z"
+        },
+        {
+          "id": "2ae0e180",
+          "title": "Chcą zakręcić nam kurek z paliwem. Decyzja uderzy w Polskę",
+          "url": "https://www.wnp.pl/energia/chca-zakrecic-nam-kurek-z-paliwem-decyzja-uderzy-w-polske,1102735.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-09-25T10:42:52.000Z"
+        },
+        {
           "id": "570d2e65",
           "title": "Rosja ucieka się do starych trików. Znów szantażuje gazem",
           "url": "https://energetyka24.com/surowce/gaz/rosja-ucieka-sie-do-starych-trikow-znow-szantazuje-gazem",
           "source": "Energetyka24",
           "publishedAt": "2026-09-25T10:12:33.000Z"
-        },
-        {
-          "id": "a503af80",
-          "title": "Ogromne zasoby w Polsce. Połowa importu gazu do likwidacji",
-          "url": "https://www.wnp.pl/budownictwo/ogromne-zasoby-w-polsce-polowa-importu-gazu-do-likwidacji,1102643.html",
-          "source": "wnp.pl",
-          "publishedAt": "2026-09-25T05:18:44.000Z"
         },
         {
           "id": "ab59feea",
@@ -204,27 +225,6 @@
           "url": "https://energetyka24.com/surowce/ropa/rachunek-za-uzaleznienie-jak-zmniejszyc-koszty-kolejnego-kryzysu-paliwowego",
           "source": "Energetyka24",
           "publishedAt": "2026-09-24T04:30:01.000Z"
-        },
-        {
-          "id": "358b9687",
-          "title": "Diesel przekroczył 9 zł za litr. W tych regionach jest najdrożej",
-          "url": "https://energetyka24.com/surowce/ropa/diesel-przekroczyl-9-zl-za-litr-w-tych-regionach-jest-najdrozej",
-          "source": "Energetyka24",
-          "publishedAt": "2026-09-23T14:07:48.000Z"
-        },
-        {
-          "id": "be7f1349",
-          "title": "Motyka: projekt prezydenta ws. cen paliw może doprowadzić do braków na stacjach",
-          "url": "https://energetyka24.com/surowce/ropa/motyka-projekt-prezydenta-ws-cen-paliw-moze-doprowadzic-do-brakow-na-stacjach",
-          "source": "Energetyka24",
-          "publishedAt": "2026-09-23T13:45:55.000Z"
-        },
-        {
-          "id": "61d97cec",
-          "title": "Gaz-System bliżej realizacji programu FSRU",
-          "url": "https://energetyka24.com/surowce/gaz/gaz-system-blizej-realizacji-programu-fsru",
-          "source": "Energetyka24",
-          "publishedAt": "2026-09-23T09:03:37.000Z"
         }
       ]
     }
