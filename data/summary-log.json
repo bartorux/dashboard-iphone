@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-22T14:31:06.029Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W czwartek nadwyżka spadła poniżej progu 1100 MW, dając operatorowi pełną swobodę przywołania.",
-      "body": "Dziś margines ujemny dotyka godziny 19:00, ponieważ zapotrzebowanie przewyższa normę przy jednoczesnym spadku PV. Ogłoszenie może jeszcze nadejść w kolejnych dobach roboczych, o ile wyprzedzenie przekracza osiem godzin.",
-      "outlook": "Poza wskazanymi dniami, w poniedziałek 28 września rezerwa w pełni pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-22T16:15:44.703Z",
-      "prompt": 53,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 11:00 nadwyżka w systemie spadła poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-      "body": "Zapotrzebowanie powyżej normy oraz fotowoltaika poniżej normy sprawiają, że margines o 19:00 jest niższy niż zwykle na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Poza tym czwartkiem operator może ogłosić przywołanie także w piątek między 07:00 a 10:00 oraz od 16:00 do 21:00, w jutrzejszym dniu od 07:00 do 09:00 i dzisiaj między 18:00 a 21:00, podczas gdy w poniedziałek 28 września nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-22T17:15:48.228Z",
       "prompt": 53,
       "accepted": true,
@@ -2536,6 +2520,24 @@
       "headline": "Dzisiejsza sytuacja mieści się w typowym paśmie, choć między 18:00 a 22:00 operator może ogłosić przywołanie.",
       "body": "We wtorek 29 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin 07:00-08:00 oraz 19:00-20:00 ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 28 września, środę 30 września i czwartek 1 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-25T07:45:41.320Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Dzisiejsza sytuacja mieści się w typowych normach z ostatnich trzydziestu dni, choć między 18:00 a 22:00 operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 21:00. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 29 września między 07:00 a 08:00 oraz 19:00 a 20:00 rezerwa spada poniżej wymaganego poziomu, dając operatorowi swobodę decyzji, podczas gdy w poniedziałek 28 września, środę 30 września i czwartek 1 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-25T07:45:41.320Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Dzisiejsza sytuacja mieści się w typowych normach, lecz między 18:00 a 22:00 operator może ogłosić przywołanie, choć nie musi.",
+      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 21:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 29 września między 07:00 a 08:00 oraz 19:00 a 20:00 operator również może ogłosić przywołanie, podczas gdy w pozostałe dni nic go nie zapowiada."
     }
   ]
 }
