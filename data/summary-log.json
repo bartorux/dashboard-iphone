@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-23T00:01:08.647Z",
-      "prompt": 54,
-      "accepted": true,
-      "headline": "Między 07:00 a 11:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Zapotrzebowanie wzrosło powyżej normy, a fotowoltaika spadła poniżej normy. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek przywołanie wchodzi w grę przez kilkanaście godzin, natomiast w pozostałe dni nic go nie zapowiada."
-    },
-    {
       "at": "2026-09-23T00:15:41.415Z",
       "prompt": 54,
       "accepted": false,
@@ -2531,6 +2523,14 @@
       "headline": "Dziś między 17:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "We wtorek 29 września prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść między 07:00 a 08:00 oraz między 17:00 a 20:00.",
       "outlook": "W poniedziałek 28 września, środę 30 września i czwartek 1 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-25T16:01:31.580Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "We wtorek 29 września między 07:00 a 08:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka przekracza próg 1100 MW.",
+      "body": "Prognoza na ten dzień jeszcze się ustala, a ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 20:00.",
+      "outlook": "W poniedziałek, środę i czwartek nic nie zapowiada przywołania, a w pozostałych dniach rezerwa pokrywa wymagany poziom."
     }
   ]
 }
