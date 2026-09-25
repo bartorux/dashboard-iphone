@@ -3,15 +3,6 @@
     {
       "at": "2026-09-22T23:01:46.478Z",
       "prompt": 54,
-      "accepted": false,
-      "reason": "możliwe przywołanie w dobie bez salda, bez zastrzeżenia",
-      "headline": "W czwartek między 07:00 a 12:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Zapotrzebowanie wzrosło ponad normę, a generacja PV spadła poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W piątek i czwartek rezerwa miejscami spada poniżej wymaganego poziomu, a w poniedziałek 28 września nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-22T23:01:46.478Z",
-      "prompt": 54,
       "accepted": true,
       "headline": "W czwartek między 07:00 a 12:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "W czwartek zapotrzebowanie rośnie powyżej normy, a fotowoltaika spada poniżej normy. Ogłoszenie może jeszcze nadejść. Saldo wymiany na czwartek nie doszło jeszcze.",
@@ -2536,6 +2527,14 @@
       "headline": "We wtorek 29 września operator może ogłosić przywołanie, ale nie musi między 07:00 a 08:00.",
       "body": "Prognoza we wtorek 29 września jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 28 września, środę 30 września i czwartek 1 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-25T13:15:41.764Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "We wtorek 29 września operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza na ten dzień jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść w godzinach 07:00-08:00 oraz 19:00-20:00.",
+      "outlook": "W poniedziałek 28 września oraz w środę i czwartek nic nie zapowiada przywołania."
     }
   ]
 }
