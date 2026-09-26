@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-23T16:15:51.069Z",
-      "prompt": 54,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "W piątek o 19:00 rezerwa spadnie najgłębiej w całym okresie, a nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W piątek prognoza jest jeszcze wstępna i nie uwzględnia planu wymiany transgranicznej. Do podanych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, czwartek i poniedziałek 28 września nic nie zapowiada przywołania, a w pozostałych dniach operator może ogłosić przywołanie między 07:00 a 09:00, między 17:00 a 18:00, między 19:00 a 22:00, a także we wtorek 29 września od 07:00 do 08:00 i w piątek od 07:00 do 11:00 oraz od 15:00 do 22:00, przy czym jutro Kompas Energetyczny PSE zaleca oszczędzanie od 07:00 do 08:00."
-    },
-    {
       "at": "2026-09-23T17:01:12.031Z",
       "prompt": 54,
       "accepted": false,
@@ -2365,6 +2356,14 @@
       "headline": "We wtorek 29 września między 07:00 a 09:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka trzyma się powyżej progu 1100 MW. Operator może ogłosić przywołanie, ale nie musi.",
       "body": "We wtorek 29 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, bo do wskazanych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "W poniedziałek 28 września nic nie zapowiada przywołania, a w pozostałych dniach margines pozostaje dodatni."
+    },
+    {
+      "at": "2026-09-26T16:30:57.319Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "We wtorek 29 września między 07:00 a 09:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza na poniedziałek 28 września jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin wtorkowego poranka zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Poza wtorkiem wąski margines pojawia się jeszcze w piątek 2 października o 19:00, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
