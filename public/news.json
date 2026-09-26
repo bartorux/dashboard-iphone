@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T04:01:08.276Z",
+  "generatedAt": "2026-09-26T06:01:10.193Z",
   "groups": [
     {
       "id": "sieci",
@@ -109,6 +109,13 @@
       "label": "Energetyka",
       "items": [
         {
+          "id": "60ea5cab",
+          "title": "Koniec z zakręcaniem. Minimalna opłata za ciepło od 2027 r.",
+          "url": "https://www.wnp.pl/budownictwo/koniec-z-zakrecaniem-minimalna-oplata-za-cieplo-od-2027-r,1102807.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-09-26T05:32:00.000Z"
+        },
+        {
           "id": "6b4deb83",
           "title": "Prezes URE ogłosiła tegoroczne aukcje OZE. W grze miliardy złotych",
           "url": "https://www.wnp.pl/energia/prezes-ure-oglosila-tegoroczne-aukcje-oze-w-grze-miliardy-zlotych,1102933.html",
@@ -130,27 +137,6 @@
           "publishedAt": "2026-09-25T17:15:35.000Z"
         },
         {
-          "id": "cb946a25",
-          "title": "W dużym polskim mieście wytworzą jeszcze więcej ciepła z odpadów. Węgiel poszedł już w odstawkę",
-          "url": "https://www.wnp.pl/energia/w-duzym-polskim-miescie-wytworza-jeszcze-wiecej-ciepla-z-odpadow-wegiel-poszedl-juz-w-odstawke,1102821.html",
-          "source": "wnp.pl",
-          "publishedAt": "2026-09-25T14:39:37.000Z"
-        },
-        {
-          "id": "97a0b100",
-          "title": "Światowa agencja podjęła decyzję w sprawie Taurona. Zarząd jest zadowolony",
-          "url": "https://www.wnp.pl/energia/swiatowa-agencja-podjela-decyzje-w-sprawie-taurona-zarzad-jest-zadowolony,1102804.html",
-          "source": "wnp.pl",
-          "publishedAt": "2026-09-25T13:43:23.000Z"
-        },
-        {
-          "id": "61f6a819",
-          "title": "Po 40 latach przestaną wydobywać tu węgiel. Zamiast tego będzie duże wsparcie dla atomowych planów",
-          "url": "https://www.wnp.pl/energia/po-40-latach-przestana-wydobywac-tu-wegiel-zamiast-tego-bedzie-duze-wsparcie-dla-atomowych-planow,1102790.html",
-          "source": "wnp.pl",
-          "publishedAt": "2026-09-25T13:32:07.000Z"
-        },
-        {
           "id": "30bf0cfd",
           "title": "Fitch zmienił perspektywę ratingową Tauronu",
           "url": "https://www.cire.pl/artykuly/serwis-informacyjny-cire-24/fitch-zmienil-perspektywe-ratingowa-tauronu?utm_source=rss&utm_campaign=rss&utm_medium=link",
@@ -163,6 +149,20 @@
           "url": "https://energetyka24.com/gospodarka/spolki/rating-taurona-na-stabilnym-poziomie-nowa-ocena-agencji-ratingowej",
           "source": "Energetyka24",
           "publishedAt": "2026-09-25T10:07:39.000Z"
+        },
+        {
+          "id": "156a635c",
+          "title": "Ciepłownictwa będzie coraz więcej na rynku energii",
+          "url": "https://wysokienapiecie.pl/121686-cieplownictwa-bedzie-coraz-wiecej-na-rynku-energii/",
+          "source": "Wysokie Napięcie",
+          "publishedAt": "2026-09-25T08:17:35.000Z"
+        },
+        {
+          "id": "33c34d59",
+          "title": "ORLEN partnerem głównym konferencji CIRE PowerUp",
+          "url": "https://www.cire.pl/artykuly/serwis-informacyjny-cire-24/orlen-partnerem-glownym-konferencji-cire-powerup?utm_source=rss&utm_campaign=rss&utm_medium=link",
+          "source": "CIRE",
+          "publishedAt": "2026-09-24T16:30:00.000Z"
         }
       ]
     },
@@ -170,6 +170,27 @@
       "id": "paliwa",
       "label": "Paliwa i gaz",
       "items": [
+        {
+          "id": "a4d9d51e",
+          "title": "Ogrzanie domu droższe niż rok temu o 4830 zł. Porównanie z gazem i węglem",
+          "url": "https://www.wnp.pl/budownictwo/ogrzanie-domu-drozsze-niz-rok-temu-o-4830-zl-porownanie-z-gazem-i-weglem,1102765.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-09-26T05:06:00.000Z"
+        },
+        {
+          "id": "0f9667bf",
+          "title": "Spór o Sierszę, postępy w atomie i wielki rachunek za paliwa. Energetyczny Przegląd",
+          "url": "https://energetyka24.com/energetyka/elektroenergetyka/spor-o-siersze-postepy-w-atomie-i-wielki-rachunek-za-paliwa-energetyczny-przeglad",
+          "source": "Energetyka24",
+          "publishedAt": "2026-09-26T04:30:00.000Z"
+        },
+        {
+          "id": "03630f6d",
+          "title": "Węgiel potrzebny jak nigdy, więc mocarstwo \"wciska gaz do dechy\". Zarobić mogą polskie firmy",
+          "url": "https://www.wnp.pl/energia/wegiel-potrzebny-jak-nigdy-wiec-mocarstwo-wciska-gaz-do-dechy-zarobic-moga-polskie-firmy,1102701.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-09-26T04:00:00.000Z"
+        },
         {
           "id": "d087034e",
           "title": "Orlen zdecydował ws. cen paliw. Benzyna drożeje o ponad 100 zł",
@@ -204,27 +225,6 @@
           "url": "https://energetyka24.com/surowce/ropa/ceny-ropy-spadaja-postepy-w-sprawie-iranu-oraz-spotkania-ukrainy-i-rosji",
           "source": "Energetyka24",
           "publishedAt": "2026-09-25T14:12:00.000Z"
-        },
-        {
-          "id": "0e60c2c6",
-          "title": "Kolejna rosyjska rafineria trafiona. Zełenski ostrzega Rosję przed „bolesną” zimą",
-          "url": "https://energetyka24.com/surowce/ropa/kolejna-rosyjska-rafineria-trafiona-zelenski-ostrzega-rosje-przed-bolesna-zima",
-          "source": "Energetyka24",
-          "publishedAt": "2026-09-25T11:19:47.000Z"
-        },
-        {
-          "id": "570d2e65",
-          "title": "Rosja ucieka się do starych trików. Znów szantażuje gazem",
-          "url": "https://energetyka24.com/surowce/gaz/rosja-ucieka-sie-do-starych-trikow-znow-szantazuje-gazem",
-          "source": "Energetyka24",
-          "publishedAt": "2026-09-25T10:12:33.000Z"
-        },
-        {
-          "id": "ab59feea",
-          "title": "Windfall tax dla koncernów paliwowych przeszedł przez Senat. Co zrobi prezydent?",
-          "url": "https://energetyka24.com/gospodarka/regulacje/windfall-tax-dla-koncernow-paliwowych-przeszedl-przez-senat-co-zrobi-prezydent",
-          "source": "Energetyka24",
-          "publishedAt": "2026-09-24T10:35:50.000Z"
         }
       ]
     }
