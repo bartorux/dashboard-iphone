@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-24T20:45:49.319Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 09:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "We wtorek 29 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 28 września, we wtorek 29 września i w środę 30 września margines przeważnie przewyższa typowy zakres z ostatnich trzydziestu dni, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-24T21:01:08.618Z",
       "prompt": 56,
       "accepted": true,
@@ -2179,6 +2171,23 @@
       "headline": "W piątek 2 października między 19:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "W środę 30 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wyznaczonych godzin w piątek 2 października ogłoszenie może jeszcze nadejść.",
       "outlook": "W pozostałe dni nic nie zapowiada przywołania, a w najbliższych godzinach, jutro oraz w czwartek 1 października rezerwa w pełni pokrywa wymagany poziom."
+    },
+    {
+      "at": "2026-09-27T21:01:05.147Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "W piątek 2 października między 19:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, a margines jest ujemny. Nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza na środę 30 września jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do piątkowych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W pozostałych dniach nic nie zapowiada przywołania, a w poniedziałek, we wtorek, w środę i w czwartek margines jest dodatni."
+    },
+    {
+      "at": "2026-09-27T21:01:05.147Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W piątek 2 października między 19:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW. Operator może ogłosić przywołanie, ale nie musi.",
+      "body": "W środę 30 września prognoza jeszcze się ustala i raz pokrywa wymagane wartości, a raz nie. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin zostało ponad osiem godzin.",
+      "outlook": "Poza piątkiem 2 października w całym okresie nic nie zapowiada przywołania, a w pozostałych dniach rezerwa spokojnie pokrywa wymagany poziom."
     }
   ]
 }
