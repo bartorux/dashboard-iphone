@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-24T17:45:41.367Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Margines utrzymuje się powyżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Jutro między 20:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, a nadwyżka utrzyma się powyżej progu 1100 MW. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "We wtorek 29 września prognoza jeszcze się ustala, a w pozostałe dni nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie dzisiaj od 20:00 do 21:00."
-    },
-    {
       "at": "2026-09-24T17:57:11.625Z",
       "prompt": 56,
       "accepted": true,
@@ -2168,6 +2160,23 @@
       "headline": "Przez większość doby margines przewyższa typowy zakres z ostatnich trzydziestu dni.",
       "body": "We wtorek 29 września rezerwa nie pokrywa wymaganego poziomu między 07:00 a 08:00 oraz od 17:00 do 20:00, ale nadwyżka utrzymuje się powyżej progu 1100 MW. Do tych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 29 września i środę 30 września operator może ogłosić przywołanie, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-27T17:56:14.526Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Margines utrzymuje się powyżej typowego zakresu z ostatnich trzydziestu dni przez większość doby.",
+      "body": "We wtorek dwudziestego dziewiątego września o godzinie dziewiętnastej margines spadnie poniżej wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek i środę operator może ogłosić przywołanie w wyznaczonych godzinach porannych i popołudniowych, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-27T17:56:14.526Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Margines w większości godzin przewyższa typowy zakres z ostatnich trzydziestu dni.",
+      "body": "We wtorek 29 września rezerwa nie pokrywa wymaganego poziomu, a nadwyżka trzyma się powyżej progu 1100 MW. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 29 września między 07:00 a 08:00 oraz między 17:00 a 20:00 i w środę 30 września między 07:00 a 08:00 operator ma wybór, a w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
