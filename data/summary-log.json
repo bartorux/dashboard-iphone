@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-24T06:01:06.526Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś między 17:00 a 22:00 rezerwa spada poniżej wymaganego poziomu, lecz nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 20:00.",
-      "outlook": "Jutro między 08:00 a 10:00 oraz od 16:00 do 21:00, a także we wtorek 29 września między 07:00 a 08:00 rezerwa również nie pokrywa wymaganego poziomu przy zachowaniu progu 1100 MW, natomiast w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-24T06:15:45.969Z",
       "prompt": 56,
       "accepted": true,
@@ -2136,6 +2128,14 @@
       "headline": "We wtorek 29 września między 07:00 a 08:00 oraz między 17:00 a 20:00 margines spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW.",
       "body": "W środę 30 września prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin wciąż pozostaje ponad osiem godzin.",
       "outlook": "W pozostałych dniach tygodnia nic nie zapowiada przywołania, a w piątek 2 października margines będzie wąski."
+    },
+    {
+      "at": "2026-09-27T06:01:08.436Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "We wtorek 29 września między 07:00 a 08:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "W środę 30 września prognoza jeszcze się ustala i raz pokryje wymagany poziom, raz nie. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W pozostałych dniach nic nie zapowiada przywołania, poza wtorkiem 29 września, w którym wąski, ale dodatni margines występuje jeszcze między 17:00 a 20:00."
     }
   ]
 }
