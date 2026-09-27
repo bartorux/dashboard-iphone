@@ -2144,6 +2144,23 @@
       "headline": "We wtorek 29 września między 07:00 a 08:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na środę 30 września jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Pozostałe doby nie przynoszą takich godzin, a w środę 30 września przywołanie wchodzi w grę od 07:00 do 08:00."
+    },
+    {
+      "at": "2026-09-27T07:01:11.557Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Wtorek 29 września przynosi godziny, w których rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, dając operatorowi wybór między ogłoszeniem przywołania a jego pominięciem.",
+      "body": "Wtorek 29 września przynosi spadek rezerwy między 07:00 a 08:00 oraz między 17:00 a 20:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Poza wtorkiem i środą 30 września w żadnym innym dniu nadchodzącego okresu nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-27T07:01:11.557Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Wtorek 29 września przynosi godziny, w których operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "We wtorek 29 września rezerwa spadnie poniżej wymaganego poziomu między 07:00 a 08:00 oraz między 17:00 a 20:00. Do tych godzin ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę 30 września prognoza jeszcze się ustala, a w pozostałe dni okresu nic nie zapowiada przywołania."
     }
   ]
 }
