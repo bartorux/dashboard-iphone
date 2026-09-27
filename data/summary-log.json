@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-24T08:31:01.509Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Jutro między 19:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "We wtorek 29 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść w godzinach 07:00-08:00.",
-      "outlook": "W poniedziałek 28 września, w środę 30 września oraz przez większość pozostałych godzin nic nie zapowiada przywołania, a we wtorek 29 września o 07:00 margines jest wąski."
-    },
-    {
       "at": "2026-09-24T08:45:43.174Z",
       "prompt": 56,
       "accepted": false,
@@ -2168,6 +2160,14 @@
       "headline": "We wtorek 29 września między 07:00 a 08:00 oraz od 17:00 do 20:00 rezerwa nie pokryje wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, więc operator zachowa wybór co do ogłoszenia przywołania.",
       "body": "Prognoza na środę 30 września wciąż się ustala, a rezerwa w tym dniu naprzemiennie pokrywa i nie pokrywa wymaganej wielkości. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin pozostało ponad osiem godzin.",
       "outlook": "Pozostałe doby przynoszą całkowicie stabilne warunki, a we wtorek i środę poza wspomnianymi godzinami rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-27T08:45:38.265Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "We wtorek 29 września we wskazanych godzinach operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "W środę 30 września prognoza jeszcze się ustala, a rezerwa w niektórych godzinach nie pokrywa wymaganego poziomu. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "Wtorek przynosi wąski, ale dodatni margines w dwóch godzinach poza głównym zakresem, podczas gdy w pozostałe dni okresu nic nie zapowiada przywołania."
     }
   ]
 }
