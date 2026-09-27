@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-24T07:31:04.791Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "godzina bez nazwy dnia",
-      "headline": "Dzisiejsza rezerwa spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie.",
-      "body": "Między 17:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 10:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-24T07:31:04.791Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "godzina bez nazwy dnia",
-      "headline": "Dzisiejsza rezerwa spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie.",
-      "body": "Między 19:00 rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka utrzymuje się powyżej progu 1100 MW. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 10:00 nadwyżka spada poniżej progu 1100 MW, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-24T07:45:43.263Z",
       "prompt": 56,
       "accepted": true,
@@ -2160,6 +2142,14 @@
       "headline": "Dzisiejsza rezerwa odbiega od typowego zakresu z ostatnich trzydziestu dni.",
       "body": "We wtorek 29 września rezerwa nie pokrywa wymaganego poziomu między 07:00 a 08:00 oraz między 17:00 a 20:00. Nadwyżka przekracza próg 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "outlook": "We wtorek i środę 30 września ogłoszenie może jeszcze nadejść, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-27T07:45:40.928Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Wtorek 29 września i środa 30 września przyniosą godzinne przedziały ze zaniżonym marginesem, w których nadwyżka utrzyma się powyżej progu 1100 MW.",
+      "body": "We wtorek 29 września margines spadnie między 07:00 a 08:00 oraz między 17:00 a 20:00, co da operatorowi możliwość ogłoszenia przywołania. Na to ogłoszenie pozostaje jeszcze czas.",
+      "outlook": "Pozostałe dni dzisiejszego okresu przebiegną bez zapowiedzi przywołania, a rezerwa w całości pokryje wymagany poziom."
     }
   ]
 }
