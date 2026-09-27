@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-24T15:15:49.186Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś między 17:00 a 18:00 oraz 19:00 a 20:00 operator może ogłosić przywołanie, ale nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza na wtorek 29 września jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin objętych wyborem operatora zostało jeszcze ponad osiem godzin, więc ogłoszenie może nadejść.",
-      "outlook": "Jutro oraz we wtorek 29 września pojawiają się godziny z uprawnieniem do ogłoszenia, a przez pozostałą część okresu nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-24T16:15:47.650Z",
       "prompt": 56,
       "accepted": true,
@@ -2136,6 +2128,14 @@
       "headline": "We wtorek 29 września między 07:00 a 08:00 oraz między 17:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka utrzymuje się powyżej progu 1100 MW, co daje operatorowi wybór.",
       "body": "We wtorek 29 września o 19:00 margines spadnie do najniższego poziomu, a w środę 30 września prognoza jeszcze się ustala i raz pokrywa wymagane wartości, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W pozostałych dniach tygodnia nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-27T15:31:03.843Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "We wtorek 29 września między 07:00 a 08:00 operator może ogłosić przywołanie, ale ma wybór, bo nadwyżka przekracza próg 1100 MW.",
+      "body": "Margines ujemny oznacza, że rezerwa nie pokrywa wymaganego poziomu, jednak do wskazanych godzin pozostało ponad osiem godzin.",
+      "outlook": "We wtorek 29 września przywołanie może paść także między 17:00 a 20:00, w środę 30 września między 07:00 a 08:00 prognoza wciąż się ustala, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
