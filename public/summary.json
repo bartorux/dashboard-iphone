@@ -1,8 +1,8 @@
 {
-  "headline": "W środę między 07:00 a 08:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "W środę prognoza jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na środę i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek między 19:00 a 20:00 pojawia się podobna godzina z możliwością wyboru operatora, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-28T06:01:08.441Z",
+  "headline": "W środę o godzinę 07:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "W środę prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na środę i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W piątek między 19:00 a 20:00 operator również ma wybór, a w pozostałe dni i godziny nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-28T06:15:43.086Z",
   "dates": [
     "2026-09-28",
     "2026-09-29",
@@ -10,6 +10,6 @@
     "2026-10-01",
     "2026-10-02"
   ],
-  "assessment": "2026-09-28|R|none|1000|19:00|0|0|13|||-|-;2026-09-29|R|none|900|18:00|0|0|23|||X|-;2026-09-30|R|moderate|0|07:00|0|0|21|moderate:07:00-08:00||X|P;2026-10-01|R|none|2900|07:00|0|0|24|||X|P;2026-10-02|R|moderate|0|19:00|0|0|20|moderate:19:00-20:00||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-28|R|none|1000|19:00|0|0|16|||-|-;2026-09-29|R|none|800|18:00|0|0|23|||X|-;2026-09-30|R|moderate|-100|07:00|0|0|21|moderate:07:00-08:00||X|P;2026-10-01|R|none|2800|07:00|0|0|24|||X|P;2026-10-02|R|moderate|-100|19:00|1|0|20|moderate:19:00-20:00||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
