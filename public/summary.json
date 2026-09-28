@@ -1,8 +1,8 @@
 {
-  "headline": "Operator może ogłosić przywołanie między 17:00 a 20:00, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
-  "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść. Ocena na jutro, środę i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "Dzisiaj między 18:00 a 19:00 na ogłoszenie jest już za późno, w środę operator ma wybór między 07:00 a 08:00, w piątek między 17:00 a 21:00, a w czwartek nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-28T10:01:08.097Z",
+  "headline": "Operator może ogłosić przywołanie jutro między 17:00 a 20:00, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
+  "body": "Prognoza na jutro poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na jutro, środę i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Dziś operator ma wybór między 18:00 a 19:00, lecz na ogłoszenie jest już za późno, natomiast w środę i piątek operator również może ogłosić przywołanie odpowiednio między 07:00 a 08:00 oraz między 17:00 a 21:00, podczas gdy w czwartek nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-28T10:15:42.350Z",
   "dates": [
     "2026-09-28",
     "2026-09-29",
@@ -10,6 +10,6 @@
     "2026-10-01",
     "2026-10-02"
   ],
-  "assessment": "2026-09-28|R|moderate|-100|18:00|1|0|6|moderate:18:00-19:00||-|-;2026-09-29|R|moderate|-200|19:00|1|0|19|moderate:17:00-20:00||X|-;2026-09-30|R|moderate|-400|07:00|0|1|19|moderate:07:00-08:00||X|P;2026-10-01|R|none|1700|08:00|0|0|23|||X|P;2026-10-02|R|moderate|-1100|19:00|0|2|17|moderate:17:00-21:00||X|P#-/typical/prognoza poprawia się#v56",
+  "assessment": "2026-09-28|R|moderate|-100|18:00|1|0|6|moderate:18:00-19:00||-|-;2026-09-29|R|moderate|-200|19:00|1|0|19|moderate:17:00-20:00||X|-;2026-09-30|R|moderate|-500|07:00|0|1|19|moderate:07:00-08:00||X|P;2026-10-01|R|none|1700|08:00|0|0|23|||X|P;2026-10-02|R|moderate|-1200|19:00|1|2|17|moderate:17:00-21:00||X|P#-/typical/prognoza poprawia się#v56",
   "model": "gemini-3.5-flash-lite"
 }
