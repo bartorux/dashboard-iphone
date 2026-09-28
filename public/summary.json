@@ -1,8 +1,8 @@
 {
-  "headline": "W piątek między 18:00 a 21:00 rezerwa spadnie poniżej wymaganego poziomu, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "W piątek prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W środę, czwartek i pozostałych dniach nic nie zapowiada przywołania, a w jutrzejszej dobie Kompas Energetyczny PSE wskazuje zalecane oszczędzanie między 19:00 a 20:00.",
-  "generatedAt": "2026-09-28T18:45:39.257Z",
+  "headline": "W piątek między 18:00 a 21:00 operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W pozostałych dniach nic nie zapowiada przywołania, a w piątek poza wskazanymi godzinami rezerwa pokrywa wymagany poziom.",
+  "generatedAt": "2026-09-28T19:01:11.278Z",
   "dates": [
     "2026-09-28",
     "2026-09-29",
@@ -10,6 +10,6 @@
     "2026-10-01",
     "2026-10-02"
   ],
-  "assessment": "2026-09-28|R|none|1400|23:00|0|0|2|||-|-;2026-09-29|R|none|900|00:00|0|0|14||K2:19:00-20:00|-|-;2026-09-30|R|none|500|19:00|0|0|22|||X|P;2026-10-01|R|none|1900|08:00|0|0|23|||X|P;2026-10-02|R|moderate|-800|19:00|1|1|18|moderate:18:00-21:00||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-28|R|none|900|23:00|0|0|1|||-|-;2026-09-29|R|none|300|00:00|0|1|14|||-|-;2026-09-30|R|none|500|19:00|0|0|22|||X|P;2026-10-01|R|none|1900|08:00|0|0|23|||X|P;2026-10-02|R|moderate|-800|19:00|1|1|18|moderate:18:00-21:00||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
