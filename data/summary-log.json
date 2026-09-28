@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-25T07:15:42.801Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dzisiejsza sytuacja mieści się w typowym paśmie, choć między 18:00 a 22:00 operator może ogłosić przywołanie.",
-      "body": "We wtorek 29 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin 07:00-08:00 oraz 19:00-20:00 ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 28 września, środę 30 września i czwartek 1 października nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-25T07:45:41.320Z",
       "prompt": 56,
       "accepted": false,
@@ -2052,6 +2044,14 @@
       "headline": "Przez większość doby margines przewyższa typowy zakres z ostatnich trzydziestu dni.",
       "body": "W środę prognoza wciąż się ustala, a rezerwa nie pokrywa wymaganego poziomu między 07:00 a 08:00. Nadwyżka przekracza próg 1100 MW, więc operator ma wybór, a ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek między 19:00 a 20:00 margines również nie pokrywa wymaganego poziomu, podczas gdy w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-28T07:15:43.194Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W większości nadchodzących godzin margines przewyższa typowy zakres z ostatnich trzydziestu dni.",
+      "body": "W środę prognoza jeszcze się ustala, więc raz pokrywa wymagany poziom, raz nie. Do godzin porannych ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek między 19:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
