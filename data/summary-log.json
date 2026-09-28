@@ -1,31 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-25T00:47:11.833Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś między 18:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez dwie godziny. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 21:00.",
-      "outlook": "We wtorek dwudziestego dziewiątego września o 07:00 margines nie pokrywa wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-25T01:01:04.920Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "Kompas przy dniu, którego nie dotyczy",
-      "headline": "Dziś między 17:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Wtorek 29 września o 07:00 prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Na ogłoszenie może jeszcze nadejść czas, bo do tych godzin zostało jeszcze ponad osiem godzin, a nadwyżka trzyma się powyżej progu 1100 MW.",
-      "outlook": "W poniedziałek 28 września, środę 30 września i czwartek 1 października nic nie zapowiada przywołania, a w godzinach 19:00-21:00 Kompas Energetyczny PSE zaleca oszczędzanie."
-    },
-    {
-      "at": "2026-09-25T01:01:04.920Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "O godzinie 19:00 margines spadnie do najniższego poziomu i rezerwa nie pokryje wymaganego poziomu, a nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "We wtorek 29 września o 07:00 prognoza jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 21:00.",
-      "outlook": "W poniedziałek 28 września, w środę 30 września oraz w czwartek 1 października nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-25T01:15:42.842Z",
       "prompt": 56,
       "accepted": true,
@@ -2121,6 +2096,14 @@
       "accepted": true,
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "W środę o 07:00 margines jest wąski, ale wciąż dodatni.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-09-28T01:01:08.199Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "W środę o 07:00 margines mocno się zacieśnia, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
