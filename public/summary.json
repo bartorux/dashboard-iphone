@@ -1,8 +1,8 @@
 {
-  "headline": "W piątek między 18:00 a 21:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW. Operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Prognoza w piątek jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W pozostałych dniach tygodnia nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-28T18:01:15.275Z",
+  "headline": "W piątek między 18:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-28T18:15:46.255Z",
   "dates": [
     "2026-09-28",
     "2026-09-29",
@@ -10,6 +10,6 @@
     "2026-10-01",
     "2026-10-02"
   ],
-  "assessment": "2026-09-28|R|none|1400|23:00|0|0|2|||-|-;2026-09-29|R|none|1100|19:00|0|0|20|||-|-;2026-09-30|R|none|500|19:00|0|0|22|||X|P;2026-10-01|R|none|1900|08:00|0|0|23|||X|P;2026-10-02|R|moderate|-800|19:00|1|1|18|moderate:18:00-21:00||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-28|R|none|1300|22:00|0|0|2|||-|-;2026-09-29|R|none|1100|19:00|0|0|20|||-|-;2026-09-30|R|none|500|19:00|0|0|22|||X|P;2026-10-01|R|none|1900|08:00|0|0|23|||X|P;2026-10-02|R|moderate|-800|19:00|1|1|18|moderate:18:00-21:00||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
