@@ -1,31 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-25T09:01:12.489Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś między 18:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin, a Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 21:00.",
-      "outlook": "W poniedziałek, środę i czwartek nic nie zapowiada przywołania, a we wtorek o 07:00 margines jest wąski, lecz dodatni."
-    },
-    {
-      "at": "2026-09-25T09:15:40.909Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "Kompas przy dniu, którego nie dotyczy",
-      "headline": "Dziś między 18:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W poniedziałek, środę i czwartek nic nie zapowiada przywołania, a we wtorek rezerwa pokrywa wymagany poziom i Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 21:00."
-    },
-    {
-      "at": "2026-09-25T09:15:40.909Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Operator może ogłosić przywołanie między 18:00 a 22:00, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, do tych godzin zostało bowiem ponad osiem godzin.",
-      "outlook": "W poniedziałek 28 września, we wtorek 29 września, w środę 30 września oraz w czwartek 1 października nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-25T09:45:44.972Z",
       "prompt": 56,
       "accepted": true,
@@ -2048,6 +2023,14 @@
       "headline": "W środę między 07:00 a 08:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka w systemie trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza na środę jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek nic nie zapowiada przywołania, a w piątek operator ma wybór między 18:00 a 20:00."
+    },
+    {
+      "at": "2026-09-28T09:15:43.190Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Operator może ogłosić przywołanie jutro między 17:00 a 20:00, ale nie musi.",
+      "body": "W środę prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Na ogłoszenie może jeszcze nadejść czas, bo do wskazanych godzin pozostało ponad osiem godzin.",
+      "outlook": "Dziś, jutro, w środę i w piątek przywołanie wchodzi w grę w pojedynczych godzinach, podczas gdy w czwartek nic go nie zapowiada."
     }
   ]
 }
