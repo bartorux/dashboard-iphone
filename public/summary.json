@@ -1,8 +1,8 @@
 {
-  "headline": "Operator może ogłosić przywołanie jutro między 17:00 a 20:00, ale nie musi.",
-  "body": "W środę prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Na ogłoszenie może jeszcze nadejść czas, bo do wskazanych godzin pozostało ponad osiem godzin. Ocena na jutro, środę i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "Dziś, jutro, w środę i w piątek przywołanie wchodzi w grę w pojedynczych godzinach, podczas gdy w czwartek nic go nie zapowiada.",
-  "generatedAt": "2026-09-28T09:15:43.190Z",
+  "headline": "Jutro w godzinach 17:00-20:00 operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Dziś margines spadnie między 18:00 a 19:00, ale na ogłoszenie jest już za późno. Jutro i w piątek ogłoszenie może jeszcze nadejść, natomiast w środę prognoza jeszcze się ustala. Ocena na jutro, środę i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W czwartek nic nie zapowiada przywołania, a w pozostałe dni dotyczy to wyłącznie godzin spoza wskazanych przedziałów.",
+  "generatedAt": "2026-09-28T09:45:41.876Z",
   "dates": [
     "2026-09-28",
     "2026-09-29",
@@ -10,6 +10,6 @@
     "2026-10-01",
     "2026-10-02"
   ],
-  "assessment": "2026-09-28|R|moderate|-100|18:00|1|0|7|moderate:18:00-19:00||-|-;2026-09-29|R|moderate|-200|19:00|1|0|19|moderate:17:00-20:00||X|-;2026-09-30|R|moderate|-400|07:00|0|1|20|moderate:07:00-08:00||X|P;2026-10-01|R|none|2700|20:00|0|0|24|||X|P;2026-10-02|R|moderate|-600|19:00|1|0|18|moderate:18:00-20:00||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-28|R|moderate|-100|18:00|1|0|6|moderate:18:00-19:00||-|-;2026-09-29|R|moderate|-200|19:00|1|0|19|moderate:17:00-20:00||X|-;2026-09-30|R|moderate|-400|07:00|0|1|20|moderate:07:00-08:00||X|P;2026-10-01|R|none|1700|08:00|0|0|23|||X|P;2026-10-02|R|moderate|-1100|19:00|0|2|17|moderate:17:00-21:00||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
