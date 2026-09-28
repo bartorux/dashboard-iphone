@@ -1,8 +1,8 @@
 {
-  "headline": "Przez większość czasu margines utrzymuje się powyżej typowego zakresu z ostatnich trzydziestu dni.",
-  "body": "W środę prognoza dla godziny 07:00 jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin pozostaje ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na środę i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek o 19:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-28T07:45:40.364Z",
+  "headline": "W środę i piątek rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, co daje operatorowi wybór.",
+  "body": "Prognoza na środę jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do godzin 07:00-08:00 w tym dniu ogłoszenie może jeszcze nadejść. Ocena na środę i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W piątek między 19:00 a 20:00 ogłoszenie również może jeszcze nadejść, a przez pozostałe dni i godziny nic nie zapowiada przywołania.",
+  "generatedAt": "2026-09-28T08:01:08.935Z",
   "dates": [
     "2026-09-28",
     "2026-09-29",
@@ -10,6 +10,6 @@
     "2026-10-01",
     "2026-10-02"
   ],
-  "assessment": "2026-09-28|R|none|500|09:00|0|0|13|||-|-;2026-09-29|R|none|800|18:00|0|0|23|||X|-;2026-09-30|R|moderate|-100|07:00|0|0|21|moderate:07:00-08:00||X|P;2026-10-01|R|none|2800|07:00|0|0|24|||X|P;2026-10-02|R|moderate|-200|19:00|1|0|19|moderate:19:00-20:00||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-28|R|none|900|19:00|0|0|13|||-|-;2026-09-29|R|none|800|18:00|0|0|23|||X|-;2026-09-30|R|moderate|-100|07:00|0|0|21|moderate:07:00-08:00||X|P;2026-10-01|R|none|2800|07:00|0|0|24|||X|P;2026-10-02|R|moderate|-200|19:00|1|0|19|moderate:19:00-20:00||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
