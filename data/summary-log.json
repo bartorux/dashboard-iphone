@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-25T03:01:11.713Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dzisiaj między 18:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Wtorek 29 września przynosi prognozę, która jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Do godzin 07:00-08:00 tego dnia ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 21:00.",
-      "outlook": "We wtorek 29 września margines wypada poniżej typowego pasma przez trzy godziny, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-25T03:15:43.983Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś między 18:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka utrzymuje się powyżej progu 1100 MW. Operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 21:00.",
-      "outlook": "We wtorek 29 września między 07:00 a 08:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-09-25T03:45:48.746Z",
       "prompt": 56,
       "accepted": false,
@@ -2128,6 +2112,14 @@
       "accepted": true,
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "W środę o 07:00 margines mocno się skurczy, ale ta godzina wciąż mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-09-28T03:15:45.007Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "W środa o 07:00 margines spada, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
