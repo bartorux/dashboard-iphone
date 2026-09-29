@@ -1,8 +1,8 @@
 {
-  "headline": "Między 18:00 a 19:00 w piątek margines osiąga najniższą wartość, a operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
-  "body": "W dzisiejszej dnie prognoza jeszcze się ustala. Na ogłoszenie jest już za późno, bo do tych godzin zostało mniej niż osiem godzin. Ocena na piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W czwartek i w pozostałe doby nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-29T01:14:36.519Z",
+  "headline": "W piątek i w poniedziałek 5 października margines lokalnie odbiega od typowego zakresu z ostatnich trzydziestu dni.",
+  "body": "Dziś prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na piątek i poniedziałek 5 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W piątek między 17:00 a 21:00 oraz w poniedziałek 5 października między 07:00 a 09:00 i między 17:00 a 21:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada.",
+  "generatedAt": "2026-09-29T07:29:16.262Z",
   "dates": [
     "2026-09-29",
     "2026-09-30",
@@ -10,6 +10,6 @@
     "2026-10-02",
     "2026-10-05"
   ],
-  "assessment": "2026-09-29|R|moderate|-200|07:00|0|1|7|moderate:07:00-08:00||-|-;2026-09-30|R|none|1500|18:00|0|0|24|||X|-;2026-10-01|R|none|2200|08:00|0|0|24|||X|P;2026-10-02|R|moderate|-400|19:00|1|0|18|moderate:18:00-20:00||X|P;2026-10-05|R|moderate|-300|08:00|5|1|16|moderate:08:00-09:00||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-09-29|R|none|1200|09:00|0|0|11|||-|-;2026-09-30|R|none|1300|18:00|0|0|24|||X|-;2026-10-01|R|none|2000|20:00|0|0|24|||X|P;2026-10-02|R|moderate|-800|19:00|0|1|17|moderate:17:00-21:00||X|P;2026-10-05|R|moderate|-600|08:00|0|2|16|moderate:07:00-09:00,moderate:17:00-21:00||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
