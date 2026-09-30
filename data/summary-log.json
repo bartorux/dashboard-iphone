@@ -1,79 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-09-26T23:15:45.126Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "We wtorek 29 września we wskazanych godzinach operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Margines spadnie poniżej wymaganego poziomu między 07:00 a 08:00. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W środę 30 września prognoza jeszcze się ustala, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-26T23:45:42.011Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "We wtorek 29 września między 07:00 a 08:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W środa 30 września między 07:00 a 08:00 prognoza jeszcze się ustala, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-27T00:01:08.735Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "We wtorek 29 września między 07:00 a 08:00 rezerwa spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "We wtorek 29 września prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę 30 września między 07:00 a 08:00 również pojawią się godziny z nadwyżką powyżej progu 1100 MW, podczas gdy w pozostałe dni okresu nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-27T00:15:39.322Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "We wtorek 29 września między 07:00 a 08:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W środę 30 września prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Wtorek 29 września przyniesie ujemny margines także między 17:00 a 20:00, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-27T00:45:41.510Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "We wtorek 29 września między 07:00 a 08:00 rezerwa spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "We wtorek 29 września o 07:00 rezerwa spadnie poniżej wymaganego poziomu. Do tych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 29 września i w środę 30 września w wyznaczonych godzinach operator może ogłosić przywołanie, podczas gdy w pozostałe dni okresu nic go nie zapowiada."
-    },
-    {
-      "at": "2026-09-27T00:45:41.510Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "We wtorek 29 września między 07:00 a 08:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator zachowa wybór co do przywołania.",
-      "body": "We wtorek 29 września o 07:00 rezerwa nie pokryje wymaganego poziomu. Do tych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę 30 września między 07:00 a 08:00 rezerwa również spadnie poniżej wymaganego poziomu przy zachowanym wyborze operatora, a w pozostałe dni okresu nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-27T01:01:05.278Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "We wtorek 29 września między 07:00 a 08:00 rezerwa spadnie poniżej wymaganego poziomu, a nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza na środę 30 września jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-27T01:15:42.454Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "We wtorek 29 września między 07:00 a 08:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW.",
-      "body": "Margines we wtorek 29 września spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-09-27T01:45:37.548Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "We wtorek 29 września między 07:00 a 08:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka utrzymuje się powyżej progu 1100 MW.",
-      "body": "We wtorek 29 września o 07:00 margines spadnie poniżej zera. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 29 września między 17:00 a 20:00 operator również może ogłosić przywołanie, podczas gdy w pozostałe dni nic go nie zapowiada."
-    },
-    {
       "at": "2026-09-27T02:45:41.329Z",
       "prompt": 56,
       "accepted": true,
@@ -1143,6 +1070,23 @@
       "headline": "W piątek między 17:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka pozostaje powyżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "W poniedziałek 5 października między 18:00 a 19:00 rezerwa również nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-30T02:21:29.851Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Przez większość doby margines pozostaje powyżej typowego zakresu z ostatnich trzydziestu dni, choć w piątek między 17:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W poniedziałek 5 października o 20:00 margines jest bardzo wąski, ale dodatkowy, natomiast we wtorek 6 października między 19:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-09-30T02:21:29.851Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Większość godzin w nadchodzących dniach przynosi marginesy wyższe od typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza na piątek pogarsza się. Do wskazanych godzin dzieli nas jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 5 października o 20:00 margines jest wąski, lecz dodatni, natomiast we wtorek 6 października między 19:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka przekracza próg 1100 MW."
     }
   ]
 }

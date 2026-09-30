@@ -1,14 +1,15 @@
 {
-  "headline": "W piątek między 17:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka pozostaje powyżej progu 1100 MW.",
-  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin. Ocena na piątek i poniedziałek 5 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W poniedziałek 5 października między 18:00 a 19:00 rezerwa również nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-09-29T23:12:54.941Z",
+  "headline": "Większość godzin w nadchodzących dniach przynosi marginesy wyższe od typowego zakresu z ostatnich trzydziestu dni.",
+  "body": "Prognoza na piątek pogarsza się. Do wskazanych godzin dzieli nas jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na piątek i wtorek 6 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W poniedziałek 5 października o 20:00 margines jest wąski, lecz dodatni, natomiast we wtorek 6 października między 19:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka przekracza próg 1100 MW.",
+  "generatedAt": "2026-09-30T02:21:29.851Z",
   "dates": [
     "2026-09-30",
     "2026-10-01",
     "2026-10-02",
-    "2026-10-05"
+    "2026-10-05",
+    "2026-10-06"
   ],
-  "assessment": "2026-09-30|R|none|1100|19:00|0|0|23|||-|-;2026-10-01|R|none|3400|19:00|0|0|24|||X|-;2026-10-02|R|moderate|-1300|19:00|0|2|18|moderate:17:00-21:00||X|P;2026-10-05|R|moderate|-200|18:00|1|0|17|moderate:18:00-19:00||X|P#-/below/prognoza pogarsza się#v56",
+  "assessment": "2026-09-30|R|none|1100|19:00|0|0|20|||-|-;2026-10-01|R|none|3500|19:00|0|0|24|||X|-;2026-10-02|R|moderate|-1000|19:00|0|1|18|moderate:17:00-21:00||X|P;2026-10-05|R|none|100|20:00|1|0|19|||X|P;2026-10-06|R|moderate|-200|19:00|0|0|19|moderate:19:00-20:00||X|P#-/below/prognoza pogarsza się#v56",
   "model": "gemini-3.5-flash-lite"
 }
