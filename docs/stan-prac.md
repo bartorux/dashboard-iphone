@@ -449,8 +449,12 @@ testy dla siedmiu hooków — `useOnlineStatus`, `usePersistentFlag`, `useTheme`
 Wykreślone z tej listy: `proto/alerty` — warunek osi rozwiązany i wdrożony 09.09.2026 (v3.79.0
 i v3.80.0); gałąź `feat/gest-sledzacy-palec` — usunięta 13.09.2026, patrz sekcja wyżej.
 
-**PAT do cron-job.org wygasa 28.09.2026.** Odnowienie leży po stronie właściciela; token nie trafia
-do czatu, repozytorium ani żadnego pliku.
+**PAT do cron-job.org jest bezterminowy** (zregenerowany 03.10.2026). Zmiana leży po stronie właściciela; token nie trafia
+do czatu, repozytorium ani żadnego pliku. Poprzedni wygasł 28.09.2026 o 19:00 UTC i nikt go nie
+odnowił na czas: do 03.10 analizę uruchamiał tylko zapasowy `schedule`, 4–5 razy na dobę zamiast
+~96, więc w archiwum `pk5l` brakuje odczytów z tych pięciu dób. Awarię zgłaszał codziennie strażnik
+`zapisy-podsumowania.yml` („Puls oslabl”), a strażnik świeżości pozostał zielony. Pierwsze odnowienie
+03.10 dostało znów 30 dni, więc tego samego dnia token zregenerowano bez terminu ważności.
 
 ## Kadencja 15 minut — pomiary pierwszej doby (09.09.2026)
 
