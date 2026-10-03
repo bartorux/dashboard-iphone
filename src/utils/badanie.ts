@@ -38,6 +38,32 @@ export const DWELL_FLOOR_MW = 1500;
 export const ALARM_FROM = 3;
 
 /**
+ * Longest gap, in hours, between this tool's own reads of pk5l-wp that a
+ * closed day may show in the run-up to its deadline and still be scored —
+ * past it the day is `niepelne` and leaves the tally (see
+ * `longestReadGapHours`). It stays in the ranking population, like a test
+ * day: see the verdict comment in `studyDays` for why.
+ *
+ * Measured, not picked: from 28.08 to 28.09.2026, with the external heartbeat
+ * running, no gap between reads exceeded 2.0 h (hourly cadence, before 08.09;
+ * typically 0.25 h after). While the heartbeat's token had expired (28.09
+ * 19:00 – 03.10 18:30 UTC) GitHub's own schedule was the only driver and
+ * every gap ran 3.1–7.9 h: window readings 3–6 h older than their deadline,
+ * five readings a day instead of sixty or more. A gap that long blinds the
+ * whole study, not one feature — headroom goes stale, a dwell can glue two
+ * runs over a breath nobody saw, the D−1 evening reading can come from the
+ * afternoon.
+ */
+export const READ_GAP_LIMIT_H = 3;
+
+/**
+ * How far back from the deadline `READ_GAP_LIMIT_H` applies, hours. 24 h
+ * reaches the D−1 evening reading for every target hour 7-21 and covers the
+ * longest dwell on record (21.5 h, 09.09.2026).
+ */
+export const READ_GAP_LOOKBACK_H = 24;
+
+/**
  * First and last hour a target hour can be auto-selected from, inclusive.
  *
  * Rozporządzenie w sprawie szczegółowych warunków funkcjonowania systemu
@@ -485,6 +511,52 @@ function eveMarginFor(readingsAsc: HourReading[], businessDate: string): number 
 }
 
 /**
+ * Longest stretch, in hours rounded to one decimal, that this tool went
+ * without reading pk5l-wp at all, among the stretches touching
+ * [fromMs, toMs].
+ *
+ * WHY every read and not the target hour's own readings: the archive only
+ * appends a line when a value changed, so one hour's readings thin out
+ * whenever the forecast holds still — a quiet forecast, not a blind tool.
+ * Any line for ANY block carries the instant of the run that wrote it, so
+ * the union of every `readAt` in the archive is the closest record of when
+ * this tool was actually looking.
+ *
+ * The stretch from the last read to `toMs` counts, so a window reading taken
+ * hours before its deadline is a gap like any other. A stretch that began
+ * before `fromMs` counts in full rather than clipped: how stale the first
+ * reading inside the lookback was is exactly what is being asked.
+ *
+ * A lookback reaching back past the FIRST read on record starts at that read
+ * instead. The generator loads only the current and previous monthly
+ * partitions, so on 03.10 the archive it sees opens at 01.09 00:07 — and
+ * counting 31.08 as a blind stretch called 01.09 incomplete over 13 hours the
+ * tool spent reading normally, into a file nobody loaded. `null` when there
+ * is no read at or before `toMs` at all: nothing to measure a gap from.
+ *
+ * `readTimesMs` must be sorted ascending.
+ */
+function longestReadGapHours(readTimesMs: readonly number[], fromMs: number, toMs: number): number | null {
+  let anchor: number | null = null;
+  let longestMs = 0;
+  for (const readMs of readTimesMs) {
+    if (readMs > toMs) break;
+    if (anchor !== null && readMs > fromMs) {
+      longestMs = Math.max(longestMs, readMs - anchor);
+    }
+    anchor = readMs;
+  }
+  if (anchor === null) return null;
+  longestMs = Math.max(longestMs, toMs - anchor);
+  return Math.round((longestMs / HOUR_MS) * 10) / 10;
+}
+
+/** A day whose archive went blind for longer than `READ_GAP_LIMIT_H` before its deadline. */
+function incompleteArchive(day: { readGapHours: number | null }): boolean {
+  return day.readGapHours !== null && day.readGapHours > READ_GAP_LIMIT_H;
+}
+
+/**
  * The Kompas level active at one (businessDate, hour) block's OWN deadline —
  * its Warsaw-local start minus NOTICE_HOURS, exactly the deadline
  * `computeHourWindow` uses for the archive readings, computed directly here
@@ -568,6 +640,7 @@ interface RawDay {
   tightHours: Array<{ hour: number; surplus: number; margin: number }>;
   readings: Reading[];
   exchangeArrivedAt: string | null;
+  readGapHours: number | null;
 }
 
 function buildRawDay(
@@ -575,7 +648,9 @@ function buildRawDay(
   compass: readonly CompassVersionRow[],
   event: CallEvent | null,
   businessDate: string,
-  now: Date
+  now: Date,
+  /** Every read this tool made, ms, ascending — `null` when the caller has none to judge by. */
+  readTimesMs: readonly number[] | null
 ): RawDay {
   const worstHour = event ? event.hour : autoTargetHour(rows, businessDate, now);
   const tightHours = tightHoursFor(rows, businessDate, now, worstHour);
@@ -603,6 +678,7 @@ function buildRawDay(
       tightHours,
       readings: [],
       exchangeArrivedAt: null,
+      readGapHours: null,
     };
   }
 
@@ -613,6 +689,12 @@ function buildRawDay(
   // happen well before the window (the window is the deadline reading, the
   // arrival is whenever it actually happened).
   const arrivedAt = exchangeArrivedAt(readingsAsc);
+  // Up to the deadline once it has passed; while it is still ahead, up to
+  // `now` — what the archive has seen of the run-up so far.
+  const gapEndMs = open ? now.getTime() : deadline.getTime();
+  const readGapHours = readTimesMs
+    ? longestReadGapHours(readTimesMs, deadline.getTime() - READ_GAP_LOOKBACK_H * HOUR_MS, gapEndMs)
+    : null;
 
   if (windowIndex === -1) {
     return {
@@ -630,6 +712,7 @@ function buildRawDay(
       tightHours,
       readings,
       exchangeArrivedAt: arrivedAt,
+      readGapHours,
     };
   }
 
@@ -652,6 +735,7 @@ function buildRawDay(
     tightHours,
     readings,
     exchangeArrivedAt: arrivedAt,
+    readGapHours,
   };
 }
 
@@ -714,7 +798,16 @@ export function studyDays(
    * and defaulting to "unknown for every date" so every existing caller
    * (tests included) that has no forecast to hand keeps working unchanged.
    */
-  forecastByDate?: ReadonlyMap<string, ReadonlyArray<{ exchange: number | null }>>
+  forecastByDate?: ReadonlyMap<string, ReadonlyArray<{ exchange: number | null }>>,
+  /**
+   * The `readAt` of every line in the WHOLE archive, any block, any date —
+   * when this tool was actually reading (see `longestReadGapHours`). Optional
+   * for the same reason as `forecastByDate`: without it no day is judged for
+   * archive gaps and `readGapHours` stays `null`. It is a separate input
+   * rather than read off `rows` because test fixtures carry only the few
+   * readings a case needs, hours apart, and would all read as blind.
+   */
+  readTimes?: readonly string[]
 ): DayStudy[] {
   const nowMs = now.getTime();
   // What could actually be known AT `now` — a defensive floor, since real
@@ -730,8 +823,15 @@ export function studyDays(
     .sort();
   const eventByDate = new Map(events.map((event) => [event.date, event]));
 
+  const readTimesMs = readTimes
+    ? readTimes
+        .map((readAt) => Date.parse(readAt))
+        .filter((readAtMs) => !Number.isNaN(readAtMs) && readAtMs <= nowMs)
+        .sort((a, b) => a - b)
+    : null;
+
   const raw = businessDates.map((date) =>
-    buildRawDay(knownRows, compass, eventByDate.get(date) ?? null, date, now)
+    buildRawDay(knownRows, compass, eventByDate.get(date) ?? null, date, now, readTimesMs)
   );
 
   const headroom = rankFeature(raw, (day) => day.headroom, false);
@@ -761,18 +861,28 @@ export function studyDays(
     // `extremeCount`: the features and percentiles are still computed
     // normally and the day stays in the ranking population (see
     // `rankFeature`), only the VERDICT is pulled out of the trafienie/
-    // falszywy-alarm/przeoczenie/cisza tally.
+    // falszywy-alarm/przeoczenie/cisza tally. An incomplete archive comes
+    // next, after the test because a test is a fact from the register
+    // whatever the archive saw, while every verdict below is a claim about
+    // what the archive saw. It too stays in the ranking population. Taking
+    // the four blind days of 30.09-03.10 out of it was tried on the real
+    // archive: all four were milder than the worst days, so the population
+    // shrank from 32 to 28 and the 0.9 cut fitted three days instead of four
+    // — 11.09 slid from 0.903 to 0.889 on its D−1 margin and stopped being a
+    // false alarm. A fix aimed at four days must not quietly rewrite a fifth.
     const verdict = day.window.open
       ? 'otwarte'
       : day.event?.kind === 'test'
         ? 'test'
-        : day.event && extremeCount >= ALARM_FROM
-          ? 'trafienie'
-          : !day.event && extremeCount >= ALARM_FROM
-            ? 'falszywy-alarm'
-            : day.event && extremeCount < ALARM_FROM
-              ? 'przeoczenie'
-              : 'cisza';
+        : incompleteArchive(day)
+          ? 'niepelne'
+          : day.event && extremeCount >= ALARM_FROM
+            ? 'trafienie'
+            : !day.event && extremeCount >= ALARM_FROM
+              ? 'falszywy-alarm'
+              : day.event && extremeCount < ALARM_FROM
+                ? 'przeoczenie'
+                : 'cisza';
 
     const study: DayStudy = {
       date: day.date,
@@ -797,6 +907,7 @@ export function studyDays(
         ? exchangePlanned(forecastByDate.get(day.date)!)
         : null,
       exchangeArrivedAt: day.exchangeArrivedAt,
+      readGapHours: day.readGapHours,
     };
     return study;
   });
@@ -808,7 +919,9 @@ export function buildBadanie(
   events: readonly CallEvent[],
   now: Date,
   /** Forwarded to `studyDays` — see its own doc comment. */
-  forecastByDate?: ReadonlyMap<string, ReadonlyArray<{ exchange: number | null }>>
+  forecastByDate?: ReadonlyMap<string, ReadonlyArray<{ exchange: number | null }>>,
+  /** Forwarded to `studyDays` — see its own doc comment. */
+  readTimes?: readonly string[]
 ): BadanieFile {
   return {
     generatedAt: now.toISOString(),
@@ -816,8 +929,9 @@ export function buildBadanie(
     exemptionMw: CALL_PERIOD_EXEMPTION_MW,
     dwellFloorMw: DWELL_FLOOR_MW,
     alarmFrom: ALARM_FROM,
+    readGapLimitHours: READ_GAP_LIMIT_H,
     observations: [],
-    days: studyDays(rows, compass, events, now, forecastByDate),
+    days: studyDays(rows, compass, events, now, forecastByDate, readTimes),
     events: [...events],
   };
 }
@@ -909,7 +1023,9 @@ export function buildBadanieWithObservations(
   issueObservations: readonly Observation[],
   now: Date,
   /** Forwarded to `buildBadanie` — see its own doc comment. */
-  forecastByDate?: ReadonlyMap<string, ReadonlyArray<{ exchange: number | null }>>
+  forecastByDate?: ReadonlyMap<string, ReadonlyArray<{ exchange: number | null }>>,
+  /** Forwarded to `buildBadanie` — see its own doc comment. */
+  readTimes?: readonly string[]
 ): BadanieFile {
   const registerDates = new Set(registerEvents.map((event) => event.date));
 
@@ -933,7 +1049,8 @@ export function buildBadanieWithObservations(
     compass,
     [...registerEvents, ...eventsFromIssues],
     now,
-    forecastByDate
+    forecastByDate,
+    readTimes
   );
   const labeled = applyObservations({ ...scored, events: [...registerEvents] }, issueObservations);
   return { ...labeled, events: scored.events };

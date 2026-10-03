@@ -52,6 +52,7 @@ const VERDICT_WORD: Record<Verdict, string> = {
   cisza: 'cisza',
   otwarte: 'otwarte',
   test: 'test · poza oceną',
+  niepelne: 'niepełne archiwum · poza oceną',
 };
 
 const EVENT_KIND_WORD: Record<CallEvent['kind'], string> = {
@@ -353,6 +354,18 @@ function formatExchangeArrivalLine(day: DayStudy): string | null {
   return null;
 }
 
+/**
+ * Why a `niepelne` day is out of the tally, in its own figure: the longest
+ * stretch the tool went without reading before the deadline. Shown only for
+ * that verdict — on every other day the gap is a quarter of an hour and
+ * saying so on each row would be noise. Short enough to fit a phone's width:
+ * the why sits once, above the table, not on every row.
+ */
+function formatReadGapLine(day: DayStudy): string | null {
+  if (day.verdict !== 'niepelne' || day.readGapHours == null) return null;
+  return `Przerwa w odczytach przed terminem: ${formatDwellHours(day.readGapHours)} — doba poza oceną.`;
+}
+
 function DayRow({
   day,
   dwellFloorMw,
@@ -370,6 +383,7 @@ function DayRow({
   const rowClass = `${rowMuted} ${rowBold}`.trim();
   const eventCell = eventCellContent(day);
   const exchangeArrivalLine = formatExchangeArrivalLine(day);
+  const readGapLine = formatReadGapLine(day);
 
   return (
     <>
@@ -424,7 +438,12 @@ function DayRow({
       {expanded && (
         <tr>
           <td colSpan={12} id={detailsId} className="border-t border-separator px-2">
-            <p className="pt-2 text-[0.8125rem] text-text-secondary">{formatTightHoursLine(day)}</p>
+            {readGapLine && (
+              <p className="pt-2 text-[0.8125rem] text-text-secondary">{readGapLine}</p>
+            )}
+            <p className={`${readGapLine ? '' : 'pt-2 '}text-[0.8125rem] text-text-secondary`}>
+              {formatTightHoursLine(day)}
+            </p>
             {exchangeArrivalLine && (
               <p className="text-[0.8125rem] text-text-secondary">{exchangeArrivalLine}</p>
             )}
@@ -486,7 +505,7 @@ const COLUMNS: ReadonlyArray<{ label: string; hint?: string; align?: 'right' }> 
   },
   {
     label: 'Werdykt',
-    hint: 'Zestawienie liczby ekstremów z rejestrem: trafienie, fałszywy alarm, przeoczenie, cisza. „Otwarte" — termin jeszcze nie minął; „otwarte · bez salda" — ta doba nie ma jeszcze w prognozie salda wymiany; rezerwa jest liczona bez importu i eksportu i po dodaniu planu może się zmienić w obie strony. „test — poza oceną": testów nie przewidujemy.',
+    hint: 'Zestawienie liczby ekstremów z rejestrem: trafienie, fałszywy alarm, przeoczenie, cisza. „Otwarte" — termin jeszcze nie minął; „otwarte · bez salda" — ta doba nie ma jeszcze w prognozie salda wymiany; rezerwa jest liczona bez importu i eksportu i po dodaniu planu może się zmienić w obie strony. „test — poza oceną": testów nie przewidujemy. „Niepełne archiwum — poza oceną": w 24 h przed terminem aplikacja przez ponad 3 h nie czytała prognozy, więc cechy opisują nieaktualny odczyt i doba nie liczy się do bilansu.',
   },
   {
     label: 'Zdarzenie',
@@ -615,6 +634,8 @@ export interface Bilans {
   /** Kept apart from `alarmy`: a test's hour is the operator's own choice,
    *  not a signal the rule can be judged against (see `Verdict.test`). */
   testy: number;
+  /** Days the archive went blind before the deadline (see `Verdict.niepelne`). */
+  niepelne: number;
 }
 
 /**
@@ -635,6 +656,7 @@ export function bilans(days: DayStudy[]): Bilans {
     przeoczenia: count('przeoczenie'),
     cisza: count('cisza'),
     testy: count('test'),
+    niepelne: count('niepelne'),
   };
 }
 
@@ -662,6 +684,7 @@ export function polishCount(n: number, forms: readonly [string, string, string])
 const RAZY_FORMS = ['raz', 'razy', 'razy'] as const;
 const TRAFIENIE_FORMS = ['trafienie', 'trafienia', 'trafień'] as const;
 const FALSZYWY_ALARM_FORMS = ['fałszywy alarm', 'fałszywe alarmy', 'fałszywych alarmów'] as const;
+const DOBA_FORMS = ['doba', 'doby', 'dób'] as const;
 
 /**
  * The sentence itself. "Przeoczeń" and "Testy" stay in one fixed form —
@@ -677,7 +700,11 @@ function bilansSentence(counts: Bilans): string {
           counts.trafienia,
           TRAFIENIE_FORMS
         )}, ${polishCount(counts.falszywe, FALSZYWY_ALARM_FORMS)}.`;
-  return `${opening} Przeoczeń ${counts.przeoczenia}. Testy (${counts.testy}) liczone osobno, bo ich godzinę wybiera operator.`;
+  const incomplete =
+    counts.niepelne === 0
+      ? ''
+      : ` Poza oceną także ${polishCount(counts.niepelne, DOBA_FORMS)} z kilkugodzinną przerwą w odczytach przed terminem.`;
+  return `${opening} Przeoczeń ${counts.przeoczenia}. Testy (${counts.testy}) liczone osobno, bo ich godzinę wybiera operator.${incomplete}`;
 }
 
 /**
@@ -974,8 +1001,13 @@ function Content({ data }: { data: BadanieFile }) {
   // "Notable" is anything the verdict has something to say about: a hit, a
   // false alarm, a miss, or a test day (shown but excluded from the tally —
   // see `Verdict.test`). Plain silence is the default state of the grid.
-  const notable = settled.filter((day) => day.verdict !== 'cisza');
+  // An incomplete day with an event on record stays notable — the event is
+  // the reason to look at it; one without sits behind its own fold, like
+  // silence, since it has nothing to say about the rule.
+  const incompleteQuiet = (day: DayStudy) => day.verdict === 'niepelne' && day.event === null;
+  const notable = settled.filter((day) => day.verdict !== 'cisza' && !incompleteQuiet(day));
   const quiet = settled.filter((day) => day.verdict === 'cisza');
+  const incomplete = settled.filter(incompleteQuiet);
 
   return (
     <div className="bg-bg text-text p-4">
@@ -1044,11 +1076,31 @@ function Content({ data }: { data: BadanieFile }) {
       {quiet.length > 0 && (
         <details className="mt-4">
           <summary className="cursor-pointer text-[0.875rem] font-semibold">
-            Cisza — {quiet.length} {quiet.length === 1 ? 'doba' : 'dób'} bez zdarzenia i bez alarmu
+            Cisza — {polishCount(quiet.length, DOBA_FORMS)} bez zdarzenia i bez alarmu
           </summary>
           <DaysTable
             caption="Zamknięte doby bez zdarzenia i bez alarmu"
             days={quiet}
+            dwellFloorMw={data.dwellFloorMw}
+            expanded={expandedDates}
+            onToggle={toggleDate}
+          />
+        </details>
+      )}
+
+      {incomplete.length > 0 && (
+        <details className="mt-4">
+          <summary className="cursor-pointer text-[0.875rem] font-semibold">
+            Niepełne archiwum — {polishCount(incomplete.length, DOBA_FORMS)} poza oceną
+          </summary>
+          <p className="mt-1 max-w-prose text-[0.8125rem] text-text-secondary">
+            W 24 h przed terminem aplikacja przez ponad {data.readGapLimitHours ?? 3} h nie czytała
+            prognozy. Cechy są policzone, ale z nieaktualnego odczytu, więc te doby nie wchodzą do
+            bilansu.
+          </p>
+          <DaysTable
+            caption="Zamknięte doby z przerwą w odczytach przed terminem"
+            days={incomplete}
             dwellFloorMw={data.dwellFloorMw}
             expanded={expandedDates}
             onToggle={toggleDate}

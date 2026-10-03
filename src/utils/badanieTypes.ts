@@ -79,7 +79,17 @@ export type Verdict =
    * claims a hit nor a miss — the day is shown, scored, and kept out of the
    * tally.
    */
-  | 'test';
+  | 'test'
+  /**
+   * The archive went blind before the deadline: in the 24 h up to it this
+   * tool once went longer than `readGapLimitHours` without reading the
+   * forecast (28.09-03.10.2026: the external heartbeat's token had expired,
+   * five reads a day instead of sixty or more). The features are still
+   * computed and shown, but they describe a stale reading, so the day leaves
+   * the tally. Like a test day it stays in the ranking population, so no
+   * other day's verdict moves because of it.
+   */
+  | 'niepelne';
 
 export interface DayStudy {
   date: string;
@@ -176,6 +186,15 @@ export interface DayStudy {
    * other.
    */
   exchangeArrivedAt: string | null;
+  /**
+   * Longest gap, hours, between this tool's own reads of the forecast — any
+   * block, not just this day — in the 24 h up to the deadline (up to now
+   * while the window is open). Above `BadanieFile.readGapLimitHours` the
+   * verdict is `niepelne`. `null` when the generator passed no read times
+   * or the day has no target hour; optional only so a file written before
+   * this field existed still matches the type.
+   */
+  readGapHours?: number | null;
 }
 
 export interface BadanieFile {
@@ -188,6 +207,8 @@ export interface BadanieFile {
   dwellFloorMw: number;
   /** Feature count from which a day is called "alarm" for the verdict. */
   alarmFrom: number;
+  /** READ_GAP_LIMIT_H at generation time; absent in files written before it existed. */
+  readGapLimitHours?: number;
   days: DayStudy[];
   events: CallEvent[];
   /** Every observation the generator knew of, issues included, newest first. */

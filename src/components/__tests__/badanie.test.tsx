@@ -451,12 +451,53 @@ describe('Badanie', () => {
     // Quiet days live inside a collapsed <details>, counted in its summary —
     // three now: 31.08 (issue-observed real, no register event), 01.09
     // (issue-observed "nic"), and 03.09 (no entry at all).
-    const fold = screen.getByText(/Cisza — 3 dób/).closest('details');
+    const fold = screen.getByText(/Cisza — 3 doby/).closest('details');
     expect(fold).not.toBeNull();
     expect(fold).not.toHaveAttribute('open');
     expect(within(fold as HTMLElement).getByRole('button', { name: '03.09' })).toBeInTheDocument();
     expect(within(fold as HTMLElement).getByRole('button', { name: '01.09' })).toBeInTheDocument();
     expect(within(fold as HTMLElement).getByRole('button', { name: '31.08' })).toBeInTheDocument();
+  });
+
+  it('keeps a day with an incomplete archive behind its own fold, out of the tally, and says why when expanded', async () => {
+    const withGap = JSON.parse(JSON.stringify(FIXTURE)) as BadanieFile;
+    withGap.readGapLimitHours = 3;
+    withGap.days.push({ ...studyDay('2026-08-29', 'niepelne'), readGapHours: 7.1 });
+    respondWith({ badanie: withGap });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const fold = screen.getByText(/Niepełne archiwum — 1 doba poza oceną/).closest('details');
+    expect(fold).not.toBeNull();
+    expect(fold).not.toHaveAttribute('open');
+    expect(within(fold as HTMLElement).getByText(/przez ponad 3 h nie czytała/)).toBeInTheDocument();
+    const button = within(fold as HTMLElement).getByRole('button', { name: '29.08' });
+    // Neither notable nor quiet: it has nothing to say about the rule.
+    const notable = screen.getByRole('table', { name: /ze zdarzeniem/ }) as HTMLElement;
+    expect(within(notable).queryByRole('button', { name: '29.08' })).toBeNull();
+    expect(screen.getByText(/Poza oceną także 1 doba z kilkugodzinną przerwą/)).toBeInTheDocument();
+
+    fireEvent.click(button);
+    expect(
+      within(fold as HTMLElement).getByText('Przerwa w odczytach przed terminem: 7,1 h — doba poza oceną.')
+    ).toBeInTheDocument();
+  });
+
+  it('keeps an incomplete day with an event on record among the notable ones', async () => {
+    const withGap = JSON.parse(JSON.stringify(FIXTURE)) as BadanieFile;
+    withGap.days.push({
+      ...studyDay('2026-08-29', 'niepelne'),
+      readGapHours: 6.2,
+      event: { date: '2026-08-29', hour: 20, kind: 'real', scope: 'market' },
+    });
+    respondWith({ badanie: withGap });
+    render(<Badanie />);
+    await screen.findByText('Badanie przywołań');
+
+    const notable = screen.getByRole('table', { name: /ze zdarzeniem/ }) as HTMLElement;
+    expect(within(notable).getByRole('button', { name: '29.08' })).toBeInTheDocument();
+    expect(within(notable).getByText('niepełne archiwum · poza oceną')).toBeInTheDocument();
+    expect(screen.queryByText(/Niepełne archiwum — /)).toBeNull();
   });
 
   it('explains a column at once on hover and pins it on click', async () => {
@@ -1038,6 +1079,7 @@ describe('Badanie', () => {
         studyDay('2026-09-08', 'przeoczenie'),
         studyDay('2026-09-09', 'cisza'),
         studyDay('2026-09-10', 'test'),
+        studyDay('2026-09-11', 'niepelne'),
       ];
       expect(bilans(days)).toEqual({
         alarmy: 2,
@@ -1046,6 +1088,7 @@ describe('Badanie', () => {
         przeoczenia: 1,
         cisza: 1,
         testy: 1,
+        niepelne: 1,
       });
     });
 
@@ -1058,6 +1101,7 @@ describe('Badanie', () => {
         przeoczenia: 0,
         cisza: 0,
         testy: 0,
+        niepelne: 0,
       });
     });
 
@@ -1077,6 +1121,7 @@ describe('Badanie', () => {
         przeoczenia: 0,
         cisza: 0,
         testy: 0,
+        niepelne: 0,
       });
     });
 
@@ -1089,6 +1134,7 @@ describe('Badanie', () => {
         przeoczenia: 0,
         cisza: 0,
         testy: 0,
+        niepelne: 0,
       });
     });
   });

@@ -964,6 +964,34 @@ pobierać `news.json`. **Nie sprawdzone:** prawdziwy iPhone (dotyk w WebKit, obs
 rozmycie). Zauważone przy okazji: dwa niemal identyczne wpisy PSE (16:00 i 16:02, ten sam tytuł) —
 deduplikacja generatora, nie ta zmiana.
 
+## Niepełne archiwum w badaniu (03.10.2026, v3.90.2)
+
+**Po co.** Od 28.09 19:00 do 03.10 18:30 UTC wygasły PAT w cron-job.org zostawił analizę na zapasowym
+`schedule`: 4–5 odczytów na dobę zamiast ~96. Badanie liczyło w tym czasie werdykty z odczytów sprzed
+kilku godzin (01.10: okno 3,2 h przed terminem, 02.10: 3,5 h, 03.10: 5,7 h) i pokazywało je jako zwykłą
+ciszę.
+
+**Reguła.** Werdykt `niepelne` („niepełne archiwum · poza oceną”), gdy w 24 h przed terminem najdłuższa
+przerwa między odczytami przekracza 3 h (`READ_GAP_LIMIT_H`). Przerwę mierzy się na `readAt` z całego
+archiwum, nie z wierszy jednej godziny — archiwum dopisuje wiersz tylko przy zmianie wartości. Próg
+z pomiaru: przy działającym pulsie najdłuższa przerwa 2,0 h (kadencja godzinowa do 07.09), w czasie
+awarii najkrótsza 3,1 h. Kolejność werdyktów: otwarte → test → niepełne → reszta. Doba wypada z bilansu,
+zostaje w populacji percentyli (jak test). Strona: osobna zwinięta sekcja pod „Ciszą”, w rozwinięciu
+wiersza długość przerwy.
+
+**Dwie pułapki znalezione na prawdziwym archiwum.** (1) Generator wczytuje dwa miesięczne pliki, więc
+01.09 wyglądało na 13 h bez odczytów — okno sięgające przed pierwszy wczytany odczyt liczy się od niego.
+(2) Wyłączenie czterech dób z populacji percentyli zmieniało werdykt 11.09 (margines D−1: percentyl
+0,903 → 0,889, fałszywy alarm → cisza). Odrzucone: poprawka czterech dób nie przepisuje piątej. Przy
+okazji widać, jak krucha jest granica 0,9 przy ~30 dobach — 09.09 (0,906) i 11.09 (0,903) leżą na
+niej; argument za utrwalaniem werdyktów w v3.91.
+
+**Wynik na archiwum z 03.10:** zmieniają się tylko 30.09–03.10 (cisza → niepełne); pozostałe 35 dób
+identyczne co do cech i werdyktów, bilans bez zmian (2 fałszywe alarmy). 1385 testów, 6 sond
+mutacyjnych — wszystkie zabite. Zrzuty w WebKit na przeliczonym pliku, oba tryby. Przy okazji
+„Cisza — 24 dób” → „24 doby”. Punkt powrotu `v3.90.1-przed-niepelnym-archiwum` (tag, gałąź,
+archiwum — sprawdzone).
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś

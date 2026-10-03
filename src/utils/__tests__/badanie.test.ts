@@ -3,6 +3,7 @@ import fixtureText from '../__fixtures__/pk5l-archiwum-wycinek.jsonl?raw';
 import {
   ALARM_FROM,
   DWELL_FLOOR_MW,
+  READ_GAP_LIMIT_H,
   applyObservations,
   buildBadanie,
   buildBadanieWithObservations,
@@ -1339,5 +1340,163 @@ describe('buildBadanieWithObservations', () => {
     expect(day.extremeCount).toBeGreaterThanOrEqual(ALARM_FROM);
     expect(day.event).toEqual({ date: '2026-08-10', hour: 15, kind: 'test', scope: 'unit', note: undefined });
     expect(day.verdict).toBe('test');
+  });
+});
+
+describe('read gaps: a day the archive went blind before its deadline', () => {
+  // Hour 15 in June is 13:00 UTC (CEST), so every deadline below is 05:00 UTC
+  // on the day itself and the 24 h lookback starts 05:00 UTC the day before.
+  const NOW = new Date('2026-06-20T00:00:00Z');
+
+  /** One reading per day, a quarter of an hour before its 05:00Z deadline. */
+  function dayRows(plan: Array<{ date: string; surplus: number }>): ArchiveRow[] {
+    return plan.map(({ date, surplus }) => row(date, 15, surplus, 1000, `${date}T04:45:00Z`));
+  }
+
+  /**
+   * This tool's reads every 15 minutes from 06-07 to 06-14, minus every read
+   * strictly inside each `skip` span — a heartbeat that stopped and came back.
+   */
+  function readsEvery15Min(...skip: Array<[string, string]>): string[] {
+    const spans = skip.map(([from, to]) => [Date.parse(from), Date.parse(to)] as const);
+    const reads: string[] = [];
+    for (let ms = Date.parse('2026-06-07T00:00:00Z'); ms <= Date.parse('2026-06-14T00:00:00Z'); ms += 15 * 60_000) {
+      if (spans.some(([from, to]) => ms > from && ms < to)) continue;
+      reads.push(new Date(ms).toISOString());
+    }
+    return reads;
+  }
+
+  const QUIET = [
+    { date: '2026-06-10', surplus: 3000 },
+    { date: '2026-06-11', surplus: 3100 },
+  ];
+
+  it('reads a quarter-hour cadence as no gap at all and scores the day as usual', () => {
+    const days = studyDays(dayRows(QUIET), [], [], NOW, undefined, readsEvery15Min());
+    const day = days.find((d) => d.date === '2026-06-10')!;
+
+    expect(day.readGapHours).toBe(0.3); // 15 min, rounded to one decimal
+    expect(day.verdict).toBe('cisza');
+  });
+
+  it(`calls a day "niepelne" past ${READ_GAP_LIMIT_H} h without a read in the 24 h before the deadline`, () => {
+    const reads = readsEvery15Min(['2026-06-09T20:00:00Z', '2026-06-10T00:00:00Z']);
+    const days = studyDays(dayRows(QUIET), [], [], NOW, undefined, reads);
+    const day = days.find((d) => d.date === '2026-06-10')!;
+
+    expect(day.readGapHours).toBe(4);
+    expect(day.verdict).toBe('niepelne');
+    // The features are still measured and shown — only the verdict changes.
+    expect(day.surplus).toBe(3000);
+    expect(day.headroom.value).not.toBeNull();
+  });
+
+  it(`keeps a gap of exactly ${READ_GAP_LIMIT_H} h scored — the limit is "longer than", not "as long as"`, () => {
+    const reads = readsEvery15Min(['2026-06-09T20:00:00Z', '2026-06-09T23:00:00Z']);
+    const day = studyDays(dayRows(QUIET), [], [], NOW, undefined, reads).find((d) => d.date === '2026-06-10')!;
+
+    expect(day.readGapHours).toBe(3);
+    expect(day.verdict).toBe('cisza');
+  });
+
+  it('ignores a gap that ended before the 24 h lookback began', () => {
+    const reads = readsEvery15Min(['2026-06-08T20:00:00Z', '2026-06-09T02:00:00Z']);
+    const day = studyDays(dayRows(QUIET), [], [], NOW, undefined, reads).find((d) => d.date === '2026-06-10')!;
+
+    expect(day.readGapHours).toBe(0.3);
+    expect(day.verdict).toBe('cisza');
+  });
+
+  it('counts a gap straddling the start of the lookback in full, not clipped', () => {
+    // 03:00-07:00 on 06-09: only two of its four hours fall after 05:00, the
+    // lookback's start, but the first read inside the lookback is still four
+    // hours stale.
+    const reads = readsEvery15Min(['2026-06-09T03:00:00Z', '2026-06-09T07:00:00Z']);
+    const day = studyDays(dayRows(QUIET), [], [], NOW, undefined, reads).find((d) => d.date === '2026-06-10')!;
+
+    expect(day.readGapHours).toBe(4);
+    expect(day.verdict).toBe('niepelne');
+  });
+
+  it('starts at the first read on record when the lookback reaches back past it — a file not loaded is not a blind tool', () => {
+    // The generator loads two monthly partitions, so the archive it sees can
+    // open mid-lookback (01.09 00:07 on 03.10). Reads from 06-09 22:00 on only:
+    // seven hours of lookback with nothing loaded, none of it a gap.
+    const reads = readsEvery15Min(['2026-06-06T00:00:00Z', '2026-06-09T22:00:00Z']);
+    const day = studyDays(dayRows(QUIET), [], [], NOW, undefined, reads).find((d) => d.date === '2026-06-10')!;
+
+    expect(day.readGapHours).toBe(0.3);
+    expect(day.verdict).toBe('cisza');
+  });
+
+  it('counts the stretch from the last read to the deadline: a window reading hours older than its deadline', () => {
+    const rows = [row('2026-06-10', 15, 3000, 1000, '2026-06-10T00:45:00Z'), ...dayRows([QUIET[1]])];
+    const reads = readsEvery15Min(['2026-06-10T00:45:00Z', '2026-06-10T08:00:00Z']);
+    const day = studyDays(rows, [], [], NOW, undefined, reads).find((d) => d.date === '2026-06-10')!;
+
+    expect(day.window.readAt).toBe('2026-06-10T00:45:00Z');
+    expect(day.readGapHours).toBe(4.3); // 00:45 to the 05:00 deadline
+    expect(day.verdict).toBe('niepelne');
+  });
+
+  it('judges nothing when the caller passes no read times — the field is null and the verdict unchanged', () => {
+    const day = studyDays(dayRows(QUIET), [], [], NOW).find((d) => d.date === '2026-06-10')!;
+
+    expect(day.readGapHours).toBeNull();
+    expect(day.verdict).toBe('cisza');
+  });
+
+  it('lets a test event and an open window win over an incomplete archive', () => {
+    const reads = readsEvery15Min(['2026-06-09T20:00:00Z', '2026-06-10T00:00:00Z']);
+    const test: CallEvent = { date: '2026-06-10', hour: 15, kind: 'test', scope: 'unit' };
+    const tested = studyDays(dayRows(QUIET), [], [test], NOW, undefined, reads).find(
+      (d) => d.date === '2026-06-10'
+    )!;
+    expect(tested.verdict).toBe('test');
+
+    const beforeDeadline = new Date('2026-06-10T04:50:00Z');
+    const open = studyDays(dayRows(QUIET), [], [], beforeDeadline, undefined, reads).find(
+      (d) => d.date === '2026-06-10'
+    )!;
+    expect(open.window.open).toBe(true);
+    expect(open.verdict).toBe('otwarte');
+  });
+
+  it('keeps a real event on an incomplete day out of the tally too: no trafienie or przeoczenie off a stale reading', () => {
+    const reads = readsEvery15Min(['2026-06-09T20:00:00Z', '2026-06-10T00:00:00Z']);
+    const real: CallEvent = { date: '2026-06-10', hour: 15, kind: 'real', scope: 'market' };
+    const day = studyDays(dayRows(QUIET), [], [real], NOW, undefined, reads).find((d) => d.date === '2026-06-10')!;
+
+    expect(day.event).toEqual(real);
+    expect(day.verdict).toBe('niepelne');
+  });
+
+  it('keeps an incomplete day in the ranking population: no other day\'s rank or verdict moves because of it', () => {
+    const plan = [
+      { date: '2026-06-10', surplus: 200 }, // worst — and blind
+      { date: '2026-06-11', surplus: 2000 },
+      { date: '2026-06-12', surplus: 3000 },
+    ];
+    const reads = readsEvery15Min(['2026-06-09T20:00:00Z', '2026-06-10T00:00:00Z']);
+
+    const withGap = new Map(studyDays(dayRows(plan), [], [], NOW, undefined, reads).map((d) => [d.date, d]));
+    const without = new Map(studyDays(dayRows(plan), [], [], NOW).map((d) => [d.date, d]));
+
+    // 06-11 against [06-10, 06-12] is milder than one of two either way.
+    expect(withGap.get('2026-06-11')!.headroom.percentile).toBe(0.5);
+    expect(without.get('2026-06-11')!.headroom.percentile).toBe(0.5);
+    expect(withGap.get('2026-06-11')!.verdict).toBe(without.get('2026-06-11')!.verdict);
+    // The blind day keeps its own rank too — only its verdict changes.
+    expect(withGap.get('2026-06-10')!.headroom.percentile).toBe(1);
+    expect(withGap.get('2026-06-10')!.verdict).toBe('niepelne');
+  });
+
+  it('buildBadanieWithObservations forwards the read times and writes the limit into the file', () => {
+    const reads = readsEvery15Min(['2026-06-09T20:00:00Z', '2026-06-10T00:00:00Z']);
+    const file = buildBadanieWithObservations(dayRows(QUIET), [], [], [], NOW, undefined, reads);
+
+    expect(file.readGapLimitHours).toBe(READ_GAP_LIMIT_H);
+    expect(file.days.find((d) => d.date === '2026-06-10')!.verdict).toBe('niepelne');
   });
 });

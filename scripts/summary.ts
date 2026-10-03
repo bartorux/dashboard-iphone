@@ -623,13 +623,20 @@ async function writeBadanie(at: Date): Promise<void> {
       else forecastByDate.set(point.businessDate, [{ exchange: point.exchange }]);
     }
 
+    // Every run that changed anything left its instant on the lines it
+    // wrote, so the union of `readAt` across the whole archive is when this
+    // tool was actually reading — what tells the study a day it went blind
+    // for hours (28.09-03.10.2026, the heartbeat's token expired).
+    const readTimes = Array.from(new Set(rows.map((row) => row[5])));
+
     const file = buildBadanieWithObservations(
       rows,
       compass,
       events,
       issueObservations,
       at,
-      forecastByDate
+      forecastByDate,
+      readTimes
     );
     // Compact on purpose: this file is fetched by a browser, and the readings
     // list alone runs to thousands of entries a month.
