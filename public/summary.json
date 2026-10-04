@@ -1,8 +1,8 @@
 {
-  "headline": "W środę 7 października operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 08:00.",
-  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 6 października i środę 7 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek 6 października między 18:00 a 21:00 operator może ogłosić przywołanie, podczas gdy w pozostałe dni okresu nic go nie zapowiada.",
-  "generatedAt": "2026-10-04T14:57:45.882Z",
+  "headline": "W środę 7 października nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-08:00, co oznacza, że operator może ogłosić przywołanie.",
+  "body": "Prognoza pogarsza się w środę 7 października. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 6 października i środę 7 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek 6 października margines spada między 18:00 a 21:00, a w pozostałych dniach okresu nic nie zapowiada przywołania.",
+  "generatedAt": "2026-10-04T18:46:47.278Z",
   "dates": [
     "2026-10-04",
     "2026-10-05",
@@ -11,6 +11,6 @@
     "2026-10-08",
     "2026-10-09"
   ],
-  "assessment": "2026-10-04|W|none|300|18:00|0|0|1|||-|-;2026-10-05|R|none|1000|19:00|0|0|19|||-|-;2026-10-06|R|moderate|-1700|19:00|1|3|16|moderate:18:00-21:00||X|P;2026-10-07|R|high|-2800|07:00|0|8|10|high:07:00-08:00,moderate:08:00-09:00,moderate:16:00-21:00||X|P;2026-10-08|R|none|2100|19:00|0|0|24|||X|P;2026-10-09|R|none|2800|19:00|0|0|24|||X|P#-/below/prognoza pogarsza się#v56",
+  "assessment": "2026-10-04|W|none|0|20:00|0|0|0|||-|-;2026-10-05|R|none|1000|19:00|0|0|19|||-|-;2026-10-06|R|moderate|-1700|19:00|1|3|16|moderate:18:00-21:00||X|P;2026-10-07|R|high|-2800|07:00|0|8|10|high:07:00-08:00,moderate:08:00-09:00,moderate:16:00-21:00||X|P;2026-10-08|R|none|2000|18:00|0|0|24|||X|P;2026-10-09|R|none|3100|19:00|0|0|24|||X|P#-/below/prognoza pogarsza się#v56",
   "model": "gemini-3.5-flash-lite"
 }
