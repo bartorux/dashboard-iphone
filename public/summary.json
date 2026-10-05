@@ -1,15 +1,14 @@
 {
-  "headline": "Wczorajszy schemat powtórzy się jutro, kiedy rezerwa spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW.",
-  "body": "Zapotrzebowanie wzrośnie powyżej normy, co sprawi, że o 19:00 margines osiągnie ujemną wartość. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 20:00, a ogłoszenie może jeszcze nadejść. Ocena na środę jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W środę operator również zachowa wybór między 07:00 a 09:00 oraz 17:00 a 21:00, podczas gdy w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-05T17:23:13.567Z",
+  "headline": "W środę i jutro między 18:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "W środę o 07:00 rezerwa spada przez fotowoltaiki poniżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Ocena na środę jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W czwartek i piątek nic nie zapowiada przywołania, a w środę w pozostałych godzinach rezerwa pokrywa wymagany poziom.",
+  "generatedAt": "2026-10-05T23:21:14.874Z",
   "dates": [
-    "2026-10-05",
     "2026-10-06",
     "2026-10-07",
     "2026-10-08",
     "2026-10-09"
   ],
-  "assessment": "2026-10-05|R|none|400|20:00|0|0|2|||-|-;2026-10-06|R|moderate|-400|19:00|1|0|17|moderate:19:00-21:00|K2:19:00-20:00|-|-;2026-10-07|R|moderate|-1500|07:00|0|7|12|moderate:07:00-09:00,moderate:17:00-21:00||X|P;2026-10-08|R|none|1900|07:00|0|0|23|||X|P;2026-10-09|R|none|2100|19:00|0|0|24|||X|P#zapotrzebowanie powyżej normy/typical/-#v56",
+  "assessment": "2026-10-06|R|moderate|-500|19:00|0|0|12|moderate:18:00-21:00|K2:19:00-20:00|-|-;2026-10-07|R|moderate|-500|07:00|2|1|14|moderate:07:00-08:00,moderate:18:00-21:00||X|-;2026-10-08|R|none|1900|07:00|0|0|23|||X|P;2026-10-09|R|none|1400|19:00|0|0|24|||X|P#zapotrzebowanie powyżej normy, PV poniżej normy/typical/-#v56",
   "model": "gemini-3.5-flash-lite"
 }
