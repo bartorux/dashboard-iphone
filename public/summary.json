@@ -1,15 +1,15 @@
 {
-  "headline": "Dziś i jutro rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Margines o 08:00 jest niższy niż zwykle o tej porze na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść między 07:00 a 09:00.",
-  "outlook": "W czwartek, piątek i w poniedziałek 12 października nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-06T17:24:07.754Z",
+  "headline": "Dziś o 08:00 rezerwa najsilniej nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "W piątek margines o 19:00 ma zwykły przebieg doby i mieści się w normie na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść w godzinach 18:00-20:00, bo do tych godzin zostało jeszcze ponad osiem godzin. Ocena na piątek i wtorek 13 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Wtorek 13 października niesie przywołanie w zasięgu operatora między 07:00 a 09:00 oraz między 17:00 a 21:00, podczas gdy pozostałe dni upływają bez takich zawirowań.",
+  "generatedAt": "2026-10-07T01:47:41.044Z",
   "dates": [
-    "2026-10-06",
     "2026-10-07",
     "2026-10-08",
     "2026-10-09",
-    "2026-10-12"
+    "2026-10-12",
+    "2026-10-13"
   ],
-  "assessment": "2026-10-06|R|moderate|-300|19:00|1|0|0|moderate:19:00-20:00|K2:19:00-20:00|-|-;2026-10-07|R|moderate|-700|08:00|3|2|3|moderate:07:00-09:00||-|-;2026-10-08|R|none|1200|18:00|0|0|21|||X|P;2026-10-09|R|none|0|19:00|2|0|21|||X|P;2026-10-12|R|none|800|19:00|0|0|21|||X|P#nic nie odstaje od normy dla tej pory — zwykły przebieg doby/below/-#v56",
+  "assessment": "2026-10-07|R|moderate|-800|08:00|2|2|3|moderate:07:00-09:00||-|-;2026-10-08|R|none|1800|18:00|0|0|23|||X|-;2026-10-09|R|moderate|-300|19:00|0|0|21|moderate:18:00-20:00||X|P;2026-10-12|R|none|300|18:00|0|0|18|||X|P;2026-10-13|R|moderate|-1100|18:00|0|3|13|moderate:07:00-09:00,moderate:17:00-21:00||X|P#nic nie odstaje od normy dla tej pory — zwykły przebieg doby/typical/-#v56",
   "model": "gemini-3.5-flash-lite"
 }
