@@ -1,8 +1,8 @@
 {
-  "headline": "We wtorek 13 października między 07:00 a 10:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
-  "body": "We wtorek prognoza jeszcze się ustala, raz pokrywając wymagany poziom, a raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na poniedziałek 12 października, wtorek 13 października i środę 14 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W poniedziałek 12 października i środę 14 października margines ujemny występuje w wybranych godzinach, natomiast w czwartek 15 października nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-09T16:35:36.391Z",
+  "headline": "We wtorek 13 października o 18:00 nadwyżka spadła poniżej progu 1100 MW. Operator może ogłosić przywołanie.",
+  "body": "Margines spadnie z powodu zapotrzebowania powyżej normy oraz fotowoltaiki poniżej normy. Ogłoszenie może jeszcze nadejść. Ocena na poniedziałek 12 października, wtorek 13 października i środę 14 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W poniedziałek 12 października między 18:00 a 21:00, we wtorek 13 października między 07:00 a 09:00 oraz między 16:00 a 21:00, a także w środę 14 października między 18:00 a 19:00 operator może ogłosić przywołanie, podczas gdy w pozostałe dni i godziny nic go nie zapowiada.",
+  "generatedAt": "2026-10-09T21:17:21.478Z",
   "dates": [
     "2026-10-09",
     "2026-10-12",
@@ -10,6 +10,6 @@
     "2026-10-14",
     "2026-10-15"
   ],
-  "assessment": "2026-10-09|R|none|1400|18:00|0|0|6|||-|-;2026-10-12|R|moderate|-1200|19:00|1|3|9|moderate:18:00-21:00||X|P;2026-10-13|R|high|-3700|18:00|0|11|0|high:07:00-10:00,moderate:15:00-16:00,high:16:00-21:00,moderate:21:00-22:00||X|P;2026-10-14|R|high|-2500|18:00|0|9|6|moderate:07:00-09:00,moderate:15:00-18:00,high:18:00-20:00,moderate:20:00-22:00||X|P;2026-10-15|R|none|300|19:00|0|0|17|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-10-09|R|none|3500|23:00|0|0|1|||X|-;2026-10-12|R|moderate|-1300|19:00|0|3|13|moderate:18:00-21:00||X|P;2026-10-13|R|high|-3600|18:00|0|11|0|high:07:00-09:00,moderate:09:00-10:00,moderate:15:00-16:00,high:16:00-21:00,moderate:21:00-22:00||X|P;2026-10-14|R|high|-2100|18:00|0|7|7|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-19:00,moderate:19:00-22:00||X|P;2026-10-15|R|none|400|19:00|0|0|16|||X|P#zapotrzebowanie powyżej normy, PV poniżej normy/below/-#v56",
   "model": "gemini-3.5-flash-lite"
 }
