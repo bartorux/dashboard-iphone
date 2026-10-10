@@ -1,15 +1,16 @@
 {
-  "headline": "We wtorek 13 października o 18:00 nadwyżka spadła poniżej progu 1100 MW. Operator może ogłosić przywołanie.",
-  "body": "Margines spadnie z powodu zapotrzebowania powyżej normy oraz fotowoltaiki poniżej normy. Ogłoszenie może jeszcze nadejść. Ocena na poniedziałek 12 października, wtorek 13 października i środę 14 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W poniedziałek 12 października między 18:00 a 21:00, we wtorek 13 października między 07:00 a 09:00 oraz między 16:00 a 21:00, a także w środę 14 października między 18:00 a 19:00 operator może ogłosić przywołanie, podczas gdy w pozostałe dni i godziny nic go nie zapowiada.",
-  "generatedAt": "2026-10-09T21:17:21.478Z",
+  "headline": "We wtorek 13 października operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-09:00 i 16:00-21:00.",
+  "body": "Prognoza pogarsza się we wtorek 13 października. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na poniedziałek 12 października, wtorek 13 października, środę 14 października, czwartek 15 października i piątek 16 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek 13 października nadwyżka spadła poniżej progu 1100 MW, podczas gdy w poniedziałek 12 października, w środę 14 października, w czwartek 15 października i w piątek 16 października operator ma wybór.",
+  "generatedAt": "2026-10-10T14:42:27.167Z",
   "dates": [
-    "2026-10-09",
+    "2026-10-10",
     "2026-10-12",
     "2026-10-13",
     "2026-10-14",
-    "2026-10-15"
+    "2026-10-15",
+    "2026-10-16"
   ],
-  "assessment": "2026-10-09|R|none|3500|23:00|0|0|1|||X|-;2026-10-12|R|moderate|-1300|19:00|0|3|13|moderate:18:00-21:00||X|P;2026-10-13|R|high|-3600|18:00|0|11|0|high:07:00-09:00,moderate:09:00-10:00,moderate:15:00-16:00,high:16:00-21:00,moderate:21:00-22:00||X|P;2026-10-14|R|high|-2100|18:00|0|7|7|moderate:07:00-09:00,moderate:16:00-18:00,high:18:00-19:00,moderate:19:00-22:00||X|P;2026-10-15|R|none|400|19:00|0|0|16|||X|P#zapotrzebowanie powyżej normy, PV poniżej normy/below/-#v56",
+  "assessment": "2026-10-10|W|none|-200|16:00|0|1|3|||-|-;2026-10-12|R|moderate|-1800|19:00|2|3|11|moderate:18:00-21:00||X|P;2026-10-13|R|high|-4000|18:00|0|11|0|high:07:00-09:00,moderate:09:00-10:00,moderate:15:00-16:00,high:16:00-21:00,moderate:21:00-22:00||X|P;2026-10-14|R|moderate|-900|18:00|0|3|7|moderate:17:00-21:00||X|P;2026-10-15|R|moderate|-1600|18:00|2|6|6|moderate:07:00-09:00,moderate:17:00-21:00||X|P;2026-10-16|R|moderate|-300|19:00|0|0|15|moderate:18:00-20:00||X|P#-/below/prognoza pogarsza się#v56",
   "model": "gemini-3.5-flash-lite"
 }
