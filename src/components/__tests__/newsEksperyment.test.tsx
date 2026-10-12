@@ -6,6 +6,7 @@ import ArkuszTelefon from '../news/eksperyment/ArkuszTelefon';
 import PasekIkona from '../news/eksperyment/PasekIkona';
 import PasekDolny from '../news/eksperyment/PasekDolny';
 import SekcjaGora from '../news/eksperyment/SekcjaGora';
+import WierszZBranzy from '../news/eksperyment/WierszZBranzy';
 import { newLabel, type WejscieProps } from '../news/eksperyment/wspolne';
 import type { NewsFile, NewsItem } from '../../utils/newsTypes';
 
@@ -382,6 +383,72 @@ describe('PasekDolny — "dol"', () => {
     const { unmount } = renderInRoot(<PasekDolny {...entry()} />);
     unmount();
     expect(document.querySelector('.zb-bar')).toBeNull();
+  });
+});
+
+describe('WierszZBranzy — "wiersz"', () => {
+  const row = () => screen.getByRole('button', { name: /^Z branży, / });
+
+  it('is a row in the page, named with its state, that opens a dialog', () => {
+    const { root } = renderInRoot(<WierszZBranzy {...entry()} />);
+
+    expect(row()).toHaveAccessibleName('Z branży, stan 18:00');
+    expect(row()).toHaveAttribute('aria-haspopup', 'dialog');
+    expect(root.contains(row())).toBe(true);
+    // A row, not an icon: at least 44px tall and the width of the cards.
+    expect(row().className).toContain('min-h-11');
+    expect(row().className).toContain('w-full');
+    expect(row().querySelector('svg')).not.toBeNull();
+  });
+
+  it('names PSE and URE when they have something new, and nothing else', () => {
+    const cases: Array<[string[], string]> = [
+      [['s1'], 'Z branży, nowe od PSE'],
+      [['r1'], 'Z branży, nowe od URE'],
+      [['r1', 's3'], 'Z branży, nowe od PSE i URE'],
+    ];
+    for (const [ids, name] of cases) {
+      const fresh = new Set(ids);
+      const { unmount } = renderInRoot(<WierszZBranzy {...entry({ isNew: (i) => fresh.has(i.id) })} />);
+      expect(row()).toHaveAccessibleName(name);
+      unmount();
+    }
+  });
+
+  it('stays at the time of the feeds for new press headlines, even one filed under Sieci', () => {
+    const fresh = new Set(['s2', 'e1', 'p1']);
+    renderInRoot(<WierszZBranzy {...entry({ isNew: (i) => fresh.has(i.id) })} />);
+    expect(row()).toHaveAccessibleName('Z branży, stan 18:00');
+  });
+
+  it('says the feeds are old when they are, whatever is new', () => {
+    renderInRoot(<WierszZBranzy {...entry({ stale: true, isNew: () => true })} />);
+    expect(row()).toHaveAccessibleName('Z branży, stan 18:00, nieaktualne');
+    // Old news from PSE is not news: the quiet grey, not the darker one.
+    expect(row().querySelectorAll('span')[1].className).toContain('text-text-tertiary');
+  });
+
+  it('uses no colour of its own: grey for the time, a darker grey for news from PSE or URE', () => {
+    const { unmount } = renderInRoot(<WierszZBranzy {...entry()} />);
+    const quiet = row().querySelectorAll('span')[1];
+    expect(quiet.className).toContain('text-text-tertiary');
+    unmount();
+
+    renderInRoot(<WierszZBranzy {...entry({ isNew: (i) => i.id === 's1' })} />);
+    const fresh = row().querySelectorAll('span')[1];
+    expect(fresh.className).toContain('text-text-secondary');
+    expect(row().outerHTML).not.toMatch(/alarm|warn|accent|ok-/);
+  });
+
+  it('opens the sheet, and counts the headlines as seen when it closes, not when it opens', async () => {
+    const onSeen = vi.fn();
+    renderInRoot(<WierszZBranzy {...entry({ onSeen })} />);
+
+    await userEvent.click(row());
+    expect(screen.getByRole('dialog', { name: 'Z branży' })).toBeInTheDocument();
+    expect(onSeen).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: 'Gotowe' }));
+    expect(onSeen).toHaveBeenCalledTimes(1);
   });
 });
 

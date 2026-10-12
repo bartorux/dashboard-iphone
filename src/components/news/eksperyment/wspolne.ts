@@ -1,9 +1,9 @@
 import type { NewsFile, NewsItem } from '../../../utils/newsTypes';
 
 /**
- * What App hands each of the three ways into "Z branży" on a phone (see
- * useNewsExperiment). One shape for all three, so App picks a variant without
- * wiring each one differently.
+ * What App hands each way into "Z branży" on a phone (see useNewsExperiment).
+ * One shape for all of them, so App picks a variant without wiring each one
+ * differently.
  */
 export interface WejscieProps {
   news: NewsFile;
@@ -30,6 +30,28 @@ export function newLabel(count: number): string {
   if (count === 1) return '1 nowa';
   if (count >= 2 && count <= 4) return `${count} nowe`;
   return `${count} nowych`;
+}
+
+/**
+ * The two outlets whose news can bear on the capacity market — the system
+ * operator and the regulator — in that order.
+ */
+const AUTHORITIES = ['PSE', 'URE'] as const;
+
+/**
+ * Which of PSE and URE have something new, PSE first. By outlet, not by
+ * group: Sieci also carries Wysokie Napięcie, and a press article is not a
+ * reason to look up from the reserve.
+ */
+export function newFromAuthorities(news: NewsFile, isNew: (item: NewsItem) => boolean): string[] {
+  return AUTHORITIES.filter((source) =>
+    news.groups.some((group) => group.items.some((item) => item.source === source && isNew(item)))
+  );
+}
+
+/** "PSE", "URE" or "PSE i URE". */
+export function listNames(names: readonly string[]): string {
+  return names.join(' i ');
 }
 
 /** Marks every way into the sheet, so focus can find its way back when the tap gave it none. */

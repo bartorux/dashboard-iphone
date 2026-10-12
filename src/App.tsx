@@ -15,6 +15,7 @@ import NewsSheet from './components/news/NewsSheet';
 import PasekIkona from './components/news/eksperyment/PasekIkona';
 import PasekDolny from './components/news/eksperyment/PasekDolny';
 import SekcjaGora from './components/news/eksperyment/SekcjaGora';
+import WierszZBranzy from './components/news/eksperyment/WierszZBranzy';
 import type { WejscieProps } from './components/news/eksperyment/wspolne';
 import PullToRefresh from './components/PullToRefresh';
 import OfflineIndicator from './components/OfflineIndicator';
@@ -120,12 +121,11 @@ function App() {
   const newsState = news ? newsFreshness(news, now) : 'expired';
 
   /*
-   * "Z branży" on a phone: three variants on trial, one at a time, each only
-   * when the address asks for it (?z-branzy=pasek|dol|gora — see the hook).
-   * This is the only place that decides; without the parameter `wariant` is
-   * null and not one of the three is rendered, so the phone is exactly what
-   * it was. Always null from 48rem. Same rule as the desktop card for when
-   * there is anything to show.
+   * "Z branży" on a phone: one variant at a time. Without a parameter it is
+   * the row under the summary (the trial chosen 12.10.2026); the address can
+   * still ask for the others (?z-branzy=pasek|dol|gora) or for none (brak) —
+   * see the hook. This is the only place that decides. Always null from
+   * 48rem. Same rule as the desktop card for when there is anything to show.
    */
   const wariant = useNewsExperiment();
   const newsEntry: WejscieProps | null =
@@ -535,6 +535,7 @@ function App() {
               {summary && <SummaryCard summary={summary} now={now} />}
             </div>
 
+            {wariant === 'wiersz' && newsEntry && <WierszZBranzy {...newsEntry} />}
             {wariant === 'gora' && newsEntry && <SekcjaGora {...newsEntry} />}
 
             {/*

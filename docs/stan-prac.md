@@ -455,6 +455,10 @@ odnowił na czas: do 03.10 analizę uruchamiał tylko zapasowy `schedule`, 4–5
 ~96, więc w archiwum `pk5l` brakuje odczytów z tych pięciu dób. Awarię zgłaszał codziennie strażnik
 `zapisy-podsumowania.yml` („Puls oslabl”), a strażnik świeżości pozostał zielony. Pierwsze odnowienie
 03.10 dostało znów 30 dni, więc tego samego dnia token zregenerowano bez terminu ważności.
+**Stan 12.10: harmonogram w cron-job.org nadal nie wywołuje GitHuba** — od 03.10 jedyne
+`repository_dispatch` to dwa ręczne „Test run” (przechodzą z wartościami z formularza, także bez
+„Save” i przy wyłączonym zadaniu). Dowodem naprawy jest dopiero przebieg o pełnym kwadransie.
+Skutki: codzienny „Puls oslabl”, 10.10 analiza 16,7 h, doby badania od 30.09 `niepelne`.
 
 ## Kadencja 15 minut — pomiary pierwszej doby (09.09.2026)
 
@@ -990,6 +994,34 @@ niej; argument za utrwalaniem werdyktów w v3.91.
 identyczne co do cech i werdyktów, bilans bez zmian (2 fałszywe alarmy). 1385 testów, 6 sond
 mutacyjnych — wszystkie zabite. Zrzuty w WebKit na przeliczonym pliku, oba tryby. Przy okazji
 „Cisza — 24 dób” → „24 doby”. Punkt powrotu `v3.90.1-przed-niepelnym-archiwum` (tag, gałąź,
+archiwum — sprawdzone).
+
+## „Z branży” na telefonie: wiersz pod analizą (12.10.2026, v3.90.3)
+
+**Po co.** Właściciel nie sprawdził wariantów z v3.90.0: parametr w adresie żyje tylko w karcie
+przeglądarki, nie w aplikacji z ekranu początkowego, a od 48rem warianty są wyłączone. Po zrzutach
+i nagraniach (strona z makietami) poleciłem ikonę w pasku; odpowiedź: „nie jest intuicyjna do
+kliknięcia”. Trzy podpisane wersje (napis w pasku, link w drugiej linii paska, wiersz pod analizą)
+wstawione do działającej aplikacji na żywych danych, przejrzane przez agenta ze skillami apple-design
+i emil-design-eng. Wybrany wiersz.
+
+**Co.** `WierszZBranzy`: „Z branży · stan HH:MM ›” pod Analizą AI, `mx-3 mt-3`, `min-h-11`,
+`rounded-xl`, wciśnięcie jak wiersz wiadomości (`news-row`). Otwiera ten sam `ArkuszTelefon`; przeczytane
+przy zamknięciu. Nowe od PSE lub URE → „nowe od PSE i URE” w `text-text-secondary`; po źródle, nie po
+grupie, bo Sieci niesie też Wysokie Napięcie; prasa nic nie zmienia. Nieaktualne → „stan HH:MM,
+nieaktualne”. Etykieta dostępności „Z branży, …” (dwa spany czytane jako jedno słowo).
+`useNewsExperiment`: bez parametru `wiersz` (DEFAULT_VARIANT), `?z-branzy=brak` zapamiętane jako
+wyłączone do końca karty; pozostałe warianty nadal pod parametrem. Pasek zostaje cały dla stanu.
+
+**Próba: tydzień, do 19.10.** Potem zostaje (i znikają `pasek`, `dol`, `gora`, hook) albo znika
+wszystko, a telefon przestaje pobierać `news.json`.
+
+**Sprawdzone.** 1393 testy, 9 sond mutacyjnych (jedna przeżyła — kolor przy danych nieaktualnych —
+i dostała asercję). Strażnik wizualny: 10 scen telefonu dłuższych o 56 px, duży tekst o 81 px, nowe
+wzorce; wszystkie sceny komputera bez zmian. Trzy wzorce nadpisane przez `--update` bez potrzeby
+(szum wygładzania) przywrócone; `teraz-w-alercie` złapał nietypową klatkę wykresu — wzorzec z typowej,
+trzy przebiegi czyste. Zrzuty w WebKit na żywych danych (393 i 375 px, oba tryby, „nowe od PSE i URE”,
+`brak`, 1280 px bez wiersza). Punkt powrotu `v3.90.2-przed-wierszem-z-branzy` (tag, gałąź,
 archiwum — sprawdzone).
 
 ## Czego dzień nauczył

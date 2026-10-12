@@ -36,12 +36,12 @@ afterEach(() => {
 });
 
 describe('useNewsExperiment', () => {
-  it('is null without the parameter — the page as it has always been', () => {
-    expect(variant()).toBeNull();
+  it('is the row without the parameter — the phone default since 12.10.2026', () => {
+    expect(variant()).toBe('wiersz');
   });
 
-  it('names each of the three variants the address asks for', () => {
-    for (const name of ['pasek', 'dol', 'gora'] as const) {
+  it('names each variant the address asks for', () => {
+    for (const name of ['wiersz', 'pasek', 'dol', 'gora'] as const) {
       sessionStorage.clear();
       openAt(`?z-branzy=${name}`);
       expect(variant()).toBe(name);
@@ -73,14 +73,15 @@ describe('useNewsExperiment', () => {
 
     openAt('?z-branzy=brak');
     expect(variant()).toBeNull();
-    expect(sessionStorage.getItem(NEWS_EXPERIMENT_KEY)).toBeNull();
+    // Remembered as off, not forgotten — forgetting would bring the default back.
+    expect(sessionStorage.getItem(NEWS_EXPERIMENT_KEY)).toBe('brak');
     openAt('');
     expect(variant()).toBeNull();
   });
 
-  it('ignores a stored value it does not know', () => {
+  it('falls back to the default for a stored value it does not know', () => {
     sessionStorage.setItem(NEWS_EXPERIMENT_KEY, 'boczny');
-    expect(variant()).toBeNull();
+    expect(variant()).toBe('wiersz');
   });
 
   it('is null from 48rem whatever the address says — the computer has its own card', () => {
@@ -91,6 +92,13 @@ describe('useNewsExperiment', () => {
     } finally {
       restore();
     }
+  });
+
+  it('gives the default where the tab cannot even read its storage', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('SecurityError');
+    });
+    expect(variant()).toBe('wiersz');
   });
 
   it('still follows the address where the tab has no storage', () => {

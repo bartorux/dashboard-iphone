@@ -23,11 +23,21 @@ describe('news experiment wiring in App — source', () => {
     expect(app).toContain("newsButton={wariant === 'pasek' && newsEntry ? <PasekIkona {...newsEntry} /> : undefined}");
     expect(app).toContain("{wariant === 'gora' && newsEntry && <SekcjaGora {...newsEntry} />}");
     expect(app).toContain("{wariant === 'dol' && newsEntry && <PasekDolny {...newsEntry} />}");
-    for (const tag of ['<PasekIkona', '<SekcjaGora', '<PasekDolny']) {
+    expect(app).toContain("{wariant === 'wiersz' && newsEntry && <WierszZBranzy {...newsEntry} />}");
+    for (const tag of ['<PasekIkona', '<SekcjaGora', '<PasekDolny', '<WierszZBranzy']) {
       expect(app.split(tag)).toHaveLength(2);
     }
     // The sheet belongs to the two entries that open it, not to App.
     expect(app).not.toContain('ArkuszTelefon');
+  });
+
+  it('puts the row straight under the AI summary, above the day tabs', () => {
+    const summary = app.indexOf('<SummaryCard');
+    const row = app.indexOf('<WierszZBranzy');
+    expect(summary).toBeGreaterThan(-1);
+    expect(row).toBeGreaterThan(summary);
+    expect(app.indexOf('<NewsCard')).toBeGreaterThan(row);
+    expect(app.indexOf('<DayNavigation')).toBeGreaterThan(row);
   });
 
   it('shows the variants under the same rule as the desktop card', () => {
@@ -105,6 +115,7 @@ describe('news experiment wiring in App — render', () => {
   });
 
   const experiment = () => ({
+    row: document.querySelector('[aria-label^="Z branży, "]'),
     icon: document.querySelector('header [data-z-branzy-otworz]'),
     bar: document.querySelector('.zb-bar'),
     room: document.querySelector('[data-z-branzy-odstep]'),
@@ -114,11 +125,15 @@ describe('news experiment wiring in App — render', () => {
   /** The desktop card is in the tree on every width (CSS hides it), so it says the file has landed. */
   const newsLanded = () => waitFor(() => expect(screen.getByRole('button', { name: 'Wszystkie ›' })).toBeInTheDocument());
 
-  it('without the parameter renders none of the three', async () => {
+  it('without the parameter: the row, the phone default, and nothing else', async () => {
     render(<App />);
     await newsLanded();
 
-    expect(experiment()).toEqual({ icon: null, bar: null, room: null, section: null });
+    const found = experiment();
+    // A first visit has seen nothing yet, so nothing counts as new: the time of the feeds.
+    expect(found.row).toHaveAccessibleName(/^Z branży, stan \d{2}:\d{2}$/);
+    expect(found.row?.closest('header')).toBeNull();
+    expect([found.icon, found.bar, found.room, found.section]).toEqual([null, null, null, null]);
   });
 
   it('with ?z-branzy=pasek: the icon in the header, and nothing else', async () => {
@@ -128,7 +143,7 @@ describe('news experiment wiring in App — render', () => {
 
     const found = experiment();
     expect(found.icon).toHaveAccessibleName('Z branży');
-    expect([found.bar, found.room, found.section]).toEqual([null, null, null]);
+    expect([found.row, found.bar, found.room, found.section]).toEqual([null, null, null, null]);
   });
 
   it('with ?z-branzy=dol: the bar and the room for it, and nothing else', async () => {
@@ -139,7 +154,7 @@ describe('news experiment wiring in App — render', () => {
     const found = experiment();
     expect(found.bar).not.toBeNull();
     expect(found.room).not.toBeNull();
-    expect([found.icon, found.section]).toEqual([null, null]);
+    expect([found.row, found.icon, found.section]).toEqual([null, null, null]);
   });
 
   it('with ?z-branzy=gora: the section, and nothing else', async () => {
@@ -149,22 +164,27 @@ describe('news experiment wiring in App — render', () => {
 
     const found = experiment();
     expect(found.section).not.toBeNull();
-    expect([found.icon, found.bar, found.room]).toEqual([null, null, null]);
+    expect([found.row, found.icon, found.bar, found.room]).toEqual([null, null, null, null]);
   });
 
-  it('with ?z-branzy=brak, and on a window from 48rem whatever the parameter: none', async () => {
+  it('with ?z-branzy=brak, and on a window from 48rem with or without the parameter: none', async () => {
+    const none = { row: null, icon: null, bar: null, room: null, section: null };
     openAt('?z-branzy=brak');
     const first = render(<App />);
     await newsLanded();
-    expect(experiment()).toEqual({ icon: null, bar: null, room: null, section: null });
+    expect(experiment()).toEqual(none);
     first.unmount();
 
     const restore = mockMedia(['(min-width: 48rem)']);
     try {
-      openAt('?z-branzy=gora');
-      render(<App />);
-      await newsLanded();
-      expect(experiment()).toEqual({ icon: null, bar: null, room: null, section: null });
+      for (const search of ['?z-branzy=gora', '']) {
+        sessionStorage.clear();
+        openAt(search);
+        const view = render(<App />);
+        await newsLanded();
+        expect(experiment()).toEqual(none);
+        view.unmount();
+      }
     } finally {
       restore();
     }
