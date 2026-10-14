@@ -1440,6 +1440,19 @@ describe('Kompas Energetyczny w instrukcji', () => {
     ).toEqual({ ok: true });
   });
 
+  it('reads "03a:00", PSE\'s label for 03:00 on the autumn DST fold, as an hour the facts can allow', () => {
+    const summary = {
+      headline: 'Dziś o 03a:00 margines jest najniższy.',
+      body: '',
+      outlook: 'W pozostałych dniach nic nie zapowiada przywołania.',
+    };
+    expect(validateSummary(summary, new Set(['03a:00']), ['dziś'])).toEqual({ ok: true });
+    expect(validateSummary(summary, new Set(['03:00']), ['dziś'])).toEqual({
+      ok: false,
+      reason: 'godzina 03a:00 spoza faktów',
+    });
+  });
+
   it('refuses an hour the Kompas never stated', () => {
     const facts = fakty(kompasNa('2026-08-10', [16, 2], [17, 2]));
 

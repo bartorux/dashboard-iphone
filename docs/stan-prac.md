@@ -1024,6 +1024,37 @@ trzy przebiegi czyste. Zrzuty w WebKit na żywych danych (393 i 375 px, oba tryb
 `brak`, 1280 px bez wiersza). Punkt powrotu `v3.90.2-przed-wierszem-z-branzy` (tag, gałąź,
 archiwum — sprawdzone).
 
+## Zmiana czasu 25.10.2026: doba 25-godzinna (14.10.2026, v3.90.4)
+
+**Po co.** Termin z planu z 22.09 („strażnik kontraktu i archiwum przed zmianą czasu 25.10”).
+Sprawdzone na prawdziwych odpowiedziach API PSE z 26.10.2025 i 29.03.2026, nie na domysłach:
+pk5l-wp daje 25 wierszy, powtórzona godzina to okres „03 - 03a” (01:00–02:00 UTC, druga 02:00),
+03:00–04:00 to „03a - 04”; poze-redoze i pdgobpkd dają 100 kwadransów („02a:15” itd.), pdgsz ma
+„03a:00”; czas UTC jest jednoznaczny wszędzie. Przegląd kodu przez agenta, wnioski sprawdzone.
+
+**Naprawione.**
+- **Strażnik kontraktu** (`pse.api.test.ts`) oczekiwał zawsze 72 godzin — 23, 24 i 25.10 trzy
+  fałszywe alarmy (tak samo 26–28.03.2027 z 71). Teraz suma `hoursInBusinessDay` z trzech dób
+  (nowa funkcja w dateHelpers, przez Intl, niezależna od strefy procesu). Odtworzone zapytanie na
+  oknach z 2025/2026: stara asercja padała w 5 z 7 dni, nowa zgadza się z API we wszystkich.
+- **Archiwum pk5l**: „03 - 03a” i „03a - 04” dostawały klucz godziny 3 — na danych z 26.10.2025
+  dwa wiersze na każdy przebieg bez zmiany prognozy (ok. 1300 przez tydzień), dwa bloki nie do
+  odróżnienia. Teraz powtórzona nocna godzina pomijana, „03a” to godzina 3 (zegarowa 03:00–04:00).
+- **Karta OZE**: pasek 24 miejsc kluczowany `parseInt(hourLabel)` — „03a” nadpisywał „03”;
+  w kolizji wygrywa blok, który trwa, więc podświetlony słupek pokazuje to co pierścień.
+- **Walidator tekstu**: `HOUR_PATTERN` nie rozpoznawał „03a:00” — fakt z tą godziną (najgorsza
+  godzina w nocy 25.10) nie dałby się zapisać w żadnej formie. Wzorzec z opcjonalnym „a”.
+- **Limity** poze-redoze i pdgobpkd: 100 przy 100 kwadransach doby jesiennej; teraz 120.
+
+**Świadomie zostawione (tylko 25.10, kosmetyka):** pasek alertów (`AlertsPanel`, oś dzielona
+przez 24) przesunięty o 1/25 po godzinie 3; wykres 30 dni pomija dzisiejszy punkt „03a”; Kompas
+gubi godzinę „03a:00” (`hourLabelOf` jej nie zna — noc, poziom 0); `hourTicks` pokazuje 03a na
+osi; ceny z 25.10 nie trafią do archiwum cen (wymóg 24 godzin, zamierzony).
+
+**Sprawdzone.** 1401 testów (8 nowych, na prawdziwych dobach DST), 7 sond mutacyjnych — wszystkie
+zabite (w tym stan sprzed poprawki karty OZE). Strażnik wizualny bez zmian. Punkt powrotu
+`v3.90.3-przed-zmiana-czasu` (tag, gałąź, archiwum — sprawdzone); rotacja: usunięty v3.89.1.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś

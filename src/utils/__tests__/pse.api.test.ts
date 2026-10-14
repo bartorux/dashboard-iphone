@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { API_URL, API_BASE } from '../constants';
+import { hoursInBusinessDay } from '../dateHelpers';
 
 /**
  * Contract test against the live PSE endpoint. Excluded from `npm test` and CI —
@@ -7,13 +8,18 @@ import { API_URL, API_BASE } from '../constants';
  * shows up as an empty chart on the phone.
  */
 describe('PSE API contract', () => {
-  it('serves 72 hourly records for the current three business days', async () => {
+  it('serves one hourly record per hour of the current three business days', async () => {
     const pad = (n: number) => String(n).padStart(2, '0');
-    const stamp = (d: Date, hour: number) =>
-      `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(hour)}:00:00`;
+    const date = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const stamp = (d: Date, hour: number) => `${date(d)} ${pad(hour)}:00:00`;
 
     const today = new Date();
     const end = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3);
+    // 72 on ordinary days; 73 or 71 while the window holds a DST switch
+    // (23-25.10.2026, 26-28.03.2027) — a fixed 72 sent three false alarms a year each way.
+    const expected = [0, 1, 2]
+      .map((offset) => date(new Date(today.getFullYear(), today.getMonth(), today.getDate() + offset)))
+      .reduce((sum, day) => sum + hoursInBusinessDay(day), 0);
 
     const url =
       `${API_URL}?$filter=plan_dtime ge '${stamp(today, 1)}' and ` +
@@ -23,7 +29,7 @@ describe('PSE API contract', () => {
     expect(response.ok).toBe(true);
 
     const { value } = await response.json();
-    expect(value.length).toBe(72);
+    expect(value.length).toBe(expected);
 
     const first = value[0];
     expect(first.plan_dtime).toBe(stamp(today, 1));

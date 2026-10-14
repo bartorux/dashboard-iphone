@@ -2,6 +2,9 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import RenewableMixCard from '../RenewableMixCard';
 import { makePoint } from '../../test/factories';
+import { processData } from '../../utils/dataTransform';
+import type { PSERawItem } from '../../types';
+import fixtureAutumn from '../../utils/__fixtures__/pse-dst-autumn.json';
 
 const pad = (h: number) => String(h).padStart(2, '0');
 
@@ -301,5 +304,29 @@ describe('RenewableMixCard hour scrubbing', () => {
     expect(screen.getByText('—')).toBeInTheDocument();
     expect(screen.getByText('18:00–19:00')).toBeInTheDocument();
     expect(screen.queryByText('50%')).not.toBeInTheDocument();
+  });
+});
+
+
+describe('RenewableMixCard on the autumn DST fold (real PSE rows, 26.10.2025)', () => {
+  const day = processData((fixtureAutumn as { value: PSERawItem[] }).value).filter(
+    (point) => point.businessDate === '2025-10-26'
+  );
+  // A different demand for every block, so no two hours share a percentage.
+  const demand = new Map(day.map((point, index) => [point.time.getTime() - 3_600_000, 6000 + index * 700]));
+  const shareText = () => screen.getByText(/^\d+%$/).textContent;
+  const barThree = () => screen.getByLabelText(/^03:00 · /);
+
+  it('during the repeated hour ("03 - 03a") slot 3 shows that hour, the one the ring shows', () => {
+    // 01:30 UTC = 02:30 CET, the second time round.
+    render(<RenewableMixCard points={day} kseDemand={demand} now={new Date('2025-10-26T01:30:00Z')} />);
+    expect(barThree().className).toContain('ring-inset');
+    expect(barThree().getAttribute('aria-label')).toBe(`03:00 · ${shareText()}`);
+  });
+
+  it('an hour later ("03a - 04") slot 3 shows the new hour', () => {
+    render(<RenewableMixCard points={day} kseDemand={demand} now={new Date('2025-10-26T02:30:00Z')} />);
+    expect(barThree().className).toContain('ring-inset');
+    expect(barThree().getAttribute('aria-label')).toBe(`03:00 · ${shareText()}`);
   });
 });

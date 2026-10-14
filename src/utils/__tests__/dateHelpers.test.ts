@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  hoursInBusinessDay,
   formatDateTimeApi,
   parsePseUtc,
   formatHourLabel,
@@ -154,3 +155,20 @@ describe('publicationTsToIso', () => {
     expect(publicationTsToIso('nonsense')).toBe('');
   });
 });
+
+describe('hoursInBusinessDay', () => {
+  it('counts 25 hours on the autumn DST switch and 23 on the spring one', () => {
+    // 2025-10-26 and 2026-03-29: the days the fixtures pse-dst-autumn/-spring were cut from.
+    expect(hoursInBusinessDay('2025-10-26')).toBe(25);
+    expect(hoursInBusinessDay('2026-03-29')).toBe(23);
+    expect(hoursInBusinessDay('2026-10-25')).toBe(25);
+    expect(hoursInBusinessDay('2027-03-28')).toBe(23);
+  });
+
+  it('counts 24 on the days either side of a switch and on an ordinary day', () => {
+    for (const date of ['2026-10-24', '2026-10-26', '2026-03-28', '2026-03-30', '2026-10-14', '2026-07-01']) {
+      expect(hoursInBusinessDay(date)).toBe(24);
+    }
+  });
+});
+

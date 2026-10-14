@@ -582,7 +582,11 @@ const LIMITS: Record<keyof Summary, number> = {
   outlook: 300,
 };
 
-const HOUR_PATTERN = /\b\d{1,2}:\d{2}\b/g;
+// "03a:00" is a clock time too: PSE's label for 03:00 on the autumn DST fold.
+// Without the optional "a" the validator saw a stray number in it, and a fact
+// naming that hour (worstHour on the night of 25.10.2026) could never be
+// written in any form it would accept.
+const HOUR_PATTERN = /\b\d{1,2}a?:\d{2}\b/g;
 
 /** Weekday stems, Monday first — they survive every case ending a day name takes. */
 const WEEKDAY_STEMS = ['poniedział', 'wtor', 'środ', 'czwart', 'piąt', 'sobot', 'niedziel'];

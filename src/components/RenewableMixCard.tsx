@@ -64,10 +64,17 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
   );
 
   const slots = useMemo<HourSlot[]>(() => {
+    const nowMs = now.getTime();
+    const running = (point: PSEDataPoint) =>
+      point.time.getTime() - HOUR_MS <= nowMs && nowMs < point.time.getTime();
     const byHour = new Map<number, PSEDataPoint>();
     for (const point of points) {
       const hour = Number.parseInt(point.hourLabel, 10);
-      if (Number.isFinite(hour)) byHour.set(hour, point);
+      if (!Number.isFinite(hour)) continue;
+      // The autumn DST fold puts two blocks on one slot: "03 - 03a" and
+      // "03a - 04" both read as 3. The running one wins, so the highlighted
+      // bar shows the hour the ring is describing; otherwise the first.
+      if (!byHour.has(hour) || running(point)) byHour.set(hour, point);
     }
     return Array.from({ length: 24 }, (_, hour) => ({
       hour,
@@ -75,7 +82,7 @@ const RenewableMixCard: React.FC<RenewableMixCardProps> = ({ points, kseDemand, 
       endLabel: `${pad2((hour + 1) % 24)}:00`,
       share: shareFor(byHour.get(hour), kseDemand),
     }));
-  }, [points, kseDemand]);
+  }, [points, kseDemand, now]);
 
   // The hour under the pointer/finger while a gesture is actively in
   // progress (mouse hover anywhere on the strip, or a touch/pen currently

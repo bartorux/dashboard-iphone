@@ -169,7 +169,8 @@ export async function fetchRedispatch(
 ): Promise<PSERedispatchRawItem[]> {
   const rows = await query<PSERedispatchRawItem>(
     `${API_BASE}/poze-redoze`,
-    `$filter=${encodeURIComponent(`business_date eq '${businessDate}'`)}&$first=100`
+    // 96 quarters a day, 100 on the autumn DST fold (25.10.2026) — 120 leaves room.
+    `$filter=${encodeURIComponent(`business_date eq '${businessDate}'`)}&$first=120`
   );
   return rows ?? [];
 }
@@ -185,7 +186,8 @@ export async function fetchKseDemand(
   const rows = await query<PSEKseDemandRawItem>(
     `${API_BASE}/pdgobpkd`,
     `$filter=${encodeURIComponent(`business_date eq '${businessDate}'`)}` +
-      `&$select=business_date,dtime_utc,kse_pow_dem&$first=100`
+      // Quarter-hourly like poze-redoze: 100 rows on the autumn DST fold.
+      `&$select=business_date,dtime_utc,kse_pow_dem&$first=120`
   );
   return rows ?? [];
 }

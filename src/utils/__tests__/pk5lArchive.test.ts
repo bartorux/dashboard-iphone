@@ -8,6 +8,8 @@ import {
   lastValuesFrom,
 } from '../pk5lArchive';
 import type { PSERawItem } from '../../types';
+import fixtureAutumn from '../__fixtures__/pse-dst-autumn.json';
+import fixtureSpring from '../__fixtures__/pse-dst-spring.json';
 
 /** A raw pk5l-wp row, shaped like the live endpoint actually returns it. */
 function rawRow(overrides: Partial<PSERawItem> = {}): PSERawItem {
@@ -248,6 +250,42 @@ describe('newArchiveLines — hour from the period string', () => {
       '2026-08-29T18:00:00Z'
     );
     expect(lines).toEqual([]);
+  });
+});
+
+describe('newArchiveLines — DST days, real PSE rows', () => {
+  const rowsOf = (fixture: unknown): PSERawItem[] =>
+    ((fixture as { value?: PSERawItem[] }).value ?? (fixture as PSERawItem[]));
+  const hoursFor = (lines: string[], businessDate: string) =>
+    lines.map((line) => JSON.parse(line)).filter((row) => row[0] === businessDate);
+
+  it('keeps one line per wall-clock hour on the 25-hour day, 03:00-04:00 ("03a - 04") as hour 3', () => {
+    const lines = newArchiveLines(rowsOf(fixtureAutumn), new Map(), '2025-10-26T12:00:00Z');
+    const day = hoursFor(lines, '2025-10-26');
+
+    expect(day.map((row) => row[1])).toEqual(Array.from({ length: 24 }, (_, hour) => hour));
+    // "03a - 04" carries 4027/1180; the repeated 02:00 block ("03 - 03a",
+    // 3933/1183) is the one left out.
+    const three = day.find((row) => row[1] === 3);
+    expect([three[2], three[3]]).toEqual([4027, 1180]);
+    expect(day.some((row) => row[2] === 3933)).toBe(false);
+  });
+
+  it('writes nothing on a second run over the same 25-hour day — no key flaps between two blocks', () => {
+    const rows = rowsOf(fixtureAutumn);
+    const first = newArchiveLines(rows, new Map(), '2025-10-26T12:00:00Z');
+    const again = newArchiveLines(rows, parseArchiveLines(first.join('\n')), '2025-10-26T12:15:00Z');
+    expect(again).toEqual([]);
+  });
+
+  it('keeps the 23 hours of the spring day as they are, with no hour 2', () => {
+    const rows = rowsOf(fixtureSpring);
+    const lines = newArchiveLines(rows, new Map(), '2026-03-29T12:00:00Z');
+    const hours = hoursFor(lines, '2026-03-29').map((row) => row[1]);
+
+    expect(hours).toHaveLength(23);
+    expect(hours).not.toContain(2);
+    expect(newArchiveLines(rows, parseArchiveLines(lines.join('\n')), '2026-03-29T12:15:00Z')).toEqual([]);
   });
 });
 

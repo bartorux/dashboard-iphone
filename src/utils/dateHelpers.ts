@@ -80,6 +80,40 @@ export function periodEnd(period: string): string | null {
   return end === '24' ? '00' : end;
 }
 
+const warsawClock = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Europe/Warsaw',
+  hourCycle: 'h23',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+});
+
+/** Warsaw's offset from UTC at an instant, in hours (1 in winter, 2 in summer). */
+function warsawOffsetHours(utcMs: number): number {
+  const parts = Object.fromEntries(
+    warsawClock.formatToParts(new Date(utcMs)).map((part) => [part.type, part.value])
+  );
+  const wall = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour, +parts.minute);
+  return (wall - utcMs) / 3_600_000;
+}
+
+/**
+ * How many hours a business day has: 24, or 23 on the spring DST switch and
+ * 25 on the autumn one (PSE then publishes 23 or 25 rows). The EU switches at
+ * 01:00 UTC both ways, so the offset in force at the date's own UTC midnight
+ * is the one the day began under and the offset at the next UTC midnight the
+ * one it ended under — their difference is the hour gained or lost. Read
+ * through Intl, never the process clock, so a UTC runner gets it right too.
+ */
+export function hoursInBusinessDay(businessDate: string): number {
+  const [year, month, day] = businessDate.split('-').map(Number);
+  const start = Date.UTC(year, month - 1, day);
+  const end = Date.UTC(year, month - 1, day + 1);
+  return 24 + warsawOffsetHours(start) - warsawOffsetHours(end);
+}
+
 /** Local wall-clock hour of an instant, as "HH:00". */
 export function localHourLabel(date: Date): string {
   return `${pad(date.getHours())}:00`;

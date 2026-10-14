@@ -1,5 +1,5 @@
 import type { PSERawItem } from '../types';
-import { periodStart, publicationTsToIso } from './dateHelpers';
+import { periodEnd, periodStart, publicationTsToIso } from './dateHelpers';
 
 /**
  * Our own hourly archive of pk5l-wp: what surplus/required reserve the
@@ -170,8 +170,14 @@ function toNumber(value: unknown): number | null {
 function blockStartHour(period: string | undefined): number | null {
   const start = periodStart(period ?? '');
   if (!start) return null;
-  // periodStart can return "03a" on the autumn DST fold; parseInt reads its
-  // numeral and stops at the suffix rather than failing outright.
+  // The autumn DST fold. PSE writes the repeated 02:00 block (01:00-02:00
+  // UTC) as "03 - 03a" and 03:00-04:00 as "03a - 04"; read as numbers, both
+  // are hour 3. On 26.10.2025's real rows that key flapped between the two
+  // on every run — two lines a run on an unchanged forecast — and left the
+  // two blocks impossible to tell apart on disk. A 25-hour day cannot fit a
+  // key of wall-clock hours without one collision, so the repeated night
+  // hour stays out, and "03a" keeps hour 3, which is the hour it really is.
+  if (periodEnd(period ?? '')?.endsWith('a') && !start.endsWith('a')) return null;
   const hour = parseInt(start, 10);
   return Number.isInteger(hour) && hour >= 0 && hour <= 23 ? hour : null;
 }
