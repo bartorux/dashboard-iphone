@@ -464,6 +464,23 @@
       "headline": "Margines spadł poniżej typowego zakresu z ostatnich trzydziestu dni, a jutro między 17:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza na dziś jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin jest już za mało czasu na ogłoszenie.",
       "outlook": "W poniedziałek 19 października między 18:00 a 20:00 oraz we wtorek 20 października margines chwilami mocno zawęzi się, podczas gdy w środę 21 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-15T07:15:40.666Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Margines spada poniżej typowego zakresu w ciągu kilku najbliższych dni, a operator może ogłosić przywołanie między 17:00 a 20:00.",
+      "body": "Prognoza na dzisiejszą dobę jeszcze się ustala. Ogłoszenie może jeszcze nadejść w godzinach, w których nadwyżka spada poniżej progu 1100 MW.",
+      "outlook": "W poniedziałek 19 października oraz wtorek 20 października operator może ogłosić przywołanie w godzinach porannych i popołudniowych, natomiast w środę 21 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-15T07:15:40.666Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Margines spoczywa poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza jeszcze się ustala w dzisiejszej dobie i raz pokrywa wymagany poziom, raz nie. Na ogłoszenie jest już za późno.",
+      "outlook": "Jutro między 17:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, a w poniedziałek 19 października między 18:00 a 20:00 również zsunie się poniżej tego progu, podczas gdy w pozostałe dni okresu nic nie zapowiada przywołania."
     }
   ]
 }
