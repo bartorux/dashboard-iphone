@@ -1,8 +1,8 @@
 {
-  "headline": "Między 18:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Prognoza pogarsza się w poniedziałek 19 października. Na ogłoszenie jest już za późno. Ocena na poniedziałek 19 października i wtorek 20 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W poniedziałek 19 października między 07:00 a 10:00 oraz między 15:00 a 22:00 nadwyżka spada poniżej progu 1100 MW, we wtorek 20 października nadwyżka spada poniżej tego progu między 07:00 a 08:00, natomiast w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-16T10:45:40.375Z",
+  "headline": "W poniedziałek 19 października nadwyżka spadła poniżej progu 1100 MW między 07:00 a 10:00, co oznacza, że operator może ogłosić przywołanie.",
+  "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 19:00. Na ogłoszenie jest już za późno. Ocena na poniedziałek 19 października i wtorek 20 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W poniedziałek 19 października, wtorek 20 października oraz we czwartek 22 października margines spada poniżej wymaganego poziomu, a w środę 21 października nic nie zapowiada przywołania.",
+  "generatedAt": "2026-10-16T11:15:47.111Z",
   "dates": [
     "2026-10-16",
     "2026-10-19",
@@ -10,6 +10,6 @@
     "2026-10-21",
     "2026-10-22"
   ],
-  "assessment": "2026-10-16|R|moderate|-400|19:00|0|0|2|moderate:18:00-21:00|K2:18:00-19:00|-|-;2026-10-19|R|high|-3600|19:00|0|18|5|high:07:00-10:00,moderate:10:00-15:00,high:15:00-22:00||X|P;2026-10-20|R|high|-2000|07:00|0|15|0|high:07:00-08:00,moderate:08:00-21:00||X|P;2026-10-21|R|none|400|19:00|0|0|8|||X|P;2026-10-22|R|none|200|08:00|1|0|8|||X|P#-/below/prognoza pogarsza się#v56",
+  "assessment": "2026-10-16|R|moderate|-500|19:00|0|0|1|moderate:18:00-21:00|K2:18:00-19:00|-|-;2026-10-19|R|high|-3100|19:00|0|18|5|high:07:00-10:00,moderate:10:00-15:00,high:15:00-21:00,moderate:21:00-22:00||X|P;2026-10-20|R|moderate|-1500|07:00|0|13|2|moderate:07:00-20:00||X|P;2026-10-21|R|none|900|20:00|0|0|12|||X|P;2026-10-22|R|none|600|19:00|0|0|11|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
