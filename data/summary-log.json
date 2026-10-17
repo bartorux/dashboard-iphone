@@ -1843,6 +1843,23 @@
       "headline": "W poniedziałek 19 października nadwyżka spadła poniżej progu 1100 MW między 18:00 a 20:00, co oznacza, że operator może ogłosić przywołanie.",
       "body": "We wtorek 20 października margines jest poniżej typowego zakresu z ostatnich trzydziestu dni przez trzynaście godzin. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę i czwartek nic nie zapowiada przywołania, a w piątek 23 października operator ma wybór między 07:00 a 10:00."
+    },
+    {
+      "at": "2026-10-17T18:15:43.422Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W poniedziałek 19 października nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia tego kroku.",
+      "body": "Margines spadnie poniżej typowego pasma przez dwanaście godzin, osiągając najniższy poziom o 19:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może nadejść.",
+      "outlook": "We wtorek 20 października oraz w piątek 23 października nadwyżka również spadnie poniżej progu lub utrzyma się powyżej niego w wyznaczonych godzinach, natomiast w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-17T18:15:43.422Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W poniedziałek 19 października nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00, co pozwala operatorowi ogłosić przywołanie bez pomijania.",
+      "body": "Margines spadnie poniżej typowego zakresu przez dwanaście godzin, a w godzinach 18:00-21:00 rezerwa nie pokryje wymaganego poziomu. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 20 października nadwyżka spadnie poniżej progu między 07:00 a 09:00, a w środę 21 października prognoza wciąż się ustala, podczas gdy w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
