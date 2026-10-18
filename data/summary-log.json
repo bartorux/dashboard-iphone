@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-15T02:30:55.442Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "godzina bez nazwy dnia",
-      "headline": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się i najniższy margines wystąpi między 18:00 a 19:00. Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
-      "outlook": "W poniedziałek dziewiętnastego października i we wtorek dwudziestego października margines w wybranych godzinach nie pokryje wymaganego poziomu, podczas gdy w środę dwudziestego pierwszego października nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-15T02:30:55.442Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W najbliższych dniach rezerwa miejscami spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza na jutro pogarsza się, a w godzinach 18:00-19:00 nadwyżka spadła poniżej progu 1100 MW. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 19 października między 07:00 a 10:00 oraz od 15:00 do 22:00, a także we wtorek 20 października między 07:00 a 09:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
       "at": "2026-10-15T03:45:39.564Z",
       "prompt": 56,
       "accepted": true,
@@ -1867,6 +1850,24 @@
       "headline": "W najbliższych dniach rezerwa momentami spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "W środę dwudziestego pierwszego października prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin wciąż zostało ponad osiem godzin.",
       "outlook": "We wtorek dwudziestego października oraz w piątek dwudziestego trzeciego października margines miejscami spadnie poniżej wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-18T02:45:43.714Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Margines mocno odbiega od normy z ostatnich trzydziestu dni, bo najniższa rezerwa spada poniżej zera w kolejnych dobach roboczych.",
+      "body": "Prognoza jeszcze się ustala w środę 21 października i raz pokrywa wymagany poziom, raz nie. Do tych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 20 października oraz w piątek 23 października nadwyżka spada poniżej progu 1100 MW w godzinach porannych i wieczornych, a w czwartek 22 października oraz dziś nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-18T02:45:43.714Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "W najbliższych dniach rezerwa wielokrotnie wypada poza typowy zakres z ostatnich trzydziestu dni, spadając do poziomu, w którym operator może ogłosić przywołanie.",
+      "body": "Prognoza na środę dwudziestego pierwszego października jeszcze się ustala i naprzemiennie pokrywa oraz nie pokrywa wymaganego poziomu. Do godzin objętych możliwością ogłoszenia zostało jeszcze ponad osiem godzin.",
+      "outlook": "We wtorek dwudziestego października między 07:00 a 09:00 oraz w piątek dwudziestego trzeciego października między 07:00 a 09:00 i między 19:00 a 20:00 rezerwa również nie pokrywa wymaganego poziomu, podczas gdy w czwartek dwudziestego drugiego października i w dniach wolnych nic nie zapowiada przywołania."
     }
   ]
 }
