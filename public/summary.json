@@ -1,8 +1,8 @@
 {
-  "headline": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-  "body": "We wtorek dwudziestego października prognoza pogarsza się między godziną 07:00 a 14:00 oraz od 15:00 do 16:00. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin. Ocena na wtorek 20 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek dwudziestego października między godziną 07:00 a 14:00 operator może ogłosić przywołanie, ale nie musi, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-18T22:15:42.352Z",
+  "headline": "We wtorek 20 października nadwyżka spadła poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
+  "body": "Margines tej doby spada poniżej typowego zakresu z ostatnich trzydziestu dni. Do godzin objętych przywołaniem zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na wtorek 20 października i środę 21 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W środę 21 października między 17:00 a 20:00 operator może ogłosić przywołanie, a w czwartek i piątek nic go nie zapowiada.",
+  "generatedAt": "2026-10-18T22:30:55.599Z",
   "dates": [
     "2026-10-19",
     "2026-10-20",
@@ -10,6 +10,6 @@
     "2026-10-22",
     "2026-10-23"
   ],
-  "assessment": "2026-10-19|R|none|0|08:00|4|0|2|||-|-;2026-10-20|R|moderate|-1000|08:00|1|6|6|moderate:07:00-14:00,moderate:15:00-16:00||X|-;2026-10-21|R|none|700|20:00|0|0|17|||X|P;2026-10-22|R|none|1100|18:00|0|0|13|||X|P;2026-10-23|R|none|400|07:00|0|0|18|||X|P#-/below/prognoza pogarsza się#v56",
+  "assessment": "2026-10-19|R|moderate|-200|19:00|6|0|0|moderate:15:00-16:00,moderate:19:00-20:00||-|-;2026-10-20|R|high|-1500|08:00|2|10|2|high:07:00-14:00,moderate:14:00-15:00,high:15:00-16:00||X|-;2026-10-21|R|moderate|-400|17:00|3|0|13|moderate:17:00-20:00||X|P;2026-10-22|R|none|900|17:00|0|0|14|||X|P;2026-10-23|R|none|600|07:00|0|0|19|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
