@@ -1,8 +1,8 @@
 {
-  "headline": "Operator może ogłosić przywołanie jutro między 19:00 a 20:00, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
-  "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 20 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek 20 października przywołanie również wchodzi w grę, natomiast w pozostałe dni nic go nie zapowiada.",
-  "generatedAt": "2026-10-18T19:30:54.317Z",
+  "headline": "Operator może ogłosić przywołanie między 19:00 a 20:00, ale nadwyżka trzyma się powyżej progu 1100 MW, więc ma wybór.",
+  "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Ocena na wtorek 20 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek 20 października przywołanie również wchodzi w grę między 07:00 a 19:00, a przez resztę tygodnia nic nie zapowiada przywołania.",
+  "generatedAt": "2026-10-18T19:45:45.781Z",
   "dates": [
     "2026-10-18",
     "2026-10-19",
@@ -11,6 +11,6 @@
     "2026-10-22",
     "2026-10-23"
   ],
-  "assessment": "2026-10-18|W|none|1600|21:00|0|0|2|||-|-;2026-10-19|R|moderate|-200|19:00|5|0|2|moderate:19:00-20:00||-|-;2026-10-20|R|moderate|-2100|08:00|1|11|2|moderate:07:00-19:00||X|P;2026-10-21|R|none|800|20:00|0|0|17|||X|P;2026-10-22|R|none|1200|18:00|0|0|13|||X|P;2026-10-23|R|none|300|08:00|0|0|18|||X|P#-/typical/prognoza poprawia się#v56",
+  "assessment": "2026-10-18|W|none|1300|21:00|0|0|0|||-|-;2026-10-19|R|moderate|-200|19:00|5|0|2|moderate:19:00-20:00||-|-;2026-10-20|R|moderate|-2100|08:00|1|11|2|moderate:07:00-19:00||X|P;2026-10-21|R|none|800|20:00|0|0|17|||X|P;2026-10-22|R|none|1200|18:00|0|0|13|||X|P;2026-10-23|R|none|300|08:00|0|0|18|||X|P#-/typical/prognoza poprawia się#v56",
   "model": "gemini-3.5-flash-lite"
 }
