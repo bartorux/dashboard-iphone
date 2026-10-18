@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-15T11:15:44.732Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 19 października między 17:00 a 20:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "W poniedziałek 19 października prognoza pogarsza się. Do wskazanych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "W jutrzejszym dniu oraz we wtorek 20 października operator ma wybór w wyznaczonych godzinach, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-15T11:15:44.732Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października między 17:00 a 20:00 nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza dla poniedziałku 19 października pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W jutrzejszym dobowym rozkładzie oraz we wtorek 20 października operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
       "at": "2026-10-15T11:45:45.655Z",
       "prompt": 56,
       "accepted": true,
@@ -1890,6 +1873,14 @@
       "headline": "We wtorek 20 października między 07:00 a 09:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a rezerwa nie pokrywa wymaganego poziomu.",
       "body": "Margines w tym dniu jest poniżej typowego zakresu z ostatnich trzydziestu dni przez dwanaście godzin. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Jutro między 07:00 a 10:00 oraz od 15:00 do 22:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-10-18T11:30:57.299Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "We wtorek 20 października między 07:00 a 09:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a poziom, który pozwalał mu je pominąć, przestał obowiązywać.",
+      "body": "We wtorek 20 października margines ujemny utrzymuje się najgłębiej spośród wszystkich dób. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę 21 października prognoza jeszcze się ustala, natomiast w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
