@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-15T16:45:47.439Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października o 18:00 margines spadnie do najniższego poziomu ze wszystkich dni, a nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "W środę 21 października prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października między 07:00 a 21:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania poza wskazanymi przedziałami godzinowymi."
-    },
-    {
       "at": "2026-10-15T17:01:12.075Z",
       "prompt": 56,
       "accepted": true,
@@ -1911,6 +1903,24 @@
       "headline": "We wtorek 20 października o godzinie 08:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie i stracił możliwość jego pominięcia.",
       "body": "Prognoza pogarsza się we wtorek 20 października. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-18T17:01:10.494Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "W najbliższych dniach rezerwa kilkukrotnie spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "We wtorek dwudziestego października prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek i środę między 07:00 a 21:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-10-18T17:01:10.494Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "zdanie przeczy samo sobie o pokryciu",
+      "headline": "W najbliższych dniach margines miejscami spada poniżej typowego zakresu z ostatnich trzydziestu dni, a we wtorek dwudziestego października nadwyżka spada poniżej progu 1100 MW między 07:00 a 09:00.",
+      "body": "We wtorek dwudziestego października prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę dwudziestego pierwszego października margines bywa ujemny, a w pozostałych dniach rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania."
     }
   ]
 }
