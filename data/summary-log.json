@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-15T18:15:44.156Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00, co oznacza, że operator może ogłosić przywołanie bez pomijania tej możliwości.",
-      "body": "Margines we wtorek 20 października spada poniżej typowego zakresu przez dwanaście godzin. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W środę 21 października prognoza jeszcze się ustala i raz pokrywa wymagany poziom, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-15T18:45:44.663Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00.",
-      "body": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez osiemnaście godzin. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października operator ma wybór między 07:00 a 21:00, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-15T19:01:14.571Z",
       "prompt": 56,
       "accepted": true,
@@ -1938,6 +1922,14 @@
       "headline": "We wtorek 20 października operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
       "body": "Prognoza pogarsza się we wtorek 20 października. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W jutrzejszym dniu rezerwa spadnie o 19:00, a w pozostałym okresie nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-18T18:45:46.173Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "We wtorek 20 października operator może ogłosić przywołanie między 07:00 a 19:00, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, a jutro operator może je ogłosić między 19:00 a 20:00."
     }
   ]
 }
