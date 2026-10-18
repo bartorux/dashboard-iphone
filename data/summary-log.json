@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-15T22:45:43.482Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października nadwyżka spadła poniżej progu 1100 MW między 07:00 a 10:00, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "Margines w tym dniu spada poniżej typowego zakresu z ostatnich trzydziestu dni przez siedemnaście godzin. Ogłoszenie może jeszcze nadejść w godzinach między 07:00 a 10:00.",
-      "outlook": "W jutrzejszym dniu oraz we wtorek 20 października operator może ogłosić przywołanie, natomiast w środę 21 października prognoza jeszcze się ustala."
-    },
-    {
-      "at": "2026-10-15T23:15:38.458Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00.",
-      "body": "Margines jest poniżej typowego zakresu przez siedemnaście godzin. Na ogłoszenie w tych godzinach jest już za późno.",
-      "outlook": "Jutro między 18:00 a 21:00 ogłoszenie może jeszcze nadejść, a we wtorek 20 października i środę 21 października nic nie zapowiada przywołania w pozostałych dobach."
-    },
-    {
       "at": "2026-10-15T23:45:38.554Z",
       "prompt": 56,
       "accepted": false,
@@ -2003,6 +1987,14 @@
       "headline": "We wtorek 20 października operator może ogłosić przywołanie, a nadwyżka spadła poniżej 1100 MW w godzinach 08:00-09:00.",
       "body": "Prognoza marginesu we wtorek 20 października jest poniżej typowego zakresu z ostatnich trzydziestu dni przez osiem godzin. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, a w pozostałych dniach margines bywa wąski."
+    },
+    {
+      "at": "2026-10-18T23:15:44.874Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "We wtorek 20 października operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 08:00 a 09:00.",
+      "body": "Prognoza na wtorek 20 października jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do godzin porannych ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek między 08:00 a 09:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
