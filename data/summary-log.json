@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-16T04:15:44.179Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś między 18:00 a 21:00 operator może ogłosić przywołanie, a między 07:00 a 09:00 na ogłoszenie jest już za późno.",
-      "body": "W poniedziałek 19 października prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 19 października między 07:00 a 10:00 nadwyżka spadła poniżej progu 1100 MW, a we wtorek 20 października margines pozostaje dodatni; w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-16T04:45:40.716Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00, więc operator może ogłosić przywołanie.",
-      "body": "Prognoza pogarsza się w poniedziałek 19 października. Do godzin wieczornych ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października nadwyżka utrzymuje się powyżej progu 1100 MW między 07:00 a 20:00, a w środę i czwartek nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-16T05:15:40.641Z",
       "prompt": 56,
       "accepted": true,
@@ -2019,6 +2003,14 @@
       "headline": "Dziś i jutro operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza na dziś jeszcze się ustala, a margines raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść między 14:00 a 16:00.",
       "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-19T04:45:41.044Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00.",
+      "body": "W poniedziałek prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek między 07:00 a 16:00 nadwyżka i rezerwa zmieniają się, a w środę, czwartek i piątek nic nie zapowiada przywołania."
     }
   ]
 }
