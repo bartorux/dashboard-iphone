@@ -1985,6 +1985,23 @@
       "headline": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni w części godzin jutro, co sprawi, że nadwyżka osunie się poniżej progu 1100 MW między 07:00 a 09:00.",
       "body": "Prognoza jeszcze się ustala dzisiaj. Ogłoszenie może jeszcze nadejść w godzinach od 14:00 do 16:00 dzisiaj oraz między 07:00 a 16:00 jutro.",
       "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-19T03:01:09.866Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Jutro nadwyżka spadnie poniżej progu 1100 MW w godzinach 07:00-09:00, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Dziś margines jeszcze się ustala, a w niektórych godzinach ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, a w godzinach popołudniowych margines bywa wąski, ale dodatni."
+    },
+    {
+      "at": "2026-10-19T03:01:09.866Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Jutro nadwyżka spadnie poniżej progu 1100 MW w godzinach 07:00-09:00, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Dziś margines jeszcze się ustala, a w niektórych godzinach ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, a w godzinach wąskiego marginesu rezerwa pokrywa wymagany poziom."
     }
   ]
 }
