@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-16T19:30:58.902Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października operator może ogłosić przywołanie, a nadwyżka spadła poniżej 1100 MW w godzinach 07:00-10:00.",
-      "body": "W poniedziałek 19 października prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października operator może ogłosić przywołanie w godzinach 07:00-20:00, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-16T19:45:42.188Z",
       "prompt": 56,
       "accepted": true,
@@ -2134,6 +2126,23 @@
       "headline": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "W czwartek margines spadnie poniżej wymaganego poziomu. Do tych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek prognoza jeszcze się ustala, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-19T19:30:59.936Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "Kompas przy dniu, którego nie dotyczy",
+      "headline": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka przekracza próg 1100 MW.",
+      "body": "W czwartek rezerwa nie pokrywa wymaganego poziomu. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Poza czwartkiem w całym okresie nic nie zapowiada przywołania, a w piątek o 07:00 Kompas Energetyczny PSE zaleca oszczędzanie."
+    },
+    {
+      "at": "2026-10-19T19:30:59.936Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "W czwartek rezerwa nie pokrywa wymaganego poziomu o 18:00. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W piątek o 07:00 margines jest wąski, lecz dodatni, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
