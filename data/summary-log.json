@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-16T21:01:10.213Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października o godzinie 19:00 rezerwa najbardziej nie pokrywa wymaganego poziomu, a nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Prognoza w poniedziałek 19 października pogarsza się. Do godzin porannych i popołudniowych ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października między 07:00 a 21:00 nadwyżka utrzymuje się powyżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-16T22:01:10.631Z",
       "prompt": 56,
       "accepted": true,
@@ -2144,6 +2136,24 @@
       "headline": "W czwartek między 07:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Margines spadnie w czwartek między 07:00 a 20:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę, piątek oraz dzisiaj i jutro nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-19T21:15:41.760Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "godzina 19:00 spoza faktów",
+      "headline": "W czwartek między 18:00 a 19:00 rezerwa spadnie poniżej wymaganego poziomu, nadwyżka utrzyma się powyżej progu 1100 MW, a operator może ogłosić przywołanie, ale nie musi.",
+      "body": "W czwartek prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W piątek margines będzie wąski, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-19T21:15:41.760Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "godzina 19:00 spoza faktów",
+      "headline": "W czwartek między 18:00 a 19:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do czwartkowego ogłoszenia zostało jeszcze ponad osiem godzin, więc decyzja może nadejść.",
+      "outlook": "Poza czwartkiem w całym omawianym okresie nic nie zapowiada przywołania."
     }
   ]
 }
