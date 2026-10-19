@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-16T19:45:42.188Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-10:00.",
-      "body": "W poniedziałek 19 października prognoza pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października operator również ma wybór między 07:00 a 20:00, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-16T20:01:11.342Z",
       "prompt": 56,
       "accepted": true,
@@ -2143,6 +2135,23 @@
       "headline": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "W czwartek rezerwa nie pokrywa wymaganego poziomu o 18:00. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "W piątek o 07:00 margines jest wąski, lecz dodatni, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-19T19:45:46.258Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "Kompas przy dniu, którego nie dotyczy",
+      "headline": "W czwartek operator może ogłosić przywołanie, ale nie musi między 07:00 a 21:00.",
+      "body": "W czwartek margines spadnie poniżej wymaganego poziomu o 18:00. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W pozostałych dniach nic nie zapowiada przywołania, a w środę Kompas Energetyczny PSE zaleca oszczędzanie między 11:00 a 12:00."
+    },
+    {
+      "at": "2026-10-19T19:45:46.258Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka przekracza próg 1100 MW.",
+      "body": "W czwartek rezerwa nie pokrywa wymaganego poziomu. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, piątek oraz w pozostałych dniach nic nie zapowiada przywołania, a w jutrzejszych godzinach od 11:00 do 12:00 Kompas Energetyczny PSE zaleca oszczędzanie."
     }
   ]
 }
