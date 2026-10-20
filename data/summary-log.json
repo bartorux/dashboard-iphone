@@ -2219,6 +2219,23 @@
       "headline": "W czwartek o 09:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na czwartek pogarsza się. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin od 07:00 do 21:00 zostało ponad osiem godzin.",
       "outlook": "W piątek i poniedziałek 26 października operator również ma wybór w wyznaczonych porach, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-20T16:31:00.158Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "W czwartek o 09:00 margines spadnie do najniższego poziomu ze wszystkich dni, a rezerwa nie pokryje wymaganego poziomu, choć nadwyżka utrzyma się powyżej progu 1100 MW, pozostawiając operatorowi swobodę w podjęciu decyzji o przywołaniu.",
+      "body": "Prognoza w czwartek pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 21:00.",
+      "outlook": "W piątek i poniedziałek 26 października operator również zachowa wybór między 07:00 a 10:00, 16:00 a 20:00 oraz od 15:00 do 21:00, podczas gdy dziś i jutro nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-20T16:31:00.158Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W czwartek o 09:00 margines spadnie najniżej ze wszystkich dni, ale nadwyżka trzyma się powyżej progu 1100 MW, co pozwala operatorowi nie ogłaszać przywołania.",
+      "body": "Prognoza w czwartek pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach między 07:00 a 21:00.",
+      "outlook": "W piątek i w poniedziałek 26 października operator również ma wybór w wyznaczonych porach, podczas gdy w pozostałym okresie nic nie zapowiada przywołania."
     }
   ]
 }
