@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-17T19:42:05.069Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 19 października między 18:00 a 20:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "W środę 21 października prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października i piątek 23 października margines spada w wyznaczonych godzinach poniżej wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-17T19:42:05.069Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października między 18:00 a 20:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "W środę 21 października prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 19 października, we wtorek 20 października i w piątek 23 października operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada."
-    },
-    {
       "at": "2026-10-17T19:45:46.156Z",
       "prompt": 56,
       "accepted": true,
@@ -2251,6 +2234,14 @@
       "headline": "Przywołanie wchodzi w grę, bo operator może je ogłosić, ale nie musi między 07:00 a 21:00 w czwartek.",
       "body": "Prognoza pogarsza się w czwartek. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "W czwartek, piątek i w poniedziałek 26 października operator zachowuje wybór w wybranych godzinach, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-20T19:45:44.998Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Operator może ogłosić przywołanie w czwartek, ale nie musi między 07:00 a 21:00.",
+      "body": "Prognoza pogarsza się w czwartek. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek i poniedziałek 26 października operator również ma wybór w wybranych godzinach, a przez resztę tygodnia nic nie zapowiada przywołania."
     }
   ]
 }
