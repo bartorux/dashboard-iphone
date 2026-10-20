@@ -2204,6 +2204,24 @@
       "headline": "Margines bywa poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie, ale nie musi.",
       "body": "W piątek prognoza jeszcze się ustala i raz pokrywa wymagane poziomy, a raz nie. Ogłoszenie może jeszcze nadejść w czwartek, piątek i poniedziałek 26 października.",
       "outlook": "Poza czwartkiem, piątkiem, poniedziałkiem 26 października oraz dzisiejszym popołudniem rezerwa w całym okresie pokrywa wymagany poziom i nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-20T12:10:30.880Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "stopniuje to, czego fakty nie stopniują",
+      "headline": "W najbliższych dniach margines miejscami wyraźnie odbiega od normy z ostatnich trzydziestu dni, a w czwartek operator może ogłosić przywołanie między 07:00 a 21:00.",
+      "body": "W piątek prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek między 07:00 a 10:00 oraz od 16:00 do 21:00, a także w poniedziałek 26 października między 15:00 a 21:00 nadwyżka przekracza próg 1100 MW i operator ma wybór, natomiast dziś i jutro nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-20T12:10:30.880Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "W czwartek, piątek oraz w poniedziałek 26 października rezerwa chwilowo spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie, choć nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "W piątek prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do godzin objętych przywołaniem zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, dzisiaj oraz jutro nic nie zapowiada przywołania."
     }
   ]
 }
