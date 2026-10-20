@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-17T22:01:09.305Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00, co pozwala operatorowi ogłosić przywołanie.",
-      "body": "W poniedziałek 19 października margines spada poniżej typowego zakresu przez dwanaście godzin. Do tych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października i w piątek 23 października nadwyżka utrzymuje się powyżej progu 1100 MW, w środę 21 października prognoza jeszcze się ustala, a w czwartek 22 października nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-17T22:15:37.516Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Margines bywa poniżej typowego zakresu z ostatnich trzydziestu dni, a w poniedziałek 19 października nadwyżka spadła poniżej progu 1100 MW między 18:00 a 21:00.",
-      "body": "W środę 21 października prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października oraz w piątek 23 października operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-17T23:01:07.036Z",
       "prompt": 56,
       "accepted": true,
@@ -2249,6 +2233,23 @@
       "headline": "W czwartek margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, dając operatorowi możliwość ogłoszenia przywołania między 07:00 a 21:00.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek i w poniedziałek 26 października operator zachowuje wybór w wybranych godzinach, a w pozostałym okresie tego typu dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-20T22:15:42.372Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "stopniuje to, czego fakty nie stopniują",
+      "headline": "W czwartek rezerwa wyraźnie odbiega od normy, a operator może ogłosić przywołanie między 07:00 a 21:00.",
+      "body": "Prognoza na czwartek pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek i w poniedziałek 26 października operator zachowuje wybór w wybranych godzinach, podczas gdy jutro nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-20T22:15:42.372Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Czwartek przynosi rezerwy poniżej typowego zakresu z ostatnich trzydziestu dni, w którym operator może ogłosić przywołanie, ale nie musi między 07:00 a 21:00.",
+      "body": "Prognoza w czwartek pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W piątek i w poniedziałek 26 października margines spada poniżej wymaganego poziomu w wybranych godzinach, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
