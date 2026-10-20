@@ -1,8 +1,8 @@
 {
   "headline": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-  "body": "Dziś rezerwa nie pokrywa wymaganego poziomu między 09:00 a 10:00, 11:00 a 12:00 oraz 15:00 a 16:00, ale na ogłoszenie jest już za późno. Ogłoszenie może jeszcze nadejść w czwartek, ponieważ do wyznaczonych godzin zostało jeszcze ponad osiem godzin. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek prognoza jeszcze się ustala, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-20T05:15:41.742Z",
+  "body": "Dziś między 09:00 a 10:00, 11:00 a 12:00 oraz 15:00 a 16:00 rezerwa nie pokrywa wymaganego poziomu. Na ogłoszenie jest już za późno, a Kompas Energetyczny PSE zaleca oszczędzanie między 11:00 a 12:00. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W piątek prognoza jeszcze się ustala, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-10-20T05:30:54.744Z",
   "dates": [
     "2026-10-20",
     "2026-10-21",
@@ -10,6 +10,6 @@
     "2026-10-23",
     "2026-10-26"
   ],
-  "assessment": "2026-10-20|R|moderate|-200|11:00|7|0|3|moderate:09:00-10:00,moderate:11:00-12:00,moderate:15:00-16:00||-|-;2026-10-21|R|none|3500|20:00|0|0|24|||X|-;2026-10-22|R|moderate|-1000|18:00|0|14|8|moderate:07:00-21:00||X|P;2026-10-23|R|none|0|07:00|2|0|17|||X|P;2026-10-26|R|none|600|17:00|0|0|19|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-10-20|R|moderate|-200|11:00|7|0|3|moderate:09:00-10:00,moderate:11:00-12:00,moderate:15:00-16:00|K2:11:00-12:00|-|-;2026-10-21|R|none|3500|20:00|0|0|24|||X|-;2026-10-22|R|moderate|-1000|18:00|0|14|8|moderate:07:00-21:00||X|P;2026-10-23|R|none|0|07:00|2|0|17|||X|P;2026-10-26|R|none|600|17:00|0|0|19|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
