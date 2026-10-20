@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-17T12:30:57.505Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 19 października margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 10:00, od 15:00 do 21:00 oraz o 22:00.",
-      "outlook": "Wtorek przyniesie podobne ograniczenia w godzinach od 07:00 do 21:00, w środę przywołanie wchodzi w grę o 08:00, a pozostałe dni przebiegną spokojnie."
-    },
-    {
       "at": "2026-10-17T12:45:46.792Z",
       "prompt": 56,
       "accepted": true,
@@ -2222,6 +2214,24 @@
       "headline": "W czwartek między 09:00 a 10:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "Prognoza na piątek jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, do wskazanych godzin zostało bowiem ponad osiem godzin.",
       "outlook": "W czwartek, piątek oraz w poniedziałek 26 października margines spada w niektórych godzinach poniżej wymaganego poziomu, podczas gdy w pozostałym okresie nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-20T12:31:06.232Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni w czwartek między 09:00 a 10:00, kiedy operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "W piątek prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek, piątek i w poniedziałek 26 października margines jest wąski w wyznaczonych godzinach, natomiast jutro nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-20T12:31:06.232Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Margines bywa poniżej typowego zakresu z ostatnich trzydziestu dni, a w czwartek między 09:00 a 10:00 nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "W piątek prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Na ogłoszenie może jeszcze nadejść pora, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W środę nic nie zapowiada przywołania, a w czwartek, piątek oraz poniedziałek 26 października operator może ogłosić przywołanie w wyznaczonych godzinach."
     }
   ]
 }
