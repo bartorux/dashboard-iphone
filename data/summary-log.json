@@ -1,58 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-18T02:01:07.511Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Marginesy w większości dni wypadają poza typowy zakres z ostatnich trzydziestu dni, a jutro między 17:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, co otwiera operatorowi drogę do przywołania.",
-      "body": "W środę dwudziestego pierwszego października prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek dwudziestego października i w piątek dwudziestego trzeciego października operator może ogłosić przywołanie w wybranych godzinach, natomiast w czwartek dwudziestego drugiego października nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-18T02:15:39.145Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W najbliższych dniach rezerwa momentami spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "W środę dwudziestego pierwszego października prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin wciąż zostało ponad osiem godzin.",
-      "outlook": "We wtorek dwudziestego października oraz w piątek dwudziestego trzeciego października margines miejscami spadnie poniżej wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-18T02:45:43.714Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Margines mocno odbiega od normy z ostatnich trzydziestu dni, bo najniższa rezerwa spada poniżej zera w kolejnych dobach roboczych.",
-      "body": "Prognoza jeszcze się ustala w środę 21 października i raz pokrywa wymagany poziom, raz nie. Do tych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października oraz w piątek 23 października nadwyżka spada poniżej progu 1100 MW w godzinach porannych i wieczornych, a w czwartek 22 października oraz dziś nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-18T02:45:43.714Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "W najbliższych dniach rezerwa wielokrotnie wypada poza typowy zakres z ostatnich trzydziestu dni, spadając do poziomu, w którym operator może ogłosić przywołanie.",
-      "body": "Prognoza na środę dwudziestego pierwszego października jeszcze się ustala i naprzemiennie pokrywa oraz nie pokrywa wymaganego poziomu. Do godzin objętych możliwością ogłoszenia zostało jeszcze ponad osiem godzin.",
-      "outlook": "We wtorek dwudziestego października między 07:00 a 09:00 oraz w piątek dwudziestego trzeciego października między 07:00 a 09:00 i między 19:00 a 20:00 rezerwa również nie pokrywa wymaganego poziomu, podczas gdy w czwartek dwudziestego drugiego października i w dniach wolnych nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-18T03:01:10.815Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "We wtorek 20 października nadwyżka spadła poniżej progu 1100 MW między 07:00 a 09:00, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
-      "body": "Prognoza na wtorek 20 października jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek nadwyżka spadła poniżej progu 1100 MW między 17:00 a 21:00, w środę 21 października rezerwa na przemian pokrywa i nie pokrywa wymaganego poziomu, a w piątek 23 października nadwyżka utrzymuje się powyżej progu 1100 MW w wybranych godzinach porannych i wieczornych; w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-18T03:01:10.815Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "We wtorek 20 października nadwyżka spadła poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
-      "body": "Margines ujemny utrzymuje się przez czternaście godzin. Ogłoszenie może jeszcze nadejść w ciągu doby.",
-      "outlook": "W środę 21 października oraz w piątek 23 października operator ma wybór w wyznaczonych godzinach porannych i wieczornych, natomiast w czwartek 22 października nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-18T03:15:41.777Z",
       "prompt": 56,
       "accepted": true,
@@ -2275,6 +2223,14 @@
       "headline": "W piątek o 07:00 rezerwa osiągnie najniższy punkt w całym okresie, a nadwyżka utrzyma się powyżej progu 1100 MW, pozostawiając operatorowi wybór co do przywołania.",
       "body": "Prognoza na jutro pogarsza się. Ogłoszenie między 07:00 a 21:00 może jeszcze nadejść.",
       "outlook": "W piątek między 07:00 a 09:00 oraz między 16:00 a 20:00, a także w poniedziałek 26 października między 17:00 a 18:00 operator ma wybór, natomiast w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-21T03:01:17.352Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W piątek między 07:00 a 09:00 oraz między 16:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W jutrzejszym dniu oraz w poniedziałek 26 października rezerwa również miejscami spada poniżej wymaganego poziomu, podczas gdy wtorek 27 października nie przynosi żadnych zagrożeń dla pracy sieci."
     }
   ]
 }
