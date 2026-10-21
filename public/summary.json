@@ -1,8 +1,8 @@
 {
-  "headline": "Jutro operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW w godzinach 07:00-21:00.",
-  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Ocena na jutro, piątek i poniedziałek 26 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek i poniedziałek 26 października między godzinami 07:00 a 20:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-21T09:01:09.532Z",
+  "headline": "Operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 07:00 a 21:00.",
+  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Ocena na piątek i poniedziałek 26 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W środę, piątek i poniedziałek 26 października operator również może ogłosić przywołanie, natomiast we wtorek 27 października nic nie zapowiada przywołania.",
+  "generatedAt": "2026-10-21T09:30:54.086Z",
   "dates": [
     "2026-10-21",
     "2026-10-22",
@@ -10,6 +10,6 @@
     "2026-10-26",
     "2026-10-27"
   ],
-  "assessment": "2026-10-21|R|moderate|-300|11:00|2|0|0|moderate:11:00-13:00,moderate:14:00-15:00||-|-;2026-10-22|R|high|-2200|12:00|1|0|0|high:07:00-21:00||X|-;2026-10-23|R|moderate|-1600|07:00|0|0|0|moderate:07:00-09:00,moderate:16:00-20:00||X|P;2026-10-26|R|moderate|-600|17:00|1|0|0|moderate:16:00-18:00||X|P;2026-10-27|R|none|1000|17:00|0|0|0|||X|P#-/unknown/prognoza pogarsza się#v56",
+  "assessment": "2026-10-21|R|moderate|-600|14:00|1|0|0|moderate:11:00-16:00|K2:12:00-16:00|-|-;2026-10-22|R|high|-2200|12:00|1|0|0|high:07:00-21:00||X|-;2026-10-23|R|moderate|-1500|07:00|0|0|0|moderate:07:00-09:00,moderate:16:00-20:00||X|P;2026-10-26|R|moderate|-600|17:00|1|0|0|moderate:16:00-18:00||X|P;2026-10-27|R|none|1000|17:00|0|0|0|||X|P#-/unknown/prognoza pogarsza się#v56",
   "model": "gemini-3.5-flash-lite"
 }
