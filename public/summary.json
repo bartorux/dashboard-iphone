@@ -1,8 +1,8 @@
 {
-  "headline": "W piątek między 07:00 a 09:00 oraz między 17:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Prognoza pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W poniedziałek 26 października o 17:00 margines jest wąski, lecz dodatni, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-21T13:15:45.420Z",
+  "headline": "W piątek między 07:00 a 09:00 oraz od 17:00 do 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Prognoza pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Jutro między 08:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu przy zachowaniu wyboru operatora, natomiast w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-10-21T13:31:06.275Z",
   "dates": [
     "2026-10-21",
     "2026-10-22",
@@ -10,6 +10,6 @@
     "2026-10-26",
     "2026-10-27"
   ],
-  "assessment": "2026-10-21|R|none|500|15:00|0|0|4|||-|-;2026-10-22|R|moderate|-1100|12:00|1|13|1|moderate:08:00-21:00||-|-;2026-10-23|R|moderate|-1100|07:00|0|2|14|moderate:07:00-09:00,moderate:17:00-20:00||X|P;2026-10-26|R|none|100|17:00|1|0|17|||X|P;2026-10-27|R|none|1400|17:00|0|0|21|||X|P#-/below/prognoza pogarsza się#v56",
+  "assessment": "2026-10-21|R|none|200|15:00|1|0|4|||-|-;2026-10-22|R|moderate|-1100|12:00|1|13|1|moderate:08:00-21:00||-|-;2026-10-23|R|moderate|-1100|07:00|0|2|14|moderate:07:00-09:00,moderate:17:00-20:00||X|P;2026-10-26|R|none|100|17:00|1|0|17|||X|P;2026-10-27|R|none|1400|17:00|0|0|21|||X|P#-/below/prognoza pogarsza się#v56",
   "model": "gemini-3.5-flash-lite"
 }
