@@ -1,14 +1,14 @@
 {
-  "headline": "Margines jutro spada poniżej typowego zakresu z ostatnich trzydziestu dni, co daje operatorowi wybór w ogłoszeniu przywołania między 08:00 a 14:00.",
-  "body": "W godzinach między 08:00 a 14:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin. Ocena na piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek operator zachowuje ten sam wybór w godzinach od 07:00 do 09:00 oraz od 17:00 do 20:00, podczas gdy w poniedziałek 26 października prognoza jeszcze się ustala, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-21T22:01:12.197Z",
+  "headline": "Margines w jutrzejszych godzinach od 08:00 do 14:00 spadnie poniżej normy z ostatnich trzydziestu dni, a Kompas Energetyczny PSE zaleca oszczędzanie poboru.",
+  "body": "Margines w tym okresie spadnie, bo wiatr osiągnie wartości poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+  "outlook": "W piątek oraz poniedziałek 26 października margines miejscami mocno się zwęzi, a we wtorek 27 października utrzyma się na bezpiecznym poziomie w całym dobowym profilu.",
+  "generatedAt": "2026-10-21T22:15:50.956Z",
   "dates": [
     "2026-10-22",
     "2026-10-23",
     "2026-10-26",
     "2026-10-27"
   ],
-  "assessment": "2026-10-22|R|moderate|-1100|10:00|1|6|5|moderate:08:00-14:00|K2:08:00-14:00|-|-;2026-10-23|R|moderate|-900|07:00|0|1|14|moderate:07:00-09:00,moderate:17:00-20:00||X|-;2026-10-26|R|none|100|17:00|1|0|17|||X|P;2026-10-27|R|none|2200|17:00|0|0|22|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-10-22|R|moderate|-1000|10:00|1|6|6|moderate:08:00-14:00|K2:08:00-14:00|-|-;2026-10-23|R|none|0|07:00|1|0|18|||X|-;2026-10-26|R|none|500|17:00|0|0|19|||X|P;2026-10-27|R|none|2000|17:00|0|0|22|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
