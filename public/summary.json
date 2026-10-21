@@ -1,8 +1,8 @@
 {
-  "headline": "Jutro między 08:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW. Operator może ogłosić przywołanie.",
-  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Ocena na jutro, piątek i poniedziałek 26 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek, w poniedziałek 26 października i we wtorek 27 października margines pozostaje dodatni lub operator zachowuje wybór, natomiast dzisiaj między 10:00 a 11:00 na ogłoszenie jest już za późno, a Kompas Energetyczny PSE zaleca oszczędzanie.",
-  "generatedAt": "2026-10-21T08:30:58.676Z",
+  "headline": "Jutro między 07:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, co odejmuje operatorowi możliwość pominięcia przywołania.",
+  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść. Ocena na jutro i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W piątek przywołanie wchodzi w grę między 07:00 a 09:00 oraz między 16:00 a 20:00, a w pozostałych dniach okresu sytuacja wygląda spokojniej.",
+  "generatedAt": "2026-10-21T08:45:49.439Z",
   "dates": [
     "2026-10-21",
     "2026-10-22",
@@ -10,6 +10,6 @@
     "2026-10-26",
     "2026-10-27"
   ],
-  "assessment": "2026-10-21|R|moderate|-500|10:00|0|0|0|moderate:10:00-11:00|K2:10:00-11:00|-|-;2026-10-22|R|high|-1600|12:00|0|0|0|moderate:07:00-08:00,high:08:00-20:00,moderate:20:00-21:00||X|-;2026-10-23|R|moderate|-1600|07:00|0|0|0|moderate:07:00-09:00,moderate:16:00-20:00||X|P;2026-10-26|R|moderate|-600|17:00|1|0|0|moderate:16:00-18:00||X|P;2026-10-27|R|none|1000|17:00|0|0|0|||X|P#-/unknown/prognoza pogarsza się#v56",
+  "assessment": "2026-10-21|R|moderate|-500|10:00|2|0|6|moderate:10:00-11:00|K2:10:00-11:00|-|-;2026-10-22|R|high|-2200|12:00|1|14|5|high:07:00-21:00||X|-;2026-10-23|R|moderate|-1600|07:00|0|5|14|moderate:07:00-09:00,moderate:16:00-20:00||X|P;2026-10-26|R|moderate|-600|17:00|1|2|16|moderate:16:00-18:00||X|P;2026-10-27|R|none|1000|17:00|0|0|20|||X|P#-/below/prognoza pogarsza się#v56",
   "model": "gemini-3.5-flash-lite"
 }
