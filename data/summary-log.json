@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-18T17:01:10.494Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "W najbliższych dniach rezerwa kilkukrotnie spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "We wtorek dwudziestego października prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek i środę między 07:00 a 21:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
-      "at": "2026-10-18T17:01:10.494Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "zdanie przeczy samo sobie o pokryciu",
-      "headline": "W najbliższych dniach margines miejscami spada poniżej typowego zakresu z ostatnich trzydziestu dni, a we wtorek dwudziestego października nadwyżka spada poniżej progu 1100 MW między 07:00 a 09:00.",
-      "body": "We wtorek dwudziestego października prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę dwudziestego pierwszego października margines bywa ujemny, a w pozostałych dniach rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-18T17:15:39.135Z",
       "prompt": 56,
       "accepted": true,
@@ -2372,6 +2354,14 @@
       "headline": "Jutro o 11:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW między 08:00 a 16:00.",
       "body": "W poniedziałek 26 października prognoza jeszcze się ustala i raz pokrywa wymagane minimum, a raz nie. Do godzin objętych ograniczeniami zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek i w poniedziałek 26 października operator zachowuje wybór, natomiast w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-21T17:01:15.115Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Margines spędza większość czasu powyżej typowego zakresu z ostatnich trzydziestu dni, choć jutro między 10:00 a 14:00 nadwyżka spada poniżej progu 1100 MW.",
+      "body": "Jutro rezerwa nie pokrywa wymaganego poziomu, a Kompas Energetyczny PSE zaleca oszczędzanie energii od 08:00 do 16:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek między 07:00 a 09:00 oraz 17:00 a 20:00 operator ma wybór, a w poniedziałek 26 października margines ulega wahaniom między 16:00 a 19:00, podczas gdy w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
