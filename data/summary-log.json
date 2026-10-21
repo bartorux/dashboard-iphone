@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-18T14:15:39.107Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Operator może ogłosić przywołanie jutro między 07:00 a 09:00, między 15:00 a 21:00 oraz we wtorek 20 października od 07:00 do 19:00, ponieważ nadwyżka w systemie spadła poniżej progu 1100 MW.",
-      "body": "We wtorek 20 października prognoza jeszcze się ustala. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę 21 października i czwartek 22 października nic nie zapowiada przywołania, a w piątek 23 października margines pozostaje wąski, choć dodatni."
-    },
-    {
       "at": "2026-10-18T14:30:59.969Z",
       "prompt": 56,
       "accepted": true,
@@ -2344,6 +2336,14 @@
       "headline": "Operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 08:00 a 16:00.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin. Kompas Energetyczny PSE zaleca oszczędzanie między 08:00 a 16:00 oraz między 18:00 a 20:00.",
       "outlook": "Przywołanie wchodzi w grę także w piątek między 07:00 a 09:00 oraz między 17:00 a 20:00, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-10-21T14:15:53.062Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Jutro w godzinach 08:00-16:00 nadwyżka spadnie poniżej progu 1100 MW, przez co operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "Prognoza na jutro pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek między 07:00 a 09:00 oraz 17:00 a 20:00 margines jest wąski, a w poniedziałek 26 października w jednej godzinie występuje wąski margines dodatni, natomiast w pozostałym okresie nic nie zapowiada przywołania."
     }
   ]
 }
