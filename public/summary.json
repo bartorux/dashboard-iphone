@@ -1,8 +1,8 @@
 {
-  "headline": "Jutro między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść. Ocena na jutro, piątek i poniedziałek 26 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek między 07:00 a 09:00 oraz 16:00 a 20:00 i w poniedziałek 26 października między 17:00 a 18:00 operator również zachowuje wybór, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-21T00:01:12.162Z",
+  "headline": "Jutro między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+  "body": "Prognoza na jutro pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na jutro, piątek i poniedziałek 26 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W piątek między 07:00 a 09:00 oraz od 16:00 do 20:00, a także w poniedziałek 26 października między 17:00 a 18:00 operator również ma wybór, a w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-10-21T00:15:40.067Z",
   "dates": [
     "2026-10-21",
     "2026-10-22",
@@ -10,6 +10,6 @@
     "2026-10-26",
     "2026-10-27"
   ],
-  "assessment": "2026-10-21|R|none|900|14:00|0|0|14|||-|-;2026-10-22|R|moderate|-1100|10:00|0|14|8|moderate:07:00-21:00||X|-;2026-10-23|R|moderate|-1500|07:00|1|4|13|moderate:07:00-09:00,moderate:16:00-20:00||X|P;2026-10-26|R|moderate|-100|17:00|0|0|16|moderate:17:00-18:00||X|P;2026-10-27|R|none|1900|17:00|0|0|24|||X|P#-/below/prognoza pogarsza się#v56",
+  "assessment": "2026-10-21|R|none|900|14:00|0|0|14|||-|-;2026-10-22|R|moderate|-1100|10:00|0|14|8|moderate:07:00-21:00||X|-;2026-10-23|R|moderate|-1600|07:00|1|5|13|moderate:07:00-09:00,moderate:16:00-20:00||X|P;2026-10-26|R|moderate|0|17:00|0|0|16|moderate:17:00-18:00||X|P;2026-10-27|R|none|2000|17:00|0|0|24|||X|P#-/below/prognoza pogarsza się#v56",
   "model": "gemini-3.5-flash-lite"
 }
