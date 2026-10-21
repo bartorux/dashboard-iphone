@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-18T16:07:00.464Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Wtorek 20 października przyniesie najniższy margines między 07:00 a 08:00, a nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 20 października ogłoszenie może jeszcze nadejść, natomiast w środę 21 października i czwartek 22 października nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-18T16:31:04.706Z",
       "prompt": 56,
       "accepted": true,
@@ -2352,6 +2344,24 @@
       "headline": "Jutro o 11:00 rezerwa najsilniej odejdzie od normy, a nadwyżka spadnie poniżej progu 1100 MW, odbierając operatorowi wybór w godzinach 08:00-16:00.",
       "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin pozostało ponad osiem godzin.",
       "outlook": "W piątek operator zachowuje wybór między 07:00 a 09:00 oraz 17:00 a 20:00, a w poniedziałek 26 października margines pozostaje dodatni, podczas gdy w pozostałych dniach i okresach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-21T16:15:48.442Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "Kompas przy dniu, którego nie dotyczy",
+      "headline": "W środę o 11:00 nadwyżka spadła poniżej progu 1100 MW — poniżej poziomu, który pozwalał operatorowi przywołanie pominąć — a operator może ogłosić przywołanie.",
+      "body": "Margines spadnie w godzinach 08:00-16:00. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek między 07:00 a 09:00 oraz 17:00 a 20:00 operator może ogłosić przywołanie, poniedziałek 26 października przyniesie godzinę z ujemnym marginesem, a pozostałe doby przyniosą bezpieczne rezerwy. Kompas Energetyczny PSE zaleca oszczędzanie w środę od 08:00 do 16:00 oraz od 18:00 do 20:00."
+    },
+    {
+      "at": "2026-10-21T16:15:48.442Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "stopniuje to, czego fakty nie stopniują",
+      "headline": "W środę o 11:00 nadwyżka spadła poniżej progu 1100 MW, który pozwalał operatorowi pominąć przywołanie.",
+      "body": "Margines w tej godzinie mocno spada poniżej normy. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 26 października między 17:00 a 18:00 oraz w piątek między 07:00 a 09:00 i od 17:00 do 20:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
