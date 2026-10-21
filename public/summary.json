@@ -1,8 +1,8 @@
 {
-  "headline": "W najbliższych dniach rezerwa chwilami spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść. Ocena na piątek i poniedziałek 26 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek między 07:00 a 09:00 oraz 17:00 a 20:00, a także w poniedziałek 26 października między 17:00 a 18:00 operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada.",
-  "generatedAt": "2026-10-21T12:45:48.405Z",
+  "headline": "W piątek operator może ogłosić przywołanie między 07:00 a 09:00 oraz między 17:00 a 20:00, ponieważ nadwyżka utrzymuje się powyżej progu 1100 MW.",
+  "body": "Prognoza w tym dniu pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Ocena na piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W środę przywołanie wchodzi w grę od 08:00 do 21:00, natomiast w pozostałe dni nic go nie zapowiada.",
+  "generatedAt": "2026-10-21T13:01:21.146Z",
   "dates": [
     "2026-10-21",
     "2026-10-22",
@@ -10,6 +10,6 @@
     "2026-10-26",
     "2026-10-27"
   ],
-  "assessment": "2026-10-21|R|none|400|14:00|0|0|4|||-|-;2026-10-22|R|moderate|-1200|10:00|0|13|0|moderate:07:00-21:00||-|-;2026-10-23|R|moderate|-1200|07:00|0|2|14|moderate:07:00-09:00,moderate:17:00-20:00||X|P;2026-10-26|R|moderate|0|17:00|0|0|17|moderate:17:00-18:00||X|P;2026-10-27|R|none|1400|17:00|0|0|21|||X|P#-/below/prognoza pogarsza się#v56",
+  "assessment": "2026-10-21|R|none|600|16:00|0|0|4|||-|-;2026-10-22|R|moderate|-1100|10:00|1|13|0|moderate:08:00-21:00||-|-;2026-10-23|R|moderate|-1200|07:00|0|2|14|moderate:07:00-09:00,moderate:17:00-20:00||X|P;2026-10-26|R|none|100|17:00|1|0|17|||X|P;2026-10-27|R|none|1400|17:00|0|0|21|||X|P#-/below/prognoza pogarsza się#v56",
   "model": "gemini-3.5-flash-lite"
 }
