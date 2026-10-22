@@ -1,8 +1,8 @@
 {
-  "headline": "Jutro między 07:00 a 08:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW, mimo że rezerwa nie pokrywa wymaganego poziomu.",
-  "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagane minimum, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin. Ocena na jutro jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "Dzisiaj między 11:00 a 14:00 operator ma taki sam wybór, choć na ogłoszenie jest już za późno, natomiast w poniedziałek 26 października, we wtorek 27 października i w środę 28 października nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-22T08:31:03.132Z",
+  "headline": "Jutro między 07:00 a 08:00 operator może ogłosić przywołanie, lecz nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
+  "body": "Margines o 07:00 jest niższy niż zwykle o tej porze, na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, gdyż do tych godzin zostało jeszcze ponad osiem godzin. Ocena na jutro jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W poniedziałek, środę oraz czwartek nic nie zapowiada przywołania, natomiast we wtorek margines jest wąski.",
+  "generatedAt": "2026-10-22T09:01:13.002Z",
   "dates": [
     "2026-10-22",
     "2026-10-23",
@@ -10,6 +10,6 @@
     "2026-10-27",
     "2026-10-28"
   ],
-  "assessment": "2026-10-22|R|moderate|-800|13:00|1|2|2|moderate:11:00-14:00|K2:12:00-14:00|-|-;2026-10-23|R|moderate|-500|07:00|4|1|14|moderate:07:00-08:00||X|-;2026-10-26|R|none|1400|17:00|0|0|22|||X|P;2026-10-27|R|none|300|17:00|1|0|18|||X|P;2026-10-28|R|none|1000|17:00|0|0|21|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-10-22|R|moderate|-900|13:00|1|2|2|moderate:11:00-14:00|K2:12:00-14:00|-|-;2026-10-23|R|moderate|-500|07:00|4|1|14|moderate:07:00-08:00||X|-;2026-10-26|R|none|1400|17:00|0|0|22|||X|P;2026-10-27|R|none|300|17:00|1|0|18|||X|P;2026-10-28|R|none|1000|17:00|0|0|21|||X|P#nic nie odstaje od normy dla tej pory — zwykły przebieg doby/below/-#v56",
   "model": "gemini-3.5-flash-lite"
 }

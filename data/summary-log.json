@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-19T08:31:03.969Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-      "body": "Prognoza poprawia się. Do tych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś między 15:00 a 16:00 margines jest ujemny, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-19T08:45:46.406Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 14:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
-      "body": "Prognoza na ten dzień poprawia się. Na ogłoszenie pozostaje jeszcze ponad osiem godzin.",
-      "outlook": "W środę margines bywa wąski między 15:00 a 16:00, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-19T09:01:13.838Z",
       "prompt": 56,
       "accepted": true,
@@ -2356,6 +2340,14 @@
       "headline": "Jutro między 07:00 a 08:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW, mimo że rezerwa nie pokrywa wymaganego poziomu.",
       "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagane minimum, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "Dzisiaj między 11:00 a 14:00 operator ma taki sam wybór, choć na ogłoszenie jest już za późno, natomiast w poniedziałek 26 października, we wtorek 27 października i w środę 28 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-22T09:01:13.002Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Jutro między 07:00 a 08:00 operator może ogłosić przywołanie, lecz nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Margines o 07:00 jest niższy niż zwykle o tej porze, na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, gdyż do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W poniedziałek, środę oraz czwartek nic nie zapowiada przywołania, natomiast we wtorek margines jest wąski."
     }
   ]
 }
