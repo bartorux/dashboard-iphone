@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-19T04:01:10.392Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka w systemie trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza na dziś jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Między 14:00 a 16:00 ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 14:00 oraz od 15:00 do 16:00 operator również zachowuje wybór, a w środę, czwartek i piątek nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-19T04:15:41.290Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś i jutro operator może ogłosić przywołanie, ale nie musi, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza na dziś jeszcze się ustala, a margines raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść między 14:00 a 16:00.",
-      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-19T04:45:41.044Z",
       "prompt": 56,
       "accepted": true,
@@ -2374,6 +2358,14 @@
       "headline": "Dziś operator może ogłosić przywołanie, a między 11:00 a 12:00 nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Na ogłoszenie przywołania jest już za późno, bo do wskazanych godzin zostało mniej niż osiem godzin. Kompas Energetyczny PSE zaleca oszczędzanie między 08:00 a 10:00 oraz od 11:00 do 14:00.",
       "outlook": "W kolejnych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-22T04:15:42.497Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Dziś operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW między 11:00 a 12:00.",
+      "body": "Prognoza pogarsza się. Na ogłoszenie jest już za późno. Kompas Energetyczny PSE zaleca oszczędzanie między 08:00 a 10:00 oraz między 11:00 a 14:00.",
+      "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
