@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-19T03:01:09.866Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Jutro nadwyżka spadnie poniżej progu 1100 MW w godzinach 07:00-09:00, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "Dziś margines jeszcze się ustala, a w niektórych godzinach ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, a w godzinach popołudniowych margines bywa wąski, ale dodatni."
-    },
-    {
-      "at": "2026-10-19T03:01:09.866Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Jutro nadwyżka spadnie poniżej progu 1100 MW w godzinach 07:00-09:00, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "Dziś margines jeszcze się ustala, a w niektórych godzinach ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, a w godzinach wąskiego marginesu rezerwa pokrywa wymagany poziom."
-    },
-    {
       "at": "2026-10-19T03:15:38.506Z",
       "prompt": 56,
       "accepted": true,
@@ -2384,6 +2367,14 @@
       "headline": "Dziś przez cztery godziny rezerwa spada poniżej typowego zakresu z ostatnich trzydziestu dni, a w godzinach 08:00-14:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "W godzinach 08:00-14:00 rezerwa nie pokrywa wymaganego poziomu. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 26 października prognoza jeszcze się ustala, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-22T03:06:07.409Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Dziś między 08:00 a 14:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Na ogłoszenie jest już za późno.",
+      "outlook": "W poniedziałek 26 października, we wtorek 27 października, w środę 28 października oraz jutro nic nie zapowiada przywołania."
     }
   ]
 }
