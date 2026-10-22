@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-19T12:15:41.183Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W czwartek rezerwa na chwilę wypada poza typowy zakres z ostatnich trzydziestu dni.",
-      "body": "W czwartek o dziewiętnastej margines spadnie do ujemnego poziomu. Do tych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę i piątek rezerwa trzyma się w normie, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-19T12:31:02.984Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka pozostaje powyżej progu 1100 MW, więc operator ma wybór.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "Pozostałe dni nie niosą ryzyka przywołania, a w piątek o 07:00 margines jest wąski, lecz dodatni."
-    },
-    {
       "at": "2026-10-19T12:45:46.920Z",
       "prompt": 56,
       "accepted": true,
@@ -2376,6 +2360,23 @@
       "headline": "Margines jest dziś znacznie wyższy niż zwykle w ostatnich trzydziestu dniach.",
       "body": "Prognoza na jutro jeszcze się ustala — raz pokrywa wymagany poziom, raz nie. Do godzin między 16:00 a 18:00 w wtorek 27 października zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 27 października rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-22T12:31:04.210Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Przez większość dni rezerwa utrzymuje się powyżej typowego zakresu z ostatnich trzydziestu dni, z wyjątkiem wtorku dwudziestego siódmego października między 16:00 a 18:00, kiedy rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka przekracza próg 1100 MW.",
+      "body": "Prognoza na wtorek dwudziestego siódmego października jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-22T12:31:04.210Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Przez większość dni margines trzyma się powyżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "We wtorek 27 października rezerwa nie pokrywa wymaganego poziomu między 16:00 a 18:00, więc operator może ogłosić przywołanie, ale nie musi, bo nadwyżka przekracza próg 1100 MW. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "Nic nie zapowiada przywołania dzisiaj, jutro, w poniedziałek 26 października ani w środę 28 października."
     }
   ]
 }
