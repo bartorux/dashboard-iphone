@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 08:00 a 14:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka w systemie trzyma się powyżej progu 1100 MW.",
-  "body": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni przez sześć godzin z powodu pracy wiatru poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-  "outlook": "W poniedziałek 26 października prognoza jeszcze się ustala, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-22T01:15:45.082Z",
+  "headline": "Dziś między 08:00 a 14:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "W poniedziałek 26 października prognoza jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin dzisiejszej doby zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść, a Kompas Energetyczny PSE zaleca oszczędzanie między 08:00 a 14:00.",
+  "outlook": "W jutrzejszym dniu oraz w kolejnych dobach nic nie zapowiada przywołania, choć w środę margines bywa wąski.",
+  "generatedAt": "2026-10-22T01:45:40.801Z",
   "dates": [
     "2026-10-22",
     "2026-10-23",
@@ -10,6 +10,6 @@
     "2026-10-27",
     "2026-10-28"
   ],
-  "assessment": "2026-10-22|R|moderate|-900|10:00|1|6|5|moderate:08:00-14:00|K2:08:00-14:00|-|-;2026-10-23|R|none|200|07:00|1|0|19|||X|-;2026-10-26|R|none|900|17:00|0|0|21|||X|P;2026-10-27|R|none|1300|17:00|0|0|21|||X|P;2026-10-28|R|none|2300|17:00|0|0|24|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-10-22|R|moderate|-900|10:00|2|6|3|moderate:08:00-14:00|K2:08:00-14:00|-|-;2026-10-23|R|none|200|07:00|1|0|19|||X|-;2026-10-26|R|none|900|17:00|0|0|21|||X|P;2026-10-27|R|none|1300|17:00|0|0|21|||X|P;2026-10-28|R|none|2300|17:00|0|0|24|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
