@@ -449,7 +449,7 @@ export function buildFacts(
  */
 const RISK_WORD: Record<CallPeriodRisk, string> = {
   high:
-    'OPERATOR MOŻE OGŁOSIĆ PRZYWOŁANIE. Nadwyżka w systemie spadła poniżej ' +
+    'OPERATOR MOŻE OGŁOSIĆ PRZYWOŁANIE. Nadwyżka w systemie jest poniżej ' +
     '1100 MW — poniżej poziomu, który pozwalał operatorowi przywołanie ' +
     'pominąć',
   // Named by what it does, not by a label. Handed "wartość regulacyjna", the
@@ -466,7 +466,7 @@ const RISK_WORD: Record<CallPeriodRisk, string> = {
 
 /** The same states in a few words, for places where the full clause will not fit. */
 const RISK_SHORT: Record<CallPeriodRisk, string> = {
-  high: 'operator może ogłosić przywołanie, a nadwyżka spadła poniżej 1100 MW',
+  high: 'operator może ogłosić przywołanie, a nadwyżka jest poniżej 1100 MW',
   moderate: 'operator może ogłosić przywołanie, ale nie musi',
   none: 'nic nie zapowiada przywołania',
   unknown: 'brakuje odczytów, żeby to ocenić',

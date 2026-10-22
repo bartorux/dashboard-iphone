@@ -42,7 +42,7 @@ export interface Summary {
 // 56: the instruction stops asking the model for the exchange and provisional
 // caveats the code now writes — obeying them had pushed DALEJ past its 300
 // characters (382 and 443 on 23.09) and got two runs refused.
-export const PROMPT_VERSION = 56;
+export const PROMPT_VERSION = 57;
 
 /**
  * Written in correct Polish on purpose, diacritics and all. Runs where the
@@ -89,8 +89,8 @@ prawnych. Nadwyżka i próg 1100 MW to liczby, nie instytucje prawne.
 - rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej
   1100 MW — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, ALE NIE MUSI. Co zrobi, nie
   wiadomo, więc tego nie przesądzaj.
-- nadwyżka spadła poniżej 1100 MW — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, a spadła
-  poniżej poziomu, który pozwalał mu je pominąć. NIE pisz, że przywołanie
+- nadwyżka jest poniżej 1100 MW — operator MOŻE OGŁOSIĆ PRZYWOŁANIE, a nadwyżka
+  jest poniżej poziomu, który pozwalał mu je pominąć. NIE pisz, że przywołanie
   „powinno zostać ogłoszone", „zostanie ogłoszone" ani że jest „spodziewane":
   bywały doby poniżej progu bez żadnego ogłoszenia, a decyzji operatora nikt tu
   nie zna. Nie pisz też, że przepis „nie pozwala pominąć" — to znaczyłoby, że
@@ -138,6 +138,10 @@ bez urzędowego żargonu. Odbiorcy pracują w energetyce.
 - CZASOWNIKI zamiast rzeczowników odczasownikowych: „rezerwa spadnie", nie
   „nastąpi spadek rezerwy"; „nie pokryje", nie „wystąpi brak pokrycia".
 - KONKRETNE GODZINY, kiedy fakty je podają: „między 18:00 a 19:00".
+- KAŻDA GODZINA Z DNIEM, także w nagłówku: „Dziś między 18:00 a 19:00",
+  „W piątek między 19:00 a 20:00". Sama godzina czyta się jak dzisiejsza.
+- CZAS TERAŹNIEJSZY ALBO PRZYSZŁY. To prognoza, nie relacja z tego, co już
+  się stało: nadwyżka „jest" albo „będzie" poniżej progu.
 - PEŁNE ZDANIA. Nazwy stanów w faktach to skróty z listy — w zdaniu potrzebują
   orzeczenia. Nie zostawiaj też przymiotnika bez rzeczownika.
 - JEDNO ZDANIE, JEDNA MYŚL. Zastrzeżenie dodawaj tylko wtedy, gdy zmienia wniosek.
@@ -681,7 +685,9 @@ export function validateSummary(
    * The facts per day, for the checks that need to know WHICH day carries a
    * Kompas flag. Empty skips them.
    */
-  days: ReadonlyArray<Pick<DayFacts, 'businessDate' | 'spokenName' | 'compass'>> = []
+  days: ReadonlyArray<
+    Pick<DayFacts, 'businessDate' | 'spokenName' | 'compass'> & Partial<Pick<DayFacts, 'ranges'>>
+  > = []
 ): { ok: true } | { ok: false; reason: string } {
   for (const [key, limit] of Object.entries(LIMITS) as Array<
     [keyof Summary, number]
@@ -732,8 +738,13 @@ export function validateSummary(
    * forbidden, which makes it the clearest case for a refusal rather than a
    * request.
    */
+  // Widened 22.10.2026 after reading 417 accepted texts: "we wskazanych
+  // godzinach" (no hour anywhere in the text), "w wybranych godzinach",
+  // "w wyznaczonych porach" and "do godzin porannych" — twenty texts, every
+  // one of them withholding the hour the facts gave. The first cut demanded
+  // "w " and so missed "we " entirely.
   if (
-    /w godzinach (wieczorn|porann|popo|nocn)\w*|w wyznaczonym przedziale|w godzinach szczytu|w (wyznaczonych|określonych|podanych|wskazanych) godzinach/i.test(
+    /w godzinach (wieczorn|porann|popo|nocn)\w*|w wyznaczonym przedziale|w godzinach szczytu|(?<!\p{L})we?\s+(wyznaczonych|określonych|podanych|wskazanych|wybranych)\s+(godzinach|porach)|do\s+godzin\s+(porann|wieczorn|popołudniow|nocn)\p{L}*/iu.test(
       whole
     )
   ) {
@@ -767,6 +778,21 @@ export function validateSummary(
     DAY_WORD.test(summary.headline) || DAY_WORD.test(summary.body);
   if (/\d{1,2}:\d{2}/.test(summary.body) && !dayNamed) {
     return { ok: false, reason: 'godzina bez nazwy dnia' };
+  }
+
+  /*
+   * The headline itself, when it carries an hour, names its day.
+   *
+   * Exempt until 22.10.2026 on the reasoning above — a headline names its day
+   * when it has one. Measured over 417 accepted texts, 24 headlines gave hours
+   * with no day at all, and the worst of them were the ones no reader could
+   * place: "Operator może ogłosić przywołanie, bo nadwyżka spadła poniżej
+   * progu 1100 MW między 19:00 a 21:00", over a body about today's
+   * 19:00-22:00 and a different state. The instruction now asks for the day
+   * with every hour; this is the refusal.
+   */
+  if (/\d{1,2}a?:\d{2}/.test(summary.headline) && !DAY_WORD.test(summary.headline)) {
+    return { ok: false, reason: 'godzina w nagłówku bez nazwy dnia' };
   }
 
   /*
@@ -804,6 +830,82 @@ export function validateSummary(
    */
   if (/dodatkow/i.test(whole)) {
     return { ok: false, reason: '„dodatkowy" zamiast „dodatni"' };
+  }
+
+  /*
+   * Rules added 22.10.2026 from one reading of every accepted text since
+   * 23.09 (417 under prompt 56). Each was measured against that log before it
+   * was kept: the counts below are texts it would have refused, and every one
+   * of them was read. A candidate that also refused correct writing was cut
+   * down or dropped — "w całym okresie" next to "może ogłosić" hit nine texts
+   * of which seven were consistent ("Poza wtorkiem w całym okresie nic…" over a
+   * headline about Tuesday), so only its "w żadnym dniu" form survived.
+   */
+
+  // A forecast told as something that already happened. 72 texts, every one
+  // "nadwyżka spadła poniżej progu" about today or a later day — copied from
+  // our own instruction, which said "spadła" until prompt 57.
+  if (/(?<!\p{L})(spadła|spadł|wypadła|wypadł)(?!\p{L})/iu.test(whole)) {
+    return { ok: false, reason: 'prognoza opisana czasem przeszłym' };
+  }
+
+  // A weekday left in the nominative after "w"/"we" — "W środa 30 września"
+  // (six texts) — or "w dzisiejszej dnie" (one). Errors any reader stops on.
+  if (/(?<!\p{L})we?\s+(środa|sobota|niedziela)(?!\p{L})|dzisiejsz\p{L}*\s+dnie(?!\p{L})/iu.test(whole)) {
+    return { ok: false, reason: 'nazwa dnia w złym przypadku' };
+  }
+
+  // "Między 19:00 a 19:00", "w godzinach 19:00 i 19:00" — a span of nothing,
+  // three times in the log.
+  if (/(?<!\d)(\d{1,2}a?:\d{2})\s*(?:a|i|do|-|–)\s*\1(?!\d)/iu.test(whole)) {
+    return { ok: false, reason: 'zakres godzin od tej samej do tej samej' };
+  }
+
+  /*
+   * Below the threshold the exemption is gone, and nothing takes its place:
+   * the operator MAY declare, nobody obliges him to. "Bez możliwości
+   * pominięcia", "bez pomijania tej opcji", "bezwarunkowo" all say he must —
+   * ten texts in the log, the same mistake the instruction forbids as "nie
+   * pozwala pominąć".
+   */
+  if (/bez\s+(możliwości\s+)?(jego\s+)?pomini\p{L}*|bez\s+pomijania|bezwarunkow\p{L}*/iu.test(whole)) {
+    return { ok: false, reason: 'możliwość przywołania podana jak nakaz' };
+  }
+
+  for (const zdanie of whole.split(/(?<=[.!?])\s+/)) {
+    /*
+     * The operator's freedom credited to the reserve. "Rezerwa spadnie poniżej
+     * wymaganego poziomu, więc operator zachowa pełną swobodę decyzji" (30.09):
+     * a reserve that does not cover is what OPENS the possibility of a call; the
+     * choice comes only from the surplus above 1100 MW. Where the sentence names
+     * the surplus, "swoboda" describes it fairly and stays (two texts).
+     */
+    if (/swobod/iu.test(zdanie) && !/nadwyżk/iu.test(zdanie)) {
+      return { ok: false, reason: 'wybór operatora bez nadwyżki nad progiem' };
+    }
+
+    /*
+     * The surplus above 1100 MW given as the reason a call MAY come. It is the
+     * reason one need NOT: "operator może ogłosić przywołanie, bo nadwyżka
+     * trzyma się powyżej progu 1100 MW, choć rezerwa nie pokrywa…" (four texts).
+     * A sentence that already says "nie musi" or "wybór" has the causality
+     * right and passes.
+     */
+    if (
+      /może\s+ogłosić/iu.test(zdanie) &&
+      !/nie\s+musi|wyb[óo]r/iu.test(zdanie) &&
+      (/(?<!\p{L})(bo|ponieważ|gdyż)(?!\p{L})[^.]*nadwyżk\p{L}*[^.]{0,40}(powyżej|przekracza)/iu.test(zdanie) ||
+        /nadwyżk\p{L}*[^.]{0,40}(powyżej|przekracza)[^.]*(?<!\p{L})(więc|zatem|dlatego)(?!\p{L})[^.]*może\s+ogłosić/iu.test(zdanie))
+    ) {
+      return { ok: false, reason: 'nadwyżka nad progiem podana jako powód przywołania' };
+    }
+  }
+
+  // "W żadnym dniu tego okresu przywołanie nie wchodzi w grę" over a text that
+  // then says the operator may declare one (27.09). One text; a reader told
+  // both cannot act on either.
+  if (/w\s+żadnym\s+dniu/iu.test(whole) && /może\s+ogłosić|ma\s+wybór|nie\s+musi/iu.test(whole)) {
+    return { ok: false, reason: 'tekst przeczy sam sobie: w żadnym dniu, a operator może' };
   }
 
   /*
@@ -900,7 +1002,10 @@ export function validateSummary(
    * stating a span for days that did not share it.
    */
   const DZIEN =
-    '(?:poniedział\\w*|wtor\\w*|środ\\w*|czwart\\w*|piąt\\w*|sobot\\w*|niedziel\\w*|dziś|dzisiaj|jutro)';
+    // \p{L}, never \w: \w is ASCII, so "środę", "sobotę" and "niedzielę" ended
+    // the match at their last letter and "w środę i piątek między 18:00 a 20:00"
+    // passed while "we wtorek i piątek…" was refused (found 22.10.2026).
+    '(?:poniedział\\p{L}*|wtor\\p{L}*|środ\\p{L}*|czwart\\p{L}*|piąt\\p{L}*|sobot\\p{L}*|niedziel\\p{L}*|dziś|dzisiaj|jutro)';
   // The date may ride along with the day name in either form the model reaches
   // for, and must not break the list apart.
   const DATA = '(?:\\s+\\d{1,2}\\s+\\p{L}+|\\s+\\d{4}-\\d{2}-\\d{2})?';
@@ -910,7 +1015,12 @@ export function validateSummary(
   // shows it. Counting clock times across the whole sentence was the first
   // attempt at this and was strictly worse — it also let a genuine shared span
   // through whenever some other day's hour appeared later in the sentence.
-  const ODSTEP = '(?:(?!\\d{1,2}:\\d{2})[^.]){0,60}?';
+  //
+  // Nor may another day. Once \\p{L} let "środę" into the list, "W poniedziałek,
+  // środę i czwartek nic nie zapowiada przywołania, a we wtorek między 19:00
+  // a 20:00…" matched — the range belongs to the Tuesday named after the list,
+  // and the sentence is right (22.10.2026, found by replaying the log).
+  const ODSTEP = `(?:(?!\\d{1,2}:\\d{2}|(?<!\\p{L})${DZIEN})[^.]){0,60}?`;
   const wspolnyZakres = new RegExp(
     `${DZIEN}${DATA}(?:\\s*(?:,|i|oraz)\\s*(?:we\\s+|w\\s+)?${DZIEN}${DATA})+` +
       `${ODSTEP}(?:między|od)\\s+\\d{1,2}:\\d{2}\\s+(?:a|do)\\s+\\d{1,2}:\\d{2}`,
@@ -919,6 +1029,9 @@ export function validateSummary(
 
   for (const pole of [summary.headline, summary.body, summary.outlook]) {
     for (const zdanie of pole.split(/(?<=[.!?])\s+/)) {
+      // "W środę i piątek … odpowiednio między 07:00 a 08:00 oraz między 17:00
+      // a 21:00" pairs each day with its own range; "odpowiednio" says so.
+      if (/odpowiednio/iu.test(zdanie)) continue;
       if (wspolnyZakres.test(zdanie)) {
         return { ok: false, reason: 'jeden zakres godzin rozciągnięty na kilka dni' };
       }
@@ -1098,6 +1211,30 @@ export function validateSummary(
    */
   if (days.length > 0) {
     const zdania = whole.split(/(?<=[.!?])\s+/);
+
+    /*
+     * "Za późno" about hours still well ahead.
+     *
+     * Five texts in the log of 23.09-15.10, e.g. 28.09 11:15: "W środę prognoza
+     * jeszcze się ustala. Na ogłoszenie jest już za późno." — Wednesday's 07:00
+     * was forty-four hours off. Told it is too late, the reader stops watching
+     * a day that is still open. The facts carry, per range, whether it can
+     * still be announced, so the phrase stands only next to a day that has a
+     * range past that point — or, in a sentence naming no day, when some day
+     * does. Skipped when the caller passed no ranges.
+     */
+    const poTerminie = (day: (typeof days)[number]) =>
+      (day.ranges ?? []).some((range) => !range.announceable);
+    if (days.some((day) => day.ranges !== undefined)) {
+      for (const zdanie of zdania) {
+        if (!/za\s+późno/iu.test(zdanie)) continue;
+        const nazwane = days.filter((day) => names(zdanie, day));
+        const prawda = nazwane.length > 0 ? nazwane.some(poTerminie) : days.some(poTerminie);
+        if (!prawda) {
+          return { ok: false, reason: '„za późno”, choć termin ogłoszenia jeszcze nie minął' };
+        }
+      }
+    }
 
     /*
      * A Kompas flag named against the wrong day.

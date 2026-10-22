@@ -1055,6 +1055,43 @@ osi; ceny z 25.10 nie trafią do archiwum cen (wymóg 24 godzin, zamierzony).
 zabite (w tym stan sprzed poprawki karty OZE). Strażnik wizualny bez zmian. Punkt powrotu
 `v3.90.3-przed-zmiana-czasu` (tag, gałąź, archiwum — sprawdzone); rotacja: usunięty v3.89.1.
 
+## Jakość tekstu Analizy AI: przegląd 417 tekstów i nowe reguły (22.10.2026, v3.90.5)
+
+**Po co.** Kontrola przepuściła 12.10 nagłówek „operator może ogłosić przywołanie, a wcześniejszy próg
+omija”. Agent przeczytał wszystkie zaakceptowane teksty promptu 56 z 23.09–14.10 (384, potem
+korpus 417 do 15.10): 2/3 bez błędu, ale co piąty z czymś, co może wprowadzić w błąd przy decyzji
+o uprzedzeniu obiektów — sprzeczność (15), odwrócona przyczyna (12), błędnie podana reguła (18),
+godzina przy złym dniu lub bez dnia (29); do tego gramatyka i czas przeszły (71), zdania bez sensu
+(21). Wariant A (reguły + instrukcja) wybrany przed B (zdania o ryzyku z szablonu w kodzie).
+
+**Instrukcja, prompt 57.** Czas przeszły brał się od nas: wiersz stanów i etykiety faktów mówiły
+„nadwyżka spadła poniżej 1100 MW” — teraz „jest”. Dwa nowe punkty: każda godzina z dniem, także
+w nagłówku; czas teraźniejszy albo przyszły.
+
+**Kontrola tekstu.** Nowe odmowy: czas przeszły o prognozie; „W środa / sobota / niedziela”,
+„dzisiejszej dnie”; zakres od tej samej godziny do tej samej; „bez możliwości pominięcia”,
+„bez pomijania”, „bezwarunkowo”; „swoboda” bez nadwyżki w zdaniu; nadwyżka nad progiem jako powód
+przywołania (bez „nie musi”/„wybór”); „w żadnym dniu” obok „może ogłosić”; godzina w nagłówku bez
+dnia; „za późno” przy dniu, którego zakresy są jeszcze do ogłoszenia (z faktów, `ranges` w
+`days`). Poszerzone: mgliste pory („we wskazanych”, „w wybranych godzinach”, „w wyznaczonych
+porach”, „do godzin porannych”). Naprawione: reguła „jeden zakres na kilka dni” nie widziała
+„środę/sobotę/niedzielę” (`\w` to ASCII) — po naprawie zakres poprzedzony innym nazwanym dniem
+i zdania z „odpowiednio” przechodzą (dwa poprawne teksty, które pierwsza wersja odrzucała).
+
+**Pomiar.** Odtworzenie korpusu z faktami „przepuszczającymi” (wszystkie godziny i daty z tekstu):
+obecna kontrola 0/417, nowa 120/417 — czas przeszły 59, godzina w nagłówku bez dnia 22 (około
+połowa to teksty o dziś bez słowa „Dziś”, połowa wskazuje zły dzień), mgliste 20, inne 19; każdy
+przeczytany. Odrzucony kandydat: „w całym okresie” obok „może ogłosić” (7 z 9 trafień poprawnych).
+Reguły „za późno” nie da się zmierzyć na korpusie (log nie trzyma faktów) — tylko testy.
+
+**Ryzyko do obserwacji.** Więcej odmów na start, dopóki model nie przyjmie promptu 57. Przy pulsie
+co 15 minut odmowa kosztuje kwadrans; karta chowa tekst po 12 h. Sprawdzić dziennik prób po dobie.
+
+**Sprawdzone.** 1416 testów (15 nowych, przykłady dosłownie z logu), 16 sond mutacyjnych — jedna
+przeżyła (przykład „odpowiednio” był za długi, by reguła go w ogóle dotknęła) i dostała zdanie
+z logu. Punkt powrotu `v3.90.4-przed-jakoscia-tekstu` (tag, gałąź, archiwum — sprawdzone);
+rotacja: usunięty v3.90.1.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś

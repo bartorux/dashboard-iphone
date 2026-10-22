@@ -645,7 +645,7 @@ describe('validateSummary', () => {
     expect(
       validateSummary(
         {
-          headline: 'W poniedziałek 17 sierpnia nadwyżka spadła poniżej 1100 MW o 19:00.',
+          headline: 'W poniedziałek 17 sierpnia nadwyżka jest poniżej 1100 MW o 19:00.',
           body: '',
           outlook: 'We wtorek 18 sierpnia nic nie zapowiada przywołania.',
         },
@@ -1132,7 +1132,7 @@ describe('validateSummary: fakty na dobę (Kompas)', () => {
   const GODZINY = new Set(['19:00', '20:00', '13:00']);
   // Published verbatim on 22.09 at 21:01.
   const OPUBLIKOWANY = {
-    headline: 'W czwartek i piątek operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.',
+    headline: 'W czwartek i piątek operator może ogłosić przywołanie, bo nadwyżka jest poniżej progu 1100 MW.',
     body: 'W czwartek o 19:00 margines spada najniżej, bo zapotrzebowanie rośnie ponad normę, a produkcja z fotowoltaiki spada poniżej normy. Do tych godzin ogłoszenie może jeszcze nadejść.',
     outlook: 'W pozostałe dni nic nie zapowiada przywołania, a Kompas Energetyczny PSE zaleca oszczędzanie we wtorek między 19:00 a 20:00.',
   };
@@ -1189,7 +1189,7 @@ describe('withSaldoCaveat', () => {
   // Published on 22.09 at 22:01 under prompt 54: the day in one sentence,
   // "może ogłosić" in the next, "wchodzi w grę" further on — no word about the plan.
   const V54 = {
-    headline: 'W czwartek między 07:00 a 11:00 nadwyżka w systemie spadła poniżej progu 1100 MW. Operator może ogłosić przywołanie, a nadwyżka spadła poniżej poziomu, który pozwalał mu je pominąć.',
+    headline: 'W czwartek między 07:00 a 11:00 nadwyżka w systemie jest poniżej progu 1100 MW. Operator może ogłosić przywołanie, a nadwyżka jest poniżej poziomu, który pozwalał mu je pominąć.',
     body: 'W czwartek PV wypada poniżej normy, zapotrzebowanie rośnie powyżej normy, a ubytki trzymają się poniżej normy.',
     outlook: 'W piątek przywołanie wchodzi w grę między 07:00 a 22:00, natomiast w pozostałe dni nic nie zapowiada przywołania.',
   };
@@ -1485,3 +1485,164 @@ describe('Kompas Energetyczny w instrukcji', () => {
     ).toEqual({ ok: true });
   });
 });
+
+describe('validateSummary: reguły z przeglądu 417 tekstów (22.10.2026)', () => {
+  /*
+   * Every refused text below was accepted and published between 23.09 and
+   * 15.10; every accepted one is its corrected form or a correct text from the
+   * same log that the first cut of a rule wrongly refused.
+   */
+  const H = new Set(['07:00', '08:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00']);
+  const DNI_Z_DATA = ['wtorek 29 września', 'środa 30 września', 'poniedziałek 28 września', 'czwartek 1 października'];
+  const sprawdz = (headline: string, body = 'Prognoza poprawia się.', outlook = '') =>
+    validateSummary({ headline, body, outlook }, H, DNI_Z_DATA);
+
+  it('refuses a forecast told in the past tense, and passes it in the present', () => {
+    expect(sprawdz('Jutro między 07:00 a 08:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie.')).toEqual({
+      ok: false,
+      reason: 'prognoza opisana czasem przeszłym',
+    });
+    expect(sprawdz('Jutro między 07:00 a 08:00 nadwyżka jest poniżej progu 1100 MW, więc operator może ogłosić przywołanie.')).toEqual({ ok: true });
+  });
+
+  it('refuses "W środa 30 września" and "w dzisiejszej dnie", passes "W środę"', () => {
+    expect(sprawdz('W środa 30 września między 07:00 a 08:00 operator może ogłosić przywołanie, ale nie musi.')).toEqual({
+      ok: false,
+      reason: 'nazwa dnia w złym przypadku',
+    });
+    expect(sprawdz('Dziś między 18:00 a 19:00 operator ma wybór.', 'W dzisiejszej dnie prognoza jeszcze się ustala.')).toEqual({
+      ok: false,
+      reason: 'nazwa dnia w złym przypadku',
+    });
+    expect(sprawdz('W środę 30 września między 07:00 a 08:00 operator może ogłosić przywołanie, ale nie musi.')).toEqual({ ok: true });
+  });
+
+  it('refuses a span from an hour to the same hour', () => {
+    for (const headline of [
+      'We wtorek 29 września między 19:00 a 19:00 rezerwa nie pokryje wymaganego poziomu.',
+      'We wtorek 29 września w godzinach 19:00 i 19:00 rezerwa nie pokrywa wymaganego poziomu.',
+    ]) {
+      expect(sprawdz(headline)).toEqual({ ok: false, reason: 'zakres godzin od tej samej do tej samej' });
+    }
+    expect(sprawdz('We wtorek 29 września między 19:00 a 20:00 rezerwa nie pokryje wymaganego poziomu.')).toEqual({ ok: true });
+  });
+
+  it('refuses a call period stated as an obligation', () => {
+    for (const tail of ['bez możliwości pominięcia', 'bez pomijania tej opcji', 'bezwarunkowo']) {
+      expect(sprawdz(`Jutro między 07:00 a 08:00 nadwyżka jest poniżej progu 1100 MW, więc operator może ogłosić przywołanie ${tail}.`)).toEqual({
+        ok: false,
+        reason: 'możliwość przywołania podana jak nakaz',
+      });
+    }
+  });
+
+  it('refuses the operator\'s choice credited to the reserve, keeps it when the surplus is named', () => {
+    expect(sprawdz('W piątek między 17:00 a 21:00 rezerwa spadnie poniżej wymaganego poziomu, więc operator zachowa pełną swobodę decyzji.')).toEqual({
+      ok: false,
+      reason: 'wybór operatora bez nadwyżki nad progiem',
+    });
+    expect(
+      sprawdz('W piątek między 17:00 a 21:00 rezerwa spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, więc operator zachowa pełną swobodę decyzji.')
+    ).toEqual({ ok: true });
+  });
+
+  it('refuses the surplus above 1100 MW given as the reason a call may come, in either order', () => {
+    for (const headline of [
+      'We wtorek 29 września między 07:00 a 08:00 operator może ogłosić przywołanie, bo nadwyżka trzyma się powyżej progu 1100 MW, choć rezerwa nie pokrywa wymaganego poziomu.',
+      'Dziś między 18:00 a 22:00 nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie.',
+    ]) {
+      expect(sprawdz(headline)).toEqual({ ok: false, reason: 'nadwyżka nad progiem podana jako powód przywołania' });
+    }
+    expect(sprawdz('Dziś między 18:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.')).toEqual({ ok: true });
+  });
+
+  it('refuses "w żadnym dniu" over a text that says the operator may', () => {
+    expect(
+      sprawdz(
+        'W żadnym dniu tego okresu przywołanie nie wchodzi w grę, mimo że we wtorek o 19:00 margines jest wąski.',
+        'W środę o 07:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.'
+      )
+    ).toEqual({ ok: false, reason: 'tekst przeczy sam sobie: w żadnym dniu, a operator może' });
+  });
+
+  it('refuses hours withheld behind "we wskazanych", "w wybranych", "w wyznaczonych porach", "do godzin porannych"', () => {
+    for (const [headline, body] of [
+      ['We wtorek 29 września we wskazanych godzinach operator może ogłosić przywołanie, ale nie musi.', 'Prognoza poprawia się.'],
+      ['W środę operator może ogłosić przywołanie w wybranych godzinach.', 'Prognoza poprawia się.'],
+      ['W środę operator może ogłosić przywołanie w wyznaczonych porach.', 'Prognoza poprawia się.'],
+      ['Dziś między 18:00 a 22:00 operator ma wybór.', 'Do godzin porannych ogłoszenie może jeszcze nadejść.'],
+    ]) {
+      expect(sprawdz(headline, body)).toEqual({ ok: false, reason: 'mgliste określenie pory zamiast godziny' });
+    }
+  });
+
+  it('refuses a headline that gives an hour and no day, passes it with "Dziś"', () => {
+    expect(sprawdz('Między 18:00 a 22:00 operator może ogłosić przywołanie, ale nie musi.')).toEqual({
+      ok: false,
+      reason: 'godzina w nagłówku bez nazwy dnia',
+    });
+    expect(sprawdz('Dziś między 18:00 a 22:00 operator może ogłosić przywołanie, ale nie musi.')).toEqual({ ok: true });
+  });
+
+  it('refuses one span over "środę i piątek" — Polish letters no longer end the day list', () => {
+    expect(sprawdz('W środę i piątek między 18:00 a 20:00 operator może ogłosić przywołanie, ale nie musi.')).toEqual({
+      ok: false,
+      reason: 'jeden zakres godzin rozciągnięty na kilka dni',
+    });
+  });
+
+  it('passes a day list followed by another, named day\'s range, and pairs given "odpowiednio"', () => {
+    expect(
+      sprawdz(
+        'We wtorek 29 września między 19:00 a 20:00 operator ma wybór.',
+        'W poniedziałek 28 września, środę 30 września i czwartek 1 października nic nie zapowiada przywołania, a we wtorek 29 września między 19:00 a 20:00 operator ma wybór.'
+      )
+    ).toEqual({ ok: true });
+    expect(
+      sprawdz(
+        'Dziś między 18:00 a 19:00 operator ma wybór.',
+        // Verbatim from 28.09 10:15, minus the clause after it.
+        'Dziś operator ma wybór między 18:00 a 19:00, natomiast w środę i piątek operator również może ogłosić przywołanie odpowiednio między 07:00 a 08:00 oraz między 17:00 a 21:00.'
+      )
+    ).toEqual({ ok: true });
+  });
+
+  describe('"za późno" against the facts per day', () => {
+    type Dzien = NonNullable<Parameters<typeof validateSummary>[3]>[number];
+    const zakres = (announceable: boolean) => ({ risk: 'moderate' as const, from: '18:00', to: '19:00', hours: 1, announceable });
+    // 28.09.2026, a Monday: today's 18:00-19:00 already past the eight hours, Wednesday still open.
+    const DNI: Dzien[] = [
+      { businessDate: '2026-09-28', spokenName: 'dziś', compass: [], ranges: [zakres(false)] },
+      { businessDate: '2026-09-30', spokenName: 'środa 30 września', compass: [], ranges: [zakres(true)] },
+    ];
+    const tekst = (body: string) => ({ headline: 'Dziś między 18:00 a 19:00 operator ma wybór.', body, outlook: '' });
+    const sprawdzZFaktami = (body: string, dni: Dzien[] = DNI) =>
+      validateSummary(tekst(body), new Set(['18:00', '19:00']), ['środa 30 września'], dni);
+
+    it('refuses "za późno" said about a day whose hours are still announceable', () => {
+      expect(sprawdzZFaktami('W środę 30 września prognoza jeszcze się ustala, a na ogłoszenie jest już za późno.')).toEqual({
+        ok: false,
+        reason: '„za późno”, choć termin ogłoszenia jeszcze nie minął',
+      });
+    });
+
+    it('passes it about today, whose range is past the eight hours', () => {
+      expect(sprawdzZFaktami('Dziś na ogłoszenie jest już za późno.')).toEqual({ ok: true });
+    });
+
+    it('judges a sentence naming no day by whether any day is past the eight hours', () => {
+      expect(sprawdzZFaktami('Na ogłoszenie jest już za późno.')).toEqual({ ok: true });
+      const otwarte = DNI.map((day) => ({ ...day, ranges: [zakres(true)] }));
+      expect(sprawdzZFaktami('Na ogłoszenie jest już za późno.', otwarte)).toEqual({
+        ok: false,
+        reason: '„za późno”, choć termin ogłoszenia jeszcze nie minął',
+      });
+    });
+
+    it('leaves "za późno" alone when the caller passes no ranges', () => {
+      const bezZakresow = DNI.map(({ ranges: _ranges, ...day }) => day);
+      expect(sprawdzZFaktami('W środę 30 września na ogłoszenie jest już za późno.', bezZakresow)).toEqual({ ok: true });
+    });
+  });
+});
+

@@ -290,7 +290,7 @@ describe('buildFacts', () => {
     // Plain words, not the language of the capacity market: the people who read
     // this run the electrical side of a plant and want to know whether they can
     // be told to cut load.
-    expect(point).toContain('nadwyżka spadła poniżej 1100 MW');
+    expect(point).toContain('nadwyżka jest poniżej 1100 MW');
     expect(point).toContain('19:00');
     expect(point).not.toContain('08:00');
   });
@@ -370,7 +370,7 @@ describe('buildFacts', () => {
 
     expect(whole).toContain('MOŻE OGŁOSIĆ PRZYWOŁANIE, ale nie musi');
     expect(whole).toContain('trzyma się powyżej 1100 MW');
-    expect(whole).toContain('spadła poniżej 1100 MW');
+    expect(whole).toContain('jest poniżej 1100 MW');
     expect(whole).toContain('pozwalał operatorowi przywołanie pominąć');
     // Jargon the reader would have to already know the rules to decode.
     expect(whole).not.toMatch(/odstępstw|przepis|regulamin/i);
@@ -434,7 +434,7 @@ describe('buildFacts', () => {
     // Plain words, not the language of the capacity market: the people who read
     // this run the electrical side of a plant and want to know whether they can
     // be told to cut load.
-    expect(point).toContain('nadwyżka spadła poniżej 1100 MW');
+    expect(point).toContain('nadwyżka jest poniżej 1100 MW');
   });
 
   it('prefers the range within a day that can still be announced', () => {
