@@ -1,35 +1,15 @@
 import type { NewsFile, NewsItem } from '../../../utils/newsTypes';
 
-/**
- * What App hands each way into "Z branży" on a phone (see useNewsExperiment).
- * One shape for all of them, so App picks a variant without wiring each one
- * differently.
- */
+/** What App hands the phone's "Z branży" row (WierszZBranzy). */
 export interface WejscieProps {
   news: NewsFile;
   now: Date;
-  /** Past four hours: the count gives way to "nieaktualne", as on the desktop card. */
+  /** Past four hours: the row says "nieaktualne", as the desktop card does. */
   stale: boolean;
   isNew: (item: NewsItem) => boolean;
   onArticleOpen: (id: string) => void;
-  /** The reader has looked: the sheet was closed, or ("gora") the page was left. */
+  /** The reader has looked: the sheet was closed. */
   onSeen: () => void;
-}
-
-export function countNew(news: NewsFile, isNew: (item: NewsItem) => boolean): number {
-  return news.groups.reduce((count, group) => count + group.items.filter(isNew).length, 0);
-}
-
-/**
- * "1 nowa", "3 nowe", "5 nowych", "9+ nowych" — the noun left out is
- * "wiadomość". Capped at nine like the desktop card: past that the number
- * stops telling the reader anything the word does not.
- */
-export function newLabel(count: number): string {
-  if (count > 9) return '9+ nowych';
-  if (count === 1) return '1 nowa';
-  if (count >= 2 && count <= 4) return `${count} nowe`;
-  return `${count} nowych`;
 }
 
 /**

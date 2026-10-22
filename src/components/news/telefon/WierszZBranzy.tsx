@@ -5,8 +5,8 @@ import ArkuszTelefon from './ArkuszTelefon';
 import { listNames, newFromAuthorities, type WejscieProps } from './wspolne';
 
 /**
- * "Z branży" as one row under the AI summary — the "wiersz" variant of the
- * experiment (useNewsExperiment), and the phone's default since 12.10.2026.
+ * "Z branży" on a phone: one row under the AI summary, opening the sheet.
+ * Chosen 12.10.2026 and kept after a week of use (22.10.2026).
  *
  * Chosen over the header icon, which did not read as something to tap: a
  * named row ending in a chevron is how iOS says "this opens", the same shape

@@ -1092,6 +1092,18 @@ przeżyła (przykład „odpowiednio” był za długi, by reguła go w ogóle d
 z logu. Punkt powrotu `v3.90.4-przed-jakoscia-tekstu` (tag, gałąź, archiwum — sprawdzone);
 rotacja: usunięty v3.90.1.
 
+## „Z branży” zostaje: wiersz na stałe, eksperyment usunięty (22.10.2026, v3.90.5)
+
+Decyzja właściciela po tygodniu próby wiersza (12–19.10): **zostaje**. Zgodnie z planem z v3.90.0
+usunięte: `PasekIkona`, `PasekDolny`, `SekcjaGora`, hook `useNewsExperiment` z parametrem
+`?z-branzy=` i `sessionStorage`, miejsce `newsButton` w `Header`, style `.zb-bar`, wariant `'telefon'`
+w `pickCardRows` (był tylko dla sekcji „góra”) i `countNew`/`newLabel`. Folder
+`news/eksperyment` → `news/telefon`. Wiersz renderuje się na telefonie (poniżej 48rem) bez
+żadnego parametru; stary adres z `?z-branzy=` niczego już nie zmienia. Arkusz zostaje w wersji
+z próby (przejście CSS zamiast sprężyny) — dopracowanie do zrobienia, jeśli będzie potrzeba.
+Strażnik wizualny bez zmian (wiersz był już w scenach telefonu); 1384 testy (usunięte testy trzech
+wariantów i hooka), sondy na warunek telefonu i granicę 48rem — zabite.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś

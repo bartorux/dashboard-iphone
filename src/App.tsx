@@ -12,11 +12,8 @@ import AlertsPanel from './components/AlertsPanel';
 import SettingsPanel from './components/SettingsPanel';
 import NewsCard from './components/news/NewsCard';
 import NewsSheet from './components/news/NewsSheet';
-import PasekIkona from './components/news/eksperyment/PasekIkona';
-import PasekDolny from './components/news/eksperyment/PasekDolny';
-import SekcjaGora from './components/news/eksperyment/SekcjaGora';
-import WierszZBranzy from './components/news/eksperyment/WierszZBranzy';
-import type { WejscieProps } from './components/news/eksperyment/wspolne';
+import WierszZBranzy from './components/news/telefon/WierszZBranzy';
+import type { WejscieProps } from './components/news/telefon/wspolne';
 import PullToRefresh from './components/PullToRefresh';
 import OfflineIndicator from './components/OfflineIndicator';
 import { RefreshIcon } from './components/icons';
@@ -33,7 +30,6 @@ import { useTheme } from './hooks/useTheme';
 import { useSummary } from './hooks/useSummary';
 import { useNews } from './hooks/useNews';
 import { useNewsSeen } from './hooks/useNewsSeen';
-import { useNewsExperiment } from './hooks/useNewsExperiment';
 import { useMediaQuery } from './hooks/useMediaQuery';
 import { newsFreshness } from './utils/news';
 import { useLayout } from './hooks/useLayout';
@@ -121,13 +117,13 @@ function App() {
   const newsState = news ? newsFreshness(news, now) : 'expired';
 
   /*
-   * "Z branży" on a phone: one variant at a time. Without a parameter it is
-   * the row under the summary (the trial chosen 12.10.2026); the address can
-   * still ask for the others (?z-branzy=pasek|dol|gora) or for none (brak) —
-   * see the hook. This is the only place that decides. Always null from
-   * 48rem. Same rule as the desktop card for when there is anything to show.
+   * "Z branży" on a phone: one row under the AI summary, opening a sheet.
+   * Chosen 12.10.2026 over an icon in the header, a fixed bottom bar and three
+   * headlines under the summary, and kept after a week of use (22.10). Only
+   * below 48rem — from there the computer has its own card and panel. Same
+   * rule as the desktop card for when there is anything to show.
    */
-  const wariant = useNewsExperiment();
+  const telefon = !useMediaQuery('(min-width: 48rem)');
   const newsEntry: WejscieProps | null =
     news && newsState !== 'expired'
       ? { news, now, stale: newsState === 'stale', isNew: isNewsNew, onArticleOpen: markNewsRead, onSeen: markNewsSeen }
@@ -396,7 +392,6 @@ function App() {
         connectionText={connectionText}
         onToggleSettings={() => setSettingsVisible((visible) => !visible)}
         onRetry={refreshAll}
-        newsButton={wariant === 'pasek' && newsEntry ? <PasekIkona {...newsEntry} /> : undefined}
       />
 
       <main className="content-width relative flex-1 overflow-x-hidden supports-[overflow:clip]:overflow-x-clip pb-6">
@@ -535,8 +530,7 @@ function App() {
               {summary && <SummaryCard summary={summary} now={now} />}
             </div>
 
-            {wariant === 'wiersz' && newsEntry && <WierszZBranzy {...newsEntry} />}
-            {wariant === 'gora' && newsEntry && <SekcjaGora {...newsEntry} />}
+            {telefon && newsEntry && <WierszZBranzy {...newsEntry} />}
 
             {/*
               Under the analysis, in the same cell, from 80rem only (the card
@@ -644,7 +638,6 @@ function App() {
         </div>
       </main>
 
-      {wariant === 'dol' && newsEntry && <PasekDolny {...newsEntry} />}
 
       <OfflineIndicator isOffline={!browserOnline} lastUpdate={lastUpdate} />
     </div>

@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { act, createEvent, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ArkuszTelefon from '../news/eksperyment/ArkuszTelefon';
-import PasekIkona from '../news/eksperyment/PasekIkona';
-import PasekDolny from '../news/eksperyment/PasekDolny';
-import SekcjaGora from '../news/eksperyment/SekcjaGora';
-import WierszZBranzy from '../news/eksperyment/WierszZBranzy';
-import { newLabel, type WejscieProps } from '../news/eksperyment/wspolne';
+import ArkuszTelefon from '../news/telefon/ArkuszTelefon';
+import WierszZBranzy from '../news/telefon/WierszZBranzy';
+import type { WejscieProps } from '../news/telefon/wspolne';
 import type { NewsFile, NewsItem } from '../../utils/newsTypes';
 
 const NOW = new Date('2026-09-17T18:10:00+02:00');
@@ -98,7 +95,7 @@ const Harness: React.FC<{ startOpen?: boolean; onClose?: () => void; onArticleOp
   );
 };
 
-describe('ArkuszTelefon — the sheet behind "pasek" and "dol"', () => {
+describe('ArkuszTelefon — the sheet behind the "Z branży" row', () => {
   it('is a labelled modal dialog, outside the page, listing the desktop panel\'s groups', async () => {
     const { root } = renderInRoot(<Harness />);
     await userEvent.click(screen.getByRole('button', { name: 'Otwórz' }));
@@ -313,80 +310,7 @@ describe('ArkuszTelefon — the sheet behind "pasek" and "dol"', () => {
   });
 });
 
-describe('PasekIkona — "pasek"', () => {
-  it('is an icon button named "Z branży" that opens the sheet', async () => {
-    renderInRoot(<PasekIkona {...entry()} />);
-    const button = screen.getByRole('button', { name: 'Z branży' });
-    expect(button).toHaveAttribute('aria-haspopup', 'dialog');
-    expect(button.querySelector('svg')).toHaveAttribute('aria-hidden');
-
-    await userEvent.click(button);
-
-    expect(screen.getByRole('dialog', { name: 'Z branży' })).toBeInTheDocument();
-  });
-
-  it('counts the headlines as seen when the sheet is closed, not when it opens', async () => {
-    const onSeen = vi.fn();
-    renderInRoot(<PasekIkona {...entry({ onSeen })} />);
-
-    await userEvent.click(screen.getByRole('button', { name: 'Z branży' }));
-    expect(onSeen).not.toHaveBeenCalled();
-    await userEvent.click(screen.getByRole('button', { name: 'Gotowe' }));
-    expect(onSeen).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe('PasekDolny — "dol"', () => {
-  const bar = () => document.querySelector('.zb-bar') as HTMLElement;
-
-  it('is fixed to the foot of the screen, outside the page, with room left for it at the foot of the page', () => {
-    const { root } = renderInRoot(<PasekDolny {...entry()} />);
-
-    expect(bar().className).toContain('fixed');
-    expect(bar().className).toContain('bottom-0');
-    expect(root.contains(bar())).toBe(false);
-    // The safe-area padding under it is not checked here: jsdom drops env() values.
-
-    const room = root.querySelector('[data-z-branzy-odstep]') as HTMLElement;
-    expect(room).toHaveAttribute('aria-hidden');
-    // The same 48px as the bar's button, which is its height above the safe area.
-    expect(room.className).toContain('h-12');
-    expect(within(bar()).getByRole('button').className).toContain('h-12');
-  });
-
-  it('says how many headlines are new', () => {
-    const fresh = new Set(['s1', 'r1', 'e1']);
-    renderInRoot(<PasekDolny {...entry({ isNew: (i) => fresh.has(i.id) })} />);
-    expect(within(bar()).getByRole('button').textContent).toBe('Z branży · 3 nowe');
-  });
-
-  it('says when the feeds were read when nothing is new, and that they are old when they are', () => {
-    const { unmount } = renderInRoot(<PasekDolny {...entry()} />);
-    expect(within(bar()).getByRole('button').textContent).toBe('Z branży · stan 18:00');
-    unmount();
-
-    renderInRoot(<PasekDolny {...entry({ stale: true, isNew: () => true })} />);
-    expect(within(bar()).getByRole('button').textContent).toBe('Z branży · stan 18:00, nieaktualne');
-  });
-
-  it('opens the sheet, and counts the headlines as seen when it closes', async () => {
-    const onSeen = vi.fn();
-    renderInRoot(<PasekDolny {...entry({ onSeen })} />);
-
-    await userEvent.click(within(bar()).getByRole('button'));
-    expect(screen.getByRole('dialog', { name: 'Z branży' })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Gotowe' }));
-    expect(onSeen).toHaveBeenCalledTimes(1);
-  });
-
-  it('takes its bar with it when it goes', () => {
-    const { unmount } = renderInRoot(<PasekDolny {...entry()} />);
-    unmount();
-    expect(document.querySelector('.zb-bar')).toBeNull();
-  });
-});
-
-describe('WierszZBranzy — "wiersz"', () => {
+describe('WierszZBranzy — the phone\'s "Z branży" row', () => {
   const row = () => screen.getByRole('button', { name: /^Z branży, / });
 
   it('is a row in the page, named with its state, that opens a dialog', () => {
@@ -449,67 +373,5 @@ describe('WierszZBranzy — "wiersz"', () => {
     expect(onSeen).not.toHaveBeenCalled();
     await userEvent.click(screen.getByRole('button', { name: 'Gotowe' }));
     expect(onSeen).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe('SekcjaGora — "gora"', () => {
-  const section = () => document.querySelector('[data-z-branzy-sekcja]') as HTMLElement;
-
-  it('lists three headlines: PSE and URE first, then the newest, one from Paliwa at most', () => {
-    renderInRoot(<SekcjaGora {...entry()} />);
-    const links = within(section()).getAllByRole('link');
-    expect(links.map((link) => link.getAttribute('href'))).toEqual(['https://x.pl/r1', 'https://x.pl/s1', 'https://x.pl/p1']);
-  });
-
-  it('each row is the article itself, in a new tab, with its group, source and time', () => {
-    renderInRoot(<SekcjaGora {...entry()} />);
-    const link = within(section()).getByRole('link', { name: /Komunikat OSP/ });
-    expect(link).toHaveAttribute('target', '_blank');
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
-    expect(link.textContent).toContain('Sieci·PSE·11:39');
-    expect(within(link).getByText('(otwiera nową kartę)')).toBeInTheDocument();
-    expect(within(section()).queryByRole('button')).toBeNull();
-  });
-
-  it('names itself like the desktop card, with the count in words', () => {
-    const { unmount } = renderInRoot(<SekcjaGora {...entry({ isNew: (i) => i.id === 'r1' })} />);
-    expect(within(section()).getByRole('heading', { level: 2 }).textContent).toBe('Z branży · stan 18:00 · 1 nowa');
-    unmount();
-
-    renderInRoot(<SekcjaGora {...entry({ stale: true, isNew: () => true })} />);
-    expect(within(section()).getByRole('heading', { level: 2 }).textContent).toBe('Z branży · stan 18:00, nieaktualne');
-  });
-
-  it('tells the app when an article is opened', async () => {
-    const onArticleOpen = vi.fn();
-    renderInRoot(<SekcjaGora {...entry({ onArticleOpen })} />);
-    await userEvent.click(within(section()).getByRole('link', { name: /Aukcje OZE/ }));
-    expect(onArticleOpen).toHaveBeenCalledWith('r1');
-  });
-
-  it('counts the headlines as seen when the page is left, not while it is in view', () => {
-    const onSeen = vi.fn();
-    renderInRoot(<SekcjaGora {...entry({ onSeen })} />);
-    const hidden = vi.spyOn(document, 'hidden', 'get');
-
-    hidden.mockReturnValue(false);
-    document.dispatchEvent(new Event('visibilitychange'));
-    expect(onSeen).not.toHaveBeenCalled();
-
-    hidden.mockReturnValue(true);
-    document.dispatchEvent(new Event('visibilitychange'));
-    expect(onSeen).toHaveBeenCalledTimes(1);
-    hidden.mockRestore();
-  });
-});
-
-describe('newLabel', () => {
-  it('agrees the word with the number, and stops counting past nine', () => {
-    expect(newLabel(1)).toBe('1 nowa');
-    expect(newLabel(2)).toBe('2 nowe');
-    expect(newLabel(4)).toBe('4 nowe');
-    expect(newLabel(5)).toBe('5 nowych');
-    expect(newLabel(9)).toBe('9 nowych');
-    expect(newLabel(10)).toBe('9+ nowych');
   });
 });

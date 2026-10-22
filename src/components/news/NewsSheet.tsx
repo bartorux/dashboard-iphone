@@ -303,9 +303,9 @@ export interface NewsGroupsProps {
 /**
  * The grouped list inside the panel, and its footer.
  *
- * Its own component so the phone sheet of the experiment (ArkuszTelefon, see
- * useNewsExperiment) shows the very same list rather than a copy that could
- * drift from it while the variants are being tried. Which group is unfolded
+ * Its own component so the phone sheet (ArkuszTelefon, behind the "Z branży"
+ * row) shows the very same list rather than a copy that could drift from it.
+ * Which group is unfolded
  * lives here: unmounting the list with its panel folds them all again.
  */
 export const NewsGroups: React.FC<NewsGroupsProps> = ({ news, now, isNew, highlightId, onArticleOpen, idPrefix }) => {

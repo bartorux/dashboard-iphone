@@ -5,7 +5,7 @@ import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import type { NewsFile, NewsItem } from '../../../utils/newsTypes';
 import { NewsGroups } from '../NewsSheet';
 import { OPENER_SELECTOR } from './wspolne';
-import './eksperyment.css';
+import './telefon.css';
 
 export interface ArkuszTelefonProps {
   open: boolean;
@@ -16,7 +16,7 @@ export interface ArkuszTelefonProps {
   onArticleOpen: (id: string) => void;
 }
 
-/** The `.zb-sheet` way out in eksperyment.css; the sheet leaves the page once it is over. */
+/** The `.zb-sheet` way out in telefon.css; the sheet leaves the page once it is over. */
 const CLOSE_MS = 320;
 /** Travel before a press on the handle counts as a drag rather than a tap. */
 const DRAG_SLOP_PX = 4;
@@ -46,15 +46,14 @@ type Drag = {
 };
 
 /**
- * Every headline, in a sheet from the bottom — the list behind the "pasek"
- * and "dol" variants of the experiment (useNewsExperiment).
+ * Every headline, in a sheet from the bottom — the list behind the phone's
+ * "Z branży" row (WierszZBranzy).
  *
  * The settings sheet's frame and manners without its engine: the same layer,
  * dim, grabber and "Gotowe", the page out of reach behind it, Escape and a tap
  * on the dim to close, a drag down on the handle to dismiss. It moves by CSS
- * transition rather than springs, and the page does not recede. Enough to
- * judge whether the list belongs behind this entry; the variant that stays
- * gets the springs.
+ * transition rather than springs, and the page does not recede — built for
+ * the trial of 23.09–19.10.2026, and kept as it was when the row stayed.
  *
  * The one part that is not optional is the touch shield. The dashboard's
  * pull-to-refresh listens on `document` and cancels a downward move at the

@@ -35,12 +35,6 @@ interface HeaderProps {
   onToggleSettings: () => void;
   /** Offered only when there is nothing to show; see the error branch. */
   onRetry?: () => void;
-  /**
-   * Beside the gear: the "pasek" variant of the news experiment
-   * (useNewsExperiment). App passes it only when the address asks for it;
-   * otherwise nothing is rendered here and the bar is as it always was.
-   */
-  newsButton?: React.ReactNode;
 }
 
 /**
@@ -69,7 +63,6 @@ const Header: React.FC<HeaderProps> = ({
   connectionText,
   onToggleSettings,
   onRetry,
-  newsButton,
 }) => {
   const isLoading = connection === 'loading';
   const isError = connection === 'error';
@@ -174,8 +167,6 @@ const Header: React.FC<HeaderProps> = ({
               </div>
             )}
           </div>
-
-          {newsButton}
 
           <button
             type="button"
