@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-19T07:15:49.219Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni przez sześć godzin.",
-      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś między 15:00 a 16:00 obowiązuje Kompas Energetyczny PSE: zalecane oszczędzanie, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-19T07:30:59.230Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Margines bywa dziś i jutro poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza na dziś jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin z ujemnym marginesem zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
-      "outlook": "Jutro między 07:00 a 09:00 nadwyżka spadła poniżej progu 1100 MW, a w pozostałych dniach tygodnia nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-19T07:45:45.486Z",
       "prompt": 56,
       "accepted": true,
@@ -2347,6 +2331,23 @@
       "headline": "Dziś margines spada miejscami poniżej typowego pasma z ostatnich trzydziestu dni, dając operatorowi wybór między 11:00 a 14:00.",
       "body": "Prognoza na jutro jeszcze się ustala, a na ogłoszenie jest już za późno. Kompas Energetyczny PSE zaleca oszczędzanie między 11:00 a 12:00.",
       "outlook": "Operator może ogłosić przywołanie między 07:00 a 08:00, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-22T07:31:02.286Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "Kompas przy dniu, którego nie dotyczy",
+      "headline": "Dzisiejszy margines wypada w części godzin poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Na ogłoszenie między 07:00 a 08:00 jest jeszcze czas, więc może nadejść.",
+      "outlook": "W poniedziałek, wtorek i środę nic nie zapowiada przywołania, a w pozostałych godzinach jutrzejszej doby rezerwa pokrywa wymagany poziom i Kompas Energetyczny PSE zaleca oszczędzanie między 11:00 a 14:00."
+    },
+    {
+      "at": "2026-10-22T07:31:02.286Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Margines w dwóch godzinach wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Na ogłoszenie w godzinach 07:00-08:00 jest jeszcze czas, bo do tego momentu zostało ponad osiem godzin.",
+      "outlook": "W poniedziałek 26 października, we wtorek 27 października i w środę 28 października nic nie zapowiada przywołania."
     }
   ]
 }
