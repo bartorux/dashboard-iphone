@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-19T03:15:38.506Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin porannych na ogłoszenie jest już za późno.",
-      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-19T03:45:40.907Z",
       "prompt": 56,
       "accepted": false,
@@ -2373,6 +2365,14 @@
       "prompt": 56,
       "accepted": true,
       "headline": "Dziś między 08:00 a 14:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Na ogłoszenie jest już za późno.",
+      "outlook": "W poniedziałek 26 października, we wtorek 27 października, w środę 28 października oraz jutro nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-22T03:30:57.652Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Dziś między 08:00 a 14:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka w systemie trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Na ogłoszenie jest już za późno.",
       "outlook": "W poniedziałek 26 października, we wtorek 27 października, w środę 28 października oraz jutro nic nie zapowiada przywołania."
     }
