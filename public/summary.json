@@ -1,8 +1,8 @@
 {
-  "headline": "Jutro między 17:00 a 19:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, lecz nie musi.",
-  "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie, bo margines spadnie poniżej normy. Do tych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-  "outlook": "Wtorek 27 października przyniesie wąski margines między 17:00 a 17:00, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-22T13:45:51.471Z",
+  "headline": "Operator może ogłosić przywołanie jutro w godzinach 17:00-19:00, ale nie musi, ponieważ nadwyżka przekracza próg 1100 MW.",
+  "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść, a Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 19:00. Ocena na wtorek 27 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek 27 października między 17:00 a 18:00 operator również ma wybór i ogłoszenie może nadejść, natomiast w pozostałych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-10-22T14:04:33.914Z",
   "dates": [
     "2026-10-22",
     "2026-10-23",
@@ -10,6 +10,6 @@
     "2026-10-27",
     "2026-10-28"
   ],
-  "assessment": "2026-10-22|R|none|900|18:00|0|0|3|||-|-;2026-10-23|R|moderate|-600|18:00|0|1|7|moderate:17:00-19:00||-|-;2026-10-26|R|none|1200|17:00|0|0|21|||X|P;2026-10-27|R|none|0|17:00|2|0|17|||X|P;2026-10-28|R|none|1300|17:00|0|0|23|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
+  "assessment": "2026-10-22|R|none|900|18:00|0|0|3|||-|-;2026-10-23|R|moderate|-900|18:00|1|1|1|moderate:17:00-19:00|K2:18:00-19:00|-|-;2026-10-26|R|none|1000|17:00|0|0|20|||X|P;2026-10-27|R|moderate|-200|17:00|1|0|15|moderate:17:00-18:00||X|P;2026-10-28|R|none|1100|17:00|0|0|20|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v56",
   "model": "gemini-3.5-flash-lite"
 }
