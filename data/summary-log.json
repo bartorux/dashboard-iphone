@@ -1,30 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-20T05:01:08.781Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
-      "body": "W piątek prognoza jeszcze się ustala, raz pokrywając wymagany poziom, a raz nie. Do godzin objętych wyborem operatora zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek margines bywa wąski, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-20T05:15:41.742Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Dziś rezerwa nie pokrywa wymaganego poziomu między 09:00 a 10:00, 11:00 a 12:00 oraz 15:00 a 16:00, ale na ogłoszenie jest już za późno. Ogłoszenie może jeszcze nadejść w czwartek, ponieważ do wyznaczonych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "W piątek prognoza jeszcze się ustala, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-20T05:30:54.744Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Dziś między 09:00 a 10:00, 11:00 a 12:00 oraz 15:00 a 16:00 rezerwa nie pokrywa wymaganego poziomu. Na ogłoszenie jest już za późno, a Kompas Energetyczny PSE zaleca oszczędzanie między 11:00 a 12:00.",
-      "outlook": "W piątek prognoza jeszcze się ustala, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-20T05:45:40.608Z",
       "prompt": 56,
       "accepted": true,
@@ -2405,6 +2381,24 @@
       "headline": "Dziś między 18:00 a 19:00 nadwyżka spadła poniżej progu 1100 MW, co otwiera operatorowi drogę do przywołania.",
       "body": "Margines o 18:00 wypada niżej niż zwykle o tej porze na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie energii między 18:00 a 20:00.",
       "outlook": "Przywołanie wchodzi w grę także w poniedziałek 26 października między 17:00 a 19:00, we wtorek 27 października między 16:00 a 18:00, w środę 28 października między 16:00 a 19:00 oraz w czwartek 29 października między 17:00 a 18:00."
+    },
+    {
+      "at": "2026-10-23T05:30:57.981Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś między 18:00 a 19:00 nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie, a Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 20:00.",
+      "body": "Margines o 18:00 jest niższy niż zwykle o tej porze, na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 26 października między 17:00 a 19:00, we wtorek 27 października między 16:00 a 19:00 oraz między 20:00 a 21:00, w środę 28 października między 16:00 a 19:00 oraz w czwartek 29 października między 17:00 a 18:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-10-23T05:30:57.981Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Między 18:00 a 19:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Margines o 18:00 jest niższy niż zwykle o tej porze, na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie od 18:00 do 20:00.",
+      "outlook": "W poniedziałek 26 października między 17:00 a 19:00, we wtorek 27 października między 16:00 a 19:00 oraz od 20:00 do 21:00, w środę 28 października między 16:00 a 19:00 i w czwartek 29 października między 17:00 a 18:00 operator może ogłosić przywołanie."
     }
   ]
 }
