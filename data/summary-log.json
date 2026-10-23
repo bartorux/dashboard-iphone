@@ -2399,6 +2399,24 @@
       "headline": "Między 18:00 a 19:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "Margines o 18:00 jest niższy niż zwykle o tej porze, na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie od 18:00 do 20:00.",
       "outlook": "W poniedziałek 26 października między 17:00 a 19:00, we wtorek 27 października między 16:00 a 19:00 oraz od 20:00 do 21:00, w środę 28 października między 16:00 a 19:00 i w czwartek 29 października między 17:00 a 18:00 operator może ogłosić przywołanie."
+    },
+    {
+      "at": "2026-10-23T05:45:38.851Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś między 18:00 a 19:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Margines o 18:00 spadł niżej niż zwykle o tej porze na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W poniedziałek 26 października między 17:00 a 19:00, we wtorek 27 października między 16:00 a 19:00 oraz od 20:00 do 21:00, w środę 28 października między 16:00 a 19:00, a także w czwartek 29 października między 17:00 a 18:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-10-23T05:45:38.851Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś między 18:00 a 19:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Margines o 18:00 spadł niżej niż zwykle o tej porze na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść do tych godzin, bo zostało do nich ponad osiem godzin.",
+      "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 20:00, a w poniedziałek 26 października, we wtorek 27 października, w środę 28 października i w czwartek 29 października operator może ogłosić przywołanie w godzinach popołudniowych i wieczornych."
     }
   ]
 }
