@@ -1,8 +1,8 @@
 {
-  "headline": "W poniedziałek 26 października operator może ogłosić przywołanie w godzinach 16:00-22:00.",
-  "body": "Prognoza w poniedziałek 26 października poprawia się. Ogłoszenie może jeszcze nadejść. Ocena na poniedziałek 26 października, wtorek 27 października i środę 28 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek 27 października i środę 28 października operator również może ogłosić przywołanie odpowiednio między 07:00 a 09:00 i 15:00 a 21:00 oraz między 16:00 a 19:00, podczas gdy w czwartek 29 października nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-23T09:15:47.506Z",
+  "headline": "W poniedziałek między 15:00 a 22:00 operator może ogłosić przywołanie, ale nie musi.",
+  "body": "W poniedziałek 26 października zapotrzebowanie przekracza normę, a produkcja z paneli fotowoltaicznych spada poniżej normy. Na ogłoszenie pozostaje jeszcze ponad osiem godzin. Ocena na poniedziałek 26 października, wtorek 27 października i środę 28 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Wtorek 27 października oraz środa 28 października przynoszą wąskie marginesy w wybranym czasie, natomiast w czwartek 29 października nic nie zapowiada przywołania.",
+  "generatedAt": "2026-10-23T09:45:51.904Z",
   "dates": [
     "2026-10-23",
     "2026-10-26",
@@ -10,6 +10,6 @@
     "2026-10-28",
     "2026-10-29"
   ],
-  "assessment": "2026-10-23|R|high|-1300|18:00|0|2|0|moderate:17:00-18:00,high:18:00-19:00,moderate:19:00-20:00|K2:18:00-20:00|-|-;2026-10-26|R|moderate|-1300|17:00|1|6|14|moderate:16:00-22:00||X|P;2026-10-27|R|moderate|-2100|17:00|0|8|2|moderate:07:00-09:00,moderate:15:00-21:00||X|P;2026-10-28|R|moderate|-700|17:00|2|2|12|moderate:16:00-19:00||X|P;2026-10-29|R|none|600|17:00|0|0|19|||X|P#-/below/prognoza poprawia się#v56",
+  "assessment": "2026-10-23|R|high|-1300|18:00|0|2|1|moderate:17:00-18:00,high:18:00-19:00,moderate:19:00-20:00|K2:18:00-20:00|-|-;2026-10-26|R|moderate|-1300|17:00|0|7|14|moderate:15:00-22:00||X|P;2026-10-27|R|moderate|-2100|17:00|0|8|2|moderate:07:00-09:00,moderate:15:00-21:00||X|P;2026-10-28|R|moderate|-700|17:00|2|2|12|moderate:16:00-19:00,moderate:20:00-21:00||X|P;2026-10-29|R|none|600|17:00|0|0|19|||X|P#zapotrzebowanie powyżej normy, PV poniżej normy/below/-#v56",
   "model": "gemini-3.5-flash-lite"
 }

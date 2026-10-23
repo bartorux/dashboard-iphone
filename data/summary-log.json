@@ -1,31 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-20T09:31:01.112Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W czwartek operator może ogłosić przywołanie między 07:00 a 21:00, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "W piątek prognoza jeszcze się ustala, a rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Poza czwartkiem przywołanie wchodzi w grę również dzisiaj, w piątek i w poniedziałek 26 października, natomiast jutro nic go nie zapowiada."
-    },
-    {
-      "at": "2026-10-20T09:45:44.585Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś, w czwartek, w piątek oraz w poniedziałek 26 października operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "W piątek prognoza jeszcze się ustala i raz pokrywa wymagane poziomy, a raz nie. Ogłoszenie może jeszcze nadejść w czwartek, w piątek oraz w poniedziałek 26 października.",
-      "outlook": "W środę nic nie zapowiada przywołania, a w pozostałych dniach wąskie marginesy pojawiają się w wyznaczonych godzinach."
-    },
-    {
-      "at": "2026-10-20T09:45:44.585Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś, w czwartek, w piątek oraz w poniedziałek 26 października operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W piątek prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Na ogłoszenie w czwartek i piątek oraz w poniedziałek 26 października może jeszcze nadejść czas, natomiast dzisiaj na ogłoszenie jest już za późno.",
-      "outlook": "W jutrzejszym dniu nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-20T10:01:11.425Z",
       "prompt": 56,
       "accepted": true,
@@ -2455,6 +2430,14 @@
       "headline": "W poniedziałek 26 października operator może ogłosić przywołanie w godzinach 16:00-22:00.",
       "body": "Prognoza w poniedziałek 26 października poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 27 października i środę 28 października operator również może ogłosić przywołanie odpowiednio między 07:00 a 09:00 i 15:00 a 21:00 oraz między 16:00 a 19:00, podczas gdy w czwartek 29 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-23T09:45:51.904Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W poniedziałek między 15:00 a 22:00 operator może ogłosić przywołanie, ale nie musi.",
+      "body": "W poniedziałek 26 października zapotrzebowanie przekracza normę, a produkcja z paneli fotowoltaicznych spada poniżej normy. Na ogłoszenie pozostaje jeszcze ponad osiem godzin.",
+      "outlook": "Wtorek 27 października oraz środa 28 października przynoszą wąskie marginesy w wybranym czasie, natomiast w czwartek 29 października nic nie zapowiada przywołania."
     }
   ]
 }
