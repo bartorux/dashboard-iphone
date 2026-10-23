@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, bo zapotrzebowanie przewyższa normę.",
+  "headline": "Dziś margines wypada poniżej typowego pasma z ostatnich trzydziestu dni, bo zapotrzebowanie rośnie ponad normę.",
   "body": "Między 18:00 a 19:00 nadwyżka spada poniżej próg 1100 MW. Ogłoszenie może jeszcze nadejść. Ocena na poniedziałek 26 października, wtorek 27 października i środę 28 października jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W poniedziałek 26 października, we wtorek 27 października i w środę 28 października margines nie pokrywa wymaganego poziomu, a w czwartek 29 października nic nie zapowiada przywołania.",
-  "generatedAt": "2026-10-23T07:31:00.575Z",
+  "outlook": "W poniedziałek 26 października, we wtorek 27 października i w środę 28 października operator może ogłosić przywołanie, natomiast w czwartek 29 października nic nie zapowiada przywołania.",
+  "generatedAt": "2026-10-23T07:55:18.414Z",
   "dates": [
     "2026-10-23",
     "2026-10-26",
@@ -10,6 +10,6 @@
     "2026-10-28",
     "2026-10-29"
   ],
-  "assessment": "2026-10-23|R|high|-1500|18:00|0|2|1|moderate:17:00-18:00,high:18:00-19:00,moderate:19:00-20:00|K2:18:00-20:00|-|-;2026-10-26|R|moderate|-100|17:00|1|0|17|moderate:17:00-18:00||X|P;2026-10-27|R|moderate|-500|17:00|0|2|12|moderate:16:00-18:00||X|P;2026-10-28|R|moderate|-100|17:00|1|0|15|moderate:17:00-18:00||X|P;2026-10-29|R|none|400|17:00|0|0|19|||X|P#zapotrzebowanie powyżej normy/below/-#v56",
+  "assessment": "2026-10-23|R|high|-1500|18:00|0|2|1|moderate:17:00-18:00,high:18:00-19:00,moderate:19:00-20:00|K2:18:00-20:00|-|-;2026-10-26|R|moderate|-100|17:00|1|0|17|moderate:17:00-18:00||X|P;2026-10-27|R|moderate|-500|17:00|0|2|12|moderate:16:00-18:00||X|P;2026-10-28|R|moderate|-200|17:00|1|0|15|moderate:17:00-18:00||X|P;2026-10-29|R|none|300|17:00|0|0|19|||X|P#zapotrzebowanie powyżej normy/below/-#v56",
   "model": "gemini-3.5-flash-lite"
 }

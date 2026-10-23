@@ -2428,6 +2428,23 @@
       "headline": "Dzisiejsza rezerwa spada poniżej normy z powodu zapotrzebowania powyżej typowego zakresu z ostatnich trzydziestu dni, a nadwyżka spada poniżej progu 1100 MW między 18:00 a 19:00.",
       "body": "Między 18:00 a 19:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej poziomu, który pozwalał mu je pominąć. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "W poniedziałek 26 października o 17:00, we wtorek 27 października o 17:00 oraz w środę 28 października o 17:00 operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada."
+    },
+    {
+      "at": "2026-10-23T07:55:18.414Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Dzisiejsza rezerwa spada poniżej normy z ostatnich trzydziestu dni przez zapotrzebowanie powyżej typowego poziomu.",
+      "body": "Między 18:00 a 19:00 nadwyżka spada poniżej próg 1100 MW. Ogłoszenie może jeszcze nadejść do tych godzin.",
+      "outlook": "W poniedziałek 26 października między 17:00 a 18:00, we wtorek 27 października między 16:00 a 18:00 oraz w środę 28 października między 17:00 a 18:00 operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada."
+    },
+    {
+      "at": "2026-10-23T07:55:18.414Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Dziś margines wypada poniżej typowego pasma z ostatnich trzydziestu dni, bo zapotrzebowanie rośnie ponad normę.",
+      "body": "Między 18:00 a 19:00 nadwyżka spada poniżej próg 1100 MW. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 26 października, we wtorek 27 października i w środę 28 października operator może ogłosić przywołanie, natomiast w czwartek 29 października nic nie zapowiada przywołania."
     }
   ]
 }
