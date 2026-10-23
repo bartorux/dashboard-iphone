@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-20T14:01:18.347Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W czwartek operator może ogłosić przywołanie, a w godzinach 09:00-10:00 nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "W czwartek prognoza pogarsza się. Do wskazanych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek i w poniedziałek 26 października operator może ogłosić przywołanie w wybranych godzinach, podczas gdy dziś i jutro nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-20T14:15:43.236Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W czwartek między 09:00 a 10:00 nadwyżka w systemie spadła poniżej progu 1100 MW.",
-      "body": "Prognoza w czwartek pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek i w poniedziałek 26 października operator może ogłosić przywołanie, podczas gdy dzisiaj i jutro nic go nie zapowiada."
-    },
-    {
       "at": "2026-10-20T14:45:41.934Z",
       "prompt": 56,
       "accepted": false,
@@ -2449,6 +2433,14 @@
       "headline": "We wtorek 27 października nadwyżka spadła poniżej progu 1100 MW między 16:00 a 18:00, co oznacza, że operator może ogłosić przywołanie.",
       "body": "We wtorek 27 października prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Ponadto w poniedziałek 26 października, we wtorek 27 października i w środę 28 października rezerwa nie pokrywa wymaganego poziomu, a w czwartek 29 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-23T14:15:51.018Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "We wtorek 27 października operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW między 16:00 a 18:00.",
+      "body": "Prognoza na wtorek 27 października pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 26 października, środę 28 października oraz w części godzin we wtorek 27 października operator może ogłosić przywołanie, ale ma wybór, a w czwartek 29 października nic nie zapowiada przywołania."
     }
   ]
 }
