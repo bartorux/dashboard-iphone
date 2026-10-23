@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-20T07:15:44.116Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś margines rośnie nadzwyczaj wysoko, ale w kolejnych dniach pojawiają się godziny poniżej normy.",
-      "body": "W czwartek margines spadnie między 07:00 a 21:00. Na ogłoszenie tego przywołania jest jeszcze czas.",
-      "outlook": "W piątek i czwartek operator może ogłosić przywołanie, podczas gdy w pozostałe dni nic go nie zapowiada."
-    },
-    {
       "at": "2026-10-20T07:45:42.267Z",
       "prompt": 56,
       "accepted": true,
@@ -2409,6 +2401,23 @@
       "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez zapotrzebowanie powyżej normy, a nadwyżka obniża się poniżej progu 1100 MW między 18:00 a 19:00, co sprawia, że operator może ogłosić przywołanie bez możliwości pominięcia go.",
       "body": "W godzinach 17:00-18:00 na ogłoszenie jest już za późno, natomiast między 18:00 a 20:00 ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 19:00.",
       "outlook": "W poniedziałek 26 października między 17:00 a 18:00, we wtorek 27 października od 16:00 do 18:00 oraz w środę 28 października między 17:00 a 18:00 operator może ogłosić przywołanie, a w czwartek 29 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-23T07:31:00.575Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Dzisiejszy margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez zapotrzebowanie powyżej normy.",
+      "body": "Między 18:00 a 19:00 nadwyżka spada poniżej próg 1100 MW. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 26 października, we wtorek 27 października i w środę 28 października operator może ogłosić przywołanie, a w czwartek 29 października nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 20:00."
+    },
+    {
+      "at": "2026-10-23T07:31:00.575Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, bo zapotrzebowanie przewyższa normę.",
+      "body": "Między 18:00 a 19:00 nadwyżka spada poniżej próg 1100 MW. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 26 października, we wtorek 27 października i w środę 28 października margines nie pokrywa wymaganego poziomu, a w czwartek 29 października nic nie zapowiada przywołania."
     }
   ]
 }
