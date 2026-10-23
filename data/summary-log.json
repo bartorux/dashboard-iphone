@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-20T16:15:48.237Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W czwartek o 09:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza na czwartek pogarsza się. Ogłoszenie może jeszcze nadejść, bo do wyznaczonych godzin od 07:00 do 21:00 zostało ponad osiem godzin.",
-      "outlook": "W piątek i poniedziałek 26 października operator również ma wybór w wyznaczonych porach, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-20T16:31:00.158Z",
       "prompt": 56,
       "accepted": false,
@@ -2492,6 +2484,24 @@
       "headline": "We wtorek 27 października między 16:00 a 18:00 operator może ogłosić przywołanie, a nadwyżka w systemie spadła poniżej progu 1100 MW.",
       "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 26 października oraz w środę 28 października operator ma wybór przez kilka godzin, a w czwartek 29 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-23T16:15:48.434Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "We wtorek 27 października między 16:00 a 18:00 nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 26 października, we wtorek 27 października i w środę 28 października operator może ogłosić przywołanie w wyznaczonych godzinach, natomiast w czwartek 29 października nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-23T16:15:48.434Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "We wtorek 27 października nadwyżka spadła poniżej progu 1100 MW w godzinach 16:00-18:00, więc operator może ogłosić przywołanie.",
+      "body": "Prognoza pogarsza się we wtorek 27 października. Do tych godzin ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 26 października, środę 28 października oraz w czwartek 29 października przywołanie wchodzi w grę w wyznaczonych godzinach, natomiast dzisiaj oraz w pozostałym okresie nic nie zapowiada przywołania."
     }
   ]
 }
