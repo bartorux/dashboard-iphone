@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-21T04:30:59.019Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Operator może ogłosić przywołanie między 07:00 a 21:00.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro margines spadnie o 12:00, w piątek spadnie o 07:00, a w poniedziałek 26 października spadnie o 17:00, natomiast dzisiaj oraz we wtorek 27 października nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-21T04:45:37.403Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Operator może ogłosić przywołanie w godzinach 07:00-21:00.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "W piątek między 07:00 a 09:00 oraz między 16:00 a 20:00, a także w poniedziałek 26 października między 17:00 a 18:00 operator również ma wybór, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-21T05:01:08.201Z",
       "prompt": 56,
       "accepted": true,
@@ -2451,6 +2435,14 @@
       "headline": "W poniedziałek 26 października nadwyżka spadnie poniżej progu 1100 MW między 17:00 a 18:00, co oznacza, że operator straci wybór i może ogłosić przywołanie.",
       "body": "W czwartek 29 października prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 27 października między 16:00 a 18:00 oraz w piątek 30 października operator może ogłosić przywołanie, a w środę 28 października ma wybór, natomiast dzisiaj nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-24T04:45:42.215Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "W poniedziałek 26 października między 17:00 a 18:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
+      "body": "W poniedziałek 26 października prognoza jeszcze się ustala, raz pokrywając wymagany poziom, a raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 27 października i piątek 30 października nadwyżka również spada poniżej progu 1100 MW, natomiast w środę 28 października oraz czwartek 29 października operator zachowuje wybór."
     }
   ]
 }
