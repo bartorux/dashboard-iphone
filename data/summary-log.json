@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-23T00:45:44.316Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś między 18:00 a 19:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 20:00.",
-      "outlook": "W poniedziałek 26 października między 17:00 a 18:00 oraz w kolejnych dniach do czwartku 29 października w wybranych godzinach popołudniowych operator może ogłosić przywołanie, a poza tym w całym okresie nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-23T01:01:06.664Z",
       "prompt": 56,
       "accepted": false,
@@ -2507,6 +2499,14 @@
       "headline": "W wielu godzinach margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza pogarsza się we wtorek 27 października. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek między 17:00 a 18:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałych dniach oraz w pozostałych godzinach operator ma wybór, czy ogłosi przywołanie."
+    },
+    {
+      "at": "2026-10-25T23:01:08.700Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę 28 października między 13:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 27 października między 17:00 a 18:00 nadwyżka również spadnie poniżej progu 1100 MW, a w pozostałych dniach nadwyżka utrzyma się powyżej tego poziomu."
     }
   ]
 }
