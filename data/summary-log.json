@@ -2401,6 +2401,23 @@
       "headline": "Marginesy na najbliższe dni mocno odbiegają od typowego zakresu z ostatnich trzydziestu dni, spadając w wielu godzinach poniżej normy.",
       "body": "Prognoza na jutro pogarsza się. Do godzin z niską rezerwą zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Wtorek 27 października oraz środa 28 października przyniosą godziny z nadwyżką spadającą poniżej progu 1100 MW, natomiast w czwartek 29 października i piątek 30 października operator cały czas zachowa wybór."
+    },
+    {
+      "at": "2026-10-25T07:15:38.619Z",
+      "prompt": 56,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "Margines mocno odstaje od normy z ostatnich trzydziestu dni.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 27 października, środę 28 października, czwartek 29 października i piątek 30 października nadwyżka spada poniżej progu 1100 MW lub operator ma wybór między 07:00 a 22:00, a pozostałe dni przebiegają spokojnie."
+    },
+    {
+      "at": "2026-10-25T07:15:38.619Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Marginesy spadają poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie jutro między 15:00 a 21:00, bo nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 27 października między 17:00 a 18:00, w środę 28 października między 14:00 a 21:00 oraz w czwartek 29 października i piątek 30 października nadwyżka również spada poniżej progu 1100 MW, a w pozostałych dniach rezerwa utrzymuje bezpieczniejszy poziom."
     }
   ]
 }
