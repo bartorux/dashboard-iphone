@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-22T07:15:48.075Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "godzina bez nazwy dnia",
-      "headline": "W godzinach 11:00-14:00 margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "W tych godzinach rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi. Na ogłoszenie jest już za późno. Kompas Energetyczny PSE zaleca oszczędzanie od 11:00 do 12:00.",
-      "outlook": "Jutro między 07:00 a 08:00 prognoza jeszcze się ustala, a ogłoszenie może jeszcze nadejść; w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-22T07:15:48.075Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Dziś margines spada miejscami poniżej typowego pasma z ostatnich trzydziestu dni, dając operatorowi wybór między 11:00 a 14:00.",
-      "body": "Prognoza na jutro jeszcze się ustala, a na ogłoszenie jest już za późno. Kompas Energetyczny PSE zaleca oszczędzanie między 11:00 a 12:00.",
-      "outlook": "Operator może ogłosić przywołanie między 07:00 a 08:00, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-22T07:31:02.286Z",
       "prompt": 56,
       "accepted": false,
@@ -2418,6 +2401,14 @@
       "headline": "Marginesy spadają poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie jutro między 15:00 a 21:00, bo nadwyżka spadła poniżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "We wtorek 27 października między 17:00 a 18:00, w środę 28 października między 14:00 a 21:00 oraz w czwartek 29 października i piątek 30 października nadwyżka również spada poniżej progu 1100 MW, a w pozostałych dniach rezerwa utrzymuje bezpieczniejszy poziom."
+    },
+    {
+      "at": "2026-10-25T07:31:00.088Z",
+      "prompt": 56,
+      "accepted": true,
+      "headline": "Marginesy przez większość nadchodzących dni mocno odbiegają od normy z ostatnich trzydziestu dni, a operator może ogłosić przywołanie.",
+      "body": "Prognoza na jutro pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 27 października między 07:00 a 21:00, w środę 28 października między 07:00 a 22:00, w czwartek 29 października między 15:00 a 20:00 oraz w piątek 30 października między 07:00 a 10:00 i między 14:00 a 21:00 operator może ogłosić przywołanie, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
