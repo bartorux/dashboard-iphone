@@ -4,15 +4,6 @@
       "at": "2026-10-23T05:30:57.981Z",
       "prompt": 56,
       "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Dziś między 18:00 a 19:00 nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie, a Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 20:00.",
-      "body": "Margines o 18:00 jest niższy niż zwykle o tej porze, na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 26 października między 17:00 a 19:00, we wtorek 27 października między 16:00 a 19:00 oraz między 20:00 a 21:00, w środę 28 października między 16:00 a 19:00 oraz w czwartek 29 października między 17:00 a 18:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
-      "at": "2026-10-23T05:30:57.981Z",
-      "prompt": 56,
-      "accepted": false,
       "reason": "godzina bez nazwy dnia",
       "headline": "Między 18:00 a 19:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "Margines o 18:00 jest niższy niż zwykle o tej porze, na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie od 18:00 do 20:00.",
@@ -2506,6 +2497,14 @@
       "headline": "W środę między 17:00 a 18:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
       "body": "Margines spadnie poniżej typowego zakresu, bo zapotrzebowanie urośnie, a produkcja z fotowoltaiki spadnie. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś między 15:00 a 21:00, jutro w wybranych godzinach między 07:00 a 20:00, w środę między 07:00 a 22:00, w czwartek między 07:00 a 21:00 oraz w piątek między 07:00 a 21:00 operator może ogłosić przywołanie, a w pozostałych godzinach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-10-26T01:15:43.420Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę między 17:00 a 18:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a nadwyżka jest poniżej poziomu, który pozwalał mu je pominąć.",
+      "body": "W środę zapotrzebowanie urośnie ponad normę, a produkcja fotowoltaiki spadnie poniżej normy. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek, we wtorek, w czwartek i w piątek rezerwa w poszczególnych godzinach nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi."
     }
   ]
 }
