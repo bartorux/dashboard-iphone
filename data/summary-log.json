@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-23T08:01:10.145Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Dziś między 18:00 a 19:00 nadwyżka spadła poniżej progu 1100 MW, przez co operator może ogłosić przywołanie, a Kompas Energetyczny PSE zaleca oszczędzanie energii między 18:00 a 20:00.",
-      "body": "Zapotrzebowanie przekracza normę, a margines wypada poniżej typowego poziomu z ostatnich trzydziestu dni. Na ogłoszenie przywołania dla tych godzin jest już za późno.",
-      "outlook": "W poniedziałek 26 października, we wtorek 27 października i w środę 28 października operator może ogłosić przywołanie między 16:00 a 18:00, podczas gdy w czwartek 29 października nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-23T08:15:40.822Z",
       "prompt": 56,
       "accepted": true,
@@ -2499,6 +2490,14 @@
       "headline": "Dziś między 15:00 a 16:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
       "body": "Prognoza na dziś poprawia się. Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 08:00, między 15:00 a 18:00 oraz między 19:00 a 21:00.",
       "outlook": "Jutro między 07:00 a 08:00 i między 16:00 a 18:00, w środę między 07:00 a 22:00, w czwartek między 07:00 a 09:00 i między 15:00 a 21:00 oraz w piątek między 07:00 a 10:00 i między 14:00 a 21:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-10-26T06:45:40.517Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę między 17:00 a 18:00 nadwyżka spadnie poniżej próg 1100 MW, a operator będzie mógł ogłosić przywołanie.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś między 15:00 a 16:00, jutro między 16:00 a 18:00, w środę między 13:00 a 22:00, w czwartek między 07:00 a 09:00 i między 15:00 a 21:00 oraz w piątek między 07:00 a 10:00 i między 15:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, a w pozostałe dni i godziny nic nie zapowiada przywołania."
     }
   ]
 }
