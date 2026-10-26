@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-23T06:30:58.549Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Dziś między 18:00 a 19:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "Margines o 18:00 spada niżej niż zwykle o tej porze na tle ostatnich trzydziestu dni. Do wyznaczonych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 19:00.",
-      "outlook": "W poniedziałek 26 października między 16:00 a 20:00, we wtorek 27 października między 16:00 a 18:00, w środę 28 października między 16:00 a 19:00 oraz w czwartek 29 października między 17:00 a 18:00 operator ma wybór i może ogłosić przywołanie, a w pozostałych dniach okresu nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-23T06:45:41.183Z",
       "prompt": 56,
       "accepted": true,
@@ -2503,6 +2494,14 @@
       "headline": "W środę między 14:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
       "body": "Margines spadnie poniżej normy przez zapotrzebowanie powyżej normy oraz fotowoltaikę poniżej normy. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "Przywołanie wchodzi w grę także dziś między 15:00 a 21:00, jutro między 07:00 a 20:00, w czwartek między 07:00 a 10:00 i od 15:00 do 21:00 oraz w piątek między 07:00 a 10:00 i od 14:00 do 21:00."
+    },
+    {
+      "at": "2026-10-26T04:01:04.572Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 15:00 a 21:00 operator może ogłosić przywołanie, ale ma wybór, ponieważ nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Jutro między 17:00 a 18:00 zapotrzebowanie urośnie ponad normę, a produkcja z fotowoltaiki spadnie poniżej normy. Do tych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i piątek przywołanie również wchodzi w grę."
     }
   ]
 }
