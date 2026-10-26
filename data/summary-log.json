@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-23T05:45:38.851Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 18:00 a 19:00 operator może ogłosić przywołanie, bo nadwyżka spadła poniżej progu 1100 MW.",
-      "body": "Margines o 18:00 spadł niżej niż zwykle o tej porze na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść do tych godzin, bo zostało do nich ponad osiem godzin.",
-      "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 20:00, a w poniedziałek 26 października, we wtorek 27 października, w środę 28 października i w czwartek 29 października operator może ogłosić przywołanie w godzinach popołudniowych i wieczornych."
-    },
-    {
       "at": "2026-10-23T06:01:13.834Z",
       "prompt": 56,
       "accepted": true,
@@ -2504,6 +2495,14 @@
       "headline": "W środę o 17:00 margines spadnie do najniższego poziomu w tym okresie, a nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "W środę zapotrzebowanie urośnie powyżej normy, a fotowoltaika spadnie poniżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś między 15:00 a 21:00, jutro między 07:00 a 20:00, w czwartek między 07:00 a 10:00 i od 15:00 do 21:00 oraz w piątek między 07:00 a 10:00 i od 14:00 do 21:00 operator może ogłosić przywołanie, a Kompas Energetyczny PSE zaleca oszczędzanie dziś między 15:00 a 21:00."
+    },
+    {
+      "at": "2026-10-26T02:45:40.929Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś rezerwa spada poniżej typowego pasma z ostatnich trzydziestu dni i przez sześć godzin między 15:00 a 21:00 operator może ogłosić przywołanie, choć nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Dziś margines w godzinach od 15:00 do 21:00 nie pokrywa wymaganego poziomu. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść, a Kompas Energetyczny PSE zaleca oszczędzanie poboru między 15:00 a 21:00.",
+      "outlook": "Jutro między 17:00 a 18:00 nadwyżka spada poniżej progu 1100 MW, a w środę i czwartek oraz piątek rezerwa w ujęciu godzinowym również wchodzi w strefę, w której operator może ogłosić przywołanie."
     }
   ]
 }
