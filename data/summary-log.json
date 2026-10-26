@@ -4,15 +4,6 @@
       "at": "2026-10-23T15:01:14.929Z",
       "prompt": 56,
       "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W godzinach 18:00-19:00 nadwyżka spadła poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a na ogłoszenie jest już za późno.",
-      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 17:00 a 19:00. Ogłoszenie może jeszcze nadejść w poniedziałek między 15:00 a 22:00.",
-      "outlook": "We wtorek, środę i czwartek sytuacja wygląda różnie, przy czym w czwartek nic nie zapowiada przywołania, a w pozostałych dniach rezerwa spada poniżej wymaganego poziomu w wyznaczonych godzinach."
-    },
-    {
-      "at": "2026-10-23T15:01:14.929Z",
-      "prompt": 56,
-      "accepted": false,
       "reason": "pole outlook dłuższe niż 300 znaków",
       "headline": "W najbliższych godzinach nadwyżka spadła poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
       "body": "Między 18:00 a 19:00 rezerwa nie pokryje wymaganego poziomu, a nadwyżka spadnie. Na ogłoszenie dla tych godzin jest już za późno.",
@@ -2499,6 +2490,14 @@
       "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Dziś między 15:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi. Na ogłoszenie jest już za późno.",
       "outlook": "W środę, czwartek i piątek nadwyżka spada poniżej progu 1100 MW, a jutro nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-26T12:45:46.198Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś rezerwa spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "W środę prognoza pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek między 07:00 a 22:00 oraz w piątek między 07:00 a 22:00 nadwyżka utrzymuje się poniżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
