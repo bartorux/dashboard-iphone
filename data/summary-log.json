@@ -5,15 +5,6 @@
       "prompt": 56,
       "accepted": false,
       "reason": "tekst zawiera liczbę spoza godzin",
-      "headline": "W środę 28 października o 17:00 nadwyżka spadła poniżej progu 1100 MW, poniżej poziomu pozwalającego operatorowi pominąć przywołanie.",
-      "body": "Prognoza na poniedziałek 26 października pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach 16:00-18:00.",
-      "outlook": "We wtorek 27 października między 16:00 a 18:00 oraz w środę 28 października między 15:00 a 21:00 nadwyżka również spadła poniżej progu 1100 MW, natomiast w czwartek 29 i piątek 30 października operator zachowuje wybór."
-    },
-    {
-      "at": "2026-10-24T21:01:10.566Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "tekst zawiera liczbę spoza godzin",
       "headline": "W poniedziałek 26 października o godzinie 17:00 nadwyżka spadła poniżej progu 1100 MW, więc operator może ogłosić przywołanie, tracąc możliwość jego pominięcia.",
       "body": "Prognoza na poniedziałek 26 października pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach 16:00-18:00.",
       "outlook": "We wtorek 27 października między 16:00 a 18:00, w środę 28 października między 15:00 a 21:00, a także w czwartek 29 i piątek 30 października nadwyżka również spadła poniżej progu 1100 MW lub operator zachował wybór, natomiast w pozostałe dni i godziny nic nie zapowiada przywołania."
@@ -2508,6 +2499,14 @@
       "headline": "W czwartek między 07:00 a 10:00 rezerwa spadnie poniżej wymaganego poziomu, a nadwyżka utrzyma się poniżej progu 1100 MW.",
       "body": "W czwartek prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek między 07:00 a 10:00 nadwyżka również spadnie poniżej progu 1100 MW, a w pozostałych dniach operator zachowuje wybór."
+    },
+    {
+      "at": "2026-10-27T17:01:17.284Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W czwartek nadwyżka spada poniżej progu 1100 MW między 07:00 a 10:00, co oznacza, że operator może ogłosić przywołanie bez progu pomijającego.",
+      "body": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez dwadzieścia jedną godzinę w czwartek. Ogłoszenie może jeszcze nadejść w czwartek między 07:00 a 10:00.",
+      "outlook": "W jutrzejszym dniu między 07:00 a 09:00, w czwartek między 07:00 a 10:00, a także w piątek między 07:00 a 10:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania poza wskazanymi godzinami."
     }
   ]
 }
