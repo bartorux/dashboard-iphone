@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-24T06:15:50.459Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 26 października o 17:00 nadwyżka spadła poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "Prognoza na poniedziałek 26 października pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Wtorkowy margines spada w godzinach 16:00-18:00 poniżej progu 1100 MW, a w środę i piątek operator zachowuje wybór w kilkugodzinnych przedziałach popołudniowych."
-    },
-    {
-      "at": "2026-10-24T06:26:00.082Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "W poniedziałek 26 października między 17:00 a 18:00 nadwyżka spadła poniżej progu 1100 MW, przez co operator stracił możliwość pominięcia przywołania.",
-      "body": "Prognoza pogarsza się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 27 października między 16:00 a 18:00 nadwyżka również spadła poniżej progu 1100 MW, podczas gdy w pozostałe dni tygodnia operator zachowuje pełny wybór albo nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-24T06:45:37.364Z",
       "prompt": 56,
       "accepted": true,
@@ -2503,6 +2487,24 @@
       "headline": "W czwartek między 15:00 a 16:00 rezerwa spadnie mocno poniżej wymaganego poziomu, a nadwyżka utrzyma się poniżej progu 1100 MW.",
       "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę, czwartek i piątek margines w wielu godzinach nie pokryje wymaganego poziomu, podczas gdy w poniedziałek 2 listopada rezerwa wszędzie go pokryje."
+    },
+    {
+      "at": "2026-10-27T02:01:10.190Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "Margines jest poniżej typowego zakresu z ostatnich trzydziestu dni przez większą część doby.",
+      "body": "Prognoza pogarsza się jutro. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 09:00.",
+      "outlook": "W czwartek i piątek ogłoszenie może jeszcze nadejść między 07:00 a 22:00, natomiast w poniedziałek drugiego listopada nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-27T02:01:10.190Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "Margines jest poniżej typowego zakresu z ostatnich trzydziestu dni przez większą część doby.",
+      "body": "Prognoza pogarsza się jutro. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 09:00.",
+      "outlook": "W czwartek i piątek ogłoszenie może jeszcze nadejść między 07:00 a 22:00, natomiast w poniedziałek drugiego listopada nic nie zapowiada przywołania."
     }
   ]
 }
