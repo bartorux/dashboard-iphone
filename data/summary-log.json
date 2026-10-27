@@ -5,15 +5,6 @@
       "prompt": 56,
       "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 26 października margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "W poniedziałek, wtorek, środę, czwartek i piątek w wyznaczonych godzinach operator może ogłosić przywołanie, a w pozostałych dniach okresu nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-24T17:15:39.548Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
       "headline": "W poniedziałek 26 października margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 26 października, wtorek 27 października i środę 28 października w wyznaczonych godzinach nadwyżka spada poniżej progu 1100 MW, a w pozostałe dni okresu operator zachowuje wybór albo zachodzi dodatni margines."
@@ -2507,6 +2498,14 @@
       "headline": "Jutro między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
       "body": "Prognoza na czwartek i piątek spada poniżej typowego zakresu z ostatnich trzydziestu dni. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę, czwartek i piątek margines nie pokryje wymaganego poziomu, podczas gdy w poniedziałek drugi listopada prognoza wciąż się ustala i naprzemiennie pokrywa oraz nie pokrywa wymaganego poziomu."
+    },
+    {
+      "at": "2026-10-27T12:15:39.233Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W najbliższych dniach margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Jutro między 15:00 a 22:00 rezerwa nie pokryje wymaganego poziomu, a nadwyżka spadnie poniżej progu 1100 MW. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek i piątek margines również spadnie poniżej normy, natomiast w poniedziałek 2 listopada sytuacja wciąż się ustala."
     }
   ]
 }
