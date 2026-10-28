@@ -1145,6 +1145,74 @@ Punkt powrotu `v3.90.5-przed-ocena-wstepna`.
 **Zauważone przy okazji:** strażnik po przełączeniu dnia robi zrzut przed narysowaniem linii wykresu
 rezerwy (`tomorrow-light` ma same punkty) — sceny z `dayIndex` nie pilnują wyglądu wykresu.
 
+## Saldo szacowane w tle: etap 2 (28.10.2026, v3.90.7)
+
+**Po co.** Etap 2 decyzji z 28.10: szacunek salda liczony co przebieg, zapisywany i mierzony przez
+2–3 tygodnie, bez niczego na ekranie. Liczby idą do właściciela przed etapem 3 (szacunek jako opis
+pod flagą `?saldo=1`, makiety przed kodem).
+
+**Wdrożone.**
+- `saldoSzacunek.ts`:
+  - E5 dla h=1–2: ½ × ta sama godzina ostatniej doby z planem + ½ × średnia tej godziny z dób tego
+    samego typu z 28 dni do niej włącznie. Dla h≥3 sam profil.
+  - Typy dób: robocza / sobota / niedziela-święto (Wigilia też). Co najmniej 3 doby danego typu,
+    tylko doby z planem (`exchangePlanned`), wynik zaokrąglony do 100 MW.
+  - Pasmo P10/P90 dla każdej godziny i dla h=1, 2, ≥3 jako stałe, policzone z planów końcowych PSE
+    z 01.01–28.10.2026 (300 dób). W tej próbie pasmo objęło 80,3%, a MAE dla h=1 w godzinach 7–21
+    wyniosło 1068 MW, tak jak w rozpoznaniu.
+- Historia: `planned_exchange` dopisane do `HISTORY_FIELDS_WITH_MIX`. Te 30 dni generator i tak
+  pobiera, więc nie ma nowych zapytań do pk5l-wp. Na telefonach bez zmian.
+- Jutro z `pwm-rdn`:
+  - pobierane od 12:00 czasu polskiego, dopóki jutro opiera się na dzisiejszym planie (ok. 5 zapytań
+    na dobę);
+  - suma wszystkich granic, średnia z czterech kwadransów godziny;
+  - null na granicy synchronicznej, LT lub SE oznacza brak wyniku (D+2 ma wypełnione tylko UA);
+  - sprawdzone na żywo 28.10 dla 29.10: znak się zgadza, w nocy różnica 8–45 MW, w dzień do 300 MW
+    od planu, który PSE zdążyło już poprawić;
+  - godzina liczona z lokalnego końca kwadransu (`dtime`), bo `period` przy zmianie czasu ma postać
+    „03:00 - 02a:15”; powtórzona godzina pominięta, jak w archiwum.
+- Log `data/saldo-szacunki/YYYY-MM.jsonl` (`merge=union`): wiersz
+  `[doba, godz, h, metoda, mw, p10, p90, readAt]` przy każdej zmianie. Obejmuje te same doby, które
+  aplikacja oznacza „wstępnie” (`datesAwaitingExchangePlan`).
+- `saldoOcena.ts` → `data/saldo-ocena.json`, zapis tylko przy zmianie. Dla każdej doby po dojściu
+  planu liczy:
+  - błąd salda w godzinach 7–21 względem pierwszego planu i względem stanu w terminie
+    (godzina − 8 h), osobno dla każdej metody i horyzontu oraz dla wartości zastępczej;
+  - pokrycie pasma;
+  - werdykty dób roboczych (trafiona / fałszywa / przeoczona / spokojna), widziane tuż przed planem,
+    dla rezerwy PSE i dla rezerwy z szacunkiem przy k=0,5 i k=0,9.
+  Werdyktu nie dostaje doba, w której ostatni odczyt bez planu był ponad 60 min przed planem (awaria
+  pulsu 29.09–14.10 dawała przerwy 6–13 h). Pole `stage3` zbiera próg: co najmniej 15 dób roboczych,
+  pokrycie E5 dla h=1 co najmniej 75%, przeoczeń nie więcej niż przy samej rezerwie PSE.
+- **Zmiana wobec planu:** w etapie 2 nie ma `public/saldo.json`. Żaden telefon go jeszcze nie czyta,
+  a plik w `public/` przebudowywałby stronę przy każdej zmianie. Wejdzie w etapie 3 razem z bramką.
+- Archiwum pk5l jest czytane raz na przebieg (`readArchiveRows`), wspólnie dla badania i oceny.
+
+**Sprawdzone.**
+- 1442 testy. 20 sond mutacyjnych: 3 przeżyły pierwsze podejście, więc usunąłem martwy warunek „a”
+  i dopisałem dwa testy. Sonda kontrolna, która nie zmienia zachowania, przeżyła, jak powinna.
+- Strażnik `saldoShadowWiring` pilnuje trzech rzeczy: żaden moduł aplikacji nie importuje szacunku,
+  generator nie pisze do `public/`, fakty AI nie zawierają szacunku. Sonda z importem w App.tsx
+  została złapana.
+- Symulacja na prawdziwym archiwum (09.09–27.10, szacunek sprzed planu liczony z planów końcowych
+  PSE), 22 doby robocze z odczytem na czas, w układzie trafione / fałszywe / przeoczone:
+  - sama rezerwa PSE: 15/4/1;
+  - k=0,5: 15/3/1;
+  - k=0,9: 13/2/3.
+  To odtwarza rozpoznanie (14/4/1, 14/3/1 i 12/2/3 na 21 dobach). MAE względem pierwszego planu:
+  E5 dla h=1 1094 MW, wartość zastępcza 1198 MW. Pokrycie pasma 81,7%.
+- Pierwszy plan z 13:15 jest co do wielkości średnio o ok. 300 MW mniejszy niż wersja końcowa
+  (1212 wobec 1506 MW, różnica bezwzględna 357 MW). Dlatego ocena mierzy względem pierwszego planu
+  i stanu w terminie, a nie wersji końcowej.
+- Generator na kopii repozytorium (żywe PSE, bez kluczy): 5 dób bez planu (od 30.10 E5 h=1 do 03.11
+  profil h=5), 120 wierszy. Drugi przebieg dopisał 0 wierszy, ocena się nie zmieniła. Cały przebieg
+  trwa 5 s.
+- Punkt powrotu `v3.90.6-przed-szacunkiem-salda`.
+
+**Do sprawdzenia po dobie:** pierwsza doba z dojściem planu w `data/saldo-ocena.json` (30.10, plan
+29.10 ok. 13:15); czy wynik `pwm-rdn` dla 30.10 wszedł do logu 29.10 po 13:04; przyrost logu na dobę.
+**Ocena:** 15 dób roboczych od 30.10 (11.11 wolne) przypada na 20.11.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś

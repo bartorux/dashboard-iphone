@@ -27,6 +27,7 @@ import {
   fetchCompassHistory,
   fetchPSEData,
   fetchPSEHistory,
+  fetchPwmRdn,
 } from '../src/utils/api';
 import { processData } from '../src/utils/dataTransform';
 import { visibleBusinessDates } from '../src/utils/dayWindow';
@@ -62,6 +63,18 @@ import {
   newArchiveLines,
   previousPartition,
 } from '../src/utils/pk5lArchive';
+import type { ArchiveRow } from '../src/utils/pk5lArchive';
+import { datesAwaitingExchangePlan } from '../src/utils/exchangePlan';
+import {
+  estimateExchange,
+  exchangeByDay,
+  exchangeFromPwmRdn,
+  lastEstimatesFrom,
+  newEstimateLines,
+  parseEstimateLog,
+  withMarketResult,
+} from '../src/utils/saldoSzacunek';
+import { evaluateEstimates } from '../src/utils/saldoOcena';
 import { newOzeArchiveLines, ozeLastValuesFrom } from '../src/utils/ozeArchive';
 import {
   compassVersionRows,
@@ -105,6 +118,8 @@ const archiveDir = resolve(root, 'data/pk5l-archiwum');
 const compassArchiveDir = resolve(root, 'data/kompas-archiwum');
 const ozeArchiveDir = resolve(root, 'data/pk5l-oze-archiwum');
 const badanieTarget = resolve(root, 'data/badanie.json');
+const saldoLogDir = resolve(root, 'data/saldo-szacunki');
+const saldoOcenaTarget = resolve(root, 'data/saldo-ocena.json');
 const eventsTarget = resolve(root, 'data/przywolania.json');
 const pricesTarget = resolve(root, 'public/ceny.json');
 const pricesArchiveDir = resolve(root, 'data/ceny-archiwum');
@@ -614,7 +629,27 @@ async function fetchObservationIssues(): Promise<IssueLike[]> {
   }
 }
 
-async function writeBadanie(at: Date): Promise<void> {
+/**
+ * Every pk5l-wp reading of this partition and the previous one, read once and
+ * handed to both the study and the exchange-estimate evaluation — together
+ * they run to tens of megabytes.
+ */
+function readArchiveRows(at: Date): ArchiveRow[] {
+  const partition = archivePartition(at);
+  return parseArchiveRows(
+    [previousPartition(partition), partition]
+      .map((name) => {
+        try {
+          return readFileSync(resolve(archiveDir, `${name}.jsonl`), 'utf8');
+        } catch {
+          return '';
+        }
+      })
+      .join('\n')
+  );
+}
+
+async function writeBadanie(at: Date, rows: ArchiveRow[]): Promise<void> {
   try {
     const partition = archivePartition(at);
     const partitions = [previousPartition(partition), partition];
@@ -625,9 +660,6 @@ async function writeBadanie(at: Date): Promise<void> {
         return '';
       }
     };
-    const rows = parseArchiveRows(
-      partitions.map((name) => readPartition(archiveDir, name)).join('\n')
-    );
     const compass = partitions.flatMap((name) =>
       compassVersionRows(readPartition(compassArchiveDir, name))
     );
@@ -675,6 +707,77 @@ async function writeBadanie(at: Date): Promise<void> {
     console.log(`Badanie przywolan: ${file.days.length} dob, zapisano data/badanie.json.`);
   } catch (error) {
     console.warn(`Badanie przywolan pominiete w tym przebiegu: ${String(error)}`);
+  }
+}
+
+/** pwm-rdn for tomorrow comes out at 13:02–13:06 Warsaw; asked earlier, it is always empty. */
+const PWM_RDN_FROM_WARSAW_HOUR = 12;
+
+const warsawDayOf = (at: Date) =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Warsaw' }).format(at);
+const warsawHourOf = (at: Date) =>
+  Number(
+    new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Warsaw', hour: '2-digit', hourCycle: 'h23' }).format(at)
+  );
+
+/**
+ * Stage 2 of the exchange estimate (saldoSzacunek.ts): estimate the days PSE
+ * has not planned yet, log every change to data/saldo-szacunki/, and score the
+ * log against the archive into data/saldo-ocena.json. Nothing goes to public/:
+ * no phone reads the estimate yet, and a file there would rebuild the site on
+ * every change (see the commit step in summary.yml).
+ *
+ * The days are the ones the app itself marks "wstępnie"
+ * (`datesAwaitingExchangePlan`), so the log covers exactly what a reader saw
+ * without a plan. Wrapped whole, like the archives: a lost estimate, never a
+ * failed run.
+ */
+async function writeSaldo(at: Date, archiveRows: readonly ArchiveRow[]): Promise<void> {
+  try {
+    const byDay = exchangeByDay([...history, ...forecast]);
+    let estimates = estimateExchange(byDay, [...datesAwaitingExchangePlan(points)].sort());
+
+    // Tomorrow, once the market has cleared it: the result per border comes
+    // 10–40 minutes before pk5l-wp carries the plan. Asked for only while
+    // tomorrow rests on today's plan, so after 13:15 the day after tomorrow
+    // (which pwm-rdn has no result for) is never asked about.
+    const tomorrow = estimates.find((day) => day.h === 1 && day.basedOn === warsawDayOf(at));
+    if (tomorrow && warsawHourOf(at) >= PWM_RDN_FROM_WARSAW_HOUR) {
+      const hourly = exchangeFromPwmRdn(await fetchPwmRdn(tomorrow.businessDate), tomorrow.businessDate);
+      if (hourly) estimates = withMarketResult(estimates, tomorrow.businessDate, hourly);
+    }
+
+    const partition = archivePartition(at);
+    const readLog = (name: string): string => {
+      try {
+        return readFileSync(resolve(saldoLogDir, `${name}.jsonl`), 'utf8');
+      } catch {
+        return '';
+      }
+    };
+    const texts = [readLog(previousPartition(partition)), readLog(partition)];
+    const lines = newEstimateLines(estimates, lastEstimatesFrom(texts), at.toISOString());
+    if (lines.length > 0) {
+      mkdirSync(saldoLogDir, { recursive: true });
+      appendFileSync(resolve(saldoLogDir, `${partition}.jsonl`), `${lines.join('\n')}\n`);
+    }
+    const opis = estimates.map((day) => `${day.businessDate} ${day.method} h=${day.h}`).join(', ');
+    console.log(`Szacunek salda: ${opis || 'brak dob bez planu'}; dopisano ${lines.length} wierszy.`);
+
+    const ocena = evaluateEstimates(parseEstimateLog([...texts, lines.join('\n')].join('\n')), archiveRows, at);
+    const nextText = `${JSON.stringify(ocena, null, 2)}\n`;
+    let currentText: string | null = null;
+    try {
+      currentText = readFileSync(saldoOcenaTarget, 'utf8');
+    } catch {
+      // First evaluation ever.
+    }
+    if (nextText !== currentText) {
+      writeFileSync(saldoOcenaTarget, nextText);
+      console.log(`Ocena szacunku salda: ${ocena.days.length} dob, ${ocena.stage3.workingDays} roboczych z werdyktem.`);
+    }
+  } catch (error) {
+    console.warn(`Szacunek salda pominiety w tym przebiegu: ${String(error)}`);
   }
 }
 
@@ -914,7 +1017,11 @@ try {
 
 // After both archives have taken this hour's rows, so the study sees them —
 // and before the first exit below, so a quiet day still gets re-scored.
-if (!dryRun) await writeBadanie(now);
+if (!dryRun) {
+  const archiveRows = readArchiveRows(now);
+  await writeBadanie(now, archiveRows);
+  await writeSaldo(now, archiveRows);
+}
 
 // Independent of the summary text entirely — a day with no facts to write
 // about (the exit right below) still has a price strip worth refreshing.

@@ -18,9 +18,9 @@ import { CALL_PERIOD_EXEMPTION_MW, HOUR_MS } from './constants';
 export type CallPeriodRisk = 'high' | 'moderate' | 'none' | 'unknown';
 
 /** First and last hour a call period can start at, inclusive. */
-const WINDOW_FIRST_HOUR = 7;
+export const WINDOW_FIRST_HOUR = 7;
 /** 21:00-22:00 is the last block inside the 07:00-22:00 window. */
-const WINDOW_LAST_HOUR = 21;
+export const WINDOW_LAST_HOUR = 21;
 
 /** The operator must give at least this much notice, so a closer hour is settled. */
 export const NOTICE_HOURS = 8;

@@ -61,6 +61,33 @@ export interface PSEKseDemandRawItem {
   kse_pow_dem?: string | number | null;
 }
 
+/**
+ * A row from pwm-rdn — the day-ahead market's result per border, one row per
+ * quarter, published on D−1 around 13:04. Import into PL positive (`cz_pl`),
+ * export negative (`pl_cz`). For D+2 only the UA fields are filled and every
+ * other border is null: no market result yet, not a zero.
+ */
+export interface PSEPwmRdnRawItem {
+  business_date: string;
+  /** Local wall-clock END of the quarter; the repeated autumn hour carries an "a" ("02a:15:00"). */
+  dtime: string;
+  period?: string;
+  cz_pl?: number | null;
+  de_pl?: number | null;
+  lt_pl?: number | null;
+  se_pl?: number | null;
+  sk_pl?: number | null;
+  ua_pl?: number | null;
+  ua_dob_pl?: number | null;
+  pl_cz?: number | null;
+  pl_de?: number | null;
+  pl_lt?: number | null;
+  pl_se?: number | null;
+  pl_sk?: number | null;
+  pl_ua?: number | null;
+  pl_ua_dob?: number | null;
+}
+
 export interface PSERedispatchRawItem {
   business_date: string;
   dtime: string;

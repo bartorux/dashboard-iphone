@@ -5,6 +5,7 @@ import {
   fetchPSEHistory,
   fetchRedispatch,
   fetchCompassHistory,
+  fetchPwmRdn,
 } from '../api';
 
 const ok = (value: unknown[]) => ({
@@ -183,6 +184,7 @@ describe('fetchPSEHistory', () => {
     const url = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
     // Keeps 30 days at ~7.5 KB gzipped instead of half a megabyte
     expect(url).not.toContain('grid_demand_fcst');
+    expect(url).not.toContain('planned_exchange');
     expect(url).toContain('surplus_cap_avail_tso');
   });
 
@@ -204,6 +206,29 @@ describe('fetchPSEHistory', () => {
     expect(url).toContain('fcst_wi_tot_gen');
     expect(url).toContain('sum_unav_oper_cond');
     expect(url).toContain('surplus_cap_avail_tso');
+    // Four weeks of PSE's own plans, for the exchange estimate.
+    expect(url).toContain('planned_exchange');
+  });
+});
+
+describe('fetchPwmRdn', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('asks pwm-rdn, not pk5l-wp, for one business day, with room for the 100-quarter DST day', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok([{ dtime: 'x' }]));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await fetchPwmRdn('2026-10-29');
+
+    const url = decodeURIComponent(String(fetchMock.mock.calls[0][0]));
+    expect(url).toMatch(/\/pwm-rdn\?/);
+    expect(url).toContain("business_date eq '2026-10-29'");
+    expect(url).toContain('$first=120');
+  });
+
+  it('returns an empty array rather than throwing when the request fails', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
+    await expect(fetchPwmRdn('2026-10-29')).resolves.toEqual([]);
   });
 });
 

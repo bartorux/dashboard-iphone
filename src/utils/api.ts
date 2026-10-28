@@ -1,4 +1,10 @@
-import { PSECompassRawItem, PSEKseDemandRawItem, PSERawItem, PSERedispatchRawItem } from '../types';
+import {
+  PSECompassRawItem,
+  PSEKseDemandRawItem,
+  PSEPwmRdnRawItem,
+  PSERawItem,
+  PSERedispatchRawItem,
+} from '../types';
 import { API_BASE, API_URL, FORECAST_ROW_LIMIT } from './constants';
 import { daysToFetch } from './dayWindow';
 import { addDays, formatDateTimeApi, getStartOfToday } from './dateHelpers';
@@ -55,6 +61,9 @@ export const HISTORY_FIELDS_WITH_MIX = [
   'fcst_pv_tot_gen',
   'fcst_wi_tot_gen',
   'sum_unav_oper_cond',
+  // The exchange estimate (saldoSzacunek.ts) averages each hour over the last
+  // four weeks of PSE's own plans — the same rows, one more column.
+  'planned_exchange',
 ].join(',');
 
 /**
@@ -170,6 +179,20 @@ export async function fetchRedispatch(
   const rows = await query<PSERedispatchRawItem>(
     `${API_BASE}/poze-redoze`,
     // 96 quarters a day, 100 on the autumn DST fold (25.10.2026) — 120 leaves room.
+    `$filter=${encodeURIComponent(`business_date eq '${businessDate}'`)}&$first=120`
+  );
+  return rows ?? [];
+}
+
+/**
+ * The day-ahead market result per border (pwm-rdn) for one business day: 96
+ * quarters, published on D−1 around 13:04 — 10 to 40 minutes before
+ * pk5l-wp carries the exchange plan. Asked for by the generator only.
+ */
+export async function fetchPwmRdn(businessDate: string): Promise<PSEPwmRdnRawItem[]> {
+  const rows = await query<PSEPwmRdnRawItem>(
+    `${API_BASE}/pwm-rdn`,
+    // 100 quarters on the autumn DST fold, as poze-redoze.
     `$filter=${encodeURIComponent(`business_date eq '${businessDate}'`)}&$first=120`
   );
   return rows ?? [];

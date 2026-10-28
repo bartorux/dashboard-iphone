@@ -218,7 +218,7 @@ function warsawLocalDateOf(instant: Date): string {
  * itself (never touched by the 07-23 hours this module deals with), so one
  * pass is exact here.
  */
-function warsawWallClockToUtc(businessDate: string, hour: number): Date {
+export function warsawWallClockToUtc(businessDate: string, hour: number): Date {
   if (!BUSINESS_DATE.test(businessDate)) return new Date(NaN);
   const [year, month, day] = businessDate.split('-').map(Number);
 
