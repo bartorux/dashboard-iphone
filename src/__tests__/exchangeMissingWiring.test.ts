@@ -76,4 +76,14 @@ describe('Zastrzeżenie o niezaplanowanym saldzie wymiany — okablowanie w App'
     expect(badge).toMatch(/findAlerts\(planned,/);
     expect(badge).not.toMatch(/findAlerts\(allData,/);
   });
+
+  it('znakuje zakładki tych samych dób i podaje karcie alertów zdanie z zegara', () => {
+    const offsets = extractCall(appSrc, 'const provisionalOffsets = useMemo(');
+    expect(offsets).toMatch(/preliminaryDates\.has\(/);
+    expect(extractJsxTag(appSrc, '<DayNavigation')).toContain('provisionalOffsets={provisionalOffsets}');
+
+    const caveat = extractCall(appSrc, 'const exchangeCaveat = useMemo(');
+    expect(caveat).toMatch(/provisionalCaveat\(selectedBusinessDate, now\)/);
+    expect(extractJsxTag(appSrc, '<AlertsPanel')).toContain('exchangeCaveat={exchangeCaveat}');
+  });
 });

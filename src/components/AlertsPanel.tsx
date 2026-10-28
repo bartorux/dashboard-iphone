@@ -40,7 +40,24 @@ interface AlertsPanelProps {
    * the status card.
    */
   exchangeMissing?: boolean;
+  /**
+   * The sentence saying why the day is "wstępna" and when that ends — see
+   * `provisionalCaveat` in exchangePlan.ts. App computes it, because it needs
+   * the wall clock; shown only while `exchangeMissing`.
+   */
+  exchangeCaveat?: string;
 }
+
+/**
+ * A hollow ring: "not settled yet". The same mark sits on the day's tab
+ * (SegmentedControl's `provisional`), so the two read as one sign.
+ */
+const ProvisionalRing: React.FC = () => (
+  <span
+    aria-hidden
+    className="mr-1 inline-block h-[5px] w-[5px] rounded-full border border-current align-[1px]"
+  />
+);
 
 const SEVERITY_STYLE = {
   red: {
@@ -96,7 +113,7 @@ const startHour = (label: string) => parseInt(label, 10) || 0;
  * reserve chart's plot area in the card above (see shared.tsx) regardless of
  * which of the two cards' padding changes later.
  */
-const DayAxis: React.FC<{ ranges: AlertRange[] }> = ({ ranges }) => {
+const DayAxis: React.FC<{ ranges: AlertRange[]; provisional: boolean }> = ({ ranges, provisional }) => {
   const inset = dayAxisInset();
   const trackInset = {
     marginLeft: Math.max(0, inset.left - ALERTS_CARD_PADDING_PX),
@@ -113,7 +130,9 @@ const DayAxis: React.FC<{ ranges: AlertRange[] }> = ({ ranges }) => {
           return (
             <span
               key={`${range.severity}-${range.from}`}
-              className={`absolute rounded-full ${style.bar} ${
+              // Hatched while the day is "wstępna": the windows stay where
+              // they are, the alarm colour does not — see AlertsPanel.
+              className={`absolute rounded-full ${provisional ? 'alert-bar-provisional' : style.bar} ${
                 // Weight as a second channel: alarm runs the full height,
                 // warning sits inset — the size cue points the same way as
                 // the colour instead of contradicting it.
@@ -175,6 +194,7 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
   isLoading = false,
   compassRanges = [],
   exchangeMissing = false,
+  exchangeCaveat,
 }) => {
   const dayName = dayLabel(currentDayOffset);
   // Two separate totals, not one: a day that only ever touched the orange
@@ -188,20 +208,26 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
     .reduce((sum, range) => sum + range.hours, 0);
 
   /*
-   * Below the alert list, above the Kompas block — the one place this app
-   * already carries a note that qualifies the figures above it without
-   * touching their color or status (see the two `text-text-tertiary`
-   * paragraphs a few lines down). Shown in both branches below (with alerts
-   * and without) since the caveat is about the day's data, not about whether
-   * an alert happened to fire on it.
+   * A day still waiting for PSE's exchange plan is assessed "wstępnie" (the
+   * owner's rule of 22.09.2026): the same windows and the same megawatts, but
+   * nothing in the alarm colours — grey rows keeping only a thin coloured edge
+   * (which window is worse), no warning triangle, a hatched axis, a grey pill.
+   * Measured over 22 working days, without the plan the evening margin reads
+   * 1.0–1.4 GW low; on 30.10.2026, seen from 28.10, that was twenty red hours.
+   *
+   * The sentence saying why goes first, under the axis: it is how to read the
+   * numbers below it, not a footnote after them.
    */
-  const exchangeNote = exchangeMissing ? (
-    <p className="mt-2 text-[0.75rem] text-text-secondary">
-      Saldo wymiany na tę dobę nie jest jeszcze zaplanowane — rezerwa liczona
-      bez importu i eksportu. Plan dochodzi dzień wcześniej, dotąd zawsze
-      między 13:15 a 14:00.
-    </p>
-  ) : null;
+  const provisional = exchangeMissing;
+  const provisionalNote =
+    provisional && hasData ? (
+      <p className="mb-3 text-[0.75rem] leading-snug text-text-secondary">
+        {exchangeCaveat ??
+          'Ocena wstępna: saldo wymiany na tę dobę nie jest jeszcze zaplanowane — rezerwa liczona bez importu i eksportu.'}
+      </p>
+    ) : null;
+  const pillClass = (severity: AlertRange['severity']) =>
+    provisional ? 'bg-surface-2 text-text-secondary' : SEVERITY_STYLE[severity].pill;
 
   return (
     <section className="mx-3 mt-3 rounded-2xl bg-surface p-4 shadow-sm">
@@ -213,15 +239,20 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
           <div className="flex shrink-0 items-center gap-1">
             {redHours > 0 && (
               <span
-                className={`tnum rounded-full ${SEVERITY_STYLE.red.pill} px-2 py-0.5 text-[0.6875rem] font-semibold`}
+                className={`tnum rounded-full ${pillClass('red')} px-2 py-0.5 text-[0.6875rem] font-semibold`}
               >
+                {provisional && <ProvisionalRing />}
+                {provisional && 'wstępnie · '}
                 {redHours} godz.
               </span>
             )}
             {orangeHours > 0 && (
               <span
-                className={`tnum rounded-full ${SEVERITY_STYLE.orange.pill} px-2 py-0.5 text-[0.6875rem] font-semibold`}
+                className={`tnum rounded-full ${pillClass('orange')} px-2 py-0.5 text-[0.6875rem] font-semibold`}
               >
+                {/* "wstępnie" once, on the first pill shown. */}
+                {provisional && redHours === 0 && <ProvisionalRing />}
+                {provisional && redHours === 0 && 'wstępnie · '}
                 {orangeHours} godz.
               </span>
             )}
@@ -233,7 +264,9 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
           quiet" in a register the text branch below already owns (see
           "Brak alertów w tym dniu") — one axis with nothing on it adds
           nothing a reader can act on. */}
-      {ranges.length > 0 && <DayAxis ranges={ranges} />}
+      {ranges.length > 0 && <DayAxis ranges={ranges} provisional={provisional} />}
+
+      {provisionalNote}
 
       {/*
         This branch has to come FIRST, before !hasData.
@@ -263,7 +296,6 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
             <CheckIcon className="h-4 w-4 shrink-0" />
             Brak alertów w tym dniu
           </div>
-          {exchangeNote}
           <CompassRows ranges={compassRanges} />
         </div>
       ) : (
@@ -278,25 +310,26 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
               return (
                 <li
                   key={`${range.severity}-${range.from}`}
-                  className={`flex gap-3 overflow-hidden rounded-xl ${style.wrapper}`}
+                  className={`flex gap-3 overflow-hidden rounded-xl ${provisional ? 'bg-surface-2' : style.wrapper}`}
                 >
-                  <span className={`w-1 shrink-0 ${style.bar}`} aria-hidden />
+                  <span className={`${provisional ? 'w-[3px]' : 'w-1'} shrink-0 ${style.bar}`} aria-hidden />
                   <div className="min-w-0 flex-1 py-2 pr-3">
                     <div className="flex items-baseline justify-between gap-3">
                       <span className="tnum text-[0.9375rem] font-semibold text-text">
                         {range.from}–{range.to}
                       </span>
                       <span
-                        className={`tnum text-[0.9375rem] font-semibold ${style.text}`}
+                        className={`tnum text-[0.9375rem] font-semibold ${provisional ? 'text-text' : style.text}`}
                       >
                         {signedMW(range.worstDifference)}
                       </span>
                     </div>
                     <div className="mt-0.5 flex items-baseline justify-between gap-3">
                       <span
-                        className={`flex shrink-0 items-center gap-1 text-[0.6875rem] font-semibold ${style.text}`}
+                        className={`flex shrink-0 items-center gap-1 text-[0.6875rem] font-semibold ${provisional ? 'text-text-secondary' : style.text}`}
                       >
-                        <AlertIcon className="h-3.5 w-3.5" />
+                        {/* The triangle is the sign of a confirmed alarm. */}
+                        {!provisional && <AlertIcon className="h-3.5 w-3.5" />}
                         {rowLabel}
                       </span>
                       <span className="tnum text-[0.75rem] text-text-secondary">
@@ -320,7 +353,6 @@ const AlertsPanel: React.FC<AlertsPanelProps> = ({
             Próg alarmowy to ostrzeżenie wyprzedzające — margines może być
             jeszcze dodatni.
           </p>
-          {exchangeNote}
           <CompassRows ranges={compassRanges} />
         </div>
       )}

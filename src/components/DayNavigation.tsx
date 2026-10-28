@@ -8,6 +8,8 @@ interface DayNavigationProps {
   offsets: DayOffset[];
   currentDay: DayOffset;
   onSwitchDay: (offset: DayOffset) => void;
+  /** Days still waiting for PSE's exchange plan — marked "wstępna" on their tab. */
+  provisionalOffsets?: ReadonlySet<DayOffset>;
 }
 
 /**
@@ -33,13 +35,18 @@ const DayNavigation: React.FC<DayNavigationProps> = ({
   offsets,
   currentDay,
   onSwitchDay,
+  provisionalOffsets,
 }) => (
   <div className="mx-3 mt-3 xl:pl-3">
     <SegmentedControl
       ariaLabel="Wybór dnia"
       value={currentDay}
       onChange={onSwitchDay}
-      segments={offsets.map((offset) => ({ value: offset, ...dayTab(offset) }))}
+      segments={offsets.map((offset) => ({
+        value: offset,
+        ...dayTab(offset),
+        provisional: provisionalOffsets?.has(offset) ?? false,
+      }))}
       className="xl:w-full xl:max-w-[34rem]"
     />
   </div>

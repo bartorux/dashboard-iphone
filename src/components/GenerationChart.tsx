@@ -15,6 +15,7 @@ import { HOUR_MS } from '../utils/constants';
 import { niceScaleRange } from '../utils/scale';
 import { hasCurtailment, RedispatchHour } from '../utils/redispatch';
 import { renewableMixShare } from '../utils/renewableShare';
+import { exchangePlanned } from '../utils/exchangePlan';
 import { useChartColors } from '../hooks/useChartColors';
 import {
   useChartAnimationMs,
@@ -97,6 +98,13 @@ interface Row {
   windRed: number | null;
   /** Country-wide demand for this hour, or null when not published. */
   kseDemand: number | null;
+  /**
+   * Whether the DAY carries PSE's exchange plan (exchangePlanned) — judged on
+   * the whole day, never on this one hour. Without it `exchange` is PSE's
+   * placeholder (−12, 0, a few tens of MW), which the tooltip used to read out
+   * as "eksport 12 MW".
+   */
+  exchangePlanned: boolean;
 }
 
 /**
@@ -223,9 +231,12 @@ export const GenerationTooltip: React.FC<TooltipProps> = ({ active, payload, lab
         />
         <TooltipRow
           label="Wymiana"
-          value={`${exchange > 0 ? 'import ' : 'eksport '}${formatMW(
-            Math.abs(exchange)
-          )} MW`}
+          value={
+            row.exchangePlanned
+              ? `${exchange > 0 ? 'import ' : 'eksport '}${formatMW(Math.abs(exchange))} MW`
+              : 'jeszcze bez planu'
+          }
+          tone={row.exchangePlanned ? undefined : 'text-text-tertiary'}
         />
         <TooltipRow label="Ubytki mocy" value={`${formatMW(row.outages ?? 0)} MW`} />
         {showRedispatch && (
@@ -277,7 +288,9 @@ const GENERATION_COLUMNS: HourColumn<Row>[] = [
   {
     header: 'Wymiana',
     value: (row) =>
-      row.exchange === null ? '—' : `${row.exchange > 0 ? '+' : ''}${formatMW(row.exchange)}`,
+      row.exchange === null || !row.exchangePlanned
+        ? '—'
+        : `${row.exchange > 0 ? '+' : ''}${formatMW(row.exchange)}`,
   },
 ];
 
@@ -306,6 +319,9 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
    */
   const fillWash = Number(colors.fillOpacity);
 
+  // Judged on the whole day — see Row.exchangePlanned.
+  const dayExchangePlanned = useMemo(() => exchangePlanned(data), [data]);
+
   const rows = useMemo<Row[]>(
     () =>
       data.map((point) => ({
@@ -325,8 +341,9 @@ const GenerationChart: React.FC<GenerationChartProps> = ({
         ...redispatchForPoint(point, redispatch),
         kseDemand:
           kseDemand?.get(point.time.getTime() - HOUR_MS) ?? null,
+        exchangePlanned: dayExchangePlanned,
       })),
-    [data, redispatch, kseDemand]
+    [data, redispatch, kseDemand, dayExchangePlanned]
   );
 
   const curtailmentHours = useMemo(

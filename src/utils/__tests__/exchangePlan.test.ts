@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   datesAwaitingExchangePlan,
+  provisionalCaveat,
   exchangeArrivedAt,
   exchangePlanned,
   plannedByReading,
@@ -152,6 +153,34 @@ describe('datesAwaitingExchangePlan', () => {
 
   it('leaves out a day with no readings at all — nothing fetched yet is not "unplanned"', () => {
     expect(datesAwaitingExchangePlan(hours('2026-10-30', null, null))).toEqual(new Set());
+  });
+});
+
+describe('provisionalCaveat', () => {
+  // Local wall clock, as the app runs in Europe/Warsaw (the suite is pinned to it).
+  const at = (iso: string) => new Date(iso);
+
+  it('names the day the plan will come, two days ahead: "w czw. 29.10"', () => {
+    expect(provisionalCaveat('2026-10-30', at('2026-10-28T19:13:00'))).toBe(
+      'Ocena wstępna: rezerwa jest liczona bez importu, bo PSE poda plan wymiany z zagranicą na tę dobę dopiero w czw. 29.10 około 13:00–13:45 — do tego czasu margines wieczorem jest zwykle zaniżony o 1–1,4 GW, a w południe zawyżony.'
+    );
+  });
+
+  it('says "we wt." for a Tuesday, as "we wtorek", and names Sunday for a Monday', () => {
+    expect(provisionalCaveat('2026-10-28', at('2026-10-26T10:00:00'))).toContain('dopiero we wt. 27.10 około');
+    expect(provisionalCaveat('2026-11-02', at('2026-10-29T10:00:00'))).toContain('dopiero w niedz. 01.11 około');
+  });
+
+  it('says "dziś" for tomorrow until the window closes, then that the plan is late', () => {
+    expect(provisionalCaveat('2026-10-29', at('2026-10-28T09:00:00'))).toContain('dopiero dziś około 13:00–13:45');
+    expect(provisionalCaveat('2026-10-29', at('2026-10-28T13:44:00'))).toContain('dopiero dziś około');
+    const late = provisionalCaveat('2026-10-29', at('2026-10-28T13:45:00'));
+    expect(late).toContain('jeszcze nie doszedł (zwykle do 13:45)');
+    expect(late).not.toContain('dopiero');
+  });
+
+  it('calls a plan missing on the day itself late as well', () => {
+    expect(provisionalCaveat('2026-10-28', at('2026-10-28T08:00:00'))).toContain('jeszcze nie doszedł');
   });
 });
 

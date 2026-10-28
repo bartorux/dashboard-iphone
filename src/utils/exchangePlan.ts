@@ -131,16 +131,55 @@ export function readingHasExchange(exchange: number | null | undefined): boolean
 }
 
 /**
- * The observed local-time window in which the exchange has arrived so far —
- * three measurements, all on D−1: 13:59 (01.09→02.09), 13:19 (06.09→07.09),
- * 13:15 (08.09→09.09). This is an observation of PSE's practice, NOT a rule
- * out of the regulations: nothing requires the day-ahead market to clear at
- * any particular minute, and a fourth measurement could easily fall outside
- * it. Kept here only as a documented, named constant so a caller wanting to
- * quote "so far always between X and Y" has one place to read the figures
- * from instead of copying them into prose by hand.
+ * The observed local-time window in which the exchange arrives — on D−1.
+ * Measured on 31 days with quarter-hourly readings (09.09–26.10.2026): PSE's
+ * publication stamp fell at 13:02–13:22 on 29 of them (13:42 for 25.10, the
+ * DST day, and 13:15 for 26.10), and our first reading carrying it at
+ * 13:13–13:45. An observation of PSE's practice, NOT a rule: nothing requires
+ * the day-ahead market to clear at any particular minute. One place for the
+ * figures, so no sentence on screen copies them by hand (two did, quoting the
+ * first three measurements, "13:15 a 14:00", long after they stopped being the
+ * best ones).
  */
-export const EXCHANGE_ARRIVAL_OBSERVED_LOCAL = { earliest: '13:15', latest: '13:59' } as const;
+export const EXCHANGE_ARRIVAL_OBSERVED_LOCAL = { earliest: '13:00', latest: '13:45' } as const;
+
+const pad2 = (value: number) => String(value).padStart(2, '0');
+const isoLocal = (date: Date) => `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+
+/**
+ * The sentence that tells the reader why a day is assessed "wstępnie" — and
+ * when that ends. The plan for day D arrives on D−1, so the sentence names
+ * that day: "w czw. 29.10", "dziś", or, once today's window has closed with
+ * nothing in it, that the plan is late. Local wall clock, like every other
+ * time on screen.
+ *
+ * The figures in the second clause are the archive's medians over 22 working
+ * days (28.10.2026): evening 17–21 understated by 1.0–1.4 GW, midday
+ * overstated, because Poland exports then.
+ */
+export function provisionalCaveat(businessDate: string, now: Date): string {
+  const { earliest, latest } = EXCHANGE_ARRIVAL_OBSERVED_LOCAL;
+  const [year, month, day] = businessDate.split('-').map(Number);
+  const dayBefore = new Date(year, month - 1, day - 1);
+  const today = isoLocal(now);
+  const publishedOn = isoLocal(dayBefore);
+  const nowClock = `${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
+  const effect = 'margines wieczorem jest zwykle zaniżony o 1–1,4 GW, a w południe zawyżony';
+
+  const late = publishedOn < today || (publishedOn === today && nowClock >= latest);
+  if (late) {
+    return `Ocena wstępna: rezerwa jest liczona bez importu — plan wymiany z zagranicą na tę dobę jeszcze nie doszedł (zwykle do ${latest}). Do tego czasu ${effect}.`;
+  }
+
+  let when = 'dziś';
+  if (publishedOn !== today) {
+    const weekday = new Intl.DateTimeFormat('pl-PL', { weekday: 'short' }).format(dayBefore);
+    // "we wt.", like "we wtorek"; "w" before every other day.
+    const preposition = weekday.startsWith('wt') ? 'we' : 'w';
+    when = `${preposition} ${weekday} ${pad2(dayBefore.getDate())}.${pad2(dayBefore.getMonth() + 1)}`;
+  }
+  return `Ocena wstępna: rezerwa jest liczona bez importu, bo PSE poda plan wymiany z zagranicą na tę dobę dopiero ${when} około ${earliest}–${latest} — do tego czasu ${effect}.`;
+}
 
 /**
  * The moment a day's readings first show a real exchange after having shown

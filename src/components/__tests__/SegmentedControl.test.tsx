@@ -104,3 +104,27 @@ describe('SegmentedControl — klawiatura (roving tabindex, automatic activation
     expect(onChange).toHaveBeenCalledWith('b');
   });
 });
+
+describe('SegmentedControl — segment "wstępny" (provisional)', () => {
+  const segments: Segment<number>[] = [
+    { value: 0, label: 'Dziś', sublabel: '28.10' },
+    { value: 2, label: 'pt.', sublabel: '30.10', provisional: true },
+  ];
+
+  it('hangs a hollow ring off the date and tells a screen reader, without replacing the name', () => {
+    render(<SegmentedControl ariaLabel="Wybór dnia" segments={segments} value={0} onChange={() => {}} />);
+    const friday = screen.getByRole('tab', { name: /pt\./ });
+    expect(friday.querySelector('[data-provisional-ring]')).not.toBeNull();
+    expect(friday).toHaveAccessibleName('pt.30.10, ocena wstępna');
+    // The date itself is still the plain text, so it stays on its neighbours' line.
+    expect(friday.textContent).toContain('30.10');
+  });
+
+  it('marks nothing on a settled segment', () => {
+    render(<SegmentedControl ariaLabel="Wybór dnia" segments={segments} value={0} onChange={() => {}} />);
+    const today = screen.getByRole('tab', { name: /Dziś/ });
+    expect(today.querySelector('[data-provisional-ring]')).toBeNull();
+    expect(today.textContent).not.toContain('ocena wstępna');
+  });
+});
+

@@ -9,7 +9,7 @@ import {
   Verdict,
 } from '../utils/badanieTypes';
 import { formatMW, signedMW } from '../utils/format';
-import { readingHasExchange } from '../utils/exchangePlan';
+import { EXCHANGE_ARRIVAL_OBSERVED_LOCAL, readingHasExchange } from '../utils/exchangePlan';
 import { issueUrlFor, ObservationDraft, parseObservationTitle } from '../utils/obserwacje';
 
 /**
@@ -1042,7 +1042,8 @@ function Content({ data }: { data: BadanieFile }) {
       <p className="mt-1 text-[0.8125rem] text-text-secondary">
         Doby od pojutrza nie mają jeszcze salda wymiany — rezerwa liczona bez importu i eksportu,
         po dodaniu planu może się zmienić o kilka gigawatów w obie strony. Saldo dochodzi dzień
-        wcześniej, dotąd zawsze między 13:15 a 14:00.
+        wcześniej, zwykle między {EXCHANGE_ARRIVAL_OBSERVED_LOCAL.earliest} a{' '}
+        {EXCHANGE_ARRIVAL_OBSERVED_LOCAL.latest}.
       </p>
       {ahead.length === 0 ? (
         <p className="mt-1 text-[0.8125rem] text-text-secondary">

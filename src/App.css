@@ -1149,6 +1149,18 @@ body {
 /* Rows of the card. Press shows at once; hover only where there is a pointer
    to hover with. The hairline is inset from the text, as in the settings
    lists, and gives way next to a lit row. */
+/* An alert window on a day still waiting for PSE's exchange plan (AlertsPanel,
+   "wstępna"): hatched in the tertiary text colour instead of the alarm fill, as
+   iOS Calendar hatches a tentative event. The geometry is the alarm's own, so
+   the full-height/inset weight still tells the two severities apart. */
+.alert-bar-provisional {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--text-tertiary) 0 1.5px,
+    transparent 1.5px 4px
+  );
+}
+
 .news-row {
   position: relative;
   transition: background-color 100ms ease;

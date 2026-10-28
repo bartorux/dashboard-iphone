@@ -124,8 +124,7 @@ describe('AlertsPanel — Kompas Energetyczny PSE', () => {
   });
 });
 
-const EXCHANGE_SENTENCE =
-  /Saldo wymiany na tę dobę nie jest jeszcze zaplanowane/;
+const EXCHANGE_SENTENCE = /^Ocena wstępna:/;
 
 describe('AlertsPanel — zastrzeżenie o niezaplanowanym saldzie wymiany', () => {
   it('domyślnie (prop pominięty) nic nie pokazuje', () => {
@@ -145,7 +144,7 @@ describe('AlertsPanel — zastrzeżenie o niezaplanowanym saldzie wymiany', () =
     expect(screen.queryByText(EXCHANGE_SENTENCE)).not.toBeInTheDocument();
   });
 
-  it('exchangeMissing={true} bez alertów: zdanie widoczne, pod zieloną linią i nad Kompasem', () => {
+  it('exchangeMissing={true} bez alertów: zdanie widoczne, NAD zieloną linią i nad Kompasem', () => {
     render(
       <AlertsPanel
         ranges={[]}
@@ -160,15 +159,16 @@ describe('AlertsPanel — zastrzeżenie o niezaplanowanym saldzie wymiany', () =
     const note = screen.getByText(EXCHANGE_SENTENCE);
     const heading = screen.getByText(COMPASS_HEADING);
 
+    // First, since 28.10.2026: it says how to read what follows.
     expect(
-      okLine.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING
+      note.compareDocumentPosition(okLine) & Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
     expect(
       note.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
   });
 
-  it('exchangeMissing={true} z alertami: zdanie widoczne pod listą alertów, nad Kompasem', () => {
+  it('exchangeMissing={true} z alertami: zdanie pod osią doby i NAD listą, nad Kompasem', () => {
     const { container } = render(
       <AlertsPanel
         ranges={[alertRange()]}
@@ -180,11 +180,13 @@ describe('AlertsPanel — zastrzeżenie o niezaplanowanym saldzie wymiany', () =
     );
 
     const alertRow = container.querySelector('li')!;
+    const axis = container.querySelector('[data-os-doby]')!;
     const note = screen.getByText(EXCHANGE_SENTENCE);
     const heading = screen.getByText(COMPASS_HEADING);
 
+    expect(axis.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(
-      alertRow.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING
+      note.compareDocumentPosition(alertRow) & Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
     expect(
       note.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING
@@ -306,3 +308,43 @@ describe('AlertsPanel — pasek doby', () => {
     expect(screen.getByText(EXCHANGE_SENTENCE)).toBeInTheDocument();
   });
 });
+
+describe('AlertsPanel — doba wstępna (bez salda PSE, decyzja z 22.09)', () => {
+  const red = () => alertRange({ severity: 'red' });
+
+  it('keeps the windows and megawatts, but drops the alarm colour, the triangle and the red pill', () => {
+    const { container } = render(
+      <AlertsPanel ranges={[red()]} currentDayOffset={2} hasData exchangeMissing />
+    );
+    const row = container.querySelector('li')!;
+    expect(row.className).toContain('bg-surface-2');
+    expect(row.className).not.toContain('bg-alarm-soft');
+    expect(row.querySelector('svg')).toBeNull();
+    // The edge still says which window is worse.
+    expect(row.querySelector('span[aria-hidden]')!.className).toContain('bg-alarm');
+
+    const pill = screen.getByText(/wstępnie ·/);
+    expect(pill.textContent).toMatch(/wstępnie · \d+ godz\./);
+    expect(pill.className).toContain('bg-surface-2');
+    expect(pill.className).not.toContain('bg-alarm-soft');
+
+    expect(container.querySelector('[data-os-doby] .alert-bar-provisional')).not.toBeNull();
+    expect(container.querySelector('[data-os-doby] .bg-alarm')).toBeNull();
+  });
+
+  it('shows the caveat App computed, verbatim', () => {
+    const caveat = 'Ocena wstępna: rezerwa jest liczona bez importu, bo PSE poda plan wymiany z zagranicą na tę dobę dopiero w czw. 29.10 około 13:00–13:45 — do tego czasu margines wieczorem jest zwykle zaniżony o 1–1,4 GW, a w południe zawyżony.';
+    render(<AlertsPanel ranges={[red()]} currentDayOffset={2} hasData exchangeMissing exchangeCaveat={caveat} />);
+    expect(screen.getByText(caveat)).toBeInTheDocument();
+  });
+
+  it('leaves a day with PSE\'s plan exactly as it was: red rows, triangle, red pill, no "wstępnie"', () => {
+    const { container } = render(<AlertsPanel ranges={[red()]} currentDayOffset={1} hasData />);
+    const row = container.querySelector('li')!;
+    expect(row.className).toContain('bg-alarm-soft');
+    expect(row.querySelector('svg')).not.toBeNull();
+    expect(screen.queryByText(/wstępnie/)).toBeNull();
+    expect(container.querySelector('.alert-bar-provisional')).toBeNull();
+  });
+});
+

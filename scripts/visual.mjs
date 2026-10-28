@@ -30,6 +30,20 @@ const forecast = readFileSync(
   resolve(root, 'src/utils/__fixtures__/pse-okno.json'),
   'utf8'
 );
+/**
+ * The forecast fixture with PSE's pre-clearing placeholder on every hour of
+ * the days from `fromDate` on — the state the live feed shows for every day
+ * after tomorrow (see exchangePlan.ts). Only `planned_exchange` changes.
+ */
+function withExchangePlaceholder(text, fromDate) {
+  const parsed = JSON.parse(text);
+  const rows = Array.isArray(parsed) ? parsed : parsed.value;
+  for (const row of rows) {
+    if (row.business_date >= fromDate) row.planned_exchange = -12;
+  }
+  return JSON.stringify(parsed);
+}
+
 const history = readFileSync(
   resolve(root, 'src/utils/__fixtures__/pse-30d.json'),
   'utf8'
@@ -97,6 +111,13 @@ const SCENARIOS = [
   // Selected by position, not by name: the labels are weekday names now, so a
   // literal would have to be recomputed whenever the frozen clock moves.
   { name: 'tomorrow-light', scheme: 'light', dayIndex: 1 },
+  // A day still waiting for PSE's exchange plan (22.09 rule, 28.10.2026): the
+  // fixture's days from 06.08 get PSE's placeholder (−12 MW on every hour), as
+  // the live feed has them from the day after tomorrow on. Covers the ring on
+  // the tabs, the muted Alerts card with its hatched axis and the caveat, and
+  // no fixture showed such a day before.
+  { name: 'doba-wstepna-light', scheme: 'light', dayIndex: 2, exchangePlaceholderFrom: '2026-08-06' },
+  { name: 'doba-wstepna-dark', scheme: 'dark', dayIndex: 2, exchangePlaceholderFrom: '2026-08-06' },
   { name: 'settings-light', scheme: 'light', settings: true },
   { name: 'no-data-light', scheme: 'light', offline: true },
   // Sizes are in rem and the root is hooked to the system font, so raising the
@@ -325,7 +346,9 @@ for (const scenario of SCENARIOS) {
           ? compass
           : requested.includes('business_date ge')
             ? history
-            : forecast;
+            : scenario.exchangePlaceholderFrom
+              ? withExchangePlaceholder(forecast, scenario.exchangePlaceholderFrom)
+              : forecast;
     return route.fulfill({
       status: 200,
       contentType: 'application/json',

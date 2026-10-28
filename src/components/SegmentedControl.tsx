@@ -5,6 +5,13 @@ export interface Segment<T extends string | number> {
   label: string;
   /** Optional second line, e.g. the date under a day name. */
   sublabel?: string;
+  /**
+   * Marks the segment as not settled yet — a day still waiting for PSE's
+   * exchange plan (DayNavigation). A hollow ring after the sublabel, the same
+   * mark as AlertsPanel's "wstępnie" pill, and ", ocena wstępna" for a screen
+   * reader in the button's own text rather than an aria-label replacing it.
+   */
+  provisional?: boolean;
 }
 
 interface SegmentedControlProps<T extends string | number> {
@@ -124,9 +131,22 @@ export function SegmentedControl<T extends string | number>({
             </span>
             {segment.sublabel && (
               <span className="tnum block text-[0.6875rem] text-text-tertiary">
-                {segment.sublabel}
+                {/* Inline and relative, so the ring hangs off the text without
+                    moving it: the date stays centred and on the same line as
+                    its neighbours'. */}
+                <span className="relative">
+                  {segment.sublabel}
+                  {segment.provisional && (
+                    <span
+                      aria-hidden
+                      data-provisional-ring=""
+                      className="absolute left-full top-1/2 ml-[3px] h-[5px] w-[5px] -translate-y-1/2 rounded-full border border-current"
+                    />
+                  )}
+                </span>
               </span>
             )}
+            {segment.provisional && <span className="sr-only">, ocena wstępna</span>}
           </button>
         );
       })}

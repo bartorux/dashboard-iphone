@@ -824,7 +824,7 @@ describe('Badanie', () => {
 
     expect(
       screen.getByText(
-        'Doby od pojutrza nie mają jeszcze salda wymiany — rezerwa liczona bez importu i eksportu, po dodaniu planu może się zmienić o kilka gigawatów w obie strony. Saldo dochodzi dzień wcześniej, dotąd zawsze między 13:15 a 14:00.'
+        'Doby od pojutrza nie mają jeszcze salda wymiany — rezerwa liczona bez importu i eksportu, po dodaniu planu może się zmienić o kilka gigawatów w obie strony. Saldo dochodzi dzień wcześniej, zwykle między 13:00 a 13:45.'
       )
     ).toBeInTheDocument();
   });

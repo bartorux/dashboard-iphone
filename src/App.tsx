@@ -48,7 +48,7 @@ import { DayOffset } from './types';
 import { addDays, formatDate } from './utils/dateHelpers';
 import { dayLabel, visibleDayOffsets } from './utils/dayWindow';
 import { isEnergyDay } from './utils/energyDay';
-import { datesAwaitingExchangePlan, exchangePlanned } from './utils/exchangePlan';
+import { datesAwaitingExchangePlan, exchangePlanned, provisionalCaveat } from './utils/exchangePlan';
 
 /** Re-evaluate "now" this often so the current hour rolls over on its own. */
 const CLOCK_TICK_MS = 30 * 1000;
@@ -249,6 +249,21 @@ function App() {
    * (owner's rule of 22.09.2026): marked, muted, and out of the badge below.
    */
   const preliminaryDates = useMemo(() => datesAwaitingExchangePlan(allData), [allData]);
+  // The same days as tab offsets, for the ring on their tabs.
+  const provisionalOffsets = useMemo(
+    () =>
+      new Set(
+        dayOffsets.filter((offset) => preliminaryDates.has(formatDate(addDays(new Date(), offset))))
+      ),
+    // todayKey rolls the offset-to-date mapping over at midnight, like dayOffsets.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dayOffsets, preliminaryDates, todayKey]
+  );
+  // Why the day on screen is "wstępna" and when that ends; read off the clock.
+  const exchangeCaveat = useMemo(
+    () => (exchangeMissing ? provisionalCaveat(selectedBusinessDate, now) : undefined),
+    [exchangeMissing, selectedBusinessDate, now]
+  );
 
   // ...while the app badge counts the whole horizon, so it does not change just
   // because the user switched to a different day — but only the days that
@@ -568,6 +583,7 @@ function App() {
               offsets={dayOffsets}
               currentDay={currentDayOffset}
               onSwitchDay={handleSwitchDay}
+              provisionalOffsets={provisionalOffsets}
             />
 
             <ChartSection
@@ -590,6 +606,7 @@ function App() {
               isLoading={firstLoad}
               compassRanges={dayCompassRanges}
               exchangeMissing={exchangeMissing}
+              exchangeCaveat={exchangeCaveat}
             />
 
           </div>

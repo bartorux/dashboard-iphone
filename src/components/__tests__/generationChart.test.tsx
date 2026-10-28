@@ -413,3 +413,27 @@ describe('GenerationChart — doba pełna na osi (h/24, nie h/23)', () => {
     expect(gridLines).toHaveLength(expected.ticks.length);
   });
 });
+
+describe('exchange on a day without PSE\'s plan', () => {
+  const base = {
+    key: '19:00', endLabel: '20:00', demand: 21000, pv: 0, wind: 3100,
+    outages: 3000, generation: 19000, pvRed: 0, windRed: 0, kseDemand: null,
+  };
+
+  it('says "jeszcze bez planu" instead of reading the placeholder out as an export', () => {
+    const { container } = render(
+      <GenerationTooltip active payload={[{ payload: { ...base, exchange: -12, exchangePlanned: false } } as never]} label="19:00" />
+    );
+    expect(container.textContent).toContain('jeszcze bez planu');
+    expect(container.textContent).not.toContain('eksport 12');
+  });
+
+  it('keeps the real figure once the day carries the plan', () => {
+    const { container } = render(
+      <GenerationTooltip active payload={[{ payload: { ...base, exchange: 2300, exchangePlanned: true } } as never]} label="19:00" />
+    );
+    expect(container.textContent).toContain(`import ${formatMW(2300)} MW`);
+    expect(container.textContent).not.toContain('bez planu');
+  });
+});
+
