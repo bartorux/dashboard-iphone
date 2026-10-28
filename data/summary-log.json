@@ -3,15 +3,6 @@
     {
       "at": "2026-10-26T00:30:51.888Z",
       "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 15:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 15:00 a 18:00 oraz między 19:00 a 21:00. Ogłoszenie może jeszcze nadejść do tych godzin.",
-      "outlook": "Jutro między 17:00 a 18:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałe dni od środy do piątku w wyznaczonych godzinach rezerwa również nie pokrywa wymaganego poziomu."
-    },
-    {
-      "at": "2026-10-26T00:30:51.888Z",
-      "prompt": 57,
       "accepted": true,
       "headline": "Dziś między 15:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Margines spadnie poniżej typowego zakresu przez pięć godzin. Kompas Energetyczny PSE zaleca oszczędzanie od 15:00 do 18:00 oraz od 19:00 do 21:00.",
@@ -2509,6 +2500,14 @@
       "headline": "Dziś rezerwa spada poniżej typowego pasma z ostatnich trzydziestu dni.",
       "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść między 10:00 a 11:00.",
       "outlook": "W piątek przywołanie wchodzi w grę między 07:00 a 10:00 oraz między 13:00 a 21:00, w poniedziałek 2 listopada w tych samych przedziałach godzinowych powtórzy się podobny układ, natomiast we wtorek 3 listopada operator ma wybór między 07:00 a 10:00 oraz między 13:00 a 21:00."
+    },
+    {
+      "at": "2026-10-28T17:31:04.571Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Margines spoczywa poniżej typowego zakresu z ostatnich trzydziestu dni przez większość czasu w najbliższym okresie.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach między 08:00 a 09:00, ponieważ nadwyżka spada poniżej progu 1100 MW.",
+      "outlook": "W piątek między 07:00 a 10:00, między 13:00 a 21:00 oraz w poniedziałek 2 listopada między 07:00 a 10:00 i między 12:00 a 21:00 nadwyżka utrzymuje się poniżej progu 1100 MW, a w pozostałych analizowanych dobach operator zachowuje wybór."
     }
   ]
 }
