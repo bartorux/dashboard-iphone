@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "days": [],
+  "totals": {
+    "errors": [],
+    "verdicts": {
+      "days": 0,
+      "pse": {
+        "hit": 0,
+        "false-alarm": 0,
+        "missed": 0,
+        "calm": 0
+      },
+      "k05": {
+        "hit": 0,
+        "false-alarm": 0,
+        "missed": 0,
+        "calm": 0
+      },
+      "k09": {
+        "hit": 0,
+        "false-alarm": 0,
+        "missed": 0,
+        "calm": 0
+      }
+    }
+  },
+  "stage3": {
+    "workingDays": 0,
+    "workingDaysNeeded": 15,
+    "coverage": null,
+    "coverageNeeded": 0.75,
+    "missed": {
+      "pse": 0,
+      "k05": 0,
+      "k09": 0
+    }
+  }
+}
