@@ -1104,6 +1104,47 @@ z próby (przejście CSS zamiast sprężyny) — dopracowanie do zrobienia, jeś
 Strażnik wizualny bez zmian (wiersz był już w scenach telefonu); 1384 testy (usunięte testy trzech
 wariantów i hooka), sondy na warunek telefonu i granicę 48rem — zabite.
 
+## Doby bez salda: ocena wstępna i przygotowanie szacunku salda (28.10.2026, v3.90.6)
+
+**Po co.** Właściciel: „brak salda zakłamuje następne dni — przewidujmy wymianę, zaznaczajmy, a gdy
+przyjdzie docelowa, pokazujmy ją nadrzędnie”. Rozpoznanie (workflow 6 agentów, tylko odczyt,
+zweryfikowane przez sceptyka) dało cztery rzeczy:
+- Bez planu salda margines 17–21 jest zaniżony o 1,0–1,4 GW (mediany, 22 doby robocze), a 10–14
+  zawyżony, bo Polska wtedy eksportuje. W 6 z 22 dób wszystkie ujemne godziny znikały po planie.
+- Plan na dobę D: PSE publikuje go w D−1 o 13:02–13:22 (29 z 31 dób), odczyt do 13:45. Jutro do tej
+  pory też jest bez salda (32 z 32 migawek o 9:00 i 12:00).
+- Szacunek salda E5 (½ ta sama godzina ostatniej doby z planem + ½ średnia tego typu doby z 4 tyg.)
+  daje MAE 1,06 GW zamiast 1,47 (2026, h=1) przy paśmie P10–P90 ok. 3 GW. Względem stanu
+  w terminie ogłoszenia zamienia fałszywe alarmy na przeoczenia (12/2/3 wobec 14/4/1 dób), więc
+  szacunek nie wchodzi do alarmów.
+- Decyzja z 22.09 („doby bez salda oceniać wstępnie”) nie była wdrożona: odznaka liczyła wszystko.
+  30.10 widziane 28.10 miało 20 godzin na czerwono.
+
+**Decyzje właściciela (28.10).** Szacunek tylko jako opis, najpierw 2–3 tygodnie w tle z pomiarem
+(etap 2, osobno). Ocenę wstępną wdrożyć teraz, jutro przed 13:15 też wstępne. Do tego archiwum
+PV, wiatru i zapotrzebowania, dymek generacji, saldo jutra z `pwm-rdn` (etap 2) i Wigilia.
+Makiety (artefakt, agent ze skillami apple-design i emil-design-eng) przyjęte bez zmian.
+
+**Wdrożone.**
+- `datesAwaitingExchangePlan` (exchangePlan.ts): odznaka liczy tylko doby z planem.
+- Zakładka dnia: pusty pierścień przy dacie (`Segment.provisional`), dla czytnika „, ocena wstępna”.
+- Karta alertów doby wstępnej: te same okna i MW, szare wiersze z cienką kolorową kreską, bez
+  trójkąta, szara plakietka „wstępnie”, oś kreskowana (`.alert-bar-provisional`), zdanie
+  `provisionalCaveat` nad listą („w czw. 29.10 około 13:00–13:45”, „dziś”, „jeszcze nie doszedł”).
+- `EXCHANGE_ARRIVAL_OBSERVED_LOCAL` 13:00–13:45; to samo zdanie na podstronie badania.
+- Dymek wykresu generacji: „Wymiana: jeszcze bez planu”, w tabeli „—”.
+- Wigilia dniem wolnym od 2025.
+- `data/pk5l-oze-archiwum`: PV, wiatr, zapotrzebowanie z chwili odczytu (merge=union), do
+  uczciwego pomiaru korekty szacunku.
+- Strażnik wizualny: sceny `doba-wstepna-light/-dark` (saldo −12 od 06.08 w fiksturze).
+
+**Sprawdzone.** 1408 testów, 11 sond mutacyjnych (wszystkie zabite), strażnik: dotychczasowe sceny
+bez zmian, nowe wzorce przejrzane. Zrzuty WebKit na żywych danych (393 i 375 px, oba tryby).
+Punkt powrotu `v3.90.5-przed-ocena-wstepna`.
+
+**Zauważone przy okazji:** strażnik po przełączeniu dnia robi zrzut przed narysowaniem linii wykresu
+rezerwy (`tomorrow-light` ma same punkty) — sceny z `dayIndex` nie pilnują wyglądu wykresu.
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
