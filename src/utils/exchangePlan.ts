@@ -6,7 +6,9 @@
  * Observed on the live pk5l-wp feed (07.09.2026 16:32): today and tomorrow
  * carry an hourly-varying exchange, +1.9 to +3.3 GW of import in the evening
  * peak; every day from D+2 to D+9 carries a flat −12 MW on all 24 hours, and
- * days beyond that a flat 0. The reserve for those days is therefore stated
+ * days beyond that a flat 0. Tomorrow only from the afternoon: in 32 of 32
+ * archive snapshots at 09:00 and 12:00 (09.09–25.10) it still carried the
+ * placeholder — its plan is published on D−1 at 13:02–13:22. The reserve for those days is therefore stated
  * WITHOUT any exchange at all — 09.09 showed 49 MW of reserve at 19:00 for
  * exactly this reason. Import so far, but the owner's caution stands: an
  * export day would move the reserve the other way, so no direction is
@@ -26,6 +28,34 @@
  */
 export function exchangePlanned(points: ReadonlyArray<{ exchange: number | null }>): boolean {
   return exchangePeakMw(points) >= EXCHANGE_PLAN_MIN_PEAK_MW;
+}
+
+/**
+ * Business dates still waiting for PSE's exchange plan: days that have
+ * readings but whose own hours carry only the placeholder — judged per day,
+ * exactly as `exchangePlanned` judges one. A date with no readings at all is
+ * left out: nothing fetched yet is not "unplanned".
+ *
+ * The owner's rule of 22.09.2026, implemented 28.10: such days are assessed
+ * "wstępnie" — marked on their tab, muted in Alerts and kept out of the app
+ * badge. Measured on 22 working days of the archive: without the plan the
+ * evening margin (17–21) reads 1.0–1.4 GW low, and in 6 of them every negative
+ * hour was gone once the plan arrived.
+ */
+export function datesAwaitingExchangePlan(
+  points: ReadonlyArray<{ businessDate: string; exchange: number | null; reserve: number | null }>
+): Set<string> {
+  const byDate = new Map<string, Array<{ exchange: number | null; reserve: number | null }>>();
+  for (const point of points) {
+    const day = byDate.get(point.businessDate);
+    if (day) day.push(point);
+    else byDate.set(point.businessDate, [point]);
+  }
+  const awaiting = new Set<string>();
+  for (const [date, day] of byDate) {
+    if (day.some((point) => point.reserve !== null) && !exchangePlanned(day)) awaiting.add(date);
+  }
+  return awaiting;
 }
 
 /**

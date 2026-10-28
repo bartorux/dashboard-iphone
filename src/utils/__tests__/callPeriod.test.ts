@@ -67,6 +67,13 @@ describe('polishHolidays', () => {
       expect(days.has(day)).toBe(true);
     }
   });
+
+  it('includes Wigilia from 2025, when it became a public holiday, and not before', () => {
+    expect(polishHolidays(2026).has('2026-12-24')).toBe(true);
+    expect(polishHolidays(2025).has('2025-12-24')).toBe(true);
+    expect(polishHolidays(2024).has('2024-12-24')).toBe(false);
+    expect(isWorkingDay('2026-12-24')).toBe(false); // czwartek
+  });
 });
 
 describe('isWorkingDay', () => {

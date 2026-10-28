@@ -48,7 +48,7 @@ import { DayOffset } from './types';
 import { addDays, formatDate } from './utils/dateHelpers';
 import { dayLabel, visibleDayOffsets } from './utils/dayWindow';
 import { isEnergyDay } from './utils/energyDay';
-import { exchangePlanned } from './utils/exchangePlan';
+import { datesAwaitingExchangePlan, exchangePlanned } from './utils/exchangePlan';
 
 /** Re-evaluate "now" this often so the current hour rolls over on its own. */
 const CLOCK_TICK_MS = 30 * 1000;
@@ -234,21 +234,31 @@ function App() {
    * Whether the day on screen still carries PSE's flat placeholder exchange
    * rather than a cleared day-ahead plan — see exchangePlan.ts. Gated on
    * `hasReadings` so an empty day (nothing fetched yet) never reads as
-   * "unplanned" merely for having nothing to check; today and tomorrow always
-   * carry a real, hour-varying plan on the live feed, so this only ever fires
-   * a few days out. Changes no status and no threshold — see AlertsPanel.
+   * "unplanned" merely for having nothing to check. Today always carries a
+   * real plan; tomorrow only from about 13:15, when PSE publishes it, and every
+   * later day never. Changes no status and no threshold — see AlertsPanel.
    */
   const exchangeMissing = useMemo(
     () => hasReadings(dayData) && !exchangePlanned(dayData),
     [dayData]
   );
 
-  // ...while the app badge counts the whole 72-hour horizon, so it does not
-  // change just because the user switched to a different day.
+  /*
+   * Every day of the horizon still waiting for PSE's exchange plan — from the
+   * day after tomorrow always, tomorrow until about 13:15. Assessed "wstępnie"
+   * (owner's rule of 22.09.2026): marked, muted, and out of the badge below.
+   */
+  const preliminaryDates = useMemo(() => datesAwaitingExchangePlan(allData), [allData]);
+
+  // ...while the app badge counts the whole horizon, so it does not change just
+  // because the user switched to a different day — but only the days that
+  // carry PSE's exchange plan. A day stated without its import showed twenty
+  // red hours on 30.10.2026 seen from 28.10, most of which a plan removes.
   const horizonAlertCount = useMemo(() => {
-    const alerts = findAlerts(allData, orangeThreshold, redThreshold);
+    const planned = allData.filter((point) => !preliminaryDates.has(point.businessDate));
+    const alerts = findAlerts(planned, orangeThreshold, redThreshold);
     return alerts.orange.length + alerts.red.length;
-  }, [allData, orangeThreshold, redThreshold]);
+  }, [allData, preliminaryDates, orangeThreshold, redThreshold]);
 
   // clockTick is a dependency on purpose: both of these read the wall clock, so
   // they have to be recomputed as the hour rolls over, not only when data changes.

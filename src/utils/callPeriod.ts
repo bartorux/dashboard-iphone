@@ -77,11 +77,20 @@ const pad = (value: number) => String(value).padStart(2, '0');
 const iso = (year: number, month: number, day: number) =>
   `${year}-${pad(month)}-${pad(day)}`;
 
+/**
+ * Wigilia, a public holiday from 2025 on (the amendment of 6.12.2024 to the
+ * act on public holidays). Kept apart from FIXED_HOLIDAYS because it is not one
+ * before 2025, and found missing on 28.10.2026 — 24.12.2026 is a Thursday the
+ * app would have scored as a working day.
+ */
+const WIGILIA_FROM_YEAR = 2025;
+
 /** Public holidays for one year, as "YYYY-MM-DD". */
 export function polishHolidays(year: number): Set<string> {
   const days = new Set(
     FIXED_HOLIDAYS.map(([month, day]) => iso(year, month, day))
   );
+  if (year >= WIGILIA_FROM_YEAR) days.add(iso(year, 12, 24));
 
   const easter = easterSunday(year);
   // Arithmetic in UTC so no local timezone can shift a date across midnight.

@@ -66,4 +66,14 @@ describe('Zastrzeżenie o niezaplanowanym saldzie wymiany — okablowanie w App'
     // Exactly one place wires the prop at all.
     expect(appSrc.match(/exchangeMissing=\{exchangeMissing\}/g) ?? []).toHaveLength(1);
   });
+
+  it('liczy odznakę tylko z dób z planem salda — doby wstępne (22.09) do niej nie wchodzą', () => {
+    const preliminary = extractCall(appSrc, 'const preliminaryDates = useMemo(');
+    expect(preliminary).toMatch(/datesAwaitingExchangePlan\(allData\)/);
+
+    const badge = extractCall(appSrc, 'const horizonAlertCount = useMemo(');
+    expect(badge).toMatch(/allData\.filter\(\(point\) => !preliminaryDates\.has\(point\.businessDate\)\)/);
+    expect(badge).toMatch(/findAlerts\(planned,/);
+    expect(badge).not.toMatch(/findAlerts\(allData,/);
+  });
 });

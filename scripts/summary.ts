@@ -62,6 +62,7 @@ import {
   newArchiveLines,
   previousPartition,
 } from '../src/utils/pk5lArchive';
+import { newOzeArchiveLines, ozeLastValuesFrom } from '../src/utils/ozeArchive';
 import {
   compassVersionRows,
   lastCompassValuesFrom,
@@ -102,6 +103,7 @@ const logTarget = resolve(root, 'data/forecast-log.json');
 const textLogTarget = resolve(root, 'data/summary-log.json');
 const archiveDir = resolve(root, 'data/pk5l-archiwum');
 const compassArchiveDir = resolve(root, 'data/kompas-archiwum');
+const ozeArchiveDir = resolve(root, 'data/pk5l-oze-archiwum');
 const badanieTarget = resolve(root, 'data/badanie.json');
 const eventsTarget = resolve(root, 'data/przywolania.json');
 const pricesTarget = resolve(root, 'public/ceny.json');
@@ -252,6 +254,35 @@ function archivePk5l(rows: PSERawItem[], at: Date): void {
     console.log(`Archiwum pk5l-wp: dopisano ${lines.length} wierszy do ${partition}.jsonl.`);
   } catch (error) {
     console.warn(`Archiwum pk5l-wp pominiete w tym przebiegu: ${String(error)}`);
+  }
+}
+
+/**
+ * Appends PV, wind and demand as this run read them (see ozeArchive.ts) —
+ * the same partitions and the same previous-partition read as `archivePk5l`,
+ * and wrapped the same way: a lost reading, never a failed run.
+ */
+function archiveOze(rows: PSERawItem[], at: Date): void {
+  try {
+    const partition = archivePartition(at);
+    const readPartition = (name: string): string => {
+      try {
+        return readFileSync(resolve(ozeArchiveDir, `${name}.jsonl`), 'utf8');
+      } catch {
+        return '';
+      }
+    };
+    const lastByKey = ozeLastValuesFrom([readPartition(previousPartition(partition)), readPartition(partition)]);
+    const lines = newOzeArchiveLines(rows, lastByKey, at.toISOString());
+    if (lines.length === 0) {
+      console.log('Archiwum PV/wiatr/zapotrzebowanie: bez zmian — nic nie dopisuje.');
+      return;
+    }
+    mkdirSync(ozeArchiveDir, { recursive: true });
+    appendFileSync(resolve(ozeArchiveDir, `${partition}.jsonl`), `${lines.join('\n')}\n`);
+    console.log(`Archiwum PV/wiatr/zapotrzebowanie: dopisano ${lines.length} wierszy do ${partition}.jsonl.`);
+  } catch (error) {
+    console.warn(`Archiwum PV/wiatr/zapotrzebowanie pominiete w tym przebiegu: ${String(error)}`);
   }
 }
 
@@ -815,6 +846,7 @@ if (!dryRun) recordForecast(points, now);
 // asked anything, and `dryRun` means "show me the prompt", not "read PSE
 // live and pretend the run never happened".
 if (!dryRun) archivePk5l(forecast, now);
+if (!dryRun) archiveOze(forecast, now);
 
 // One-time, and a no-op the moment the archive holds anything at all — see
 // the function's own comment. Placed before the live Kompas fetch below so a

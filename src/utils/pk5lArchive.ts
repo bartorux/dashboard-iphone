@@ -115,7 +115,7 @@ function parseUtcCalendarDate(dateStr: string): number | null {
  * of day a run happens to execute at — a row for "tomorrow" filed at 23:59
  * UTC must not read any differently than the same row filed at 00:01 UTC.
  */
-function isPlausibleBusinessDate(businessDate: string, nowIso: string): boolean {
+export function isPlausibleBusinessDate(businessDate: string, nowIso: string): boolean {
   const businessMs = parseUtcCalendarDate(businessDate);
   if (businessMs === null) return false;
 
@@ -167,7 +167,7 @@ function toNumber(value: unknown): number | null {
  * the wrong edge of the block and, on any process not pinned to Europe/Warsaw,
  * the wrong hour entirely.
  */
-function blockStartHour(period: string | undefined): number | null {
+export function blockStartHour(period: string | undefined): number | null {
   const start = periodStart(period ?? '');
   if (!start) return null;
   // The autumn DST fold. PSE writes the repeated 02:00 block (01:00-02:00

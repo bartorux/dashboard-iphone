@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  datesAwaitingExchangePlan,
   exchangeArrivedAt,
   exchangePlanned,
   plannedByReading,
@@ -132,3 +133,25 @@ describe('exchangeArrivedAt', () => {
     expect(exchangeArrivedAt([])).toBeNull();
   });
 });
+
+describe('datesAwaitingExchangePlan', () => {
+  const hours = (date: string, exchange: number | null, reserve: number | null = 2000) =>
+    Array.from({ length: 24 }, () => ({ businessDate: date, exchange, reserve }));
+  const evening = (date: string) =>
+    Array.from({ length: 24 }, (_, hour) => ({ businessDate: date, exchange: hour >= 17 ? 2300 : -400, reserve: 2000 }));
+
+  it('names the days that carry only the placeholder, and not the ones with a plan', () => {
+    const points = [...evening('2026-10-28'), ...evening('2026-10-29'), ...hours('2026-10-30', -12), ...hours('2026-11-02', 0)];
+    expect(datesAwaitingExchangePlan(points)).toEqual(new Set(['2026-10-30', '2026-11-02']));
+  });
+
+  it('judges each day on its own hours — a varying placeholder of a few tens of MW is still a placeholder', () => {
+    const points = Array.from({ length: 24 }, (_, hour) => ({ businessDate: '2026-10-30', exchange: -62 + hour * 3, reserve: 2000 }));
+    expect(datesAwaitingExchangePlan(points)).toEqual(new Set(['2026-10-30']));
+  });
+
+  it('leaves out a day with no readings at all — nothing fetched yet is not "unplanned"', () => {
+    expect(datesAwaitingExchangePlan(hours('2026-10-30', null, null))).toEqual(new Set());
+  });
+});
+
