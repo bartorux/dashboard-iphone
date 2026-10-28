@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-26T05:15:41.282Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 15:00 a 16:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "Prognoza poprawia się. Na ogłoszenie w tych godzinach jest jeszcze za późno lub może ono nadejść w zależności od przedziału, a Kompas Energetyczny PSE zaleca oszczędzanie między 15:00 a 18:00 oraz między 19:00 a 21:00.",
-      "outlook": "Jutro, w środę, czwartek oraz w piątek w wybranych godzinach nadwyżka również spadnie poniżej progu 1100 MW."
-    },
-    {
-      "at": "2026-10-26T05:30:54.057Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 15:00 a 16:00 nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 08:00, między 15:00 a 18:00 oraz między 19:00 a 21:00.",
-      "outlook": "Jutro między 17:00 a 18:00, w środę między 13:00 a 22:00, w czwartek między 07:00 a 09:00 i między 15:00 a 21:00 oraz w piątek między 07:00 a 10:00 i między 14:00 a 21:00 nadwyżka również spadnie poniżej progu 1100 MW."
-    },
-    {
       "at": "2026-10-26T05:45:41.734Z",
       "prompt": 57,
       "accepted": true,
@@ -2506,6 +2489,24 @@
       "headline": "W piątek o 16:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
       "body": "Jutro o 10:00 margines spada przez fotowoltaikę poniżej normy i wysokie zapotrzebowanie. Do tych godzin minął już czas na ogłoszenie.",
       "outlook": "W środę, piątek, poniedziałek 2 listopada i wtorek 3 listopada przywołanie wchodzi w grę w wyznaczonych godzinach, natomiast w pozostałym okresie nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-28T22:01:07.843Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina bez nazwy dnia",
+      "headline": "Margines jest poniżej typowego zakresu z ostatnich trzydziestu dni przez większość doby.",
+      "body": "W jutrzejszą dobę margines spada między 07:00 a 22:00, ponieważ fotowoltaika spada poniżej normy, a zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść w godzinach 08:00-14:00.",
+      "outlook": "W piątek, poniedziałek 2 listopada i wtorek 3 listopada operator może ogłosić przywołanie, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-28T22:01:07.843Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina 11:00 spoza faktów",
+      "headline": "Marginesy trzymają się poniżej typowego zakresu z ostatnich trzydziestu dni przez większość czasu w najbliższych dobach.",
+      "body": "Jutro między 10:00 a 11:00 margines spadnie najniżej z powodu niskiej generacji źródeł fotowoltaicznych i wysokiego zapotrzebowania. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie jutro między 06:00 a 14:00 oraz między 17:00 a 18:00, a w piątek oraz w poniedziałek 2 listopada przywołanie wchodzi w grę przez cały dzień."
     }
   ]
 }
