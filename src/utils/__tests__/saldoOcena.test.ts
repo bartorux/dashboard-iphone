@@ -44,11 +44,50 @@ describe('evaluateEstimates', () => {
     const [day] = evaluateEstimates(log(), archive(), CLOSED).days;
     expect(day).toMatchObject({ businessDate: DAY, workingDay: true, arrivedAt: ARRIVED_AT, arrivalGapMin: 15, closed: true });
     expect(day.errors).toEqual([
-      { method: 'placeholder', h: null, hours: 15, mae: 1512, maeAtDeadline: 1512, coverage: null },
-      { method: 'e5', h: 1, hours: 15, mae: 100, maeAtDeadline: 100, coverage: 1 },
-      { method: 'e5', h: 2, hours: 15, mae: 500, maeAtDeadline: 500, coverage: 1 },
-      { method: 'pwm-rdn', h: 1, hours: 15, mae: 20, maeAtDeadline: 20, coverage: null },
+      {
+        method: 'placeholder', h: null, hours: 15, mae: 1512, maeAtDeadline: 1512, coverage: null,
+        sums: { abs: 22680, deadlineAbs: 22680, deadlineHours: 15, banded: 0, inBand: 0 },
+      },
+      {
+        method: 'e5', h: 1, hours: 15, mae: 100, maeAtDeadline: 100, coverage: 1,
+        sums: { abs: 1500, deadlineAbs: 1500, deadlineHours: 15, banded: 15, inBand: 15 },
+      },
+      {
+        method: 'e5', h: 2, hours: 15, mae: 500, maeAtDeadline: 500, coverage: 1,
+        sums: { abs: 7500, deadlineAbs: 7500, deadlineHours: 15, banded: 15, inBand: 15 },
+      },
+      {
+        method: 'pwm-rdn', h: 1, hours: 15, mae: 20, maeAtDeadline: 20, coverage: null,
+        sums: { abs: 300, deadlineAbs: 300, deadlineHours: 15, banded: 0, inBand: 0 },
+      },
     ]);
+  });
+
+  it('measures the gap on the generator\'s cadence, not on this day\'s own rows', () => {
+    // This day unchanged since 09:00, another day read at 12:10: the
+    // generator was running, the day simply did not move.
+    const rows = archive().map((row): ArchiveRow =>
+      row[5] === PLACEHOLDER_AT ? [row[0], row[1], row[2], row[3], row[4], '2026-10-28T09:00:00.000Z', row[6]] : row
+    );
+    const other = reading(19, 5000, -12, '2026-10-28T12:10:00.000Z', '2026-10-30');
+    const [day] = evaluateEstimates(log(), [...rows, other], CLOSED).days;
+    expect(day.arrivalGapMin).toBe(5);
+    expect(day.verdicts).not.toBeNull();
+  });
+
+  it('scores no deadline that passed before the plan was seen — an outage, PSE had it and we did not', () => {
+    // Seen only at 23:30 UTC: 07:00's deadline (22:00) and 08:00's (23:00) had passed.
+    const late = '2026-10-28T23:30:00.000Z';
+    const rows = archive().map((row): ArchiveRow =>
+      row[5] === ARRIVED_AT ? [row[0], row[1], row[2], row[3], row[4], late, row[6]] : row
+    );
+    // The 12:30 line is before this late plan, so it would count: left out here.
+    const lateLog = log().filter((row) => row[4] !== 9999);
+    const [day] = evaluateEstimates(lateLog, rows, CLOSED).days;
+    const e5 = day.errors.find((entry) => entry.method === 'e5' && entry.h === 1)!;
+    expect(e5.sums.deadlineHours).toBe(13);
+    expect(e5.maeAtDeadline).toBe(100);
+    expect(day.verdicts).toBeNull(); // 690 minutes without a reading
   });
 
   it('judges against the plan at each deadline: a revision before it counts, one after it does not', () => {
@@ -137,6 +176,47 @@ describe('evaluateEstimates', () => {
       coverageNeeded: 0.75,
       missed: { pse: 0, k05: 0, k09: 0 },
     });
+  });
+
+  it('carries a closed day over as it was scored, though the log and archive have moved on', () => {
+    const first = evaluateEstimates(log(), archive(), CLOSED);
+    const later = evaluateEstimates([], [], new Date('2026-12-01T00:15:00.000Z'), JSON.parse(JSON.stringify(first)));
+    expect(later.days).toEqual(first.days);
+    expect(later.totals).toEqual(first.totals);
+    expect(later.stage3).toEqual(first.stage3);
+
+    // Rescoring it from what is left would only lose the h=2 estimate.
+    const partial = evaluateEstimates(log().filter((row) => row[2] === 1), archive(), CLOSED, first);
+    expect(partial.days).toHaveLength(1);
+    expect(partial.days[0].errors.map((entry) => `${entry.method}#${entry.h}`)).toContain('e5#2');
+  });
+
+  it('rescores an open day, and carries nothing from a file of another version or without sums', () => {
+    const open = evaluateEstimates(log(), archive(), new Date('2026-10-28T22:30:00.000Z'));
+    expect(evaluateEstimates([], [], CLOSED, open).days).toEqual([]);
+
+    const closed = evaluateEstimates(log(), archive(), CLOSED);
+    expect(evaluateEstimates([], [], CLOSED, { ...closed, version: 2 }).days).toEqual([]);
+    const withoutSums = { ...closed, days: closed.days.map((day) => ({ ...day, errors: day.errors.map(({ sums: _sums, ...rest }) => rest) })) };
+    expect(evaluateEstimates([], [], CLOSED, withoutSums).days).toEqual([]);
+    expect(evaluateEstimates([], [], CLOSED, 'not a file').days).toEqual([]);
+  });
+
+  it('adds a carried day and a fresh one up exactly, from their sums, in date order', () => {
+    const friday = '2026-10-30';
+    const fridayClosed = new Date('2026-10-30T21:00:00.000Z');
+    const shifted = (iso: string) => iso.replace('2026-10-28', '2026-10-29').replace('2026-10-27', '2026-10-28');
+    const fridayRows = archive(friday).map((row): ArchiveRow => [row[0], row[1], row[2], row[3], row[4], shifted(row[5]), row[6]]);
+    const fridayLog = log(friday)
+      .map((row): EstimateLogRow => [row[0], row[1], row[2], row[3], row[4] + 30, row[5], row[6], shifted(row[7])]);
+    // Friday carried from the file, Thursday scored fresh: the earlier day
+    // still comes first.
+    const carried = evaluateEstimates(fridayLog, fridayRows, fridayClosed);
+    const file = evaluateEstimates(log(), archive(), fridayClosed, carried);
+    expect(file.days.map((day) => day.businessDate)).toEqual([DAY, friday]);
+    // Thursday 15 h × 100 MW, Friday 15 h × 70 MW.
+    expect(file.totals.errors.find((entry) => entry.method === 'e5' && entry.h === 1)).toMatchObject({ hours: 30, mae: 85 });
+    expect(file.stage3.workingDays).toBe(2);
   });
 
   it('ignores lines read after `now`', () => {

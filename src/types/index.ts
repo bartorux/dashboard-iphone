@@ -71,6 +71,8 @@ export interface PSEPwmRdnRawItem {
   business_date: string;
   /** Local wall-clock END of the quarter; the repeated autumn hour carries an "a" ("02a:15:00"). */
   dtime: string;
+  /** The same END in UTC, "2026-10-28 23:15" — unambiguous on both DST days. */
+  dtime_utc: string;
   period?: string;
   cz_pl?: number | null;
   de_pl?: number | null;

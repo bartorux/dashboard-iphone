@@ -1169,8 +1169,10 @@ pod flagą `?saldo=1`, makiety przed kodem).
   - null na granicy synchronicznej, LT lub SE oznacza brak wyniku (D+2 ma wypełnione tylko UA);
   - sprawdzone na żywo 28.10 dla 29.10: znak się zgadza, w nocy różnica 8–45 MW, w dzień do 300 MW
     od planu, który PSE zdążyło już poprawić;
-  - godzina liczona z lokalnego końca kwadransu (`dtime`), bo `period` przy zmianie czasu ma postać
-    „03:00 - 02a:15”; powtórzona godzina pominięta, jak w archiwum.
+  - godzina to czas polski początku kwadransu, liczony z `dtime_utc`. Lokalny koniec kwadransu wiosną
+    dawał nieistniejącą godzinę 2, bo kwadrans 01:45–02:00 kończy się o „03:00:00”. Kwadranse z „a”
+    w `dtime` (powtórzona godzina jesienią) są pominięte, jak w archiwum. Prawdziwe doby 29.03
+    i 25.10.2026 są w fiksturach.
 - Log `data/saldo-szacunki/YYYY-MM.jsonl` (`merge=union`): wiersz
   `[doba, godz, h, metoda, mw, p10, p90, readAt]` przy każdej zmianie. Obejmuje te same doby, które
   aplikacja oznacza „wstępnie” (`datesAwaitingExchangePlan`).
@@ -1181,19 +1183,34 @@ pod flagą `?saldo=1`, makiety przed kodem).
   - pokrycie pasma;
   - werdykty dób roboczych (trafiona / fałszywa / przeoczona / spokojna), widziane tuż przed planem,
     dla rezerwy PSE i dla rezerwy z szacunkiem przy k=0,5 i k=0,9.
-  Werdyktu nie dostaje doba, w której ostatni odczyt bez planu był ponad 60 min przed planem (awaria
-  pulsu 29.09–14.10 dawała przerwy 6–13 h). Pole `stage3` zbiera próg: co najmniej 15 dób roboczych,
-  pokrycie E5 dla h=1 co najmniej 75%, przeoczeń nie więcej niż przy samej rezerwie PSE.
+  Werdyktu nie dostaje doba, w której plan zobaczono ponad 60 min po poprzednim przebiegu generatora
+  (awaria pulsu 29.09–14.10 dawała przerwy 6–13 h). Liczy się rytm generatora, nie wiersze samej doby:
+  archiwum zapisuje wiersz tylko przy zmianie, a w spokojną niedzielę doba poniedziałkowa stoi
+  godzinę bez zmian. Godziny, których termin minął przed dojściem planu, nie mają błędu „w terminie”.
+  Doba zamknięta (wszystkie terminy minęły) jest ostateczna i przechodzi do kolejnych plików bez
+  przeliczania. Przy każdym wyniku zapisane są sumy, więc wyniki zbiorcze składają się dokładnie.
+  Bez tego od 1. dnia miesiąca doby sprzed dwóch miesięcy wypadałyby z oceny, bo generator czyta
+  dwie partycje. Na prawdziwym archiwum byłoby to 48 → 26 dób, z przenoszeniem zostaje 48 i te same
+  wyniki zbiorcze. Pole `stage3` zbiera próg: co najmniej 15 dób roboczych, pokrycie E5 dla h=1 co
+  najmniej 75%, przeoczeń nie więcej niż przy samej rezerwie PSE.
 - **Zmiana wobec planu:** w etapie 2 nie ma `public/saldo.json`. Żaden telefon go jeszcze nie czyta,
   a plik w `public/` przebudowywałby stronę przy każdej zmianie. Wejdzie w etapie 3 razem z bramką.
 - Archiwum pk5l jest czytane raz na przebieg (`readArchiveRows`), wspólnie dla badania i oceny.
 
+**Przegląd przed wdrożeniem** (workflow: 4 recenzentów, każdy zgłoszenie sprawdził sceptyk). Zgłoszeń
+było 9, potwierdzone 4, wszystkie o niskiej wadze i poprawione: wypadanie dób na przełomie miesiąca,
+godzina 2 w pwm-rdn wiosną, próg 60 min liczony od wierszy doby, błąd „w terminie” przy planie po
+terminie. Odrzucone: brak limitu czasu dla pwm-rdn (Node przerywa po ok. 5 min, wtedy zostaje E5)
+i luki w strażniku izolacji. Te ostatnie i tak domknięte: import dynamiczny, ścieżka z „.ts”, nazwa
+pliku danych, test faktów AI, który nie może przejść na pusto.
+
 **Sprawdzone.**
-- 1442 testy. 20 sond mutacyjnych: 3 przeżyły pierwsze podejście, więc usunąłem martwy warunek „a”
-  i dopisałem dwa testy. Sonda kontrolna, która nie zmienia zachowania, przeżyła, jak powinna.
+- 1449 testów. Sondy mutacyjne: 20 na pierwszej wersji i 12 na poprawkach z przeglądu. Za pierwszym
+  razem przeżyło 3 i 4, po poprawkach (martwy warunek „a” usunięty, testy dopisane) wszystkie są
+  łapane. Sondy kontrolne, które nie zmieniają zachowania, przeżyły, jak powinny.
 - Strażnik `saldoShadowWiring` pilnuje trzech rzeczy: żaden moduł aplikacji nie importuje szacunku,
-  generator nie pisze do `public/`, fakty AI nie zawierają szacunku. Sonda z importem w App.tsx
-  została złapana.
+  generator nie pisze do `public/`, fakty AI nie zawierają szacunku. Sondy w App.tsx (import
+  statyczny, import dynamiczny z „.ts”, pobranie `saldo-ocena.json`) zostały złapane.
 - Symulacja na prawdziwym archiwum (09.09–27.10, szacunek sprzed planu liczony z planów końcowych
   PSE), 22 doby robocze z odczytem na czas, w układzie trafione / fałszywe / przeoczone:
   - sama rezerwa PSE: 15/4/1;

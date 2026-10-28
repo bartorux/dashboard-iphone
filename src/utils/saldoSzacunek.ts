@@ -199,6 +199,22 @@ const RDN_UA = ['ua_pl', 'ua_dob_pl', 'pl_ua', 'pl_ua_dob'] as const;
 
 /** A 23-hour day has 92 quarters; fewer and the day is not complete. */
 const RDN_MIN_QUARTERS = 92;
+const QUARTER_MS = 15 * 60 * 1000;
+
+const warsawClock = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/Warsaw',
+  hourCycle: 'h23',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+});
+
+/** Warsaw calendar date and hour of a UTC instant. */
+function warsawDateHour(ms: number): [date: string, hour: number] {
+  const parts = Object.fromEntries(warsawClock.formatToParts(new Date(ms)).map((part) => [part.type, part.value]));
+  return [`${parts.year}-${parts.month}-${parts.day}`, Number(parts.hour)];
+}
 
 /**
  * Hourly exchange from the day-ahead market result, MW, import positive: every
@@ -207,9 +223,14 @@ const RDN_MIN_QUARTERS = 92;
  *
  * Checked live on 29.10.2026 against pk5l-wp's plan for the same day: the sign
  * agrees, nights within 8–45 MW, daytime within 300 MW of a plan PSE had by
- * then revised. The hour comes from the quarter's local END (`dtime`), because
- * `period` on the autumn fold reads "03:00 - 02a:15"; a quarter with "a" in
- * it is the repeated hour and stays out, as `blockStartHour` leaves it out.
+ * then revised.
+ *
+ * The hour is the Warsaw hour of the quarter's START, from `dtime_utc`. The
+ * local stamps cannot give it: they mark the END, and on the spring day the
+ * 01:45–02:00 quarter ends at "03:00:00" (the local end once put it in an
+ * hour 2 that day does not have), while `period` on the autumn fold reads
+ * "03:00 - 02a:15". A quarter whose local end carries "a" is the repeated
+ * autumn hour and stays out, as `blockStartHour` leaves it out of pk5l-wp.
  */
 export function exchangeFromPwmRdn(
   rows: readonly PSEPwmRdnRawItem[],
@@ -220,9 +241,11 @@ export function exchangeFromPwmRdn(
 
   const byHour = new Map<number, number[]>();
   for (const quarter of quarters) {
-    // "02a:15:00" does not match, so the repeated hour drops out here.
-    const match = /^(\d{4}-\d{2}-\d{2}) (\d{2}):(\d{2})/.exec(quarter.dtime ?? '');
-    if (!match) continue;
+    if ((quarter.dtime ?? '').includes('a')) continue;
+    const endMs = Date.parse(`${(quarter.dtime_utc ?? '').replace(' ', 'T')}Z`);
+    if (Number.isNaN(endMs)) continue;
+    const [date, hour] = warsawDateHour(endMs - QUARTER_MS);
+    if (date !== businessDate) continue;
 
     let sum = 0;
     for (const field of RDN_BORDERS) {
@@ -232,11 +255,6 @@ export function exchangeFromPwmRdn(
     }
     for (const field of RDN_UA) sum += toNumber(quarter[field]) ?? 0;
 
-    // "2026-10-30 00:00:00" ends the 23:45 quarter of the 29th.
-    const minutes =
-      (match[1] === businessDate ? 0 : 24 * 60) + Number(match[2]) * 60 + Number(match[3]);
-    const hour = Math.floor((minutes - 15) / 60);
-    if (hour < 0 || hour > 23) continue;
     const bucket = byHour.get(hour) ?? [];
     bucket.push(sum);
     byHour.set(hour, bucket);

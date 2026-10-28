@@ -28,10 +28,13 @@ export type Verdict = 'hit' | 'false-alarm' | 'missed' | 'calm';
 export const ESTIMATE_K = { k05: 0.5, k09: 0.9 } as const;
 
 /**
- * A day whose last placeholder reading came longer than this before the plan
- * gets errors but no verdict: "just before the plan" would be hours stale.
- * The heartbeat outage of 29.09–14.10 left gaps of 6 to 13 hours; a working
- * heartbeat reads every 15 minutes.
+ * A day whose plan was first seen longer than this after the generator's
+ * previous reading gets errors but no verdict: "just before the plan" would be
+ * hours stale. Measured on the generator's cadence (any business date's
+ * reading), not on this date's own rows — the archive keeps a row only when a
+ * value changes, and a quiet Sunday leaves a Monday target unchanged for an
+ * hour while the heartbeat is fine. The outage of 29.09–14.10 left gaps of 6
+ * to 13 hours; a working heartbeat reads every 15 minutes.
  */
 export const MAX_ARRIVAL_GAP_MIN = 60;
 
@@ -51,6 +54,11 @@ export interface ErrorScore {
   maeAtDeadline: number | null;
   /** Share of hours whose first plan fell inside [p10, p90]; null where there is no band. */
   coverage: number | null;
+  /**
+   * The sums behind the three figures, so a day carried over from an earlier
+   * file still adds up exactly into the totals — rounded means cannot.
+   */
+  sums: { abs: number; deadlineAbs: number; deadlineHours: number; banded: number; inBand: number };
 }
 
 export interface DayScore {
@@ -58,9 +66,9 @@ export interface DayScore {
   workingDay: boolean;
   /** The first reading with the plan in. */
   arrivedAt: string;
-  /** Minutes from the last placeholder reading to `arrivedAt` — a long one blurs what "just before" was. */
+  /** Minutes from the generator's previous reading to `arrivedAt` — a long one blurs what "just before" was. */
   arrivalGapMin: number | null;
-  /** Every hour 7–21 is past its deadline. */
+  /** Every hour 7–21 is past its deadline: the score is final and is carried over from then on. */
   closed: boolean;
   errors: ErrorScore[];
   /** Only for a closed working day read on time, with an estimate and readings for every hour 7–21. */
@@ -89,29 +97,49 @@ export interface SaldoOcenaFile {
 interface Accumulator {
   method: ErrorScore['method'];
   h: number | null;
-  errors: number[];
-  deadlineErrors: number[];
-  banded: number;
-  inBand: number;
+  hours: number;
+  sums: ErrorScore['sums'];
 }
 
 function accumulator(method: ErrorScore['method'], h: number | null): Accumulator {
-  return { method, h, errors: [], deadlineErrors: [], banded: 0, inBand: 0 };
+  return { method, h, hours: 0, sums: { abs: 0, deadlineAbs: 0, deadlineHours: 0, banded: 0, inBand: 0 } };
 }
 
-const mean = (values: readonly number[]) =>
-  values.reduce((sum, value) => sum + value, 0) / values.length;
+const tenth = (value: number) => Math.round(value * 10) / 10;
 
 function score(acc: Accumulator): ErrorScore {
+  const { abs, deadlineAbs, deadlineHours, banded, inBand } = acc.sums;
   return {
     method: acc.method,
     h: acc.h,
-    hours: acc.errors.length,
-    mae: Math.round(mean(acc.errors.map(Math.abs))),
-    maeAtDeadline:
-      acc.deadlineErrors.length > 0 ? Math.round(mean(acc.deadlineErrors.map(Math.abs))) : null,
-    coverage: acc.banded > 0 ? Math.round((acc.inBand / acc.banded) * 1000) / 1000 : null,
+    hours: acc.hours,
+    mae: Math.round(abs / acc.hours),
+    maeAtDeadline: deadlineHours > 0 ? Math.round(deadlineAbs / deadlineHours) : null,
+    coverage: banded > 0 ? Math.round((inBand / banded) * 1000) / 1000 : null,
+    sums: { abs: tenth(abs), deadlineAbs: tenth(deadlineAbs), deadlineHours, banded, inBand },
   };
+}
+
+/**
+ * The closed days of an earlier file, kept as they were scored. A closed day
+ * is final — its plan has arrived and every deadline has passed — and
+ * rescoring it later would only lose it: the generator reads two monthly
+ * partitions, so from the 1st of a month the days logged two months back are
+ * no longer in what it reads. A file of another version, or a day without
+ * sums, is not carried: change the scoring and the version goes up.
+ */
+function closedDaysOf(previous: unknown): DayScore[] {
+  if (!previous || typeof previous !== 'object') return [];
+  const file = previous as Partial<SaldoOcenaFile>;
+  if (file.version !== 1 || !Array.isArray(file.days)) return [];
+  return file.days.filter(
+    (day): day is DayScore =>
+      !!day &&
+      day.closed === true &&
+      typeof day.businessDate === 'string' &&
+      Array.isArray(day.errors) &&
+      day.errors.every((entry) => !!entry && typeof entry.sums === 'object' && entry.sums !== null && typeof entry.hours === 'number')
+  );
 }
 
 function verdictOf(predicted: boolean, actual: boolean): Verdict {
@@ -140,11 +168,19 @@ const orderKey = (method: ErrorScore['method'], h: number | null) => {
 export function evaluateEstimates(
   log: readonly EstimateLogRow[],
   archive: readonly ArchiveRow[],
-  now: Date
+  now: Date,
+  previous: unknown = null
 ): SaldoOcenaFile {
   const nowMs = now.getTime();
-  const dates = [...new Set(log.map((row) => row[0]))].sort();
+  const carried = closedDaysOf(previous);
+  const carriedDates = new Set(carried.map((day) => day.businessDate));
+  const dates = [...new Set(log.map((row) => row[0]))].filter((date) => !carriedDates.has(date)).sort();
   const wanted = new Set(dates);
+
+  // Every instant the generator wrote anything, oldest first.
+  const readTimes = [...new Set(archive.map((row) => Date.parse(row[5])))]
+    .filter((ms) => ms <= nowMs)
+    .sort((a, b) => a - b);
 
   const archiveByDate = new Map<string, ArchiveRow[]>();
   for (const row of archive) {
@@ -161,9 +197,7 @@ export function evaluateEstimates(
     logByDate.set(row[0], bucket);
   }
 
-  const totals = new Map<string, Accumulator>();
-  const totalVerdicts = { days: 0, pse: zeroCounts(), k05: zeroCounts(), k09: zeroCounts() };
-  const days: DayScore[] = [];
+  const days: DayScore[] = [...carried];
 
   for (const businessDate of dates) {
     const rows = (archiveByDate.get(businessDate) ?? []).sort(
@@ -178,7 +212,8 @@ export function evaluateEstimates(
     const arrivedAt = exchangeArrivedAt(readings);
     if (!arrivedAt) continue;
     const arrivalMs = Date.parse(arrivedAt);
-    const lastPlaceholder = lastBefore(readings, (r) => Date.parse(r.readAt), arrivalMs, false);
+    const lastRead = lastBefore(readTimes, (ms) => ms, arrivalMs, false);
+    const arrivalGapMin = lastRead !== undefined ? Math.round((arrivalMs - lastRead) / 60_000) : null;
 
     const archiveByHour = new Map<number, ArchiveRow[]>();
     for (const row of rows) {
@@ -193,13 +228,20 @@ export function evaluateEstimates(
     const logReadAtOf = (row: EstimateLogRow) => Date.parse(row[7]);
 
     const dayAcc = new Map<string, Accumulator>();
-    const add = (method: ErrorScore['method'], h: number | null, fn: (acc: Accumulator) => void) => {
+    const add = (method: ErrorScore['method'], h: number | null, value: number, plan: number, deadlinePlan: number | null, band?: readonly [number, number]) => {
       const key = `${method}#${h ?? ''}`;
-      for (const map of [dayAcc, totals]) {
-        const acc = map.get(key) ?? accumulator(method, h);
-        fn(acc);
-        map.set(key, acc);
+      const acc = dayAcc.get(key) ?? accumulator(method, h);
+      acc.hours += 1;
+      acc.sums.abs += Math.abs(value - plan);
+      if (deadlinePlan !== null) {
+        acc.sums.deadlineHours += 1;
+        acc.sums.deadlineAbs += Math.abs(value - deadlinePlan);
       }
+      if (band) {
+        acc.sums.banded += 1;
+        if (plan >= band[0] && plan <= band[1]) acc.sums.inBand += 1;
+      }
+      dayAcc.set(key, acc);
     };
 
     let closed = true;
@@ -217,19 +259,16 @@ export function evaluateEstimates(
       const atDeadline = open ? undefined : lastBefore(hourRows, readAtOf, deadlineMs, true);
 
       const plan = first?.[6] ?? null;
-      const deadlinePlan = atDeadline?.[6] ?? null;
+      // A deadline that passed before the plan was seen has no plan to score
+      // against — only during an outage, when PSE had it and we did not.
+      const deadlinePlan = deadlineMs >= arrivalMs ? (atDeadline?.[6] ?? null) : null;
       if (plan === null) {
         verdictable = false;
         continue;
       }
 
       const placeholder = before?.[6] ?? null;
-      if (placeholder !== null) {
-        add('placeholder', null, (acc) => {
-          acc.errors.push(placeholder - plan);
-          if (deadlinePlan !== null) acc.deadlineErrors.push(placeholder - deadlinePlan);
-        });
-      }
+      if (placeholder !== null) add('placeholder', null, placeholder, plan, deadlinePlan);
 
       // Per (method, h), the estimate that stood last before the plan: a
       // target is estimated from several horizons as the days go by.
@@ -242,14 +281,7 @@ export function evaluateEstimates(
         if (row[3] !== 'pwm-rdn') statistical = row;
       }
       for (const [, , h, method, mw, p10, p90] of stood.values()) {
-        add(method, h, (acc) => {
-          acc.errors.push(mw - plan);
-          if (deadlinePlan !== null) acc.deadlineErrors.push(mw - deadlinePlan);
-          if (p10 !== null && p90 !== null) {
-            acc.banded += 1;
-            if (plan >= p10 && plan <= p90) acc.inBand += 1;
-          }
-        });
+        add(method, h, mw, plan, deadlinePlan, p10 !== null && p90 !== null ? [p10, p90] : undefined);
       }
 
       if (!before || !atDeadline || !statistical) {
@@ -265,22 +297,15 @@ export function evaluateEstimates(
     }
 
     const workingDay = isWorkingDay(businessDate);
-    const arrivalGapMin = lastPlaceholder
-      ? Math.round((arrivalMs - Date.parse(lastPlaceholder.readAt)) / 60_000)
-      : null;
     const readOnTime = arrivalGapMin !== null && arrivalGapMin <= MAX_ARRIVAL_GAP_MIN;
-    let verdicts: DayScore['verdicts'] = null;
-    if (workingDay && closed && verdictable && readOnTime) {
-      verdicts = {
-        pse: verdictOf(predicted.pse, actual),
-        k05: verdictOf(predicted.k05, actual),
-        k09: verdictOf(predicted.k09, actual),
-      };
-      totalVerdicts.days += 1;
-      totalVerdicts.pse[verdicts.pse] += 1;
-      totalVerdicts.k05[verdicts.k05] += 1;
-      totalVerdicts.k09[verdicts.k09] += 1;
-    }
+    const verdicts: DayScore['verdicts'] =
+      workingDay && closed && verdictable && readOnTime
+        ? {
+            pse: verdictOf(predicted.pse, actual),
+            k05: verdictOf(predicted.k05, actual),
+            k09: verdictOf(predicted.k09, actual),
+          }
+        : null;
 
     days.push({
       businessDate,
@@ -289,15 +314,36 @@ export function evaluateEstimates(
       arrivalGapMin,
       closed,
       errors: [...dayAcc.values()]
-        .filter((acc) => acc.errors.length > 0)
         .map(score)
         .sort((a, b) => orderKey(a.method, a.h) - orderKey(b.method, b.h)),
       verdicts,
     });
   }
+  days.sort((a, b) => a.businessDate.localeCompare(b.businessDate));
 
+  // Totals from the days' own sums, carried days and fresh ones alike.
+  const totals = new Map<string, Accumulator>();
+  const totalVerdicts = { days: 0, pse: zeroCounts(), k05: zeroCounts(), k09: zeroCounts() };
+  for (const day of days) {
+    for (const entry of day.errors) {
+      const key = `${entry.method}#${entry.h ?? ''}`;
+      const acc = totals.get(key) ?? accumulator(entry.method, entry.h);
+      acc.hours += entry.hours;
+      acc.sums.abs += entry.sums.abs;
+      acc.sums.deadlineAbs += entry.sums.deadlineAbs;
+      acc.sums.deadlineHours += entry.sums.deadlineHours;
+      acc.sums.banded += entry.sums.banded;
+      acc.sums.inBand += entry.sums.inBand;
+      totals.set(key, acc);
+    }
+    if (day.verdicts) {
+      totalVerdicts.days += 1;
+      totalVerdicts.pse[day.verdicts.pse] += 1;
+      totalVerdicts.k05[day.verdicts.k05] += 1;
+      totalVerdicts.k09[day.verdicts.k09] += 1;
+    }
+  }
   const totalErrors = [...totals.values()]
-    .filter((acc) => acc.errors.length > 0)
     .map(score)
     .sort((a, b) => orderKey(a.method, a.h) - orderKey(b.method, b.h));
 

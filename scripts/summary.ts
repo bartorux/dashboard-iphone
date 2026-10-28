@@ -764,14 +764,23 @@ async function writeSaldo(at: Date, archiveRows: readonly ArchiveRow[]): Promise
     const opis = estimates.map((day) => `${day.businessDate} ${day.method} h=${day.h}`).join(', ');
     console.log(`Szacunek salda: ${opis || 'brak dob bez planu'}; dopisano ${lines.length} wierszy.`);
 
-    const ocena = evaluateEstimates(parseEstimateLog([...texts, lines.join('\n')].join('\n')), archiveRows, at);
-    const nextText = `${JSON.stringify(ocena, null, 2)}\n`;
+    // Closed days come back from the file as they were scored (see
+    // saldoOcena.ts), so the two partitions read here never shrink the record.
     let currentText: string | null = null;
+    let previous: unknown = null;
     try {
       currentText = readFileSync(saldoOcenaTarget, 'utf8');
+      previous = JSON.parse(currentText);
     } catch {
-      // First evaluation ever.
+      // First evaluation ever, or an unreadable file: everything is rescored.
     }
+    const ocena = evaluateEstimates(
+      parseEstimateLog([...texts, lines.join('\n')].join('\n')),
+      archiveRows,
+      at,
+      previous
+    );
+    const nextText = `${JSON.stringify(ocena, null, 2)}\n`;
     if (nextText !== currentText) {
       writeFileSync(saldoOcenaTarget, nextText);
       console.log(`Ocena szacunku salda: ${ocena.days.length} dob, ${ocena.stage3.workingDays} roboczych z werdyktem.`);

@@ -11,6 +11,8 @@ import {
 } from '../saldoSzacunek';
 import type { ExchangeByDay } from '../saldoSzacunek';
 import type { PSEPwmRdnRawItem, PSERawItem } from '../../types';
+import rdnSpring from '../__fixtures__/pwm-rdn-dst-spring.json';
+import rdnAutumn from '../__fixtures__/pwm-rdn-dst-autumn.json';
 
 /** A planned day: 1000 MW every hour (peak over the 700 MW threshold), with overrides. */
 const plannedDay = (overrides: Record<number, number> = {}) =>
@@ -103,17 +105,21 @@ describe('estimateExchange', () => {
   });
 });
 
+const HOURS_WITHOUT_2 = Array.from({ length: 24 }, (_, hour) => hour).filter((hour) => hour !== 2);
+
 describe('exchangeFromPwmRdn', () => {
   const pad = (n: number) => String(n).padStart(2, '0');
-  /** 96 quarters of 29.10: 300 MW in from CZ, 100 out to SK, UA closed. */
+  /** 96 quarters of 29.10 (CET, UTC+1): 300 MW in from CZ, 100 out to SK, UA closed. */
   const quarters = (override: (index: number) => Partial<PSEPwmRdnRawItem> = () => ({})): PSEPwmRdnRawItem[] =>
     Array.from({ length: 96 }, (_, index) => {
       const end = (index + 1) * 15;
       const dtime =
         end === 24 * 60 ? '2026-10-30 00:00:00' : `2026-10-29 ${pad(Math.floor(end / 60))}:${pad(end % 60)}:00`;
+      const endUtc = new Date(Date.UTC(2026, 9, 29) + (end - 60) * 60_000).toISOString();
       return {
         business_date: '2026-10-29',
         dtime,
+        dtime_utc: `${endUtc.slice(0, 10)} ${endUtc.slice(11, 16)}`,
         cz_pl: 300, de_pl: 0, lt_pl: 0, se_pl: 0, sk_pl: 0,
         pl_cz: 0, pl_de: 0, pl_lt: 0, pl_se: 0, pl_sk: -100,
         ua_pl: null, ua_dob_pl: null, pl_ua: null, pl_ua_dob: null,
@@ -139,13 +145,41 @@ describe('exchangeFromPwmRdn', () => {
     expect(exchangeFromPwmRdn(quarters(() => ({ ua_pl: 50 })), '2026-10-29')!.get(10)).toBe(250);
   });
 
-  it('leaves out the repeated autumn hour, whose quarters carry an "a"', () => {
-    const fold: PSEPwmRdnRawItem[] = ['02a:15:00', '02a:30:00', '02a:45:00', '03a:00:00'].map((time) => ({
-      ...quarters()[0],
-      dtime: `2026-10-29 ${time}`,
-      cz_pl: 9999,
-    }));
-    expect(exchangeFromPwmRdn([...quarters(), ...fold], '2026-10-29')!.get(2)).toBe(200);
+  it('leaves out a quarter whose start falls on another day', () => {
+    const stray = { ...quarters()[0], dtime: '2026-10-30 11:15:00', dtime_utc: '2026-10-30 10:15', cz_pl: 9999 };
+    expect(exchangeFromPwmRdn([...quarters(), stray], '2026-10-29')!.get(11)).toBe(200);
+  });
+
+  /** Every border of one quarter summed, UA nulls as 0 — computed apart from the module. */
+  const sumOf = (row: Record<string, unknown>) =>
+    Object.entries(row)
+      .filter(([key]) => /^(cz|de|lt|se|sk|ua|ua_dob|pl)_/.test(key))
+      .reduce((total, [, value]) => total + (typeof value === 'number' ? value : 0), 0);
+  const meanOf = (rows: Array<Record<string, unknown>>, periods: string[]) => {
+    const picked = rows.filter((row) => periods.includes(String(row.period)));
+    expect(picked).toHaveLength(periods.length);
+    return Math.round(picked.reduce((total, row) => total + sumOf(row), 0) / picked.length);
+  };
+
+  it('on the real spring day (29.03.2026, 92 quarters) gives 23 hours and no hour 2', () => {
+    const rows = rdnSpring as unknown as PSEPwmRdnRawItem[];
+    const hourly = exchangeFromPwmRdn(rows, '2026-03-29')!;
+    expect([...hourly.keys()].sort((a, b) => a - b)).toEqual(HOURS_WITHOUT_2);
+    // The 01:45–02:00 quarter ends at "03:00:00" local; it still belongs to hour 1.
+    expect(hourly.get(1)).toBe(meanOf(rdnSpring, ['01:00 - 01:15', '01:15 - 01:30', '01:30 - 01:45', '01:45 - 02:00']));
+    expect(hourly.get(3)).toBe(meanOf(rdnSpring, ['02:00 - 03:15', '03:15 - 03:30', '03:30 - 03:45', '03:45 - 04:00']));
+  });
+
+  it('on the real autumn day (25.10.2026, 100 quarters) gives 24 hours, the repeated 02:00 left out', () => {
+    // That night both 02:00 hours read about −9 MW, so the repeated one is
+    // made to stand out here: kept in, it would move hour 2.
+    const rows = (rdnAutumn as unknown as PSEPwmRdnRawItem[]).map((row) =>
+      row.dtime.includes('a') ? { ...row, cz_pl: 9999 } : row
+    );
+    const hourly = exchangeFromPwmRdn(rows, '2026-10-25')!;
+    expect([...hourly.keys()].sort((a, b) => a - b)).toEqual(Array.from({ length: 24 }, (_, hour) => hour));
+    expect(hourly.get(2)).toBe(meanOf(rdnAutumn, ['02:00 - 02:15', '02:15 - 02:30', '02:30 - 02:45', '02:45 - 03:00']));
+    expect(hourly.get(3)).toBe(meanOf(rdnAutumn, ['03a:00 - 03:15', '03:15 - 03:30', '03:30 - 03:45', '03:45 - 04:00']));
   });
 });
 

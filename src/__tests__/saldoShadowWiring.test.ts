@@ -6,8 +6,10 @@ import generatorSrc from '../../scripts/summary.ts?raw';
  * Stage 2 of the exchange estimate (28.10.2026): computed and measured in the
  * background for two to three weeks, NOTHING on screen. The owner decided the
  * estimate may only ever describe — and before it does even that, its numbers
- * go to him first. These pin the shadow: no app module imports it, and the
- * generator keeps it out of public/, the only folder a phone downloads.
+ * go to him first. These pin the shadow: no app module imports it, statically
+ * or lazily, and the generator keeps it out of public/, which the build ships
+ * to every phone. (Phones also read data/badanie.json straight from the repo —
+ * the guard on imports is what keeps the estimate from following that path.)
  */
 const appSources = import.meta.glob(['../**/*.{ts,tsx}', '!../**/__tests__/**', '!../utils/saldo*.ts'], {
   query: '?raw',
@@ -19,7 +21,7 @@ describe('szacunek salda w cieniu', () => {
   it('nie trafia do żadnego modułu aplikacji', () => {
     expect(Object.keys(appSources).length).toBeGreaterThan(50);
     const users = Object.entries(appSources)
-      .filter(([, src]) => /from\s+['"][^'"]*\/saldo(Szacunek|Ocena)['"]/.test(src))
+      .filter(([, src]) => /(?:from\s+|import\(\s*)['"][^'"]*\/saldo(?:Szacunek|Ocena)(?:\.ts)?['"]|saldo-(?:szacunki|ocena)/.test(src))
       .map(([path]) => path);
     expect(users).toEqual([]);
   });
@@ -38,7 +40,10 @@ describe('szacunek salda w cieniu', () => {
   });
 
   it('nie zasila faktów dla tekstu AI', () => {
-    const facts = generatorSrc.slice(generatorSrc.indexOf('const facts = buildFacts('));
+    const start = generatorSrc.indexOf('const facts = buildFacts(');
+    expect(start).toBeGreaterThan(-1);
+    const facts = generatorSrc.slice(start);
+    expect(facts.slice(0, facts.indexOf(');'))).toMatch(/processData\(history\)/);
     expect(facts.slice(0, facts.indexOf(');'))).not.toMatch(/estimate|saldo/i);
   });
 });
