@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-25T07:01:09.370Z",
-      "prompt": 56,
-      "accepted": true,
-      "headline": "Marginesy na najbliższe dni mocno odbiegają od typowego zakresu z ostatnich trzydziestu dni, spadając w wielu godzinach poniżej normy.",
-      "body": "Prognoza na jutro pogarsza się. Do godzin z niską rezerwą zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Wtorek 27 października oraz środa 28 października przyniosą godziny z nadwyżką spadającą poniżej progu 1100 MW, natomiast w czwartek 29 października i piątek 30 października operator cały czas zachowa wybór."
-    },
-    {
-      "at": "2026-10-25T07:15:38.619Z",
-      "prompt": 56,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Margines mocno odstaje od normy z ostatnich trzydziestu dni.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 27 października, środę 28 października, czwartek 29 października i piątek 30 października nadwyżka spada poniżej progu 1100 MW lub operator ma wybór między 07:00 a 22:00, a pozostałe dni przebiegają spokojnie."
-    },
-    {
       "at": "2026-10-25T07:15:38.619Z",
       "prompt": 56,
       "accepted": true,
@@ -2510,6 +2493,23 @@
       "headline": "Dziś między 08:00 a 09:00 oraz między 16:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek oraz w poniedziałek 2 listopada i we wtorek 3 listopada przywołanie wchodzi w grę w licznych godzinach, natomiast w pozostałym okresie rezerwa utrzymuje się bezpiecznie powyżej wymaganego poziomu."
+    },
+    {
+      "at": "2026-10-28T00:45:41.575Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Jutro między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek, poniedziałek 2 listopada i wtorek 3 listopada operator może ogłosić przywołanie w licznych godzinach, natomiast dzisiaj margines ujemny występuje tylko w wybranych porach i częściowo przekracza próg 1100 MW."
+    },
+    {
+      "at": "2026-10-28T00:45:41.575Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Jutro między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek, poniedziałek 2 listopada i wtorek 3 listopada przywołanie wchodzi w grę przez wiele godzin, natomiast dzisiaj margines ujemny występuje tylko w wyznaczonym czasie i towarzyszy mu nadwyżka powyżej progu 1100 MW."
     }
   ]
 }
