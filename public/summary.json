@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 21:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
-  "body": "Jutro margines spadnie poniżej typowego pasma, bo produkcja z instalacji fotowoltaicznych spadnie poniżej normy, a zapotrzebowanie wzrośnie. Do tych godzin ogłoszenie może jeszcze nadejść. Ocena na piątek, poniedziałek 2 listopada i wtorek 3 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "Jutro, w piątek, w poniedziałek 2 listopada oraz we wtorek 3 listopada operator może ogłosić przywołanie, podczas gdy w pozostałe dni okresu rezerwa pokrywa wymagany poziom.",
-  "generatedAt": "2026-10-28T20:31:06.193Z",
+  "headline": "Dziś między 21:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW.",
+  "body": "W środę margines o 10:00 spada, bo fotowoltaika spada poniżej normy, a zapotrzebowanie rośnie ponad normę. Na ogłoszenie może jeszcze nadejść czas, bo do tych godzin zostało jeszcze ponad osiem godzin. Ocena na piątek, poniedziałek 2 listopada i wtorek 3 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Jutro, w piątek, w poniedziałek 2 listopada i we wtorek 3 listopada rezerwa w części godzin spada poniżej wymaganego poziomu, a Kompas Energetyczny PSE zaleca oszczędzanie w środę od 06:00 do 14:00 oraz od 17:00 do 18:00.",
+  "generatedAt": "2026-10-28T20:45:44.187Z",
   "dates": [
     "2026-10-28",
     "2026-10-29",
@@ -10,6 +10,6 @@
     "2026-11-02",
     "2026-11-03"
   ],
-  "assessment": "2026-10-28|R|moderate|-100|21:00|0|3|0|moderate:21:00-22:00||-|-;2026-10-29|R|high|-1400|10:00|3|16|0|moderate:07:00-08:00,high:08:00-13:00,moderate:13:00-14:00,moderate:17:00-22:00|K2:07:00-14:00,K2:17:00-18:00|-|-;2026-10-30|R|high|-2800|17:00|0|21|0|high:07:00-10:00,moderate:10:00-13:00,high:13:00-21:00,moderate:21:00-22:00||X|P;2026-11-02|R|high|-2800|13:00|0|15|5|high:07:00-10:00,moderate:10:00-12:00,high:12:00-21:00,moderate:21:00-22:00||X|P;2026-11-03|R|moderate|-1300|17:00|1|10|1|moderate:07:00-10:00,moderate:13:00-21:00||X|P#PV poniżej normy, zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v57",
+  "assessment": "2026-10-28|R|moderate|-100|21:00|0|3|0|moderate:21:00-22:00||-|-;2026-10-29|R|high|-1400|10:00|3|16|0|moderate:07:00-08:00,high:08:00-13:00,moderate:13:00-14:00,moderate:17:00-22:00|K2:06:00-14:00,K2:17:00-18:00|-|-;2026-10-30|R|high|-2800|17:00|0|21|0|high:07:00-10:00,moderate:10:00-13:00,high:13:00-21:00,moderate:21:00-22:00||X|P;2026-11-02|R|high|-2800|13:00|0|15|5|high:07:00-10:00,moderate:10:00-12:00,high:12:00-21:00,moderate:21:00-22:00||X|P;2026-11-03|R|moderate|-1300|17:00|1|10|1|moderate:07:00-10:00,moderate:13:00-21:00||X|P#PV poniżej normy, zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
