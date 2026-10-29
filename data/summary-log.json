@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-26T12:15:42.744Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "„dodatkowy\" zamiast „dodatni\"",
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni między 15:00 a 21:00, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 15:00 a 17:00 oraz między 19:00 a 21:00. Na ogłoszenie jest już za późno.",
-      "outlook": "W środę, czwartek i piątek margines również spada poniżej normy przez cały dzień, a w środę prognoza dodatkowo się pogarsza."
-    },
-    {
       "at": "2026-10-26T12:30:58.834Z",
       "prompt": 57,
       "accepted": false,
@@ -2511,6 +2502,14 @@
       "headline": "W poniedziałek 2 listopada między 07:00 a 10:00 oraz między 12:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "Prognoza poprawia się, a margines pozostaje poniżej normy przez szesnaście godzin. Do tych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś, jutro, we wtorek 3 listopada oraz w środę 4 listopada rezerwa również spada miejscami poniżej wymaganego poziomu, a Kompas Energetyczny PSE zaleca oszczędzanie dziś między 06:00 a 07:00, 08:00 a 10:00 oraz 11:00 a 13:00."
+    },
+    {
+      "at": "2026-10-29T03:31:02.105Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W poniedziałek 2 listopada między 07:00 a 10:00 oraz między 12:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Prognoza poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś między 07:00 a 14:00 i między 16:00 a 22:00 oraz jutro między 07:00 a 10:00 i między 13:00 a 21:00 operator ma wybór i może ogłosić przywołanie, a w pozostałych dniach rezerwa miejscami wymaga uwagi."
     }
   ]
 }
