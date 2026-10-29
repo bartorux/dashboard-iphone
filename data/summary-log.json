@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-26T08:45:41.582Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "W środę między 12:00 a 22:00 nadwyżka spada poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "Prognoza w środę jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś między 15:00 a 16:00 operator może ogłosić przywołanie, a w pozostałe dni w wyznaczonych godzinach ma wybór, podczas gdy w reszcie okresu rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania, przy czym Kompas Energetyczny PSE zaleca oszczędzanie dziś między 15:00 a 18:00 oraz między 19:00 a 21:00."
-    },
-    {
       "at": "2026-10-26T09:01:16.251Z",
       "prompt": 57,
       "accepted": true,
@@ -2507,6 +2498,14 @@
       "headline": "Dziś rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Dziś między 05:00 a 14:00 oraz między 17:00 a 18:00 obowiązuje Kompas Energetyczny PSE: zalecane oszczędzanie. Do tych godzin zostało jeszcze sporo czasu, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Jutro między 07:00 a 10:00 oraz w poniedziałek 2 listopada i wtorek 3 listopada nadwyżka spada poniżej progu 1100 MW, a w pozostałych dniach rezerwa miejscami nie pokrywa wymaganego poziomu."
+    },
+    {
+      "at": "2026-10-29T00:45:38.360Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 07:00 a 14:00 oraz między 16:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 06:00 a 14:00. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro między 07:00 a 21:00, w poniedziałek 2 listopada między 07:00 a 22:00, we wtorek 3 listopada między 07:00 a 10:00 oraz między 13:00 a 21:00, a także w środę 4 listopada między 15:00 a 21:00 rezerwa spada poniżej wymaganego poziomu."
     }
   ]
 }
