@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-27T07:01:09.521Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Prognoza na najbliższe dni przynosi marginesy mocno poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 09:00 oraz między 12:00 a 22:00, a także w czwartek i piątek między 07:00 a 22:00 nadwyżka spada poniżej progu 1100 MW i operator może ogłosić przywołanie, natomiast w pozostałe dni i godziny nic go nie zapowiada."
-    },
-    {
-      "at": "2026-10-27T07:01:09.521Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Prognoza na jutro odbiega od normy, a nadwyżka spada poniżej progu 1100 MW między 07:00 a 09:00.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "Dziś margines trzyma się w normie, ale w czwartek i piątek oraz w poniedziałek 2 listopada rezerwa w wielu godzinach nie pokrywa wymaganego poziomu."
-    },
-    {
       "at": "2026-10-27T07:15:45.031Z",
       "prompt": 57,
       "accepted": false,
@@ -2515,6 +2498,24 @@
       "headline": "W poniedziałek 2 listopada operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW w godzinach 07:00-22:00.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś między 21:00 a 22:00 operator ma wybór, jutro między 07:00 a 22:00 również, a w pozostałych dniach rezerwa spada poniżej wymaganego poziomu w wyznaczonych godzinach, przy czym Kompas Energetyczny PSE zaleca oszczędzanie jutro między 06:00 a 11:00, między 12:00 a 13:00 i między 14:00 a 20:00."
+    },
+    {
+      "at": "2026-10-29T19:31:10.691Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś między 21:00 a 22:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
+      "body": "W poniedziałek 2 listopada prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro, w poniedziałek 2 listopada, we wtorek 3 listopada oraz w środę 4 listopada operator może ogłosić przywołanie, podczas gdy w pozostałych godzinach dzisiejszej dobie rezerwa pokrywa wymagany poziom i nic tam go nie zapowiada, a w jutrzejszej dobie Kompas Energetyczny PSE zaleca oszczędzanie między 06:00 a 11:00, 12:00 a 13:00 oraz 14:00 a 20:00."
+    },
+    {
+      "at": "2026-10-29T19:31:10.691Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś między 21:00 a 22:00 rezerwa spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, co daje operatorowi wybór w kwestii przywołania.",
+      "body": "Dziś o 21:00 margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni. Na ogłoszenie jest już za późno, gdyż do tych godzin zostało mniej niż osiem godzin.",
+      "outlook": "Jutro między 07:00 a 22:00 operator zachowuje wybór, w poniedziałek 2 listopada między 07:00 a 22:00 nadwyżka spadnie poniżej progiem 1100 MW, we wtorek 3 listopada i środę 4 listopada sytuacja z nadwyżką będzie się zmieniać w ciągu dnia, a przez reszta doby w każdym z tych dni rezerwa pokryje wymagany poziom."
     }
   ]
 }
