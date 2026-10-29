@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-26T17:01:15.052Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez cztery godziny, a Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 21:00.",
-      "body": "Dziś między 19:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi. Na ogłoszenie jest już za późno.",
-      "outlook": "W jutrzejszej dobie prognoza jeszcze się ustala, a w środę, czwartek i piątek operator może ogłosić przywołanie, bo nadwyżka spada poniżej progu 1100 MW."
-    },
-    {
-      "at": "2026-10-26T17:15:45.497Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni między 19:00 a 21:00, a operator może ogłosić przywołanie.",
-      "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, czwartek i piątek margines również utrzymuje się poniżej typowego zakresu z ostatnich trzydziestu dni przez większość doby, a Kompas Energetyczny PSE zaleca oszczędzanie dzisiaj między 19:00 a 21:00."
-    },
-    {
       "at": "2026-10-26T17:31:07.017Z",
       "prompt": 57,
       "accepted": true,
@@ -2517,6 +2501,23 @@
       "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza poprawia się. Na ogłoszenie jest już za późno.",
       "outlook": "Jutro między 07:00 a 10:00 nadwyżka spada poniżej progu 1100 MW, a w poniedziałek 2 listopada, we wtorek 3 listopada i w środę 4 listopada margines pozostaje wąski."
+    },
+    {
+      "at": "2026-10-29T07:15:42.950Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza jutro poprawia się. Na ogłoszenie w wyznaczonych godzinach może jeszcze nadejść pora.",
+      "outlook": "Jutro, w poniedziałek 2 listopada, we wtorek 3 listopada oraz w środę 4 listopada przywołanie wchodzi w grę, podczas gdy w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-10-29T07:15:42.950Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro, w poniedziałek 2 listopada, we wtorek 3 listopada i w środę 4 listopada przywołanie wchodzi w grę."
     }
   ]
 }
