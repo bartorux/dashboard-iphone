@@ -10,15 +10,6 @@
       "outlook": "W czwartek i piątek ogłoszenie może jeszcze nadejść między 07:00 a 22:00, natomiast w poniedziałek drugiego listopada nic nie zapowiada przywołania."
     },
     {
-      "at": "2026-10-27T02:01:10.190Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Margines jest poniżej typowego zakresu z ostatnich trzydziestu dni przez większą część doby.",
-      "body": "Prognoza pogarsza się jutro. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 09:00.",
-      "outlook": "W czwartek i piątek ogłoszenie może jeszcze nadejść między 07:00 a 22:00, natomiast w poniedziałek drugiego listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-27T02:15:47.242Z",
       "prompt": 57,
       "accepted": true,
@@ -2515,6 +2506,14 @@
       "headline": "Przywołanie wchodzi w grę.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 2 listopada i wtorek 3 listopada nadwyżka spada poniżej progu 1100 MW, podczas gdy w pozostałe dni operator ma wybór lub nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-10-29T15:15:51.275Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 16:00 a 18:00 oraz między 20:00 a 22:00 nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza na jutro poprawia się. Do godzin między 17:00 a 19:00 zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie jutro od 05:00 do 13:00 oraz od 14:00 do 21:00, a w poniedziałek 2 listopada, we wtorek 3 listopada i w środę 4 listopada przywołanie wchodzi w grę przez wiele godzin."
     }
   ]
 }
