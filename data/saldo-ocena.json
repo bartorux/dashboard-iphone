@@ -6,19 +6,19 @@
       "workingDay": true,
       "arrivedAt": "2026-10-29T12:15:45.895Z",
       "arrivalGapMin": 15,
-      "closed": false,
+      "closed": true,
       "errors": [
         {
           "method": "placeholder",
           "h": null,
           "hours": 15,
           "mae": 1656,
-          "maeAtDeadline": 1888,
+          "maeAtDeadline": 1792,
           "coverage": null,
           "sums": {
             "abs": 24840,
-            "deadlineAbs": 26436,
-            "deadlineHours": 14,
+            "deadlineAbs": 26884,
+            "deadlineHours": 15,
             "banded": 0,
             "inBand": 0
           }
@@ -28,18 +28,22 @@
           "h": 1,
           "hours": 15,
           "mae": 999,
-          "maeAtDeadline": 1096,
+          "maeAtDeadline": 1040,
           "coverage": 0.933,
           "sums": {
             "abs": 14984,
-            "deadlineAbs": 15341,
-            "deadlineHours": 14,
+            "deadlineAbs": 15606,
+            "deadlineHours": 15,
             "banded": 15,
             "inBand": 14
           }
         }
       ],
-      "verdicts": null
+      "verdicts": {
+        "pse": "hit",
+        "k05": "hit",
+        "k09": "hit"
+      }
     }
   ],
   "totals": {
@@ -49,12 +53,12 @@
         "h": null,
         "hours": 15,
         "mae": 1656,
-        "maeAtDeadline": 1888,
+        "maeAtDeadline": 1792,
         "coverage": null,
         "sums": {
           "abs": 24840,
-          "deadlineAbs": 26436,
-          "deadlineHours": 14,
+          "deadlineAbs": 26884,
+          "deadlineHours": 15,
           "banded": 0,
           "inBand": 0
         }
@@ -64,33 +68,33 @@
         "h": 1,
         "hours": 15,
         "mae": 999,
-        "maeAtDeadline": 1096,
+        "maeAtDeadline": 1040,
         "coverage": 0.933,
         "sums": {
           "abs": 14984,
-          "deadlineAbs": 15341,
-          "deadlineHours": 14,
+          "deadlineAbs": 15606,
+          "deadlineHours": 15,
           "banded": 15,
           "inBand": 14
         }
       }
     ],
     "verdicts": {
-      "days": 0,
+      "days": 1,
       "pse": {
-        "hit": 0,
+        "hit": 1,
         "false-alarm": 0,
         "missed": 0,
         "calm": 0
       },
       "k05": {
-        "hit": 0,
+        "hit": 1,
         "false-alarm": 0,
         "missed": 0,
         "calm": 0
       },
       "k09": {
-        "hit": 0,
+        "hit": 1,
         "false-alarm": 0,
         "missed": 0,
         "calm": 0
@@ -98,7 +102,7 @@
     }
   },
   "stage3": {
-    "workingDays": 0,
+    "workingDays": 1,
     "workingDaysNeeded": 15,
     "coverage": 0.933,
     "coverageNeeded": 0.75,
