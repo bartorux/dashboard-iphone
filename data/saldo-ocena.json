@@ -44,6 +44,61 @@
         "k05": "hit",
         "k09": "hit"
       }
+    },
+    {
+      "businessDate": "2026-10-31",
+      "workingDay": false,
+      "arrivedAt": "2026-10-30T12:15:47.117Z",
+      "arrivalGapMin": 15,
+      "closed": false,
+      "errors": [
+        {
+          "method": "placeholder",
+          "h": null,
+          "hours": 15,
+          "mae": 48,
+          "maeAtDeadline": null,
+          "coverage": null,
+          "sums": {
+            "abs": 717,
+            "deadlineAbs": 0,
+            "deadlineHours": 0,
+            "banded": 0,
+            "inBand": 0
+          }
+        },
+        {
+          "method": "e5",
+          "h": 1,
+          "hours": 15,
+          "mae": 967,
+          "maeAtDeadline": null,
+          "coverage": 0.8,
+          "sums": {
+            "abs": 14499,
+            "deadlineAbs": 0,
+            "deadlineHours": 0,
+            "banded": 15,
+            "inBand": 12
+          }
+        },
+        {
+          "method": "e5",
+          "h": 2,
+          "hours": 15,
+          "mae": 1069,
+          "maeAtDeadline": null,
+          "coverage": 0.733,
+          "sums": {
+            "abs": 16035,
+            "deadlineAbs": 0,
+            "deadlineHours": 0,
+            "banded": 15,
+            "inBand": 11
+          }
+        }
+      ],
+      "verdicts": null
     }
   ],
   "totals": {
@@ -51,12 +106,12 @@
       {
         "method": "placeholder",
         "h": null,
-        "hours": 15,
-        "mae": 1656,
+        "hours": 30,
+        "mae": 852,
         "maeAtDeadline": 1792,
         "coverage": null,
         "sums": {
-          "abs": 24840,
+          "abs": 25557,
           "deadlineAbs": 26884,
           "deadlineHours": 15,
           "banded": 0,
@@ -66,16 +121,31 @@
       {
         "method": "e5",
         "h": 1,
-        "hours": 15,
-        "mae": 999,
+        "hours": 30,
+        "mae": 983,
         "maeAtDeadline": 1040,
-        "coverage": 0.933,
+        "coverage": 0.867,
         "sums": {
-          "abs": 14984,
+          "abs": 29483,
           "deadlineAbs": 15606,
           "deadlineHours": 15,
+          "banded": 30,
+          "inBand": 26
+        }
+      },
+      {
+        "method": "e5",
+        "h": 2,
+        "hours": 15,
+        "mae": 1069,
+        "maeAtDeadline": null,
+        "coverage": 0.733,
+        "sums": {
+          "abs": 16035,
+          "deadlineAbs": 0,
+          "deadlineHours": 0,
           "banded": 15,
-          "inBand": 14
+          "inBand": 11
         }
       }
     ],
@@ -104,7 +174,7 @@
   "stage3": {
     "workingDays": 1,
     "workingDaysNeeded": 15,
-    "coverage": 0.933,
+    "coverage": 0.867,
     "coverageNeeded": 0.75,
     "missed": {
       "pse": 0,
