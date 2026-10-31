@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-28T21:45:42.136Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W piątek o 16:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Jutro o 10:00 margines spada przez fotowoltaikę poniżej normy i wysokie zapotrzebowanie. Do tych godzin minął już czas na ogłoszenie.",
-      "outlook": "W środę, piątek, poniedziałek 2 listopada i wtorek 3 listopada przywołanie wchodzi w grę w wyznaczonych godzinach, natomiast w pozostałym okresie nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-10-28T22:01:07.843Z",
       "prompt": 57,
       "accepted": false,
@@ -2515,6 +2506,14 @@
       "headline": "Margines we wszystkich nadchodzących dniach spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza na poniedziałek 2 listopada pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Wtorek 3 listopada, środa 4 listopada, czwartek 5 listopada oraz piątek 6 listopada przynoszą godziny, w których operator może ogłosić przywołanie."
+    },
+    {
+      "at": "2026-10-31T12:31:03.198Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Margines we wszystkich nadchodzących dobach spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza pogarsza się w poniedziałek 2 listopada. Do godzin objętych nadwyżką poniżej progu 1100 MW zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 3 listopada, środę 4 listopada, czwartek 5 listopada oraz piątek 6 listopada rezerwa w poszczególnych godzinach nie pokrywa wymaganego poziomu, a nadwyżka spada poniżej progu 1100 MW lub utrzymuje się powyżej niego, dając operatorowi wybór."
     }
   ]
 }
