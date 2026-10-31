@@ -4,15 +4,6 @@
       "at": "2026-10-28T22:01:07.843Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "godzina bez nazwy dnia",
-      "headline": "Margines jest poniżej typowego zakresu z ostatnich trzydziestu dni przez większość doby.",
-      "body": "W jutrzejszą dobę margines spada między 07:00 a 22:00, ponieważ fotowoltaika spada poniżej normy, a zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść w godzinach 08:00-14:00.",
-      "outlook": "W piątek, poniedziałek 2 listopada i wtorek 3 listopada operator może ogłosić przywołanie, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-10-28T22:01:07.843Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "godzina 11:00 spoza faktów",
       "headline": "Marginesy trzymają się poniżej typowego zakresu z ostatnich trzydziestu dni przez większość czasu w najbliższych dobach.",
       "body": "Jutro między 10:00 a 11:00 margines spadnie najniżej z powodu niskiej generacji źródeł fotowoltaicznych i wysokiego zapotrzebowania. Ogłoszenie może jeszcze nadejść.",
@@ -2514,6 +2505,14 @@
       "headline": "Margines we wszystkich nadchodzących dobach spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza pogarsza się w poniedziałek 2 listopada. Do godzin objętych nadwyżką poniżej progu 1100 MW zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 3 listopada, środę 4 listopada, czwartek 5 listopada oraz piątek 6 listopada rezerwa w poszczególnych godzinach nie pokrywa wymaganego poziomu, a nadwyżka spada poniżej progu 1100 MW lub utrzymuje się powyżej niego, dając operatorowi wybór."
+    },
+    {
+      "at": "2026-10-31T12:45:42.411Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Margines we wszystkich nadchodzących dniach spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "W poniedziałek 2 listopada prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 3 listopada między 07:00 a 10:00, między 10:00 a 13:00, między 13:00 a 22:00 oraz w pozostałych dniach od środy 4 listopada do piątku 6 listopada sytuacja utrzymuje się w podobnym stanie."
     }
   ]
 }
