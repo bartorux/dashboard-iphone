@@ -5,15 +5,6 @@
       "prompt": 57,
       "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 16:00 a 17:00 oraz między 19:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W piątek prognoza pogarsza się. Ogłoszenie może jeszcze nadejść w piątek oraz w poniedziałek 2 listopada między 07:00 a 09:00.",
-      "outlook": "We wtorek 3 listopada operator ma wybór między 07:00 a 10:00 oraz między 12:00 a 22:00, a w pozostałych dniach rezerwa spada w wyznaczonych godzinach."
-    },
-    {
-      "at": "2026-10-28T15:31:02.019Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
       "headline": "Zacznij od najbliższych godzin. Dziś rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie.",
       "body": "Prognoza spada poniżej typowego zakresu. Ogłoszenie może jeszcze nadejść w kolejnych dobach.",
       "outlook": "W piątek między 07:00 a 09:00 nadwyżka spada poniżej progu 1100 MW, a w poniedziałek 2 listopada i we wtorek 3 listopada sytuacja powtarza się w wyznaczonych godzinach, podczas gdy w pozostałe dni okresu rezerwa utrzymuje się w bezpiecznych granicach."
@@ -2514,6 +2505,14 @@
       "headline": "W poniedziałek 2 listopada o godzinie 16:00 margines spadnie najgłębiej, a nadwyżka utrzyma się poniżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 2 listopada między 07:00 a 22:00 oraz w kolejnych dniach nadwyżka spada poniżej progu 1100 MW."
+    },
+    {
+      "at": "2026-10-31T06:45:43.964Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W poniedziałek 2 listopada między 16:00 a 17:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka utrzyma się poniżej progu 1100 MW, przez co operator może ogłosić przywołanie.",
+      "body": "W poniedziałek 2 listopada prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Od poniedziałku 2 listopada do piątku 6 listopada przywołanie wchodzi w grę w każdym dniu roboczym, natomiast dzisiaj nic go nie zapowiada, a Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 18:00."
     }
   ]
 }
