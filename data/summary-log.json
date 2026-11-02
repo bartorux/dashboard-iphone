@@ -5,15 +5,6 @@
       "prompt": 57,
       "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 2 listopada między 07:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza na poniedziałek 2 listopada pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 3 listopada, środę 4 listopada i czwartek 5 listopada nadwyżka w wybranych godzinach spada poniżej progu 1100 MW albo utrzymuje się powyżej niego, dając operatorowi wybór, podczas gdy margines nie pokrywa wymaganego poziomu."
-    },
-    {
-      "at": "2026-10-30T19:15:45.059Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
       "headline": "W poniedziałek 2 listopada operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW w godzinach 07:00-22:00.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 2 listopada rezerwa nie pokrywa wymaganego poziomu, a w pozostałe dni od wtorku 3 listopada do czwartku 5 listopada w określonych godzinach rezerwa również nie pokrywa wymaganego poziomu i nadwyżka spada poniżej progu 1100 MW."
@@ -2499,6 +2490,14 @@
       "headline": "W środę między 16:00 a 17:00 margines spadnie najniżej ze wszystkich dni, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza na tę dobę poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W jutrzejszy wtorek, czwartek i piątek nadwyżka trzyma się powyżej progu 1100 MW, a dzisiejsza doba przebiega spokojnie."
+    },
+    {
+      "at": "2026-11-02T16:45:48.261Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę między 16:00 a 17:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
+      "body": "Prognoza na środę poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek między 07:00 a 09:00 oraz między 16:00 a 22:00, w środę między 07:00 a 22:00, w czwartek między 07:00 a 09:00 oraz między 15:00 a 22:00, a także w piątek między 07:00 a 22:00 margines nie pokrywa wymaganego poziomu, podczas gdy w pozostałe dni i godziny nic nie zapowiada przywołania."
     }
   ]
 }
