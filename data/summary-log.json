@@ -4,15 +4,6 @@
       "at": "2026-10-30T12:45:45.975Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "W poniedziałek 2 listopada prognoza pogarsza się. Kompas Energetyczny PSE zaleca oszczędzanie między 14:00 a 21:00.",
-      "outlook": "W poniedziałek 2 listopada oraz we wtorek 3 listopada nadwyżka spada poniżej progu 1100 MW między 07:00 a 22:00, a w kolejnych dniach podobne godziny występują od wtorku do czwartku."
-    },
-    {
-      "at": "2026-10-30T12:45:45.975Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
       "headline": "Dziś margines spada poniżej typowego pasma z ostatnich trzydziestu dni, a rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW między 13:00 a 22:00.",
       "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 14:00 a 21:00. Na ogłoszenie przywołania w tych godzinach jest już za późno.",
@@ -2494,6 +2485,14 @@
       "headline": "W piątek między 16:00 a 17:00 margines spadnie najgłębiej w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Dziś między 12:00 a 15:00 Kompas Energetyczny PSE zaleca oszczędzanie. Na ogłoszenie jest już za późno.",
       "outlook": "We wtorek, środę, czwartek i piątek przywołanie wchodzi w grę przez wiele godzin, natomiast dziś dotyczy to tylko wybranego przedziału, a w pozostałe dni rezerwa zachowuje się stabilnie."
+    },
+    {
+      "at": "2026-11-02T11:15:49.014Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W piątek między 16:00 a 17:00 rezerwa spadnie najgłębiej, a nadwyżka utrzyma się poniżej progu 1100 MW.",
+      "body": "Dziś między 12:00 a 15:00 oraz między 18:00 a 19:00 Kompas Energetyczny PSE zaleca oszczędzanie. Na ogłoszenie jest już za późno.",
+      "outlook": "Jutro, w środę, czwartek i piątek ogłoszenie może jeszcze nadejść w wielu godzinach, natomiast w czwartek występują też godziny z nadwyżką powyżej progu 1100 MW, w których operator ma wybór."
     }
   ]
 }
