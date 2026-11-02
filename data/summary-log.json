@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-30T04:31:00.054Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 14:00 a 22:00 margines spadnie poniżej wymaganego poziomu, a nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "Dziś Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 10:00 oraz między 15:00 a 20:00. Ogłoszenie może jeszcze nadejść w godzinach popołudniowych i wieczornych.",
-      "outlook": "W poniedziałek 2 listopada, we wtorek 3 listopada, w środę 4 listopada oraz w czwartek 5 listopada przywołanie również wchodzi w grę."
-    },
-    {
       "at": "2026-10-30T04:45:44.911Z",
       "prompt": 57,
       "accepted": false,
@@ -2498,6 +2489,14 @@
       "headline": "W środę o 16:00 margines spadnie najniżej, a nadwyżka utrzyma się poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "Jutro o 17:00 margines spadnie głębiej niż zwykle, bo zapotrzebowanie urośnie ponad normę. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
       "outlook": "Dziś między 08:00 a 10:00 oraz między 12:00 a 16:00 Kompas Energetyczny PSE zaleca oszczędzanie, a w pozostałe dni przywołanie wchodzi w grę w licznych godzinach."
+    },
+    {
+      "at": "2026-11-02T01:15:42.709Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę o 16:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka utrzyma się poniżej progu 1100 MW.",
+      "body": "W środę margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez dziewiętnaście godzin, a ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie dzisiaj między 08:00 a 10:00 oraz między 12:00 a 16:00.",
+      "outlook": "We wtorek między 07:00 a 09:00 oraz w czwartek między 16:00 a 20:00 nadwyżka również spadnie poniżej progu 1100 MW, a w pozostałe dni i godziny operator zachowa wybór lub nic nie zapowiada przywołania."
     }
   ]
 }
