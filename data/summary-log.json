@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-30T14:01:15.764Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 15:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 19:00. Na ogłoszenie dla dzisiejszych godzin jest już za późno.",
-      "outlook": "W poniedziałek 2 listopada, we wtorek 3 listopada, w środę 4 listopada i w czwartek 5 listopada nadwyżka spada poniżej progu 1100 MW, a ogłoszenie może jeszcze nadejść."
-    },
-    {
-      "at": "2026-10-30T14:45:46.805Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 15:00 a 22:00 operator może ogłosić przywołanie, choć nadwyżka utrzymuje się powyżej progu 1100 MW.",
-      "body": "Dziś Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 19:00. Na ogłoszenie dla dzisiejszych godzin jest już za późno.",
-      "outlook": "W poniedziałek 2 listopada, we wtorek 3 listopada, w środę 4 listopada oraz w czwartek 5 listopada przywołanie wchodzi w grę, a prognoza na poniedziałek 2 listopada pogarsza się."
-    },
-    {
       "at": "2026-10-30T15:01:17.070Z",
       "prompt": 57,
       "accepted": false,
@@ -2494,6 +2478,23 @@
       "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Dziś między 13:00 a 14:00 nadwyżka spada poniżej progu 1100 MW. Na ogłoszenie przywołania jest już za późno.",
       "outlook": "Jutro, w środę, czwartek oraz piątek w wyznaczonych godzinach operator może ogłosić przywołanie."
+    },
+    {
+      "at": "2026-11-02T12:15:45.030Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAG",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-02T12:15:45.030Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie.",
+      "body": "Dziś między 13:00 a 14:00 zapotrzebowanie rośnie powyżej normy. Na ogłoszenie jest już za późno.",
+      "outlook": "Jutro między 07:00 a 09:00 oraz od 15:00 do 22:00 operator ma wybór, a w środę między 07:00 a 09:00 nadwyżka spada poniżej progu 1100 MW."
     }
   ]
 }

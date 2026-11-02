@@ -1,8 +1,8 @@
 {
-  "headline": "W piątek o 16:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-  "body": "Prognoza na ten dzień poprawia się. Ogłoszenie może jeszcze nadejść. Ocena na środę, czwartek i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W środę między 07:00 a 22:00, w czwartek między 07:00 a 22:00 oraz w piątek między 07:00 a 22:00 operator może ogłosić przywołanie, a w pozostałe dni rezerwa zachowuje stabilny poziom.",
-  "generatedAt": "2026-11-02T11:45:48.600Z",
+  "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie.",
+  "body": "Dziś między 13:00 a 14:00 zapotrzebowanie rośnie powyżej normy. Na ogłoszenie jest już za późno. Ocena na środę jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Jutro między 07:00 a 09:00 oraz od 15:00 do 22:00 operator ma wybór, a w środę między 07:00 a 09:00 nadwyżka spada poniżej progu 1100 MW.",
+  "generatedAt": "2026-11-02T12:15:45.030Z",
   "dates": [
     "2026-11-02",
     "2026-11-03",
@@ -10,6 +10,6 @@
     "2026-11-05",
     "2026-11-06"
   ],
-  "assessment": "2026-11-02|R|high|-1600|12:00|4|3|0|high:12:00-14:00,moderate:14:00-16:00,moderate:18:00-19:00|K2:12:00-15:00|-|-;2026-11-03|R|high|-1800|08:00|0|12|0|high:07:00-09:00,moderate:09:00-14:00,high:14:00-22:00||X|-;2026-11-04|R|high|-4100|16:00|0|16|0|high:07:00-09:00,moderate:09:00-14:00,high:14:00-22:00||X|P;2026-11-05|R|high|-2800|17:00|0|11|2|moderate:07:00-09:00,moderate:15:00-16:00,high:16:00-21:00,moderate:21:00-22:00||X|P;2026-11-06|R|high|-4700|16:00|0|19|0|high:07:00-10:00,moderate:10:00-12:00,high:12:00-22:00||X|P#-/below/prognoza poprawia się#v57",
+  "assessment": "2026-11-02|R|high|-1400|13:00|5|2|0|high:13:00-14:00,moderate:14:00-16:00,moderate:18:00-19:00|K2:13:00-15:00|-|-;2026-11-03|R|moderate|-200|15:00|2|0|0|moderate:07:00-09:00,moderate:15:00-20:00,moderate:21:00-22:00||-|-;2026-11-04|R|high|-4100|16:00|0|17|0|high:07:00-09:00,moderate:09:00-14:00,high:14:00-22:00||X|P;2026-11-05|R|high|-2800|17:00|0|11|1|moderate:07:00-09:00,moderate:15:00-16:00,high:16:00-21:00,moderate:21:00-22:00||X|P;2026-11-06|R|high|-4700|16:00|0|19|0|high:07:00-10:00,moderate:10:00-12:00,high:12:00-22:00||X|P#zapotrzebowanie powyżej normy; w drugą stronę ubytki poniżej normy/below/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
