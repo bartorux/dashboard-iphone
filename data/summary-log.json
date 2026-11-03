@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-31T22:31:00.371Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Margines we wszystkich dniach roboczych spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "W poniedziałek 2 listopada prognoza pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 3 listopada, środę 4 listopada, czwartek 5 listopada i piątek 6 listopada operator może ogłosić przywołanie przez więkskelub mniejsze części doby."
-    },
-    {
-      "at": "2026-10-31T22:45:40.663Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W poniedziałek 2 listopada margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "We wtorek 3 listopada, w środę 4 listopada, w czwartek 5 listopada i w piątek 6 listopada margines również spadnie poniżej normy z ostatnich trzydziestu dni."
-    },
-    {
       "at": "2026-10-31T23:01:12.585Z",
       "prompt": 57,
       "accepted": true,
@@ -2503,6 +2487,23 @@
       "headline": "W czwartek między 07:00 a 09:00 nadwyżka spada poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "Prognoza na czwartek poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś, jutro, w piątek i w poniedziałek 9 listopada margines również spada miejscami poniżej wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-03T17:01:19.490Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś margines spada poniżej typowego zakresu przez cztery godziny.",
+      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 19:00. Na ogłoszenie jest już za późno.",
+      "outlook": "Jutro, w czwartek, piątek oraz w poniedziałek 9 listopada przywołanie wchodzi w grę w wyznaczonych godzinach, natomiast w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-03T17:01:19.490Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Dziś między 18:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW. Na ogłoszenie jest już za późno.",
+      "outlook": "Jutro między 07:00 a 10:00, między 12:00 a 15:00 oraz między 16:00 a 22:00 operator ma wybór, a w pozostałe dni wchodzi w grę ogłoszenie przywołania."
     }
   ]
 }
