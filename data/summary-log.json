@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-10-31T19:01:06.069Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W poniedziałek 2 listopada między 07:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
-      "body": "Prognoza na poniedziałek 2 listopada pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 3 listopada, w środę 4 listopada, w czwartek 5 listopada i w piątek 6 listopada nadwyżka również spadnie poniżej progu 1100 MW w większości godzin między 07:00 a 22:00."
-    },
-    {
-      "at": "2026-10-31T19:15:53.578Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W poniedziałek 2 listopada między 07:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, przez co operator może ogłosić przywołanie.",
-      "body": "Prognoza pogarsza się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 3 listopada, środę 4 listopada, czwartek 5 listopada oraz piątek 6 listopada margines również utrzyma się poniżej wymaganego poziomu, a operator zachowa uprawnienie do ogłoszenia przywołania."
-    },
-    {
       "at": "2026-10-31T19:30:54.866Z",
       "prompt": 57,
       "accepted": true,
@@ -2505,6 +2489,23 @@
       "headline": "W czwartek między 07:00 a 09:00 oraz od 15:00 do 22:00 nadwyżka spada poniżej progu 1100 MW, co uniemożliwia operatorowi pominięcie przywołania.",
       "body": "Prognoza na ten dzień poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek i w poniedziałek 9 listopada nadwyżka również spada miejscami poniżej progu 1100 MW, natomiast dziś i jutro operator zachowuje pełny wybór."
+    },
+    {
+      "at": "2026-11-03T13:15:49.845Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W czwartek między 07:00 a 09:00 nadwyżka spada poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek, poniedziałek 9 listopada oraz w pozostałych nadchodzących dniach rezerwa również obniża się w określonych godzinach, a w pozostałym okresie sytuacja nie budzi obaw."
+    },
+    {
+      "at": "2026-11-03T13:15:49.845Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W czwartek między 07:00 a 09:00 nadwyżka spada poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W pozostałych dniach okresu rezerwa w poszczególnych godzinach również nie pokrywa wymaganego poziomu, a w piątek i poniedziałek 9 listopada nadwyżka także spada poniżej progu 1100 MW."
     }
   ]
 }
