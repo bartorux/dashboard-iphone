@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-01T04:45:38.129Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW i operator będzie mógł ogłosić przywołanie.",
-      "body": "Prognoza na ten dzień pogarsza się. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Przywołanie wchodzi w grę także we wtorek 3 listopada, w środę 4 listopada, w czwartek 5 listopada i w piątek 6 listopada."
-    },
-    {
-      "at": "2026-11-01T05:01:06.775Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 16:00 a 21:00 Kompas Energetyczny PSE zaleca oszczędzanie.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 3 listopada, w środę 4 listopada, w czwartek 5 listopada i w piątek 6 listopada operator może ogłosić przywołanie."
-    },
-    {
       "at": "2026-11-01T05:15:42.760Z",
       "prompt": 57,
       "accepted": true,
@@ -2508,6 +2492,23 @@
       "headline": "W czwartek między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
       "body": "W czwartek zapotrzebowanie przekroczy normę. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę, czwartek, piątek oraz poniedziałek 9 listopada rezerwa spadnie poniżej wymaganego poziomu, podczas gdy dzisiaj nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-03T21:15:53.846Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W czwartek między 16:00 a 17:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
+      "body": "W czwartek zapotrzebowanie urośnie powyżej normy. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro, w piątek oraz w poniedziałek 9 listopada w wybranych godzinach operator również ma wybór lub może ogłosić przywołanie, podczas gdy dziś nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-03T21:15:53.846Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W czwartek między 16:00 a 17:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
+      "body": "W czwartek zapotrzebowanie urośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro, w czwartek, piątek i w poniedziałek 9 listopada operator może ogłosić przywołanie, podczas gdy dziś nic go nie zapowiada."
     }
   ]
 }
