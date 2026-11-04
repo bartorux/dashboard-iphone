@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-01T09:15:43.190Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Jutro między 07:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
-      "body": "O godzinie 20:00 wiatr osłabnie poniżej normy, a zapotrzebowanie wzrośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 3 listopada, w środę 4 listopada, w czwartek 5 listopada i w piątek 6 listopada operator również może ogłosić przywołanie, natomiast dziś nic go nie zapowiada, choć Kompas Energetyczny PSE zaleca oszczędzanie od 16:00 do 18:00 i od 20:00 do 22:00 oraz wymaga ograniczenia poboru między 18:00 a 20:00."
-    },
-    {
       "at": "2026-11-01T09:30:56.790Z",
       "prompt": 57,
       "accepted": true,
@@ -2509,6 +2500,14 @@
       "headline": "W piątek między 07:00 a 10:00 oraz między 13:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 11:00 a 15:00 oraz między 17:00 a 18:00.",
       "outlook": "Dziś, jutro, w poniedziałek 9 listopada oraz we wtorek 10 listopada margines również spada poniżej wymaganego poziomu, a operator zachowuje wybór, dopóki nadwyżka trzyma się powyżej progu 1100 MW."
+    },
+    {
+      "at": "2026-11-04T04:15:49.106Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś, jutro, w piątek, w poniedziałek 9 listopada oraz we wtorek 10 listopada operator może ogłosić przywołanie, a nadwyżka trzyma się poniżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 11:00 a 15:00 oraz między 17:00 a 18:00.",
+      "outlook": "W tych samych dniach rezerwa w pewnych godzinach spada poniżej wymaganego poziomu, lecz nadwyżka przekracza próg 1100 MW, co daje operatorowi wybór bez obowiązku ogłaszania."
     }
   ]
 }
