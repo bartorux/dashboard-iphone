@@ -201,7 +201,7 @@ jobs:
       cancel-in-progress: false
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.ponowna.outputs.page_url }}
     steps:
       # The branch head, not the SHA that triggered the schedule — the summary
       # commit landed after this run began.
@@ -221,5 +221,28 @@ jobs:
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist
+
+      # A failed publication is never worth a red run. On 3-4.11.2026 four of
+      # about 136 failed on GitHub's side (500, 502, a missing artifact, a
+      # timeout), each one an e-mail about something nobody can act on. Nothing
+      # is lost: the data is already committed by the job above, and the next
+      # publication, usually within the half hour, builds the branch head. So:
+      # one more try, then a warning. A build that breaks still fails above, and
+      # Pages down for good is what analiza-zywa.yml is for — it reads the
+      # PUBLISHED file. `.outcome`, because with continue-on-error `.conclusion`
+      # reads success even when the step failed.
       - id: deployment
         uses: actions/deploy-pages@v5
+        continue-on-error: true
+      - if: steps.deployment.outcome == 'failure'
+        run: sleep 120
+      # Five minutes against the default ten: a healthy publication takes 7-110 s,
+      # and this job holds the `pages` queue while it waits.
+      - id: ponowna
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+        with:
+          timeout: 300000
+      - if: steps.deployment.outcome == 'failure' && steps.ponowna.outcome == 'failure'
+        run: echo "::warning title=Publikacja nie wyszla::Dwa podejscia do GitHub Pages nie powiodly sie. Dane sa juz w repozytorium, kolejna publikacja zbuduje najnowszy stan."

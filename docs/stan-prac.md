@@ -1230,6 +1230,44 @@ pliku danych, test faktów AI, który nie może przejść na pusto.
 29.10 ok. 13:15); czy wynik `pwm-rdn` dla 30.10 wszedł do logu 29.10 po 13:04; przyrost logu na dobę.
 **Ocena:** 15 dób roboczych od 30.10 (11.11 wolne) przypada na 20.11.
 
+## Maile z GitHuba: awarie Pages i fałszywy alarm strażnika (04.11.2026, v3.90.8)
+
+**Co przyszło.** Od wdrożenia v3.90.7 (28.10) padło 5 przebiegów, wszystkie 3–4.11:
+- 4 razy „Podsumowanie AI”, zawsze krok `actions/deploy-pages` w zadaniu `deploy`, a zadanie `summary`
+  zielone, czyli dane zapisane. Przyczyny po stronie GitHuba:
+  - 03.11 12:31 UTC: brak artefaktu (status GitHuba nie wymienia wtedy awarii);
+  - 04.11 10:01 UTC: 502, 11:16 UTC: 500 (obie w czasie awarii 09:49–11:50);
+  - 04.11 18:31 UTC: limit czasu, 15 min po końcu awarii Actions (17:40–18:16).
+- 1 raz strażnik „Zapisy podsumowania” (04.11 16:24 UTC) z tekstem „każdy to bezpowrotnie utracony
+  odczyt”. To był **fałszywy alarm**: liczył przebiegi ze statusem failure, a oba odczyty leżały już
+  w repozytorium. Odczytów nie stracono. Strona wróciła sama przy kolejnej publikacji.
+
+**Poprawione.**
+- `zapisy-podsumowania.yml`: liczy tylko przebiegi z padniętym zadaniem `summary`, publikacje podaje
+  osobno w logu. Alarm o słabym pulsie bez zmian.
+- `summary.yml`, zadanie `deploy`: dwa podejścia do `deploy-pages` (drugie po 2 min, limit 5 min),
+  potem ostrzeżenie zamiast czerwonego przebiegu. Nikt nie może nic zrobić z awarią Pages, a kolejna
+  publikacja (ok. 75 na dobę) buduje najnowszy stan. Padnięcie builda nadal jest głośne.
+- **Cena:** trwałą awarię publikacji zgłosi dopiero strażnik świeżości, po 15 h, plus opóźnienie jego
+  crona (strażniki startują nawet 8 h po terminie). Telefon pobiera dane PSE sam, więc w tym czasie
+  starzeją się tylko analiza AI, ceny i wiadomości. `deploy.yml` (wdrożenia kodu) zostaje głośny.
+
+**Sprawdzone.** Skrypt strażnika uruchomiony lokalnie ze stubem `gh`, stara i nowa wersja: prawdziwe
+zadania z 04.11 dają w starej alarm, w nowej zielony wynik. Dwa utracone zapisy, słaby puls i błąd
+API nadal dają czerwony wynik. `workflowGuardWiring.test.ts`, 6 sond mutacyjnych złapanych, składnia
+YAML sprawdzona PyYAML. **Nie sprawdzone:** ścieżka ponowienia na GitHubie, bo uruchamia ją dopiero
+prawdziwa awaria. Przy następnej trzeba zajrzeć w adnotacje przebiegu.
+
+**Etap 2 po tygodniu (log od 28.10).**
+- 7 dób ocenionych, 4 robocze z werdyktem (wszystkie „trafione” przy każdym k), pokrycie E5 h=1 84,8%.
+- MAE względem pierwszego planu: E5 h=1 884 MW, wartość zastępcza 1059 MW. Próba jest jeszcze mała.
+- **`pwm-rdn` nie dał ani jednego wiersza.** Wynik rynku wychodzi o 13:02, przebiegi są o 13:00 i 13:15,
+  a o 13:15 plan jest już w pk5l-wp (7 z 7 dób). Przy tym rytmie ta ścieżka nic nie wnosi, a kosztuje
+  ok. 5 pustych zapytań na dobę. Do decyzji przy etapie 3: usunąć albo dodać przebieg o 13:05.
+
+**Zauważone przy okazji:** ostrzeżenie „Node.js 20 is deprecated” dla `configure-pages`
+i `upload-artifact` (działają wymuszone na Node 24, maili nie generuje).
+
 ## Czego dzień nauczył
 
 1. **Zielony test nie jest testem sprawdzonym.** Każda nowa asercja sprawdzona mutacją — dziś
