@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-02T22:31:06.424Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez większość nadchodzącego okresu.",
-      "body": "Prognoza poprawia się w środę. Ogłoszenie może jeszcze nadejść w środę między 07:00 a 09:00, kiedy nadwyżka spada poniżej progu 1100 MW.",
-      "outlook": "Jutro, w środę, czwartek i piątek margines spada w niektórych godzinach poniżej wymaganego poziomu, podczas gdy dzisiejsza doba przebiega spokojnie."
-    },
-    {
-      "at": "2026-11-02T22:45:41.157Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez dziesięć godzin jutro.",
-      "body": "Prognoza uwzględnia Kompas Energetyczny PSE zalecający oszczędzanie między 18:00 a 19:00 oraz między 21:00 a 22:00. Ogłoszenie może jeszcze nadejść do tych godzin, ponieważ do ich nadejścia zostało ponad osiem godzin.",
-      "outlook": "W środę, czwartek oraz piątek rezerwa również spada poniżej normy przez kilkanaście godzin dziennie, natomiast dzisiaj nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-02T23:01:18.491Z",
       "prompt": 57,
       "accepted": true,
@@ -2522,6 +2506,24 @@
       "headline": "We wtorek 10 listopada i w poniedziałek 9 listopada rezerwa nie pokrywa wymaganego poziomu, a nadwyżka spada poniżej próg 1100 MW.",
       "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "Jutro między 07:00 a 08:00 oraz w poniedziałek 9 listopada i we wtorek 10 listopada operator może ogłosić przywołanie, a w czwartek 12 listopada nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-05T19:01:32.497Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina w nagłówku bez nazwy dnia",
+      "headline": "Przywołanie wchodzi w grę, bo nadwyżka spada poniżej progu 1100 MW między 07:00 a 08:00.",
+      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-05T19:01:32.497Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAG",
+      "body": "",
+      "outlook": ""
     }
   ]
 }
