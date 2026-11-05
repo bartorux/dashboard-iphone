@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-02T17:45:47.128Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza poprawia się w środę. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 09:00 oraz od 14:00 do 22:00.",
-      "outlook": "W czwartek margines spada poniżej typowego zakresu w dziesięciu godzinach, a w pozostałe dni dotyka go przez niemal cały roboczy czas doby."
-    },
-    {
-      "at": "2026-11-02T18:01:20.364Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a jego decyzji nie da się przesądzić.",
-      "body": "W środę prognoza poprawia się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek między 07:00 a 09:00 oraz między 16:00 a 22:00, w środę między 09:00 a 22:00, w czwartek między 07:00 a 09:00 oraz między 15:00 a 22:00, a także w piątek między 07:00 a 22:00 operator może ogłosić przywołanie, a w pozostałych dniach i godzinach nic go nie zapowiada."
-    },
-    {
       "at": "2026-11-02T18:15:49.920Z",
       "prompt": 57,
       "accepted": true,
@@ -2521,6 +2505,24 @@
       "headline": "Dziś między 16:00 a 22:00 oraz jutro rezerwa nie pokrywa wymaganego poziomu, a operator ma prawo ogłosić przywołanie.",
       "body": "Jutro zapotrzebowanie wzrośnie ponad normę. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 9 listopada między 07:00 a 22:00, we wtorek 10 listopada między 07:00 a 22:00 oraz w czwartek 12 listopada margines bywa wąski, natomiast w czwartek 12 listopada nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-05T10:45:45.545Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "tekst zawiera liczbę spoza godzin",
+      "headline": "Dziś między 16:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Dziś między 16:00 a 2",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-05T10:45:45.545Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: Dziś między 16:00 a 22:00 rezerwa nie pokrywa wymagan",
+      "body": "",
+      "outlook": ""
     }
   ]
 }
