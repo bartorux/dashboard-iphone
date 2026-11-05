@@ -4,15 +4,6 @@
       "at": "2026-11-02T09:45:45.281Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "Dziś między 10:00 a 11:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, podczas gdy w innych godzinach ma wybór, bo nadwyżka trzyma się powyżej tego progu, choć rezerwa nie pokrywa wymaganego poziomu.",
-      "body": "Dziś margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez pięć godzin. Kompas Energetyczny PSE na tę dobę zaleca oszczędzanie od 10:00 do 15:00, a do dzisiejszych godzin jest już za późno na ogłoszenie.",
-      "outlook": "Jutro, w środę, czwartek i piątek przywołanie wchodzi w grę, a w pozostałe dni okresu rezerwa pokrywa wymagany poziom i nic tam go nie zapowiada."
-    },
-    {
-      "at": "2026-11-02T09:45:45.281Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
       "headline": "Dziś między 10:00 a 11:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, podczas gdy w innych godzinach ma wybór.",
       "body": "Kompas Energetyczny PSE zaleca oszczędzanie od 10:00 do 15:00. Na ogłoszenie przywołania dla dzisiejszych godzin jest już za późno, bo do tego czasu zostało mniej niż osiem godzin.",
@@ -2527,6 +2518,14 @@
       "headline": "Dziś między 07:00 a 09:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka spada poniżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Na ogłoszenie dla tych godzin jest już za późno.",
       "outlook": "Jutro między 07:00 a 22:00 oraz we wtorek 10 listopada i w poniedziałek 9 listopada operator może ogłosić przywołanie, a w czwartek 12 listopada nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-05T01:01:14.982Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 07:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Na ogłoszenie dla tych najwcześniejszych godzin jest już za późno.",
+      "outlook": "Jutro, w poniedziałek 9 listopada oraz we wtorek 10 listopada ogłoszenie może jeszcze nadejść w wielu godzinach, podczas gdy w czwartek 12 listopada rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
     }
   ]
 }
