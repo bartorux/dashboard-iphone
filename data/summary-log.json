@@ -3,15 +3,6 @@
     {
       "at": "2026-11-02T15:01:25.731Z",
       "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 18:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Dziś margines spada ze względu na zapotrzebowanie powyżej normy. Ogłoszenie nie nadejdzie, bo do tych godzin zostało mniej niż osiem godzin.",
-      "outlook": "Jutro między 07:00 a 09:00 oraz między 16:00 a 22:00 nadwyżka trzyma się powyżej progu 1100 MW, a w środę, czwartek i piątek w wyznaczonych godzinach rezerwa spada poniżej wymaganej wartości."
-    },
-    {
-      "at": "2026-11-02T15:01:25.731Z",
-      "prompt": 57,
       "accepted": true,
       "headline": "Dziś między 18:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Dziś margines spadnie do najniższego poziomu. Do tych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
@@ -2521,6 +2512,14 @@
       "headline": "W środę operator może ogłosić przywołanie, bo nadwyżka spada poniżej progu 1100 MW między 07:00 a 10:00.",
       "body": "Zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś między 16:00 a 22:00 oraz w poniedziałek i wtorek operator może ogłosić przywołanie, natomiast w czwartek nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-05T09:01:11.622Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś i w kolejnych dniach operator może ogłosić przywołanie.",
+      "body": "Dziś margines spada poniżej wymaganego poziomu, bo zapotrzebowanie rośnie. Ogłoszenie może jeszcze nadejść między 16:00 a 22:00.",
+      "outlook": "Jutro, w poniedziałek 9 listopada oraz we wtorek 10 listopada rezerwa powtórzy spadek, natomiast w czwartek 12 listopada nic nie zapowiada przywołania."
     }
   ]
 }
