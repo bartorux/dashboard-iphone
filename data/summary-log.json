@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-02T23:01:18.491Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Prognoza na środę poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek między 17:00 a 18:00 również pojawią się warunki do ogłoszenia przywołania, podczas gdy jutro i w piątek rezerwa w części godzin nie pokryje wymaganego poziomu."
-    },
-    {
-      "at": "2026-11-02T23:15:47.285Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W piątek między 07:00 a 09:00 oraz między 14:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW.",
-      "body": "Prognoza na piątek poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, czwartek oraz w piątek rezerwa wielokrotnie spada poniżej wymaganego poziomu, podczas gdy jutro wąski margines występuje tylko w kilku godzinach."
-    },
-    {
       "at": "2026-11-02T23:31:06.911Z",
       "prompt": 57,
       "accepted": true,
@@ -2524,6 +2508,23 @@
       "headline": "NAG",
       "body": "",
       "outlook": ""
+    },
+    {
+      "at": "2026-11-05T19:15:44.151Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: Dziś między 21:00 a 22:00 rezerwa spadnie poniżej wym",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-05T19:15:44.151Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 21:00 a 22:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, co daje operatorowi pełną swobodę w podjęciu decyzji o przywołaniu.",
+      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 9 listopada, we wtorek 10 listopada oraz jutro operator może ogłosić przywołanie, podczas gdy w czwartek 12 listopada nic go nie zapowiada."
     }
   ]
 }
