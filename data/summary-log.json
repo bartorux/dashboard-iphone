@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-02T15:01:25.731Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 18:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Dziś margines spadnie do najniższego poziomu. Do tych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
-      "outlook": "Jutro między 07:00 a 09:00 oraz między 16:00 a 22:00, a także w środę, czwartek i piątek operator może ogłosić przywołanie, a w pozostałe dni okresu rezerwa pokrywa wymagany poziom."
-    },
-    {
-      "at": "2026-11-02T15:15:47.999Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę między 07:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "W środę zapotrzebowanie rośnie powyżej normy, a ubytki trzymają się poniżej normy. Do wyznaczonych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 09:00 oraz między 16:00 a 22:00, w środę między 09:00 a 22:00, w czwartek między 07:00 a 09:00 oraz między 15:00 a 22:00, a w piątek między 07:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, podczas gdy w pozostałych dniach i godzinach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-02T15:45:47.988Z",
       "prompt": 57,
       "accepted": true,
@@ -2520,6 +2504,23 @@
       "headline": "Dziś i w kolejnych dniach operator może ogłosić przywołanie.",
       "body": "Dziś margines spada poniżej wymaganego poziomu, bo zapotrzebowanie rośnie. Ogłoszenie może jeszcze nadejść między 16:00 a 22:00.",
       "outlook": "Jutro, w poniedziałek 9 listopada oraz we wtorek 10 listopada rezerwa powtórzy spadek, natomiast w czwartek 12 listopada nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-05T09:15:46.120Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś, jutro oraz w poniedziałek 9 listopada i wtorek 10 listopada operator może ogłosić przywołanie, podczas gdy w czwartek 12 listopada nic go nie zapowiada.",
+      "body": "Jutro zapotrzebowanie urośnie powyżej normy, a margines osiągnie najniższy poziom o godzinie 17:00. Na ogłoszenie w tych godzinach jest jeszcze czas, bo do ich nadejścia zostało ponad osiem godzin.",
+      "outlook": "W poniedziałek 9 listopada i wtorek 10 listopada przywołanie wchodzi w grę w wyznaczonych godzinach, natomiast w czwartek 12 listopada rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-05T09:15:46.120Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś, jutro, w poniedziałek 9 listopada oraz we wtorek 10 listopada operator może ogłosić przywołanie, bo w części godzin nadwyżka spada poniżej progu 1100 MW.",
+      "body": "Jutro zapotrzebowanie rośnie powyżej normy, a margines osiąga najniższy poziom o 17:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek 12 listopada rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
     }
   ]
 }
