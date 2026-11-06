@@ -4,15 +4,6 @@
       "at": "2026-11-03T19:45:54.300Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś, jutro, w czwartek, piątek oraz w poniedziałek 9 listopada operator może ogłosić przywołanie.",
-      "body": "W czwartek margines spadnie o 17:00 z powodu zapotrzebowania powyżej normy. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę nic nie zapowiada przywołania, a w pozostałe dni wchodzi ono w grę w wyznaczonych godzinach."
-    },
-    {
-      "at": "2026-11-03T19:45:54.300Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "prognoza opisana czasem przeszłym",
       "headline": "Dziś rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie między 20:00 a 22:00, lecz nie musi.",
       "body": "Margines spadł poniżej typowego zakresu z ostatnich trzydziestu dni. Na ogłoszenie jest już za późno, bo do tych godzin zostało mniej niż osiem godzin.",
@@ -2517,6 +2508,14 @@
       "headline": "Margines w kraju spada wyraźnie poniżej typowego pasma z ostatnich trzydziestu dni.",
       "body": "Dziś między 21:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka spada poniżej progu 1100 MW. Kompas Energetyczny PSE zaleca oszczędzanie między 18:00 a 22:00.",
       "outlook": "W poniedziałek 9 listopada między 15:00 a 20:00 operator może ogłosić przywołanie, a we wtorek 10 listopada margines utrzymuje się nisko przez cały dzień roboczy."
+    },
+    {
+      "at": "2026-11-06T17:45:49.959Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Między 21:00 a 22:00 nadwyżka spada poniżej progu 1100 MW i rezerwa nie pokrywa wymaganego poziomu, co oznacza, że operator może ogłosić przywołanie. Na to ogłoszenie jest już za późno, bo do tych godzin zostało mniej niż osiem godzin.",
+      "outlook": "W poniedziałek 9 listopada i wtorek 10 listopada margines utrzymuje się poniżej typowego zakresu przez wiele godzin, a w czwartek 12 listopada oraz piątek 13 listopada rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania."
     }
   ]
 }
