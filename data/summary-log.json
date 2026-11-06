@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-03T02:31:00.800Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Jutro między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW. Próg ten oznacza, że operator może ogłosić przywołanie.",
-      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść do tych godzin.",
-      "outlook": "W czwartek, piątek i poniedziałek 9 listopada nadwyżka również spadnie poniżej tego poziomu w wybranych porach, podczas gdy dziś rezerwa trzyma się powyżej niego."
-    },
-    {
-      "at": "2026-11-03T03:15:50.023Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W piątek nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza na piątek poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś między 17:00 a 22:00, jutro, w czwartek, w piątek oraz w poniedziałek 9 listopada operator może ogłosić przywołanie."
-    },
-    {
       "at": "2026-11-03T03:31:11.070Z",
       "prompt": 57,
       "accepted": true,
@@ -2521,6 +2504,23 @@
       "headline": "W poniedziałek między 15:00 a 19:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "Prognoza na poniedziałek 9 listopada poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Jutro między 21:00 a 22:00 oraz we wtorek 10 listopada między 14:00 a 20:00 nadwyżka również spadnie poniżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-06T00:01:14.985Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: Dziś między 2",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-06T00:01:14.985Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 21:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Kompas Energet",
+      "outlook": ""
     }
   ]
 }
