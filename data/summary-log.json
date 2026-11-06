@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-03T19:45:54.300Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "prognoza opisana czasem przeszłym",
-      "headline": "Dziś rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie między 20:00 a 22:00, lecz nie musi.",
-      "body": "Margines spadł poniżej typowego zakresu z ostatnich trzydziestu dni. Na ogłoszenie jest już za późno, bo do tych godzin zostało mniej niż osiem godzin.",
-      "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie dziś od 20:00 do 21:00, jutro od 07:00 do 08:00 oraz od 16:00 do 21:00, natomiast w czwartek, piątek i poniedziałek 9 listopada operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW w części godzin."
-    },
-    {
       "at": "2026-11-03T19:47:07.239Z",
       "prompt": 57,
       "accepted": true,
@@ -2516,6 +2507,14 @@
       "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Między 21:00 a 22:00 nadwyżka spada poniżej progu 1100 MW i rezerwa nie pokrywa wymaganego poziomu, co oznacza, że operator może ogłosić przywołanie. Na to ogłoszenie jest już za późno, bo do tych godzin zostało mniej niż osiem godzin.",
       "outlook": "W poniedziałek 9 listopada i wtorek 10 listopada margines utrzymuje się poniżej typowego zakresu przez wiele godzin, a w czwartek 12 listopada oraz piątek 13 listopada rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-06T18:01:16.291Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Wtorek 10 listopada między 13:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, co odejmuje operatorowi prawo pominięcia przywołania.",
+      "body": "Margines spada poniżej typowego zakresu przez piętnaście godzin. Na ogłoszenie pozostaje jeszcze czas.",
+      "outlook": "W poniedziałek 9 listopada między 15:00 a 21:00 nadwyżka również spada poniżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
