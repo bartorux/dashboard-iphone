@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-03T03:41:34.590Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "We wtorek nadwyżka spada poniżej progu 1100 MW między 07:00 a 09:00 oraz między 14:00 a 22:00, więc operator może ogłosić przywołanie.",
-      "body": "Prognoza poprawia się we wtorek. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę margines spada między 07:00 a 09:00 oraz między 15:00 a 22:00, w piątek między 07:00 a 09:00 i między 14:00 a 22:00, a poniedziałek 9 listopada przynosi wąskie godziny między 15:00 a 20:00, podczas gdy w pozostałe dni okresu rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-03T03:45:46.937Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W piątek między 07:00 a 09:00 oraz między 14:00 a 22:00 nadwyżka spada poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
-      "body": "Prognoza na ten dzień poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę, w czwartek, w piątek oraz w poniedziałek 9 listopada margines w wybranych godzinach nie pokrywa wymaganego poziomu, podczas gdy dzisiaj oraz w pozostałych dniach okresu nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-03T03:45:46.937Z",
       "prompt": 57,
       "accepted": false,
@@ -2520,6 +2502,24 @@
       "headline": "Ddziś między 21:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek i we wtorek margines miejscami spadnie, podczas gdy w czwartek i piątek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-06T01:01:09.130Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: Dziś między 2",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-06T01:01:09.130Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina 08:00 spoza faktów",
+      "headline": "Dziś między 07:00 a 08:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
+      "body": "Prognoza dziś poprawia się. Ogłoszenie może jeszcze nadejść w wielu nadchodzących godzinach.",
+      "outlook": "W poniedziałek 9 listopada oraz we wtorek 10 listopada operator również może ogłosić przywołanie w licznych godzinach, podczas gdy w czwartek 12 listopada i w piątek 13 listopada nic go nie zapowiada."
     }
   ]
 }
