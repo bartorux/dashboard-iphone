@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-03T23:01:17.050Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W czwartek między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a nadwyżka jest poniżej poziomu, który pozwalał mu je pominąć.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek i w poniedziałek 9 listopada operator również może ogłosić przywołanie w wyznaczonych godzinach, natomiast jutro rezerwa nie pokryje wymaganego poziomu, a Kompas Energetyczny PSE zaleca oszczędzanie między 17:00 a 18:00."
-    },
-    {
-      "at": "2026-11-03T23:01:17.050Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a nadwyżka jest poniżej poziomu, który pozwalał mu je pominąć.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 22:00 oraz w poniedziałek 9 listopada między 07:00 a 22:00 operator ma wybór, natomiast w piątek między 07:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW."
-    },
-    {
       "at": "2026-11-03T23:15:42.646Z",
       "prompt": 57,
       "accepted": true,
@@ -2513,6 +2496,14 @@
       "headline": "W poniedziałek 9 listopada i wtorek 10 listopada margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "W poniedziałek 9 listopada zapotrzebowanie urośnie powyżej normy między 15:00 a 21:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek 12 listopada i piątek 13 listopada rezerwa pokryje wymagany poziom, a w pozostałychach dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-06T23:01:22.449Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "We wtorek 10 listopada między 13:00 a 21:00 nadwyżka spada poniżej progu 1100 MW i operator może ogłosić przywołanie.",
+      "body": "W poniedziałek 9 listopada zapotrzebowanie rośnie powyżej normy, a margines o 16:00 spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W poniedziałek i wtorek operator może ogłosić przywołanie także w innych godzinach, natomiast w czwartek i piątek nic go nie zapowiada."
     }
   ]
 }
