@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-04T14:31:07.681Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina w nagłówku bez nazwy dnia",
-      "headline": "Przywołanie wchodzi w grę, a nadwyżka spada poniżej progu 1100 MW między 08:00 a 09:00.",
-      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek, w poniedziałek 9 listopada oraz we wtorek 10 listopada nadwyżka również spada poniżej progu 1100 MW w licznych godzinach."
-    },
-    {
-      "at": "2026-11-04T14:31:07.681Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś przywołanie nie wchodzi już w grę, ale jutro między 08:00 a 09:00 operator może ogłosić przywołanie, bo nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek, w poniedziałek 9 listopada oraz we wtorek 10 listopada w wyznaczonych godzinach nadwyżka również spada poniżej progu 1100 MW."
-    },
-    {
       "at": "2026-11-04T14:46:00.748Z",
       "prompt": 57,
       "accepted": false,
@@ -2511,6 +2493,24 @@
       "headline": "W poniedziałek 9 listopada między 15:00 a 20:00 margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "W poniedziałek 9 listopada zapotrzebowanie urośnie powyżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
       "outlook": "We wtorek 10 listopada i w poniedziałek 16 listopada nadwyżka utrzyma się w różnych godzinach poniżej lub powyżej progu 1100 MW, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-07T13:01:12.374Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "możliwość przywołania podana jak nakaz",
+      "headline": "W poniedziałek 9 listopada między 15:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bezwarunkowo.",
+      "body": "Zapotrzebowanie wzrośnie powyżej normy, a margines osiągnie najniższy poziom o 17:00. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 10 listopada i w poniedziałek 16 listopada nadwyżka również spadnie poniżej progu 1100 MW w części godzin, dając operatorowi prawo do przywołania, podczas gdy w pozostałe dni okresu nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-07T13:01:12.374Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "możliwość przywołania podana jak nakaz",
+      "headline": "W poniedziałek 9 listopada między 15:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bezwarunkowo.",
+      "body": "W poniedziałek 9 listopada zapotrzebowanie urośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 10 listopada i w poniedziałek 16 listopada operator może ogłosić przywołanie, natomiast w czwartek 12 listopada oraz w piątek 13 listopada nic nie zapowiada przywołania."
     }
   ]
 }
