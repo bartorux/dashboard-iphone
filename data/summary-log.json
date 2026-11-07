@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-04T10:01:16.932Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 16:00 a 22:00 nadwyżka utrzymuje się powyżej progu 1100 MW, a margines nie pokrywa wymaganego poziomu, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Dziś margines spada poniżej typowego zakresu, a w godzinach 14:00-15:00 oraz 17:00-18:00 obowiązuje zalecane oszczędzanie z Kompasu Energetycznego PSE. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 09:00 nadwyżka spada poniżej progu 1100 MW, a w piątek oraz w poniedziałek 9 listopada i wtorek 10 listopada sytuacja powtarza się w wielu godzinach."
-    },
-    {
       "at": "2026-11-04T10:15:52.568Z",
       "prompt": 57,
       "accepted": false,
@@ -2515,6 +2507,14 @@
       "headline": "W poniedziałek 9 listopada w godzinach od 15:00 do 20:00 nadwyżka spadnie poniżej progu 1100 MW, przez co operator może ogłosić przywołanie.",
       "body": "W poniedziałek 9 listopada rezerwa spadnie, bo zapotrzebowanie urośnie ponad normę. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 9 listopada między 07:00 a 10:00, 13:00 a 15:00 oraz 20:00 a 22:00, we wtorek 10 listopada między 07:00 a 22:00 oraz w poniedziałek 16 listopada między 07:00 a 22:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-07T07:31:02.728Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W poniedziałek 9 listopada między 15:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a rezerwa nie pokryje wymaganego poziomu.",
+      "body": "W poniedziałek 9 listopada zapotrzebowanie urośnie powyżej normy, a margines o 17:00 obniży się mocniej niż zwykle. Do tych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 10 listopada między 07:00 a 22:00 oraz w poniedziałek 16 listopada między 07:00 a 22:00 operator zachowuje wybór, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
