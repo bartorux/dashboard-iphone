@@ -4,15 +4,6 @@
       "at": "2026-11-04T13:15:48.808Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "W piątek nadwyżka spada poniżej progu 1100 MW między 07:00 a 10:00 oraz między 13:00 a 22:00, co pozwala operatorowi ogłosić przywołanie bez pomijania.",
-      "body": "Wymagany poziom jest jeszcze wstępny, więc margines na razie zaniża rzeczywisty stan. Ogłoszenie może jeszcze nadejść w kolejnych godzinach.",
-      "outlook": "Dziś między 14:00 a 15:00, 17:00 a 18:00 oraz 19:00 a 22:00 nadwyżka utrzymuje się powyżej progu 1100 MW, jutro między 18:00 a 19:00 spada poniżej tego progu z powodu zapotrzebowania powyżej normy, a w poniedziałek 9 listopada i wtorek 10 listopada sytuacja powtarza się w licznych godzinach roboczych."
-    },
-    {
-      "at": "2026-11-04T13:15:48.808Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
       "headline": "W piątek nadwyżka spadnie poniżej progu 1100 MW między 07:00 a 10:00 oraz między 13:00 a 22:00, co oznacza, że operator może ogłosić przywołanie.",
       "body": "Wymagany poziom jest jeszcze wstępny. Ogłoszenie może jeszcze nadejść.",
@@ -2512,6 +2503,14 @@
       "headline": "W poniedziałek 9 listopada między 15:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
       "body": "W poniedziałek 9 listopada zapotrzebowanie wzrośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 10 listopada i poniedziałek 16 listopada nadwyżka również spadnie poniżej progu 1100 MW w części godzin, dając operatorowi wybór, natomiast w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-07T12:01:09.713Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W poniedziałek 9 listopada między 15:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
+      "body": "W poniedziałek 9 listopada zapotrzebowanie przekroczy normę. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 10 listopada i w poniedziałek 16 listopada nadwyżka również spadnie miejscami poniżej progu 1100 MW, natomiast w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
