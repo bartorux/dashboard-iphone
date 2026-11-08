@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-06T00:01:14.985Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "odpowiedz nie ma oczekiwanych pol",
-      "headline": "NAGŁÓWEK: Dziś między 2",
-      "body": "",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-06T00:01:14.985Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 21:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza poprawia się. Kompas Energet",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-06T00:15:46.604Z",
       "prompt": 57,
       "accepted": true,
@@ -2482,6 +2465,23 @@
       "headline": "We wtorek 10 listopada między 08:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW.",
       "body": "Wtorkowy margines o 12:00 spada na tle ostatnich trzydziestu dni, bo produkcja z fotowoltaiki trafia poniżej normy. Ogłoszenie może jeszcze nadejść, o ile do wskazanych godzin zostało ponad osiem godzin.",
       "outlook": "W poniedziałek, czwartek i piątek nic nie zapowiada przywołania, a najbliższa doba przynosi wąski margines dodatni przez trzy godziny i zalecane oszczędzanie według Kompasu Energetycznego PSE między 18:00 a 19:00."
+    },
+    {
+      "at": "2026-11-08T23:15:39.022Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "We wtorek 10 listopada między 08:00 a 09:00 nadwyżka spada poniżej progu 1100 MW, więc operator może ogłosić przywołanie, a nadwyżka jest poniżej poziomu, który pozwalał mu je pominąć.",
+      "body": "Margines o 12:00 spada poniżej typowego zakresu, bo fotowoltaika działa poniżej normy. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W jutrzejszym dniu rezerwa w wybranych godzinach nie pokrywa wymaganego poziomu, podczas gdy w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-08T23:15:39.022Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "We wtorek 10 listopada między 08:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
+      "body": "Margines o 12:00 spadnie mocniej niż zwykle, bo produkcja z paneli fotowoltaicznych spadnie poniżej normy. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę nic nie zapowiada przywołania, a w czwartek i piątek margines będzie wąski."
     }
   ]
 }
