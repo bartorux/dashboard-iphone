@@ -2387,6 +2387,23 @@
       "headline": "Dziś margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 18:00 oraz między 19:00 a 20:00, a także wymaga ograniczenia poboru między 18:00 a 19:00. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 10 listopada między 07:00 a 11:00 oraz między 11:00 a 22:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-08T12:30:58.935Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "We wtorek 10 listopada między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Saldo wymiany dla tej doby nie doszło jeszcze, więc rezerwa liczy się bez importu i eksportu. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 10 listopada w wyznaczonych godzinach operator może ogłosić przywołanie, podczas gdy w pozostałe dni okresu nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-08T12:30:58.935Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "We wtorek 10 listopada między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Saldo wymiany transgranicznej dla tej doby jeszcze nie doszło, więc rezerwa może się zmienić. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 10 listopada przywołanie wchodzi w grę między 07:00 a 22:00, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
