@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-05T09:15:46.120Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś, jutro oraz w poniedziałek 9 listopada i wtorek 10 listopada operator może ogłosić przywołanie, podczas gdy w czwartek 12 listopada nic go nie zapowiada.",
-      "body": "Jutro zapotrzebowanie urośnie powyżej normy, a margines osiągnie najniższy poziom o godzinie 17:00. Na ogłoszenie w tych godzinach jest jeszcze czas, bo do ich nadejścia zostało ponad osiem godzin.",
-      "outlook": "W poniedziałek 9 listopada i wtorek 10 listopada przywołanie wchodzi w grę w wyznaczonych godzinach, natomiast w czwartek 12 listopada rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-05T09:15:46.120Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś, jutro, w poniedziałek 9 listopada oraz we wtorek 10 listopada operator może ogłosić przywołanie, bo w części godzin nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Jutro zapotrzebowanie rośnie powyżej normy, a margines osiąga najniższy poziom o 17:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek 12 listopada rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-05T09:31:05.107Z",
       "prompt": 57,
       "accepted": true,
@@ -2428,6 +2411,14 @@
       "headline": "Jutro między 16:00 a 18:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "W poniedziałek 16 listopada prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 10 listopada nadwyżka spadnie poniżej progu 1100 MW w godzinach 07:00-09:00 oraz 12:00-20:00, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-08T09:30:56.374Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Jutro między 16:00 a 18:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Dziś Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 18:00 oraz wymaga ograniczenia poboru między 18:00 a 20:00. Na ogłoszenie może jeszcze nadejść czas, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 10 listopada przywołanie wchodzi w grę w szerszym zakresie, podczas gdy w pozostałe dni nic go nie zapowiada."
     }
   ]
 }
