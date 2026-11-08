@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-05T04:31:02.670Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 08:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza poprawia się. Między 14:00 a 15:00 oraz od 16:00 do 22:00 ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro, w poniedziałek 9 listopada oraz we wtorek 10 listopada w wyznaczonych godzinach przywołanie wchodzi w grę, natomiast w czwartek 12 listopada nic go nie zapowiada."
-    },
-    {
-      "at": "2026-11-05T04:31:02.670Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 08:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Prognoza poprawia się. Na ogłoszenie między 14:00 a 15:00 oraz między 16:00 a 22:00 może jeszcze nadejść czas.",
-      "outlook": "Jutro, w poniedziałek 9 listopada oraz we wtorek 10 listopada w wyznaczonych godzinach przywołanie wchodzi w grę, a w czwartek 12 listopada nic go"
-    },
-    {
       "at": "2026-11-05T04:45:43.157Z",
       "prompt": 57,
       "accepted": true,
@@ -2388,6 +2370,14 @@
       "headline": "Jutro między 16:00 a 18:00 operator może ogłosić przywołanie, bo nadwyżka spada poniżej progu 1100 MW.",
       "body": "Dziś margines spada poniżej typowego zakresu przez jedenaście godzin. Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 18:00 oraz między 19:00 a 21:00, a także wymaga ograniczenia poboru między 18:00 a 19:00.",
       "outlook": "We wtorek 10 listopada i w poniedziałek 16 listopada margines mocno faluje, a w pozostałe dni okresu rezerwa bez przeszkód pokrywa wymagany poziom."
+    },
+    {
+      "at": "2026-11-08T04:45:39.709Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Przywołanie wchodzi w grę, bo jutro nadwyżka spada poniżej progu 1100 MW między 16:00 a 18:00.",
+      "body": "W poniedziałek 16 listopada prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 10 listopada między 07:00 a 22:00 operator może ogłosić przywołanie, a w czwartek 12 listopada, piątek 13 listopada i poniedziałek 16 listopada nic go nie zapowiada."
     }
   ]
 }
