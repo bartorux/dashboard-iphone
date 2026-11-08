@@ -1,32 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-05T13:45:50.800Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "odpowiedz nie ma oczekiwanych pol",
-      "headline": "NAG",
-      "body": "",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-05T13:45:50.800Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 9 listopada między 15:00 a 21:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 17:00 a 19:00.",
-      "outlook": "We wtorek 10 listopada w wyznaczonych godzinach nadwyżka również spada poniżej progu 1100 MW, a w czwartek 12 listopada nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-05T14:01:19.075Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W poniedziałek 9 listopada prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 10 listopada nadwyżka w wybranym czasie spada poniżej progu 1100 MW, a w czwartek 12 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-05T14:15:47.477Z",
       "prompt": 57,
       "accepted": true,
@@ -2436,6 +2410,14 @@
       "headline": "We wtorek 10 listopada między 12:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Wtorkowa prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 10 listopada między 07:00 a 12:00 oraz między 20:00 a 21:00 operator ma wybór, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-08T14:01:20.652Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Wtorkowy poranek i popołudnie przynoszą spadek rezerwy poniżej progu 1100 MW, dając operatorowi pełne prawo do ogłoszenia przywołania.",
+      "body": "Wtorkowa prognoza wciąż się",
+      "outlook": ""
     }
   ]
 }
