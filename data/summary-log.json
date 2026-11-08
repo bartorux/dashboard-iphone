@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-05T11:45:47.811Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "odpowiedz nie ma oczekiwanych pol",
-      "headline": "NAGŁÓWEK: Dziś o 17:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.\n",
-      "body": "",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-05T11:45:47.811Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś o 17:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Zapotrzebowanie przekracza normę. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 10:00 nadwyżka spada poniżej progu 1100 MW, w poniedziałek 9 listopada oraz we wtorek 10 listopada rezerwa również spada miejscami poniżej tego progu, a w czwartek 12 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-05T13:15:53.784Z",
       "prompt": 57,
       "accepted": true,
@@ -2379,6 +2362,14 @@
       "headline": "Wtorek 10 listopada między 18:00 a 20:00 nadwyżka spadnie poniżej próg 1100 MW, a rezerwa nie pokryje wymaganego poziomu.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Jutro między 07:00 a 09:00 oraz we wtorek 10 listopada między 07:00 a 09:00, między 11:00 a 20:00 operator może ogłosić przywołanie, a w pozostałych dniach rezerwa pokrywa wymagany poziom."
+    },
+    {
+      "at": "2026-11-08T12:01:12.354Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Przez większość dni rezerwa trzyma się poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro między 07:00 a 09:00 oraz między 14:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, a we wtorek 10 listopada sytuacja wygląda podobnie w godzinach 07:00-09:00 i 11:00-20:00, natomiast w pozostałe dni okresu nic nie zapowiada przywołania."
     }
   ]
 }
