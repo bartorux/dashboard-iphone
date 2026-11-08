@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś margines spada poniżej typowego pasma z ostatnich trzydziestu dni, a Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 20:00.",
-  "body": "Jutro między 16:00 a 18:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Ocena na jutro, wtorek 10 listopada i poniedziałek 16 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek 10 listopada i w poniedziałek 16 listopada operator może ogłosić przywołanie, natomiast w czwartek 12 listopada oraz w piątek 13 listopada nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-08T02:01:11.026Z",
+  "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a Kompas Energetyczny PSE zaleca oszczędzanie energii między 16:00 a 20:00.",
+  "body": "Prognoza na poniedziałek 16 listopada jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na jutro, wtorek 10 listopada i poniedziałek 16 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek 10 listopada i w poniedziałek 16 listopada nadwyżka spada poniżej progu 1100 MW, natomiast w pozostałe dni nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-08T02:15:42.956Z",
   "dates": [
     "2026-11-08",
     "2026-11-09",
@@ -11,6 +11,6 @@
     "2026-11-13",
     "2026-11-16"
   ],
-  "assessment": "2026-11-08|W|none|-1300|17:00|0|10|0||K2:16:00-20:00|-|-;2026-11-09|R|high|-1400|17:00|1|4|7|moderate:07:00-09:00,moderate:15:00-16:00,high:16:00-18:00,moderate:18:00-21:00||X|-;2026-11-10|R|high|-3100|13:00|0|12|0|high:07:00-09:00,moderate:09:00-12:00,high:12:00-21:00,moderate:21:00-22:00||X|P;2026-11-12|R|none|800|17:00|0|0|16|||X|P;2026-11-13|R|none|2300|16:00|0|0|23|||X|P;2026-11-16|R|moderate|0|17:00|1|0|13|moderate:17:00-18:00||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
+  "assessment": "2026-11-08|W|none|-1300|17:00|0|12|0||K2:16:00-20:00|-|-;2026-11-09|R|high|-1400|17:00|1|4|7|moderate:07:00-09:00,moderate:15:00-16:00,high:16:00-18:00,moderate:18:00-21:00||X|-;2026-11-10|R|high|-3200|17:00|0|13|0|high:07:00-09:00,moderate:09:00-12:00,high:12:00-21:00,moderate:21:00-22:00||X|P;2026-11-12|R|none|700|15:00|0|0|14|||X|P;2026-11-13|R|none|2300|16:00|0|0|23|||X|P;2026-11-16|R|moderate|0|17:00|1|0|13|moderate:17:00-18:00||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
   "model": "gemini-3.5-flash-lite"
 }
