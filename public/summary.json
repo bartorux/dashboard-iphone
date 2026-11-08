@@ -1,8 +1,8 @@
 {
-  "headline": "We wtorek 10 listopada między 07:00 a 22:00 nadwyżka spada poniżej progu 1100 MW w części godzin, co oznacza, że operator może ogłosić przywołanie.",
-  "body": "We wtorek 10 listopada prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 10 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W pozostałe dni rezerwa w pełni pokrywa wymagany poziom i nic tam nie zapowiada przywołania.",
-  "generatedAt": "2026-11-08T13:15:44.645Z",
+  "headline": "We wtorek 10 listopada między 12:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW.",
+  "body": "W godzinach 12:00 do 13:00 fotowoltaika spadnie poniżej normy. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 10 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek 10 listopada między 07:00 a 12:00 oraz między 20:00 a 21:00 nadwyżka utrzyma się powyżej progu 1100 MW i operator zachowa wybór, natomiast w pozostałych dniach okresu nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-08T13:31:01.678Z",
   "dates": [
     "2026-11-08",
     "2026-11-09",
@@ -11,6 +11,6 @@
     "2026-11-13",
     "2026-11-16"
   ],
-  "assessment": "2026-11-08|W|none|-2200|19:00|0|8|0||K2:14:00-21:00|-|-;2026-11-09|R|none|0|09:00|12|0|3|||-|-;2026-11-10|R|high|-3100|19:00|0|14|0|high:07:00-09:00,moderate:09:00-11:00,high:11:00-20:00,moderate:20:00-22:00||X|P;2026-11-12|R|none|600|17:00|0|0|12|||X|P;2026-11-13|R|none|2300|16:00|0|0|23|||X|P;2026-11-16|R|none|1200|16:00|0|0|24|||X|P#-/below/-#v57",
+  "assessment": "2026-11-08|W|none|-1300|16:00|0|5|0||K2:14:00-15:00,K2:16:00-18:00|-|-;2026-11-09|R|none|0|08:00|12|0|3|||-|-;2026-11-10|R|high|-2400|12:00|1|13|0|moderate:07:00-12:00,high:12:00-20:00,moderate:20:00-21:00||X|P;2026-11-12|R|none|600|15:00|0|0|12|||X|P;2026-11-13|R|none|2100|17:00|0|0|23|||X|P;2026-11-16|R|none|1300|16:00|0|0|24|||X|P#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
