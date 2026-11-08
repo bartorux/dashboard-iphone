@@ -1,8 +1,8 @@
 {
-  "headline": "We wtorek 10 listopada między 08:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-  "body": "Margines o 12:00 spadnie mocniej niż zwykle, bo produkcja z paneli fotowoltaicznych spadnie poniżej normy. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na wtorek 10 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W środę nic nie zapowiada przywołania, a w czwartek i piątek margines będzie wąski.",
-  "generatedAt": "2026-11-08T23:15:39.022Z",
+  "headline": "We wtorek 10 listopada nadwyżka jest poniżej progu 1100 MW między 08:00 a 09:00, więc operator może ogłosić przywołanie.",
+  "body": "Wtorkowy spadek marginesu wynika z tego, że produkcja z PV spada poniżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Ocena na wtorek 10 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Jutro między 12:00 a 14:00 oraz między 16:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW i operator może ogłosić przywołanie, natomiast w czwartek, piątek i poniedziałek nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-08T23:31:03.214Z",
   "dates": [
     "2026-11-09",
     "2026-11-10",
@@ -10,6 +10,6 @@
     "2026-11-13",
     "2026-11-16"
   ],
-  "assessment": "2026-11-09|R|moderate|-700|18:00|3|5|0|moderate:07:00-09:00,moderate:12:00-14:00,moderate:16:00-21:00|K2:18:00-19:00|-|-;2026-11-10|R|high|-1600|12:00|0|12|6|moderate:07:00-08:00,high:08:00-09:00,moderate:09:00-11:00,high:11:00-20:00,moderate:20:00-21:00||X|-;2026-11-12|R|none|100|16:00|11|0|11|||X|P;2026-11-13|R|none|3000|19:00|0|0|24|||X|P;2026-11-16|R|none|2100|16:00|0|0|24|||X|P#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v57",
+  "assessment": "2026-11-09|R|moderate|-700|18:00|3|6|0|moderate:07:00-09:00,moderate:12:00-14:00,moderate:16:00-21:00|K2:18:00-19:00|-|-;2026-11-10|R|high|-1600|12:00|0|12|6|moderate:07:00-08:00,high:08:00-09:00,moderate:09:00-11:00,high:11:00-20:00,moderate:20:00-21:00||X|-;2026-11-12|R|none|100|16:00|11|0|11|||X|P;2026-11-13|R|none|3100|16:00|0|0|24|||X|P;2026-11-16|R|none|2100|16:00|0|0|24|||X|P#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
