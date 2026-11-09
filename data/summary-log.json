@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-06T21:01:22.032Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W poniedziałek 9 listopada między 15:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "W poniedziałek 9 listopada zapotrzebowanie urośnie powyżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "We wtorek 10 listopada nadwyżka również spadnie miejscami poniżej progu 1100 MW, natomiast w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-06T22:01:08.506Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W poniedziałek i wtorek margines w wielu godzinach spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "W poniedziałek zapotrzebowanie rośnie powyżej normy, a o godzinie 16:00 rezerwa osiąga najniższy poziom. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek i piątek nic nie zapowiada przywołania, a w pozostałych dniach rezerwa wraca do normy."
-    },
-    {
       "at": "2026-11-06T22:15:47.601Z",
       "prompt": 57,
       "accepted": false,
@@ -2478,6 +2462,23 @@
       "headline": "Dziś między 20:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść między 14:00 a 16:00.",
       "outlook": "W czwartek między 07:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-09T19:15:48.524Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: Dziś i jutro operator może ogłosić przy",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-09T19:15:48.524Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś i jutro operator może ogłosić przywołanie, a w kolejnych dniach nic go nie zapowiada.",
+      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, a w piątek i poniedziałek 16 listopada rezerwa pokrywa wymagany poziom."
     }
   ]
 }
