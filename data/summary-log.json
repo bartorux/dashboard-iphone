@@ -3,15 +3,6 @@
     {
       "at": "2026-11-07T01:45:41.761Z",
       "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W poniedziałek 9 listopada między 15:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
-      "body": "W poniedziałek 9 listopada o 16:00 zapotrzebowanie urośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 10 listopada i w poniedziałek 16 listopada operator może ogłosić przywołanie w wybranych godzinach, a w pozostałe dni nic go nie zapowiada."
-    },
-    {
-      "at": "2026-11-07T01:45:41.761Z",
-      "prompt": 57,
       "accepted": true,
       "headline": "W poniedziałek 9 listopada między 15:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
       "body": "W poniedziałek 9 listopada o 16:00 margines spadnie najniżej ze wszystkich dni, ponieważ zapotrzebowanie urośnie powyżej normy. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -2481,6 +2472,14 @@
       "headline": "W czwartek między 07:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza w czwartek poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Jutro między 07:00 a 10:00 oraz między 13:00 a 22:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie jutro między 07:00 a 09:00, między 13:00 a 16:00 oraz między 19:00 a 20:00."
+    },
+    {
+      "at": "2026-11-09T23:45:45.138Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W czwartek między 07:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi, mimo że rezerwa nie pokrywa wymaganego poziomu.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro między 07:00 a 10:00 oraz między 13:00 a 22:00 rezerwa również nie pokrywa wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
