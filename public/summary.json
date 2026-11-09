@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-  "body": "Jutro między 08:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW. Ogłoszenie może jeszcze nadejść. Ocena na jutro jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W czwartek między 16:00 margines będzie wąski, a w piątek i w poniedziałek 16 listopada nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-09T02:01:09.108Z",
+  "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+  "body": "Dziś między 07:00 a 09:00, między 12:00 a 14:00 oraz między 16:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu. W godzinach 12:00-14:00 oraz 16:00-21:00 ogłoszenie może jeszcze nadejść. Ocena na jutro jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Jutro operator może ogłosić przywołanie między 08:00 a 09:00, a w czwartek margines pozostaje wąski. W piątek i w poniedziałek 16 listopada rezerwa w pełni pokrywa wymagany poziom i nic tam nie zapowiada przywołania.",
+  "generatedAt": "2026-11-09T02:15:44.451Z",
   "dates": [
     "2026-11-09",
     "2026-11-10",
@@ -10,6 +10,6 @@
     "2026-11-13",
     "2026-11-16"
   ],
-  "assessment": "2026-11-09|R|moderate|-800|03:00|3|5|0|moderate:07:00-09:00,moderate:12:00-14:00,moderate:16:00-21:00|K2:03:00-04:00,K2:18:00-19:00|-|-;2026-11-10|R|high|-1500|12:00|0|12|8|moderate:07:00-08:00,high:08:00-09:00,moderate:09:00-12:00,high:12:00-20:00,moderate:20:00-21:00||X|-;2026-11-12|R|none|200|16:00|7|0|11|||X|P;2026-11-13|R|none|3400|17:00|0|0|24|||X|P;2026-11-16|R|none|2100|16:00|0|0|24|||X|P#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v57",
+  "assessment": "2026-11-09|R|moderate|-900|03:00|3|6|0|moderate:07:00-09:00,moderate:12:00-14:00,moderate:16:00-21:00|K2:03:00-04:00,K2:18:00-19:00|-|-;2026-11-10|R|high|-1500|12:00|0|12|8|moderate:07:00-08:00,high:08:00-09:00,moderate:09:00-12:00,high:12:00-20:00,moderate:20:00-21:00||X|-;2026-11-12|R|none|200|16:00|7|0|11|||X|P;2026-11-13|R|none|3400|17:00|0|0|24|||X|P;2026-11-16|R|none|2100|16:00|0|0|24|||X|P#-/below/prognoza poprawia się#v57",
   "model": "gemini-3.5-flash-lite"
 }
