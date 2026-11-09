@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś o 02:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka utrzymuje się powyżej progu 1100 MW, co daje operatorowi pełną swobodę w podjęciu decyzji o przywołaniu.",
-  "body": "Jutro między 07:00 a 08:00 fotowoltaika spada poniżej normy. Ogłoszenie może jeszcze nadejść. Ocena na jutro jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "Dziś Kompas Energetyczny PSE zaleca oszczędzanie między 02:00 a 03:00 oraz między 18:00 a 19:00, natomiast w czwartek, piątek i poniedziałek 16 listopada nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-09T01:15:44.581Z",
+  "headline": "Jutro między 08:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
+  "body": "Jutro o 12:00 margines spadnie poniżej zwykłego poziomu, bo fotowoltaika osiągnie wyniki poniżej normy. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 02:00 a 04:00 oraz między 18:00 a 19:00. Ocena na jutro jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Dziś margines spadnie poniżej wymaganego poziomu, przy czym między 07:00 a 09:00 operator zachowuje wybór, w czwartek rezerwa utrzyma dodatni margines, a w piątek i w poniedziałek 16 listopada nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-09T01:45:39.252Z",
   "dates": [
     "2026-11-09",
     "2026-11-10",
@@ -10,6 +10,6 @@
     "2026-11-13",
     "2026-11-16"
   ],
-  "assessment": "2026-11-09|R|moderate|-900|02:00|3|7|0|moderate:07:00-09:00,moderate:12:00-14:00,moderate:16:00-21:00|K2:02:00-03:00,K2:18:00-19:00|-|-;2026-11-10|R|high|-1600|12:00|0|12|8|moderate:07:00-08:00,high:08:00-09:00,moderate:09:00-12:00,high:12:00-20:00,moderate:20:00-21:00||X|-;2026-11-12|R|none|200|16:00|9|0|11|||X|P;2026-11-13|R|none|3100|16:00|0|0|24|||X|P;2026-11-16|R|none|2100|16:00|0|0|24|||X|P#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v57",
+  "assessment": "2026-11-09|R|moderate|-1100|02:00|3|6|0|moderate:07:00-09:00,moderate:12:00-14:00,moderate:16:00-21:00|K2:02:00-04:00,K2:18:00-19:00|-|-;2026-11-10|R|high|-1500|12:00|0|12|8|moderate:07:00-08:00,high:08:00-09:00,moderate:09:00-12:00,high:12:00-20:00,moderate:20:00-21:00||X|-;2026-11-12|R|none|200|16:00|7|0|11|||X|P;2026-11-13|R|none|3400|17:00|0|0|24|||X|P;2026-11-16|R|none|2100|16:00|0|0|24|||X|P#PV poniżej normy; w drugą stronę ubytki poniżej normy/below/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
