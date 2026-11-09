@@ -1,8 +1,8 @@
 {
   "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-  "body": "Dziś między 18:00 a 19:00 Kompas Energetyczny PSE zaleca oszczędzanie. Na ogłoszenie przywołania jest już za późno. Ocena na jutro i czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "Jutro między 07:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, a w czwartek prognoza jeszcze się ustala.",
-  "generatedAt": "2026-11-09T12:01:13.760Z",
+  "body": "Dziś między 18:00 a 19:00 Kompas Energetyczny PSE zaleca oszczędzanie. Na ogłoszenie przywołania jest już za późno. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W czwartek margines spada poniżej normy przez sześć godzin.",
+  "generatedAt": "2026-11-09T12:15:47.009Z",
   "dates": [
     "2026-11-09",
     "2026-11-10",
@@ -10,6 +10,6 @@
     "2026-11-13",
     "2026-11-16"
   ],
-  "assessment": "2026-11-09|R|moderate|-600|18:00|1|1|0|moderate:13:00-14:00,moderate:17:00-21:00|K2:18:00-19:00|-|-;2026-11-10|R|high|-3300|12:00|0|16|0|high:07:00-21:00,moderate:21:00-22:00||X|-;2026-11-12|R|moderate|-700|16:00|2|6|9|moderate:08:00-20:00||X|P;2026-11-13|R|none|3300|19:00|0|0|24|||X|P;2026-11-16|R|none|3100|17:00|0|0|24|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
+  "assessment": "2026-11-09|R|moderate|-600|18:00|1|1|0|moderate:13:00-14:00,moderate:17:00-21:00|K2:18:00-19:00|-|-;2026-11-10|R|high|-1200|13:00|1|11|0|moderate:07:00-10:00,moderate:11:00-13:00,high:13:00-21:00,moderate:21:00-22:00||-|-;2026-11-12|R|moderate|-700|16:00|2|6|9|moderate:08:00-20:00||X|P;2026-11-13|R|none|3300|19:00|0|0|24|||X|P;2026-11-16|R|none|3200|17:00|0|0|24|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
   "model": "gemini-3.5-flash-lite"
 }
