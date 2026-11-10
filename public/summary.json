@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie między 13:00 a 22:00, choć nadwyżka trzyma się powyżej progu 1100 MW.",
-  "body": "Prognoza poprawia się. Na ogłoszenie między 13:00 a 22:00 jest jeszcze czas, bo do tych godzin zostało ponad osiem godzin. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada.",
-  "generatedAt": "2026-11-10T02:15:45.414Z",
+  "headline": "W czwartek między 07:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Prognoza w czwartek jeszcze się ustala. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 14:00 a 16:00 oraz między 19:00 a 20:00. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Dziś między 13:00 a 22:00 operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada.",
+  "generatedAt": "2026-11-10T03:45:49.274Z",
   "dates": [
     "2026-11-10",
     "2026-11-12",
@@ -10,6 +10,6 @@
     "2026-11-16",
     "2026-11-17"
   ],
-  "assessment": "2026-11-10|R|moderate|-800|15:00|2|6|0|moderate:07:00-10:00,moderate:13:00-22:00|K2:14:00-16:00,K2:19:00-20:00|-|-;2026-11-12|R|moderate|-2000|17:00|0|14|8|moderate:07:00-21:00||X|P;2026-11-13|R|none|3100|17:00|0|0|24|||X|P;2026-11-16|R|none|2400|17:00|0|0|24|||X|P;2026-11-17|R|none|3000|17:00|0|0|24|||X|P#-/below/prognoza poprawia się#v57",
+  "assessment": "2026-11-10|R|moderate|-700|19:00|2|4|0|moderate:07:00-10:00,moderate:13:00-22:00|K2:14:00-16:00,K2:19:00-20:00|-|-;2026-11-12|R|moderate|-2000|17:00|0|14|8|moderate:07:00-21:00||X|P;2026-11-13|R|none|3100|17:00|0|0|24|||X|P;2026-11-16|R|none|2400|17:00|0|0|24|||X|P;2026-11-17|R|none|3000|17:00|0|0|24|||X|P#-/below/prognoza poprawia się#v57",
   "model": "gemini-3.5-flash-lite"
 }
