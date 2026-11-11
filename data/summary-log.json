@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-08T18:45:43.927Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "We wtorek 10 listopada między 08:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza na ten dzień jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może nadejść.",
-      "outlook": "We wtorek oraz jutro operator może ogłosić przywołanie w wyznaczonych godzinach, natomiast w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-08T19:01:08.974Z",
       "prompt": 57,
       "accepted": true,
@@ -2485,6 +2476,14 @@
       "headline": "Margines spadnie jutro poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza pogarsza się, a między 07:00 a 13:00 oraz 15:00 a 21:00 nadwyżka utrzyma się poniżej progu 1100 MW. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "W piątek oraz poniedziałek 16 listopada, wtorek 17 listopada i środę 18 listopada nic nie zapowiada przywołania, a w pozostałych dniach rezerwa utrzyma się na bezpiecznym poziomie."
+    },
+    {
+      "at": "2026-11-11T17:45:45.984Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni tylko w niektórych godzinach, a jutro nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W pozostałe dni nic nie zapowiada przywołania, a w piątek, w poniedziałek szesnastego listopada, we wtorek siedemnastego listopada i w środę osiemnastego listopada margines utrzyma się powyżej typowego zakresu z ostatnich trzydziestu dni przez całą dobę."
     }
   ]
 }
