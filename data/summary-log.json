@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-08T12:15:45.960Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 18:00 oraz między 19:00 a 20:00, a także wymaga ograniczenia poboru między 18:00 a 19:00. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 10 listopada między 07:00 a 11:00 oraz między 11:00 a 22:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-08T12:30:58.935Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "We wtorek 10 listopada między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Saldo wymiany dla tej doby nie doszło jeszcze, więc rezerwa liczy się bez importu i eksportu. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 10 listopada w wyznaczonych godzinach operator może ogłosić przywołanie, podczas gdy w pozostałe dni okresu nic go nie zapowiada."
-    },
-    {
       "at": "2026-11-08T12:30:58.935Z",
       "prompt": 57,
       "accepted": true,
@@ -2479,6 +2462,24 @@
       "prompt": 57,
       "accepted": true,
       "headline": "Jutro o 13:00 rezerwa osiągnie najniższy punkt i spadnie do poziomu, w którym nadwyżka znajdzie się poniżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś Kompas Energetyczny PSE zaleca oszczędzanie między 17:00 a 19:00, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-11T11:45:46.363Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina w nagłówku bez nazwy dnia",
+      "headline": "W jutrzejszych godzinach między 07:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś Kompas Energetyczny PSE zaleca oszczędzanie między 17:00 a 19:00, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-11T11:45:46.363Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina 14:00 spoza faktów",
+      "headline": "Jutro między 13:00 a 14:00 margines spadnie najniżej.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś Kompas Energetyczny PSE zaleca oszczędzanie między 17:00 a 19:00, a w pozostałe dni nic nie zapowiada przywołania."
     }
