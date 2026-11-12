@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T17:15:49.416Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, natomiast w piątek i poniedziałek 16 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-09T17:31:05.340Z",
       "prompt": 57,
       "accepted": false,
@@ -2294,6 +2286,14 @@
       "headline": "Dziś między 18:00 a 21:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Na ogłoszenie przywołania jest już za późno, ponieważ do tych godzin zostało mniej niż osiem godzin.",
       "outlook": "W kolejnych dniach rezerwa bez przeszkód pokryje wymagany poziom i nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-12T17:31:05.131Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 18:00 a 19:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Na ogłoszenie przywołania jest już za późno, bo do tych godzin zostało mniej niż osiem godzin.",
+      "outlook": "W pozostałe dni rezerwa bezpiecznie pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
     }
   ]
 }
