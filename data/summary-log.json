@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T21:01:18.540Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina bez nazwy dnia",
-      "headline": "W jutrzejszy dzień między 15:00 a 16:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, co daje operatorowi wybór w kwestii ogłoszenia przywołania.",
-      "body": "Prognoza poprawia się, a Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 09:00, między 13:00 a 17:00 oraz między 19:00 a 21:00. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin pozostało ponad osiem godzin.",
-      "outlook": "W czwartek między 07:00 a 21:00 nadwyżka również trzyma się powyżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-09T21:01:18.540Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina 18:00 spoza faktów",
-      "headline": "W czwartek między 17:00 a 18:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 10:00 oraz między 12:00 a 22:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-09T21:15:47.997Z",
       "prompt": 57,
       "accepted": false,
@@ -2265,6 +2247,14 @@
       "accepted": true,
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "Jutro o 13:00 margines spadnie, bo prognoza się pogarsza, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-12T21:05:18.918Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś i w kolejnych dniach nic nie zapowiada przywołania.",
+      "body": "Jutro o 13:00 rezerwa spadnie najniżej ze wszystkich dni, ale ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
