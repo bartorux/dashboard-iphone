@@ -1,32 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T01:01:12.929Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 07:00 a 09:00, między 12:00 a 14:00 oraz między 16:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW.",
-      "body": "Jutro o godzinie 12:00 margines spadnie najniżej ze wszystkich dni, bo produkcja z paneli fotowoltaicznych spadnie poniżej normy. Ogłoszenie może jeszcze nadejść w godzinach popołudniowych.",
-      "outlook": "W czwartek margines zwęzi się między innymi o godzinie 16:00, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-09T01:01:12.929Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "nadwyżka nad progiem podana jako powód przywołania",
-      "headline": "Dziś między 12:00 a 14:00 oraz między 16:00 a 21:00 operator może ogłosić przywołanie, bo nadwyżka trzyma się powyżej progu 1100 MW, choć rezerwa nie pokrywa wymaganego poziomu.",
-      "body": "Jutro o 12:00 margines spadnie najniżej ze wszystkich dni, a fotowoltaika wypadnie poniżej normy. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W czwartek margines zrobi się wąski między 16:00 a 17:00, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-09T01:11:54.192Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś o 02:00 margines spadnie poniżej wymaganego poziomu, a operator zachowa wybór co do przywołania, bo nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "Jutro w południe margines zniży się na tle ostatnich trzydziestu dni, bo fotowoltaika spadnie poniżej normy. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś zalecane oszczędzanie poboru przypada między 02:00 a 03:00 oraz między 18:00 a 19:00, natomiast w czwartek, piątek oraz poniedziałek 16 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-09T01:15:44.581Z",
       "prompt": 57,
       "accepted": true,
@@ -2473,6 +2447,14 @@
       "headline": "Dziś między 15:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-12T01:15:44.151Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 07:00 a 09:00 nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Do godzin między 09:00 a 13:00 oraz między 15:00 a 21:00 zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 09:00 oraz między 18:00 a 21:00.",
+      "outlook": "W pozostałe dni w całym okresie nic nie zapowiada przywołania."
     }
   ]
 }
