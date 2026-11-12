@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T21:45:50.634Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina 18:00 spoza faktów",
-      "headline": "W czwartek między 17:00 a 18:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza na ten dzień jeszcze się ustala. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 10:00 oraz między 12:00 a 22:00 operator ma wybór i może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada. Kompas Energetyczny PSE zaleca oszczędzanie jutro między 07:00 a 09:00, między 13:00 a 17:00 oraz między 19:00 a 21:00."
-    },
-    {
-      "at": "2026-11-09T21:45:50.634Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina 18:00 spoza faktów",
-      "headline": "W czwartek między 17:00 a 18:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza na jutro poprawia się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę między 07:00 a 10:00 oraz między 12:00 a 22:00 oraz w czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
       "at": "2026-11-09T22:01:12.304Z",
       "prompt": 57,
       "accepted": true,
@@ -2244,6 +2226,14 @@
       "accepted": true,
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "Jutro o 13:00 margines spadnie do najniższego poziomu i prognoza pogarsza się, ale ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-12T22:01:08.191Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W tych dniach nic nie zapowiada przywołania, choć jutro między 13:00 margines wypada znacznie poniżej tego, co o tej porze typowe.",
+      "body": "Margines mieści się w typowym zakresie z ostatnich trzydziestu dni, a w kolejnych dobach prognoza się pogarsza.",
       "outlook": ""
     }
   ]
