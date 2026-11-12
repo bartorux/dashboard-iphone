@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 18:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-  "body": "Prog",
-  "outlook": "",
-  "generatedAt": "2026-11-12T13:01:11.354Z",
+  "headline": "Dziś między 18:00 a 20:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW.",
+  "body": "Prognoza poprawia się. Na ogłoszenie jest już za późno.",
+  "outlook": "W jutrzejszym dniu oraz w poniedziałek 16 listopada, wtorek 17 listopada i środę 18 listopada nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-12T13:13:33.661Z",
   "dates": [
     "2026-11-12",
     "2026-11-13",
@@ -10,6 +10,6 @@
     "2026-11-17",
     "2026-11-18"
   ],
-  "assessment": "2026-11-12|R|high|-1100|19:00|0|3|0|moderate:15:00-18:00,high:18:00-20:00,moderate:20:00-21:00|K2:15:00-17:00,K2:18:00-21:00|-|-;2026-11-13|R|none|1800|13:00|0|0|19|||-|-;2026-11-16|R|none|2400|17:00|0|0|24|||X|P;2026-11-17|R|none|1900|16:00|0|0|24|||X|P;2026-11-18|R|none|1700|16:00|0|0|24|||X|P#-/below/prognoza poprawia się#v57",
+  "assessment": "2026-11-12|R|high|-1100|19:00|1|3|0|moderate:16:00-18:00,high:18:00-20:00,moderate:20:00-21:00|K2:15:00-17:00,K2:18:00-21:00|-|-;2026-11-13|R|none|1800|13:00|0|0|19|||-|-;2026-11-16|R|none|2400|17:00|0|0|24|||X|P;2026-11-17|R|none|1900|16:00|0|0|24|||X|P;2026-11-18|R|none|1700|16:00|0|0|24|||X|P#-/below/prognoza poprawia się#v57",
   "model": "gemini-3.5-flash-lite"
 }
