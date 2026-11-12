@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś rezerwa w części godzin spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-  "body": "Prognoza poprawia się, a na ogłoszenie przywołania jest już za późno, bo do tych godzin zostało mniej niż osiem godzin.",
-  "outlook": "W jutrzejszym dniu oraz w poniedziałek 16 listopada, wtorek 17 listopada i środę 18 listopada nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 17:00 oraz między 18:00 a 21:00.",
-  "generatedAt": "2026-11-12T12:15:51.318Z",
+  "headline": "Dziś między 18:00 a 20:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW.",
+  "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez trzy godziny. Kompas Energetyczny PSE zaleca oszczędzanie między 15:00 a 17:00 oraz między 18:00 a 21:00, a na ogłoszenie jest już za późno.",
+  "outlook": "W pozostałe dni nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-12T12:30:58.798Z",
   "dates": [
     "2026-11-12",
     "2026-11-13",
@@ -10,6 +10,6 @@
     "2026-11-17",
     "2026-11-18"
   ],
-  "assessment": "2026-11-12|R|high|-1200|19:00|0|3|0|moderate:15:00-18:00,high:18:00-20:00,moderate:20:00-21:00|K2:16:00-17:00,K2:18:00-21:00|-|-;2026-11-13|R|none|2100|13:00|0|0|23|||X|-;2026-11-16|R|none|2400|17:00|0|0|24|||X|P;2026-11-17|R|none|2000|15:00|0|0|24|||X|P;2026-11-18|R|none|1300|16:00|0|0|23|||X|P#-/below/prognoza poprawia się#v57",
+  "assessment": "2026-11-12|R|high|-1200|19:00|0|3|0|moderate:15:00-18:00,high:18:00-20:00,moderate:20:00-21:00|K2:15:00-17:00,K2:18:00-21:00|-|-;2026-11-13|R|none|2000|13:00|0|0|23|||X|-;2026-11-16|R|none|2300|17:00|0|0|24|||X|P;2026-11-17|R|none|2000|15:00|0|0|24|||X|P;2026-11-18|R|none|1700|16:00|0|0|24|||X|P#-/below/prognoza poprawia się#v57",
   "model": "gemini-3.5-flash-lite"
 }
