@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T23:01:22.457Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 21:00 nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 10:00 oraz między 13:00 a 22:00 rezerwa spadnie poniżej wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-09T23:15:46.095Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza w czwartek poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 10:00 oraz między 13:00 a 22:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie jutro między 07:00 a 09:00, między 13:00 a 16:00 oraz między 19:00 a 20:00."
-    },
-    {
       "at": "2026-11-09T23:45:45.138Z",
       "prompt": 57,
       "accepted": true,
@@ -2231,6 +2215,14 @@
     },
     {
       "at": "2026-11-12T23:01:18.458Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "Jutro o 13:00 rezerwa spadnie, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-12T23:31:06.206Z",
       "prompt": 57,
       "accepted": true,
       "headline": "W tych dniach nic nie zapowiada przywołania.",
