@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 07:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW.",
-  "body": "Zapotrzebowanie przekracza normę, a produkcja z fotowoltaiki spada poniżej normy. Ogłoszenie może jeszcze nadejść między 15:00 a 21:00.",
-  "outlook": "W pozostałych dniach rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie dziś od 06:00 do 12:00 oraz od 18:00 do 21:00.",
-  "generatedAt": "2026-11-12T04:45:48.782Z",
+  "headline": "Dziś między 07:00 a 09:00 nadwyżka jest poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
+  "body": "Zapotrzebowanie rośnie powyżej normy, a fotowoltaika spada poniżej normy. Między 15:00 a 21:00 ogłoszenie może jeszcze nadejść.",
+  "outlook": "Jutro, w poniedziałek 16 listopada, we wtorek 17 listopada oraz w środę 18 listopada nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 06:00 a 12:00 oraz między 18:00 a 21:00.",
+  "generatedAt": "2026-11-12T05:15:41.621Z",
   "dates": [
     "2026-11-12",
     "2026-11-13",
@@ -10,6 +10,6 @@
     "2026-11-17",
     "2026-11-18"
   ],
-  "assessment": "2026-11-12|R|high|-1500|08:00|0|6|2|high:07:00-09:00,moderate:09:00-13:00,moderate:15:00-21:00|K2:06:00-12:00,K2:18:00-21:00|-|-;2026-11-13|R|none|3900|14:00|0|0|24|||X|-;2026-11-16|R|none|2800|17:00|0|0|24|||X|P;2026-11-17|R|none|3100|16:00|0|0|24|||X|P;2026-11-18|R|none|2200|16:00|0|0|24|||X|P#zapotrzebowanie powyżej normy, PV poniżej normy/below/-#v57",
+  "assessment": "2026-11-12|R|high|-1500|08:00|1|6|2|high:07:00-09:00,moderate:09:00-13:00,moderate:15:00-21:00|K2:06:00-12:00,K2:18:00-21:00|-|-;2026-11-13|R|none|3900|14:00|0|0|24|||X|-;2026-11-16|R|none|2800|17:00|0|0|24|||X|P;2026-11-17|R|none|3100|16:00|0|0|24|||X|P;2026-11-18|R|none|2200|16:00|0|0|24|||X|P#zapotrzebowanie powyżej normy, PV poniżej normy/below/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
