@@ -1,31 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T02:15:44.451Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Dziś między 07:00 a 09:00, między 12:00 a 14:00 oraz między 16:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu. W godzinach 12:00-14:00 oraz 16:00-21:00 ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro operator może ogłosić przywołanie między 08:00 a 09:00, a w czwartek margines pozostaje wąski. W piątek i w poniedziałek 16 listopada rezerwa w pełni pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-09T02:45:43.104Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza poprawia się w środę, kiedy nadwyżka spada poniżej progu 1100 MW między 08:00 a 09:00. Ogłoszenie może jeszcze nadejść w godzinach popołudniowych i wieczornych.",
-      "outlook": "W czwartek margines bywa wąski, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-09T02:45:43.104Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza poprawia się w jutro. Ogłoszenie może jeszcze nadejść między 12:00 a 20:00.",
-      "outlook": "W czwartek, piątek i poniedziałek 16 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-09T03:01:17.883Z",
       "prompt": 57,
       "accepted": true,
@@ -2456,6 +2431,14 @@
       "headline": "Dziś przez sześć godzin margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "Prognoza pogarsza się. Między 09:00 a 13:00 oraz między 15:00 a 21:00 ogłoszenie może jeszcze nadejść.",
       "outlook": "W jutrzejszym dobie oraz w poniedziałek 16 listopada, wtorek 17 listopada i środę 18 listopada nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-12T02:45:44.854Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś przez dziewięć godzin rezerwa wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza pogarsza się. Między 09:00 a 14:00 oraz między 15:00 a 21:00 ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro, w poniedziałek 16 listopada, we wtorek 17 listopada oraz w środę 18 listopada rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
     }
   ]
 }
