@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T04:01:11.210Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 16:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 05:00 a 07:00, między 12:00 a 14:00 oraz między 17:00 a 19:00. Ogłoszenie może jeszcze nadejść w godzinach od 16:00 do 21:00.",
-      "outlook": "Jutro operator może ogłosić przywołanie między 07:00 a 21:00, natomiast w czwartek, piątek i w poniedziałek 16 listopada nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-09T04:15:42.375Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 16:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW.",
-      "body": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść między 16:00 a 21:00.",
-      "outlook": "W jutrzejszej dobie operator może ogłosić przywołanie, a w czwartek, piątek i poniedziałek szesnastego listopada nic go nie zapowiada."
-    },
-    {
       "at": "2026-11-09T04:31:00.114Z",
       "prompt": 57,
       "accepted": true,
@@ -2439,6 +2423,14 @@
       "headline": "Dziś między 07:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW.",
       "body": "Zapotrzebowanie rośnie ponad normę, a produkcja z fotowoltaiki spada poniżej normy. Między 15:00 a 21:00 ogłoszenie może jeszcze nadejść.",
       "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-12T04:15:49.128Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 07:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW.",
+      "body": "Zapotrzebowanie rośnie powyżej normy, a fotowoltaika spada poniżej normy. Kompas Energetyczny PSE zaleca oszczędzanie między 06:00 a 08:00, 09:00 a 13:00 oraz 18:00 a 20:00, a także wymaga ograniczenia poboru między 08:00 a 09:00.",
+      "outlook": "Jutro oraz w poniedziałek 16 listopada, wtorek 17 listopada i środę 18 listopada nic nie zapowiada przywołania."
     }
   ]
 }
