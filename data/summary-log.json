@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T21:15:47.997Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "tekst podaje wielkość mocy",
-      "headline": "W środę o 15:00 margines wynosi -1022 MW, a nadwyżka trzyma się powyżej progu 1100 MW, co daje operatorowi wybór w sprawie przywołania.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść w środę między 07:00 a 10:00 oraz między 12:00 a 22:00.",
-      "outlook": "W czwartek między 07:00 a 21:00 operator również ma wybór, podczas gdy w pozostałe dni nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie w środę między 07:00 a 09:00, między 13:00 a 17:00 oraz między 19:00 a 21:00."
-    },
-    {
-      "at": "2026-11-09T21:15:47.997Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro o 15:00 margines spadnie do najniższego poziomu w tym tygodniu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza poprawia się, a Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 09:00, między 13:00 a 17:00 oraz między 19:00 a 21:00. Ogłoszenie może jeszcze nadejść do wyznaczonych godzin.",
-      "outlook": "W czwartek między 07:00 a 21:00 operator zachowuje wybór co do ogłoszenia, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-09T21:31:03.504Z",
       "prompt": 57,
       "accepted": false,
@@ -2255,6 +2238,14 @@
       "accepted": true,
       "headline": "Dziś i w kolejnych dniach nic nie zapowiada przywołania.",
       "body": "Jutro o 13:00 rezerwa spadnie najniżej ze wszystkich dni, ale ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-12T21:15:52.769Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "Jutro o 13:00 rezerwa spadnie najmocniej, bo prognoza się pogarsza, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
