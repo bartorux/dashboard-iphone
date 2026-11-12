@@ -1,31 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T22:31:05.179Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Margines spadł poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza poprawia się, a w czwartek margines jest jeszcze wstępny. Do godzin porannych i popołudniowych ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek i w poniedziałek 16 listopada nic nie zapowiada przywołania, a pozostałe doby przynoszą wybór operatora między 07:00 a 10:00 oraz między 13:00 a 22:00."
-    },
-    {
-      "at": "2026-11-09T22:31:05.179Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Margines spadnie jutro między 07:00 a 10:00 oraz między 13:00 a 22:00 poniżej wymaganego poziomu, nadwyżka trzyma się powyżej progu 1100 MW, a operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek między 07:00 a 21:00 margines również spadnie poniżej wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie jutro między 07:00 a 09:00, między 13:00 a 17:00 oraz między 19:00 a 21:00."
-    },
-    {
-      "at": "2026-11-09T22:45:44.336Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada."
-    },
-    {
       "at": "2026-11-09T23:01:22.457Z",
       "prompt": 57,
       "accepted": true,
@@ -2244,6 +2219,14 @@
       "accepted": true,
       "headline": "W tych dniach nic nie zapowiada przywołania, choć margines bywa zróżnicowany.",
       "body": "W jutro o 13:00 margines spadnie, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-12T22:45:50.786Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W najbliższych dniach nic nie zapowiada przywołania, choć jutro w południe rezerwa mocno się zacieśni.",
+      "body": "Jutro o 13:00 margines spadnie do najniższego poziomu, ale ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
