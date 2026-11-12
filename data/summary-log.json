@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T15:15:54.183Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "tekst zawiera liczbę spoza godzin",
-      "headline": "Dziś między 16:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Dziś margines spada poniżej typowego zakresu z ostatnich 30 dni przez jedną godzinę. Na ogłoszenie jest już za późno.",
-      "outlook": "Jutro między 07:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW, podczas gdy w pozostałe dni rezerwa pokrywa wymagany poziom lub nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-09T15:15:54.183Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 16:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW.",
-      "body": "Dziś margines spada poniżej typowego zakresu przez jedną godzinę, a Kompas Energetyczny PSE zaleca oszczędzanie między 17:00 a 18:00. Na ogłoszenie przywołania jest już za późno.",
-      "outlook": "Jutro między 07:00 a 22:00 operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada."
-    },
-    {
       "at": "2026-11-09T15:31:07.923Z",
       "prompt": 57,
       "accepted": true,
@@ -2345,6 +2328,14 @@
       "headline": "Dziś między 16:00 a 17:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Na ogłoszenie w tych godzinach jest już za późno.",
       "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-12T15:31:06.922Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 16:00 a 17:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Na ogłoszenie w tych godzinach jest już za późno.",
+      "outlook": "W pozostałych dniach rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania."
     }
   ]
 }
