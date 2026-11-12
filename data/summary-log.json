@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-09T15:31:07.923Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 16:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW.",
-      "body": "Margines spada poniżej typowego zakresu w ciągu jednej godziny. Na ogłoszenie dla dzisiejszych godzin jest już za późno.",
-      "outlook": "Jutro między 07:00 a 22:00 oraz w czwartek między 07:00 a 21:00 operator może ogłosić przywołanie, podczas gdy w pozostałe dni nic go nie zapowiada."
-    },
-    {
       "at": "2026-11-09T15:45:51.522Z",
       "prompt": 57,
       "accepted": true,
@@ -2336,6 +2328,14 @@
       "headline": "Dziś między 16:00 a 17:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Na ogłoszenie w tych godzinach jest już za późno.",
       "outlook": "W pozostałych dniach rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-12T15:45:47.587Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 16:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Progno",
+      "outlook": ""
     }
   ]
 }
