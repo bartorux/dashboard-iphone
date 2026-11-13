@@ -1,8 +1,8 @@
 {
-  "headline": "W tych dniach nic nie zapowiada przywołania.",
-  "body": "Dziś o 15:00 margines spadnie, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-  "outlook": "",
-  "generatedAt": "2026-11-13T10:15:50.936Z",
+  "headline": "W czwartek 19 listopada między 07:00 a 10:00 oraz między 12:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+  "body": "W czwartek 19 listopada prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na czwartek 19 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Poza czwartkiem 19 listopada w całym okresie nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-13T10:45:40.733Z",
   "dates": [
     "2026-11-13",
     "2026-11-16",
@@ -10,6 +10,6 @@
     "2026-11-18",
     "2026-11-19"
   ],
-  "assessment": "2026-11-13|R|none|100|15:00|3|0|5|||-|-;2026-11-16|R|none|1800|17:00|0|0|24|||X|P;2026-11-17|R|none|1100|12:00|0|0|19|||X|P;2026-11-18|R|none|100|16:00|7|0|12|||X|P;2026-11-19|R|none|100|14:00|10|0|9|||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
+  "assessment": "2026-11-13|R|none|0|13:00|2|0|5|||-|-;2026-11-16|R|none|2000|17:00|0|0|24|||X|P;2026-11-17|R|none|1200|12:00|0|0|20|||X|P;2026-11-18|R|none|600|16:00|0|0|15|||X|P;2026-11-19|R|moderate|-700|15:00|1|7|9|moderate:07:00-10:00,moderate:12:00-21:00||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
   "model": "gemini-3.5-flash-lite"
 }
