@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-10T15:01:32.015Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 17:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator ma wybór.",
-      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 17:00. Na ogłoszenie jest już za późno.",
-      "outlook": "W czwartek między 07:00 a 20:00 nadwyżka spada poniżej progu 1100 MW, prognoza się pogarsza, a ogłoszenie może jeszcze nadejść, natomiast w piątek, w poniedziałek 16 listopada oraz we wtorek 17 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-10T15:16:02.416Z",
       "prompt": 57,
       "accepted": true,
@@ -2161,6 +2153,15 @@
       "headline": "Dziś między 16:00 a 17:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na dzisiejszą dobę jeszcze się ustala. Na ogłoszenie jest już za późno.",
       "outlook": "W poniedziałek 16 listopada, we wtorek 17 listopada, w środę 18 listopada oraz w czwartek 19 listopada nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-13T15:15:44.782Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina 18:00 spoza faktów",
+      "headline": "Dziś między 16:00 a 17:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator ma wybór i może ogłosić przywołanie, choć nie musi.",
+      "body": "Prognoza na dziś jeszcze się ustala i raz pokrywa wymagane wartości, a raz nie. Na ogłoszenie jest już za późno, bo do tych godzin zostało mniej niż osiem godzin.",
+      "outlook": "W czwartek 19 listopada między 17:00 a 18:00 margines spada do wąskich wartości, a przez pozostałą część okresu nic nie zapowiada przywołania."
     }
   ]
 }
