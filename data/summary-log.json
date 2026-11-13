@@ -1,31 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-10T22:45:46.187Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W czwartek przez większość dnia rezerwa spadnie poniżej normy z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek, poniedziałek 16 listopada oraz wtorek 17 listopada nic nie zapowiada przywołania, a w pozostałym okresie rezerwa utrzymuje się powyżej wymaganego poziomu."
-    },
-    {
-      "at": "2026-11-10T23:01:14.550Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "możliwość przywołania podana jak nakaz",
-      "headline": "W czwartek między 07:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "Prognoza na ten dzień pogarsza się. Do tych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek, w poniedziałek 16 listopada oraz we wtorek 17 listopada nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-10T23:01:14.550Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Prognoza w czwartek pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek, poniedziałek 16 listopada oraz wtorek 17 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-10T23:15:43.086Z",
       "prompt": 57,
       "accepted": true,
@@ -2180,6 +2155,14 @@
       "reason": "godzina 09:00 spoza faktów",
       "headline": "W tych dniach nic nie zapowiada przywołania, a margines we wszystkich godzinach mieści się powyżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "We wtorek 17 listopada najniższy margines wyniesie między 08:00 a 09:00, a prognoza się pogarsza.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-13T23:01:24.026Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "We wtorek 17 listopada o 08:00 rezerwa osiąga najniższy poziom, ale prognoza tej doby pogarsza się, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
