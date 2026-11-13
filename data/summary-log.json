@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-10T04:15:45.298Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 13:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW, choć rezerwa nie pokrywa wymaganego poziomu.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek między 07:00 a 21:00 ogłoszenie także wchodzi w grę, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-10T04:31:01.300Z",
       "prompt": 57,
       "accepted": true,
@@ -2179,6 +2171,14 @@
       "accepted": true,
       "headline": "W żadnym z dni nic nie zapowiada przywołania.",
       "body": "Dziś o 13:00 rezerwa spada najniżej, ale rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-13T04:15:45.814Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W tych dniach nic nie zapowiada przywołania, choć dziś o 13:00 rezerwa mocno spada.",
+      "body": "Dziś o 13:00 margines jest wyjątkowo wąski, ale wciąż dodatni, a rezerwa pokrywa wymagany poziom.",
       "outlook": ""
     }
   ]
