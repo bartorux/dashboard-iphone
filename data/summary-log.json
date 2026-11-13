@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-10T13:15:54.410Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "możliwość przywołania podana jak nakaz",
-      "headline": "W czwartek między 07:00 a 20:00 nadwyżka spada poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia tego kroku.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek i w kolejnych dniach rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-10T13:15:54.410Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W czwartek między 07:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "Prognoza na czwartek pogarsza się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 14:00 a 16:00.",
-      "outlook": "Poza czwartkiem w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-10T13:31:20.261Z",
       "prompt": 57,
       "accepted": true,
@@ -2171,6 +2154,14 @@
       "headline": "Dziś między 14:00 a 16:00 operator może ogłosić przywołanie, ale nadwyżka trzyma się powyżej progu 1100 MW i daje mu wybór.",
       "body": "Prognoza na dziś jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
       "outlook": "W czwartek 19 listopada między 17:00 margines jest wąski, ale dodatkowy, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-13T13:30:59.425Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 14:00 a 16:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
+      "outlook": "W poniedziałek 16 listopada, we wtorek 17 listopada, w środę 18 listopada oraz w czwartek 19 listopada nic nie zapowiada przywołania."
     }
   ]
 }
