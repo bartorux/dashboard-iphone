@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 13:00 a 14:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Prognoza na dzisiejszą dobę jeszcze się ustala i raz pokrywa wymagane minimum, a raz nie. Na dzisiejsze ogłoszenie jest już za późno, bo do tych godzin zostało mniej niż osiem godzin. Ocena na czwartek 19 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W czwartek 19 listopada między 07:00 a 10:00 oraz między 12:00 a 21:00 operator zachowuje wybór, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-13T11:31:01.732Z",
+  "headline": "W czwartek 19 listopada między 16:00 a 17:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Prognoza w czwartek 19 listopada jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin między 08:00 a 09:00 oraz 13:00 a 14:00 na ogłoszenie jest już za późno, jednak do pozostałych godzin ogłoszenie może jeszcze nadejść. Ocena na czwartek 19 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W poniedziałek 16 listopada, we wtorek 17 listopada oraz w środę 18 listopada nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-13T11:45:51.108Z",
   "dates": [
     "2026-11-13",
     "2026-11-16",
@@ -10,6 +10,6 @@
     "2026-11-18",
     "2026-11-19"
   ],
-  "assessment": "2026-11-13|R|moderate|0|13:00|1|0|5|moderate:13:00-14:00||-|-;2026-11-16|R|none|2100|17:00|0|0|24|||X|P;2026-11-17|R|none|1400|12:00|0|0|21|||X|P;2026-11-18|R|none|500|16:00|0|0|15|||X|P;2026-11-19|R|moderate|-600|13:00|1|2|9|moderate:07:00-10:00,moderate:12:00-21:00||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
+  "assessment": "2026-11-13|R|moderate|0|13:00|1|0|5|moderate:13:00-14:00||-|-;2026-11-16|R|none|2100|17:00|0|0|24|||X|P;2026-11-17|R|none|2000|12:00|0|0|23|||X|P;2026-11-18|R|none|1200|17:00|0|0|24|||X|P;2026-11-19|R|moderate|-100|17:00|6|0|9|moderate:08:00-09:00,moderate:13:00-14:00,moderate:16:00-20:00||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
   "model": "gemini-3.5-flash-lite"
 }
