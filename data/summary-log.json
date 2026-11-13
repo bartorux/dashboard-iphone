@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-10T01:15:52.164Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina 18:00 spoza faktów",
-      "headline": "W czwartek między 16:00 a 18:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 13:00 a 22:00.",
-      "outlook": "W piątek i w kolejnych dniach nic nie zapowiada przywołania, natomiast dziś między 07:00 a 09:00, 14:00-16:00 oraz 19:00-20:00 Kompas Energetyczny PSE zaleca oszczędzanie."
-    },
-    {
-      "at": "2026-11-10T01:15:52.164Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina 18:00 spoza faktów",
-      "headline": "W czwartek między 16:00 a 18:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 13:00 a 22:00.",
-      "outlook": "W piątek i w kolejnych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-10T01:31:00.345Z",
       "prompt": 57,
       "accepted": false,
@@ -2217,6 +2199,14 @@
       "accepted": true,
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "Dziś o 13:00 margines dodatni mocno się zacieśnia, bo prognoza pogarsza się.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-13T01:16:00.309Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W żadnym z dni nic nie zapowiada przywołania.",
+      "body": "Dziś o 13:00 margines spadnie do najniższego poziomu, ale rezerwa wciąż pokrywa wymagany poziom, a prognoza pogarsza się.",
       "outlook": ""
     }
   ]
