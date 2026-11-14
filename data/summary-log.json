@@ -1,39 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-11T02:45:44.312Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się jutro między 07:00 a 21:00,",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-11T03:15:47.645Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Wtorek 17 listopada między 07:00 a 20:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W pozostałych dniach nic nie zapowiada przywołania, a Kompas Energetyczny PSE zaleca oszczędzanie dziś między 04:00 a 07:00."
-    },
-    {
-      "at": "2026-11-11T03:45:47.136Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "Jutro między 07:00 a 20:00 nadwyżka spada poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a w godzinach 20:00 a 21:00 margines pozostaje poniżej wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek, poniedziałek 16 listopada, wtorek 17 listopada oraz środę 18 listopada nic nie zapowiada przywołania, a w dzisiejszym dniu Kompas Energetyczny PSE zaleca oszczędzanie między 04:00 a 07:00."
-    },
-    {
-      "at": "2026-11-11T03:45:47.136Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś Kompas Energetyczny PSE zaleca oszczędzanie między 04:00 a 07:00, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-11T04:01:07.177Z",
       "prompt": 57,
       "accepted": true,
@@ -2104,6 +2071,14 @@
       "accepted": true,
       "headline": "W żadnym z tych dni nic nie zapowiada przywołania, a w najbliższych dób zapotrzebowanie odbiega od normy tylko dziś między 09:00 a 10:00.",
       "body": "Ddziś o 09:00 rezerwa spadnie z powodu zapotrzebowania powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-14T04:01:06.542Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "Dziś o 09:00 margines spadnie ze względu na zapotrzebowanie powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
