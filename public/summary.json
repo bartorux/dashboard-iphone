@@ -1,8 +1,8 @@
 {
-  "headline": "We wtorek 17 listopada między 12:00 a 18:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka trzyma się powyżej progu 1100 MW.",
-  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 17 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-14T13:15:45.719Z",
+  "headline": "We wtorek 17 listopada między 12:00 a 18:00 margines ujemny nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
+  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Ocena na wtorek 17 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W poniedziałek 16 listopada, w środę 18 listopada, w czwartek 19 listopada oraz w piątek 20 listopada nic nie zapowiada przywołania, a w pozostałe dni okresu rezerwa pokrywa wymagany poziom.",
+  "generatedAt": "2026-11-14T13:31:02.544Z",
   "dates": [
     "2026-11-14",
     "2026-11-16",
@@ -11,6 +11,6 @@
     "2026-11-19",
     "2026-11-20"
   ],
-  "assessment": "2026-11-14|W|none|100|14:00|0|0|7|||-|-;2026-11-16|R|none|700|14:00|0|0|18|||X|P;2026-11-17|R|moderate|-300|13:00|2|0|12|moderate:12:00-18:00||X|P;2026-11-18|R|none|2500|17:00|0|0|24|||X|P;2026-11-19|R|none|1000|17:00|0|0|24|||X|P;2026-11-20|R|none|1700|16:00|0|0|24|||X|P#-/typical/prognoza pogarsza się#v57",
+  "assessment": "2026-11-14|W|none|0|14:00|0|0|7|||-|-;2026-11-16|R|none|600|14:00|0|0|18|||X|P;2026-11-17|R|moderate|-100|13:00|2|0|13|moderate:12:00-18:00||X|P;2026-11-18|R|none|2600|17:00|0|0|24|||X|P;2026-11-19|R|none|1100|17:00|0|0|24|||X|P;2026-11-20|R|none|1700|16:00|0|0|23|||X|P#-/typical/prognoza pogarsza się#v57",
   "model": "gemini-3.5-flash-lite"
 }
