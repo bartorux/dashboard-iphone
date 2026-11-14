@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-11T21:01:14.807Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 08:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-11T21:15:48.717Z",
       "prompt": 57,
       "accepted": true,
@@ -2116,6 +2108,24 @@
       "headline": "We wtorek 17 listopada między 07:00 a 09:00 oraz między 12:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W pozostałych dniach nic nie zapowiada przywołania, choć w czwartek 19 listopada o 17:00 margines będzie wąski."
+    },
+    {
+      "at": "2026-11-14T21:15:42.689Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "We wtorek 17 listopada między 07:00 a 09:00 oraz między 12:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza pogarsza się we wtorek 17 listopada. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 16 listopada, środę 18 listopada, czwartek 19 listopada i piątek 20 listopada nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-14T21:15:42.689Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "We wtorek 17 listopada między 07:00 a 09:00 oraz między 12:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 16 listopada, w środę 18 listopada, w czwartek 19 listopada i w piątek 20 listopada nic nie zapowiada przywołania."
     }
   ]
 }
