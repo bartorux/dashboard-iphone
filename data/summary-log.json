@@ -1,30 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-11T09:15:48.363Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-      "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do wskazanych godzin zostało ponad osiem godzin.",
-      "outlook": "W pozostałe dni okresu nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-11T09:31:00.082Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 20:00 operator może ogłosić przywołanie, bo nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
-      "outlook": "W piątek, poniedziałek 16 listopada, wtorek 17 listopada i środę 18 listopada nic nie zapowiada przywołania, a w dzisiejszym dniu Kompas Energetyczny PSE zaleca oszczędzanie między 10:00 a 11:00 oraz między 17:00 a 18:00."
-    },
-    {
-      "at": "2026-11-11T09:45:47.572Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś Kompas Energetyczny PSE zaleca oszczędzanie między 10:00 a 11:00 oraz między 17:00 a 18:00, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-11T10:01:18.298Z",
       "prompt": 57,
       "accepted": true,
@@ -2103,6 +2079,23 @@
       "accepted": true,
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "Dziś o 10:00 rezerwa spadnie z powodu zapotrzebowania powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-14T10:01:10.101Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "tekst zawiera liczbę spoza godzin",
+      "headline": "Dziś i w nadchodzących dniach nic nie zapowiada przywołania.",
+      "body": "We wtorek 17 listopada o 12:0",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-14T10:01:10.101Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W najbliższych dniach nic nie zapowiada przywołania.",
+      "body": "We wtorek 17 listopada o 12:00 margines spadnie najniżej, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
