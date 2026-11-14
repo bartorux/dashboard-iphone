@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-11T22:15:53.547Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W wyznaczonych godzinach jutro rezerwa spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się, a w godzinach od 19:00 do 20:00 nadwyżka spadnie poniżej progu 1100 MW. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie od 06:00 do 09:00, od 11:00 do 12:00 oraz od 18:00 do 21:00, podczas gdy w piątek oraz w poniedziałek 16 listopada nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-11T22:15:53.547Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina w nagłówku bez nazwy dnia",
-      "headline": "W jutrzejszych godzinach od 19:00 do 20:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie między 06:00 a 09:00, 11:00 a 12:00 oraz 18:00 a 21:00, podczas gdy w pozostałe dni okresu nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-11T22:32:16.435Z",
       "prompt": 57,
       "accepted": true,
@@ -2126,6 +2108,23 @@
       "headline": "Wtorek 17 listopada przyniesie godziny, w których rezerwa nie pokryje wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, pozostawiając operatorowi wybór co do ogłoszenia przywołania.",
       "body": "Prognoza pogarsza się we wtorek 17 listopada między 07:00 a 09:00 oraz między 12:00 a 20:00. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 16 listopada, w środę 18 listopada, w czwartek 19 listopada i w piątek 20 listopada nic nie zapowiada przy"
+    },
+    {
+      "at": "2026-11-14T22:31:02.289Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Wtorek 17 listopada przyniesie nietypowy spadek rezerwy, przy czym między 07:00 a 09:00 oraz między 12:00 a 20:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W pozostałe dni nic nie zapowiada przywołania, choć czwartek 19 listopada przyniesie wąski, ale dodatni margines o 17:00."
+    },
+    {
+      "at": "2026-11-14T22:31:02.289Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Wtorek 17 listopada przyniesie nietypowy spadek rezerwy, choć nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się we wtorek 17 listopada między 07:00 a 09:00 oraz między 12:00 a 20:00. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W pozostałe dni nic nie zapowiada przywołania, choć czwartek 19 listopada przyniesie wąski margines między godzinami popołudniowymi a wieczornymi."
     }
   ]
 }
