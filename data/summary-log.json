@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-11T05:45:46.794Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "możliwość przywołania podana jak nakaz",
-      "headline": "Jutro między 07:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W piątek i w kolejnych dniach nic nie zapowiada przywołania, a w dzisiejszych godzinach Kompas Energetyczny PSE zaleca oszczędzanie między 06:00 a 07:00."
-    },
-    {
-      "at": "2026-11-11T05:45:46.794Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 20:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W piątek i w kolejnych dniach aż do środy 18 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-11T06:01:12.747Z",
       "prompt": 57,
       "accepted": false,
@@ -2095,6 +2078,24 @@
       "accepted": true,
       "headline": "W tych dniach nic nie zapowiada przywołania.",
       "body": "Dziś o godzinie 09:00 margines spadnie za sprawą zapotrzebowania powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-14T06:01:09.126Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK W tych dniach nic nie zapowiada przywołania.\nTREŚĆ Dziś o 09:00 margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni, bo zapotrzebowanie urośnie powyżej normy.",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-14T06:01:09.126Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK W tych dniach nic nie zapowiada przywołania.\nTREŚĆ Dziś o 09:00 rezerwa spadnie z powodu zapotrzebowania powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "body": "",
       "outlook": ""
     }
   ]
