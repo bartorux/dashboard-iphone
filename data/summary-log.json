@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-11T04:31:00.471Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "odpowiedz nie ma oczekiwanych pol",
-      "headline": "NAGŁÓWEK: Jutro między 07:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, co otwiera operator",
-      "body": "",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-11T04:31:00.471Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W piątek oraz poniedziałek 16 listopada nic nie zapowiada przywołania, a w pozostałych dniach rezerwa pokrywa wymagany poziom."
-    },
-    {
       "at": "2026-11-11T05:01:13.600Z",
       "prompt": 57,
       "accepted": true,
@@ -2096,6 +2079,14 @@
       "accepted": true,
       "headline": "W żadnym z nadchodzących dni nic nie zapowiada przywołania.",
       "body": "Dziś o 09:00 margines spadnie poniżej wymaganego poziomu z powodu zapotrzebowania powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-14T04:45:47.309Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W tych dniach nic nie zapowiada przywołania.",
+      "body": "Dziś o 09:00 rezerwa spadnie przez zapotrzebowanie powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
       "outlook": ""
     }
   ]
