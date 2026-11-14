@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-11T15:01:35.318Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 21:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś między 16:00 a 18:00 Kompas Energetyczny PSE zaleca oszczędzanie, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-11T15:15:48.421Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 07:00 a 14:00 oraz między 15:00 a 21:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza na ten dzień pogarsza się.",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-11T15:31:16.601Z",
       "prompt": 57,
       "accepted": false,
@@ -2052,6 +2036,14 @@
       "headline": "We wtorek 17 listopada między 12:00 a 18:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś Kompas Energetyczny PSE zaleca oszczędzanie między 17:00 a 18:00, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-14T15:31:08.601Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "We wtorek 17 listopada między 12:00 a 18:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza na wtorek 17 listopada pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 16 listopada, środę 18 listopada, czwartek 19 listopada i piątek 20 listopada nic nie zapowiada przywołania."
     }
   ]
 }
