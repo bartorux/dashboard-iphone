@@ -2221,6 +2221,24 @@
       "headline": "We wtorek 17 listopada między 08:00 a 09:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "We wtorek 17 listopada rezerwa spadnie poniżej wymaganego poziomu, a nadwyżka pozostanie powyżej progu 1100 MW. Operator może ogłosić przywołanie, ale nie musi, a do wskazanych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "We wtorek 17 listopada występuje wąski, ale dodatni margines poza głównym zakresem, natomiast w pozostałe dni rezerwa w pełni pokrywa wymagany poziom i nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-15T11:45:44.114Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "We wtorek 17 listopada między 08:00 a 09:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "We wtorek 17 listopada margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez dziewięć godzin. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W pozostałych dniach rezerwa pokrywa wymagany poziom lub nic nie zapowiada przywołania, z wyjątkiem czwartku 19 listopada, w którym prognoza jeszcze się ustala."
+    },
+    {
+      "at": "2026-11-15T11:45:44.114Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "We wtorek 17 listopada między 08:00 a 09:00 oraz między 11:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "We wtorek 17 listopada o 15:00 margines spadnie najgłębiej w całym okresie. Ogłoszenie może jeszcze nadejść, bo do wskazanych godzin pozostało ponad osiem godzin.",
+      "outlook": "W pozostałych dniach nic nie zapowiada przywołania, choć w czwartek 19 listopada prognoza jeszcze się ustala."
     }
   ]
 }
