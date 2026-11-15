@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-12T23:01:18.458Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W tych dniach nic nie zapowiada przywołania.",
-      "body": "Jutro o 13:00 rezerwa spadnie, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-12T23:31:06.206Z",
       "prompt": 57,
       "accepted": true,
@@ -2435,6 +2427,24 @@
       "headline": "We wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "We wtorek 17 listopada oraz w czwartek 19 listopada między 15:00 a 18:00 rezerwa spada poniżej wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-15T23:09:18.462Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "We wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza wtorku 17 listopada pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 17 listopada zachodzi ryzyko przywołania, a w pozostałe dni okresu nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-15T23:09:18.462Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "We wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "We wtorek 17 listopada oraz w czwartek 19 listopada margines spada poniżej wymaganej wartości, natomiast w pozostałe dni okresu nic nie zapowiada przywołania."
     }
   ]
 }
