@@ -2408,6 +2408,23 @@
       "headline": "Prognoza na najbliższe doby przeważnie przekracza typowy zakres z ostatnich trzydziestu dni.",
       "body": "Jutro między 14:00 a 15:00 prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00 i w czwartek 19 listopada między 15:00 a 18:00 operator może ogłosić przywołanie, podczas gdy w pozostałe dni nic nie zapowiada przywołania, a Kompas Energetyczny PSE zaleca oszczędzanie jutro między 14:00 a 15:00."
+    },
+    {
+      "at": "2026-11-15T22:45:47.307Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni przez większą część doby, a jutro między 14:00 a 15:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 17 listopada między 07:00 a 10:00 oraz od 11:00 do 21:00 i w czwartek 19 listopada między 15:00 a 18:00 rezerwa również nie pokrywa wymaganego poziomu przy zachowaniu nadwyżki powyżej progu 1100 MW, podczas gdy w pozostałe dni doby pozostają spokojne."
+    },
+    {
+      "at": "2026-11-15T22:45:47.307Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Prognoza na najbliższe dni przynosi zarówno godziny o nietypowo szerokim marginesie, jak i spadki rezerwy poniżej wymaganego poziomu, przy zachowaniu nadwyżki powyżej progu 1100 MW.",
+      "body": "Prognoza na jutro pogarsza się, a rezerwa spada między 14:00 a 15:00. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00, a także w czwartek 19 listopada między 15:00 a 18:00 operator może ogłosić przywołanie, podczas gdy w pozostałe dni i godziny nic go nie zapowiada."
     }
   ]
 }
