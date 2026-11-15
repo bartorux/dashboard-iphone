@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-12T14:45:50.590Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 16:00 a 21:00 operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza poprawia się. Na ogłoszenie jest już za późno.",
-      "outlook": "Jutro oraz w kolejne dni aż do środy 18 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-12T15:01:14.695Z",
       "prompt": 57,
       "accepted": true,
@@ -2296,6 +2288,24 @@
       "headline": "Wtorek 17 listopada i czwartek 19 listopada niosą godziny, w których operator może ogłosić przywołanie, ale ma wybór, bo nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "We wtorek 17 listopada między 08:00 a 09:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu. Do tych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek 19 listopada między 16:00 a 17:00 rezerwa również nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-15T14:45:51.535Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Wtorek 17 listopada między 08:00 a 09:00 oraz między 11:00 a 21:00, a także czwartek 19 listopada między 16:00 a 17:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "We czwartek 19 listopada prognoza jeszcze się ustala, bo raz pokrywa wymagane minimum, a raz nie. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 17 listopada oraz w czwartek 19 listopada pojawiają się godziny z ujemnym marginesem, podczas gdy w pozostałe dni rezerwa w pełni pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-15T14:45:51.535Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: We wtorek 17 listopada między 08:00 a 09:00 oraz między 11:00 a ",
+      "body": "",
+      "outlook": ""
     }
   ]
 }
