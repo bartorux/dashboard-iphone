@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-12T12:15:51.318Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś rezerwa w części godzin spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza poprawia się, a na ogłoszenie przywołania jest już za późno, bo do tych godzin zostało mniej niż osiem godzin.",
-      "outlook": "W jutrzejszym dniu oraz w poniedziałek 16 listopada, wtorek 17 listopada i środę 18 listopada nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 17:00 oraz między 18:00 a 21:00."
-    },
-    {
-      "at": "2026-11-12T12:30:58.798Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 18:00 a 20:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW.",
-      "body": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni przez trzy godziny. Kompas Energetyczny PSE zaleca oszczędzanie między 15:00 a 17:00 oraz między 18:00 a 21:00, a na ogłoszenie jest już za późno.",
-      "outlook": "W pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-12T12:45:45.843Z",
       "prompt": 57,
       "accepted": false,
@@ -2239,6 +2223,14 @@
       "headline": "Wtorek 17 listopada między 08:00 a 09:00 przyniesie ujemny margines, przy którym operator może ogłosić przywołanie, ale nie musi.",
       "body": "Wtorek 17 listopada przyniesie ujemny margines, a do tych godzin zostało jeszcze ponad osiem godzin.",
       "outlook": "We wtorek 17 listopada przywołanie wchodzi w grę, a w pozostałe dni okresu nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-15T12:30:59.061Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Wtorek 17 listopada między 08:00 a 09:00 oraz między 11:00 a 21:00 przyniesie ujemny margines, lecz nadwyżka utrzyma się powyżej progu 1100 MW, co pozwoli operatorowi na ogłoszenie przywołania.",
+      "body": "We wtorek 17 listopada prognoza jeszcze się ustala, bo raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek 19 listopada między 16:00 a 17:00 margines również spadnie poniżej wymaganego poziomu, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
