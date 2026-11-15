@@ -1,8 +1,8 @@
 {
-  "headline": "Jutro między 13:00 a 17:00 operator może ogłosić przywołanie, ale ma wybór, bo nadwyżka przekracza próg 1100 MW.",
-  "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 14:00 a 15:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na wtorek 17 listopada i czwartek 19 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "Przywołanie wchodzi w grę także we wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00, a także w czwartek 19 listopada między 16:00 a 17:00, podczas gdy w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-15T15:31:09.464Z",
+  "headline": "Jutro między 13:00 a 17:00 operator może ogłosić przywołanie, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc ma wybór.",
+  "body": "Wtorek 17 listopada oraz czwartek 19 listopada przyniosą kolejne godziny z ujemnym marginesem, w których operator również zachowa wybór. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 17 listopada i czwartek 19 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Pozostałe doby nie przyniosą przywołania, a Kompas Energetyczny PSE zaleca oszczędzanie jutro między 14:00 a 15:00.",
+  "generatedAt": "2026-11-15T15:45:52.183Z",
   "dates": [
     "2026-11-15",
     "2026-11-16",
@@ -11,6 +11,6 @@
     "2026-11-19",
     "2026-11-20"
   ],
-  "assessment": "2026-11-15|W|none|1800|17:00|0|0|8|||-|-;2026-11-16|R|moderate|-500|14:00|1|0|10|moderate:13:00-17:00|K2:14:00-15:00|-|-;2026-11-17|R|moderate|-1800|15:00|0|8|9|moderate:07:00-10:00,moderate:11:00-21:00||X|P;2026-11-18|R|none|2100|17:00|0|0|22|||X|P;2026-11-19|R|moderate|-100|16:00|5|0|11|moderate:16:00-17:00||X|P;2026-11-20|R|none|1300|17:00|0|0|23|||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
+  "assessment": "2026-11-15|W|none|1600|18:00|0|0|8|||-|-;2026-11-16|R|moderate|-500|14:00|1|0|10|moderate:13:00-17:00|K2:14:00-15:00|-|-;2026-11-17|R|moderate|-1800|15:00|0|8|9|moderate:07:00-10:00,moderate:11:00-21:00||X|P;2026-11-18|R|none|2100|17:00|0|0|22|||X|P;2026-11-19|R|moderate|-100|16:00|5|0|11|moderate:16:00-17:00||X|P;2026-11-20|R|none|1300|17:00|0|0|23|||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
   "model": "gemini-3.5-flash-lite"
 }
