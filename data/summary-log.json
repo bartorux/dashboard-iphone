@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-12T07:01:24.492Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Między 19:00 a 20:00 zapotrzebowanie wzrośnie ponad normę, a nadwyżka spadnie poniżej progu 1100 MW. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie między 09:00 a 12:00"
-    },
-    {
-      "at": "2026-11-12T07:15:42.581Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś rezerwa miejscami spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Między 19:00 a 20:00 zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W jutrzejszym dniu oraz w poniedziałek 16 listopada, wtorek 17 listopada i środę 18 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-12T07:31:01.609Z",
       "prompt": 57,
       "accepted": true,
@@ -2191,6 +2175,23 @@
       "headline": "Wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, lecz nadwyżka przekroczy próg 1100 MW.",
       "body": "We wtorek 17 listopada margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni. Do tych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 17 listopada oraz w czwartek 19 listopada między 16:00 a 18:00 operator może ogłosić przywołanie, podczas gdy w pozostałe dni nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-15T07:15:46.888Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "Wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "We wtorek 17 listopada rezerwa spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez dziesięć godzin. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 17 listopada oraz w czwartek 19 listopada między 16:00 a 18:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-15T07:15:46.888Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "We wtorek 17 listopada prognoza nie odbiega od normy, choć rezerwa miejscami spada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 17 listopada i czwartek 19 listopada rezerwa okresowo nie pokrywa wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
