@@ -2270,6 +2270,24 @@
       "headline": "We wtorek 17 listopada między 08:00 a 09:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "We wtorek 17 listopada prognoza jeszcze się ustala, raz pokrywając wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
       "outlook": "W czwartek 19 listopada między 16:00 a 17:00 rezerwa również spadnie poniżej wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-15T14:15:47.903Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "We wtorek 17 listopada między 08:00 a 09:00 oraz między 11:00 a 21:00, a także w czwartek 19 listopada między 16:00 a 17:00 rezerwa nie pokryje wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, więc operator zachowa wybór co do ogłoszenia przywołania.",
+      "body": "W czwartek 19 listopada prognoza jeszcze się ustala i raz pokryje wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, bo do wskazanych godzin pozostało ponad osiem godzin.",
+      "outlook": "W pozostałe dni oraz w pozostałych godzinach wtorku 17 listopada i czwartku 19 listopada margines dodatni pokryje wymagany poziom i nic tam nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-15T14:15:47.903Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "We wtorek 17 listopada między 08:00 a 09:00 oraz między 11:00 a 21:00, a także w czwartek 19 listopada między 16:00 a 17:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
+      "body": "W czwartek 19 listopada prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Przez pozostałą część tygodnia nic nie zapowiada przywołania."
     }
   ]
 }
