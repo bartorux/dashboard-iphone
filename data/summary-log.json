@@ -3,15 +3,6 @@
     {
       "at": "2026-11-13T17:31:01.730Z",
       "prompt": 57,
-      "accepted": false,
-      "reason": "zakres godzin od tej samej do tej samej",
-      "headline": "W tych dniach nic nie zapowiada przywołania, a rezerwy mieszczą się w tym, co typowe dla tej pory roku.",
-      "body": "Dziś rezerwa spadnie poniżej wymaganego poziomu między 21:00 a 21:00, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-13T17:31:01.730Z",
-      "prompt": 57,
       "accepted": true,
       "headline": "W najbliższych dniach nic nie zapowiada przywołania.",
       "body": "Dziś o 21:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi, choć ta godzina mieści się w tym, co o tej porze typowe.",
@@ -2505,6 +2496,14 @@
       "headline": "Dziś między 16:00 a 17:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin porannych zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Poza jutrzejszym porankiem w całym okresie nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-16T15:45:50.123Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 16:00 a 17:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW i operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokryje wymagany poziom, raz nie. Do godzin między 08:00 a 09:00 oraz od 11:00 do 15:00 zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i piątek rezerwa pokryje wymagany poziom i nic nie zapowiada przywołania."
     }
   ]
 }
