@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-13T15:45:57.156Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 16:00 a 17:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka przekracza próg 1100 MW.",
-      "body": "Prognoza na dziś jeszcze się ustala, raz pokrywając wymagany poziom, a raz go nie pokrywając. Na ogłoszenie w tych godzinach jest już za późno.",
-      "outlook": "W poniedziałek 16 listopada, we wtorek 17 listopada, w środę 18 listopada oraz w czwartek 19 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-13T16:01:31.870Z",
       "prompt": 57,
       "accepted": true,
@@ -2500,6 +2492,14 @@
       "headline": "Dziś między 15:00 a 20:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza się pogarsza. Kompas Energetyczny PSE zaleca oszczędzanie między 15:00 a 17:00.",
       "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-16T14:31:18.948Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 15:00 a 18:00 operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza pogarsza się. Do tych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
+      "outlook": "W Kompasie Energetycznym PSE zalecane oszczędzanie przypada między 15:00 a 16:00, a w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
