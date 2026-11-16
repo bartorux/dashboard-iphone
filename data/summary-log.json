@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-14T04:30:54.404Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W żadnym z nadchodzących dni nic nie zapowiada przywołania.",
-      "body": "Dziś o 09:00 margines spadnie poniżej wymaganego poziomu z powodu zapotrzebowania powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-14T04:45:47.309Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W tych dniach nic nie zapowiada przywołania.",
-      "body": "Dziś o 09:00 rezerwa spadnie przez zapotrzebowanie powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-14T05:01:08.143Z",
       "prompt": 57,
       "accepted": true,
@@ -2508,6 +2492,23 @@
       "headline": "Prognoza mieści się w typowym zakresie z ostatnich dni, choć jutro między 07:00 a 17:00 operator może ogłosić przywołanie.",
       "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
       "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-16T22:15:46.410Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni, bo jutro między 07:00 a 17:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
+      "outlook": "W środę, czwartek i piątek margines trzyma się powyżej typowego zakresu i nic tam nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-16T22:15:46.410Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni, a jutro między 07:00 a 17:00 operator ma wybór, czy ogłosi przywołanie.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, a Kompas Energetyczny PSE zaleca oszczędzanie jutro między 07:00 a 08:00 oraz między 12:00 a 17:00."
     }
   ]
 }
