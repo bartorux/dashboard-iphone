@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-13T16:31:00.031Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś, w poniedziałek 16 listopada, we wtorek 17 listopada, w środę 18 listopada oraz w czwartek 19 listopada w krajowej sieci elektroenergetycznej nic nie zapowiada przywołania.",
-      "body": "W środę 18 listopada o 17:00 margines spadnie do najniższego poziomu ze wszystkich dni, ale o tej godzinie rezerwa wciąż pokrywa wymagany poziom i ta godzina mieści się w tym, co o tej porze typowe dla ostatnich trzydziestu dni.",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-13T16:45:45.951Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś i w kolejnych dniach nic nie zapowiada przywołania.",
-      "body": "W środę 18 listopada o 17:00 margines spadnie do najniższego poziomu w tym okresie, ale rezerwa nadal pokryje wymagany poziom i nic tam nie zapowiada przywołania.",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-13T17:01:27.896Z",
       "prompt": 57,
       "accepted": true,
@@ -2501,6 +2485,24 @@
       "headline": "Dziś między 15:00 a 17:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Do tych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
       "outlook": "Przez resztę tygodnia nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-16T15:15:49.351Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś między 16:00 a 17:00 margines spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, co daje operatorowi prawo do wyboru.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Na ogłoszenie we wskazanych godzinach jutra między 08:00 a 09:00 oraz między 11:00 a 15:00 jest jeszcze czas, bo do ich nadejścia zostało ponad osiem godzin.",
+      "outlook": "W środę, czwartek i piątek rezerwa pokryje wymagany poziom i nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-16T15:15:49.351Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś między 16:00 a 17:00 margines spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, co pozwoli operatorowi na wybór.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin porannych zostało na tyle dużo czasu, że ogłoszenie może jeszcze nadejść.",
+      "outlook": "Poza wskazanymi godzinami w kolejnych dniach rezerwa pokryje wymagany poziom i nic tam nie zapowiada przywołania."
     }
   ]
 }
