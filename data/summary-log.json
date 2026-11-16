@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-13T22:45:45.289Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina 09:00 spoza faktów",
-      "headline": "W tych dniach nic nie zapowiada przywołania, a margines we wszystkich godzinach mieści się powyżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "We wtorek 17 listopada najniższy margines wyniesie między 08:00 a 09:00, a prognoza się pogarsza.",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-13T23:01:24.026Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W tych dniach nic nie zapowiada przywołania.",
-      "body": "We wtorek 17 listopada o 08:00 rezerwa osiąga najniższy poziom, ale prognoza tej doby pogarsza się, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-13T23:31:06.185Z",
       "prompt": 57,
       "accepted": true,
@@ -2509,6 +2492,23 @@
       "headline": "Jutro między 07:00 a 17:00 operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na jutro jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek między 07:00 a 08:00 margines będzie wąski, a w pozostałe dni nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie między 12:00 a 15:00 oraz między 16:00 a 17:00."
+    },
+    {
+      "at": "2026-11-16T19:31:05.500Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: Jutro między 07:00 a 17:00 rezerwa nie pokryje wymaganego poziomu, ale",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-16T19:31:05.500Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Jutro między 07:00 a 17:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania."
     }
   ]
 }
