@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-13T10:01:10.812Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś i w kolejnych dniach nic nie zapowiada przywołania.",
-      "body": "Dziś o 15:00 prognoza jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-13T10:15:50.936Z",
       "prompt": 57,
       "accepted": true,
@@ -2499,6 +2491,14 @@
       "headline": "Dziś i jutro w systemie występuje stan, w którym operator może ogłosić przywołanie.",
       "body": "Prognoza w czwartek jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie na jutro może jeszcze nadejść.",
       "outlook": "Dziś między 13:00 a 15:00 operator ma wybór, a w pozostałe dni poza czwartkiem nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-16T09:15:54.224Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś i jutro operator może ogłosić przywołanie, przy czym jutro między 12:00 a 20:00 nadwyżka spada poniżej progu 1100 MW.",
+      "body": "Dziś między 13:00 a 15:00 nadwyżka utrzymuje się powyżej progu 1100 MW, dając operatorowi wybór, lecz na ogłoszenie jest już za późno. Ogłoszenie może jeszcze nadejść w godzinach, do których zostało ponad osiem godzin.",
+      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, choć w czwartek prognoza jeszcze się ustala i miejscami pokazuje wąski margines."
     }
   ]
 }
