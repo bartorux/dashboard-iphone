@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-13T22:30:57.645Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W tych dniach nic nie zapowiada przywołania, a rezerwy we wszystkich godzinach pokrywają wymagany poziom.",
-      "body": "Margines we wtorek 17 listopada o 08:00 pogarsza się, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-13T22:45:45.289Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina 09:00 spoza faktów",
-      "headline": "W tych dniach nic nie zapowiada przywołania, a rezerwa w każdym z nich pokrywa wymagany poziom.",
-      "body": "We wtorek 17 listopada między 08:00 a 09:00 margines spadnie najniżej, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-13T22:45:45.289Z",
       "prompt": 57,
       "accepted": false,
@@ -2508,6 +2491,24 @@
       "headline": "Jutro między 07:00 a 17:00 operator może ogłosić przywołanie, ale ma wybór, bo nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin, a Kompas Energetyczny PSE zaleca oszczędzanie między 12:00 a 15:00 oraz między 16:00 a 17:00.",
       "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, choć czwartkowy margines bywa wąski."
+    },
+    {
+      "at": "2026-11-16T19:15:50.818Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina 10:00 spoza faktów",
+      "headline": "W środę operator może ogłosić przywołanie między 07:00 a 17:00.",
+      "body": "Prognoza w środę jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek margines jest wąski między 10:00 a 11:00, a w pozostałe dni okresu nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-16T19:15:50.818Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina 08:00 spoza faktów",
+      "headline": "Jutro między 07:00 a 17:00 operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza na jutro jeszcze się ustala i rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek między 07:00 a 08:00 margines będzie wąski, a w pozostałe dni nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie między 12:00 a 15:00 oraz między 16:00 a 17:00."
     }
   ]
 }
