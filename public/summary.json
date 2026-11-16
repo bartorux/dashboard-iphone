@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 14:00 a 15:00 operator może ogłosić przywołanie, a nadwyżka spadnie poniżej progu 1100 MW.",
-  "body": "Prognoza pogarsza się. Kompas Energetyczny PSE zaleca oszczędzanie między 14:00 a 17:00, a na ogłoszenie jest już za późno.",
-  "outlook": "W pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-16T13:31:11.116Z",
+  "headline": "Dziś między 14:00 a 15:00 nadwyżka spada poniżej progu 1100 MW i operator może ogłosić przywołanie.",
+  "body": "Prognoza pogarsza się. Na ogłoszenie jest już za późno, bo do tych godzin zostało mniej niż osiem godzin. Kompas Energetyczny PSE zaleca oszczędzanie między 14:00 a 17:00.",
+  "outlook": "W pozostałych godzinach i w kolejnych dniach nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-16T13:45:52.550Z",
   "dates": [
     "2026-11-16",
     "2026-11-17",
@@ -10,6 +10,6 @@
     "2026-11-19",
     "2026-11-20"
   ],
-  "assessment": "2026-11-16|R|high|-1400|14:00|0|1|1|high:14:00-15:00,moderate:15:00-17:00|K2:14:00-17:00|-|-;2026-11-17|R|none|700|12:00|0|0|15|||-|-;2026-11-18|R|none|1700|13:00|0|0|22|||X|P;2026-11-19|R|none|400|16:00|0|0|21|||X|P;2026-11-20|R|none|1400|16:00|0|0|24|||X|P#-/below/prognoza pogarsza się#v57",
+  "assessment": "2026-11-16|R|high|-1900|14:00|0|2|1|high:14:00-15:00,moderate:15:00-20:00|K2:14:00-17:00|-|-;2026-11-17|R|none|800|12:00|0|0|14|||-|-;2026-11-18|R|none|1700|13:00|0|0|22|||X|P;2026-11-19|R|none|300|16:00|0|0|20|||X|P;2026-11-20|R|none|1400|16:00|0|0|24|||X|P#-/below/prognoza pogarsza się#v57",
   "model": "gemini-3.5-flash-lite"
 }
