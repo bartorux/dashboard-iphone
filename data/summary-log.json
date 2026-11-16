@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-13T16:01:31.870Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W tych dniach nic nie zapowiada przywołania.",
-      "body": "Dziś o 17:00 margines jest wąski, ale rezerwa pokrywa wymagany poziom, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-13T16:15:52.210Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W żadnym z dni nic nie zapowiada przywołania.",
-      "body": "Dziś o 17:00 margines jest wąski, ale wciąż dodatni, co mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-13T16:31:00.031Z",
       "prompt": 57,
       "accepted": true,
@@ -2500,6 +2484,23 @@
       "headline": "Dziś między 15:00 a 18:00 operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza pogarsza się. Do tych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
       "outlook": "W Kompasie Energetycznym PSE zalecane oszczędzanie przypada między 15:00 a 16:00, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-16T14:45:51.334Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "dzień tygodnia w liczbie mnogiej",
+      "headline": "Dziś między 15:00 a 17:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Do wskazanych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
+      "outlook": "Przez resztę tygodnia nic nie zapowiada przywołania, a w środy i piątki Kompas Energetyczny PSE zaleca oszczędzanie między 15:00 a 16:00."
+    },
+    {
+      "at": "2026-11-16T14:45:51.334Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 15:00 a 17:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Do tych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
+      "outlook": "Przez resztę tygodnia nic nie zapowiada przywołania."
     }
   ]
 }
