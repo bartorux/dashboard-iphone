@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-14T05:01:08.143Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś o 09:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "Dziś o 09:00 margines spadnie z powodu zapotrzebowania powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-14T05:15:42.544Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W tych dniach nic nie zapowiada przywołania.",
-      "body": "Dziś o 09:00 margines spadnie poniżej wymaganego poziomu, bo zapotrzebowanie urośnie powyżej normy, ale i ta godzina mieści się w tym, co o tej porze typowe.",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-14T05:31:04.288Z",
       "prompt": 57,
       "accepted": true,
@@ -2509,6 +2493,23 @@
       "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni, a jutro między 07:00 a 17:00 operator ma wybór, czy ogłosi przywołanie.",
       "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, a Kompas Energetyczny PSE zaleca oszczędzanie jutro między 07:00 a 08:00 oraz między 12:00 a 17:00."
+    },
+    {
+      "at": "2026-11-16T22:29:31.170Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina w nagłówku bez nazwy dnia",
+      "headline": "Margines w jutrzejszych godzinach od 07:00 do 17:00 nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W środę, czwartek i piątek nic nie zapowiada przywołania, a w pozostałych dniach rezerwa pozostaje stabilna."
+    },
+    {
+      "at": "2026-11-16T22:29:31.170Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Margines spadnie jutro poniżej typowego zakresu z ostatnich trzydziestu dni, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść między 07:00 a 17:00.",
+      "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 08:00 oraz między 12:00 a 17:00, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
