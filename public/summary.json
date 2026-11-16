@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś i jutro wchodzi w grę przywołanie, a nadwyżka spada poniżej progu 1100 MW między 12:00 a 20:00.",
-  "body": "Dziś między 13:00 a 15:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka trzyma się powyżej progu 1100 MW. Kompas Energetyczny PSE zaleca oszczędzanie między 14:00 a 15:00. Ocena na jutro jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W środę i w piątek nic nie zapowiada przywołania, w czwartek prognoza jeszcze się ustala, a w pozostałych dniach rezerwa przebiega stabilnie.",
-  "generatedAt": "2026-11-16T09:45:51.531Z",
+  "headline": "Dziś między 13:00 a 15:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 14:00 a 15:00. Na ogłoszenie dla tych godzin jest już za późno. Ocena na jutro jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Jutro między 12:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-16T10:01:14.730Z",
   "dates": [
     "2026-11-16",
     "2026-11-17",
@@ -10,6 +10,6 @@
     "2026-11-19",
     "2026-11-20"
   ],
-  "assessment": "2026-11-16|R|moderate|-400|14:00|2|0|3|moderate:13:00-15:00|K2:14:00-15:00|-|-;2026-11-17|R|high|-2200|16:00|1|10|8|moderate:07:00-10:00,moderate:11:00-12:00,high:12:00-20:00,moderate:20:00-21:00||X|-;2026-11-18|R|none|1600|14:00|0|0|21|||X|P;2026-11-19|R|none|0|16:00|2|0|14|||X|P;2026-11-20|R|none|1200|15:00|0|0|23|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
+  "assessment": "2026-11-16|R|moderate|-500|14:00|4|0|3|moderate:13:00-15:00|K2:14:00-15:00|-|-;2026-11-17|R|high|-2200|16:00|1|10|8|moderate:07:00-10:00,moderate:11:00-12:00,high:12:00-20:00,moderate:20:00-21:00||X|-;2026-11-18|R|none|1600|14:00|0|0|21|||X|P;2026-11-19|R|none|0|16:00|2|0|14|||X|P;2026-11-20|R|none|1200|15:00|0|0|23|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
   "model": "gemini-3.5-flash-lite"
 }
