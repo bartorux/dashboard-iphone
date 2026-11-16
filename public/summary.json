@@ -1,8 +1,8 @@
 {
-  "headline": "Margines spadnie jutro poniżej typowego zakresu z ostatnich trzydziestu dni, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-  "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść między 07:00 a 17:00.",
-  "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 08:00 oraz między 12:00 a 17:00, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-16T22:29:31.170Z",
+  "headline": "Jutro między 07:00 a 17:00 rezerwa spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW.",
+  "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+  "outlook": "Pozostałe dni przynoszą rezerwę pokrywającą wymagany poziom, choć w czwartek margines zrobi się wąski.",
+  "generatedAt": "2026-11-16T22:45:48.920Z",
   "dates": [
     "2026-11-16",
     "2026-11-17",
@@ -10,6 +10,6 @@
     "2026-11-19",
     "2026-11-20"
   ],
-  "assessment": "2026-11-16|R|none|1200|23:00|0|0|0|||-|-;2026-11-17|R|moderate|-1000|13:00|1|2|2|moderate:07:00-17:00|K2:07:00-08:00,K2:12:00-17:00|-|-;2026-11-18|R|none|1700|13:00|0|0|21|||X|P;2026-11-19|R|none|400|17:00|0|0|22|||X|P;2026-11-20|R|none|1400|15:00|0|0|24|||X|P#-/typical/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
+  "assessment": "2026-11-16|R|none|1100|23:00|0|0|0|||-|-;2026-11-17|R|moderate|-1000|13:00|1|4|1|moderate:07:00-17:00|K2:07:00-08:00,K2:12:00-15:00|-|-;2026-11-18|R|none|1700|13:00|0|0|21|||X|P;2026-11-19|R|none|300|17:00|0|0|22|||X|P;2026-11-20|R|none|1200|15:00|0|0|24|||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
   "model": "gemini-3.5-flash-lite"
 }
