@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-  "body": "Dziś między 08:00 a 17:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi. Na ogłoszenie jest już za późno. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W czwartek między 14:00 a 20:00 prognoza pogarsza się i nadwyżka pozostaje powyżej progu 1100 MW, co daje operatorowi wybór, a ogłoszenie może jeszcze nadejść, podczas gdy jutro, w piątek i w poniedziałek 23 listopada nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-17T07:31:05.282Z",
+  "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+  "body": "Dziś między 13:00 a 15:00 nadwyżka spada poniżej progu 1100 MW, więc operator może ogłosić przywołanie. Ogłoszenie może jeszcze nadejść między 14:00 a 21:00 w czwartek. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W czwartek między 14:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW, podczas gdy w pozostałe dni nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie dzisiaj między 08:00 a 17:00.",
+  "generatedAt": "2026-11-17T07:45:46.702Z",
   "dates": [
     "2026-11-17",
     "2026-11-18",
@@ -10,6 +10,6 @@
     "2026-11-20",
     "2026-11-23"
   ],
-  "assessment": "2026-11-17|R|moderate|-900|09:00|3|2|1|moderate:08:00-17:00|K2:08:00-17:00|-|-;2026-11-18|R|none|1600|13:00|0|0|21|||X|-;2026-11-19|R|moderate|-800|17:00|1|1|16|moderate:14:00-20:00||X|P;2026-11-20|R|none|600|15:00|0|0|23|||X|P;2026-11-23|R|none|0|17:00|8|0|10|||X|P#-/below/prognoza pogarsza się#v57",
+  "assessment": "2026-11-17|R|high|-1400|13:00|4|3|1|moderate:08:00-13:00,high:13:00-15:00,moderate:15:00-17:00|K2:08:00-17:00|-|-;2026-11-18|R|none|600|13:00|0|0|17|||X|-;2026-11-19|R|moderate|-1200|15:00|0|5|15|moderate:14:00-21:00||X|P;2026-11-20|R|none|200|15:00|3|0|17|||X|P;2026-11-23|R|none|0|17:00|8|0|10|||X|P#nic nie odstaje od normy dla tej pory — zwykły przebieg doby/below/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
