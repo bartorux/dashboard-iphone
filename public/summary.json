@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 08:00 a 09:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-  "body": "Prognoza pogarsza się. Między 09:00 a 18:00 ogłoszenie może jeszcze nadejść. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W czwartek między 15:00 a 18:00 operator ma wybór i ogłoszenie może jeszcze nadejść, a w pozostałych dniach nic nie zapowiada przywołania. Kompas Energetyczny PSE zaleca oszczędzanie dziś w godzinach 07:00-11:00 oraz 12:00-15:00.",
-  "generatedAt": "2026-11-17T06:15:46.029Z",
+  "headline": "Dziś między 07:00 a 18:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W czwartek między 15:00 a 18:00 sytuacja powtórzy się, a w pozostałe dni nic nie zapowiada przywołania; Kompas Energetyczny PSE zaleca oszczędzanie dziś od 07:00 do 18:00 oraz od 19:00 do 21:00.",
+  "generatedAt": "2026-11-17T06:31:01.414Z",
   "dates": [
     "2026-11-17",
     "2026-11-18",
@@ -10,6 +10,6 @@
     "2026-11-20",
     "2026-11-23"
   ],
-  "assessment": "2026-11-17|R|high|-1200|08:00|3|3|1|moderate:07:00-08:00,high:08:00-09:00,moderate:09:00-18:00|K2:07:00-11:00,K2:12:00-15:00|-|-;2026-11-18|R|none|2000|13:00|0|0|23|||X|-;2026-11-19|R|moderate|-500|17:00|3|0|17|moderate:15:00-18:00||X|P;2026-11-20|R|none|1200|16:00|0|0|24|||X|P;2026-11-23|R|none|800|16:00|0|0|23|||X|P#-/below/prognoza pogarsza się#v57",
+  "assessment": "2026-11-17|R|moderate|-1100|09:00|3|3|1|moderate:07:00-18:00|K2:07:00-18:00,K2:19:00-21:00|-|-;2026-11-18|R|none|1600|12:00|0|0|21|||X|-;2026-11-19|R|moderate|-500|17:00|3|0|17|moderate:15:00-18:00||X|P;2026-11-20|R|none|1200|16:00|0|0|24|||X|P;2026-11-23|R|none|800|16:00|0|0|23|||X|P#-/below/prognoza pogarsza się#v57",
   "model": "gemini-3.5-flash-lite"
 }
