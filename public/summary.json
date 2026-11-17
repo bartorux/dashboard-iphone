@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 11:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka przekracza próg 1100 MW.",
-  "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Ocena na jutro i czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "Jutro między 12:00 a 14:00 oraz w czwartek między 14:00 a 21:00 operator również ma wybór, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-17T09:31:04.880Z",
+  "headline": "Dziś między 20:00 a 21:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW, choć rezerwa nie pokrywa wymaganego poziomu.",
+  "body": "Dziś przebieg doby nie odbiega od normy. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 12:00 a 17:00 oraz między 20:00 a 21:00. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W czwartek między 14:00 a 20:00 operator też ma wybór, a w pozostałe dni nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-17T09:45:48.077Z",
   "dates": [
     "2026-11-17",
     "2026-11-18",
@@ -10,6 +10,6 @@
     "2026-11-20",
     "2026-11-23"
   ],
-  "assessment": "2026-11-17|R|moderate|-1000|13:00|2|0|0|moderate:11:00-21:00|K2:12:00-17:00,K2:20:00-21:00|-|-;2026-11-18|R|moderate|-100|12:00|8|0|11|moderate:12:00-14:00||X|-;2026-11-19|R|moderate|-1200|17:00|0|5|14|moderate:14:00-21:00||X|P;2026-11-20|R|none|200|15:00|2|0|17|||X|P;2026-11-23|R|none|400|20:00|0|0|15|||X|P#-/typical/prognoza pogarsza się#v57",
+  "assessment": "2026-11-17|R|moderate|-1100|13:00|3|0|0|moderate:11:00-18:00,moderate:20:00-21:00|K2:12:00-17:00,K2:20:00-21:00|-|-;2026-11-18|R|none|200|13:00|9|0|14|||X|-;2026-11-19|R|moderate|-1000|15:00|0|3|15|moderate:14:00-20:00||X|P;2026-11-20|R|none|400|15:00|0|0|20|||X|P;2026-11-23|R|none|700|17:00|0|0|20|||X|P#nic nie odstaje od normy dla tej pory — zwykły przebieg doby/typical/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
