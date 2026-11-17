@@ -4,15 +4,6 @@
       "at": "2026-11-14T19:15:55.415Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "We wtorek 17 listopada między 07:00 a 09:00 oraz między 12:00 a 19:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza pogarsza się we wtorek 17 listopada. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W pozostałych dniach rezerwa pokryje wymagany poziom i nic tam nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-14T19:15:55.415Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "nadwyżka nad progiem podana jako powód przywołania",
       "headline": "We wtorek 17 listopada między 07:00 a 09:00 operator może ogłosić przywołanie, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, do tych godzin zostało ponad osiem godzin.",
@@ -2508,6 +2499,14 @@
       "headline": "W czwartek między 14:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "W czwartek przebieg doby nie odbiega od normy, a margines o 17:00 spada niżej niż zwykle na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 14:00 a 17:00.",
       "outlook": "W piątek między 16:00 a 18:00 operator zachowuje taki sam wybór, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-17T13:15:52.034Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W czwartek między 14:00 a 21:00 rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
+      "body": "W czwartek margines spadnie o 17:00 niżej niż zwykle o tej porze na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś między 14:00 a 20:00 oraz w piątek między 16:00 a 18:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
