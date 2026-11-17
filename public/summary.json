@@ -1,8 +1,8 @@
 {
-  "headline": "W czwartek między 16:00 a 18:00 rezerwa mocno spadnie, ale nadwyżka utrzyma się powyżej progu 1100 MW.",
-  "body": "Margines o 17:00 spadnie niżej niż zwykle o tej porze, na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść w czwartek między 13:00 a 21:00. Ocena na czwartek i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek między 15:00 a 18:00 oraz dzisiaj między 13:00 a 18:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-17T11:15:49.040Z",
+  "headline": "W czwartek między 13:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "Margines o 17:00 wypada niżej niż zwykle na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Ocena na czwartek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "Dziś między 13:00 a 18:00 operator ma taki sam wybór, jednak na ogłoszenie jest już za późno, a w pozostałe dni rezerwa zachowuje się spokojnie.",
+  "generatedAt": "2026-11-17T11:31:01.301Z",
   "dates": [
     "2026-11-17",
     "2026-11-18",
@@ -10,6 +10,6 @@
     "2026-11-20",
     "2026-11-23"
   ],
-  "assessment": "2026-11-17|R|moderate|-1000|14:00|3|0|0|moderate:13:00-18:00|K2:13:00-17:00|-|-;2026-11-18|R|none|100|13:00|9|0|12|||X|-;2026-11-19|R|moderate|-1700|17:00|0|7|14|moderate:13:00-21:00||X|P;2026-11-20|R|moderate|-400|16:00|0|0|13|moderate:15:00-18:00||X|P;2026-11-23|R|none|400|17:00|0|0|14|||X|P#nic nie odstaje od normy dla tej pory — zwykły przebieg doby/below/-#v57",
+  "assessment": "2026-11-17|R|moderate|-1100|14:00|3|0|0|moderate:13:00-18:00||-|-;2026-11-18|R|none|100|13:00|9|0|12|||X|-;2026-11-19|R|moderate|-1700|17:00|0|7|14|moderate:13:00-21:00||X|P;2026-11-20|R|moderate|-300|17:00|0|0|12|moderate:15:00-18:00||X|P;2026-11-23|R|none|400|17:00|0|0|15|||X|P#nic nie odstaje od normy dla tej pory — zwykły przebieg doby/below/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
