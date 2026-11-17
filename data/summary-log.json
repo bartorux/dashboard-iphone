@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-15T03:31:08.217Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "We wtorek 17 listopada między 07:00 a 09:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza pogarsza się we wtorek 17 listopada. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-15T03:31:08.217Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "We wtorek 17 listopada między 07:00 a 09:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza pogarsza się we wtorek 17 listopada. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W pozostałych dniach rezerwa pokrywa wymagany poziom i nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-15T03:45:47.689Z",
       "prompt": 57,
       "accepted": false,
@@ -2500,6 +2482,24 @@
       "headline": "W czwartek między 17:00 a 18:00 rezerwa mocno spadnie, ale nadwyżka utrzyma się powyżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, ale nie musi.",
       "body": "W piątek prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę operator może ogłosić przywołanie między 07:00 a 09:00 oraz między 15:00 a 18:00, Kompas Energetyczny PSE zaleca oszczędzanie w tych samych godzinach, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-17T21:45:56.506Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W czwartek między 17:00 a 18:00 rezerwa mocno spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW.",
+      "body": "W piątek prognoza wciąż się ustala, a rezerwa raz pokryje wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść w godzinach porannych i popołudniowych.",
+      "outlook": "W poniedziałek 23 listopada nic nie zapowiada przywołania, podczas gdy w pozostałych dniach rezerwa zafiniszuje z wąskimi momentami."
+    },
+    {
+      "at": "2026-11-17T21:45:56.506Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "nadwyżka nad progiem podana jako powód przywołania",
+      "headline": "W czwartek między 16:00 a 18:00 rezerwa spadnie i chociaż nie pokryje wymaganego poziomu, nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie.",
+      "body": "Jutro w godzinach 07:00-09:00 Kompas Energetyczny PSE zaleca oszczędzanie. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek prognoza jeszcze się ustala, a w poniedziałek 23 listopada nic nie zapowiada przywołania."
     }
   ]
 }
