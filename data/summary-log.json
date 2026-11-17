@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-15T01:45:41.449Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole headline dłuższe niż 200 znaków",
-      "headline": "We wtorek 17 listopada między 07:00 a 09:00 oraz między 11:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Prognoza pogarsza się we wtorek 17 listopada. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 17 listopada rezerwa spadnie poniżej wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-15T02:01:07.608Z",
       "prompt": 57,
       "accepted": true,
@@ -2502,6 +2493,14 @@
       "headline": "Jutro między 07:00 a 09:00 oraz między 16:00 a 18:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Margines przekracza typowy zakres z ostatnich trzydziestu dni przez dziewięć godzin. Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 09:00 oraz między 16:00 a 18:00, a do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek między 13:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-17T20:31:36.636Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Jutro między 07:00 a 09:00 oraz między 15:00 a 18:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 09:00 oraz między 16:00 a 18:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek między 13:00 a 21:00 oraz w piątek między 16:00 a 18:00 rezerwa również spada poniżej wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
