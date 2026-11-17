@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś margines jest niższy niż zwykle o tej porze na tle ostatnich trzydziestu dni.",
-  "body": "W czwartek między 14:00 a 21:00 rezerwa spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW. Ogłoszenie może jeszcze nadejść. Ocena na czwartek i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W piątek między 17:00 a 18:00 operator ma wybór, a w pozostałych dniach nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-17T12:31:01.428Z",
+  "headline": "Dziś między 13:00 a 19:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+  "body": "W czwartek prognoza wciąż się ustala. Ogłoszenie może jeszcze nadejść w czwartek między 14:00 a 21:00 oraz w piątek między 16:00 a 18:00. Ocena na czwartek i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W środę nic nie zapowiada przywołania, a w poniedziałek 23 listopada rezerwa pokryje wymagany poziom przez całą dobę.",
+  "generatedAt": "2026-11-17T12:45:44.470Z",
   "dates": [
     "2026-11-17",
     "2026-11-18",
@@ -10,6 +10,6 @@
     "2026-11-20",
     "2026-11-23"
   ],
-  "assessment": "2026-11-17|R|moderate|-1100|14:00|2|0|0|moderate:13:00-18:00|K2:13:00-17:00|-|-;2026-11-18|R|none|800|13:00|0|0|15|||-|-;2026-11-19|R|moderate|-1500|17:00|1|6|14|moderate:14:00-21:00||X|P;2026-11-20|R|moderate|-100|17:00|1|0|16|moderate:17:00-18:00||X|P;2026-11-23|R|none|300|20:00|0|0|14|||X|P#nic nie odstaje od normy dla tej pory — zwykły przebieg doby/below/-#v57",
+  "assessment": "2026-11-17|R|moderate|-700|14:00|2|0|0|moderate:13:00-19:00|K2:13:00-17:00|-|-;2026-11-18|R|none|900|13:00|0|0|15|||-|-;2026-11-19|R|moderate|-1500|17:00|1|6|14|moderate:14:00-21:00||X|P;2026-11-20|R|moderate|-200|17:00|1|0|16|moderate:16:00-18:00||X|P;2026-11-23|R|none|300|20:00|0|0|14|||X|P#nic nie odstaje od normy dla tej pory — zwykły przebieg doby/below/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
