@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-15T20:01:11.231Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 13:00 a 16:00 rezerwa spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej próg 1100 MW.",
-      "body": "W tych godzinach operator może ogłosić przywołanie, ale nie musi. Kompas Energetyczny PSE zaleca oszczędzanie między 14:00 a 15:00.",
-      "outlook": "We wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00, a także w czwartek 19 listopada między 15:00 a 18:00 rezerwa również nie pokryje wymaganego poziomu, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-15T20:45:48.947Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 13:00 a 16:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin. Kompas Energetyczny PSE zaleca oszczędzanie między 14:00 a 15:00.",
-      "outlook": "We wtorek 17 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00, a także w czwartek 19 listopada między 15:00 a 18:00 rezerwa również spadnie poniżej wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, natomiast w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-15T21:01:14.592Z",
       "prompt": 57,
       "accepted": true,
@@ -2481,6 +2465,24 @@
       "headline": "Jutro między 13:00 a 14:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
       "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść, do wskazanych godzin zostało bowiem ponad osiem godzin.",
       "outlook": "W piątek, wtorek 24 listopada oraz"
+    },
+    {
+      "at": "2026-11-18T17:01:22.324Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza na jutro jeszcze się ustala. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało jeszcze ponad osiem godzin.",
+      "outlook": "W piątek i we wtorek dwudziestego czwartego listopada margines w wybranych godzinach nie"
+    },
+    {
+      "at": "2026-11-18T17:01:22.324Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "prognoza opisana czasem przeszłym",
+      "headline": "Margines spadł poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek i we wtorek margines spada poniżej wymaganego poziomu, natomiast w poniedziałek 23 listopada nic nie zapowiada przywołania."
     }
   ]
 }
