@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-16T00:15:44.733Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 14:00 a 15:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka przekracza próg 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W czwartek prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 12:00 a 20:00 oraz w czwartek między 16:00 a 17:00 operator ma wybór, a w pozostałe dni rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-16T00:31:01.191Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 14:00 a 15:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Jutro między 12:00 a 20:00 oraz w czwartek między 16:00 a 17:00 rezerwa również nie pokryje wymaganego poziomu przy nadwyżce powyżej progu 1100 MW. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę i piątek nic nie zapowiada przywołania, a w pozostałe dni okresu sytuacja przebiega bez zakłóceń."
-    },
-    {
       "at": "2026-11-16T00:45:47.014Z",
       "prompt": 57,
       "accepted": true,
@@ -2483,6 +2467,24 @@
       "headline": "Jutro między 13:00 a 14:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
       "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W piątek, w poniedziałek 23 listopada i we wtorek 24 listopada w niektórych godzinach operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-18T21:01:19.293Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "możliwość przywołania podana jak nakaz",
+      "headline": "Jutro między 13:00 a 14:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
+      "body": "Prog",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-18T21:01:19.293Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "możliwość przywołania podana jak nakaz",
+      "headline": "Jutro między 13:00 a 14:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
+      "body": "Prognoza na ten dzień jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W piątek między 07:00 a 10:00 oraz między 13:00 a 21:00 operator ma wybór i może ogłosić przywołanie, a we wtorek 24 listopada sytuacja powtórzy się między 13:00 a 21:00; w pozostałe dni okresu nic nie zapowiada przywołania."
     }
   ]
 }
