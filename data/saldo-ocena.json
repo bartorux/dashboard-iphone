@@ -2290,12 +2290,12 @@
           "h": null,
           "hours": 15,
           "mae": 1520,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 99,
           "coverage": null,
           "sums": {
             "abs": 22801,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 99,
+            "deadlineHours": 1,
             "banded": 0,
             "inBand": 0
           }
@@ -2305,12 +2305,12 @@
           "h": 1,
           "hours": 15,
           "mae": 1281,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 1078,
           "coverage": 0.533,
           "sums": {
             "abs": 19212,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 1078,
+            "deadlineHours": 1,
             "banded": 15,
             "inBand": 8
           }
@@ -2320,12 +2320,12 @@
           "h": 2,
           "hours": 15,
           "mae": 825,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 1178,
           "coverage": 1,
           "sums": {
             "abs": 12376,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 1178,
+            "deadlineHours": 1,
             "banded": 15,
             "inBand": 15
           }
@@ -2335,12 +2335,12 @@
           "h": 3,
           "hours": 15,
           "mae": 961,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 1578,
           "coverage": 0.867,
           "sums": {
             "abs": 14412,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 1578,
+            "deadlineHours": 1,
             "banded": 15,
             "inBand": 13
           }
@@ -2350,12 +2350,12 @@
           "h": 4,
           "hours": 15,
           "mae": 941,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 1578,
           "coverage": 0.933,
           "sums": {
             "abs": 14112,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 1578,
+            "deadlineHours": 1,
             "banded": 15,
             "inBand": 14
           }
@@ -2365,12 +2365,12 @@
           "h": 5,
           "hours": 15,
           "mae": 941,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 1578,
           "coverage": 0.933,
           "sums": {
             "abs": 14112,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 1578,
+            "deadlineHours": 1,
             "banded": 15,
             "inBand": 14
           }
@@ -2380,12 +2380,12 @@
           "h": 6,
           "hours": 15,
           "mae": 927,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 1578,
           "coverage": 0.933,
           "sums": {
             "abs": 13912,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 1578,
+            "deadlineHours": 1,
             "banded": 15,
             "inBand": 14
           }
@@ -2401,12 +2401,12 @@
         "h": null,
         "hours": 315,
         "mae": 1125,
-        "maeAtDeadline": 1275,
+        "maeAtDeadline": 1271,
         "coverage": null,
         "sums": {
           "abs": 354408,
-          "deadlineAbs": 382596,
-          "deadlineHours": 300,
+          "deadlineAbs": 382695,
+          "deadlineHours": 301,
           "banded": 0,
           "inBand": 0
         }
@@ -2420,8 +2420,8 @@
         "coverage": 0.771,
         "sums": {
           "abs": 325235,
-          "deadlineAbs": 327636,
-          "deadlineHours": 300,
+          "deadlineAbs": 328714,
+          "deadlineHours": 301,
           "banded": 315,
           "inBand": 243
         }
@@ -2435,8 +2435,8 @@
         "coverage": 0.803,
         "sums": {
           "abs": 310633,
-          "deadlineAbs": 326286,
-          "deadlineHours": 285,
+          "deadlineAbs": 327464,
+          "deadlineHours": 286,
           "banded": 300,
           "inBand": 241
         }
@@ -2446,12 +2446,12 @@
         "h": 3,
         "hours": 285,
         "mae": 1125,
-        "maeAtDeadline": 1217,
+        "maeAtDeadline": 1219,
         "coverage": 0.754,
         "sums": {
           "abs": 320728,
-          "deadlineAbs": 328670,
-          "deadlineHours": 270,
+          "deadlineAbs": 330248,
+          "deadlineHours": 271,
           "banded": 285,
           "inBand": 215
         }
@@ -2461,12 +2461,12 @@
         "h": 4,
         "hours": 270,
         "mae": 1140,
-        "maeAtDeadline": 1247,
+        "maeAtDeadline": 1249,
         "coverage": 0.752,
         "sums": {
           "abs": 307754,
-          "deadlineAbs": 318068,
-          "deadlineHours": 255,
+          "deadlineAbs": 319646,
+          "deadlineHours": 256,
           "banded": 270,
           "inBand": 203
         }
@@ -2476,12 +2476,12 @@
         "h": 5,
         "hours": 240,
         "mae": 1137,
-        "maeAtDeadline": 1222,
+        "maeAtDeadline": 1223,
         "coverage": 0.771,
         "sums": {
           "abs": 272985,
-          "deadlineAbs": 274903,
-          "deadlineHours": 225,
+          "deadlineAbs": 276481,
+          "deadlineHours": 226,
           "banded": 240,
           "inBand": 185
         }
@@ -2491,12 +2491,12 @@
         "h": 6,
         "hours": 210,
         "mae": 1123,
-        "maeAtDeadline": 1219,
+        "maeAtDeadline": 1221,
         "coverage": 0.776,
         "sums": {
           "abs": 235790,
-          "deadlineAbs": 237646,
-          "deadlineHours": 195,
+          "deadlineAbs": 239224,
+          "deadlineHours": 196,
           "banded": 210,
           "inBand": 163
         }
