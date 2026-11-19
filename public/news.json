@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T08:15:52.079Z",
+  "generatedAt": "2026-11-19T10:31:13.264Z",
   "groups": [
     {
       "id": "sieci",
@@ -68,6 +68,13 @@
       "label": "Regulacje",
       "items": [
         {
+          "id": "2607bd3a",
+          "title": "Migracja inicjalna danych do CSIRE – wyniki Aktualizacji 11.2026",
+          "url": "https://www.pse.pl/-/migracja-inicjalna-danych-do-csire-wyniki-aktualizacji-11-2026",
+          "source": "PSE",
+          "publishedAt": "2026-11-19T09:13:00.000Z"
+        },
+        {
           "id": "a287d886",
           "title": "Rynek gazu: Prezes URE rozpoczyna konsultacje dotyczące rabatów, mnożników i współczynników sezonowych do taryfy dla przesyłania gazu na 2028 r.",
           "url": "https://www.ure.gov.pl/pl/urzad/informacje-ogolne/aktualnosci/13539,Rynek-gazu-Prezes-URE-rozpoczyna-konsultacje-dotyczace-rabatow-mnoznikow-i-wspol.html",
@@ -115,13 +122,6 @@
           "url": "https://www.ure.gov.pl/pl/urzad/informacje-ogolne/komunikaty-prezesa-ure/13527,Informacja-nr-592026.html",
           "source": "URE",
           "publishedAt": "2026-11-16T14:45:00.000Z"
-        },
-        {
-          "id": "b9e41d06",
-          "title": "Informacja nr 58/2026",
-          "url": "https://www.ure.gov.pl/pl/urzad/informacje-ogolne/komunikaty-prezesa-ure/13526,Informacja-nr-582026.html",
-          "source": "URE",
-          "publishedAt": "2026-11-16T14:45:00.000Z"
         }
       ]
     },
@@ -129,6 +129,34 @@
       "id": "energetyka",
       "label": "Energetyka",
       "items": [
+        {
+          "id": "703ede09",
+          "title": "Bogdanka może podzielić los JSW. Dziś sądny dzień dla najlepszej polskiej kopalni",
+          "url": "https://www.wnp.pl/energia/bogdanka-moze-podzielic-los-jsw-dzis-sadny-dzien-dla-najlepszej-polskiej-kopalni,1121346.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-11-19T09:52:02.000Z"
+        },
+        {
+          "id": "e175976f",
+          "title": "Polski atom kosztuje coraz więcej. Byli pracownicy PEJ ujawniają kulisy",
+          "url": "https://energetyka24.com/energetyka/atom/polski-atom-kosztuje-coraz-wiecej-byli-pracownicy-pej-ujawniaja-kulisy",
+          "source": "Energetyka24",
+          "publishedAt": "2026-11-19T09:08:24.000Z"
+        },
+        {
+          "id": "a68a3be7",
+          "title": "Transformacja, obrona i lekcje z Ukrainy. Już za tydzień Kongres Odporności Energetycznej",
+          "url": "https://energetyka24.com/energetyka/elektroenergetyka/transformacja-obrona-i-lekcje-z-ukrainy-juz-za-tydzien-kongres-odpornosci-energetycznej",
+          "source": "Energetyka24",
+          "publishedAt": "2026-11-19T09:03:54.000Z"
+        },
+        {
+          "id": "85e67f18",
+          "title": "PFR i amerykańska agencja DFC łączą siły na rzecz finansowania polskiego atomu",
+          "url": "https://energetyka24.com/energetyka/atom/pfr-i-amerykanska-agencja-dfc-lacza-sily-na-rzecz-finansowania-polskiego-atomu",
+          "source": "Energetyka24",
+          "publishedAt": "2026-11-19T08:50:01.000Z"
+        },
         {
           "id": "a05f9794",
           "title": "Grupa Enea podsumowała dziewięć miesięcy 2026 roku",
@@ -156,34 +184,6 @@
           "url": "https://www.wnp.pl/energia/zaskakujaca-sytuacja-w-dystrybucji-energii-polska-dostala-cenna-lekcje-z-europy-zachodniej,1120665.html",
           "source": "wnp.pl",
           "publishedAt": "2026-11-19T05:01:00.000Z"
-        },
-        {
-          "id": "9f4b8aed",
-          "title": "Miliardowe zyski i planowane inwestycje. Enea pokazała wyniki",
-          "url": "https://www.wnp.pl/energia/miliardowe-zyski-i-planowane-inwestycje-enea-pokazala-wyniki,1121202.html",
-          "source": "wnp.pl",
-          "publishedAt": "2026-11-18T19:59:00.000Z"
-        },
-        {
-          "id": "55110e1e",
-          "title": "Tauron podsumował trzy kwartały. 2,5 miliarda zysku i inwestycje za 3,8 mld zł",
-          "url": "https://www.wnp.pl/energia/tauron-podsumowal-trzy-kwartaly-2-5-miliarda-zysku-i-inwestycje-za-3-8-mld-zl,1121152.html",
-          "source": "wnp.pl",
-          "publishedAt": "2026-11-18T17:37:00.000Z"
-        },
-        {
-          "id": "6cc0e717",
-          "title": "Grupa ONDE uruchamia nowy segment – ONDE Balancing Services",
-          "url": "https://www.cire.pl/artykuly/serwis-informacyjny-cire-24/grupa-onde-uruchamia-nowy-segment--onde-balancing-services?utm_source=rss&utm_campaign=rss&utm_medium=link",
-          "source": "CIRE",
-          "publishedAt": "2026-11-18T17:30:00.000Z"
-        },
-        {
-          "id": "26933285",
-          "title": "Tauron z umową na modernizację ważnej linii energetycznej",
-          "url": "https://www.wnp.pl/energia/tauron-z-umowa-na-modernizacje-waznej-linii-energetycznej,1121134.html",
-          "source": "wnp.pl",
-          "publishedAt": "2026-11-18T16:44:00.000Z"
         }
       ]
     },
@@ -191,6 +191,34 @@
       "id": "paliwa",
       "label": "Paliwa i gaz",
       "items": [
+        {
+          "id": "a20f6edf",
+          "title": "Orlen ma umowę z Amerykanami. Polski potentat szuka nowych możliwości zarobku",
+          "url": "https://www.wnp.pl/energia/orlen-ma-porozumienie-z-amerykanami-szuka-mozliwosci-inwestycyjnych-ustalamy-horyzont-90-dni,1121356.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-11-19T10:15:32.000Z"
+        },
+        {
+          "id": "1f41f64d",
+          "title": "Orlen znalazł sposób na tańszy LNG? Zerwanie umowy z gazowym gigantem miało poprawić warunki zakupów",
+          "url": "https://www.wnp.pl/energia/orlen-znalazl-sposob-na-tanszy-lng-zerwanie-umowy-z-gazowym-gigantem-mialo-poprawic-warunki-zakupow,1121363.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-11-19T10:03:06.000Z"
+        },
+        {
+          "id": "3501f515",
+          "title": "Kierowcy zaskoczeni o poranku. Dziś diesel droższy niż zapowiadano",
+          "url": "https://energetyka24.com/surowce/ropa/kierowcy-zaskoczeni-o-poranku-dzis-diesel-drozszy-niz-zapowiadano",
+          "source": "Energetyka24",
+          "publishedAt": "2026-11-19T08:32:50.000Z"
+        },
+        {
+          "id": "a54066f0",
+          "title": "Strategiczny sojusznik Polski dogadał się z Rosją. Kurek z gazem odkręcony",
+          "url": "https://www.wnp.pl/energia/strategiczny-sojusznik-polski-dogadal-sie-z-rosja-kurek-z-gazem-odkrecony,1121323.html",
+          "source": "wnp.pl",
+          "publishedAt": "2026-11-19T08:27:49.000Z"
+        },
         {
           "id": "3160a4cc",
           "title": "Za rok wejdzie nowa opłata dla użytkowników gazu. Duże podwyżki na rachunkach",
@@ -213,39 +241,11 @@
           "publishedAt": "2026-11-18T18:48:00.000Z"
         },
         {
-          "id": "9eaffb8b",
-          "title": "Polacy z Litwinami zadbają o bezpieczeństwo gazociągów i terminali LNG",
-          "url": "https://www.wnp.pl/energia/polacy-z-litwinami-zadbaja-o-bezpieczenstwo-gazociagow-i-terminali-lng,1121111.html",
-          "source": "wnp.pl",
-          "publishedAt": "2026-11-18T16:11:00.000Z"
-        },
-        {
           "id": "97618edd",
           "title": "Gaz w transformacji energetycznej na lata. Prezes PSE: To „wieczna tranzycja” niezbędna dla bezpieczeństwa",
           "url": "https://energetyka24.com/polityka/wydarzenia/gaz-w-transformacji-energetycznej-na-lata-prezes-pse-to-wieczna-tranzycja-niezbedna-dla-bezpieczenstwa",
           "source": "Energetyka24",
           "publishedAt": "2026-11-18T13:54:45.000Z"
-        },
-        {
-          "id": "a5db68a3",
-          "title": "Orlen i węgierski MVM ONEnergy planują współpracę przy dostawach gazu",
-          "url": "https://energetyka24.com/surowce/gaz/orlen-i-wegierski-mvm-onenergy-planuja-wspolprace-przy-dostawach-gazu",
-          "source": "Energetyka24",
-          "publishedAt": "2026-11-18T11:56:20.000Z"
-        },
-        {
-          "id": "f03da196",
-          "title": "Operatorzy gazowi z Polski, Czech, Słowacji i Węgier zacieśniają współpracę regionalną",
-          "url": "https://energetyka24.com/energetyka/elektroenergetyka/operatorzy-gazowi-z-polski-czech-slowacji-i-wegier-zaciesniaja-wspolprace-regionalna",
-          "source": "Energetyka24",
-          "publishedAt": "2026-11-18T11:34:31.000Z"
-        },
-        {
-          "id": "961ee0c9",
-          "title": "Kierowcy zapłacą mniej za paliwo. Niższe ceny maksymalne",
-          "url": "https://energetyka24.com/surowce/ropa/kierowcy-zaplaca-mniej-za-paliwo-nizsze-ceny-maksymalne",
-          "source": "Energetyka24",
-          "publishedAt": "2026-11-18T11:10:51.000Z"
         }
       ]
     }
