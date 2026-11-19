@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-16T13:01:23.748Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 14:00 a 15:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza pogarsza się. Na ogłoszenie dla tych godzin jest już za późno.",
-      "outlook": "W pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-16T13:15:48.374Z",
       "prompt": 57,
       "accepted": false,
@@ -2492,6 +2484,14 @@
       "headline": "Dziś margines na tle ostatnich trzydziestu dni wypada powyżej typowego zakresu przez siedem godzin, a w środę 25 listopada zapotrzebowanie rośnie powyżej normy.",
       "body": "W środę 25 listopada zapotrzebowanie rośnie powyżej normy, przez co margines o 15:00 spada niżej niż zwykle o tej porze. Do godzin objętych przywołaniem zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Operator może ogłosić przywołanie między 07:00 a 10:00 w środę 25 listopada, a w pozostałe dni poza dzisiejszym popołudniem oraz wtorkiem 24 listopada nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-19T13:01:26.205Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę 25 listopada między 07:00 a 10:00 oraz między 12:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Zapotrzebowanie wzrośnie powyżej normy między 14:00 a 15:00. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 24 listopada między 08:00 a 22:00 oraz jutro między 07:00 a 10:00 i między 13:00 a 22:00 rezerwa nie pokryje wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
