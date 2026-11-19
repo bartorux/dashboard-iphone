@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-16T05:45:44.925Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 07:00 a 09:00 oraz 14:00 a 15:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "Dziś między 07:00 a 08:00 Kompas Energetyczny PSE zaleca oszczędzanie. Do tych godzin jest już za późno na ogłoszenie.",
-      "outlook": "Jutro między 15:00 a 17:00 nadwyżka spadnie poniżej progu 1100 MW, a w środę, czwartek i piątek nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-16T06:01:13.074Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 15:00 a 17:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "Dziś między 07:00 a 09:00 oraz między 14:00 a 15:00 margines jest ujemny, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator ma wybór. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 07:00 a 08:00.",
-      "outlook": "W czwartek między 16:00 prognoza jeszcze się ustala, natomiast w środę i piątek nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-16T06:15:50.710Z",
       "prompt": 57,
       "accepted": false,
@@ -2490,6 +2474,23 @@
       "headline": "W środę 25 listopada między 09:00 a 10:00 oraz między 16:00 a 17:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Zapotrzebowanie wzrośnie ponad normę, a produkcja z fotowoltaiki spadnie poniżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś, jutro, w poniedziałek 23 listopada, we wtorek 24 listopada oraz w środę 25 listopada w pozostałych wskazanych godzinach operator ma wybór, a poza nimi Kompas Energetyczny PSE zaleca oszczędzanie dziś od 12:00 do 15:00."
+    },
+    {
+      "at": "2026-11-19T06:01:14.157Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina 16:00 spoza faktów",
+      "headline": "W środę 25 listopada między 14:00 a 16:00 rezerwa spadnie najbardziej w całym okresie.",
+      "body": "Zapotrzebowanie wzrośnie ponad normę. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś między 07:00 a 09:00 oraz między 11:00 a 15:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, a Kompas Energetyczny PSE zaleca oszczędzanie między 12:00 a 15:00, podczas gdy w pozostałe dni i godziny margines ułoży się różnie."
+    },
+    {
+      "at": "2026-11-19T06:01:14.157Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę 25 listopada między 07:00 a 10:00 oraz między 13:00 a 18:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
+      "body": "W środę 25 listopada zapotrzebowanie urośnie powyżej normy i margines spadnie najniżej o 15:00. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 12:00 a 15:00.",
+      "outlook": "Dziś, jutro oraz we wtorek 24 listopada nadwyżka trzyma się powyżej progu 1100 MW i operator ma wybór, natomiast w poniedziałek 23 listopada nic nie zapowiada przywołania."
     }
   ]
 }
