@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-17T18:01:21.012Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W czwartek między 14:00 a 21:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW.",
-      "body": "W czwartek margines jest poniżej normy przez sześć godzin. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 07:00 a 09:00 oraz między 15:00 a 18:00 operator może ogłosić przywołanie, a w piątek prognoza wciąż się ustala, podczas gdy w poniedziałek 23 listopada nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-17T18:15:51.522Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W czwartek między 14:00 a 21:00 rezerwa spadnie poniżej wymaganego poziomu, a nadwyżka utrzyma się powyżej progu 1100 MW.",
-      "body": "W piątek prognoza jeszcze się ustala i raz pokryje wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę między 07:00 a 09:00 oraz 15:00 a 18:00 operator może ogłosić przywołanie, a w poniedziałek 23 listopada nic go nie zapowiada."
-    },
-    {
       "at": "2026-11-17T18:31:06.965Z",
       "prompt": 57,
       "accepted": true,
@@ -2509,6 +2493,24 @@
       "headline": "W środę 25 listopada między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "W środę 25 listopada zapotrzebowanie wzrośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 23 listopada, we wtorek 24 listopada, w środę 25 listopada i w czwartek 26 listopada margines spada poniżej typowego zakresu w wielu godzinach, a dzisiejsza doba mija spokojnie."
+    },
+    {
+      "at": "2026-11-20T17:31:07.647Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni między 20:00 a 22:00, a rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Dziś między 20:00 a 22:00 rezerwa spada poniżej typowego pasma z ostatnich trzydziestu dni. Na ogłoszenie jest już za późno.",
+      "outlook": "W poniedziałek, wtorek, środę i czwartek operator może ogłosić przywołanie w godzinach między 07:00 a 22:00, a poza tymi dniami rezerwa utrzymuje się w normie."
+    },
+    {
+      "at": "2026-11-20T17:31:07.647Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: Dziś między 20:00 a 22:00 rezerwa spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100",
+      "body": "",
+      "outlook": ""
     }
   ]
 }
