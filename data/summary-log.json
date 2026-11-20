@@ -4,15 +4,6 @@
       "at": "2026-11-17T19:01:22.009Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "nadwyżka nad progiem podana jako powód przywołania",
-      "headline": "Dziś między 20:00 a 21:00 operator może ogłosić przywołanie, bo nadwyżka utrzymuje się powyżej próg 1100 MW, choć rezerwa nie pokrywa wymaganego poziomu.",
-      "body": "W piątek prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Na ogłoszenie może jeszcze nadejść czas w czwartek, piątek i jutro.",
-      "outlook": "W poniedziałek 23 listopada nic nie zapowiada przywołania w całym okresie."
-    },
-    {
-      "at": "2026-11-17T19:01:22.009Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "pole outlook dłuższe niż 300 znaków",
       "headline": "Dziś między 20:00 a 21:00 operator może ogłosić przywołanie, choć nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez jedną godzinę. Na ogłoszenie jest już za późno, bo do tych godzin zostało mniej niż osiem godzin.",
@@ -2510,6 +2501,14 @@
       "headline": "W środę 25 listopada operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW między 07:00 a 10:00.",
       "body": "Zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W kolejnych dniach, od poniedziałku do czwartku, nadwyżka utrzymuje się powyżej progu 1100 MW, pozostawiając operatorowi wybór, natomiast dzisiaj na ogłoszenie jest już za późno."
+    },
+    {
+      "at": "2026-11-20T18:31:07.441Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę 25 listopada między 07:00 a 10:00 oraz między 13:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Margines o 15:00 spadnie mocniej niż zwykle o tej porze, bo zapotrzebowanie urośnie powyżej normy. Ogłoszenie może jeszcze nadejść w tych godzinach, do których zostało jeszcze ponad osiem godzin.",
+      "outlook": "Dziś między 19:00 a 22:00, w poniedziałek 23 listopada między 08:00 a 21:00, we wtorek 24 listopada między 08:00 a 21:00 oraz w czwartek 26 listopada między 07:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW."
     }
   ]
 }
