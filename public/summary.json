@@ -1,8 +1,8 @@
 {
-  "headline": "W środę 25 listopada między 07:00 a 10:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-  "body": "W środę 25 listopada margines o 15:00 spada najniżej w całej dobie, bo zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść. Ocena na poniedziałek 23 listopada, wtorek 24 listopada, środę 25 listopada i czwartek 26 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W poniedziałek 23 listopada, wtorek 24 listopada i czwartek 26 listopada operator ma wybór i może ogłosić przywołanie, podczas gdy w pozostałym okresie nic nie zapowiada przywołania.",
-  "generatedAt": "2026-11-20T21:01:19.689Z",
+  "headline": "W środę 25 listopada między 07:00 a 10:00 nadwyżka spada poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
+  "body": "W środę 25 listopada zapotrzebowanie rośnie powyżej normy, przez co margines o 15:00 spada silniej niż zwykle na tle ostatnich trzydziestu dni. Do wyznaczonych godzin wciąż zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Ocena na poniedziałek 23 listopada, wtorek 24 listopada, środę 25 listopada i czwartek 26 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W poniedziałek 23 listopada, we wtorek 24 listopada oraz w czwartek 26 listopada operator zachowuje wybór, a w pozostałych dniach rezerwa stabilnie pokrywa wymagany poziom.",
+  "generatedAt": "2026-11-20T21:15:55.174Z",
   "dates": [
     "2026-11-20",
     "2026-11-23",
@@ -10,6 +10,6 @@
     "2026-11-25",
     "2026-11-26"
   ],
-  "assessment": "2026-11-20|R|none|200|22:00|0|1|0|||-|-;2026-11-23|R|moderate|-700|12:00|0|3|8|moderate:07:00-21:00||X|P;2026-11-24|R|moderate|-1300|13:00|3|10|8|moderate:08:00-10:00,moderate:11:00-21:00||X|P;2026-11-25|R|high|-3400|15:00|0|16|5|high:07:00-10:00,moderate:10:00-12:00,high:12:00-21:00,moderate:21:00-22:00||X|P;2026-11-26|R|moderate|-1700|08:00|1|11|1|moderate:07:00-10:00,moderate:11:00-21:00||X|P#zapotrzebowanie powyżej normy/below/-#v57",
+  "assessment": "2026-11-20|R|none|200|22:00|0|1|0|||-|-;2026-11-23|R|moderate|-700|12:00|0|3|8|moderate:07:00-21:00||X|P;2026-11-24|R|moderate|-1300|13:00|3|10|8|moderate:08:00-10:00,moderate:11:00-21:00||X|P;2026-11-25|R|high|-3400|15:00|0|15|5|high:07:00-10:00,moderate:10:00-12:00,high:12:00-21:00,moderate:21:00-22:00||X|P;2026-11-26|R|moderate|-1700|08:00|1|11|1|moderate:07:00-10:00,moderate:11:00-21:00||X|P#zapotrzebowanie powyżej normy/below/-#v57",
   "model": "gemini-3.5-flash-lite"
 }
