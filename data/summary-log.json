@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-17T12:45:44.470Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 13:00 a 19:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W czwartek prognoza wciąż się ustala. Ogłoszenie może jeszcze nadejść w czwartek między 14:00 a 21:00 oraz w piątek między 16:00 a 18:00.",
-      "outlook": "W środę nic nie zapowiada przywołania, a w poniedziałek 23 listopada rezerwa pokryje wymagany poziom przez całą dobę."
-    },
-    {
-      "at": "2026-11-17T13:01:15.252Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W czwartek między 14:00 a 21:00 rezerwa nie pokryje wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
-      "body": "W czwartek przebieg doby nie odbiega od normy, a margines o 17:00 spada niżej niż zwykle na tle ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 14:00 a 17:00.",
-      "outlook": "W piątek między 16:00 a 18:00 operator zachowuje taki sam wybór, a w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-17T13:15:52.034Z",
       "prompt": 57,
       "accepted": true,
@@ -2504,6 +2488,23 @@
       "headline": "W środę 25 listopada między 07:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza pogarsza się w środę 25 listopada. Ogłoszenie może jeszcze nadejść w tych godzinach, do których zostało ponad osiem godzin.",
       "outlook": "W poniedziałek 23 listopada nic nie zapowiada przywołania, a w pozostałych dniach rezerwa miejscami spada poniżej wymaganego poziomu, przy czym we wtorek 24 listopada między 08:00 a 21:00 oraz w czwartek 26 listopada między 07:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW."
+    },
+    {
+      "at": "2026-11-20T12:01:16.612Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Dziś między 13:00 a 15:00 oraz między 19:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW. Operator może ogłosić przywołanie, ale nie musi.",
+      "outlook": "We wtorek 24 listopada między 08:00 a 10:00 i między 11:00 a 21:00 oraz w czwartek 26 listopada między 07:00 a 21:00 rezerwa również nie pokrywa wymaganego poziomu przy nadwyżce powyżej progu 1100 MW, w środę 25 listopada między 07:00 a 21:00 nadwyżka spada poniżej tego progu, a w poniedziałek 23 listopada nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-20T12:01:16.612Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Dziś rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi. Na ogłoszenie jest już za późno, bo do tych godzin zostało mniej niż osiem godzin.",
+      "outlook": "We wtorek 24 listopada między 08:00 a 10:00 oraz między 11:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW, podczas gdy w poniedziałek 23 listopada nic nie zapowiada przywołania, a w pozostałe dni operator może ogłosić przywołanie."
     }
   ]
 }
