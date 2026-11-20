@@ -2467,6 +2467,23 @@
       "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Dziś między 07:00 a 22:00 margines spada poniżej wymaganego poziomu, lecz nadwyżka utrzymuje się powyżej progu 1100 MW. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek nic nie zapowiada przywołania, we wtorek między 08:00 a 22:00 operator może ogłosić przywołanie, w środę między 07:00 a 20:00 nadwyżka spada poniżej progu 1100 MW, a w czwartek między 07:00 a 20:00 rezerwa ponownie nie pokrywa wymaganego poziomu."
+    },
+    {
+      "at": "2026-11-20T02:15:53.923Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Dziś między 08:00 a 22:00 margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 11:00 a 13:00. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek nic nie zapowiada przywołania, we wtorek między 08:00 a 22:00 oraz w czwartek między 07:00 a 20:00 operator może ogłosić przywołanie, a w środę między 07:00 a 20:00 nadwyżka spada poniżej progu 1100 MW."
+    },
+    {
+      "at": "2026-11-20T02:15:53.923Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 08:00 a 22:00 margines spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, co pozwoli operatorowi zdecydować, czy ogłosić przywołanie.",
+      "body": "Kompas Energetyczny PSE zaleca oszczędzanie między 11:00 a 13:00. Ogłoszenie może jeszcze nadejść do tych godzin.",
+      "outlook": "W poniedziałek nic nie zapowiada przywołania, natomiast we wtorek między 08:00 a 22:00, w środę między 07:00 a 22:00 oraz w czwartek między 07:00 a 20:00 operator zachowuje wybór co do ogłoszenia przywołania."
     }
   ]
 }
