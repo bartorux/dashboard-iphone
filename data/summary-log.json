@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-18T17:31:06.711Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
-      "headline": "Dziś margines trzyma się w typowym zakresie, ale jutro między 13:00 a 14:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 12:00 a 15:00.",
-      "outlook": "W piątek i we wtorek 24 listopada operator może ogłosić przywołanie między 07:00 a 09:00, 13:00 a 21:00 oraz między 14:00 a 21:00, podczas gdy w poniedziałek 23 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-18T17:45:50.483Z",
       "prompt": 57,
       "accepted": false,
@@ -2540,6 +2531,14 @@
       "headline": "W środę 25 listopada między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
       "body": "W środę 25 listopada zapotrzebowanie urośnie powyżej normy, a margines o 15:00 spadnie niżej niż zwykle o tej porze. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 23 listopada między 07:00 a 21:00, we wtorek 24 listopada między 07:00 a 22:00, w środę 25 listopada między 10:00 a 12:00 oraz od 21:00 do 22:00, w czwartek 26 listopada między 07:00 a 21:00 oraz w piątek 27 listopada między 07:00 a 10:00 i od 13:00 a 21:00 operator zachowa wybór, a poza tymi godzinami rezerwa pokryje wymagany poziom."
+    },
+    {
+      "at": "2026-11-21T15:15:47.775Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę 25 listopada między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
+      "body": "Zapotrzebowanie wzrośnie powyżej normy, co sprawi, że margines o 15:00 spadnie niżej niż zwykle o tej porze na tle ostatnich trzydziestu dni. Do tych godzin zostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 23 listopada, we wtorek 24 listopada, w czwartek 26 listopada oraz w piątek 27 listopada nadwyżka utrzyma się powyżej progu 1100 MW, a operator zachowa wybór co do ewentualnego przywołania."
     }
   ]
 }
