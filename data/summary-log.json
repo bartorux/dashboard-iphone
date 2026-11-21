@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-18T09:31:08.154Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Przywołanie wchodzi w grę, a najtrudniejsza sytuacja czeka jutro między 14:00 a 21:00, kiedy nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W środę, piątek oraz we wtorek 24 listopada przywołanie pozostaje w grze w wyznaczonych porach, natomiast w poniedziałek 23 listopada nic go nie zapowiada."
-    },
-    {
-      "at": "2026-11-18T09:31:08.154Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś, jutro, w piątek i we wtorek operator może ogłosić przywołanie, a w poniedziałek nic go nie zapowiada.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek rezerwa w pełni pokrywa wymagany poziom, podczas gdy w pozostałe dni wąski margines lub jego brak dotyka wyznaczonych godzin."
-    },
-    {
       "at": "2026-11-18T09:45:46.423Z",
       "prompt": 57,
       "accepted": true,
@@ -2528,6 +2511,24 @@
       "headline": "Dziś margines jest znacznie poniżej typowego zakresu z ostatnich trzydziestu dni, a Kompas Energetyczny PSE zaleca oszczędzanie między 15:00 a 17:00.",
       "body": "W poniedziałek 23 listopada rezerwa spadnie poniżej wymaganego poziomu, ale nadwyżka utrzyma się powyżej progu 1100 MW między 07:00 a 21:00. Ogłoszenie może jeszcze nadejść w tych godzinach.",
       "outlook": "W środę 25 listopada zapotrzebowanie wzrośnie ponad normę, a w poniedziałek 23, wtorek 24, środę 25, czwartek 26 i piątek 27 listopada operator zachowa wybór lub nadwyżka spadnie poniżej progu 1100 MW."
+    },
+    {
+      "at": "2026-11-21T07:31:03.020Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Margines jest niższy niż zwykle o tej porze na tle ostatnich trzydziestu dni.",
+      "body": "W środę dwudziestego piątego listopada zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 10:00 oraz od 12:00 do 21:00.",
+      "outlook": "W poniedziałek dwudziestego trzeciego listopada między 07:00 a 21:00, we wtorek dwudziestego czwartego listopada między 07:00 a 22:00, w czwartek dwudziestego szóstego listopada między 07:00 a 21:00 oraz w piątek dwudziestego siódmego listopada w wybranych godzinach operator zachowuje wybór, a w pozostałe dni i godziny nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-21T07:31:03.020Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "W najbliższych dniach margines rezerwy w wielu godzinach spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "W środę dwudziestego piątego listopada zapotrzebowanie urośnie powyżej normy. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 22:00.",
+      "outlook": "W poniedziałek dwudziestego trzeciego listopada między 07:00 a 21:00, we wtorek dwudziestego czwartego listopada między 07:00 a 22:00, w środę dwudziestego piątego listopada między 07:00 a 22:00, w czwartek dwudziestego szóstego listopada między 07:00 a 21:00 oraz w piątek dwudziestego siódmego listopada w wybranych godzinach między 08:00 a 18:00 operator ma wybór, a w pozostałych okresach nic nie zapowiada przywołania."
     }
   ]
 }
