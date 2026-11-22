@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-19T21:45:51.949Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina 14:00 spoza faktów",
-      "headline": "W środę 25 listopada między 14:00 a 16:00 rezerwa spadnie najniżej w całym okresie.",
-      "body": "Prognoza pogarsza się w środę 25 listopada. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 24 listopada między 08:00 a 22:00 operator może ogłosić przywołanie, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-19T22:01:18.365Z",
       "prompt": 57,
       "accepted": true,
@@ -2554,6 +2545,14 @@
       "headline": "Przez większość nadchodzących dób margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "We wtorek 24 listopada prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 24 listopada między 09:00 a 10:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałych dniach rezerwa również obniża się miejscami poniżej wymaganego poziomu."
+    },
+    {
+      "at": "2026-11-22T13:01:25.482Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę 25 listopada między 07:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 24 listopada między 07:00 a 22:00, w czwartek 26 listopada między 07:00 a 22:00 oraz w piątek 27 listopada między 07:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW i operator ma wybór, a w pozostałych dniach nic nie zapowiada przywołania."
     }
   ]
 }
