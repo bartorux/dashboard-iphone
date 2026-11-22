@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-19T07:15:54.695Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś rezerwa w krajowej sieci elektroenergetycznej waha się wokół typowych wartości z ostatnich trzydziestu dni.",
-      "body": "W środę dwudziestego piątego listopada między 13:00 a 14:00 zapotrzebowanie rośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek dwudziestego trzeciego listopada, we wtorek dwudziestego czwartego listopada oraz w środę dwudziestego piątego listopada rezerwa w niektórych godzinach nie pokrywa wymaganego poziomu, a w poniedziałek dwudziestego trzeciego listopada nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-19T07:31:05.562Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś rezerwa w krajowej sieci elektroenergetycznej spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "W środę dwudziestego piątego listopada margines o godzinie piętnastej spada niżej niż zwykle o tej porze, bo zapotrzebowanie rośnie powyżej normy. Kompas Energetyczny PSE zaleca oszczędzanie między godziną trzynastą a czternastą.",
-      "outlook": "Operator może ogłosić przywołanie między godziną trzynastą a czternastą w środę dwudziestego piątego listopada, podczas gdy w poniedziałek dwudziestego trzeciego listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-19T07:45:49.538Z",
       "prompt": 57,
       "accepted": true,
@@ -2541,6 +2525,24 @@
       "headline": "Wtorek 24 listopada między 12:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza na wtorek 24 listopada pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę 25 listopada nadwyżka również spadnie poniżej progu 1100 MW, a w pozostałe dni operator zachowa wybór."
+    },
+    {
+      "at": "2026-11-22T00:15:51.235Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "możliwość przywołania podana jak nakaz",
+      "headline": "Wtorek 24 listopada między 12:00 a 13:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W śrubach systemu trzyma się to przez cały okres, a w czwartek i piątek margines ujemny wystąpi rano."
+    },
+    {
+      "at": "2026-11-22T00:15:51.235Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "nazwa dnia w złym przypadku",
+      "headline": "Wtorek 24 listopada między 12:00 a 13:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie i straci wybór, który daje mu ten próg.",
+      "body": "Prognoza pogarsza się we wtorek 24 listopada. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środa 25 listopada nadwyżka również spadnie poniżej progu 1100 MW w licznych godzinach, natomiast w pozostałe dni od poniedziałku do piątku operator zachowuje wybór."
     }
   ]
 }
