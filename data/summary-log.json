@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-19T11:45:48.492Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 14:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W środę 25 listopada między 07:00 a 10:00 oraz między 12:00 a 20:00 nadwyżka również utrzyma się poniżej progu 1100 MW, a w poniedziałek 23 listopada nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-19T12:01:17.088Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś margines wypada powyżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach od czternastej do dwudziestej pierwszej.",
-      "outlook": "W poniedziałek nic nie zapowiada przywołania, a we wtorek oraz środę operator może je ogłosić między ósmą a dwudziestą drugą oraz siódmą a dwudziestą pierwszą."
-    },
-    {
       "at": "2026-11-19T12:15:56.529Z",
       "prompt": 57,
       "accepted": false,
@@ -2546,6 +2530,23 @@
       "headline": "W najbliższych dniach operator może ogłosić przywołanie, a nadwyżka miejscami spadnie poniżej progu 1100 MW.",
       "body": "We wtorek 24 listopada prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę 25 listopada nadwyżka spada poniżej progu w licznych godzinach między 07:00 a 22:00, podczas gdy w czwartek 26 listopada i w piątek 27 listopada trzyma się powyżej tego progu, a dziś nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-22T05:01:18.717Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina w nagłówku bez nazwy dnia",
+      "headline": "W jutrzejszych godzinach od 07:00 do 19:00 operator może ogłosić przywołanie, bo choć rezerwa nie pokrywa wymaganego poziomu, to nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza na wtorek 24 listopada pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
+      "outlook": "We wtorek 24 listopada między 14:00 a 15:00 oraz między 20:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, w środę 25 listopada i piątek 27 listopada również pojawią się godziny z nadwyżką poniżej progu, a w czwartek 26 listopada operator zachowa wybór przez cały dzień."
+    },
+    {
+      "at": "2026-11-22T05:01:18.717Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Jutro między 07:00 a 19:00 rezerwa nie pokryje wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW, więc operator zyska pełny wybór.",
+      "body": "Prognoza na jutro pogorszy się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 24 listopada między 14:00 a 15:00 oraz między 20:00 a 21:00, w środę 25 listopada przez wiele godzin, a w czwartek 26 listopada i piątek 27 listopada nadwyżka utrzyma się powyżej progu 1100 MW."
     }
   ]
 }
