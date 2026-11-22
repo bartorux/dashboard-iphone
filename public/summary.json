@@ -1,8 +1,8 @@
 {
-  "headline": "We wtorek 24 listopada operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW między 11:00 a 21:00.",
-  "body": "Prognoza pogarsza się we wtorek 24 listopada. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 24 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "We wtorek 24 listopada między 11:00 a 21:00 nadwyżka jest poniżej progu 1100 MW, podczas gdy w pozostałe dni okresu przywołanie również wchodzi w grę.",
-  "generatedAt": "2026-11-22T14:31:08.478Z",
+  "headline": "W najbliższych dniach przywołanie wchodzi w grę, a w części godzin nadwyżka spada poniżej progu 1100 MW.",
+  "body": "Prognoza na jutro jeszcze się ustala. Ogłoszenie może jeszcze nadejść. Ocena na wtorek 24 listopada i środę 25 listopada jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek 24 listopada między 09:00 a 10:00, w środę 25 listopada między 07:00 a 10:00 oraz między 12:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałych dniach operator zachowuje wybór.",
+  "generatedAt": "2026-11-22T14:46:02.778Z",
   "dates": [
     "2026-11-22",
     "2026-11-23",
@@ -11,6 +11,6 @@
     "2026-11-26",
     "2026-11-27"
   ],
-  "assessment": "2026-11-22|W|none|800|17:00|0|0|8|||-|-;2026-11-23|R|none|200|12:00|4|0|12|||-|-;2026-11-24|R|high|-2800|12:00|0|15|7|moderate:07:00-11:00,high:11:00-21:00,moderate:21:00-22:00||X|P;2026-11-25|R|high|-4100|15:00|0|17|3|high:07:00-10:00,moderate:10:00-12:00,high:12:00-21:00,moderate:21:00-22:00||X|P;2026-11-26|R|moderate|-2200|09:00|0|15|0|moderate:07:00-22:00||X|P;2026-11-27|R|moderate|-1500|14:00|1|11|6|moderate:07:00-21:00||X|P#-/below/prognoza pogarsza się#v57",
+  "assessment": "2026-11-22|W|none|600|17:00|0|0|8|||-|-;2026-11-23|R|moderate|-500|07:00|4|0|11|moderate:07:00-09:00,moderate:10:00-11:00|K2:07:00-08:00|-|-;2026-11-24|R|high|-2800|12:00|0|15|7|moderate:07:00-09:00,high:09:00-10:00,moderate:10:00-11:00,high:11:00-21:00,moderate:21:00-22:00||X|P;2026-11-25|R|high|-4100|15:00|0|16|3|high:07:00-10:00,moderate:10:00-12:00,high:12:00-21:00,moderate:21:00-22:00||X|P;2026-11-26|R|moderate|-2200|09:00|0|15|0|moderate:07:00-22:00||X|P;2026-11-27|R|moderate|-1500|14:00|1|11|6|moderate:07:00-21:00||X|P#-/below/prognoza jeszcze się ustala — raz pokrywa wymagany poziom, raz nie#v57",
   "model": "gemini-3.5-flash-lite"
 }
