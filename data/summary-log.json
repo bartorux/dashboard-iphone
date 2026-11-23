@@ -5,15 +5,6 @@
       "prompt": 57,
       "accepted": false,
       "reason": "nadwyżka nad progiem podana jako powód przywołania",
-      "headline": "Dziś margines w kilku godzinach spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Dziś między 13:00 a 14:00 oraz między 19:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie. Do tych godzin zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
-      "outlook": "We wtorek i w środę nadwyżka spada w wielu godzinach poniżej progu 1100 MW, natomiast w poniedziałek i w czwartek nic nie zapowiada przywołania poza wskazanymi przedziałami."
-    },
-    {
-      "at": "2026-11-20T12:15:58.620Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "nadwyżka nad progiem podana jako powód przywołania",
       "headline": "Dziś rezerwa spada poniżej typowego pasma z ostatnich trzydziestu dni.",
       "body": "Dziś między 13:00 a 14:00 oraz między 19:00 a 22:00 margines nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie. Na ogłoszenie dla dzisiejszych godzin jest już za późno.",
       "outlook": "We wtorek i w środę operator może ogłosić przywołanie, a w pozostałe dni nic go nie zapowiada."
@@ -2554,6 +2545,14 @@
       "headline": "Jutro między 11:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś między 07:00 a 13:00, w środę, czwartek i piątek operator może ogłosić przywołanie, a w pozostałe dni okresu rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-23T04:45:43.892Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś operator może ogłosić przywołanie, ale ma wybór, bo nadwyżka trzyma się powyżej progu 1100 MW.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach od 11:00 do 21:00.",
+      "outlook": "W środę, czwartek i piątek przywołanie również wchodzi w grę, a w pozostałe dni nic go nie zapowiada."
     }
   ]
 }
