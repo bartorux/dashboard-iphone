@@ -4,15 +4,6 @@
       "at": "2026-11-20T22:01:20.004Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "możliwość przywołania podana jak nakaz",
-      "headline": "W środę 25 listopada między 07:00 a 10:00 nadwyżka spadnie poniżej próg 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "W środę 25 listopada zapotrzebowanie urośnie powyżej normy. Do tych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 23 listopada, we wtorek 24 listopada i w czwartek 26 listopada operator ma wybór, a w pozostałych okresach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-20T22:01:20.004Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "pole outlook dłuższe niż 300 znaków",
       "headline": "W środę 25 listopada między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
       "body": "W środę 25 listopada margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni, bo zapotrzebowanie urośnie powyżej normy. Do wskazanych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -2551,6 +2542,14 @@
       "headline": "Dziś margines trzyma się powyżej typowego zakresu z ostatnich trzydziestu dni, ale jutro w godzinach między 08:00 a 21:00 spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
       "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "We środę między 07:00 a 22:00 oraz w piątek między 13:00 a 14:00 i między 16:00 a 17:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałe dni i godziny operator ma wybór."
+    },
+    {
+      "at": "2026-11-23T12:31:09.990Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś margines trzyma się powyżej typowego zakresu z ostatnich trzydziestu dni, ale w środę operator może ogłosić przywołanie, a nadwyżka jest poniżej 1100 MW w godzinach 07:00-22:00.",
+      "body": "Dziś prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę, czwartek i piątek operator może ogłosić przywołanie, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
