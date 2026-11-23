@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-21T04:31:04.021Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "W środę 25 listopada przywołanie wchodzi w grę, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "W środę 25 listopada zapotrzebowanie rośnie powyżej normy, co obniża margines. Ogłoszenie może jeszcze nadejść w godzinach między 07:00 a 22:00.",
-      "outlook": "W poniedziałek 23 listopada między 07:00 a 21:00, we wtorek 24 listopada między 07:00 a 22:00, w środę 25 listopada między 07:00 a 22:00, w czwartek 26 listopada między 07:00 a 21:00 oraz w piątek 27 listopada między 07:00 a 20:00 operator ma wybór i może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 15:00 a 17:00."
-    },
-    {
       "at": "2026-11-21T04:45:52.662Z",
       "prompt": 57,
       "accepted": false,
@@ -2547,6 +2538,14 @@
       "headline": "Dziś rezerwa raz pokrywa wymagany poziom, raz nie, a jutro między 07:00 a 12:00, między 15:00 a 20:00 oraz między 21:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Dziś prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W środę między 07:00 a 22:00 nadwyżka spada poniżej progu 1100 MW, a w czwartek i piątek między 07:00 a 22:00 nad"
+    },
+    {
+      "at": "2026-11-23T21:15:53.981Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę między 16:00 a 17:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Prognoza na dziś jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do podanych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może nadejść.",
+      "outlook": "W czwartek między 07:00 a 22:00 oraz w piątek między 07:00 a 22:00 nadwyżka utrzyma się powyżej progu 1100 MW, a w pozostałe dni nic nie zapowiada przywołania."
     }
   ]
 }
