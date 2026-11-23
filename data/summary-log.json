@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-21T00:45:48.239Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś między 15:00 a 17:00 Kompas Energetyczny PSE zaleca oszczędzanie energii, choć rezerwa pokrywa wymagany poziom.",
-      "body": "W poniedziałek 23 listopada zapotrzebowanie przewyższy normę, przez co margines o 12:00 spadnie poniżej typowego zakresu. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 24 listopada, środę 25 listopada, czwartek 26 listopada oraz piątek 27 listopada rezerwa w wybranych godzinach nie pokryje wymaganego poziomu, a w pozostałe dni okresu sytuacja nie przyniesie takich spadków."
-    },
-    {
-      "at": "2026-11-21T00:45:48.239Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Dziś między 15:00 a 17:00 Kompas Energetyczny PSE zaleca oszczędzanie, a w pozostałych godzinach nic nie zapowiada przywołania.",
-      "body": "W środę 25 listopada zapotrzebowanie urośnie powyżej normy, więc rezerwa spadnie mocniej niż zwykle o tej porze. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 23 listopada między 07:00 a 21:00, we wtorek 24 listopada między 07:00 a 22:00, w środę 25 listopada między 07:00 a 22:00, w czwartek 26 listopada między 07:00 a 21:00 oraz w piątek 27 listopada między 07:00 a 10:00 i 12:00 a 21:00 nadwyżka utrzyma się powyżej progu 1100 MW, dając operatorowi wybór."
-    },
-    {
       "at": "2026-11-21T01:01:11.637Z",
       "prompt": 57,
       "accepted": false,
@@ -2546,6 +2528,23 @@
       "headline": "Dziś margines wypada powyżej typowego zakresu z ostatnich trzydziestu dni, ale w kolejnych dobach sytuacja mocno się zmienia.",
       "body": "Prognoza na dzisiaj jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek, czwartek i w wybranym paśmie piątku operator ma wybór i może ogłosić przywołanie, natomiast"
+    },
+    {
+      "at": "2026-11-23T17:46:04.169Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAG",
+      "body": "",
+      "outlook": ""
+    },
+    {
+      "at": "2026-11-23T17:46:04.169Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni przez większość nadchodzącego okresu.",
+      "body": "Prognoza na dziś jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do jutrzejszych godzin z przywołaniem zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie jutro między 08:00 a 09:00.",
+      "outlook": "Przywołanie wchodzi w grę we wtorek między 08:00 a 12:00, między 16:00 a 19:00 oraz między 21:00 a 22:00, w środę między 07:00 a 22:00, w czwartek między 07:00 a 21:00, a także w piątek między 07:00 a 22:00."
     }
   ]
 }
