@@ -4,15 +4,6 @@
       "at": "2026-11-20T22:31:03.244Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę 25 listopada między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "W środę 25 listopada zapotrzebowanie urośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 23 listopada, we wtorek 24 listopada i w czwartek 26 listopada operator ma wybór w godzinach porannych i popołudniowych, a w pozostałe dni okresu nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-20T22:31:03.244Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "możliwość przywołania podana jak nakaz",
       "headline": "W środę 25 listopada między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
       "body": "W środę 25 listopada zapotrzebowanie wzrośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
@@ -2550,6 +2541,14 @@
       "headline": "Dziś margines wypada powyżej typowego zakresu z ostatnich trzydziestu dni.",
       "body": "W środę prognoza jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do godzin z ograniczeniami zostało jeszcze ponad osiem godzin.",
       "outlook": "W czwartek i piątek margines spada poniżej typowego zakresu przez większość doby, podczas gdy w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-23T13:01:20.029Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W środę między 07:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW.",
+      "body": "Dziś prognoza jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "W czwartek między 07:00 a 22:00 operator ma wybór, a w pozostałych dniach ujętych w prognozie sytuacja wygląda podobnie."
     }
   ]
 }
