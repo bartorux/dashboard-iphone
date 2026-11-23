@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-21T01:31:04.619Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę 25 listopada między 15:00 a 16:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a nadwyżka jest poniżej poziomu, który pozwalał mu je pominąć.",
-      "body": "W środę 25 listopada zapotrzebowanie urośnie powyżej normy. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 23 listopada, we wtorek 24 listopada, w środę 25 listopada, w czwartek 26 listopada i w piątek 27 listopada rezerwa nie pokryje wymaganego poziomu, a w pozostałych dniach nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-21T03:31:00.659Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę 25 listopada między 07:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej próg 1100 MW.",
-      "body": "Zapotrzebowanie rośnie ponad normę. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 23 listopada, we wtorek 24 listopada, w czwartek 26 listopada i w piątek 27 listopada operator ma wybór, a w pozostałe dni rezerwa w pełni pokrywa wymagany poziom."
-    },
-    {
       "at": "2026-11-21T04:15:49.329Z",
       "prompt": 57,
       "accepted": false,
@@ -2545,6 +2529,24 @@
       "headline": "NAGŁÓWEK: Dziś rezerwa pokrywa wymagany poziom, ale w jutrzejszych godzinach od 07:00 do 12:00 oraz od 15:00 do 22:00 rezerwa nie pokryje wymaganego poziomu, choć nadwyżka utrzyma się powyżej pro",
       "body": "",
       "outlook": ""
+    },
+    {
+      "at": "2026-11-23T20:15:53.950Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "Dziś rezerwa raz pokrywa wymagany poziom, raz nie, a prognoza jeszcze się ustala.",
+      "body": "W jutrzejszym dniu rezerwa nie pokryje wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW między 07:00 a 12:00 oraz między 15:00 a 22:00. Kompas Energetyczny PSE zaleca oszczędzanie między 08:00 a 09:00.",
+      "outlook": "W środę operator może ogłosić przywołanie między 07:00 a 22:00, natomiast w czwartek i piątek operator ma wybór między 07:00 a 22:00."
+    },
+    {
+      "at": "2026-11-23T20:15:53.950Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "jeden zakres godzin rozciągnięty na kilka dni",
+      "headline": "Dziś rezerwa raz pokrywa wymagany poziom, raz nie, a jutro między 07:00 a 12:00 oraz między 15:00 a 22:00 operator może ogłosić przywołanie, choć ma wybór.",
+      "body": "Prognoza jeszcze się ustala. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W środę między 07:00 a 22:00 operator może ogłosić przywołanie, a w czwartek i piątek między 07:00 a 22:00 zachowa wybór w tej sprawie."
     }
   ]
 }
