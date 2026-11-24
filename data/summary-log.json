@@ -4,15 +4,6 @@
       "at": "2026-11-21T17:01:19.026Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "odpowiedz nie ma oczekiwanych pol",
-      "headline": "NAGŁÓWEK: W środę 25 listopada zap",
-      "body": "",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-21T17:01:19.026Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "pole outlook dłuższe niż 300 znaków",
       "headline": "W środę 25 listopada zapotrzebowanie przewyższy normę, przez co nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "W środę 25 listopada margines o 15:00 spadnie niżej niż zazwyczaj o tej porze z uwagi na zapotrzebowanie powyżej normy. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -2519,6 +2510,15 @@
       "headline": "Dziś między 15:00 a 19:00 oraz między 21:00 a 22:00 margines nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Dziś margines spada poniżej typowego zakresu przez jedną godzinę. Kompas Energetyczny PSE zaleca oszczędzanie między 15:00 a 16:00, a do tych godzin jest już za późno na ogłoszenie.",
       "outlook": "Jutro, w czwartek, w piątek oraz w poniedziałek 30 listopada przywołanie wchodzi w grę w wyznaczonych godzinach, natomiast w pozostałym okresie nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-24T15:16:06.539Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "Dziś między 16:00 a 19:00 oraz między 21:00 a 22:00 margines spadnie poniżej wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW. Nadwyżka powyżej tego progu pozwala operatorowi zachować wybór w kwestii ogłoszenia przywołania.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach od 21:00 do 22:00.",
+      "outlook": "W czwartek i piątek przywołanie wchodzi w grę w wielu godzinach, podczas gdy w poniedziałek 30 listopada nic go nie zapowiada. Kompas Energetyczny PSE zaleca"
     }
   ]
 }
