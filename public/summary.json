@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś, jutro, w czwartek i piątek operator może ogłosić przywołanie, bo rezerwa nie pokrywa wymaganego poziomu.",
-  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść między 07:00 a 22:00. Ocena na jutro, czwartek i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W poniedziałek 30 listopada nic nie zapowiada przywołania, a w pozostałe dni rezerwa wchodzi w grę przez całą dobę.",
-  "generatedAt": "2026-11-24T09:31:11.514Z",
+  "headline": "Dziś między 10:00 a 18:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka przekracza próg 1100 MW.",
+  "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść. Ocena na jutro, czwartek i piątek jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "W czwartek i piątek przywołanie wchodzi w grę przez kilkanaście godzin na dobę, natomiast w poniedziałek 30 listopada nic go nie zapowiada.",
+  "generatedAt": "2026-11-24T09:45:50.286Z",
   "dates": [
     "2026-11-24",
     "2026-11-25",
@@ -10,6 +10,6 @@
     "2026-11-27",
     "2026-11-30"
   ],
-  "assessment": "2026-11-24|R|moderate|-500|21:00|1|0|0|moderate:10:00-11:00,moderate:12:00-22:00|K2:10:00-12:00,K2:17:00-18:00|-|-;2026-11-25|R|high|-4600|14:00|0|0|0|high:07:00-22:00||X|-;2026-11-26|R|high|-3100|13:00|0|0|0|high:07:00-10:00,moderate:10:00-13:00,high:13:00-21:00,moderate:21:00-22:00||X|P;2026-11-27|R|moderate|-2400|13:00|0|0|0|moderate:07:00-22:00||X|P;2026-11-30|R|none|300|17:00|0|0|0|||X|P#-/unknown/prognoza pogarsza się#v57",
+  "assessment": "2026-11-24|R|moderate|-700|11:00|2|1|0|moderate:10:00-18:00|K2:10:00-12:00|-|-;2026-11-25|R|high|-3900|14:00|0|19|0|high:07:00-22:00||X|-;2026-11-26|R|high|-3300|13:00|0|21|0|high:07:00-10:00,moderate:10:00-12:00,high:12:00-21:00,moderate:21:00-22:00||X|P;2026-11-27|R|high|-2600|13:00|0|16|3|high:07:00-09:00,moderate:09:00-13:00,high:13:00-21:00,moderate:21:00-22:00||X|P;2026-11-30|R|none|300|17:00|0|0|19|||X|P#-/below/prognoza pogarsza się#v57",
   "model": "gemini-3.5-flash-lite"
 }
