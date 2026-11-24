@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-21T21:31:06.682Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "odpowiedz nie ma oczekiwanych pol",
-      "headline": "NAGŁÓWE",
-      "body": "",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-21T21:31:06.682Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "We wtorek 24 listopada między 12:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "We wtorek 24 listopada prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W poniedziałek 23 listopada między 07:00 a 21:00, w środę 25 listopada między 07:00 a 21:00, w czwartek 26 listopada między 07:00 a 21:00 oraz w piątek 27 listopada między 07:00 a 10:00 i między 11:00 a 21:00 nadwyżka utrzyma się powyżej progu 1100 MW, dając operatorowi wybór, a w pozostałe dni i godziny nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-21T21:46:01.806Z",
       "prompt": 57,
       "accepted": true,
@@ -2484,6 +2466,14 @@
       "headline": "W czwartek między 12:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W czwartek i piątek margines ujemny utrzymuje się przez większość doby, podczas gdy pozostałe dni przynoszą dodatnie rezerwy lub stabilne warunki."
+    },
+    {
+      "at": "2026-11-24T21:45:51.739Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W czwartek o 19:00 margines spadnie do najniższego poziomu, a nadwyżka utrzyma się poniżej progu 1100 MW.",
+      "body": "Prognoza poprawia się, a w czwartek i piątek ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro między 07:00 a 09:00 oraz w pozostałych dniach rezerwa kształtuje się w ujemnych przedziałach, przy czym Kompas Energetyczny PSE zaleca oszczędz"
     }
   ]
 }
