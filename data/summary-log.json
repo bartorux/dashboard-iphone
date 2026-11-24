@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-21T16:45:48.436Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę 25 listopada między 14:00 a 16:00 operator może ogłosić przywołanie, a nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "W środę 25 listopada zapotrzebowanie wzrośnie powyżej normy, przez co margines utrzyma się poniżej typowego poziomu z ostatnich trzydziestu dni. Do tych godzin dzieli nas ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 23 listopada między 07:00 a 21:00, we wtorek 24 listopada między 07:00 a 22:00, w czwartek 26 listopada między 07:00 a 21:00 oraz w piątek 27 listopada w wybranych godzinach operator zachowa swobodę decyzji, natomiast w pozostałe dni rezerwa nie przyniesie żadnych restrykcji."
-    },
-    {
       "at": "2026-11-21T17:01:19.026Z",
       "prompt": 57,
       "accepted": false,
@@ -2519,6 +2510,15 @@
       "headline": "W czwartek między 07:00 a 10:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
       "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Dzisiaj między 15:00 a 17:00 Kompas Energetyczny PSE zaleca oszczędzanie, a w pozostałych dniach operator może ogłosić przywołanie albo dysponuje wyborem, z wyjątkiem poniedziałku 30 listopada, gdzie nic nie zapowiada przywoł"
+    },
+    {
+      "at": "2026-11-24T14:45:56.021Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś między 15:00 a 19:00 oraz między 21:00 a 22:00 margines nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Dziś margines spada poniżej typowego zakresu przez jedną godzinę. Kompas Energetyczny PSE zaleca oszczędzanie między 15:00 a 16:00, a do tych godzin jest już za późno na ogłoszenie.",
+      "outlook": "Jutro, w czwartek, w piątek oraz w poniedziałek 30 listopada przywołanie wchodzi w grę w wyznaczonych godzinach, natomiast w pozostałym okresie nic nie zapowiada przywołania."
     }
   ]
 }
