@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-21T07:45:48.140Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Margines jest niższy niż zwykle na tle ostatnich trzydziestu dni.",
-      "body": "Dziś rezerwa spadnie w godzinach od 11:00 do 13:00 oraz od 15:00 do 17:00, a Kompas Energetyczny PSE zaleca wtedy oszczędzanie. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W poniedziałek 23 listopada między 07:00 a 21:00, we wtorek 24 listopada między 07:00 a 22:00, w środę 25 listopada między 07:00 a 22:00, w czwartek 26 listopada między 07:00 a 21:00 oraz w piątek 27 listopada w wybranych godzinach operator może ogłosić przywołanie, natomiast w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-21T08:01:15.932Z",
       "prompt": 57,
       "accepted": false,
@@ -2533,6 +2524,14 @@
       "headline": "Dziś między 07:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Dziś margines spada poniżej normy przez cztery godziny, a Kompas Energetyczny PSE zaleca oszczędzanie między 07:00 a 12:00 oraz między 16:00 a 18:00. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Jutro, w czwartek i piątek przywołanie wchodzi w grę, natomiast w poniedziałek 30 listopada nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-24T04:45:53.534Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 07:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, lecz nadwyżka przekracza próg 1100 MW.",
+      "body": "Dziś między 07:00 a 12:00 oraz między 16:00 a 18:00 obowiązuje zalecane oszczędzanie według Kompasu Energetycznego PSE. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro między 07:00 a 22:00 oraz w czwartek między 07:00 a 22:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałe dni okresu rezerwa pokrywa wymagany poziom."
     }
   ]
 }
