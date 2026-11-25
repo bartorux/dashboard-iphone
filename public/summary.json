@@ -1,8 +1,8 @@
 {
-  "headline": "Dziś między 21:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-  "body": "Prognoza poprawia się. Do tych godzin ogłoszenie może jeszcze nadejść. Ocena na jutro, piątek i wtorek 1 grudnia jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
-  "outlook": "W jutrzejszych godzinach, w piątek oraz we wtorek 1 grudnia przywołanie wchodzi w grę, a w poniedziałek 30 listopada nic go nie zapowiada.",
-  "generatedAt": "2026-11-25T04:30:59.805Z",
+  "headline": "Dziś między 21:00 a 22:00 operator może ogłosić przywołanie, bo nadwyżka spada poniżej progu 1100 MW.",
+  "body": "Prognoza poprawia się. Do wskazanych godzin ogłoszenie może jeszcze nadejść. Ocena na wtorek 1 grudnia jest wstępna: saldo wymiany na te godziny jeszcze nie doszło.",
+  "outlook": "We wtorek 1 grudnia między 16:00 a 19:00 oraz między 20:00 a 21:00 margines nie pokrywa wymaganego poziomu, a w pozostałych dniach rezerwa zachowuje dodatni margines lub nic nie zapowiada przywołania.",
+  "generatedAt": "2026-11-25T04:45:47.108Z",
   "dates": [
     "2026-11-25",
     "2026-11-26",
@@ -10,6 +10,6 @@
     "2026-11-30",
     "2026-12-01"
   ],
-  "assessment": "2026-11-25|R|high|-1300|21:00|1|8|2|moderate:07:00-14:00,moderate:16:00-21:00,high:21:00-22:00|K2:06:00-10:00,K2:12:00-13:00,K2:18:00-22:00|-|-;2026-11-26|R|high|-2400|19:00|0|16|0|high:07:00-10:00,moderate:10:00-11:00,high:11:00-21:00,moderate:21:00-22:00||X|-;2026-11-27|R|high|-2500|13:00|0|16|3|high:07:00-08:00,moderate:08:00-22:00||X|P;2026-11-30|R|none|1000|17:00|0|0|24|||X|P;2026-12-01|R|moderate|-300|16:00|5|0|17|moderate:16:00-18:00||X|P#-/below/prognoza poprawia się#v57",
+  "assessment": "2026-11-25|R|high|-1300|21:00|2|8|2|moderate:07:00-13:00,moderate:16:00-21:00,high:21:00-22:00|K2:07:00-10:00,K2:11:00-13:00,K2:18:00-22:00|-|-;2026-11-26|R|high|-2400|19:00|0|16|0|high:07:00-10:00,moderate:10:00-11:00,high:11:00-21:00,moderate:21:00-22:00||X|-;2026-11-27|R|moderate|-2500|13:00|0|16|3|moderate:07:00-22:00||X|P;2026-11-30|R|none|1000|17:00|0|0|24|||X|P;2026-12-01|R|moderate|-400|16:00|2|0|16|moderate:16:00-19:00,moderate:20:00-21:00||X|P#-/below/prognoza poprawia się#v57",
   "model": "gemini-3.5-flash-lite"
 }
