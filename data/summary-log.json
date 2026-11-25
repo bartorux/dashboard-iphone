@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-22T01:15:45.796Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę 25 listopada między 15:00 a 16:00 rezerwa najsilniej odejdzie od normy, a nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Prognoza na wtorek 24 listopada pogarsza się. Do godzin objętych ograniczeniami zostało jeszcze ponad osiem godzin.",
-      "outlook": "We wtorek 24 listopada między 12:00 a 21:00 oraz w środę 25 listopada nadwyżka spada poniżej progu 1100 MW, podczas gdy w pozostałe dni operator zachowuje wybór."
-    },
-    {
       "at": "2026-11-22T01:31:08.283Z",
       "prompt": 57,
       "accepted": true,
@@ -2459,6 +2451,24 @@
       "headline": "Dziś między 21:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, a nadwyżka spada poniżej próg 1100 MW.",
       "body": "Prognoza dzisiaj poprawia się. Ogłoszenie może jeszcze nadejść w niemal wszystkich wskazanych godzinach.",
       "outlook": "Jutro i w piątek rezerwa w wielu godzinach nie pokryje wymaganego poziomu, podczas gdy w poniedziałek i we wtorek 1 grudnia nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-25T01:15:48.347Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "możliwość przywołania podana jak nakaz",
+      "headline": "W piątek między 13:00 a 14:00 rezerwa osiągnie najniższy punkt, a nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie bez możliwości pominięcia.",
+      "body": "Prognoza na dziś poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Dziś między 21:00 a 22:00 oraz jutro i w piątek rezerwa również spadnie poniżej wymaganego poziomu, podczas gdy w poniedziałek i wtorek 1 grudnia nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-25T01:15:48.347Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAGŁÓWEK: W piątek między 13:00 a 14:00 nadwyżka spadnie poniżej progu 1100",
+      "body": "",
+      "outlook": ""
     }
   ]
 }
