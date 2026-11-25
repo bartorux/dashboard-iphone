@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-22T10:45:53.138Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "możliwość przywołania podana jak nakaz",
-      "headline": "We wtorek 24 listopada między 11:00 a 22:00 nadwyżka spada poniżej próg 1100 MW, co sprawia, że operator może ogłosić przywołanie bez możliwości jego pominięcia.",
-      "body": "Prognoza pogarsza się we wtorek 24 listopada. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
-      "outlook": "W pozostałych dniach roboczych, czyli jutro, w środę, czwartek i piątek, nadwyżka również utrzymuje się w różnych godzinach poniżej albo powyżej progu 1100 MW, natomiast dziś nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-22T10:45:53.138Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "We wtorek 24 listopada nadwyżka spadnie poniżej progu 1100 MW między 11:00 a 22:00, więc operator straci możliwość pominięcia przywołania.",
-      "body": "Prognoza pogarsza się we wtorek 24 listopada. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
-      "outlook": "Poza wtorkem 24 listopada nadwyżka spada poniżej progu 1100 MW w środę 25 listopada między 07:00 a 22:00 oraz w czwartek 26 listopada między 07:00 a 10:00 i od 13:00 do 20:00, natomiast w pozostałych godzinach okresu operator zachowuje wybór."
-    },
-    {
       "at": "2026-11-22T11:01:23.766Z",
       "prompt": 57,
       "accepted": false,
@@ -2476,6 +2459,14 @@
       "headline": "Dziś między 21:00 a 22:00 nadwyżka spada poniżej progu 1100 MW i operator może ogłosić przywołanie.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Jutro i w piątek przywołanie wchodzi w grę przez całą dobę, natomiast w poniedziałek i wtorek 1 grudnia rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-25T11:01:18.990Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 21:00 a 22:00 operator może ogłosić przywołanie, bo nadwyżka spada poniżej progu 1100 MW.",
+      "body": "Margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro i w piątek ogłoszenie może nadejść w szerokich przedziałach godzinowych, podczas gdy poniedziałek trzydziestego listopada oraz wtorek pierwszego grudnia nie niosą takich obciążeń."
     }
   ]
 }
