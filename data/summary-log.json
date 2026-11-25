@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-22T10:15:48.555Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś między 07:00 a 20:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, lecz nie musi.",
-      "body": "Prognoza na wtorek 24 listopada pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 24 listopada między 09:00 a 10:00 nadwyżka spada poniżej progu 1100 MW, a w środę 25 listopada, czwartek 26 listopada i piątek 27 listopada przywołanie wchodzi w grę przez kilkanaście godzin dziennie."
-    },
-    {
       "at": "2026-11-22T10:31:06.346Z",
       "prompt": 57,
       "accepted": true,
@@ -2458,6 +2450,24 @@
       "headline": "Dziś między 21:00 a 22:00 operator może ogłosić przywołanie, bo nadwyżka spada poniżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 12:00 a 13:00 oraz między 17:00 a 23:00.",
       "outlook": "Przywołanie wchodzi w grę także jutro między 07:00 a 22:00 oraz w piątek i we wtorek 1 grudnia w wyznaczonych godzinach, a pod koniec listopada nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-25T10:15:54.891Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś między 21:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka spadła poniżej progu 1100 MW.",
+      "body": "Prognoza dzisiaj poprawia się. Ogłoszenie może jeszcze nadejść w godzinach popołudniowych i wieczornych.",
+      "outlook": "Jutro między 07:00 a 22:00 ogłoszenie może nadejść w każdej chwili, w piątek i we wtorek operator ma wybór w wyznaczonych godzinach, natomiast w poniedziałek 30 listopada nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-25T10:15:54.891Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "odpowiedz nie ma oczekiwanych pol",
+      "headline": "NAG",
+      "body": "",
+      "outlook": ""
     }
   ]
 }
