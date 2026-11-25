@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-22T01:31:08.283Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę 25 listopada między 15:00 a 16:00 nadwyżka spadnie poniżej progu 1100 MW, co sprawi, że operator straci wybór i będzie mógł ogłosić przywołanie.",
-      "body": "Prognoza pogarsza się we wtorek 24 listopada. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek 24 listopada między 13:00 a 21:00, w środę 25 listopada między 07:00 a 10:00 oraz między 11:00 a 21:00, a także w pozostałych dniach nadwyżka utrzyma się powyżej progu 1100 MW, dając operatorowi wybór."
-    },
-    {
       "at": "2026-11-22T03:31:02.175Z",
       "prompt": 57,
       "accepted": false,
@@ -2477,6 +2469,24 @@
       "headline": "Dziś między 21:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie między 06:00 a 09:00 oraz między 18:00 a 22:00, natomiast w pozostałe dni rezerwa zachowuje się spokojnie."
+    },
+    {
+      "at": "2026-11-25T01:45:44.588Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina 14:00 spoza faktów",
+      "headline": "W piątek między 12:00 a 14:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 30 listopada nic nie zapowiada przywołania, a w pozostałych dniach rezerwa miejscami spada poniżej wymaganego poziomu."
+    },
+    {
+      "at": "2026-11-25T01:45:44.588Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "godzina 14:00 spoza faktów",
+      "headline": "W piątek między 12:00 a 14:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
+      "body": "Prognoza dzisiaj poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro i w piątek przywołanie wchodzi w grę przez większość dnia, natomiast w poniedziałek 30 listopada i we wtorek 1 grudnia nic go nie zapowiada. Kompas Energetyczny PSE zaleca oszczędzanie dzisiaj między 06:00 a 10:00, 12:00 a 13:00 oraz 18:00 a 22:00."
     }
   ]
 }
