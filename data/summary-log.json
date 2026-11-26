@@ -1,24 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-23T02:45:48.493Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni przez jedną godzinę, a w pozostałych przeważa powyżej normy.",
-      "body": "Dziś między 07:00 a 09:00 obowiązuje zalecane oszczędzanie, które Kompas Energetyczny PSE kieruje do odbiorców. Ogłoszenie może jeszcze nadejść w godzinach 12:00-13:00, bo do tego przedziału zostało ponad osiem godzin.",
-      "outlook": "Jutro, w środę, w czwartek i w piątek nadwyżka spada poniżej progu 1100 MW w wyznaczonych porach, a w pozostałe dni okresu rezerwa utrzymuje się na stabilnym poziomie."
-    },
-    {
-      "at": "2026-11-23T02:45:48.493Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "Dziś margines wypada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Prognoza pogarsza się. Do wskazanych godzin ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro, w środę, w czwartek i w piątek rezerwa również spada poniżej progu 1100 MW w wybranych godzinach."
-    },
-    {
       "at": "2026-11-23T03:01:13.366Z",
       "prompt": 57,
       "accepted": false,
@@ -2431,6 +2413,14 @@
       "headline": "Dziś rezerwa spada poniżej typowego zakresu z ostatnich trzydziestu dni, a rezerwa jutro spadnie jeszcze bardziej i przekroczy próg 1100 MW.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
       "outlook": "W poniedziałek 30 listopada, we wtorek 1 grudnia i w środę 2 grudnia margines jest częściowo ujemny."
+    },
+    {
+      "at": "2026-11-26T02:45:54.333Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a rezerwa nie pokrywa wymaganego poziomu, choć nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 30 listopada między 14:00 a 21:00, we wtorek 1 grudnia między 07:00 a 09:00 oraz między 14:00 a 21:00, a także w środę 2 grudnia między 07:00 a 09:00 i między 15:00 a 21:00 operator może ogłosić przywołanie, a poza tymi godzinami rezerwa pokrywa wymagany poziom."
     }
   ]
 }
