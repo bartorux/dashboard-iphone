@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-23T17:46:04.169Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Margines wypada poza typowy zakres z ostatnich trzydziestu dni przez większość nadchodzącego okresu.",
-      "body": "Prognoza na dziś jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do jutrzejszych godzin z przywołaniem zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie jutro między 08:00 a 09:00.",
-      "outlook": "Przywołanie wchodzi w grę we wtorek między 08:00 a 12:00, między 16:00 a 19:00 oraz między 21:00 a 22:00, w środę między 07:00 a 22:00, w czwartek między 07:00 a 21:00, a także w piątek między 07:00 a 22:00."
-    },
-    {
-      "at": "2026-11-23T18:01:20.208Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę między 07:00 a 22:00 operator może ogłosić przywołanie, a nadwyżka jest poniżej progu 1100 MW.",
-      "body": "W środę wymagany poziom jest jeszcze wstępny. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek między 07:00 a 21:00 oraz w piątek między 07:00 a 22:00 operator ma wybór, natomiast dzisiaj nic nie zapowiada przywołania, choć prognoza jeszcze się ustala."
-    },
-    {
       "at": "2026-11-23T18:15:53.997Z",
       "prompt": 57,
       "accepted": false,
@@ -2530,6 +2514,24 @@
       "headline": "Dziś margines spada poniżej typowego zakresu z ostatnich trzydziestu dni, a operator może ogłosić przywołanie.",
       "body": "Dziś między 18:00 a 19:00 nadwyżka spada poniżej progu 1100 MW. Ogłoszenie nie nadejdzie, bo do tych godzin zostało mniej niż osiem godzin.",
       "outlook": "Jutro, w poniedziałek 30 listopada, we wtorek 1 grudnia oraz w środę 2 grudnia operator może ogłosić przywołanie, przy czym jutro prognoza jeszcze się ustala."
+    },
+    {
+      "at": "2026-11-26T17:15:54.556Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś przez trzy godziny margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Kompas Energetyczny PSE zaleca oszczędzanie energii między 18:00 a 21:00. Na ogłoszenie przywołania w godzinach od 18:00 do 22:00 jest już za późno.",
+      "outlook": "Jutro margines spada poniżej typowego zakresu przez osiem godzin, a Kompas Energetyczny PSE zaleca oszczędzanie od 06:00 do 09:00, od 11:00 do 13:00 oraz od 18:00 do 21:00, natomiast w pozostałych dniach ujemny margines utrzymuje się w wyznaczonych godzinach i we wszystkich tych terminach operator może ogłosić przywołanie."
+    },
+    {
+      "at": "2026-11-26T17:15:54.556Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś przez trzy godziny margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni, a nadwyżka utrzyma się powyżej progu 1100 MW, dając operatorowi wybór w sprawie przywołania.",
+      "body": "Dziś margines spadnie między 18:00 a 22:00. Na ogłoszenie jest już za późno.",
+      "outlook": "Jutro margines spadnie przez osiem godzin, we wtorek przez dziesięć godzin, a w poniedziałek i środę przez dziewięć godzin, przy czym jutro prognoza jeszcze się ustala, a Kompas Energetyczny PSE zaleca oszczędzanie dziś między 18:00 a 21:00 oraz jutro w wybranych godzinach."
     }
   ]
 }
