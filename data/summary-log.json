@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-24T00:15:52.767Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "odpowiedz nie ma oczekiwanych pol",
-      "headline": "NAG",
-      "body": "",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-24T00:31:14.460Z",
       "prompt": 57,
       "accepted": true,
@@ -2537,6 +2528,14 @@
       "headline": "Dziś między 21:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, a raz nie. Ogłoszenie może jeszcze nadejść.",
       "outlook": "Jutro między 07:00 a 14:00 oraz między 15:00 a 22:00, w poniedziałek 30 listopada między 07:00 a 09:00 oraz między 13:00 a 22:00, we wtorek 1 grudnia między 07:00 a 09:00 oraz między 14:00 a 21:00, a także w środę 2 grudnia między 07:00 a 09:00 i między 14:00 a 21:00 operator może ogłosić przywołanie w wymienionych godzinach, podczas gdy w pozostałych dniach i godzinach rezerwa zachowuje dodatni margines."
+    },
+    {
+      "at": "2026-11-26T20:45:46.709Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś między 21:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza na jutro jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do wskazanych godzin pozostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść, a w wyznaczonych przedziałach między 07:00 a 09:00 oraz 11:00 a 12:00 Kompas Energetyczny PSE zaleca oszczędzanie.",
+      "outlook": "W poniedziałek 30 listopada, we wtorek 1 grudnia i w środę 2 grudnia margines również spada poniżej wymaganego poziomu, a w pozostałych dniach rezerwa stabilnie pokrywa wymagane wartości."
     }
   ]
 }
