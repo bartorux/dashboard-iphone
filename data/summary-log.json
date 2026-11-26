@@ -1,40 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-23T06:01:20.337Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina 16:00 spoza faktów",
-      "headline": "W środę między 15:00 a 16:00 nadwyżka spadnie poniżej progu 1100 MW, a operator może ogłosić przywołanie.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Jutro między 11:00 a 21:00 nadwyżka utrzyma się poniżej progu 1100 MW, a w środę podobne warunki obejmą godziny od 07:00 do 10:00 oraz od 11:00 do 21:00, natomiast w pozostałych dniach i godzinach operator zachowuje wybór."
-    },
-    {
-      "at": "2026-11-23T06:01:20.337Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "We wtorek między 11:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie, a nadwyżka jest poniżej poziomu, który pozwalał mu je pominąć.",
-      "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "We wtorek, środę, czwartek i piątek przywołanie wchodzi w grę również w innych godzinach, natomiast dzisiaj oraz w pozostałym czasie tego okresu margines pozostaje dodatni lub operator ma pełen wybór."
-    },
-    {
-      "at": "2026-11-23T06:15:48.365Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę między 15:00 a 16:00 operator może ogłosić przywołanie, a nadwyżka spada poniżej progu 1100 MW.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś między 09:00 a 13:00, jutro, w środę, czwartek i piątek operator zachowuje wybór lub musi liczyć się z przywołaniem w wyznaczonych godzinach, natomiast w pozostałe dni okresu nic nie zapowiada przywołania."
-    },
-    {
-      "at": "2026-11-23T06:15:48.365Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę o 15:00 rezerwa spadnie najgłębiej w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
-      "body": "Prognoza na jutro pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś między 09:00 a 13:00, a także w czwartek i piątek operator ma wybór, natomiast w środę i jutro nadwyżka w wielu godzinach spadnie poniżej progu 1100 MW."
-    },
-    {
       "at": "2026-11-23T06:45:49.684Z",
       "prompt": 57,
       "accepted": false,
@@ -2472,6 +2438,24 @@
       "headline": "Dziś między 18:00 a 19:00 rezerwa spadnie, a nadwyżka spadnie poniżej progu 1100 MW, przez co operator może ogłosić przywołanie.",
       "body": "Prognoza poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Jutro między 07:00 a 22:00 oraz w poniedziałek 30 listopada, wtorek 1 grudnia i środę 2 grudnia rezerwa w części godzin nie pokryje wymaganego poziomu, a w pozostałe dni okresu rezerwa pokrywa wymagany poziom i nic tam nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-26T06:15:58.884Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś między 17:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 08:00 a 09:00, między 10:00 a 12:00 oraz między 16:00 a 22:00.",
+      "outlook": "Jutro, w poniedziałek 30 listopada, we wtorek 1 grudnia i w środę 2 grudnia operator może ogłosić przywołanie w wybranych godzinach."
+    },
+    {
+      "at": "2026-11-26T06:15:58.884Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "Dziś między 17:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro między 07:00 a 21:00 nadwyżka także spadnie poniżej progu 1100 MW, a w poniedziałek 30 listopada, we wtorek 1 grudnia i w środę 2 grudnia rezerwa w wybranych godzinach nie pokryje wymaganego poziomu, choć nadwyżka utrzyma się powyżej progu 1100 MW."
     }
   ]
 }
