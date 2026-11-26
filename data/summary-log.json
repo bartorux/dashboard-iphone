@@ -1,15 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-23T16:46:02.679Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "mgliste określenie pory zamiast godziny",
-      "headline": "W środę między 07:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
-      "body": "Prognoza na dzisiaj jeszcze się ustala. Ogłoszenie może jeszcze nadejść w kolejnych dobach.",
-      "outlook": "Jutro, w czwartek i w piątek rezerwa spadnie poniżej wymaganego poziomu w wyznaczonych godzinach, natomiast w pozostałych dniach i godzinach nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-23T17:01:26.692Z",
       "prompt": 57,
       "accepted": true,
@@ -2530,6 +2521,14 @@
       "headline": "Wtorek 1 grudnia o 16:00 margines spadnie najgłębiej w całym okresie, lecz nadwyżka utrzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do godzin objętych wyborem operatora zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "Dziś między 17:00 a 22:00 operator ma wybór, lecz na ogłoszenie jest już za późno, a w poniedziałek 30 listopada, we wtorek 1 grudnia i w środę 2 grudnia operator zachowuje uprawnienie do przywołania przez większość dnia."
+    },
+    {
+      "at": "2026-11-26T16:31:09.532Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Dziś o 17:00 rezerwa spadnie najgłębiej w całym okresie, a nadwyżka utrzyma się powyżej progu 1100 MW, dając operatorowi pełną swobodę decyzji.",
+      "body": "Prognoza na jutro jeszcze się ustala, bo rezerwa raz pokrywa wymagany poziom, raz nie. Do godzin objętych możliwością ogłoszenia pozostało wystarczająco dużo czasu, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "Jutro między 07:00 a 10:00 oraz między 15:00 a 21:00, a także w poniedziałek 30 listopada, we wtorek 1 grudnia i w środę 2 grudnia rezerwa nie pokryje wymaganego poziomu, podczas gdy w pozostałych dniach margines pozostanie dodatni."
     }
   ]
 }
