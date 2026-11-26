@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-23T13:45:49.339Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W środę między 07:00 a 22:00 nadwyżka spadnie poniżej próg 1100 MW. Nadwyżka ta znajduje się poniżej poziomu, który pozwala operatorowi pominąć przywołanie.",
-      "body": "Prognoza na dziś jeszcze się ustala i raz pokrywa wymagany poziom, raz nie. Do godzin tych w dniu dzisiejszym zostało mniej niż osiem godzin, więc na ogłoszenie jest już za późno.",
-      "outlook": "W czwartek między 07:00 a 22:00 oraz w piątek między 07:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, natomiast w pozostałe dni nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-23T14:01:28.022Z",
       "prompt": 57,
       "accepted": true,
@@ -2477,6 +2469,15 @@
       "headline": "W poniedziałek 30 listopada między 08:00 a 09:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka utrzymuje się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
       "body": "Prognoza na poniedziałek 30 listopada pogarsza się. Ogłoszenie może jeszcze nadejść, ponieważ do tych godzin zostało ponad osiem godzin.",
       "outlook": "Dziś margines spada poniżej typowego zakresu przez cztery godziny, Kompas Energetyczny PSE zaleca oszczędzanie między 16:00 a 21:00, a w pozostałych dniach rezerwa zachowuje się zmiennie."
+    },
+    {
+      "at": "2026-11-26T13:45:49.438Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole headline dłuższe niż 200 znaków",
+      "headline": "W poniedziałek 30 listopada między 08:00 a 10:00 oraz między 12:00 a 22:00 rezerwa nie pokrywa wymaganego poziomu, ale nadwyżka trzyma się powyżej progu 1100 MW, więc operator może ogłosić przywołanie, ale nie musi.",
+      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, do tych godzin zostało ponad osiem godzin. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 15:00 a 19:00.",
+      "outlook": "We wtorek 1 grudnia i w środę 2 grudnia rezerwa również spada miejscami poniżej wymaganego poziomu przy zachowaniu wyboru operatora, podczas gdy jutro i dzisiaj w pozostałych godzinach nic nie zapowiada przywołania."
     }
   ]
 }
