@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-24T21:01:14.722Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "godzina 14:00 spoza faktów",
-      "headline": "W czwartek między 13:00 a 14:00 margines spadnie do najniższego poziomu w całym okresie, a nadwyżka spadnie poniżej progu 1100 MW.",
-      "body": "Prognoza na jutro poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W czwartek między 07:00 a 22:00 oraz w piątek między 07:00 a 22:00 operator może ogłosić przywołanie, a w pozostałych dniach nic go nie zapowiada."
-    },
-    {
-      "at": "2026-11-24T21:15:57.298Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Jutro między 21:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, a margines nie pokryje wymaganego poziomu.",
-      "body": "Prognoza poprawia się, lecz w czwartek i piątek ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie od 00:00 do 01:00, od 05:00 do 10:00, od 12:00 do 13:00 oraz od 16:00 do 23:00.",
-      "outlook": "Dzisiaj oraz w poniedziałek 30 listopada nic nie zapowiada przywołania."
-    },
-    {
       "at": "2026-11-24T21:31:02.212Z",
       "prompt": 57,
       "accepted": true,
@@ -2563,6 +2546,24 @@
       "headline": "W poniedziałek 30 listopada między 08:00 a 09:00 oraz między 13:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 19:00 a 21:00.",
       "outlook": "We wtorek 1 grudnia między 07:00 a 10:00 oraz między 13:00 a 21:00, w środę 2 grudnia między 07:00 a 09:00 i między 15:00 a 21:00 oraz dziś między 17:00 a 22:00 operator ma wybór, a w pozostałe dni nic nie zapowiada przywołania."
+    },
+    {
+      "at": "2026-11-27T08:31:08.958Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś między 17:00 a 22:00 operator może ogłosić przywołanie, ale nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 30 listopada między 08:00 a 09:00 oraz między 13:00 a 22:00, we wtorek 1 grudnia między 07:00 a 10:00 oraz między 13:00 a 21:00, a także w środę 2 grudnia między 07:00 a 09:00 i między 15:00 a 21:00 operator może ogłosić przywołanie, natomiast w czwartek 3 grudnia nic go nie zapowiada."
+    },
+    {
+      "at": "2026-11-27T08:31:08.958Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś między 17:00 a 22:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka utrzymuje się powyżej progu 1100 MW.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 30 listopada między 08:00 a 09:00 i między 13:00 a 22:00, we wtorek 1 grudnia między 07:00 a 10:00 i między 13:00 a 21:00 oraz w środę 2 grudnia między 07:00 a 09:00 i między 15:00 a 21:00 nadwyżka trzyma się powyżej progu 1100 MW i ogłoszenie może jeszcze nadejść, natomiast w czwartek 3 grudnia nic nie zapowiada przywołania."
     }
   ]
 }
