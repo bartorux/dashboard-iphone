@@ -4,15 +4,6 @@
       "at": "2026-11-25T10:01:15.078Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "odpowiedz nie ma oczekiwanych pol",
-      "headline": "NAGŁÓWEK: Dziś między 21:",
-      "body": "",
-      "outlook": ""
-    },
-    {
-      "at": "2026-11-25T10:01:15.078Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "mgliste określenie pory zamiast godziny",
       "headline": "Dziś między 21:00 a 22:00 operator może ogłosić przywołanie, bo nadwyżka spada poniżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść. Kompas Energetyczny PSE zaleca oszczędzanie między 12:00 a 13:00 oraz między 17:00 a 23:00.",
@@ -2569,6 +2560,14 @@
       "headline": "W poniedziałek 30 listopada między 14:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, co otwiera operatorowi drogę do ogłoszenia przywołania.",
       "body": "Prognoza w poniedziałek 30 listopada pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 1 grudnia między 07:00 a 22:00 oraz w środę i czwartek rezerwa również przyniesie godziny z uprawnieniem do przywołania, podczas gdy pozostałe dni okresu trzymają dodatni margines."
+    },
+    {
+      "at": "2026-11-27T20:15:57.335Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W najbliższych godzinach rezerwa pokrywa wymagany poziom, ale w poniedziałek 30 listopada nadwyżka spadnie poniżej progu 1100 MW między 14:00 a 22:00, co oznacza, że operator może ogłosić przywołanie.",
+      "body": "Prognoza na poniedziałek 30 listopada pogarsza się. Do wskazanych godzin pozostało ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 1 grudnia nadwyżka spadnie poniżej progu 1100 MW między 07:00 a 09:00 oraz między 14:00 a 21:00, w środę 2 grudnia oraz czwartek 3 grudnia operator ma wybór przez cały dzień, a w pozostałe godziny rezerwa utrzyma dodatni margines."
     }
   ]
 }
