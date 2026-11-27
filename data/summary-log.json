@@ -1,14 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-24T17:45:49.185Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś margines wypada poniżej typowego pasma z ostatnich trzydziestu dni.",
-      "body": "W środę zapotrzebowanie przewyższy normę, przez co margines osłabi się o godzinie 08:00. Na ogłoszenie nadchodzi właściwy czas, bo do tych godzin pozosta",
-      "outlook": ""
-    },
-    {
       "at": "2026-11-24T18:01:19.891Z",
       "prompt": 57,
       "accepted": false,
@@ -2561,6 +2553,15 @@
       "headline": "W poniedziałek między 17:00 a 18:00 operator może ogłosić przywołanie, ale nie musi, bo nadwyżka trzyma się powyżej progu 1100 MW.",
       "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść między 15:00 a 22:00.",
       "outlook": "W poniedziałek i wtorek rezerwa spada w wielu godzinach, natomiast w środę i czwartek oraz dzisiaj dotyka to tylko wybranych pór."
+    },
+    {
+      "at": "2026-11-27T06:31:15.462Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Dziś między 15:00 a 22:00 operator może ogłosić przywołanie, ale nadwyżka trzyma się powyżej progu 1100 MW i daje mu wybór.",
+      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 30 listopada między 08:00 a 09:00 i 13:00 a 22:00, we wtorek 1 grudnia między 07:00 a 10:00 i 13:00 a 21:00, w środę 2 grudnia między 07:00 a 09:00 i 15:00 a 21:00 oraz w czwartek 3 grudnia między 16:00 a 18:00 operator również może ogłosić przywołanie, a w pozostałych dniach rezerwa utrzymuje bezpieczny poziom."
     }
   ]
 }
