@@ -3323,12 +3323,12 @@
           "h": null,
           "hours": 15,
           "mae": 1237,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 1969,
           "coverage": null,
           "sums": {
             "abs": 18552,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 1969,
+            "deadlineHours": 1,
             "banded": 0,
             "inBand": 0
           }
@@ -3338,12 +3338,12 @@
           "h": 1,
           "hours": 15,
           "mae": 512,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 910,
           "coverage": 1,
           "sums": {
             "abs": 7680,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 910,
+            "deadlineHours": 1,
             "banded": 15,
             "inBand": 15
           }
@@ -3353,12 +3353,12 @@
           "h": 2,
           "hours": 15,
           "mae": 399,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 610,
           "coverage": 1,
           "sums": {
             "abs": 5984,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 610,
+            "deadlineHours": 1,
             "banded": 15,
             "inBand": 15
           }
@@ -3368,12 +3368,12 @@
           "h": 3,
           "hours": 15,
           "mae": 1435,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 2410,
           "coverage": 0.667,
           "sums": {
             "abs": 21530,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 2410,
+            "deadlineHours": 1,
             "banded": 15,
             "inBand": 10
           }
@@ -3383,12 +3383,12 @@
           "h": 4,
           "hours": 15,
           "mae": 1435,
-          "maeAtDeadline": null,
+          "maeAtDeadline": 2410,
           "coverage": 0.667,
           "sums": {
             "abs": 21530,
-            "deadlineAbs": 0,
-            "deadlineHours": 0,
+            "deadlineAbs": 2410,
+            "deadlineHours": 1,
             "banded": 15,
             "inBand": 10
           }
@@ -3404,12 +3404,12 @@
         "h": null,
         "hours": 450,
         "mae": 1205,
-        "maeAtDeadline": 1382,
+        "maeAtDeadline": 1384,
         "coverage": null,
         "sums": {
           "abs": 542362,
-          "deadlineAbs": 601341,
-          "deadlineHours": 435,
+          "deadlineAbs": 603310,
+          "deadlineHours": 436,
           "banded": 0,
           "inBand": 0
         }
@@ -3423,8 +3423,8 @@
         "coverage": 0.802,
         "sums": {
           "abs": 433131,
-          "deadlineAbs": 454786,
-          "deadlineHours": 435,
+          "deadlineAbs": 455696,
+          "deadlineHours": 436,
           "banded": 450,
           "inBand": 361
         }
@@ -3434,12 +3434,12 @@
         "h": 2,
         "hours": 435,
         "mae": 1009,
-        "maeAtDeadline": 1136,
+        "maeAtDeadline": 1135,
         "coverage": 0.818,
         "sums": {
           "abs": 438805,
-          "deadlineAbs": 477238,
-          "deadlineHours": 420,
+          "deadlineAbs": 477848,
+          "deadlineHours": 421,
           "banded": 435,
           "inBand": 356
         }
@@ -3449,12 +3449,12 @@
         "h": 3,
         "hours": 420,
         "mae": 1082,
-        "maeAtDeadline": 1147,
+        "maeAtDeadline": 1150,
         "coverage": 0.793,
         "sums": {
           "abs": 454498,
-          "deadlineAbs": 464620,
-          "deadlineHours": 405,
+          "deadlineAbs": 467030,
+          "deadlineHours": 406,
           "banded": 420,
           "inBand": 333
         }
@@ -3464,12 +3464,12 @@
         "h": 4,
         "hours": 405,
         "mae": 1097,
-        "maeAtDeadline": 1170,
+        "maeAtDeadline": 1174,
         "coverage": 0.79,
         "sums": {
           "abs": 444402,
-          "deadlineAbs": 456432,
-          "deadlineHours": 390,
+          "deadlineAbs": 458842,
+          "deadlineHours": 391,
           "banded": 405,
           "inBand": 320
         }
