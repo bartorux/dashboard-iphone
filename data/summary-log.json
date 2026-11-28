@@ -1,23 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-26T01:45:45.972Z",
-      "prompt": 57,
-      "accepted": false,
-      "reason": "pole outlook dłuższe niż 300 znaków",
-      "headline": "Jutro między 07:00 a 21:00 nadwyżka spada poniżej progu 1100 MW, więc operator może ogłosić przywołanie.",
-      "body": "Prognoza na ten dzień pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś, w poniedziałek 30 listopada, we wtorek 1 grudnia oraz w środę 2 grudnia rezerwa w niektórych godzinach nie pokrywa wymaganego poziomu, lecz nadwyżka trzyma się powyżej progu 1100 MW. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 02:00 a 03:00, między 07:00 a 12:00 oraz między 16:00 a 22:00."
-    },
-    {
-      "at": "2026-11-26T02:01:16.859Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Dziś rezerwa spada poniżej typowego zakresu z ostatnich trzydziestu dni, a rezerwa jutro spadnie jeszcze bardziej i przekroczy próg 1100 MW.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 30 listopada, we wtorek 1 grudnia i w środę 2 grudnia margines jest częściowo ujemny."
-    },
-    {
       "at": "2026-11-26T02:45:54.333Z",
       "prompt": 57,
       "accepted": true,
@@ -2563,6 +2546,23 @@
       "headline": "W poniedziałek 30 listopada między 14:00 a 22:00 margines spadnie poniżej wymaganego poziomu, a nadwyżka spadnie poniżej progu 1100 MW.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść, bo do tych godzin zostało ponad osiem godzin.",
       "outlook": "We wtorek 1 grudnia między 07:00 a 22:00, w czwartek 3 grudnia między 07:00 a 22:00 oraz w piątek 4 grudnia między 07:00 a 22:00 operator również ma godziny z nadwyżką poniżej progu 1100 MW, natomiast w środę 2 grudnia rezerwa w części godzin nie pokryje wymaganego poziomu przy zachowaniu nadwyżki powyżej progu 1100 MW."
+    },
+    {
+      "at": "2026-11-28T11:45:56.017Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "pole outlook dłuższe niż 300 znaków",
+      "headline": "Wtorek 1 grudnia o 16:00 przyniesie najniższy margines, a nadwyżka utrzyma się poniżej progu 1100 MW.",
+      "body": "Prognoza na poniedziałek 30 listopada pogarsza się. Ogłoszenie może jeszcze nadejść.",
+      "outlook": "W poniedziałek 30 listopada między 14:00 a 22:00, we wtorek 1 grudnia między 07:00 a 09:00 oraz między 14:00 a 21:00, a także w czwartek 3 grudnia między 17:00 a 18:00 i w piątek 4 grudnia między 08:00 a 10:00 oraz między 13:00 a 20:00 nadwyżka spadnie poniżej progu 1100 MW, podczas gdy w pozostałych dniach i godzinach operator zachowa pełną swobodę decyzyjną. Kompas Energetyczny PSE zaleca oszczędzanie dziś między 12:00 a 17:00 oraz między 18:00 a 19:00."
+    },
+    {
+      "at": "2026-11-28T11:45:56.017Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "We wtorek 1 grudnia o 16:00 margines spadnie najniżej w całym okresie, a nadwyżka utrzyma się poniżej progu 1100 MW.",
+      "body": "Prognoza na poniedziałek 30 listopada pogarsza się. Ogłoszenie może jeszcze nadejść w poniedziałek 30 listopada między 14:00 a 22:00, we wtorek 1 grudnia między 07:00 a 09:00 oraz między 14:00 a 21:00, w czwartek 3 grudnia między 17:00 a 18:00, a także w piątek 4 grudnia między 08:00 a 10:00 i między 13:00 a 20:00.",
+      "outlook": "Kompas Energetyczny PSE zaleca oszczędzanie dziś między 12:00 a 17:00 oraz między 18:00 a 19:00, natomiast w środę 2 grudnia rezerwa w jednej godzinie pokryje wymagany poziom i nic tam nie zapowiada przywołania."
     }
   ]
 }
