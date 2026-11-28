@@ -1,22 +1,6 @@
 {
   "attempts": [
     {
-      "at": "2026-11-25T22:01:18.945Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "Margines spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
-      "body": "Jutro między 07:00 a 08:00 nadwyżka spadnie poniżej progu 1100 MW. Na ogłoszenie przywołania jest już za późno.",
-      "outlook": "W piątek oraz we wtorek 1 grudnia nadwyżka spadnie poniżej progu 1100 MW, a w pozostałe dni rezerwa zachowa się stabilnie."
-    },
-    {
-      "at": "2026-11-25T22:15:49.529Z",
-      "prompt": 57,
-      "accepted": true,
-      "headline": "W piątek między 07:00 a 21:00 nadwyżka spadnie poniżej progu 1100 MW i operator może ogłosić przywołanie.",
-      "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "W poniedziałek 30 listopada między 16:00 a 18:00 oraz między 20:00 a 21:00, we wtorek 1 grudnia między 07:00 a 09:00 oraz między 14:00 a 21:00, a także jutro między 07:00 a 12:00 oraz między 15:00 a 22:00 rezerwa nie pokryje wymaganego poziomu, lecz nadwyżka utrzyma się powyżej progu 1100 MW."
-    },
-    {
       "at": "2026-11-25T22:31:12.455Z",
       "prompt": 57,
       "accepted": true,
@@ -2566,6 +2550,23 @@
       "headline": "W poniedziałek 30 listopada rezerwa wypadnie poniżej typowego zakresu z ostatnich trzydziestu dni przez czternaście godzin.",
       "body": "Prognoza pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 22:00.",
       "outlook": "W grudniu margines utrzyma się poniżej normy przez kilkanaście godzin dziennie, a przywołanie wchodzi w grę we wtorek, środę, czwartek i piątek."
+    },
+    {
+      "at": "2026-11-28T07:31:13.770Z",
+      "prompt": 57,
+      "accepted": false,
+      "reason": "mgliste określenie pory zamiast godziny",
+      "headline": "W poniedziałek 30 listopada rezerwa przez wiele godzin spada poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "Prognoza na poniedziałek trzydziestego listopada pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 09:00.",
+      "outlook": "We wtorek 1 grudnia, w środę 2 grudnia i w piątek 4 grudnia nadwyżka również spada poniżej próg 1100 MW w wybranych godzinach, podczas gdy w czwartek 3 grudnia operator ma wybór przez całą dobę."
+    },
+    {
+      "at": "2026-11-28T07:31:13.770Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "Przez większość dni w nadchodzącym tygodniu margines spadnie poniżej typowego zakresu z ostatnich trzydziestu dni.",
+      "body": "W poniedziałek 30 listopada prognoza pogarsza się. Ogłoszenie może jeszcze nadejść w godzinach od 07:00 do 22:00.",
+      "outlook": "W poniedziałek 30 listopada między 08:00 a 09:00 nadwyżka spada poniżej progu 1100 MW, a w pozostałe dni od wtorku 1 grudnia do piątku 4 grudnia sytuacja powtarza się w różnych przedziałach godzinowych."
     }
   ]
 }
