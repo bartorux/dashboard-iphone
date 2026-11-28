@@ -4,15 +4,6 @@
       "at": "2026-11-26T08:45:54.301Z",
       "prompt": 57,
       "accepted": false,
-      "reason": "możliwość przywołania podana jak nakaz",
-      "headline": "Jutro nadwyżka spadnie poniżej progu 1100 MW między 07:00 a 22:00, co oznacza, że operator może ogłosić przywołanie bezwarunkowo.",
-      "body": "Prognoza poprawia się. Ogłoszenie może jeszcze nadejść.",
-      "outlook": "Dziś między 17:00 a 19:00, a także w poniedziałek 30 listopada, we wtorek 1 grudnia i środę 2 grudnia margines ułoży się poniżej wymaganego poziomu, podczas gdy w pozostałych dniach rezerwa pokryje zapotrzebowanie."
-    },
-    {
-      "at": "2026-11-26T08:45:54.301Z",
-      "prompt": 57,
-      "accepted": false,
       "reason": "pole outlook dłuższe niż 300 znaków",
       "headline": "Jutro nadwyżka spadnie poniżej progu 1100 MW między 07:00 a 22:00, więc operator może ogłosić przywołanie.",
       "body": "Prognoza poprawia się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
@@ -2554,6 +2545,14 @@
       "headline": "W poniedziałek 30 listopada między 13:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW, co oznacza, że operator może ogłosić przywołanie.",
       "body": "Prognoza na poniedziałek 30 listopada pogarsza się. Do tych godzin zostało jeszcze ponad osiem godzin, więc ogłoszenie może jeszcze nadejść.",
       "outlook": "We wtorek 1 grudnia między 07:00 a 22:00 oraz w czwartek 3 grudnia i piątek 4 grudnia w analogicznych godzinach nadwyżka również spadnie poniżej progu 1100 MW, a w pozostałe dni tygodnia operator zachowa pełny wybór."
+    },
+    {
+      "at": "2026-11-28T18:15:47.562Z",
+      "prompt": 57,
+      "accepted": true,
+      "headline": "W poniedziałek 30 listopada między 13:00 a 22:00 nadwyżka spadnie poniżej progu 1100 MW.",
+      "body": "Prognoza na poniedziałek 30 listopada pogarsza się. Do wskazanych godzin ogłoszenie może jeszcze nadejść.",
+      "outlook": "We wtorek 1 grudnia, czwartek 3 grudnia i piątek 4 grudnia nadwyżka również spadnie poniżej progu 1100 MW w części godzin, natomiast w środę 2 grudnia utrzyma się powyżej niego przez cały dzień."
     }
   ]
 }
